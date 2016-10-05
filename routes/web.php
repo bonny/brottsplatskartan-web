@@ -11,6 +11,40 @@
 |
 */
 
+use App\Http\Controllers\FeedController;
+use App\CrimeEvent;
+use Illuminate\Http\Request;
+use App\Http\Requests;
+
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::group(['prefix' => 'admin'], function () {
+
+    Route::get('', function ()    {
+
+        return redirect()->route("adminDashboard");
+
+    });
+
+    // /admin/dashboard
+    Route::get('dashboard', function (FeedController $feedController, Request $request )    {
+
+        $data = [];
+
+        // if parseItem is set and integer then parse that item
+        $parseItemID = (int) $request->input("parseItem");
+        if ($parseItemID) {
+            $feedController->parseItem($parseItemID);
+        }
+
+        $data["feedsUpdateResult"] = $feedController->updateFeedsFromPolisen();
+
+        $data["events"] = CrimeEvent::orderBy("created_at", "desc")->paginate(20);
+
+        return view('admin.dashboard', $data);
+
+    })->name("adminDashboard");
+
 });
