@@ -12,7 +12,7 @@ return [
     | any other location as required by the application or its packages.
     */
 
-    'name' => 'Laravel',
+    'name' => 'Brottsplatskartan 3',
 
     /*
     |--------------------------------------------------------------------------
@@ -64,7 +64,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Europe/Stockholm',
 
     /*
     |--------------------------------------------------------------------------
@@ -178,6 +178,11 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        // installed
+        willvincent\Feeds\FeedsServiceProvider::class,
+        'Kozz\Laravel\Providers\Guzzle',
+        Weidner\Goutte\GoutteServiceProvider::class,
+
     ],
 
     /*
@@ -225,6 +230,9 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+        'Feeds'  => willvincent\Feeds\Facades\FeedsFacade::class,
+        'Guzzle' => 'Kozz\Laravel\Facades\Guzzle',
+        'Goutte' => Weidner\Goutte\GoutteFacade::class,
 
     ],
 
