@@ -57,6 +57,11 @@ class FeedParserController extends Controller
 
     /**
      * Get info from remote, i.e. from the details page at polisen.se
+     * Info exists in div with id #column2-3
+     *
+     * We find "parsed_teaser" and "parsed_content" here
+     *
+     * @return array
      */
     public function parseContent( $contentURL ) {
 
@@ -113,7 +118,7 @@ class FeedParserController extends Controller
             }
         }
 
-        $returnParts["parsed_content"] = strip_tags($returnParts["parsed_content"]);
+        $returnParts["parsed_content"] = strip_tags($returnParts["parsed_content"], "<br><strong>");
         $returnParts["parsed_content"] = trim($returnParts["parsed_content"]);
 
         return $returnParts;

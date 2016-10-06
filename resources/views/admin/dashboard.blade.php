@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="sv">
+<html lang="sv" class="admin">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -27,6 +27,10 @@
                 color: #0a0a0a;
                 padding: .1875rem .625rem;
                 border-radius: 0;
+            }
+            .CrimeEventsTable th,
+            .CrimeEventsTable td {
+                vertical-align: top;
             }
         </style>
 
@@ -62,17 +66,13 @@
                 <h4>Händelser</h4>
 
                 @if ($events)
-                    <table class="table-scroll">
+                    <table class="table-scroll CrimeEventsTable">
                         <thead>
                             <tr>
                                 <td>{{-- room for actions --}}</td>
                                 <th>ID</th>
-                                <th>Title</th>
-                                <th>Date parsed</th>
-                                <th>Title parsed</th>
-                                <th>Title location</th>
-                                <th>Description</th>
-                                <th>Permalink</th>
+                                <th>Original title</th>
+                                <th>Content</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -84,18 +84,31 @@
                                             class="button small secondary">Parse</a>
                                     </td>
                                     <td>{{ $event->getKey() }}</td>
-                                    <td>{{ $event["title"] }}</td>
-                                    <td>{{ $event["parsed_date"] }}</td>
-                                    <td>{{ $event["parsed_title"] }}</td>
-                                    <td>{{ $event["parsed_title_location"] }}</td>
-                                    <td>{{ $event["description"] }}</td>
-                                    <td><a href="{{ $event["permalink"] }}">Link</a></td>
+                                    <td>
+                                        <a href="{{ $event["permalink"] }}">
+                                            {{ $event["title"] }}
+                                        </a>
+                                    </td>
+                                    <td>
+
+                                        <b>Original description:</b><br>
+                                        {{ $event["description"] }}<br>
+                                        @if ($event["parsed_teaser"])
+                                            <b>Parsed teaser:</b><br>
+                                            {!! nl2br($event["parsed_teaser"]) !!}<br>
+                                        @endif
+
+                                        <b>Parsed content (fetched from remote):</b><br>
+                                        <p>{!! nl2br($event["parsed_content"]) !!}</p>
+
+                                        <hr>
+                                        <b>Parsed date:</b> {{ $event["parsed_date"] }}<br>
+                                        <b>Parsed title type:</b> {{ $event["parsed_title"] }}<br>
+                                        <b>Parsed title location:</b> {{ $event["parsed_title_location"] }}<br>
+
+                                    </td>
                                 </tr>
-                                <tr>
-                                    <td colspan=2></td>
-                                    <td colspan=2>{{ $event["parsed_teaser"] }}</td>
-                                    <td colspan=4>{{ $event["parsed_content"] }}</td>
-                                </tr>
+
                             @endforeach
                         </tbody>
                     </table>
