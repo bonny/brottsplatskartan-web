@@ -8,9 +8,11 @@
         <title>B3 admin</title>
 
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.2.3/foundation.min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/foundation-icons.min.css" />
+
         <style>
             html {
-                font-size: 95%;
+                /*font-size: 95%;*/
             }
             body {
                 margin-top: 20px;
@@ -32,12 +34,27 @@
             .CrimeEventsTable td {
                 vertical-align: top;
             }
+            hr {
+                max-width: none;
+            }
+            .CrimeEventCard {
+                margin-top: 2em;
+                margin-bottom: 1em;
+                padding-top: 2em;
+                padding-bottom: 1em;
+                border-top: 1px solid #ccc;
+            }
+            :target {
+                background: Thistle;
+                padding-left: 1em;
+                padding-right: 1em;
+            }
         </style>
 
     </head>
     <body>
 
-        <div class="row expanded">
+        <div class="row xexpanded">
 
             <div class="small-12 columns">
                 <h2>
@@ -66,52 +83,73 @@
                 <h4>Händelser</h4>
 
                 @if ($events)
-                    <table class="table-scroll CrimeEventsTable">
-                        <thead>
-                            <tr>
-                                <td>{{-- room for actions --}}</td>
-                                <th>ID</th>
-                                <th>Original title</th>
-                                <th>Content</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($events as $event)
-                                <tr>
-                                    <td>
-                                        <a
-                                            href={{ route('adminDashboard', [ "parseItem" => $event->getKey() ]) }}
-                                            class="button small secondary">Parse</a>
-                                    </td>
-                                    <td>{{ $event->getKey() }}</td>
-                                    <td>
-                                        <a href="{{ $event["permalink"] }}">
-                                            {{ $event["title"] }}
-                                        </a>
-                                    </td>
-                                    <td>
 
-                                        <b>Original description:</b><br>
-                                        {{ $event["description"] }}<br>
-                                        @if ($event["parsed_teaser"])
-                                            <b>Parsed teaser:</b><br>
-                                            {!! nl2br($event["parsed_teaser"]) !!}<br>
-                                        @endif
+                    @foreach ($events as $event)
 
-                                        <b>Parsed content (fetched from remote):</b><br>
-                                        <p>{!! nl2br($event["parsed_content"]) !!}</p>
+                        <div class="CrimeEventCard" id="event-{{ $event->getKey() }}">
 
-                                        <hr>
-                                        <b>Parsed date:</b> {{ $event["parsed_date"] }}<br>
-                                        <b>Parsed title type:</b> {{ $event["parsed_title"] }}<br>
-                                        <b>Parsed title location:</b> {{ $event["parsed_title_location"] }}<br>
+                            @if ($event["parsed_teaser"])
 
-                                    </td>
-                                </tr>
+                                <div class="row">
 
-                            @endforeach
-                        </tbody>
-                    </table>
+                                    <div class="small-4 columns">
+                                        <b>Date</b>
+                                        <br>{{ $event["parsed_date"] }}
+                                    </div>
+
+                                    <div class="small-4 columns">
+                                        <b>Title/type</b>
+                                        <br>{{ $event["parsed_title"] }}
+                                    </div>
+
+                                    <div class="small-4 columns">
+                                        <b>Main location:</b>
+                                        <br>{{ $event["parsed_title_location"] }}</p>
+                                    </div>
+
+                                </div>
+
+                                <p>
+                                    <b>Teaser:</b><br>
+                                    {!! nl2br($event["parsed_teaser"]) !!}
+                                </p>
+
+                                <p>
+                                    <b>Remote content:</b><br>
+                                    {!! nl2br($event["parsed_content"]) !!}
+                                </p>
+
+                            @else
+
+                                <p>
+                                    Event not parsed, original content is:<br><br>
+                                    <b>Original title:</b> {{ $event["title"] }}<br>
+                                    <b>Original description:</b><br>
+                                    {{ $event["description"] }}<br>
+                                    {{-- <br>DBID: {{ $event->getKey() }} --}}
+                                </p>
+
+
+                            @endif
+
+                            <ul class="menu simple">
+                                <li>
+                                    <a href="{{ route('adminDashboard', [ "parseItem" => $event->getKey() ]) }}#event-{{ $event->getKey() }}">
+                                        <i class="fi-marker"></i> <span>Parse</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ $event["permalink"] }}">
+                                        <i class="fi-link"></i>
+                                        <span>Visa källa</span>
+                                    </a>
+                                </li>
+                            </ul>
+
+                        </div>
+
+                    @endforeach
+
                 @endif
 
                 {{ $events->links() }}

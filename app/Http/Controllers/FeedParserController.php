@@ -8,6 +8,7 @@ use Feeds;
 use App\CrimeEvent;
 use Goutte\Client;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class FeedParserController extends Controller
 {
@@ -124,5 +125,127 @@ class FeedParserController extends Controller
         return $returnParts;
 
     } // function
+
+
+    private function loadHighways() {
+
+        $starttime = microtime(true);
+
+        $highwaysFile = resource_path() . "/openstreetmap/highways_sorted_unique.txt";
+        $highwayItems = file($highwaysFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+
+        Log::info('Loaded highwayitems', ["count", count($highwayItems)]);
+
+        // trim items and make lowercase
+        $highwayItems = array_map("trim", $highwayItems);
+        $highwayItems = array_map("mb_strtolower", $highwayItems);
+
+        // remove short items
+        $highwayItems = array_filter($highwayItems, function($val) {
+            return (mb_strlen($val) > 4);
+        });
+
+        // ta bort lite för vanliga ord från highwayitems, t.ex. "träd" och "vägen" var lite för generalla
+        $highwaysStopWords = [
+            "träd",
+            "vägen",
+            "polisen",
+            "polis",
+            "platsen",
+            "västra",
+            "kommer",
+            "något",
+            "ringa",
+            "polisstationen",
+            "räddningstjänsten",
+            "under", "fordon", "patrullen"
+        ];
+        $highwayItems = array_where($highwayItems, function($val, $key) use ($highwaysStopWords) {
+            return ! in_array($val, $highwaysStopWords);
+        });
+
+        $timetaken = microtime(true) - $starttime;
+
+        Log::info('Loaded highwayitems, after clean and stop words removed', ["count", count($highwayItems)]);
+        Log::info('highwayitems, load done', ["time in s", $timetaken]);
+
+        return $highwayItems;
+
+    }
+
+
+    private function loadCities() {
+
+        // Find locations in content
+        $citiesFile   = resource_path() . "/openstreetmap/swedish-cities-sorted-unique.txt";
+        $citiesItems  = file($citiesFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+
+        $citiesItems = array_map("trim", $citiesItems);
+        $citiesItems = array_map("mb_strtolower", $citiesItems);
+
+        return $citiesItems;
+
+    }
+
+
+
+    public function findLocations($item) {
+
+
+        $highwayItems = $this->loadHighways();
+        $citiesItems = $this->loadCities();
+
+        $starttime = microtime(true);
+
+        // gå igenom alla gator och leta efter träff i original description + parsed_content
+        // beskrivning av regex:
+        // matcha hela ord bara
+        // utan \b matchar t.ex. "Vale" -> "Valeborgsvägen" men med \b så blir det inte match
+        // dock blir det fortfarande träff på "Södra" -> "Södra Särövägen"
+        // /i = PCRE_CASELESS
+        // /u = PCRE_UTF8, fixade så att \b inte gav träff "Sö" för "Södra", utan att åäö blev del av ord
+        // \m = PCRE_MULTILINE, hittade inte på annat än rad 1 annars
+
+        $matchingHighwayItemsInDescription = array_where($highwayItems, function($val, $key) use ($item) {
+            $highwaysRegex = '/\b' . preg_quote($val, '/') . '\b/ium';
+            return preg_match($highwaysRegex, $item->description);
+        });
+
+        $matchingHighwayItemsInContent = array_where($highwayItems, function($val, $key) use ($item) {
+            $highwaysRegex = '/\b' . preg_quote($val, '/') . '\b/ium';
+            return preg_match($highwaysRegex, $item->content);
+        });
+
+         // || preg_match($highwaysRegex, $item->parsed_content);
+
+        /*
+        Nu har vi förhoppningsvis hittat minst 1 träff
+        Finns flera träffar så beror det på att den träffar på delar av namn
+
+            Array
+            (
+                [119677] => Särö <- ska bort!
+                [120541] => Södra
+                [121237] => Södra Särövägen
+                [131899] => Valebergsvägen
+            )
+
+        */
+        #echo "<br>hittade " . count($matchingHighwayItems) . " orter som matchade";
+        echo "<pre>matcher i description/teaser (prio 1)\n" . print_r($matchingHighwayItemsInDescription, 1) . "</pre>";
+        echo "<pre>matcher i content (prio 2)\n" . print_r($matchingHighwayItemsInContent, 1) . "</pre>";
+
+        $timetaken = microtime(true) - $starttime;
+        Log::info('find locations done', ["time in s", $timetaken]);
+
+        /*
+        $array = [100, '200', 300, '400', 500];
+
+        $array = array_where($array, function ($value, $key) {
+            return is_string($value);
+        });
+        */
+
+    }
 
 }
