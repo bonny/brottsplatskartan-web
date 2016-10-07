@@ -35,87 +35,8 @@ class FeedController extends Controller
         $item->fill($parsed_content_items);
         $item->save();
 
-        // Find locations in content
-        $highwaysFile = resource_path() . "/openstreetmap/highways_sorted_unique.txt";
-        $citiesFile   = resource_path() . "/openstreetmap/swedish-cities-sorted-unique.txt";
-
-        #$highwayItems = explode("\n", file_get_contents($highwaysFile));
-        #$citiesItems  = explode("\n", file_get_contents($citiesFile));
-        $highwayItems = file($highwaysFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-        $citiesItems  = file($citiesFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-
-        echo "<br>laddade in " . count($highwayItems) . " gator";
-        echo "<br>laddade in " . count($citiesItems) . " orter";
-
-        // trim items and make lowercase
-        $highwayItems = array_map("trim", $highwayItems);
-        $highwayItems = array_map("mb_strtolower", $highwayItems);
-
-        $citiesItems = array_map("trim", $citiesItems);
-        $citiesItems = array_map("mb_strtolower", $citiesItems);
-
-        // remove short items
-        $highwayItems = array_filter($highwayItems, function($val) {
-            return (mb_strlen($val) > 4);
-        });
-
-        // ta bort lite för vanliga ord från highwayitems, t.ex. "träd" och "vägen" var lite för generalla
-        $highwaysStopWords = [
-            "träd",
-            "vägen",
-            "polisen",
-            "polis",
-            "platsen",
-            "västra",
-            "kommer",
-            "något",
-            "ringa",
-            "polisstationen",
-        ];
-        $highwayItems = array_where($highwayItems, function($val, $key) use ($highwaysStopWords) {
-            return ! in_array($val, $highwaysStopWords);
-        });
-
-        echo "<br>laddade in " . count($highwayItems) . " gator efter tagit bort stop words";
-        echo "<br>laddade in " . count($citiesItems) . " orter efter tagit bort stop words";
-
-        // gå igenom alla gator och leta efter träff i original description + parsed_content
-        $matchingHighwayItems = array_where($highwayItems, function($val, $key) use ($item) {
-
-            // matcha hela ord bara
-            // utan \b matchar t.ex. "Vale" -> "Valeborgsvägen" men med \b så blir det inte match
-            // dock blir det fortfarande träff på "Södra" -> "Södra Särövägen"
-            // /i = PCRE_CASELESS
-            // /u = PCRE_UTF8, fixade så att \b inte gav träff "Sö" för "Södra", utan att åäö blev del av ord
-            // \m = PCRE_MULTILINE, hittade inte på annat än rad 1 annars
-            $regexp = '/\b' . preg_quote($val, '/') . '\b/ium';
-
-            return preg_match($regexp, $item->description) || preg_match($regexp, $item->parsed_content);
-
-        });
-
-        /*
-        Nu har vi förhoppningsvis hittat minst 1 träff
-        Finns flera träffar så beror det på att den träffar på delar av namn
-
-            Array
-            (
-                [119677] => Särö <- ska bort!
-                [120541] => Södra
-                [121237] => Södra Särövägen
-                [131899] => Valebergsvägen
-            )
-
-        */
-        echo "<br>hittade " . count($matchingHighwayItems) . " orter som matchade";
-        echo "<pre>" . print_r($matchingHighwayItems, 1) . "</pre>";
-        /*
-        $array = [100, '200', 300, '400', 500];
-
-        $array = array_where($array, function ($value, $key) {
-            return is_string($value);
-        });
-        */
+        // Find possible locations in teaser and content
+        $this->feedParser->findLocations($item);
 
     }
 
