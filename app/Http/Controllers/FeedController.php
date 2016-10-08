@@ -36,10 +36,29 @@ class FeedController extends Controller
         $item->save();
 
         // Find possible locations in teaser and content
-        $this->feedParser->findLocations($item);
+        $locationsByPrio = $this->feedParser->findLocations($item);
+        foreach ( $locationsByPrio as $locations) {
+            #echo "<hr>Location prio: " . $locations["prio"];
+            foreach ($locations["locations"] as $locationName) {
+
+                // Add location of not already added
+                if ( $item->locations->contains("name", $locationName) ) {
+                    // echo "<br>location already added";
+                } else {
+
+                    $locationModel = new \App\Locations([
+                        "name" => $locationName,
+                        "prio" => $locations["prio"],
+                    ]);
+
+                    $item->locations()->save($locationModel);
+                }
+
+
+            }
+        }
 
     }
-
 
     /*
     Feeds use https://github.com/willvincent/feeds

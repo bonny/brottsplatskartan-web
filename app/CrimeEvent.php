@@ -25,4 +25,12 @@ class CrimeEvent extends Model
         'parsed_content',
     ];
 
+    /**
+     * Get the comments for the blog post.
+     */
+    public function locations()
+    {
+        return $this->hasMany('App\Locations');
+    }
+
 }

@@ -13,6 +13,12 @@ use Illuminate\Support\Facades\Log;
 class FeedParserController extends Controller
 {
 
+    // The loaded highway items
+    var $highwayItems = null;
+
+    // The loaded cities items
+    var $citiesItems = null;
+
     /*
 
     Title
@@ -98,8 +104,10 @@ class FeedParserController extends Controller
 
         // find .ingress
         // fins everything afer .ingress until #pagefooter
+        libxml_use_internal_errors(true);
         $htmlDoc = new \DOMDocument();
         $htmlDoc->loadHTML('<?xml encoding="UTF-8">' . $html);
+        libxml_clear_errors();
 
         $ingress = $htmlDoc->getElementsByTagName("*");
         $div = $htmlDoc->getElementsByTagName("div");
@@ -129,6 +137,10 @@ class FeedParserController extends Controller
 
     private function loadHighways() {
 
+        if (isset($this->highwayItems)) {
+            return $highwayItems;
+        }
+
         $starttime = microtime(true);
 
         $highwaysFile = resource_path() . "/openstreetmap/highways_sorted_unique.txt";
@@ -145,21 +157,8 @@ class FeedParserController extends Controller
             return (mb_strlen($val) > 4);
         });
 
-        // ta bort lite för vanliga ord från highwayitems, t.ex. "träd" och "vägen" var lite för generalla
-        $highwaysStopWords = [
-            "träd",
-            "vägen",
-            "polisen",
-            "polis",
-            "platsen",
-            "västra",
-            "kommer",
-            "något",
-            "ringa",
-            "polisstationen",
-            "räddningstjänsten",
-            "under", "fordon", "patrullen"
-        ];
+        // ta bort lite för vanliga ord från highwayitems, t.ex. "träd" och "vägen" känns lite för generalla
+        $highwaysStopWords = $this->getHighwaysStopwords();
         $highwayItems = array_where($highwayItems, function($val, $key) use ($highwaysStopWords) {
             return ! in_array($val, $highwaysStopWords);
         });
@@ -169,12 +168,36 @@ class FeedParserController extends Controller
         Log::info('Loaded highwayitems, after clean and stop words removed', ["count", count($highwayItems)]);
         Log::info('highwayitems, load done', ["time in s", $timetaken]);
 
+        $this->highwayItems = $highwayItems;
+
         return $highwayItems;
 
     }
 
+    private function getHighwaysStopwords() {
+
+        return [
+            "träd", "butik", "brottet", "skolan", "anslutning", "gripen",
+            "vägen", "istället", "plattformen",
+            "polisen",
+            "polis",
+            "platsen",
+            "västra",
+            "kommer",
+            "något",
+            "ringa",
+            "polisstationen",
+            "räddningstjänsten",
+            "under", "fordon", "patrullen", "information"
+        ];
+
+    }
 
     private function loadCities() {
+
+        if (isset($this->citiesItems)) {
+            return $citiesItems;
+        }
 
         // Find locations in content
         $citiesFile   = resource_path() . "/openstreetmap/swedish-cities-sorted-unique.txt";
@@ -183,6 +206,8 @@ class FeedParserController extends Controller
         $citiesItems = array_map("trim", $citiesItems);
         $citiesItems = array_map("mb_strtolower", $citiesItems);
 
+        $this->citiesItems = $citiesItems;
+
         return $citiesItems;
 
     }
@@ -190,7 +215,6 @@ class FeedParserController extends Controller
 
 
     public function findLocations($item) {
-
 
         $highwayItems = $this->loadHighways();
         $citiesItems = $this->loadCities();
@@ -213,7 +237,7 @@ class FeedParserController extends Controller
 
         $matchingHighwayItemsInContent = array_where($highwayItems, function($val, $key) use ($item) {
             $highwaysRegex = '/\b' . preg_quote($val, '/') . '\b/ium';
-            return preg_match($highwaysRegex, $item->content);
+            return preg_match($highwaysRegex, $item->parsed_content);
         });
 
          // || preg_match($highwaysRegex, $item->parsed_content);
@@ -232,11 +256,22 @@ class FeedParserController extends Controller
 
         */
         #echo "<br>hittade " . count($matchingHighwayItems) . " orter som matchade";
-        echo "<pre>matcher i description/teaser (prio 1)\n" . print_r($matchingHighwayItemsInDescription, 1) . "</pre>";
-        echo "<pre>matcher i content (prio 2)\n" . print_r($matchingHighwayItemsInContent, 1) . "</pre>";
+        #echo "<pre>matcher i description/teaser (prio 1)\n" . print_r($matchingHighwayItemsInDescription, 1) . "</pre>";
+        #echo "<pre>matcher i content (prio 2)\n" . print_r($matchingHighwayItemsInContent, 1) . "</pre>";
 
         $timetaken = microtime(true) - $starttime;
         Log::info('find locations done', ["time in s", $timetaken]);
+
+        return [
+            [
+                "prio" => 1,
+                "locations" => $matchingHighwayItemsInDescription
+            ],
+            [
+                "prio" => 2,
+                "locations" => $matchingHighwayItemsInContent
+            ]
+        ];
 
         /*
         $array = [100, '200', 300, '400', 500];
