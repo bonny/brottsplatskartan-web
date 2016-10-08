@@ -178,7 +178,7 @@ class FeedParserController extends Controller
 
         return [
             "träd", "butik", "brottet", "skolan", "anslutning", "gripen",
-            "vägen", "istället", "plattformen",
+            "vägen", "istället", "plattformen", "klockan",
             "polisen",
             "polis",
             "platsen",
