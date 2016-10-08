@@ -109,6 +109,24 @@
 
                                 </div>
 
+                                <div>
+                                    <b>Locations:</b>
+                                    @if ($event->locations)
+                                        <ul class="menu simple">
+                                            @foreach ($event->locations as $location)
+                                                <li class="menxu-text">
+                                                    <span>
+                                                        {{ $location->name }}
+                                                        <small>(prio {{ $location->prio }})</small>
+                                                    </span>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    @else
+                                        <p>No locations found</p>
+                                    @endif
+                                </div>
+
                                 <p>
                                     <b>Teaser:</b><br>
                                     {!! nl2br($event["parsed_teaser"]) !!}
