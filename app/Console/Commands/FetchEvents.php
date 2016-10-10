@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Http\Controllers\FeedController;
+use App\CrimeEvent;
 
 class FetchEvents extends Command
 {
@@ -52,10 +53,22 @@ class FetchEvents extends Command
         $this->line("Added " . $updatedFeedsInfo["numItemsAdded"] . " items");
         $this->line("Skipped " . $updatedFeedsInfo["numItemsAlreadyAdded"] . " already added items");
 
+        // find items missing locations and add
+        // @todo: split find location out of parseItem into own function
+        $itemsNotScannedForLocations = CrimeEvent::where('scanned_for_locations', 0)->get();
+
+        $this->line("Found " . $itemsNotScannedForLocations->count() . " items with locations missing");
+
+        foreach ($itemsNotScannedForLocations as $oneItem) {
+            $this->line("Getting location for $oneItem->title");
+            $this->feedController->parseItem($oneItem->getKey());
+        }
+
+        /*
         if ($updatedFeedsInfo["itemsAdded"]) {
 
             $this->info("Finding locations in items added");
-            
+
             foreach ( $updatedFeedsInfo["itemsAdded"] as $item ) {
 
                 $this->feedController->parseItem($item->getKey());
@@ -65,6 +78,7 @@ class FetchEvents extends Command
             }
 
         }
+        */
 
         $this->info('Done!');
 
