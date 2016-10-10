@@ -53,6 +53,7 @@ class FeedController extends Controller
 
         // Find possible locations in teaser and content
         $locationsByPrio = $this->feedParser->findLocations($item);
+
         foreach ( $locationsByPrio as $locations) {
 
             foreach ($locations["locations"] as $locationName) {
@@ -73,6 +74,9 @@ class FeedController extends Controller
 
             }
         }
+
+        $item->scanned_for_locations = true;
+        $item->save();
 
     }
 
