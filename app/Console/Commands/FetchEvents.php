@@ -47,14 +47,15 @@ class FetchEvents extends Command
         $this->info('Ok, lets go!');
         $this->line('Fetching events...');
 
+
         // updateFeedsFromPolisen
         $updatedFeedsInfo = $this->feedController->updateFeedsFromPolisen();
 
         $this->line("Added " . $updatedFeedsInfo["numItemsAdded"] . " items");
         $this->line("Skipped " . $updatedFeedsInfo["numItemsAlreadyAdded"] . " already added items");
 
+
         // find items missing locations and add
-        // @todo: split find location out of parseItem into own function
         $itemsNotScannedForLocations = CrimeEvent::where('scanned_for_locations', 0)->get();
 
         $this->line("Found " . $itemsNotScannedForLocations->count() . " items with locations missing");
@@ -64,21 +65,20 @@ class FetchEvents extends Command
             $this->feedController->parseItem($oneItem->getKey());
         }
 
-        /*
-        if ($updatedFeedsInfo["itemsAdded"]) {
 
-            $this->info("Finding locations in items added");
+        // find items not geocoded and geocode them
+        $itemsNotGeocoded = CrimeEvent::where([
+            'scanned_for_locations' => 1,
+            'geocoded' => 0
+        ])->get();
 
-            foreach ( $updatedFeedsInfo["itemsAdded"] as $item ) {
+        $this->line("Found " . $itemsNotGeocoded->count() . " items not geocoded");
 
-                $this->feedController->parseItem($item->getKey());
-
-                #print_r($item->locations);
-
-            }
-
+        foreach ($itemsNotGeocoded as $oneItem) {
+            $this->line("Getting geocode info for $oneItem->title");
+            //$this->feedController->parseItem($oneItem->getKey());
         }
-        */
+
 
         $this->info('Done!');
 
