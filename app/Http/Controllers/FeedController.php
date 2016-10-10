@@ -21,14 +21,31 @@ class FeedController extends Controller
 
     }
 
-    private function geocodeItem($itemID) {
+    public function geocodeItem($itemID) {
 
         $item = CrimeEvent::findOrFail($itemID);
         $itemLocations = $item->locations;
 
-        $apiURL = 'https://maps.googleapis.com/maps/api/geocode/outputFormat?key=AIzaSyBNGngVsHlVCo4D26UnHyp3nqcgFa-HEew&language=sv';
-        $apiURL .= '&components=country:SE';
-        $apiURL .= '&address=';
+        $apiUrlTemplate = 'https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyBNGngVsHlVCo4D26UnHyp3nqcgFa-HEew&language=sv';
+        $apiUrlTemplate .= '&components=country:SE';
+        $apiUrlTemplate .= '&address=%1$s';
+
+        $strLocationURLPart = "";
+        foreach ( $itemLocations as $location ) {
+            $strLocationURLPart .= ", " . $location->name;
+        }
+
+        // append main location
+        $strLocationURLPart .= ", " . $item->parsed_title_location;
+        $strLocationURLPart = trim($strLocationURLPart, ", ");
+
+        $strLocationURLPartBeforeUrlEncode = $strLocationURLPart;
+
+        $apiUrl = sprintf($apiUrlTemplate, urlencode($strLocationURLPart));
+
+        echo "\ngeocoding item with title " . $item->title;
+        echo "\nadress is $strLocationURLPartBeforeUrlEncode";
+        echo "\napiURL:\n$apiUrl\n";
 
     }
 

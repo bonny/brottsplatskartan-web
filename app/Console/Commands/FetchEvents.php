@@ -75,8 +75,8 @@ class FetchEvents extends Command
         $this->line("Found " . $itemsNotGeocoded->count() . " items not geocoded");
 
         foreach ($itemsNotGeocoded as $oneItem) {
-            $this->line("Getting geocode info for $oneItem->title");
-            //$this->feedController->parseItem($oneItem->getKey());
+            #$this->line("Getting geocode info for $oneItem->title");
+            $this->feedController->geocodeItem($oneItem->getKey());
         }
 
 

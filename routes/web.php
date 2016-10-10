@@ -41,7 +41,7 @@ Route::group(['prefix' => 'admin'], function () {
 
         // $data["feedsUpdateResult"] = $feedController->updateFeedsFromPolisen();
 
-        $data["events"] = CrimeEvent::orderBy("created_at", "desc")->paginate(40);
+        $data["events"] = CrimeEvent::orderBy("created_at", "desc")->paginate(100);
 
         return view('admin.dashboard', $data);
 

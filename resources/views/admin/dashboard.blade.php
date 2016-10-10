@@ -105,7 +105,7 @@
                                     </div>
 
                                     <div class="small-4 columns">
-                                        <b>Main location:</b>
+                                        <b>Main location/location found in title:</b>
                                         <br>{{ $event["parsed_title_location"] }}</p>
                                     </div>
 
