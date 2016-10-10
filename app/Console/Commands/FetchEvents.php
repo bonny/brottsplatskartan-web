@@ -49,11 +49,23 @@ class FetchEvents extends Command
         // updateFeedsFromPolisen
         $updatedFeedsInfo = $this->feedController->updateFeedsFromPolisen();
 
-            // print_r($updatedFeedsInfo);
-            // numItemsAdded
-            // numItemsAlreadyAdded
-        $this->info("Added " . $updatedFeedsInfo["numItemsAdded"] . " items");
-        $this->info("Skipped " . $updatedFeedsInfo["numItemsAlreadyAdded"] . " already added items");
+        $this->line("Added " . $updatedFeedsInfo["numItemsAdded"] . " items");
+        $this->line("Skipped " . $updatedFeedsInfo["numItemsAlreadyAdded"] . " already added items");
+
+        if ($updatedFeedsInfo["itemsAdded"]) {
+
+            $this->info("Finding locations in items added");
+            
+            foreach ( $updatedFeedsInfo["itemsAdded"] as $item ) {
+
+                $this->feedController->parseItem($item->getKey());
+
+                #print_r($item->locations);
+
+            }
+
+        }
+
         $this->info('Done!');
 
     }
