@@ -184,7 +184,7 @@ class FeedParserController extends Controller
             "morgon", "backe", "arbetet", "tillfället",
             "platsen", "byggnaden",
             "västra", "förskola",
-            "kommer",
+            "kommer", "hörnet",
             "något",
             "ringa",
             "polisstationen",
@@ -214,11 +214,14 @@ class FeedParserController extends Controller
     }
 
 
-
+    /**
+     * Check if item teaser or content contains street names
+     */
     public function findLocations($item) {
 
+        // all street names as a huge array
         $highwayItems = $this->loadHighways();
-        $citiesItems = $this->loadCities();
+        #$citiesItems = $this->loadCities();
 
         $starttime = microtime(true);
 
@@ -231,15 +234,95 @@ class FeedParserController extends Controller
         // /u = PCRE_UTF8, fixade så att \b inte gav träff "Sö" för "Södra", utan att åäö blev del av ord
         // \m = PCRE_MULTILINE, hittade inte på annat än rad 1 annars
 
-        $matchingHighwayItemsInDescription = array_where($highwayItems, function($val, $key) use ($item) {
+        $item_description = $item->description;
+        $item_parsed_content = $item->parsed_content;
+
+        // Split item description into words
+        $arr_description_words = str_word_count( utf8_decode($item_description), 1, "0123456789");
+        $arr_description_words = array_map("utf8_encode", $arr_description_words);
+        $arr_description_words = array_map("mb_strtolower", $arr_description_words);
+
+        // Split content into words
+        $arr_content_words = str_word_count( utf8_decode($item_parsed_content), 1, "0123456789");
+        $arr_content_words = array_map("utf8_encode", $arr_content_words);
+        $arr_content_words = array_map("mb_strtolower", $arr_content_words);
+
+        $matchingHighwayItemsInDescription = [];
+        $matchingHighwayItemsInContent = [];
+
+        // Check if each word[n] + word[n+1] matches a location in $highwayItems
+        // we check both n and n + (n+1) so we match street names with 2 words
+        for ($i = 0; $i < count($arr_description_words); $i++) {
+
+            $word1 = $arr_description_words[$i];
+            if ( in_array($word1, $highwayItems) ) {
+                #echo "\nword 1 matched: $word1\n";
+                $matchingHighwayItemsInDescription[] = $word1;
+            }
+
+            if ( $i < count($arr_description_words) - 1 ) {
+                $word2 = $arr_description_words[$i] . " " . $arr_description_words[$i+1];
+                if ( in_array($word2, $highwayItems) ) {
+                    #echo "\nword 2 matched: $word2\n";
+                    $matchingHighwayItemsInDescription[] = $word2;
+                }
+            }
+
+            if ( $i < count($arr_description_words) - 2 ) {
+                $word3 = $arr_description_words[$i] . " " . $arr_description_words[$i+1] . " " . $arr_description_words[$i+2];
+                if ( in_array($word3, $highwayItems) ) {
+                    #echo "\nword 3 matched: $word3\n";
+                    $matchingHighwayItemsInDescription[] = $word3;
+                }
+            }
+
+        }
+
+        #if ($matchingHighwayItemsInDescription) {
+        #    print_r($matchingHighwayItemsInDescription);
+        #}
+
+
+        for ($i = 0; $i < count($arr_content_words); $i++) {
+
+            $word1 = $arr_content_words[$i];
+            if ( in_array($word1, $highwayItems) ) {
+                #echo "\nword content 1 matched: $word1\n";
+                $matchingHighwayItemsInContent[] = $word1;
+            }
+
+            if ( $i < count($arr_content_words) - 1 ) {
+                $word2 = $arr_content_words[$i] . " " . $arr_content_words[$i+1];
+                if ( in_array($word2, $highwayItems) ) {
+                    #echo "\nword content 2 matched: $word2\n";
+                    $matchingHighwayItemsInContent[] = $word2;
+                }
+            }
+
+            if ( $i < count($arr_content_words) - 2 ) {
+                $word3 = $arr_content_words[$i] . " " . $arr_content_words[$i+1] . " " . $arr_content_words[$i+2];
+                if ( in_array($word3, $highwayItems) ) {
+                    #echo "\nword content 3 matched: $word3\n";
+                    $matchingHighwayItemsInContent[] = $word3;
+                }
+            }
+
+        }
+
+        #if ($matchingHighwayItemsInContent) {
+            #print_r($matchingHighwayItemsInContent);
+        #}
+        /*
+        $matchingHighwayItemsInDescription = array_where($highwayItems, function($val, $key) use ($item_description) {
             $highwaysRegex = '/\b' . preg_quote($val, '/') . '\b/ium';
-            return preg_match($highwaysRegex, $item->description);
+            return preg_match($highwaysRegex, $item_description);
         });
 
-        $matchingHighwayItemsInContent = array_where($highwayItems, function($val, $key) use ($item) {
+        $matchingHighwayItemsInContent = array_where($highwayItems, function($val, $key) use ($item_parsed_content) {
             $highwaysRegex = '/\b' . preg_quote($val, '/') . '\b/ium';
-            return preg_match($highwaysRegex, $item->parsed_content);
+            return preg_match($highwaysRegex, $item_parsed_content);
         });
+        */
 
          // || preg_match($highwaysRegex, $item->parsed_content);
 
