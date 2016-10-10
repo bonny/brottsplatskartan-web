@@ -39,9 +39,9 @@ Route::group(['prefix' => 'admin'], function () {
             $feedController->parseItem($parseItemID);
         }
 
-        $data["feedsUpdateResult"] = $feedController->updateFeedsFromPolisen();
+        // $data["feedsUpdateResult"] = $feedController->updateFeedsFromPolisen();
 
-        $data["events"] = CrimeEvent::orderBy("created_at", "desc")->paginate(20);
+        $data["events"] = CrimeEvent::orderBy("created_at", "desc")->paginate(40);
 
         return view('admin.dashboard', $data);
 

@@ -138,7 +138,7 @@ class FeedParserController extends Controller
     private function loadHighways() {
 
         if (isset($this->highwayItems)) {
-            return $highwayItems;
+            return $this->highwayItems;
         }
 
         $starttime = microtime(true);
@@ -177,11 +177,12 @@ class FeedParserController extends Controller
     private function getHighwaysStopwords() {
 
         return [
-            "träd", "butik", "brottet", "skolan", "anslutning", "gripen",
-            "vägen", "istället", "plattformen", "klockan",
-            "polisen",
-            "polis",
-            "platsen",
+            "träd", "butik", "brottet", "skolan", "anslutning", "gripen", "lägenheten", "oscar", "radhuset", "polishuset",
+            "diket", "södra", "gränsen", "diesel",
+            "vägen", "istället", "plattformen", "klockan", "klocka", "just nu", "i morgon", "morgon",
+            "polisen", "polis", "baksidan", "omhändertagen", "nedan", "flaskan", "start",
+            "morgon", "backe", "arbetet", "tillfället",
+            "platsen", "byggnaden",
             "västra",
             "kommer",
             "något",
@@ -196,7 +197,7 @@ class FeedParserController extends Controller
     private function loadCities() {
 
         if (isset($this->citiesItems)) {
-            return $citiesItems;
+            return $this->citiesItems;
         }
 
         // Find locations in content

@@ -21,6 +21,22 @@ class FeedController extends Controller
 
     }
 
+    private function geocodeItem($itemID) {
+
+        $item = CrimeEvent::findOrFail($itemID);
+        $itemLocations = $item->locations;
+
+        $apiURL = 'https://maps.googleapis.com/maps/api/geocode/outputFormat?key=AIzaSyBNGngVsHlVCo4D26UnHyp3nqcgFa-HEew&language=sv';
+        $apiURL .= '&components=country:SE';
+        $apiURL .= '&address=';
+
+    }
+
+    /**
+     * Parse an item
+     * Fetches remote info
+     * and finds locations/street names in the text
+     */
     public function parseItem($itemID) {
 
         $item = CrimeEvent::findOrFail($itemID);
@@ -38,7 +54,7 @@ class FeedController extends Controller
         // Find possible locations in teaser and content
         $locationsByPrio = $this->feedParser->findLocations($item);
         foreach ( $locationsByPrio as $locations) {
-            #echo "<hr>Location prio: " . $locations["prio"];
+
             foreach ($locations["locations"] as $locationName) {
 
                 // Add location of not already added
@@ -96,10 +112,11 @@ class FeedController extends Controller
                 continue;
             }
 
-            $data["itemsAdded"][] = $item_data;
+            // $data["itemsAdded"][] = $item_data;
             $data["numItemsAdded"]++;
 
             $event = CrimeEvent::create($item_data);
+            $data["itemsAdded"][] = $event;
 
         }
 

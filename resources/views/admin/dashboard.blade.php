@@ -61,6 +61,7 @@
                     <a href="{{ route('adminDashboard') }}">Brottsplatskartan admin</a>
                 </h2>
 
+                {{--
                 <h4>updateFeedsFromPolisen resultat</h4>
 
                 <ul>
@@ -79,6 +80,7 @@
                     @endif
 
                 </ul>
+                --}}
 
                 <h4>Händelser</h4>
 
