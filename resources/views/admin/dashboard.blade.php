@@ -94,40 +94,67 @@
 
                                 <div class="row">
 
-                                    <div class="small-4 columns">
+                                    <div class="small-1 columns">
+                                        <b>ID</b>
+                                        <br>{{ $event->getKey() }}
+                                    </div>
+
+                                    <div class="small-2 columns">
                                         <b>Date</b>
                                         <br>{{ $event["parsed_date"] }}
                                     </div>
 
-                                    <div class="small-4 columns">
+                                    <div class="small-9 columns">
                                         <b>Title/type</b>
                                         <br>{{ $event["parsed_title"] }}
                                     </div>
 
-                                    <div class="small-4 columns">
+                                    <!-- <div class="small-7 columns">
                                         <b>Main location/location found in title:</b>
                                         <br>{{ $event["parsed_title_location"] }}</p>
-                                    </div>
+                                    </div> -->
 
                                 </div>
+
 
                                 <div>
+
                                     <b>Locations:</b>
-                                    @if ($event->locations)
+                                    <ul class="menu simple">
+                                        @foreach ($event->locations as $location)
+                                            <li class="menxu-text">
+                                                <span>
+                                                    {{ $location->name }}
+                                                    <small>(prio {{ $location->prio }})</small>
+                                                </span>
+                                            </li>
+                                        @endforeach
+
+                                        <li>
+                                            <span>
+                                                {{ $event["parsed_title_location"] }}
+                                                <small>(main location)</small>
+                                            </span>
+                                        </li>
+
+                                    </ul>
+
+                                    <div>
+                                        <b>coordinates:</b>
                                         <ul class="menu simple">
-                                            @foreach ($event->locations as $location)
-                                                <li class="menxu-text">
-                                                    <span>
-                                                        {{ $location->name }}
-                                                        <small>(prio {{ $location->prio }})</small>
-                                                    </span>
-                                                </li>
-                                            @endforeach
+                                            <li><span>lat: {{ $event->parsed_lat }}</span></li>
+                                            <li><span>lng: {{ $event->parsed_lng }}</span></li>
                                         </ul>
-                                    @else
-                                        <p>No locations found</p>
-                                    @endif
+                                    </div>
+
+                                    <p>
+                                        <img
+                                            src="https://maps.googleapis.com/maps/api/staticmap?center={{ $event->parsed_lat }},{{ $event->parsed_lng }}&zoom=14&size=400x200&key=AIzaSyBNGngVsHlVCo4D26UnHyp3nqcgFa-HEew"
+                                            >
+                                    </p>
+
                                 </div>
+
 
                                 <p>
                                     <b>Teaser:</b><br>

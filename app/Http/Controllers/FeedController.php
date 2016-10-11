@@ -43,9 +43,50 @@ class FeedController extends Controller
 
         $apiUrl = sprintf($apiUrlTemplate, urlencode($strLocationURLPart));
 
-        echo "\ngeocoding item with title " . $item->title;
-        echo "\nadress is $strLocationURLPartBeforeUrlEncode";
-        echo "\napiURL:\n$apiUrl\n";
+        #echo "\ngeocoding item with title " . $item->title;
+        #echo "\naddress is $strLocationURLPartBeforeUrlEncode";
+        #echo "\napiURL:\n$apiUrl\n";
+
+        $result_data = json_decode( file_get_contents($apiUrl) );
+        $result_status = $result_data->status;
+        $result_results = $result_data->results;
+
+        // echo "\nstatus code: $result_status";
+        if ($result_results === "OK") {
+            return false;
+        }
+
+        $geometry_location_lat = null;
+        $geometry_location_lng = null;
+
+        foreach ( $result_results as $one_result ) {
+
+            $geometry_location = $one_result->geometry->location;
+            $geometry_location_lat = $geometry_location->lat;
+            $geometry_location_lng = $geometry_location->lng;
+            $geometry_type = $one_result->geometry->location_type;
+            $geometry_viewport = $one_result->geometry->viewport;
+            #echo "\ngeometry_location: " . print_r($geometry_location, 1);
+            #echo "\ngeometry_type: " . print_r($geometry_type, 1);
+            #echo "\ngeometry_viewport: " . print_r($geometry_viewport, 1);
+            #echo "\nlat: $geometry_location_lat";
+            #echo "\nlng: $geometry_location_lng";
+
+            // only return first
+            break;
+
+        }
+        #print_r($result_results);
+
+        if ($geometry_location_lat) {
+            $item->parsed_lat = $geometry_location_lat;
+            $item->parsed_lng = $geometry_location_lng;
+            $item->geocoded = true;
+            $item->save();
+            #echo "\nadded location for item";
+        }
+
+        #exit;
 
     }
 
@@ -76,9 +117,14 @@ class FeedController extends Controller
             foreach ($locations["locations"] as $locationName) {
 
                 // Add location of not already added
+                #$item->fresh(['locations']);
                 if ( $item->locations->contains("name", $locationName) ) {
-                    // echo "<br>location already added";
+
+                    // echo "\nskipping, location already added $locationName";
+
                 } else {
+
+                    // echo "\nadding location $locationName";
 
                     $locationModel = new \App\Locations([
                         "name" => $locationName,
@@ -86,10 +132,13 @@ class FeedController extends Controller
                     ]);
 
                     $item->locations()->save($locationModel);
+
+                    // we must reload locations so ->contains() will work in the next loop
+                    $item->load('locations');
                 }
 
-
             }
+
         }
 
         $item->scanned_for_locations = true;
