@@ -183,7 +183,7 @@ class FeedParserController extends Controller
             "polisen", "polis", "baksidan", "omhändertagen", "nedan", "flaskan", "start",
             "morgon", "backe", "arbetet", "tillfället",
             "platsen", "byggnaden", "söder", "svängen", "älgen", "trappa", "skolgården", "körning", "tobak",
-            "butiken", "strand", "huvudet",
+            "butiken", "strand", "huvudet", "parkering", "containern", "fönstret", "matsalen",
             "västra", "förskola", "posten", "branden", "perrongen",
             "kommer", "hörnet",
             "något", "centrum",
