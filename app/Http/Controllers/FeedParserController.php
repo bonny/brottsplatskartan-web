@@ -185,9 +185,9 @@ class FeedParserController extends Controller
             "platsen", "byggnaden", "söder", "svängen", "älgen", "trappa", "skolgården", "körning", "tobak",
             "butiken", "strand", "huvudet", "parkering", "containern", "fönstret", "matsalen",
             "västra", "förskola", "posten", "branden", "perrongen",
-            "kommer", "hörnet",
-            "något", "centrum",
-            "ringa",
+            "kommer", "hörnet", "frukt", "tomten",
+            "något", "centrum", "hållet", "backa",
+            "ringa", "backa", "naturbruksgymnasiet", "arenan", "stadion",
             "polisstationen",
             "räddningstjänsten",
             "under", "fordon", "patrullen", "information"
@@ -242,6 +242,21 @@ class FeedParserController extends Controller
         $arr_description_words = str_word_count( utf8_decode($item_description), 1, "0123456789");
         $arr_description_words = array_map("utf8_encode", $arr_description_words);
         $arr_description_words = array_map("mb_strtolower", $arr_description_words);
+
+        // Remove "Polisen Värmland" etc that's the last line in the content words
+        $police_lan = "";
+        $parsed_content_lines = explode("\n", $item_parsed_content);
+        if ( false !== strpos($parsed_content_lines[count($parsed_content_lines)-1], "Polisen ") ) {
+            #echo "\nfound polisen at last line";
+            $police_lan = array_pop($parsed_content_lines);
+            $police_lan = str_replace("Polisen ", "", $police_lan);
+            #echo "\ntext before removal: $item_parsed_content";
+            $item_parsed_content = implode($parsed_content_lines);
+            #echo "\ntext after removal: $item_parsed_content";
+            #echo "\n\n";
+        }
+        #exit;
+        #print_r($parsed_content_lines);exit;
 
         // Split content into words
         $arr_content_words = str_word_count( utf8_decode($item_parsed_content), 1, "0123456789");
@@ -310,6 +325,22 @@ class FeedParserController extends Controller
 
         }
 
+        // remove hits that is the same as the main location find in the title, often city names
+        $title_location = mb_strtolower($item->parsed_title_location);
+        #echo "\n checking if title_location '$title_location' exists ";
+
+        $matchingHighwayItemsInDescription = array_filter($matchingHighwayItemsInDescription, function($val) use ($title_location) {
+            return ($val !== $title_location);
+        });
+
+        $matchingHighwayItemsInContent = array_filter($matchingHighwayItemsInContent, function($val) use ($title_location) {
+            return ($val !== $title_location);
+        });
+        #$matchingHighwayItemsInDescription
+        #$matchingHighwayItemsInContent
+        #echo "\n\ndone";
+        #exit;
+
         #if ($matchingHighwayItemsInContent) {
             #print_r($matchingHighwayItemsInContent);
         #}
@@ -355,6 +386,10 @@ class FeedParserController extends Controller
             [
                 "prio" => 2,
                 "locations" => $matchingHighwayItemsInContent
+            ],
+            [
+                "prio" => 3,
+                "locations" => [$police_lan]
             ]
         ];
 
