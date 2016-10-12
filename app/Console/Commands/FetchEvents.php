@@ -61,7 +61,7 @@ class FetchEvents extends Command
         $this->line("Found " . $itemsNotScannedForLocations->count() . " items with locations missing");
 
         foreach ($itemsNotScannedForLocations as $oneItem) {
-            $this->line("Getting location for $oneItem->title");
+            $this->line("Getting locations for $oneItem->title");
             $this->feedController->parseItem($oneItem->getKey());
         }
 
