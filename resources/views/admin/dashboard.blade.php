@@ -139,19 +139,24 @@
 
                                     </ul>
 
+                                    @if ($event->parsed_lat)
                                     <div>
-                                        <b>coordinates:</b>
+                                        <b>locaion info:</b>
                                         <ul class="menu simple">
                                             <li><span>lat: {{ $event->parsed_lat }}</span></li>
                                             <li><span>lng: {{ $event->parsed_lng }}</span></li>
+                                            <li><span>geometry type: {{ $event->location_geometry_type }}</span></li>
+                                            <li><span>geometry viewport: {{ $event->location_geometry_viewport }}</span></li>
                                         </ul>
                                     </div>
 
                                     <p>
-                                        <img
-                                            src="https://maps.googleapis.com/maps/api/staticmap?center={{ $event->parsed_lat }},{{ $event->parsed_lng }}&zoom=14&size=400x200&key=AIzaSyBNGngVsHlVCo4D26UnHyp3nqcgFa-HEew"
-                                            >
+                                        <!-- <img
+                                            src="https://maps.googleapis.com/maps/api/staticmap?center={{ $event->parsed_lat }},{{ $event->parsed_lng }}&zoom=14&size=600x400&key=AIzaSyBNGngVsHlVCo4D26UnHyp3nqcgFa-HEew&markers={{ $event->parsed_lat }},{{ $event->parsed_lng }}"
+                                            > -->
+                                        <img src="{{ $event->getStaticImageSrc(600,500) }}">
                                     </p>
+                                    @endif
 
                                 </div>
 

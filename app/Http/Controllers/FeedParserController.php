@@ -188,8 +188,8 @@ class FeedParserController extends Controller
             "kommer", "hörnet", "frukt", "tomten",
             "något", "centrum", "hållet", "backa",
             "ringa", "backa", "naturbruksgymnasiet", "arenan", "stadion",
-            "polisstationen",
-            "räddningstjänsten",
+            "polisstationen", "stuga", "påsen",
+            "räddningstjänsten", "väskan",
             "under", "fordon", "patrullen", "information"
         ];
 

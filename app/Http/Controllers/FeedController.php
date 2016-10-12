@@ -64,11 +64,17 @@ class FeedController extends Controller
             $geometry_location = $one_result->geometry->location;
             $geometry_location_lat = $geometry_location->lat;
             $geometry_location_lng = $geometry_location->lng;
+
+            // location_type stores additional data about the specified location.
             $geometry_type = $one_result->geometry->location_type;
+
+            // viewport contains the recommended viewport for displaying the returned result, specified as two latitude,longitude values defining the southwest and northeast corner of the viewport bounding box. Generally the viewport is used to frame a result when displaying it to a user.
             $geometry_viewport = $one_result->geometry->viewport;
+
             #echo "\ngeometry_location: " . print_r($geometry_location, 1);
             #echo "\ngeometry_type: " . print_r($geometry_type, 1);
             #echo "\ngeometry_viewport: " . print_r($geometry_viewport, 1);
+            #exit;
             #echo "\nlat: $geometry_location_lat";
             #echo "\nlng: $geometry_location_lng";
 
@@ -81,6 +87,8 @@ class FeedController extends Controller
         if ($geometry_location_lat) {
             $item->parsed_lat = $geometry_location_lat;
             $item->parsed_lng = $geometry_location_lng;
+            $item->location_geometry_type = $geometry_type;
+            $item->location_geometry_viewport = json_encode($geometry_viewport, JSON_PRETTY_PRINT);
             $item->geocoded = true;
             $item->save();
             #echo "\nadded location for item";
