@@ -47,16 +47,17 @@ class CrimeEvent extends Model
 
             $viewport = json_decode($this->location_geometry_viewport);
             $image_src .= "&path=";
-            $image_src .= "color:0x00000000|weight:5|fillcolor:0xFF660033";
+            $image_src .= "color:0x00000000|weight:2|fillcolor:0xFF660044";
 
             /*
 
             color:
             (optional) specifies a color either as a
-            24-bit (example: color=0xFFFFCC) or 32-bit hexadecimal value (example: color=0xFFFFCCFF), or from the set {black, brown, green, purple, yellow, blue, gray, orange, red, white}.
+            24-bit (example: color=0xFFFFCC) or
+            32-bit hexadecimal value (example: color=0xFFFFCCFF), or from the set {black, brown, green, purple, yellow, blue, gray, orange, red, white}.
 
             example from google api:
-            path=color:0x00000000|weight:5|fillcolor:0xFFFF0033|8th+Avenue+%26+34th+St,New+York,NY|\
+            path=color:0xFFFFCC|weight:5|fillcolor:0xFFFF0033|8th+Avenue+%26+34th+St,New+York,NY|\
             8th+Avenue+%26+42nd+St,New+York,NY|Park+Ave+%26+42nd+St,New+York,NY,NY|\
             Park+Ave+%26+34th+St,New+York,NY,NY
 
@@ -67,10 +68,17 @@ class CrimeEvent extends Model
 
             $image_src .= "|{$viewport->southwest->lat},{$viewport->southwest->lng}";
             $image_src .= "|{$viewport->northeast->lat},{$viewport->southwest->lng}";
-        } else {
-            // no viewport, fallback to center
+
+        } else if ($this->parsed_lat) {
+
+            // no viewport but parsed_lat, fallback to center
             $image_src .= "&center={$this->parsed_lat},{$this->parsed_lng}";
             $image_src .= "&zoom=14";
+        } else {
+
+            // @TODO: return fallback iamge
+            return "";
+
         }
 
         #echo "image: <img src='$image_src'>";
