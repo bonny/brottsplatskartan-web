@@ -9,7 +9,8 @@
         "laravel/framework": "5.3.*",
         "willvincent/feeds": "1.0.*",
         "kozz/laravel-guzzle-provider": "~6.0",
-        "weidner/goutte": "@dev"
+        "weidner/goutte": "@dev",
+        "doctrine/dbal": "^2.5"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
