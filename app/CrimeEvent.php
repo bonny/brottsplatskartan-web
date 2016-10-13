@@ -19,8 +19,8 @@ class CrimeEvent extends Model
         'parsed_title_location',
         'parsed_content_location',
         'parsed_content',
-        'parsed_lng',
-        'parsed_lat',
+        'location_lng',
+        'location_lat',
         'parsed_teaser',
         'parsed_content',
     ];
@@ -34,18 +34,18 @@ class CrimeEvent extends Model
     }
 
     // return src for an image
-    public function getStaticImageSrc($width = 200, $height = 100) {
+    public function getStaticImageSrc($width = 320, $height = 320, $scale = 1) {
 
         $google_api_key = env("GOOGLE_API_KEY");
 
         $image_src = "https://maps.googleapis.com/maps/api/staticmap?";
         $image_src .= "key=$google_api_key";
         $image_src .= "&size={$width}x{$height}";
+        $image_src .= "&scale={$scale}";
 
         // if viewport info exists use that and skip manual zoom level
-        if ($this->location_geometry_viewport) {
+        if ($this->viewport_northeast_lat) {
 
-            $viewport = json_decode($this->location_geometry_viewport);
             $image_src .= "&path=";
             $image_src .= "color:0x00000000|weight:2|fillcolor:0xFF660044";
 
@@ -63,16 +63,16 @@ class CrimeEvent extends Model
 
             */
 
-            $image_src .= "|{$viewport->northeast->lat},{$viewport->northeast->lng}";
-            $image_src .= "|{$viewport->southwest->lat},{$viewport->northeast->lng}";
+            $image_src .= "|{$this->viewport_northeast_lat},{$this->viewport_northeast_lng}";
+            $image_src .= "|{$this->viewport_southwest_lat},{$this->viewport_northeast_lng}";
 
-            $image_src .= "|{$viewport->southwest->lat},{$viewport->southwest->lng}";
-            $image_src .= "|{$viewport->northeast->lat},{$viewport->southwest->lng}";
+            $image_src .= "|{$this->viewport_southwest_lat},{$this->viewport_southwest_lng}";
+            $image_src .= "|{$this->viewport_northeast_lat},{$this->viewport_southwest_lng}";
 
-        } else if ($this->parsed_lat) {
+        } else if ($this->location_lat) {
 
-            // no viewport but parsed_lat, fallback to center
-            $image_src .= "&center={$this->parsed_lat},{$this->parsed_lng}";
+            // no viewport but location_lat, fallback to center
+            $image_src .= "&center={$this->location_lat},{$this->location_lng}";
             $image_src .= "&zoom=14";
         } else {
 
@@ -84,7 +84,7 @@ class CrimeEvent extends Model
         #echo "image: <img src='$image_src'>";
         #exit;
 
-        // src="https://maps.googleapis.com/maps/api/staticmap?center={{ $event->parsed_lat }},{{ $event->parsed_lng }}&zoom=14&size=600x400&key=AIzaSyBNGngVsHlVCo4D26UnHyp3nqcgFa-HEew&markers={{ $event->parsed_lat }},{{ $event->parsed_lng }}"
+        // src="https://maps.googleapis.com/maps/api/staticmap?center={{ $event->location_lat }},{{ $event->location_lng }}&zoom=14&size=600x400&key=AIzaSyBNGngVsHlVCo4D26UnHyp3nqcgFa-HEew&markers={{ $event->location_lat }},{{ $event->location_lng }}"
         return $image_src;
 
     }

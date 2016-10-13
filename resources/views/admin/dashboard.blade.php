@@ -139,23 +139,22 @@
 
                                     </ul>
 
-                                    @if ($event->parsed_lat)
-                                    <div>
-                                        <b>locaion info:</b>
-                                        <ul class="menu simple">
-                                            <li><span>lat: {{ $event->parsed_lat }}</span></li>
-                                            <li><span>lng: {{ $event->parsed_lng }}</span></li>
-                                            <li><span>geometry type: {{ $event->location_geometry_type }}</span></li>
-                                            <li><span>geometry viewport: {{ $event->location_geometry_viewport }}</span></li>
-                                        </ul>
-                                    </div>
+                                    @if ($event->location_lat)
 
-                                    <p>
-                                        <!-- <img
-                                            src="https://maps.googleapis.com/maps/api/staticmap?center={{ $event->parsed_lat }},{{ $event->parsed_lng }}&zoom=14&size=600x400&key=AIzaSyBNGngVsHlVCo4D26UnHyp3nqcgFa-HEew&markers={{ $event->parsed_lat }},{{ $event->parsed_lng }}"
-                                            > -->
-                                        <img src="{{ $event->getStaticImageSrc(600,500) }}">
-                                    </p>
+                                        <div>
+                                            <b>locaion info:</b>
+                                            <ul class="menu simple">
+                                                <li><span>lat: {{ $event->location_lat }}</span></li>
+                                                <li><span>lng: {{ $event->location_lng }}</span></li>
+                                                <li><span>geometry type: {{ $event->location_geometry_type }}</span></li>
+                                                <li><span>administrative_area_level_1: {{ $event->administrative_area_level_1 }}</span></li>
+                                                <li><span>administrative_area_level_2: {{ $event->administrative_area_level_2 }}</span></li>
+                                            </ul>
+                                        </div>
+
+                                        <p>
+                                            <img src="{{ $event->getStaticImageSrc(320,320) }}">
+                                        </p>
                                     @endif
 
                                 </div>

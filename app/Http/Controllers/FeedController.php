@@ -50,7 +50,7 @@ class FeedController extends Controller
         $result_data = json_decode( file_get_contents($apiUrl) );
         $result_status = $result_data->status;
         $result_results = $result_data->results;
-
+        #print_r($result_results);
         // echo "\nstatus code: $result_status";
         if ($result_results === "OK") {
             return false;
@@ -71,7 +71,26 @@ class FeedController extends Controller
             // viewport contains the recommended viewport for displaying the returned result, specified as two latitude,longitude values defining the southwest and northeast corner of the viewport bounding box. Generally the viewport is used to frame a result when displaying it to a user.
             $geometry_viewport = $one_result->geometry->viewport;
 
-            #echo "\ngeometry_location: " . print_r($geometry_location, 1);
+            $geometry_address_components = $one_result->address_components;
+
+            $administrative_area_level_1 = null;
+            $administrative_area_level_2 = null;
+
+            foreach ($geometry_address_components as $key => $val) {
+                if ( in_array("administrative_area_level_1", $val->types) ) {
+                    $administrative_area_level_1 = $val->long_name;
+                    break;
+                }
+            }
+
+            foreach ($geometry_address_components as $key => $val) {
+                if ( in_array("administrative_area_level_2", $val->types) ) {
+                    $administrative_area_level_2 = $val->long_name;
+                    break;
+                }
+            }
+
+            #echo "\ngeometry_location: " . print_r($geometry_address_components, 1);exit;
             #echo "\ngeometry_type: " . print_r($geometry_type, 1);
             #echo "\ngeometry_viewport: " . print_r($geometry_viewport, 1);
             #exit;
@@ -85,10 +104,16 @@ class FeedController extends Controller
         #print_r($result_results);
 
         if ($geometry_location_lat) {
-            $item->parsed_lat = $geometry_location_lat;
-            $item->parsed_lng = $geometry_location_lng;
+            $item->location_lat = $geometry_location_lat;
+            $item->location_lng = $geometry_location_lng;
             $item->location_geometry_type = $geometry_type;
-            $item->location_geometry_viewport = json_encode($geometry_viewport, JSON_PRETTY_PRINT);
+            $item->viewport_northeast_lat = $geometry_viewport->northeast->lat;
+            $item->viewport_northeast_lng = $geometry_viewport->northeast->lng;
+            $item->viewport_southwest_lat = $geometry_viewport->southwest->lat;
+            $item->viewport_southwest_lng = $geometry_viewport->southwest->lng;
+            #= json_encode($geometry_viewport, JSON_PRETTY_PRINT);
+            $item->administrative_area_level_1 = $administrative_area_level_1;
+            $item->administrative_area_level_2 = $administrative_area_level_2;
             $item->geocoded = true;
             $item->save();
             #echo "\nadded location for item";
