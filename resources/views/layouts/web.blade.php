@@ -28,6 +28,10 @@
             padding-top: 80px;
         }
 
+        h1, h2, h3, h4 {
+            font-weight: normal;
+        }
+
         h1, h2, h3, h4, p, ul, ol {
             margin-top: .25rem;
             margin-bottom: .25rem;
@@ -47,7 +51,7 @@
             left: 0;
             right: 0;
             z-index: 5;
-            padding: 1em;
+            padding: 2em;
             box-shadow: 2px 1px 1px rgba(0,0,0,0.15);
             font-size: .75rem;
         }
@@ -69,6 +73,8 @@
         .Event {
             margin-top: 2rem;
             margin-bottom: 2rem;
+            background: #fafafa;
+            padding: 1rem;
         }
 
         .Event__title {
