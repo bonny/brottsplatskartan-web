@@ -1,1 +1,1 @@
-web: vendor/bin/heroku-php-nginx -C nginx_app.conf --verbose public/
+web: vendor/bin/heroku-php-nginx -C nginx.conf --verbose public/
