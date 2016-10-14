@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class CrimeEvent extends Model
 {
@@ -88,5 +89,18 @@ class CrimeEvent extends Model
         return $image_src;
 
     }
+
+    public function getPubDateFormatted() {
+
+        return Carbon::createFromTimestamp($this->pubdate)->toDateTimeString();
+
+    }
+
+    public function getPubDateFormattedForHumans() {
+
+        return Carbon::createFromTimestamp($this->pubdate)->diffForHumans();
+
+    }
+
 
 }

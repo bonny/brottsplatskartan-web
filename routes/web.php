@@ -15,9 +15,19 @@ use App\Http\Controllers\FeedController;
 use App\CrimeEvent;
 use Illuminate\Http\Request;
 use App\Http\Requests;
+use Carbon\Carbon;
+
+Carbon::setLocale('sv');
 
 Route::get('/', function () {
-    return view('welcome');
+
+    $data = [];
+
+    // get latest events
+    $data["events"] = CrimeEvent::orderBy("created_at", "desc")->paginate(20);
+
+    return view('start', $data);
+
 });
 
 Route::group(['prefix' => 'admin'], function () {
