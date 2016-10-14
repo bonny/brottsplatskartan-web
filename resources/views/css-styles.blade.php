@@ -39,7 +39,7 @@ a:hover {
     box-sizing: border-box;
     margin: 0 auto;
     max-width: 1000px;
-    padding: 0 20px;
+    padding: 0 10px;
 }
 
 .SiteHeader {
@@ -132,7 +132,12 @@ a:hover {
     /*color: #616161;*/
 }
 
-.Event__mapImage {
+.Event__map {
+    margin-top: -1rem;
+    margin-left: -1rem;
+    margin-right: -1rem;
+    line-height: 1;
+    display: block;
 }
 
 .pagination {
