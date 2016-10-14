@@ -19,11 +19,13 @@ use Carbon\Carbon;
 
 Carbon::setLocale('sv');
 
+/**
+ * startpage: show latest events
+ */
 Route::get('/', function () {
 
     $data = [];
 
-    // get latest events
     $data["events"] = CrimeEvent::orderBy("created_at", "desc")->paginate(20);
 
     return view('start', $data);
@@ -58,3 +60,31 @@ Route::group(['prefix' => 'admin'], function () {
     })->name("adminDashboard");
 
 });
+
+
+/**
+ * single event page
+ * ca. såhär:
+ *
+ * http://brottsplatskartan.se/vastra-gotalands-lan/rattfylleri-2331
+ *
+ */
+Route::get('/{lan}/{eventName}', function ($lan,  $eventName) {
+
+    preg_match('!\d+!', $eventName, $matches);
+    if (!isset($matches[0])) {
+        abort(404);
+    }
+
+    $eventID = $matches[0];
+    $event = CrimeEvent::find($eventID);
+
+    $data = [
+        "lan" => $lan,
+        "eventID" => $eventID,
+        "event" => $event
+    ];
+
+    return view('single-event', $data);
+
+})->name("singleEvent");
