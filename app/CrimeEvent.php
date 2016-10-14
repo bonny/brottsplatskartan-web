@@ -113,4 +113,22 @@ class CrimeEvent extends Model
 
     }
 
+    public function getLocationString() {
+
+        $locations = [];
+
+        if ($this->parsed_title_location) {
+            $locations[] = $this->parsed_title_location;
+        }
+
+        if ($this->administrative_area_level_1) {
+            $locations[] = $this->administrative_area_level_1;
+        }
+
+        $location = implode(", ", $locations);
+
+        return $location;
+
+    }
+
 }

@@ -38,6 +38,16 @@ Layout template for web
 
     </container>
 
+    <footer class="SiteFooter">
+
+        <p>Brottsplatskartan</p>
+
+        <p>
+            Om brotten och kartan
+        </p>
+
+    </footer>
+
     <amp-analytics type="googleanalytics" id="analytics-ga">
       <script type="application/json">
       {
