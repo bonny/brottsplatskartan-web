@@ -102,5 +102,15 @@ class CrimeEvent extends Model
 
     }
 
+    public function getPermalink() {
+
+        $permalink = route("singleEvent", [
+            "lan" => str_slug($this->administrative_area_level_1),
+            "eventName" => str_slug($this->parsed_title . "-" . $this->getKey())
+        ]);
+
+        return $permalink;
+
+    }
 
 }

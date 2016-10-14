@@ -1,22 +1,26 @@
+{{--
+
+Template for start page
+
+--}}
+
+
 @extends('layouts.web')
 
 @section('title', 'Start')
 
 @section('content')
 
-    <header class="SiteHeader">
-        <h1 class="SiteTitle"><a href="/">Brottsplatskartan</a></h1>
-        <p class="SiteTagline"><em>Visar på karta vad brotten sker</em></p>
-    </header>
-
     @if ($events)
 
         @foreach ($events as $event)
 
-        <article class="Event">
+        <article class="Event Event--overview">
 
             <h1 class="Event__title">
-                {{ $event->parsed_title }}
+                <a href="{{ $event->getPermalink() }}">
+                    {{ $event->parsed_title }}
+                </a>
             </h1>
             <!--
             Om bara vill visa när skillnad är mer än nn dagar/timmar osv.
@@ -40,7 +44,9 @@
 
             @if ($event->geocoded)
                 <p class="Event__map">
-                    <amp-img class="Event__mapImage" src="{{ $event->getStaticImageSrc(640,320) }}" width="640" height="320" layout="responsive"></amp-img>
+                    <a href="{{ $event->getPermalink() }}">
+                        <amp-img class="Event__mapImage" src="{{ $event->getStaticImageSrc(640,320) }}" width="640" height="320" layout="responsive"></amp-img>
+                    </a>
                 </p>
             @endif
 
@@ -54,41 +60,5 @@
     @endif
 
     {{ $events->links() }}
-
-    <amp-analytics type="googleanalytics" id="analytics-ga">
-      <script type="application/json">
-      {
-        "vars": {
-          "account": "UA-181460-13"
-        },
-        "triggers": {
-          "trackPageview": {
-            "on": "visible",
-            "request": "pageview"
-          }
-        }
-      }
-      </script>
-    </amp-analytics>
-
-    Annons:
-    <amp-ad width=300 height=250
-        type="adsense"
-        data-ad-client="ca-pub-1689239266452655"
-        data-ad-slot="7743150002"
-        layout="responsive"
-        >
-    </amp-ad>
-
-    Annons sticky:
-    <amp-sticky-ad layout="nodisplay">
-        <amp-ad width=300 height=250
-            type="adsense"
-            data-ad-client="ca-pub-1689239266452655"
-            data-ad-slot="9307455607"
-            layout="responsive"
-            >
-        </amp-ad>
-    </amp-sticky-ad>
 
 @endsection
