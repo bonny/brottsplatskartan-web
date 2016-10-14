@@ -1,3 +1,8 @@
+
+:root {
+    --color-grey-light: #ddd;
+}
+
 html, body {
     background: white;
     font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
@@ -7,10 +12,13 @@ html, body {
 
 body {
     padding-top: 80px;
+    /*background: #fafafa;*/
+    background: #f4f4f7;
 }
 
 h1, h2, h3, h4 {
     font-weight: normal;
+    font-weight: 300;
 }
 
 h1, h2, h3, h4, p, ul, ol {
@@ -65,21 +73,65 @@ a:hover {
 .Event {
     margin-top: 2rem;
     margin-bottom: 2rem;
-    background: #fafafa;
+    background: white;
     padding: 1rem;
+    box-shadow: 0 1px 2px rgba(0,0,0,.3);
 }
 
 .Event__title {
     line-height: 1;
+    margin-top: 1rem;
+    margin-bottom: .25rem;
+}
+
+.Event__date {
+    /*margin-bottom: .75rem;*/
+    margin-top: .75rem;
+}
+
+.Event__location {
+    /*color: #999;*/
+    /*margin-bottom: .25rem;*/
+    margin-bottom: .75rem;
+}
+
+.Event__date,
+.Event__location {
+    /*font-size: .8rem;*/
+}
+
+.Event__meta {
+    line-height: 1;
+    margin-top: .75rem;
+    margin-bottom: .75rem;
+    padding-bottom: .75rem;
+    /*border-bottom: 1px solid var(--color-grey-light);*/
+}
+
+.Event__metaDivider {
+    color: #aaa;
+    margin-left: .25rem;
+    margin-right: .25rem;
+    -webkit-font-smoothing: none;
+}
+
+.Event__dateHuman {
+}
+
+.Event__dateFormatted {
 }
 
 .Event--single .Event__title {
 
 }
 
+
 .Event__teaser {
     font-weight: bold;
+    /*font-size: 1.25rem;*/
+    /*color: #616161;*/
 }
+
 .Event__mapImage {
 }
 
