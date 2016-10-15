@@ -28,49 +28,15 @@ Layout template for web
 </head>
 <body>
 
-    <article class="Event Event--overview">
-
-                <p class="Event__map">
-                            <a href="http://138.68.89.224:22100/skane-laen/trafikolycka-234">
-                                <amp-img class="Event__mapImage -amp-element -amp-layout-responsive -amp-layout-size-defined -amp-layout" src="https://maps.googleapis.com/maps/api/staticmap?key=AIzaSyBNGngVsHlVCo4D26UnHyp3nqcgFa-HEew&amp;size=640x320&amp;scale=1&amp;path=color:0x00000000|weight:2|fillcolor:0xFF660044|55.8564201,13.3347121|55.8206819,13.3347121|55.8206819,13.2682741|55.8564201,13.2682741" width="640" height="320" layout="responsive" id="AMP_1"><i-amp-sizer style="display: block; padding-top: 50%;"></i-amp-sizer><img amp-img-id="AMP_1" class="-amp-fill-content -amp-replaced-content" src="https://maps.googleapis.com/maps/api/staticmap?key=AIzaSyBNGngVsHlVCo4D26UnHyp3nqcgFa-HEew&amp;size=640x320&amp;scale=1&amp;path=color:0x00000000|weight:2|fillcolor:0xFF660044|55.8564201,13.3347121|55.8206819,13.3347121|55.8206819,13.2682741|55.8564201,13.2682741"></amp-img>
-                            </a>
-                        </p>
-
-        <h1 class="Event__title">
-                    <a href="http://138.68.89.224:22100/skane-laen/trafikolycka-234">
-                        Trafikolycka
-                    </a>
-                </h1>
-        <!--
-        Om bara vill visa när skillnad är mer än nn dagar/timmar osv.
-        http://stackoverflow.com/questions/23336261/laravel-carbon-display-date-difference-only-in-days
-        -->
-        <p class="Event__meta">
-            <span class="Event__location">Eslöv</span>
-            <span class="Event__metaDivider">|</span>
-            <span class="Event__dateHuman">47 minuter sedan</span>
-            <!-- <span class="Event__dateFormatted">2016-10-15 08:26:43</span> -->
-        </p>
-
-        <p class="Event__teaser">Två personbilar kolliderar, E22 Gårdstånga-Roslöv.</p>
-        <p class="Event__content">Larm kommer om två personbilar som kolliderar på E22 vid Gårdstånga-Roslöv. Bilarna ska blockera norrgående körfält. Polis, räddningstjänst och ambulans är på väg till platsen.<br>
-    Polisen Skåne</p>
-
-    </article>
 
     <p class="Event__content">Larm kommer om två personbilar som kolliderar på E22 vid Gårdstånga-Roslöv. Bilarna ska blockera norrgående körfält. Polis, räddningstjänst och ambulans är på väg till platsen.<br>
 Polisen Skåne</p>
 
-<article class="Event Event--overview">
 
-        <span class="Event__location">Eslöv</span>
-        <span class="Event__dateHuman">47 minuter sedan</span>
+<p class="Event__content">Lorem ipsum</p>
 
-    <p class="Event__teaser">Två personbilar kolliderar, E22 Gårdstånga-Roslöv.</p>
-    <p class="Event__content">Larm kommer om två personbilar som kolliderar på E22 vid Gårdstånga-Roslöv. Bilarna ska blockera norrgående körfält. Polis, räddningstjänst och ambulans är på väg till platsen.<br>
-Polisen Skåne</p>
+<p class="Event__contant">Lorem ipsum</p>
 
-</article>
 
     <div class="container">
 
