@@ -23,9 +23,14 @@ h1, h2, h3, h4 {
     font-weight: 300;
 }
 
-h1, h2, h3, h4, p, ul, ol {
+h1, h2, h3, h4, ul, ol {
     margin-top: .25rem;
     margin-bottom: .25rem;
+}
+
+p {
+    margin-top: 1rem;
+    margin-bottom: 1rem;    
 }
 
 a {

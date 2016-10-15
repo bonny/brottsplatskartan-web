@@ -64,18 +64,10 @@ Route::group(['prefix' => 'admin'], function () {
 
 /**
  * Alla län översikt
- *
  */
 Route::get('/lan/', function () {
 
     $data = [];
-
-    /*
-    SELECT count(*) AS num, parsed_title FROM crime_events
-    GROUP BY parsed_title
-    #LIMIT 10
-    ORDER BY num DESC
-    */
 
     // Hämta alla län, grupperat på län och antal
     $data["lan"] = DB::table('crime_events')
@@ -86,7 +78,28 @@ Route::get('/lan/', function () {
 
     return view('overview-lan', $data);
 
-});
+})->name("lanOverview");
+
+/**
+ * Ett län
+ */
+Route::get('/lan/{lan}', function ($lan) {
+
+    $data = [
+        "lan" => $lan
+    ];
+
+    $data["events"] = CrimeEvent::orderBy("created_at", "desc")
+                                ->where("administrative_area_level_1", $lan)
+                                ->paginate(5);
+
+    if (!$data["events"]->count()) {
+        abort(404);
+    }
+
+    return view('single-lan', $data);
+
+})->name("lanSingle");
 
 
 /**
