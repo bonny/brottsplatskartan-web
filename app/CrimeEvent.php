@@ -143,7 +143,7 @@ class CrimeEvent extends Model
 
     // from http://cubiq.org/the-perfect-php-clean-url-generator
     // @TODO: put in global helper
-    function toAscii($str, $replace=array(), $delimiter='-') {
+    public function toAscii($str, $replace=array(), $delimiter='-') {
 
     	if( !empty($replace) ) {
     		$str = str_replace((array)$replace, ' ', $str);
