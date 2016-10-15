@@ -9,6 +9,8 @@ Template for start page
 
 @section('title', $event->parsed_title_location . " - " . $event->parsed_title . " - " . $event->getPubDateFormatted())
 @section('canonicalLink', $event->getPermalink())
+@section('metaDescription', $event->getMetaDescription())
+@section('metaImage', $event->getStaticImageSrc(640,640))
 
 @section('content')
 

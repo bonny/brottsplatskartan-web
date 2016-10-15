@@ -156,4 +156,16 @@ class CrimeEvent extends Model
 
     	return $clean;
     }
+
+    public function getMetaDescription() {
+
+        $desc = "";
+
+        $desc .= $this->description;
+        $desc .= $this->parsed_content;
+
+        return $desc;
+
+    }
+
 }
