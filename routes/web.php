@@ -18,6 +18,7 @@ use App\Http\Requests;
 use Carbon\Carbon;
 
 Carbon::setLocale('sv');
+setlocale(LC_ALL, 'sv_SE');
 
 /**
  * startpage: show latest events

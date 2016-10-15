@@ -7,7 +7,7 @@ Template for start page
 
 @extends('layouts.web')
 
-@section('title', 'Start')
+@section('title', 'Se brott som hänt nära dig')
 
 @section('content')
 
