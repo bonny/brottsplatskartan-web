@@ -26,7 +26,7 @@ Route::get('/', function () {
 
     $data = [];
 
-    $data["events"] = CrimeEvent::orderBy("created_at", "desc")->paginate(20);
+    $data["events"] = CrimeEvent::orderBy("created_at", "desc")->paginate(10);
 
     return view('start', $data);
 
