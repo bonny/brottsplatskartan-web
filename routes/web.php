@@ -62,6 +62,32 @@ Route::group(['prefix' => 'admin'], function () {
 
 });
 
+/**
+ * Alla län översikt
+ *
+ */
+Route::get('/lan/', function () {
+
+    $data = [];
+
+    /*
+    SELECT count(*) AS num, parsed_title FROM crime_events
+    GROUP BY parsed_title
+    #LIMIT 10
+    ORDER BY num DESC
+    */
+
+    // Hämta alla län, grupperat på län och antal
+    $data["lan"] = DB::table('crime_events')
+                ->select("administrative_area_level_1")
+                ->groupBy('administrative_area_level_1')
+                ->orderBy('administrative_area_level_1', 'asc')
+                ->get();
+
+    return view('overview-lan', $data);
+
+});
+
 
 /**
  * single event page
