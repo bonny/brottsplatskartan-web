@@ -11,21 +11,27 @@ Template för län-översikt
 
 @section('content')
 
-    <h1>Län</h1>
+    <h1>Se senaste brottet i ditt län</h1>
 
     <p>
-        Välj ett län för att se de senast brotten
-        och händelserna som Polisen rapporterat.
+        Välj ett län för att se de senaste brotten
+        och händelserna.
     </p>
+
+    <p>All data kommer direkt från Polisen.</p>
+
+    <div class="LanListing">
 
     @foreach ($lan as $oneLan)
 
-        <h2>
+        <h2 class="LanListing__lan">
             <a href="{{ route("lanSingle", ["lan"=>$oneLan->administrative_area_level_1]) }}">
                 {{ $oneLan->administrative_area_level_1 }}
             </a>
         </h2>
 
     @endforeach
+
+    </div>
 
 @endsection

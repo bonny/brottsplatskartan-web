@@ -1,6 +1,6 @@
-body
 :root {
     --color-grey-light: #ddd;
+    --color-link: #0379C4;
 }
 
 html, body {
@@ -24,17 +24,12 @@ h1, h2, h3, h4 {
 }
 
 h1, h2, h3, h4, ul, ol {
-    margin-top: .25rem;
-    margin-bottom: .25rem;
-}
-
-p {
     margin-top: 1rem;
-    margin-bottom: 1rem;    
+    margin-bottom: 1rem;
 }
 
 a {
-    color: #0379C4;
+    color: var(--color-link);
     text-decoration: none;
 }
 
@@ -115,7 +110,7 @@ a:hover {
 }
 
 .Event__metaDivider {
-    color: #aaa;
+    color: var(--color-grey-light);
     margin-left: .25rem;
     margin-right: .25rem;
     /*-webkit-font-smoothing: none;*/
@@ -134,8 +129,6 @@ a:hover {
 
 .Event__teaser {
     font-weight: bold;
-    /*font-size: 1.25rem;*/
-    /*color: #616161;*/
 }
 
 .Event__map {
@@ -167,4 +160,18 @@ a:hover {
 }
 .pagination li > a:hover {
     background: #ccc;
+}
+
+.LanListing {
+    overflow: hidden;
+}
+
+.LanListing__lan {
+    width: 50%;
+    float: left;
+}
+
+.SiteFooter {
+    background: var(--color-grey-light);
+    padding: .5rem;
 }
