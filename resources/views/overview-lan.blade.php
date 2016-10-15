@@ -8,6 +8,7 @@ Template för län-översikt
 @extends('layouts.web')
 
 @section('title', 'Län')
+@section('canonicalLink', '/lan')
 
 @section('content')
 

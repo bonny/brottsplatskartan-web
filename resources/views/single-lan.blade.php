@@ -8,6 +8,7 @@ Template för ett län
 @extends('layouts.web')
 
 @section('title', "Brott och händelser i $lan")
+@section('canonicalLink', "/lan/$lan")
 
 @section('content')
 
