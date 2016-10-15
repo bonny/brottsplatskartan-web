@@ -1,6 +1,7 @@
 :root {
     --color-grey-light: #ddd;
     --color-link: #0379C4;
+    --default-margin: 1rem;
 }
 
 html, body {
@@ -24,8 +25,8 @@ h1, h2, h3, h4 {
 }
 
 h1, h2, h3, h4, ul, ol {
-    margin-top: 1rem;
-    margin-bottom: 1rem;
+    margin-top: var(--default-margin);
+    margin-bottom: var(--default-margin);
 }
 
 a {
@@ -50,9 +51,15 @@ a:hover {
     left: 0;
     right: 0;
     z-index: 5;
-    padding: 2em;
+    padding: var(--default-margin);
     box-shadow: 2px 1px 1px rgba(0,0,0,0.15);
     font-size: .75rem;
+
+    /* from http://uigradients.com/ */
+    background: #fceabb; /* fallback for old browsers */
+    background: -webkit-linear-gradient(to left, #fceabb , #f8b500); /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to left, #fceabb , #f8b500); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
 }
 
 .SiteTitle {
@@ -64,6 +71,10 @@ a:hover {
 .SiteTagline {
     margin-top: .5em;
     margin-bottom: 0;
+    font-style:normal;
+}
+.SiteTagline em {
+    font-style: inherit;
 }
 
 .SiteTitle a {
@@ -75,13 +86,13 @@ a:hover {
     margin-top: 2rem;
     margin-bottom: 2rem;
     background: white;
-    padding: 1rem;
+    padding: var(--default-margin);
     box-shadow: 0 1px 2px rgba(0,0,0,.3);
 }
 
 .Event__title {
     line-height: 1;
-    margin-top: 1rem;
+    margin-top: var(--default-margin);
     margin-bottom: .25rem;
 }
 
@@ -174,4 +185,5 @@ a:hover {
 .SiteFooter {
     background: var(--color-grey-light);
     padding: .5rem;
+    margin-top: var(--default-margin);
 }

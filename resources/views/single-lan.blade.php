@@ -11,10 +11,10 @@ Template för ett län
 
 @section('content')
 
-    <h1>{{ $lan }}: senaste brotten</h1>
+    <h1>Brott i {{ $lan }}</h1>
 
     <p>
-        Visar alla från polisen inrapporterade händelser för {{ $lan }}.
+        Visar alla inrapporterade händelser och brott för {{ $lan }}, direkt från polisen.
     </p>
 
     @if ($events)
