@@ -53,4 +53,12 @@ if $single is set then larger image
     <p class="Event__teaser">{!! nl2br($event->description) !!}</p>
     <p class="Event__content">{!! nl2br($event->parsed_content) !!}</p>
 
+    @if (isset($single))
+        <div class="Event__share">
+            <amp-social-share type="twitter"></amp-social-share>
+            <amp-social-share type="facebook" app_id="134210933301575"></amp-social-share>
+            <amp-social-share type="email"></amp-social-share>
+        </div>
+    @endif
+
 </article>
