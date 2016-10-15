@@ -1,4 +1,4 @@
-
+body
 :root {
     --color-grey-light: #ddd;
 }
@@ -13,7 +13,7 @@ html, body {
 }
 
 body {
-    padding-top: 80px;
+    padding-top: 100px;
     /*background: #fafafa;*/
     background: #f4f4f7;
 }
@@ -123,7 +123,7 @@ a:hover {
 }
 
 .Event--single .Event__title {
-
+    font-size: 2.25rem;
 }
 
 
