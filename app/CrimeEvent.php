@@ -92,7 +92,7 @@ class CrimeEvent extends Model
 
     public function getPubDateFormatted() {
 
-        return Carbon::createFromTimestamp($this->pubdate)->toDateTimeString();
+        return Carbon::createFromTimestamp($this->pubdate)->formatLocalized('%A %d %B %Y');
 
     }
 
@@ -102,11 +102,21 @@ class CrimeEvent extends Model
 
     }
 
+    /**
+     * Returns a nice permalink to the page
+     */
     public function getPermalink() {
 
+        if ( ! empty($this->administrative_area_level_1) ) {
+            $lan = $this->toAscii($this->administrative_area_level_1);
+        } else {
+            $lan = "sverige";
+        }
+        $eventName = $this->toAscii($this->parsed_title . "-" . $this->getKey());
+
         $permalink = route("singleEvent", [
-            "lan" => str_slug($this->administrative_area_level_1),
-            "eventName" => str_slug($this->parsed_title . "-" . $this->getKey())
+            "lan" => $lan,
+            "eventName" => $eventName
         ]);
 
         return $permalink;
@@ -131,4 +141,19 @@ class CrimeEvent extends Model
 
     }
 
+    // from http://cubiq.org/the-perfect-php-clean-url-generator
+    // @TODO: put in global helper
+    function toAscii($str, $replace=array(), $delimiter='-') {
+
+    	if( !empty($replace) ) {
+    		$str = str_replace((array)$replace, ' ', $str);
+    	}
+
+    	$clean = iconv('UTF-8', 'ASCII//TRANSLIT', $str);
+    	$clean = preg_replace("![^a-zA-Z0-9/_|+ -]!", '', $clean);
+    	$clean = strtolower(trim($clean, '-'));
+    	$clean = preg_replace("![/_|+ -]+!", $delimiter, $clean);
+
+    	return $clean;
+    }
 }
