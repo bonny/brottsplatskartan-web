@@ -105,7 +105,7 @@ class CrimeEvent extends Model
     /**
      * Returns a nice permalink to the page
      */
-    public function getPermalink() {
+    public function getPermalink($absolute = false) {
 
         if ( ! empty($this->administrative_area_level_1) ) {
             $lan = $this->toAscii($this->administrative_area_level_1);
@@ -117,7 +117,7 @@ class CrimeEvent extends Model
         $permalink = route("singleEvent", [
             "lan" => $lan,
             "eventName" => $eventName
-        ]);
+        ], $absolute);
 
         return $permalink;
 

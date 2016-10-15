@@ -13,10 +13,12 @@ Layout template for web
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
     <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-    <link rel="canonical" href="/">
+    <link rel="canonical" href="@yield('canonicalLink', '/')">
 
-    <!-- <meta property="og:description" content="">
-    <meta name="description" content=""> -->
+    @hasSection('metaDescription')
+    <meta property="og:description" content="@yield('metaDescription')">
+    <meta name="description" content="@yield('metaDescription')">
+    @endif
 
     <title>@yield('title') → Brottsplatskartan</title>
 
