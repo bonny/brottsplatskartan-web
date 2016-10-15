@@ -5,8 +5,9 @@
 
 html, body {
     background: white;
-    /*font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;*/
-    font-family: sans-serif;
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+    /*font-family: sans-serif;*/
+    font-weight: normal;
     font-size: 16px;
     line-height: 1.4;
 }
