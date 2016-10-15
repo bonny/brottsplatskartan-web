@@ -38,7 +38,6 @@ a:hover {
 }
 
 .container {
-    box-sizing: border-box;
     margin: 0 auto;
     max-width: 1000px;
     padding: 0 10px;
@@ -146,6 +145,8 @@ a:hover {
     text-align: center;
     width: 100%;
     line-height: 1;
+    margin: 0;
+    padding: 0;
 }
 .pagination li {
     display: inline-block;

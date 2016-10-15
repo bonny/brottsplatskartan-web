@@ -4,7 +4,7 @@ Layout template for web
 
 --}}
 <!DOCTYPE html>
-<html ⚡ lang="sv">
+<html ⚡ lang="sv" class="amp-border-box">
 <head>
     <script async src="https://cdn.ampproject.org/v0.js"></script>
     <script async custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"></script>
@@ -85,6 +85,6 @@ Layout template for web
         </amp-ad>
     </amp-sticky-ad>
     -->
-    
+
 </body>
 </html>
