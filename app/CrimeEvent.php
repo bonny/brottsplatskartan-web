@@ -145,6 +145,32 @@ class CrimeEvent extends Model
 
     }
 
+    /**
+     * Som getLocationString
+     * men platser kan vara länkade, t.ex. länen
+     */
+    public function getLocationStringWithLinks() {
+
+        $locations = [];
+
+        if ($this->parsed_title_location) {
+            $locations[] = $this->parsed_title_location;
+        }
+
+        if ($this->administrative_area_level_1 && $this->administrative_area_level_1 !== $this->parsed_title_location) {
+            $locations[] = sprintf(
+                '<a href="%2$s">%1$s</a>',
+                $this->administrative_area_level_1,
+                route("lanSingle", ["lan" => $this->administrative_area_level_1])
+            );
+        }
+
+        $location = implode(", ", $locations);
+
+        return $location;
+
+    }
+
     // from http://cubiq.org/the-perfect-php-clean-url-generator
     // @TODO: put in global helper
     public function toAscii($str, $replace=array(), $delimiter='-') {
