@@ -24,10 +24,15 @@ Layout template for web
     <style amp-custom>
         @include('css-styles')
     </style>
+
 </head>
 <body>
 
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quae diligentissime contra Aristonem dicuntur a Chryippo. Obsecro, inquit, Torquate, haec dicit Epicurus? Qua ex cognitione facilior facta est investigatio rerum occultissimarum. Tu enim ista lenius, hic Stoicorum more nos vexat.</p>
+
     <div class="container">
+
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quae diligentissime contra Aristonem dicuntur a Chryippo. Obsecro, inquit, Torquate, haec dicit Epicurus? Qua ex cognitione facilior facta est investigatio rerum occultissimarum. Tu enim ista lenius, hic Stoicorum more nos vexat.</p>
 
         <header class="SiteHeader">
             <h1 class="SiteTitle"><a href="/">Brottsplatskartan</a></h1>
