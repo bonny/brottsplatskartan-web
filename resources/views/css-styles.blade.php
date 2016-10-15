@@ -128,6 +128,7 @@ a:hover {
 }
 
 .Event__dateHuman {
+    white-space: nowrap;
 }
 
 .Event__dateFormatted {
@@ -141,6 +142,32 @@ a:hover {
 .Event__teaser {
     font-weight: bold;
 }
+
+.Event__content {
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 0;
+}
+
+.Event__share {
+    margin-top: var(--default-margin);
+}
+
+
+/*
+.Event__content {
+    max-height: 5rem;
+}
+.Event__content:after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2rem;
+    background: linear-gradient( rgba(255, 255, 255, 0), white)
+}
+*/
 
 .Event__map {
     margin-top: -1rem;
@@ -180,6 +207,10 @@ a:hover {
 .LanListing__lan {
     width: 50%;
     float: left;
+    font-size: 1rem;
+    padding-top: var(--default-margin);
+    padding-bottom: var(--default-margin);
+    margin: 0;
 }
 
 .SiteFooter {

@@ -45,7 +45,7 @@ if $single is set then larger image
     http://stackoverflow.com/questions/23336261/laravel-carbon-display-date-difference-only-in-days
     -->
     <p class="Event__meta">
-        <span class="Event__location">{{ $event->getLocationString() }}</span>
+        <span class="Event__location">{!! $event->getLocationStringWithLinks() !!}</span>
         <span class="Event__metaDivider"> | </span>
         <span class="Event__dateHuman">{{ $event->getPubDateFormattedForHumans() }}</span>
     </p>
@@ -53,12 +53,16 @@ if $single is set then larger image
     <p class="Event__teaser">{!! nl2br($event->description) !!}</p>
     <p class="Event__content">{!! nl2br($event->parsed_content) !!}</p>
 
-    @if (isset($single))
         <div class="Event__share">
+            @if ( isset($overview) )
+            <amp-social-share type="twitter" width=30 height=22 data-param-url="{{ $event->getPermalink(true) }}"></amp-social-share>
+            <amp-social-share type="facebook" width=30 height=22 data-param-url="{{ $event->getPermalink() }}" data-param-app_id="105986239475133"></amp-social-share>
+            <amp-social-share type="email" width=30 height=22 data-param-url="{{ $event->getPermalink() }}"></amp-social-share>
+            @else
             <amp-social-share type="twitter"></amp-social-share>
             <amp-social-share type="facebook" data-param-app_id="105986239475133"></amp-social-share>
             <amp-social-share type="email"></amp-social-share>
+            @endif
         </div>
-    @endif
 
 </article>
