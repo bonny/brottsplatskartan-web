@@ -56,7 +56,7 @@ if $single is set then larger image
     @if (isset($single))
         <div class="Event__share">
             <amp-social-share type="twitter"></amp-social-share>
-            <amp-social-share type="facebook" app_id="134210933301575"></amp-social-share>
+            <amp-social-share type="facebook" data-param-app_id="105986239475133"></amp-social-share>
             <amp-social-share type="email"></amp-social-share>
         </div>
     @endif
