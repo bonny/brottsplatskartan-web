@@ -123,6 +123,10 @@ class CrimeEvent extends Model
 
     }
 
+    /**
+     * Hämta eventets platser i en rimligt fint formaterad sträng
+     * typ såhär: Borås, nnn län
+     */
     public function getLocationString() {
 
         $locations = [];
@@ -131,7 +135,7 @@ class CrimeEvent extends Model
             $locations[] = $this->parsed_title_location;
         }
 
-        if ($this->administrative_area_level_1) {
+        if ($this->administrative_area_level_1 && $this->administrative_area_level_1 !== $this->parsed_title_location) {
             $locations[] = $this->administrative_area_level_1;
         }
 
