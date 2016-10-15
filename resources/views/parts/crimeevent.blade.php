@@ -28,9 +28,8 @@
     -->
     <p class="Event__meta">
         <span class="Event__location">{{ $event->parsed_title_location }}</span>
-        <span class="Event__metaDivider">|</span>
+        <span class="Event__metaDivider"> | </span>
         <span class="Event__dateHuman">{{ $event->getPubDateFormattedForHumans() }}</span>
-        <!-- <span class="Event__dateFormatted">{{ $event->getPubDateFormatted() }}</span> -->
     </p>
 
     <p class="Event__teaser">{!! nl2br($event->description) !!}</p>

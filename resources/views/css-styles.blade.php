@@ -113,7 +113,7 @@ a:hover {
     color: #aaa;
     margin-left: .25rem;
     margin-right: .25rem;
-    -webkit-font-smoothing: none;
+    /*-webkit-font-smoothing: none;*/
 }
 
 .Event__dateHuman {

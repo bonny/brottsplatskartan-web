@@ -28,51 +28,6 @@ Layout template for web
 </head>
 <body>
 
-
-    rensad mer 1.3:
-    <article class="Event Event--overview">
-
-        <p class="Event__meta">
-            <span class="Event__location">Eslöv</span>
-            <span class="Event__dateHuman">55 minuter sedan</span>
-        </p>
-
-        <p class="Event__teaser">Två personbilar kolliderar, E22 Gårdstånga-Roslöv.</p>
-        <p class="Event__content">Larm kommer om två personbilar som kolliderar på E22 vid Gårdstånga-Roslöv. Bilarna ska blockera norrgående körfält. Polis, räddningstjänst och ambulans är på väg till platsen.<br>
-    Polisen Skåne</p>
-
-    </article>
-
-    rensad mer 1.22:
-    <article class="Event Event--overview">
-
-        <p class="Event__meta">
-            <span class="Event__location">Eslöv</span>
-            <span class="Event__metaDivier"> | </span>
-        </p>
-
-        <p class="Event__teaser">Två personbilar kolliderar, E22 Gårdstånga-Roslöv.</p>
-        <p class="Event__content">Larm kommer om två personbilar som kolliderar på E22 vid Gårdstånga-Roslöv. Bilarna ska blockera norrgående körfält. Polis, räddningstjänst och ambulans är på väg till platsen.<br>
-    Polisen Skåne</p>
-
-    </article>
-
-    rensad mer 1.2:
-    <article class="Event Event--overview">
-
-        <p class="Event__meta">
-            <span class="Event__location">Eslöv</span>
-            <span class="Event__metaDivider">|</span>
-        </p>
-
-        <p class="Event__teaser">Två personbilar kolliderar, E22 Gårdstånga-Roslöv.</p>
-        <p class="Event__content">Larm kommer om två personbilar som kolliderar på E22 vid Gårdstånga-Roslöv. Bilarna ska blockera norrgående körfält. Polis, räddningstjänst och ambulans är på väg till platsen.<br>
-    Polisen Skåne</p>
-
-    </article>
-
-
-
     <div class="container">
 
         <header class="SiteHeader">
