@@ -92,7 +92,7 @@ a:hover {
     box-shadow: 0 1px 2px rgba(0,0,0,.3);
 }
 
-.Event:first-of-type {
+.Event:nth-of-type(1) {
     margin-top: 0;
 }
 
@@ -219,9 +219,13 @@ amp-social-share {
     text-align: center;
     width: 100%;
     line-height: 1;
-    margin: 0;
     padding: 0;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: var(--default-margin);
+    margin-bottom: var(--default-margin);
 }
+
 .pagination li {
     display: inline-block;
 }
@@ -263,13 +267,27 @@ amp-social-share {
 @media only screen and (min-width: 768px) {
 
     .Events {
-        column-count: 2;
+        /*column-count: 2;*/
+        overflow: auto;
+    }
+
+    .Event:nth-of-type(2) {
+        margin-top: 0;
     }
 
     .Event {
-        break-inside: avoid;
+        float: left;
+        /*break-inside: avoid;*/
         /*display: inline-block;*/
-        /*width: 40%;*/
+        width: 48.5%;
+        margin-top: var(--default-margin);
+        margin-bottom: var(--default-margin);
+    }
+
+    .Event:nth-child(even) {
+        /* margin to show box shadow */
+        margin-right: 2px;
+        float: right;
     }
 
 }
