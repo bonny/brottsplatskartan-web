@@ -14,11 +14,11 @@ Template for start page
 
     <h1>Brottsplatskartan visar var brotten sker</h1>
 
-    <p>Visar senaste händerlserna:</p>
+    <p>Senaste händelserna:</p>
 
     @if ($events)
 
-        <div class="Events">
+        <div class="Events Events--overview">
 
             @foreach ($events as $event)
 

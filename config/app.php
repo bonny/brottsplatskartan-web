@@ -182,6 +182,7 @@ return [
         willvincent\Feeds\FeedsServiceProvider::class,
         'Kozz\Laravel\Providers\Guzzle',
         Weidner\Goutte\GoutteServiceProvider::class,
+        'Creitive\Breadcrumbs\BreadcrumbsServiceProvider',
 
     ],
 
@@ -233,7 +234,8 @@ return [
         'Feeds'  => willvincent\Feeds\Facades\FeedsFacade::class,
         'Guzzle' => 'Kozz\Laravel\Facades\Guzzle',
         'Goutte' => Weidner\Goutte\GoutteFacade::class,
-
+        'Breadcrumbs' => 'Creitive\Breadcrumbs\Facades\Breadcrumbs',
+        
     ],
 
 ];

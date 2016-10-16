@@ -14,6 +14,8 @@ Template for start page
 
 @section('content')
 
+    @include('parts.breadcrumb', ["single" => true])
+
     @include('parts.crimeevent', ["single" => true])
 
 @endsection

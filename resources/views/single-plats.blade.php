@@ -20,11 +20,14 @@ Template för en ort
 
     @if ($events)
 
-        @foreach ($events as $event)
+        <div class="Events Events--overview">
 
-            @include('parts.crimeevent', ["overview" => true])
+            @foreach ($events as $event)
 
-        @endforeach
+                @include('parts.crimeevent', ["overview" => true])
+
+            @endforeach
+        </div>
 
         {{ $events->links() }}
 

@@ -15,7 +15,7 @@ html, body {
 }
 
 body {
-    padding-top: 90px;
+    padding-top: 80px;
     /*background: #fafafa;*/
     background: #f4f4f7;
     margin: 0;
@@ -82,6 +82,11 @@ a:hover {
 .SiteTitle a {
     text-decoration: none;
     color: inherit;
+}
+
+.Events {
+    /*column-count: 2;*/
+    overflow: auto;
 }
 
 .Event {
@@ -263,19 +268,46 @@ amp-social-share {
     margin-top: var(--default-margin);
 }
 
+.Breadcrumbs {
+    list-style: none;
+    margin-bottom: var(--default-margin);
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: var(--default-margin);
+    overflow: hidden;
+    padding: 0;
+    line-height: 1;
+}
+
+.breadcrumbs {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.Breadcrumbs__intro,
+.breadcrumbs,
+.breadcrumbs li,
+.breadcrumbs a,
+.breadcrumbs .divider {
+    display: inline-block;
+    vertical-align: bottom;
+}
+
+.Breadcrumbs__intro {
+    margin-right: var(--default-margin-half);
+}
+
+.breadcrumbs .divider {
+    margin-left: var(--default-margin-half);
+    margin-right: var(--default-margin-half);
+}
+
 /* ipad and other medium to large screens */
 @media only screen and (min-width: 768px) {
 
-    .Events {
-        /*column-count: 2;*/
-        overflow: auto;
-    }
-
-    .Event:nth-of-type(2) {
-        margin-top: 0;
-    }
-
-    .Event {
+    .Events--overview .Event {
         float: left;
         /*break-inside: avoid;*/
         /*display: inline-block;*/
@@ -284,11 +316,16 @@ amp-social-share {
         margin-bottom: var(--default-margin);
     }
 
-    .Event:nth-child(odd) {
+    .Events--overview .Event:nth-of-type(1),
+    .Events--overview .Event:nth-of-type(2) {
+        margin-top: 0;
+    }
+
+    .Events--overview .Event:nth-child(odd) {
         clear: left;
     }
 
-    .Event:nth-child(even) {
+    .Events--overview .Event:nth-child(even) {
         /* margin to show box shadow */
         margin-right: 2px;
         float: right;
