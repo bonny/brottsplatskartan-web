@@ -15,7 +15,7 @@ html, body {
 }
 
 body {
-    padding-top: 100px;
+    padding-top: 90px;
     /*background: #fafafa;*/
     background: #f4f4f7;
 }
@@ -91,6 +91,10 @@ a:hover {
     box-shadow: 0 1px 2px rgba(0,0,0,.3);
 }
 
+.Event:first-of-type {
+    margin-top: 0;
+}
+
 .Event__title {
     line-height: 1;
     margin-top: var(--default-margin);
@@ -157,12 +161,23 @@ a:hover {
     margin-bottom: 0;
 }
 
+.Event__contentLink {
+    display: block;
+    color: inherit;
+}
+
+.Event__contentLink:hover {
+    text-decoration: none;
+    /*color: var(--color-link);*/
+}
+
 /* emulate p tags using br */
 .Event__content br {
     line-height: 2;
 }
 
 .Event__share {
+    line-height: 1;
     margin-top: var(--default-margin);
     border-top: 1px solid var(--color-grey-light);
     margin-left: -1rem;
