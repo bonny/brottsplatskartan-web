@@ -50,25 +50,26 @@ if $single is set then larger image
         <span class="Event__dateHuman">{{ $event->getPubDateFormattedForHumans() }}</span>
     </p>
 
-    <p class="Event__teaser">{!! nl2br($event->description) !!}</p>
-    <p class="Event__content">
+    <div class="Event__teaser">{!! nl2br($event->description) !!}</div>
+
+    <div class="Event__content">
         @if ( isset($overview) )
             {!! nl2br( str_limit($event->parsed_content, 160) ) !!}
         @else
             {!! nl2br( $event->parsed_content ) !!}
         @endif
-    </p>
+    </div>
 
-        <div class="Event__share">
-            @if ( isset($overview) )
-                <amp-social-share type="twitter" width=40 height=32 data-param-url="{{ $event->getPermalink(true) }}"></amp-social-share>
-                <amp-social-share type="facebook" width=40 height=32 data-param-url="{{ $event->getPermalink() }}" data-param-app_id="105986239475133"></amp-social-share>
-                <amp-social-share type="email" width=40 height=32 data-param-url="{{ $event->getPermalink() }}"></amp-social-share>
-            @else
-                <amp-social-share type="twitter"></amp-social-share>
-                <amp-social-share type="facebook" data-param-app_id="105986239475133"></amp-social-share>
-                <amp-social-share type="email"></amp-social-share>
-            @endif
-        </div>
+    <div class="Event__share">
+        @if ( isset($overview) )
+            <amp-social-share type="twitter" width=40 height=32 data-param-url="{{ $event->getPermalink(true) }}"></amp-social-share>
+            <amp-social-share type="facebook" width=40 height=32 data-param-url="{{ $event->getPermalink() }}" data-param-app_id="105986239475133"></amp-social-share>
+            <amp-social-share type="email" width=40 height=32 data-param-url="{{ $event->getPermalink() }}"></amp-social-share>
+        @else
+            <amp-social-share type="twitter"></amp-social-share>
+            <amp-social-share type="facebook" data-param-app_id="105986239475133"></amp-social-share>
+            <amp-social-share type="email"></amp-social-share>
+        @endif
+    </div>
 
 </article>

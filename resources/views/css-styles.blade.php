@@ -2,6 +2,7 @@
     --color-grey-light: #ddd;
     --color-link: #0379C4;
     --default-margin: 1rem;
+    --default-margin-half: calc(var(--default-margin)/2);
 }
 
 html, body {
@@ -146,12 +147,19 @@ a:hover {
 
 .Event__teaser {
     font-weight: bold;
+    margin-top: 0;
+    margin-bottom: var(--default-margin-half);
 }
 
 .Event__content {
     overflow: hidden;
     position: relative;
     margin-bottom: 0;
+}
+
+/* emulate p tags using br */
+.Event__content br {
+    line-height: 2;
 }
 
 .Event__share {
