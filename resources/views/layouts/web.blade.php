@@ -81,8 +81,6 @@ Layout template for web
         >
     </amp-ad>
 
-    <!--
-    Annons sticky:
     <amp-sticky-ad layout="nodisplay">
         <amp-ad width=300 height=250
             type="adsense"
@@ -92,7 +90,6 @@ Layout template for web
             >
         </amp-ad>
     </amp-sticky-ad>
-    -->
 
 </body>
 </html>
