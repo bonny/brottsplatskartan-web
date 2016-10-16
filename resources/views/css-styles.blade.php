@@ -260,6 +260,16 @@ amp-social-share {
 }
 
 /* ipad and other medium to large screens */
-@media only screen and (min-device-width: 768px) {
+@media only screen and (min-width: 768px) {
+
+    .Events {
+        column-count: 2;
+    }
+
+    .Event {
+        break-inside: avoid;
+        /*display: inline-block;*/
+        /*width: 40%;*/
+    }
 
 }
