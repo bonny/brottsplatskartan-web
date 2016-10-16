@@ -19,11 +19,11 @@ if $single is set then larger image
             <a href="{{ $event->getPermalink() }}">
             @endif
 
-                @if (isset($overview))
+            @if (isset($overview))
                 <amp-img class="Event__mapImage" src="{{ $event->getStaticImageSrc(640,320) }}" width="640" height="320" layout="responsive"></amp-img>
-                @else
-                <amp-img class="Event__mapImage" src="{{ $event->getStaticImageSrc(640,480) }}" width="640" height="480" layout="responsive"></amp-img>
-                @endif
+            @else
+                <amp-img class="Event__mapImage" src="{{ $event->getStaticImageSrc(640,320) }}" width="640" height="320" layout="responsive"></amp-img>
+            @endif
 
             @if ( isset($overview) )
             </a>
