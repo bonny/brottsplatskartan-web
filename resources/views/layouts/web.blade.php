@@ -73,7 +73,7 @@ Layout template for web
     </amp-analytics>
 
     Annons:
-    <amp-ad width=300 height=250
+    <amp-ad width=320 height=100
         type="adsense"
         data-ad-client="ca-pub-1689239266452655"
         data-ad-slot="7743150002"
@@ -82,10 +82,10 @@ Layout template for web
     </amp-ad>
 
     <amp-sticky-ad layout="nodisplay">
-        <amp-ad width=300 height=250
+        <amp-ad width=320 height=50
             type="adsense"
             data-ad-client="ca-pub-1689239266452655"
-            data-ad-slot="9307455607"
+            data-ad-slot="5942966405"
             layout="responsive"
             >
         </amp-ad>
