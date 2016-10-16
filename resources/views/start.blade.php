@@ -12,6 +12,10 @@ Template for start page
 
 @section('content')
 
+    <h1>Brottsplatskartan visar var brotten sker</h1>
+
+    <p>Visar senaste händerlserna:</p>
+
     @if ($events)
 
         <div class="Events">
