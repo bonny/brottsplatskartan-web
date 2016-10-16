@@ -86,7 +86,6 @@ Layout template for web
             type="adsense"
             data-ad-client="ca-pub-1689239266452655"
             data-ad-slot="5942966405"
-            layout="responsive"
             >
         </amp-ad>
     </amp-sticky-ad>
