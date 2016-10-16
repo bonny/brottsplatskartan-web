@@ -113,11 +113,16 @@ a:hover {
 }
 
 .Event__meta {
-    line-height: 1;
+    line-height: 1.3;
     margin-top: .75rem;
     margin-bottom: .75rem;
     padding-bottom: .75rem;
-    /*border-bottom: 1px solid var(--color-grey-light);*/
+    border-bottom: 1px solid var(--color-grey-light);
+    margin-left: -1rem;
+    margin-right: -1rem;
+    padding-left: 1rem;
+    font-size: 0.9rem;
+    color: #666;
 }
 
 .Event__metaDivider {
@@ -151,8 +156,16 @@ a:hover {
 
 .Event__share {
     margin-top: var(--default-margin);
+    border-top: 1px solid var(--color-grey-light);
+    margin-left: -1rem;
+    margin-right: -1rem;
+    padding-left: 1rem;
+    padding-top: 1rem;
 }
 
+amp-social-share {
+    margin-right: .25rem;
+}
 
 /*
 .Event__content {
