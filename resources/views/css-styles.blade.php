@@ -284,6 +284,10 @@ amp-social-share {
         margin-bottom: var(--default-margin);
     }
 
+    .Event:nth-child(odd) {
+        clear: left;
+    }
+
     .Event:nth-child(even) {
         /* margin to show box shadow */
         margin-right: 2px;
