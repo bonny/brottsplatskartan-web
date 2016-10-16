@@ -82,6 +82,47 @@ Route::get('/lan/', function () {
 })->name("lanOverview");
 
 /**
+ * Alla orter översikt
+ */
+Route::get('/plats/', function () {
+
+    $data = [];
+
+    $data["orter"] = DB::table('crime_events')
+                ->select("parsed_title_location")
+                ->where('parsed_title_location', "!=", "")
+                ->orderBy('parsed_title_location', 'asc')
+                ->distinct()
+                ->get();
+
+    return view('overview-platser', $data);
+
+})->name("platserOverview");
+
+
+/**
+ * En ort
+ */
+Route::get('/plats/{plats}', function ($plats) {
+
+    $data = [
+        "plats" => $plats
+    ];
+
+    $data["events"] = CrimeEvent::orderBy("created_at", "desc")
+                                ->where("parsed_title_location", $plats)
+                                ->orWhere("administrative_area_level_2", $plats)
+                                ->paginate(5);
+
+    if (!$data["events"]->count()) {
+        abort(404);
+    }
+
+    return view('single-plats', $data);
+
+})->name("platsSingle");
+
+/**
  * Ett län
  */
 Route::get('/lan/{lan}', function ($lan) {

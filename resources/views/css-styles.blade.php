@@ -18,6 +18,7 @@ body {
     padding-top: 90px;
     /*background: #fafafa;*/
     background: #f4f4f7;
+    margin: 0;
 }
 
 h1, h2, h3, h4 {
@@ -99,6 +100,7 @@ a:hover {
     line-height: 1;
     margin-top: var(--default-margin);
     margin-bottom: .25rem;
+    word-break: break-all;
 }
 
 .Event__date {
@@ -236,11 +238,13 @@ amp-social-share {
     background: #ccc;
 }
 
-.LanListing {
+.LanListing,
+.PlatsListing {
     overflow: hidden;
 }
 
-.LanListing__lan {
+.LanListing__lan,
+.PlatsListing__plats {
     width: 50%;
     float: left;
     font-size: 1rem;

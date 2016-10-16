@@ -104,6 +104,9 @@ class CrimeEvent extends Model
 
     /**
      * Returns a nice permalink to the page
+     *
+     * Example return value:
+     * /varmlands-lan/rattfylleri-2440
      */
     public function getPermalink($absolute = false) {
 
@@ -112,7 +115,16 @@ class CrimeEvent extends Model
         } else {
             $lan = "sverige";
         }
-        $eventName = $this->toAscii($this->parsed_title . "-" . $this->getKey());
+
+        $eventName = $this->toAscii($this->parsed_title);
+
+        if ( ! empty($this->parsed_title_location) ) {
+            $eventName .= "-" . $this->toAscii($this->parsed_title_location);
+        } else {
+            $eventName = "";
+        }
+
+        $eventName .= "-" . $this->getKey();
 
         $permalink = route("singleEvent", [
             "lan" => $lan,
@@ -154,15 +166,24 @@ class CrimeEvent extends Model
         $locations = [];
 
         if ($this->parsed_title_location) {
-            $locations[] = $this->parsed_title_location;
+
+            //$locations[] = $this->parsed_title_location;
+            $locations[] = sprintf(
+                '<a href="%2$s">%1$s</a>',
+                $this->parsed_title_location,
+                route("platsSingle", ["plats" => $this->parsed_title_location])
+            );
+
         }
 
         if ($this->administrative_area_level_1 && $this->administrative_area_level_1 !== $this->parsed_title_location) {
+
             $locations[] = sprintf(
                 '<a href="%2$s">%1$s</a>',
                 $this->administrative_area_level_1,
                 route("lanSingle", ["lan" => $this->administrative_area_level_1])
             );
+
         }
 
         $location = implode(", ", $locations);
