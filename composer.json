@@ -10,7 +10,8 @@
         "willvincent/feeds": "1.0.*",
         "kozz/laravel-guzzle-provider": "~6.0",
         "weidner/goutte": "@dev",
-        "doctrine/dbal": "^2.5"
+        "doctrine/dbal": "^2.5",
+        "creitive/laravel5-breadcrumbs": "^2.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

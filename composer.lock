@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "2f36999ad22ec3bec38dd27d17758e9b",
-    "content-hash": "11794a1ef0a6d8e1ae8e5d41d715b6ad",
+    "hash": "02f7744fcc302325a3db88d4a0402d4d",
+    "content-hash": "e65e79aa2c3701af446533b608d28c02",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -60,6 +60,99 @@
                 "preload"
             ],
             "time": "2015-11-09 22:51:51"
+        },
+        {
+            "name": "creitive/breadcrumbs",
+            "version": "v3.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/creitive/breadcrumbs.git",
+                "reference": "adcf1f009bdfa078f28706ce2221fb1e15560683"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/creitive/breadcrumbs/zipball/adcf1f009bdfa078f28706ce2221fb1e15560683",
+                "reference": "adcf1f009bdfa078f28706ce2221fb1e15560683",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.4",
+                "squizlabs/php_codesniffer": "^2.5",
+                "symfony/css-selector": "~2.0",
+                "symfony/dom-crawler": "~2.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Creitive\\Breadcrumbs\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT License"
+            ],
+            "authors": [
+                {
+                    "name": "Luka Macun",
+                    "email": "luka.macun@creitive.rs"
+                },
+                {
+                    "name": "Miloš Levačić",
+                    "email": "milos.levacic@creitive.rs"
+                }
+            ],
+            "description": "Simple breadcrumbs class",
+            "homepage": "https://github.com/creitive/breadcrumbs",
+            "keywords": [
+                "breadcrumbs"
+            ],
+            "time": "2016-04-24 04:03:43"
+        },
+        {
+            "name": "creitive/laravel5-breadcrumbs",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/creitive/laravel5-breadcrumbs.git",
+                "reference": "5bc69f2dd7d5f1aae716e5d88ef4380908624b1c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/creitive/laravel5-breadcrumbs/zipball/5bc69f2dd7d5f1aae716e5d88ef4380908624b1c",
+                "reference": "5bc69f2dd7d5f1aae716e5d88ef4380908624b1c",
+                "shasum": ""
+            },
+            "require": {
+                "creitive/breadcrumbs": "^3.0",
+                "illuminate/support": "~5.0",
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Creitive\\Breadcrumbs\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT License"
+            ],
+            "authors": [
+                {
+                    "name": "Miloš Levačić",
+                    "email": "milos.levacic@creitive.rs"
+                }
+            ],
+            "description": "Breadcrumbs integration for Laravel 5",
+            "homepage": "https://github.com/creitive/laravel5-breadcrumbs",
+            "keywords": [
+                "breadcrumbs",
+                "laravel"
+            ],
+            "time": "2016-03-09 15:13:17"
         },
         {
             "name": "dnoegel/php-xdg-base-dir",

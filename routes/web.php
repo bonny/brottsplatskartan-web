@@ -200,15 +200,30 @@ Route::get('/{lan}/{eventName}', function ($lan,  $eventName) {
     $eventID = $matches[0];
     $event = CrimeEvent::find($eventID);
 
+    $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs;
+    $breadcrumbs->addCrumb('Hem', '/');
+    // $breadcrumbs->addCrumb($event->parsed_title_location, $lan);
+
+    if ($event->administrative_area_level_1) {
+        $breadcrumbs->addCrumb(
+            e($event->administrative_area_level_1),
+            route("lanSingle", ["lan" => $event->administrative_area_level_1], true)
+        );
+    }
+
+    $breadcrumbs->addCrumb(e($event->parsed_title));
+
     $data = [
         "lan" => $lan,
         "eventID" => $eventID,
-        "event" => $event
+        "event" => $event,
+        "breadcrumbs" => $breadcrumbs
     ];
 
     return view('single-event', $data);
 
 })->name("singleEvent");
+
 
 /**
  * Skicka med data till 404-sidan
