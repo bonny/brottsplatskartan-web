@@ -99,6 +99,45 @@ Route::get('/plats/', function () {
 
 })->name("platserOverview");
 
+/**
+ * Översikt brottstyp/händelsetyp
+ */
+Route::get('/typ/', function () {
+
+    $data = [];
+
+    $data["types"] = DB::table('crime_events')
+                ->select("parsed_title")
+                ->where('parsed_title', "!=", "")
+                ->orderBy('parsed_title', 'asc')
+                ->distinct()
+                ->get();
+
+    return view('overview-typer', $data);
+
+})->name("typeOverview");
+
+/**
+ * En typ
+ */
+Route::get('/typ/{typ}', function ($typ) {
+
+    $data = [
+        "type" => $typ
+    ];
+
+    $data["events"] = CrimeEvent::orderBy("created_at", "desc")
+                                ->where("parsed_title", $typ)
+                                ->paginate(5);
+
+    if (!$data["events"]->count()) {
+        abort(404);
+    }
+
+    return view('single-typ', $data);
+
+})->name("typeSingle");
+
 
 /**
  * En ort
