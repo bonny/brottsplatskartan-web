@@ -119,6 +119,12 @@ Route::get('/typ/', function () {
                 ->distinct()
                 ->get();
 
+    $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs;
+    $breadcrumbs->addCrumb('Hem', '/');
+    $breadcrumbs->addCrumb('Brottstyper', route("typeOverview"));
+
+    $data["breadcrumbs"] = $breadcrumbs;
+
     return view('overview-typer', $data);
 
 })->name("typeOverview");
@@ -139,6 +145,13 @@ Route::get('/typ/{typ}', function ($typ) {
     if (!$data["events"]->count()) {
         abort(404);
     }
+
+    $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs;
+    $breadcrumbs->addCrumb('Hem', '/');
+    $breadcrumbs->addCrumb('Brottstyper', route("typeOverview"));
+    $breadcrumbs->addCrumb(e($typ), route("typeSingle", ["typ" => $typ]));
+
+    $data["breadcrumbs"] = $breadcrumbs;
 
     return view('single-typ', $data);
 
