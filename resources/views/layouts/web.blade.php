@@ -40,6 +40,8 @@ Layout template for web
             <p class="SiteTagline"><em>Visar på karta vad brotten sker</em></p>
         </header>
 
+        @include('parts.breadcrumb', ["single" => true])
+
         @yield('content')
 
     </div>

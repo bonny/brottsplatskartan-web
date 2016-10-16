@@ -77,6 +77,12 @@ Route::get('/lan/', function () {
                 ->where('administrative_area_level_1', "!=", "")
                 ->get();
 
+    $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs;
+    $breadcrumbs->addCrumb('Hem', '/');
+    $breadcrumbs->addCrumb('Län', route("lanOverview"));
+
+    $data["breadcrumbs"] = $breadcrumbs;
+
     return view('overview-lan', $data);
 
 })->name("lanOverview");
@@ -170,6 +176,7 @@ Route::get('/lan/{lan}', function ($lan) {
         "lan" => $lan
     ];
 
+
     $data["events"] = CrimeEvent::orderBy("created_at", "desc")
                                 ->where("administrative_area_level_1", $lan)
                                 ->paginate(5);
@@ -177,6 +184,13 @@ Route::get('/lan/{lan}', function ($lan) {
     if (!$data["events"]->count()) {
         abort(404);
     }
+
+    $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs;
+    $breadcrumbs->addCrumb('Hem', '/');
+    $breadcrumbs->addCrumb('Län', route("lanOverview"));
+    $breadcrumbs->addCrumb(e($lan), e($lan));
+
+    $data["breadcrumbs"] = $breadcrumbs;
 
     return view('single-lan', $data);
 
@@ -202,7 +216,7 @@ Route::get('/{lan}/{eventName}', function ($lan,  $eventName) {
 
     $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs;
     $breadcrumbs->addCrumb('Hem', '/');
-    // $breadcrumbs->addCrumb($event->parsed_title_location, $lan);
+    $breadcrumbs->addCrumb('Län', route("lanOverview"));
 
     if ($event->administrative_area_level_1) {
         $breadcrumbs->addCrumb(

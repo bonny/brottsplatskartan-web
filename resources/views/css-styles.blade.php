@@ -276,7 +276,7 @@ amp-social-share {
     margin-top: var(--default-margin);
     overflow: hidden;
     padding: 0;
-    line-height: 1;
+    line-height: 1.2;
 }
 
 .breadcrumbs {
@@ -300,8 +300,8 @@ amp-social-share {
 }
 
 .breadcrumbs .divider {
-    margin-left: var(--default-margin-half);
-    margin-right: var(--default-margin-half);
+    margin-left: .25rem;
+    margin-right: .5rem;
 }
 
 /* ipad and other medium to large screens */
