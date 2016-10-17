@@ -146,7 +146,7 @@ Route::get('/typ/{typ}', function ($typ) {
 
     $data["events"] = CrimeEvent::orderBy("created_at", "desc")
                                 ->where("parsed_title", $typ)
-                                ->paginate(5);
+                                ->paginate(10);
 
     if (!$data["events"]->count()) {
         abort(404);
@@ -176,7 +176,7 @@ Route::get('/plats/{plats}', function ($plats) {
     $data["events"] = CrimeEvent::orderBy("created_at", "desc")
                                 ->where("parsed_title_location", $plats)
                                 ->orWhere("administrative_area_level_2", $plats)
-                                ->paginate(5);
+                                ->paginate(10);
 
     if (!$data["events"]->count()) {
         abort(404);
@@ -204,7 +204,7 @@ Route::get('/lan/{lan}', function ($lan) {
 
     $data["events"] = CrimeEvent::orderBy("created_at", "desc")
                                 ->where("administrative_area_level_1", $lan)
-                                ->paginate(5);
+                                ->paginate(10);
 
     if (!$data["events"]->count()) {
         abort(404);
@@ -290,7 +290,7 @@ Route::get('/sok/', function (Request $request) {
             ->orWhere("parsed_content", "LIKE", "%$s%")
             ->orWhere("parsed_title", "LIKE", "%$s%");
 
-        })->paginate(5);
+        })->paginate(10);
 
     }
 
@@ -326,7 +326,7 @@ Route::get('/sok/', function (Request $request) {
 
     $data = [];
 
-    $data["events"] = CrimeEvent::orderBy("created_at", "desc")->paginate(5);
+    $data["events"] = CrimeEvent::orderBy("created_at", "desc")->paginate(10);
 
     // Hämta alla län, grupperat på län och antal
     $data["lan"] = DB::table('crime_events')

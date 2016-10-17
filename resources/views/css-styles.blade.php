@@ -79,6 +79,7 @@ a:hover {
     margin-top: .5em;
     margin-bottom: 0;
     font-style:normal;
+    line-height: 1;
 }
 .SiteTagline em {
     font-style: inherit;
@@ -252,6 +253,23 @@ amp-social-share {
 
 .SearchForm__submit {
     width: 4rem;
+}
+
+.HeaderSearch {
+    float: right;
+    margin-top: -1rem;
+    width: 30%;
+    text-align: right;
+    line-height: 1;
+    margin-bottom: -1rem;
+}
+
+.HeaderSearch__s {
+    width: 100%;
+}
+
+.HeaderSearch__submit {
+    display: none;
 }
 
 .pagination {
