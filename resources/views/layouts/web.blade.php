@@ -36,8 +36,10 @@ Layout template for web
     <div class="container">
 
         <header class="SiteHeader">
-            <h1 class="SiteTitle"><a href="/">Brottsplatskartan.se</a></h1>
-            <p class="SiteTagline"><em>Visar på karta vad brotten sker</em></p>
+            <div class="SiteHeader__inner">
+                <h1 class="SiteTitle"><a href="/">Brottsplatskartan.se</a></h1>
+                <p class="SiteTagline"><em>Visar på karta vad brotten sker</em></p>
+            </div>
         </header>
 
         @include('parts.breadcrumb', ["single" => true])
