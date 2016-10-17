@@ -235,6 +235,25 @@ amp-social-share {
     display: block;
 }
 
+.SearchForm {
+    margin-bottom: var(--default-margin);
+}
+
+.SearchForm__s,
+.SearchForm__submit {
+    font-size: 1rem;
+    padding: var(--default-margin-half);
+    display: inline-block;
+}
+
+.SearchForm__s {
+    width: calc(100% - 5rem);
+}
+
+.SearchForm__submit {
+    width: 4rem;
+}
+
 .pagination {
     text-align: center;
     width: 100%;
