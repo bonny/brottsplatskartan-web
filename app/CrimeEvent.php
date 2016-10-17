@@ -90,6 +90,12 @@ class CrimeEvent extends Model
 
     }
 
+    public function getPubDateISO8601() {
+
+        return Carbon::createFromTimestamp($this->pubdate)->toIso8601String();
+
+    }
+
     public function getPubDateFormatted() {
 
         return Carbon::createFromTimestamp($this->pubdate)->formatLocalized('%A %d %B %Y');
