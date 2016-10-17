@@ -188,6 +188,15 @@ a:hover {
     line-height: 2;
 }
 
+.Event__related {
+    margin-top: var(--default-margin);
+    border-top: 1px solid var(--color-grey-light);
+    margin-left: -1rem;
+    margin-right: -1rem;
+    padding-left: 1rem;
+    padding-top: 1rem;
+}
+
 .Event__share {
     line-height: 1;
     margin-top: var(--default-margin);
