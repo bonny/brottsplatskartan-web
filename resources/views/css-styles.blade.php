@@ -138,6 +138,7 @@ a:hover {
     margin-left: -1rem;
     margin-right: -1rem;
     padding-left: 1rem;
+    padding-right: 1rem;
     font-size: 0.9rem;
     color: #666;
 }
