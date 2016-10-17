@@ -1,4 +1,5 @@
 {{--
+
 Template part for single crime event, part of loop or single
 
 if $overview is set then adds link etc
@@ -67,6 +68,11 @@ if $single is set then larger image
     @if ( isset($overview) )
     </a>
     @endif
+
+    <div class="Event__related">
+        Visa fler brott av typ <a href="{{ route("typeSingle", $event->parsed_title ) }}">{{ $event->parsed_title }}</a>
+        <!-- <span class="Event__metaDivider"> | </span> -->
+    </div>
 
     <div class="Event__share">
         @if ( isset($overview) )
