@@ -290,7 +290,7 @@ Route::get('/sok/', function (Request $request) {
             ->orWhere("parsed_content", "LIKE", "%$s%")
             ->orWhere("parsed_title", "LIKE", "%$s%");
 
-        })->paginate(10);
+        })->orderBy("created_at", "desc")->paginate(10);
 
     }
 
