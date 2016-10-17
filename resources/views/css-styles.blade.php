@@ -304,8 +304,8 @@ amp-social-share {
     margin-right: .5rem;
 }
 
-/* ipad and other medium to large screens */
-@media only screen and (min-width: 768px) {
+/* ~ipad~ iphone 6 liggande and other medium to large screens */
+@media only screen and (min-width: 667px) {
 
     .Events--overview .Event {
         float: left;

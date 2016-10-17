@@ -27,6 +27,7 @@ Template för en ort
                 @include('parts.crimeevent', ["overview" => true])
 
             @endforeach
+            
         </div>
 
         {{ $events->links() }}
