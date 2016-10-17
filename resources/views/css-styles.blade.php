@@ -64,6 +64,11 @@ a:hover {
 
 }
 
+.SiteHeader__inner {
+    max-width: 980px;
+    margin: 0 auto;
+}
+
 .SiteTitle {
     margin: 0;
     line-height: 1;
