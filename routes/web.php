@@ -101,6 +101,12 @@ Route::get('/plats/', function () {
                 ->distinct()
                 ->get();
 
+    $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs;
+    $breadcrumbs->addCrumb('Hem', '/');
+    $breadcrumbs->addCrumb('Platser', route("platserOverview"));
+
+    $data["breadcrumbs"] = $breadcrumbs;
+
     return view('overview-platser', $data);
 
 })->name("platserOverview");
@@ -176,6 +182,13 @@ Route::get('/plats/{plats}', function ($plats) {
         abort(404);
     }
 
+    $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs;
+    $breadcrumbs->addCrumb('Hem', '/');
+    $breadcrumbs->addCrumb('Platser', route("platserOverview"));
+    $breadcrumbs->addCrumb($plats);
+
+    $data["breadcrumbs"] = $breadcrumbs;
+
     return view('single-plats', $data);
 
 })->name("platsSingle");
@@ -188,7 +201,6 @@ Route::get('/lan/{lan}', function ($lan) {
     $data = [
         "lan" => $lan
     ];
-
 
     $data["events"] = CrimeEvent::orderBy("created_at", "desc")
                                 ->where("administrative_area_level_1", $lan)
