@@ -225,4 +225,21 @@ class CrimeEvent extends Model
 
     }
 
+    // https://laracasts.com/discuss/channels/laravel/search-option-in-laravel-5?page=1
+    public static function scopeSearchByKeyword($query, $keyword) {
+
+        if ($keyword != '') {
+
+            $query->where(function ($query) use ($keyword) {
+
+                $query->where("description", "LIKE","%$keyword%")
+                    ->orWhere("parsed_title_location", "LIKE", "%$keyword%")
+                    ->orWhere("parsed_content", "LIKE", "%$keyword%")
+                    ->orWhere("parsed_title", "LIKE", "%$keyword%");
+
+            });
+        }
+
+        return $query;
+    }
 }

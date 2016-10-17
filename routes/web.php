@@ -263,6 +263,61 @@ Route::get('/{lan}/{eventName}', function ($lan,  $eventName) {
 
 })->name("singleEvent");
 
+/**
+ * sök
+ * start + söksida = samma sida
+ *
+ */
+Route::get('/sok/', function (Request $request) {
+
+    $minSearchLength = 2;
+
+    $s = $request->input("s");
+    $events = null;
+
+    $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs;
+    $breadcrumbs->addCrumb('Hem', '/');
+    $breadcrumbs->addCrumb('Sök', route("search"));
+
+    if ( $s && mb_strlen($s) >= $minSearchLength ) {
+
+        $breadcrumbs->addCrumb(e($s));
+
+        $events = CrimeEvent::where(function($query) use ($s) {
+
+            $query->where("description", "LIKE","%$s%")
+            ->orWhere("parsed_title_location", "LIKE", "%$s%")
+            ->orWhere("parsed_content", "LIKE", "%$s%")
+            ->orWhere("parsed_title", "LIKE", "%$s%");
+
+        })->paginate(5);
+
+    }
+
+
+
+    /*
+    $query->where(function ($query) use ($keyword) {
+
+        $query->where("description", "LIKE","%$keyword%")
+            ->orWhere("parsed_title_location", "LIKE", "%$keyword%")
+            ->orWhere("parsed_content", "LIKE", "%$keyword%")
+            ->orWhere("parsed_title", "LIKE", "%$keyword%");
+
+    });
+    */
+
+
+    $data = [
+        "s" => $s,
+        "events" => $events,
+        "breadcrumbs" => $breadcrumbs
+    ];
+
+    return view('search', $data);
+
+})->name("search");
+
 
 /**
  * Skicka med data till 404-sidan
