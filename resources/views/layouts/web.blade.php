@@ -39,7 +39,13 @@ Layout template for web
         <header class="SiteHeader">
             <div class="SiteHeader__inner">
                 <h1 class="SiteTitle"><a href="/">Brottsplatskartan.se</a></h1>
-                <p class="SiteTagline"><em>Visar på karta vad brotten sker</em></p>
+                <p class="SiteTagline"><em>Se på karta var brott sker</em></p>
+
+                <form method="get" action="{{ route("search") }}" class="HeaderSearch">
+                    <input type="text" name="s" value="" class="HeaderSearch__s" placeholder="Sök">
+                    <button type="submit" class="HeaderSearch__submit">Sök</button>
+                </form>
+
             </div>
         </header>
 
