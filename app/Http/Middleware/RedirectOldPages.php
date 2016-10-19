@@ -24,11 +24,11 @@ class RedirectOldPages
             // for example 'http://brottsplatskartan.dev/lan/gotlands-lan'
             $url = $request->Url();
 
-            // for example lan/gotlands-lan
+            // for example 'lan/gotlands-lan'
             $path = $request->path();
 
-            // lan/gotlands-lan
-            //ends_with("", $path);
+            // redirect gamla län-urls, slutar med 'lan/gotlands-lan'
+            // hel url är t.ex. 'www.brottsplatskartan.se/lan/stockholms-lan'
             if (starts_with($path, "lan/")) {
 
                 // gammal län-url
