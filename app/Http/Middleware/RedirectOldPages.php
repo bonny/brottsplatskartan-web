@@ -55,7 +55,7 @@ class RedirectOldPages
                     'vasterbottens-lan' => 'Västerbottens län',
                     'vasternorrlands-lan' => 'Västernorrlands län',
                     'vastmanlands-lan' => 'Västmanlands län',
-                    'vastra-gotalands -lan' => 'Västra Götalands län ',
+                    'vastra-gotalands-lan' => 'Västra Götalands län ',
                     'orebro-lan' => 'Örebro län',
                     'ostergotlands-lan' => 'Östergötlands län',
                 ];
