@@ -29,7 +29,7 @@ class RedirectOldPages
 
             // redirect gamla län-urls, slutar med 'lan/gotlands-lan'
             // hel url är t.ex. 'www.brottsplatskartan.se/lan/stockholms-lan'
-            if (starts_with($path, "lan/")) {
+            if (starts_with($path, "lan/") && ends_with($path, "-lan")) {
 
                 // gammal län-url
 
@@ -67,7 +67,7 @@ class RedirectOldPages
 
             } else {
 
-                echo "<br>404 found for<br>url $url<br>$path";
+                // echo "<br>404 found for<br>url $url<br>$path";
 
             }
 
