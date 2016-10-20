@@ -12,30 +12,32 @@ Layout template for web
     <script async custom-element="amp-sticky-ad" src="https://cdn.ampproject.org/v0/amp-sticky-ad-0.1.js"></script>
     <script async custom-element="amp-social-share" src="https://cdn.ampproject.org/v0/amp-social-share-0.1.js"></script>
     <script async custom-element="amp-form" src="https://cdn.ampproject.org/v0/amp-form-0.1.js"></script>
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
     <meta content="IE=Edge" http-equiv="X-UA-Compatible">
     <link rel="canonical" href="@yield('canonicalLink', '/')">
 
     @hasSection('metaDescription')
-    <meta property="og:description" content="@yield('metaDescription')">
-    <meta name="description" content="@yield('metaDescription')">
-    <meta name="twitter:description" content="@yield('metaDescription')">
+        <meta property="og:description" content="@yield('metaDescription')">
+        <meta name="description" content="@yield('metaDescription')">
+        <meta name="twitter:description" content="@yield('metaDescription')">
     @endif
 
     @hasSection('metaImage')
-    <meta property="og:image" content="@yield('metaImage')" />
-    <meta name="twitter:image" content="@yield('metaImage')">
+        <meta property="og:image" content="@yield('metaImage')" />
+        <meta name="twitter:image" content="@yield('metaImage')">
+        <meta name="twitter:card" content="summary_large_image">
+    @else
+        <meta name="twitter:card" content="summary">
     @endif
 
-    <meta property="fb:admins" content="685381489,523547944" />
     <meta property="og:site_name" content="Brottsplatskartan.se - brott på karta" />
     <meta property="fb:admins" content="685381489,523547944" />
     <meta property="og:locale" content="sv_SE" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="@yield('title')" />
 
-    <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@brottsplatser">
     <meta name="twitter:title" content="@yield('title')">
 
