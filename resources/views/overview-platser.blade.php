@@ -7,7 +7,8 @@ Template för ort-översikt
 
 @extends('layouts.web')
 
-@section('title', 'Ort')
+@section('title', 'Brott på platser och orter i Sverige')
+@section('metaDescription', "Se var brott sker på en mängd olika orter och platser i Sverige. Brottsplatskartan visar alla brott på en karta - direkt från Polisen.")
 @section('canonicalLink', '/orter')
 
 @section('content')
