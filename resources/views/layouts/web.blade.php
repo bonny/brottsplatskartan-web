@@ -19,9 +19,12 @@ Layout template for web
     <link rel="canonical" href="@yield('canonicalLink', '/')">
 
     @hasSection('metaDescription')
-        <meta property="og:description" content="@yield('metaDescription')">
         <meta name="description" content="@yield('metaDescription')">
+        <meta property="og:description" content="@yield('metaDescription')">
         <meta name="twitter:description" content="@yield('metaDescription')">
+    @else
+        <meta property="og:description" content="Se var brott sker nära dig">
+        <meta name="twitter:description" content="Se var brott sker nära dig">
     @endif
 
     @hasSection('metaImage')
