@@ -20,10 +20,12 @@ Layout template for web
     @hasSection('metaDescription')
     <meta property="og:description" content="@yield('metaDescription')">
     <meta name="description" content="@yield('metaDescription')">
+    <meta name="twitter:description" content="@yield('metaDescription')">
     @endif
 
     @hasSection('metaImage')
     <meta property="og:image" content="@yield('metaImage')" />
+    <meta name="twitter:image" content="@yield('metaImage')">
     @endif
 
     <meta property="fb:admins" content="685381489,523547944" />
@@ -32,6 +34,10 @@ Layout template for web
     <meta property="og:locale" content="sv_SE" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="@yield('title')" />
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@brottsplatser">
+    <meta name="twitter:title" content="@yield('title')">
 
     <title>@yield('title') → Brottsplatskartan</title>
 
