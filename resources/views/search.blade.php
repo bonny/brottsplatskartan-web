@@ -34,18 +34,22 @@ Template för sök
         </div>
 
         {{ $events->links() }}
-        
+
     @else
 
-        <p>Hittade inga sidor som innehåller <b>"{{ $s }}"</b></p>
+        @if ($s)
 
-        <p>Förslag:</p>
+            <p>Hittade inga sidor som innehåller <b>"{{ $s }}"</b></p>
 
-        <ul>
-            <li>Kontrollera att alla ord är rättstavade.</li>
-            <li>Försök med andra sökord.</li>
-            <li>Försök med mer allmänna sökord.</li>
-        </ul>
+            <p>Förslag:</p>
+
+            <ul>
+                <li>Kontrollera att alla ord är rättstavade.</li>
+                <li>Försök med andra sökord.</li>
+                <li>Försök med mer allmänna sökord.</li>
+            </ul>
+
+        @endif
 
     @endif
 
