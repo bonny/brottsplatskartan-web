@@ -65,9 +65,20 @@ Route::group(['prefix' => 'admin'], function () {
 /**
  * Alla län översikt
  */
-Route::get('/lan/', function () {
+Route::get('/lan/', function (Request $request) {
 
     $data = [];
+
+    // some old pages are indexed by google like this
+    // "brottsplatskartan.se/lan?lan=/lan/orebro-lan
+    $old_lan_query = $request->input("lan");
+
+    if ($old_lan_query) {
+        // /lan/orebro-lan
+        $old_lan_query = str_replace('/lan/', '', $old_lan_query);
+        $redirect_to = "lan/{$old_lan_query}";
+        return redirect($redirect_to, 301);
+    }
 
     // Hämta alla län, grupperat på län och antal
     $data["lan"] = DB::table('crime_events')
