@@ -79,9 +79,10 @@ Layout template for web
 
         <p>Brottsplatskartan</p>
 
-        <p>
-            Om brotten och kartan
-        </p>
+        <ul>
+            <li>Om brotten och kartan</li>
+            <li>Brottplatser API</li>
+        </ul>
 
     </footer>
 

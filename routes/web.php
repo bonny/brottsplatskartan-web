@@ -193,6 +193,22 @@ Route::get('/plats/{plats}', function ($plats) {
 
 })->name("platsSingle");
 
+
+/**
+ * sida
+ */
+Route::get('/sida/{pagename}', function ($pagename = null) {
+
+    $data = [
+        "pagename" => $pagename,
+        "pageTitle" => "Sidan $pagename"
+    ];
+
+    return view('page', $data);
+
+})->name("page");
+
+
 /**
  * Ett län
  */
@@ -263,10 +279,12 @@ Route::get('/{lan}/{eventName}', function ($lan,  $eventName) {
 
 })->name("singleEvent");
 
+
+
+
 /**
  * sök
- * start + söksida = samma sida
- *
+ * sökstartsida + sökresultatsida = samma sida
  */
 Route::get('/sok/', function (Request $request) {
 
@@ -293,20 +311,6 @@ Route::get('/sok/', function (Request $request) {
         })->orderBy("created_at", "desc")->paginate(10);
 
     }
-
-
-
-    /*
-    $query->where(function ($query) use ($keyword) {
-
-        $query->where("description", "LIKE","%$keyword%")
-            ->orWhere("parsed_title_location", "LIKE", "%$keyword%")
-            ->orWhere("parsed_content", "LIKE", "%$keyword%")
-            ->orWhere("parsed_title", "LIKE", "%$keyword%");
-
-    });
-    */
-
 
     $data = [
         "s" => $s,

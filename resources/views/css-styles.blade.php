@@ -179,6 +179,11 @@ a:hover {
     margin-bottom: 0;
 }
 
+.Event__content p {
+    margin-top: var(--default-margin-half);
+    margin-bottom: var(--default-margin-half);
+}
+
 .Event__content p:first-child {
     margin-top: 0;
 }
