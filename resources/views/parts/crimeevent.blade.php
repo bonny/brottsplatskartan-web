@@ -57,13 +57,13 @@ if $single is set then larger image
     <a class="Event__contentLink" href="{{ $event->getPermalink() }}">
     @endif
 
-    <div class="Event__teaser">{!! nl2br($event->description) !!}</div>
+    <div class="Event__teaser">{!! $event->getDescription() !!}</div>
 
     <div class="Event__content">
         @if ( isset($overview) )
-            {!! nl2br( str_limit($event->parsed_content, 160) ) !!}
+            {!! nl2br( str_limit($event->getParsedContent(), 160) ) !!}
         @else
-            {!! nl2br( $event->parsed_content ) !!}
+            {!! nl2br( $event->getParsedContent() ) !!}
         @endif
     </div>
 
