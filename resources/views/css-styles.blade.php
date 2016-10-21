@@ -164,7 +164,7 @@ a:hover {
 
 
 .Event__teaser {
-    font-weight: bold;
+    font-weight: 600;
     margin-top: 0;
     margin-bottom: var(--default-margin-half);
 }
@@ -318,6 +318,7 @@ amp-social-share {
     background: var(--color-grey-light);
     padding: .5rem;
     margin-top: var(--default-margin);
+    margin-top: 4rem;
 }
 
 .Breadcrumbs {

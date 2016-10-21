@@ -14,7 +14,7 @@ Template för sök
 
     <h1>Sök brott</h1>
 
-    <form method="get" action="{{ route("search", null, false) }}" class="SearchForm" target="_blank">
+    <form method="get" action="{{ route("search", null, false) }}" class="SearchForm" target="_top">
         <input type="text" name="s" value="{{ $s }}" class="SearchForm__s">
         <button type="submit" class="SearchForm__submit">Sök</button>
     </form>
@@ -34,6 +34,18 @@ Template för sök
         </div>
 
         {{ $events->links() }}
+        
+    @else
+
+        <p>Hittade inga sidor som innehåller <b>"{{ $s }}"</b></p>
+
+        <p>Förslag:</p>
+
+        <ul>
+            <li>Kontrollera att alla ord är rättstavade.</li>
+            <li>Försök med andra sökord.</li>
+            <li>Försök med mer allmänna sökord.</li>
+        </ul>
 
     @endif
 
