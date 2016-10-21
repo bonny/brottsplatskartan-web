@@ -246,4 +246,33 @@ class CrimeEvent extends Model
 
         return $query;
     }
+
+    /**
+     * Get the description (kinda the teaser)
+     * replacing new lines with <p>
+     */
+    public function getDescription() {
+
+        $text = $this->description;
+
+        $text = '<p>' . preg_replace('/[\r\n]+/', '</p><p>', $text) . '</p>';
+
+        return $text;
+
+    }
+
+    /**
+     * Get the description
+     * replacing new lines with <p>
+     */
+    public function getParsedContent() {
+
+        $text = $this->parsed_content;
+
+        $text = '<p>' . preg_replace('/[\r\n]+/', '</p><p>', $text) . '</p>';
+
+        return $text;
+
+    }
+
 }

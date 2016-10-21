@@ -164,14 +164,26 @@ a:hover {
 
 
 .Event__teaser {
-    font-weight: 600;
+    font-weight: bold;
     margin-top: 0;
     margin-bottom: var(--default-margin-half);
+}
+
+.Event__teaser p {
+    margin: 0;
 }
 
 .Event__content {
     overflow: hidden;
     position: relative;
+    margin-bottom: 0;
+}
+
+.Event__content p:first-child {
+    margin-top: 0;
+}
+
+.Event__content p:last-child {
     margin-bottom: 0;
 }
 
