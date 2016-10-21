@@ -14,7 +14,7 @@ Template för sök
 
     <h1>Sök brott</h1>
 
-    <form method="get" action="{{ route("search", null, false) }}" class="SearchForm">
+    <form method="get" action="{{ route("search", null, false) }}" class="SearchForm" target="_blank">
         <input type="text" name="s" value="{{ $s }}" class="SearchForm__s">
         <button type="submit" class="SearchForm__submit">Sök</button>
     </form>
