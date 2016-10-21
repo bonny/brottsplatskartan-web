@@ -71,10 +71,11 @@ if $single is set then larger image
     </a>
     @endif
 
+    {{--
     <div class="Event__related">
         Visa fler brott av typ <a href="{{ route("typeSingle", $event->parsed_title ) }}">{{ $event->parsed_title }}</a>
-        <!-- <span class="Event__metaDivider"> | </span> -->
     </div>
+    --}}
 
     <div class="Event__share">
         @if ( isset($overview) )
