@@ -61,9 +61,9 @@ if $single is set then larger image
 
     <div class="Event__content">
         @if ( isset($overview) )
-            {!! nl2br( str_limit($event->getParsedContent(), 160) ) !!}
+            {!! str_limit($event->getParsedContent(), 160) !!}
         @else
-            {!! nl2br( $event->getParsedContent() ) !!}
+            {!! $event->getParsedContent() !!}
         @endif
     </div>
 
