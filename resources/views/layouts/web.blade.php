@@ -36,7 +36,9 @@ Layout template for web
     @endif
 
     <meta property="og:site_name" content="Brottsplatskartan.se - brott på karta" />
-    <meta property="fb:admins" content="685381489,523547944" />
+    <meta property="fb:admins" content="685381489" />
+    <meta property="fb:admins" content="523547944" />
+    <meta property="fb:app_id" content="134210933301575" />
     <meta property="og:locale" content="sv_SE" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="@yield('title')" />
