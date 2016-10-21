@@ -8,7 +8,7 @@ Template för län-översikt
 @extends('layouts.web')
 
 @section('title', 'Brott i Sveriges län')
-@section('metaDescription', "På Brottsplatskartan kan du län för län se på en karta var i Sverige brott sker - direkt från Polisen")
+@section('metaDescription', e("På Brottsplatskartan kan du län för län se på en karta var i Sverige brott sker - direkt från Polisen"))
 @section('canonicalLink', '/lan')
 
 @section('content')

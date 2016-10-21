@@ -8,7 +8,7 @@ Template för ett län
 @extends('layouts.web')
 
 @section('title', "$lan: brott och händelser i $lan")
-@section('metaDescription', "Se var brott sker i närheten av $lan. Informationen kommer direkt från Polisen till vår karta!")
+@section('metaDescription', e("Se var brott sker i närheten av $lan. Informationen kommer direkt från Polisen till vår karta!"))
 @section('canonicalLink', "/lan/$lan")
 
 @section('content')
