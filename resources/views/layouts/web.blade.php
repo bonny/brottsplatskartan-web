@@ -61,7 +61,7 @@ Layout template for web
                 <h1 class="SiteTitle"><a href="/">Brottsplatskartan.se</a></h1>
                 <p class="SiteTagline"><em>Se på karta var brott sker</em></p>
 
-                <form method="get" action="{{ route("search", null, false) }}" class="HeaderSearch" target="_blank">
+                <form method="get" action="{{ route("search", null, false) }}" class="HeaderSearch" target="_top">
                     <input type="text" name="s" value="" class="HeaderSearch__s" placeholder="Sök">
                     <button type="submit" class="HeaderSearch__submit">Sök</button>
                 </form>
