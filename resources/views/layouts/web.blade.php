@@ -136,6 +136,7 @@ Layout template for web
 
     </footer>
 
+    @if (env("APP_ENV") != "local")
     <amp-analytics type="googleanalytics" id="analytics-ga">
       <script type="application/json">
       {
@@ -151,6 +152,7 @@ Layout template for web
       }
       </script>
     </amp-analytics>
+    @endif
 
     Annons:
     <amp-ad width=320 height=100
