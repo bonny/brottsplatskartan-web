@@ -46,30 +46,37 @@ Route::get('/', function () {
 Route::get('/nara', function (Request $request) {
 
     $data = [];
+    $events = null;
 
     $lat = (float) $request->input("lat");
     $lng = (float) $request->input("lng");
+    $error = (bool) $request->input("error");
 
     $lat = round($lat, 5);
     $lng = round($lng, 5);
 
-    /*
-    $events = CrimeEvent::select( DB::raw('*, ( 6371 * acos( cos( radians(59.316) ) * cos( radians( location_lat ) ) * cos( radians( location_lng ) - radians(18.08) ) + sin( radians(59.316) ) * sin( radians( location_lat ) ) ) ) AS distance') )
-                ->havingRaw("distance < 25")
-                ->orderBy("distance", "ASC")
-                ->get();
-                // ->paginate(10);
-    */
-    /*Store::selectRaw('*, distance(lat, ?, lng, ?) as distance', [$lat, $lon])
-        ->orderBy('distance')
-        ->paginate(10);*/
-        // lat, lng, lat
-    $events = CrimeEvent::selectRaw('*, ( 6371 * acos( cos( radians(?) ) * cos( radians( location_lat ) ) * cos( radians( location_lng ) - radians(?) ) + sin( radians(?) ) * sin( radians( location_lat ) ) ) ) AS distance', [ $lat, $lng, $lat ])
-    //->havingRaw("distance < 25")
-    //->having("distance", "<", "25")
-    ->orderBy("distance", "ASC")
-    #->get();
-    ->paginate(10);
+    if ($lat && $lng && ! $error ) {
+        // works, but cant use "having"
+        #$events = CrimeEvent::selectRaw('*, ( 6371 * acos( cos( radians(?) ) * cos( radians( location_lat ) ) * cos( radians( location_lng ) - radians(?) ) + sin( radians(?) ) * sin( radians( location_lat ) ) ) ) AS distance', [ $lat, $lng, $lat ])
+        #->orderBy("distance", "ASC")
+        #->paginate(10);
+
+        // try 2, works but does not support pagination
+        $nearbyInKm = 5;
+        $nearbyCount = 25;
+        $events = CrimeEvent::selectRaw('*, ( 6371 * acos( cos( radians(?) ) * cos( radians( location_lat ) ) * cos( radians( location_lng ) - radians(?) ) + sin( radians(?) ) * sin( radians( location_lat ) ) ) ) AS distance', [ $lat, $lng, $lat ])
+        ->having("distance", "<=", $nearbyInKm) // välj de som är rimligt nära, värdet är i km
+        ->orderBy("parsed_date", "DESC")
+        ->orderBy("distance", "ASC")
+        ->limit($nearbyCount)
+        ->get();
+
+        $data["nearbyInKm"] = $nearbyInKm;
+        $data["nearbyCount"] = $nearbyCount;
+
+    } else {
+        $data["error"] = true;
+    }
 
     /*
     Raw sql that seems to work:

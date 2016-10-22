@@ -12,6 +12,10 @@
             font-weight: normal;
             font-size: 16px;
             line-height: 1.4;
+            text-align: center;
+        }
+        p {
+            margin-top: 10%;
         }
     </style>
 </head>
@@ -31,7 +35,11 @@
     (function() {
 
         if (! "geolocation" in navigator) {
-            console.log("no geolocation support found");
+            // console.log("no geolocation support found");
+
+            var url = "/nara?error=1";
+            document.location = url;
+
             return;
         }
 
@@ -57,7 +65,10 @@
                     { code: 2, message: "Network location provider at 'https://www.googleapis.com/' : Returned error code 400."}
 
             */
-            console.log("did not get geolocation position", err);
+            // console.log("did not get geolocation position", err);
+
+            var url = "/nara?error=1";
+            document.location = url;
 
         });
 
