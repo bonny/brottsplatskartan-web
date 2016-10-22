@@ -51,7 +51,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => env('APP_URL', 'https://brottsplatskartan.dev'),
 
     /*
     |--------------------------------------------------------------------------
@@ -235,7 +235,7 @@ return [
         'Guzzle' => 'Kozz\Laravel\Facades\Guzzle',
         'Goutte' => Weidner\Goutte\GoutteFacade::class,
         'Breadcrumbs' => 'Creitive\Breadcrumbs\Facades\Breadcrumbs',
-        
+
     ],
 
 ];
