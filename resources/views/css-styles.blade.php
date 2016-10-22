@@ -108,6 +108,11 @@ a:hover {
     color: inherit;
 }
 
+.SiteHeader__icon {
+    width: 40px;
+    height: 40px;
+}
+
 /* Site navigation */
 .SiteNav {
     display: block;
