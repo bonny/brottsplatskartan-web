@@ -34,7 +34,7 @@ Template for start page
             @endforeach
 
         </div>
-
+        
         {{ $events->links() }}
 
     @endif

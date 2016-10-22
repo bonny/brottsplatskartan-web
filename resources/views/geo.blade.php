@@ -22,6 +22,11 @@ Template for start page
 
     @if ($events)
 
+        <p>
+            Visar de {{ $nearbyCount }} senaste brotten som rapporterats inom ungefär {{ $nearbyInKm }} km från din plats.
+            Nyaste brotten visas först.
+        </p>
+
         <div class="Events Events--overview">
 
             @foreach ($events as $event)
@@ -32,8 +37,12 @@ Template for start page
 
         </div>
 
-        {{ $events->links() }}
+        {{-- $events->links() --}}
 
+    @endif
+
+    @if (isset($error) && $error)
+        <p>Kunde inte avgöra din position.</p>
     @endif
 
 @endsection
