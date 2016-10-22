@@ -255,7 +255,7 @@ class CrimeEvent extends Model
 
         $text = $this->description;
 
-        $text = '<p>' . preg_replace('/[\r\n]+/', '</p><p>', $text) . '</p>';
+        $text = $this->autop($text);
 
         return $text;
 
@@ -269,7 +269,23 @@ class CrimeEvent extends Model
 
         $text = $this->parsed_content;
 
+        $text = $this->autop($text);
+
+        return $text;
+
+    }
+
+    /**
+     * Kinda like wp's autop function
+     * replaces newlines with paragraphs, removes duplicate <br>:s and so on
+     */
+    public function autop($text) {
+
+        // wrap paragraphs around each line
         $text = '<p>' . preg_replace('/[\r\n]+/', '</p><p>', $text) . '</p>';
+
+        // remove duplicate <br>
+        $text = preg_replace('/(<br>)+/', '<br>', $text);
 
         return $text;
 
