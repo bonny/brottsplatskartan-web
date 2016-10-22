@@ -366,7 +366,7 @@ amp-social-share {
 .Breadcrumbs__switchLan {
     display: inline-block;
     vertical-align: top;
-    line-height: 1;
+    line-height: 1.2;
 }
 
 .breadcrumbs li {
@@ -400,7 +400,9 @@ amp-social-share {
     padding: .4rem .8rem;
     font-size: .75rem;
     margin-top: -.3rem;
+    margin-left: .75rem;
     border-radius: 3px;
+    vertical-align: middle;
 }
 
 .Breadcrumbs__switchLan:hover {

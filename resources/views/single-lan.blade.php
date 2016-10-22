@@ -13,7 +13,13 @@ Template för ett län
 
 @section('content')
 
-    <h1>Brott i {{ $lan }}</h1>
+    <h1>
+        Brott i {{ $lan }}
+
+        @if (isset($showLanSwitcher))
+            <a class="Breadcrumbs__switchLan" href="{{ route("lanOverview") }}">Välj län</a>
+        @endif
+    </h1>
 
     <p>
         Visar alla inrapporterade händelser och brott för {{ $lan }}, direkt från polisen.

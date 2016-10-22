@@ -14,7 +14,14 @@ Template for start page
 
     {{--<h1>Brottsplatskartan visar var brotten sker</h1>--}}
 
-    <h1>Senaste brotten i alla län</h1>
+    <h1>
+        Senaste brotten i alla län
+
+        @if (isset($showLanSwitcher))
+            <a class="Breadcrumbs__switchLan" href="{{ route("lanOverview") }}">Välj län</a>
+        @endif
+    </h1>
+
 
     @if ($events)
 
