@@ -17,7 +17,7 @@ Template för ett län
         Brott i {{ $lan }}
 
         @if (isset($showLanSwitcher))
-            <a class="Breadcrumbs__switchLan" href="{{ route("lanOverview") }}">Välj län</a>
+            <a class="Breadcrumbs__switchLan" href="{{ route("lanOverview") }}">Byt län</a>
         @endif
     </h1>
 
