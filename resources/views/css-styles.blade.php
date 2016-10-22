@@ -32,6 +32,22 @@ h1, h2, h3, h4, ul, ol {
     margin-bottom: var(--default-margin);
 }
 
+h1 {
+    font-size: 1.5rem;
+}
+
+h2 {
+    font-size: 1.25rem;
+}
+
+h3 {
+    font-size: 1.1rem;
+}
+
+h4 {
+    font-size: 1rem;
+}
+
 a {
     color: var(--color-link);
     text-decoration: none;
@@ -130,7 +146,7 @@ a:hover {
 }
 
 .SiteNav__item svg {
-    
+
 }
 
 .SiteNav__item span {
