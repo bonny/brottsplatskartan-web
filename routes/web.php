@@ -53,16 +53,41 @@ Route::get('/nara', function (Request $request) {
     $lat = round($lat, 5);
     $lng = round($lng, 5);
 
-    // lat: 59.316230999999995, lng: 18.084073399999998
-    // lat: 59,3162, lng: 18,0840
-    #echo "lat: $lat, lng: $lng";
+    /*
+    $events = CrimeEvent::select( DB::raw('*, ( 6371 * acos( cos( radians(59.316) ) * cos( radians( location_lat ) ) * cos( radians( location_lng ) - radians(18.08) ) + sin( radians(59.316) ) * sin( radians( location_lat ) ) ) ) AS distance') )
+                ->havingRaw("distance < 25")
+                ->orderBy("distance", "ASC")
+                ->get();
+                // ->paginate(10);
+    */
+    /*Store::selectRaw('*, distance(lat, ?, lng, ?) as distance', [$lat, $lon])
+        ->orderBy('distance')
+        ->paginate(10);*/
+        // lat, lng, lat
+    $events = CrimeEvent::selectRaw('*, ( 6371 * acos( cos( radians(?) ) * cos( radians( location_lat ) ) * cos( radians( location_lng ) - radians(?) ) + sin( radians(?) ) * sin( radians( location_lat ) ) ) ) AS distance', [ $lat, $lng, $lat ])
+    //->havingRaw("distance < 25")
+    //->having("distance", "<", "25")
+    ->orderBy("distance", "ASC")
+    #->get();
+    ->paginate(10);
 
-    $data["events"] = CrimeEvent::orderBy("created_at", "desc")->paginate(10);
+    /*
+    Raw sql that seems to work:
+
+    SELECT
+    title, ( 6371 * acos( cos( radians(59.316) ) * cos( radians( location_lat ) ) * cos( radians( location_lng ) - radians(18.08) ) + sin( radians(59.316) ) * sin( radians( location_lat ) ) ) ) AS distance
+    FROM crime_events
+    HAVING distance < 25
+    ORDER BY distance LIMIT 0, 50;
+    */
+
+    $data["events"] = $events;
+    #$data["events"] = CrimeEvent::orderBy("created_at", "desc")->paginate(10);
     // $data["showLanSwitcher"] = true;
 
     $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs;
     $breadcrumbs->addCrumb('Hem', '/');
-    $breadcrumbs->addCrumb('Alla län', route("lanOverview"));
+    $breadcrumbs->addCrumb('Nära dig', route("geo"));
 
     $data["breadcrumbs"] = $breadcrumbs;
 
