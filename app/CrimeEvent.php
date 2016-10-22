@@ -218,14 +218,17 @@ class CrimeEvent extends Model
      * @TODO: shorten!
      * @return string
      */
-    public function getMetaDescription() {
+    public function getMetaDescription($length = 155) {
 
-        $desc = "";
+        $text = "";
 
-        $desc .= $this->description;
-        $desc .= $this->parsed_content;
+        $text .= $this->description;
+        $text .= $this->parsed_content;
 
-        return $desc;
+        $text = strip_tags(str_replace('<', ' <', $text));
+        $text = str_limit($text, $length);
+
+        return $text;
 
     }
 
@@ -322,7 +325,7 @@ class CrimeEvent extends Model
         ->get();
 
         return $events;
-        
+
     }
 
 }
