@@ -23,9 +23,11 @@ Template for start page
     @if ($events)
 
         <p>
-            Visar de {{ $nearbyCount }} senaste brotten som rapporterats inom ungefär {{ $nearbyInKm }} km från din plats.
+            Visar de {{ $events->count() }} senaste brotten som rapporterats inom ungefär {{ $nearbyInKm }} km från din plats.
             Nyaste brotten visas först.
         </p>
+
+        <!-- Antal försök: {{ $numTries }} -->
 
         <div class="Events Events--overview">
 

@@ -230,6 +230,7 @@ class CrimeEvent extends Model
     }
 
     // https://laracasts.com/discuss/channels/laravel/search-option-in-laravel-5?page=1
+    /*
     public static function scopeSearchByKeyword($query, $keyword) {
 
         if ($keyword != '') {
@@ -246,6 +247,7 @@ class CrimeEvent extends Model
 
         return $query;
     }
+    */
 
     /**
      * Get the description (kinda the teaser)
@@ -308,6 +310,19 @@ class CrimeEvent extends Model
 
         return $text;
 
+    }
+
+    public static function getEventsNearLocation($lat, $lng, $nearbyCount, $nearbyInKm) {
+
+        $events = CrimeEvent::selectRaw('*, ( 6371 * acos( cos( radians(?) ) * cos( radians( location_lat ) ) * cos( radians( location_lng ) - radians(?) ) + sin( radians(?) ) * sin( radians( location_lat ) ) ) ) AS distance', [ $lat, $lng, $lat ])
+        ->having("distance", "<=", $nearbyInKm) // välj de som är rimligt nära, värdet är i km
+        ->orderBy("parsed_date", "DESC")
+        ->orderBy("distance", "ASC")
+        ->limit($nearbyCount)
+        ->get();
+
+        return $events;
+        
     }
 
 }

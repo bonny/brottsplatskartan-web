@@ -60,19 +60,31 @@ Route::get('/nara', function (Request $request) {
         #$events = CrimeEvent::selectRaw('*, ( 6371 * acos( cos( radians(?) ) * cos( radians( location_lat ) ) * cos( radians( location_lng ) - radians(?) ) + sin( radians(?) ) * sin( radians( location_lat ) ) ) ) AS distance', [ $lat, $lng, $lat ])
         #->orderBy("distance", "ASC")
         #->paginate(10);
+        $numTries = 0;
 
         // try 2, works but does not support pagination
-        $nearbyInKm = 5;
         $nearbyCount = 25;
-        $events = CrimeEvent::selectRaw('*, ( 6371 * acos( cos( radians(?) ) * cos( radians( location_lat ) ) * cos( radians( location_lng ) - radians(?) ) + sin( radians(?) ) * sin( radians( location_lat ) ) ) ) AS distance', [ $lat, $lng, $lat ])
-        ->having("distance", "<=", $nearbyInKm) // välj de som är rimligt nära, värdet är i km
-        ->orderBy("parsed_date", "DESC")
-        ->orderBy("distance", "ASC")
-        ->limit($nearbyCount)
-        ->get();
+
+        // Start by showing pretty close, like 5 km
+        // If no hits then move out until we have more
+        $nearbyInKm = 5;
+
+        $events = CrimeEvent::getEventsNearLocation($lat, $lng, $nearbyCount, $nearbyInKm);
+        $numTries++;
+
+        // we want to show at least 5 events
+        // if less than 5 events is found then increase the range by nn km, until a hit is found
+        while ($events->count() < 5) {
+
+            $nearbyInKm = $nearbyInKm + 10;
+            $events = CrimeEvent::getEventsNearLocation($lat, $lng, $nearbyCount, $nearbyInKm);
+            $numTries++;
+
+        }
 
         $data["nearbyInKm"] = $nearbyInKm;
         $data["nearbyCount"] = $nearbyCount;
+        $data["numTries"] = $numTries;
 
     } else {
         $data["error"] = true;
