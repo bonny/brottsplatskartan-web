@@ -130,8 +130,8 @@ Layout template for web
         <p>Brottsplatskartan</p>
 
         <ul>
-            <li>Om brotten och kartan</li>
-            <li>Brottplatser API</li>
+            <li><a href="{{ route("page", ["pagename" => "om"]) }}">Om brotten och kartan</a></li>
+            <li><a href="{{ route("page", ["pagename" => "api"]) }}">Brottsplatser API</a></li>
         </ul>
 
     </footer>
