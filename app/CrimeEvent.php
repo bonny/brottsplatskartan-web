@@ -263,13 +263,32 @@ class CrimeEvent extends Model
 
     /**
      * Get the description
-     * replacing new lines with <p>
      */
     public function getParsedContent() {
 
         $text = $this->parsed_content;
 
         $text = $this->autop($text);
+
+        return $text;
+
+    }
+
+    /**
+     * Get the description, for overview pages, where text is cropped after nn chars
+     * and styles removed to not interfere in listing
+     */
+    public function getParsedContentTeaser($length = 160) {
+
+        $text = $this->parsed_content;
+
+        // strip tags but make sure there is at least a space where the tag was
+        // so text paragraphs don't collapse
+        $text = strip_tags(str_replace('<', ' <', $text));
+
+        $text = str_limit($text, $length);
+
+        // $text = $this->autop($text);
 
         return $text;
 

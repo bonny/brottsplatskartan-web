@@ -61,7 +61,7 @@ if $single is set then larger image
 
     <div class="Event__content">
         @if ( isset($overview) )
-            {!! str_limit($event->getParsedContent(), 160) !!}
+            {!! $event->getParsedContentTeaser() !!}
         @else
             {!! $event->getParsedContent() !!}
         @endif
