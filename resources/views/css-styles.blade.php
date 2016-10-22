@@ -221,7 +221,7 @@ a:hover {
 }
 
 .Event--single .Event__title {
-    font-size: 2.25rem;
+    font-size: 1.75rem;
 }
 
 
