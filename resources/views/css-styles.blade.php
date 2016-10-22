@@ -99,6 +99,7 @@ a:hover {
     margin-right: -1rem;
     margin-bottom: -1rem;
     background-color: rgba(255, 255, 255, .75);
+    font-size: 1rem;
 }
 
 .SiteNav__items {
@@ -478,4 +479,11 @@ amp-social-share {
         float: right;
     }
 
+}
+
+/* smått, typ iphone 5, göm lite ikoner och sånt */
+@media only screen and (max-width: 320px) {
+    .SiteNav svg {
+        display: none;
+    }
 }
