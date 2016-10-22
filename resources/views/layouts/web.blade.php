@@ -61,7 +61,10 @@ Layout template for web
 
         <header class="SiteHeader">
             <div class="SiteHeader__inner">
-                <h1 class="SiteTitle"><a href="/">Brottsplatskartan.se</a></h1>
+                <h1 class="SiteTitle"><a href="/">
+                    <svg class="SiteHeader__icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve"><path d="M36.442,95.585c0,0,36.799,0,40.132,0c0,0,7.47,0.001,7.47-7.418c0-3.103,0-5.146,0-5.146H42.98L36.442,95.585z"></path><path d="M74.482,24.585L49.148,72.071l34.895-0.082c0,0,0-37.425,0-40.527c0-6.877-4.712-6.877-6.55-6.877  S74.482,24.585,74.482,24.585z"></path><path d="M51.767,53.718c0,0,15.898-24.624,15.898-33.405S60.548,4.415,51.767,4.415s-15.899,7.119-15.899,15.898  C35.867,29.094,51.767,53.718,51.767,53.718z M51.766,11.365c4.722,0,8.55,3.827,8.55,8.549c0,4.723-3.827,8.55-8.55,8.55  s-8.55-3.827-8.55-8.55C43.217,15.194,47.044,11.365,51.766,11.365z"></path><g><path d="M29.636,24.585c0,0-6.729,0-8.338,0c-8.257,0-8.257,7.987-8.257,7.987c0,3.409,0,51.597,0,54.892   c0,8.121,6.303,8.121,6.303,8.121c2.643,0,2.965,0,2.965,0l22.154-41.35L29.636,24.585z"></path></g></svg>
+                    Brottsplatskartan.se
+                </a></h1>
                 <p class="SiteTagline"><em>Se på karta var brott sker</em></p>
 
                 <!-- <form method="get" action="{{ route("search", null, false) }}" class="HeaderSearch" target="_top">
