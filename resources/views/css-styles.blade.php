@@ -94,6 +94,7 @@ a:hover {
 }
 
 .SiteTagline {
+    display: none;
     margin-top: .5em;
     margin-bottom: 0;
     font-style:normal;
