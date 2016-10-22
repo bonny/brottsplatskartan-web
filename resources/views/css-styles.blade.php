@@ -3,6 +3,7 @@
     --color-link: #0379C4;
     --default-margin: 1rem;
     --default-margin-half: calc(var(--default-margin)/2);
+    --font-size-small: .9rem;
 }
 
 html, body {
@@ -140,7 +141,7 @@ a:hover {
     margin-right: -1rem;
     padding-left: 1rem;
     padding-right: 1rem;
-    font-size: 0.9rem;
+    font-size: var(--font-size-small);
     color: #666;
 }
 
@@ -347,6 +348,7 @@ amp-social-share {
     overflow: hidden;
     padding: 0;
     line-height: 1.2;
+    font-size: var(--font-size-small);
 }
 
 .breadcrumbs {
@@ -362,7 +364,18 @@ amp-social-share {
 .breadcrumbs a,
 .breadcrumbs .divider {
     display: inline-block;
-    vertical-align: bottom;
+    vertical-align: top;
+    line-height: 1;
+}
+
+.breadcrumbs li {
+    position: relative;
+    margin-right: 1.5rem;
+}
+
+.breadcrumbs a {
+    display: block;
+    position: relative;
 }
 
 .Breadcrumbs__intro {
@@ -370,8 +383,10 @@ amp-social-share {
 }
 
 .breadcrumbs .divider {
-    margin-left: .25rem;
-    margin-right: .5rem;
+    position: absolute;
+    top: 0;
+    right: -.9rem;
+    color: #999;
 }
 
 /* ~ipad~ iphone 6 liggande and other medium to large screens */

@@ -29,6 +29,12 @@ Route::get('/', function () {
 
     $data["events"] = CrimeEvent::orderBy("created_at", "desc")->paginate(10);
 
+    $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs;
+    $breadcrumbs->addCrumb('Hem', '/');
+    $breadcrumbs->addCrumb('Alla län', route("lanOverview"));
+
+    $data["breadcrumbs"] = $breadcrumbs;
+
     return view('start', $data);
 
 });
