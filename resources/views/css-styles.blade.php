@@ -129,8 +129,11 @@ a:hover {
     vertical-align: middle;
 }
 
+.SiteNav__item svg {
+    
+}
+
 .SiteNav__item span {
-    display: inline-block;
 }
 
 .Events {

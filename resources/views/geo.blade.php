@@ -20,4 +20,20 @@ Template for start page
         @endif
     </h1>
 
+    @if ($events)
+
+        <div class="Events Events--overview">
+
+            @foreach ($events as $event)
+
+                @include('parts.crimeevent', ["overview" => true])
+
+            @endforeach
+
+        </div>
+
+        {{ $events->links() }}
+
+    @endif
+
 @endsection
