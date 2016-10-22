@@ -89,7 +89,7 @@ a:hover {
 .SiteTitle {
     margin: 0;
     line-height: 1;
-    text-transform: uppercase;
+    /*text-transform: uppercase;*/
     font-size: 1.25rem;
 }
 
