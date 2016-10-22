@@ -28,6 +28,7 @@ Route::get('/', function () {
     $data = [];
 
     $data["events"] = CrimeEvent::orderBy("created_at", "desc")->paginate(10);
+    $data["breadcrumbsShowLanSwitcher"] = true;
 
     $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs;
     $breadcrumbs->addCrumb('Hem', '/');
@@ -249,6 +250,7 @@ Route::get('/lan/{lan}', function ($lan) {
     $breadcrumbs->addCrumb(e($lan), e($lan));
 
     $data["breadcrumbs"] = $breadcrumbs;
+    $data["breadcrumbsShowLanSwitcher"] = true;
 
     return view('single-lan', $data);
 
