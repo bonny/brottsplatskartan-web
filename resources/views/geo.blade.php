@@ -44,7 +44,10 @@ Template for start page
     @endif
 
     @if (isset($error) && $error)
-        <p>Kunde inte avgöra din position.</p>
+        <p>
+            Kunde inte avgöra din position.
+            <a href="/geo.php">Försök igen</a>
+        </p>
     @endif
 
 @endsection
