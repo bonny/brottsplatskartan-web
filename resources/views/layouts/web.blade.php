@@ -12,6 +12,7 @@ Layout template for web
     <script async custom-element="amp-sticky-ad" src="https://cdn.ampproject.org/v0/amp-sticky-ad-0.1.js"></script>
     <script async custom-element="amp-social-share" src="https://cdn.ampproject.org/v0/amp-social-share-0.1.js"></script>
     <script async custom-element="amp-form" src="https://cdn.ampproject.org/v0/amp-form-0.1.js"></script>
+    <script async custom-element="amp-iframe" src="https://cdn.ampproject.org/v0/amp-iframe-0.1.js"></script>
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
@@ -29,6 +30,8 @@ Layout template for web
 
     @hasSection('metaImage')
         <meta property="og:image" content="@yield('metaImage')" />
+        <meta property="og:image:width" content="640" />
+        <meta property="og:image:height" content="640" />
         <meta name="twitter:image" content="@yield('metaImage')">
         <meta name="twitter:card" content="summary_large_image">
     @else
@@ -61,12 +64,59 @@ Layout template for web
                 <h1 class="SiteTitle"><a href="/">Brottsplatskartan.se</a></h1>
                 <p class="SiteTagline"><em>Se på karta var brott sker</em></p>
 
-                <form method="get" action="{{ route("search", null, false) }}" class="HeaderSearch" target="_top">
+                <!-- <form method="get" action="{{ route("search", null, false) }}" class="HeaderSearch" target="_top">
                     <input type="text" name="s" value="" class="HeaderSearch__s" placeholder="Sök">
                     <button type="submit" class="HeaderSearch__submit">Sök</button>
-                </form>
+                </form> -->
+
+                <nav class="SiteNav">
+                    <ul class="SiteNav__items">
+                        <li class="SiteNav__item SiteNav__item--latest">
+                            <a href="{{ route('start') }}">
+                                <svg fill="#000000" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/>
+                                    <path d="M0 0h24v24H0z" fill="none"/>
+                                    <path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
+                                </svg>
+                                <span>Senaste</span>
+                            </a>
+
+                        <li class="SiteNav__item SiteNav__item--lan">
+                            <a href="{{ route('lanOverview') }}">
+                                <svg fill="#000000" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M15 11V5l-3-3-3 3v2H3v14h18V11h-6zm-8 8H5v-2h2v2zm0-4H5v-2h2v2zm0-4H5V9h2v2zm6 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V9h2v2zm0-4h-2V5h2v2zm6 12h-2v-2h2v2zm0-4h-2v-2h2v2z"/>
+                                    <path d="M0 0h24v24H0z" fill="none"/>
+                                </svg>
+                                <span>Län</span>
+                            </a>
+
+                        <li class="SiteNav__item SiteNav__item--geo">
+                            <a href="/geo.php">
+                                <!-- <svg fill="#000000" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M0 0h24v24H0z" fill="none"/>
+                                    <path d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm8.94 3c-.46-4.17-3.77-7.48-7.94-7.94V1h-2v2.06C6.83 3.52 3.52 6.83 3.06 11H1v2h2.06c.46 4.17 3.77 7.48 7.94 7.94V23h2v-2.06c4.17-.46 7.48-3.77 7.94-7.94H23v-2h-2.06zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/>
+                                </svg> -->
+                                <svg fill="#000000" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M0 0h24v24H0V0z" fill="none"/>
+                                    <path d="M21 3L3 10.53v.98l6.84 2.65L12.48 21h.98L21 3z"/>
+                                </svg>
+                                <span>Nära mig</span>
+                            </a>
+
+                        <li class="SiteNav__item SiteNav__item--search">
+                            <a href="{{ route('search') }}">
+                                <svg fill="#000000" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                                    <path d="M0 0h24v24H0z" fill="none"/>
+                                </svg>
+                                <span>Sök</span>
+                            </a>
+
+                    </ul>
+                </nav>
 
             </div>
+
         </header>
 
         @include('parts.breadcrumb', ["single" => true])

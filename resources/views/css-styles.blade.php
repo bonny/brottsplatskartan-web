@@ -16,7 +16,7 @@ html, body {
 }
 
 body {
-    padding-top: 80px;
+    padding-top: 100px;
     /*background: #fafafa;*/
     background: #f4f4f7;
     margin: 0;
@@ -74,6 +74,7 @@ a:hover {
     margin: 0;
     line-height: 1;
     text-transform: uppercase;
+    font-size: 1.25rem;
 }
 
 .SiteTagline {
@@ -89,6 +90,46 @@ a:hover {
 .SiteTitle a {
     text-decoration: none;
     color: inherit;
+}
+
+/* Site navigation */
+.SiteNav {
+    display: block;
+    margin-left: -1rem;
+    margin-right: -1rem;
+    margin-bottom: -1rem;
+    background-color: rgba(255, 255, 255, .75);
+}
+
+.SiteNav__items {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    text-align: center;
+}
+
+.SiteNav__item {
+    display: inline-block;
+    text-align: center;
+    width: 25%;
+}
+
+.SiteNav__item a {
+    display: block;
+    padding-top: .5rem;
+    padding-bottom: .5rem;
+    /*background: #FFF;*/
+    color: inherit;
+}
+
+.SiteNav__item svg,
+.SiteNav__item span {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.SiteNav__item span {
+    display: inline-block;
 }
 
 .Events {
@@ -327,8 +368,8 @@ amp-social-share {
     width: 50%;
     float: left;
     font-size: 1rem;
-    padding-top: var(--default-margin);
-    padding-bottom: var(--default-margin);
+    padding-top: var(--default-margin-half);
+    padding-bottom: var(--default-margin-half);
     margin: 0;
 }
 

@@ -7,7 +7,7 @@ Template för ett län
 
 @extends('layouts.web')
 
-@section('title', "Brott och händelser av typen $type")
+@section('title', "$type: brott och händelser av typen $type")
 @section('canonicalLink', "/typ/$type")
 
 @section('content')

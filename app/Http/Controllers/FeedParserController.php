@@ -191,7 +191,8 @@ class FeedParserController extends Controller
             "polisstationen", "stuga", "påsen",
             "räddningstjänsten", "väskan",
             "under", "fordon", "patrullen", "information",
-            "ansikten", "marken", "hotell", "fallet", "macken"
+            "ansikten", "marken", "hotell", "fallet", "macken",
+            "bilisten", "kosta", "kungs", "rondellen", "god morgon", "stationen", "halsen", "djuret"
         ];
 
     }

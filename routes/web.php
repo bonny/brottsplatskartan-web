@@ -38,7 +38,37 @@ Route::get('/', function () {
 
     return view('start', $data);
 
-});
+})->name("start");
+
+/**
+ * startpage: show latest events
+ */
+Route::get('/nara', function (Request $request) {
+
+    $data = [];
+
+    $lat = (float) $request->input("lat");
+    $lng = (float) $request->input("lng");
+
+    $lat = round($lat, 5);
+    $lng = round($lng, 5);
+
+    // lat: 59.316230999999995, lng: 18.084073399999998
+    // lat: 59,3162, lng: 18,0840
+    #echo "lat: $lat, lng: $lng";
+
+    $data["events"] = CrimeEvent::orderBy("created_at", "desc")->paginate(10);
+    // $data["showLanSwitcher"] = true;
+
+    $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs;
+    $breadcrumbs->addCrumb('Hem', '/');
+    $breadcrumbs->addCrumb('Alla län', route("lanOverview"));
+
+    $data["breadcrumbs"] = $breadcrumbs;
+
+    return view('geo', $data);
+
+})->name("geo");
 
 Route::group(['prefix' => 'admin'], function () {
 

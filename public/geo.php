@@ -38,9 +38,11 @@
 
         navigator.geolocation.getCurrentPosition(function(position) {
 
-            console.log("got geolocation position", position);
+            //  Coordinates { latitude: 59.3162378, longitude: 18.0840469, altitude: 0, accuracy: 20, altitudeAccuracy: 0, heading: NaN, speed: NaN }
+            // console.log("got geolocation position", position.coords);
 
-            do_something(position.coords.latitude, position.coords.longitude);
+            var url = "/nara?lat=" + position.coords.latitude + "&lng=" + position.coords.longitude;
+            document.location = url;
 
         }, function(err) {
 
@@ -50,7 +52,8 @@
                 User denies location
                     {code: 1, message: "User denied Geolocation"}
 
-                
+                User appoves but get failed anyway
+                    { code: 2, message: "Network location provider at 'https://www.googleapis.com/' : Returned error code 400."}
 
             */
             console.log("did not get geolocation position", err);

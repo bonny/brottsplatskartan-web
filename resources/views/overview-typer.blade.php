@@ -7,7 +7,7 @@ Template för typer-översikt
 
 @extends('layouts.web')
 
-@section('title', 'Lista på alla typer av brott som inrapporterats till Polisen')
+@section('title', 'Typer av brott - lista på alla typer av brott som rapporterats')
 @section('metaDescription', e("På Brottsplatskartan kan du se alla typer av brott som rapporterats till Polisen."))
 @section('canonicalLink', '/typ')
 
