@@ -183,6 +183,7 @@ return [
         'Kozz\Laravel\Providers\Guzzle',
         Weidner\Goutte\GoutteServiceProvider::class,
         'Creitive\Breadcrumbs\BreadcrumbsServiceProvider',
+        'Thujohn\Twitter\TwitterServiceProvider',
 
     ],
 
@@ -235,7 +236,7 @@ return [
         'Guzzle' => 'Kozz\Laravel\Facades\Guzzle',
         'Goutte' => Weidner\Goutte\GoutteFacade::class,
         'Breadcrumbs' => 'Creitive\Breadcrumbs\Facades\Breadcrumbs',
-
+        'Twitter' => 'Thujohn\Twitter\Facades\Twitter',
     ],
 
 ];
