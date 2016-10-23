@@ -7,7 +7,7 @@ Template for start page
 
 @extends('layouts.web')
 
-@section('title', $event->parsed_title_location . " - " . $event->parsed_title . " - " . $event->getPubDateFormatted())
+@section('title', $event->parsed_title . ", " . $event->parsed_title_location . ", " . $event->getPubDateFormatted())
 @section('canonicalLink', $event->getPermalink())
 @section('metaDescription', e($event->getMetaDescription()))
 @section('metaImage', $event->getStaticImageSrc(640,640))
