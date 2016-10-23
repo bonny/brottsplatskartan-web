@@ -222,8 +222,7 @@ class CrimeEvent extends Model
 
         $text = "";
 
-        $text .= $this->description;
-        $text .= $this->parsed_content;
+        $text .= trim($this->description) . " " . trim($this->parsed_content);
 
         $text = strip_tags(str_replace('<', ' <', $text));
         $text = str_limit($text, $length);
