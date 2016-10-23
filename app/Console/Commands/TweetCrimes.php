@@ -66,25 +66,49 @@ class TweetCrimes extends Command
 
             $url = $event->getPermalink(true);
 
+            // description:
+            // Trafikolycka 4 fordon Norrmalmsgatan.
+            // parsed_content:
+            // På Norrmalmsgatan skedde en trafikolycka där 4 fordon var inblandade. Inga personer skadades. Ärendet kommer att utredas vidare.
+            // parsed_title: Trafikolycka
+
+            // calculate how long teaser we can have
+            // the url counts as 22 chars
+            $content_length_before_teaser = 22 + mb_strlen($event->parsed_title) + mb_strlen($event->getLocationString());
+            // - n because new lines + getMetaDesc adds "..." (which we change to "…")
+            $teaser_can_be_in_length = 140 - $content_length_before_teaser - 6;
+
             $tweetMessage = sprintf(
                 '
 %2$s, %3$s
+%4$s
 %1$s
                 ',
                 $url, // 1
                 $event->parsed_title, // 2
-                $event->getLocationString() // 3
+                $event->getLocationString(), // 3
+                $event->getMetaDescription($teaser_can_be_in_length) // 4
             );
 
             $tweetMessage = trim($tweetMessage);
+            $tweetMessage = str_replace("...", "…", $tweetMessage);
 
-            $this->line("Tweet will be:\n{$tweetMessage}");
+            if (ENV("APP_ENV") == "local") {
+                $tweetMessage = str_replace('https://brottsplatskartan.dev','https://brottsplatskartan.se', $tweetMessage);
+            }
+
+            //$this->line("teaser_can_be_in_length: $teaser_can_be_in_length");
+            $this->line("Tweet will be for ID {$event->getKey()}:\n{$tweetMessage}");
+
+            // comment out this to just test...
 
             // Do the tweet!
             $tweetResult = \Twitter::postTweet([
                 'status' => $tweetMessage,
                 'format' => 'json'
             ]);
+
+            exit;
 
             // after tweetet
             $event->tweeted = true;
