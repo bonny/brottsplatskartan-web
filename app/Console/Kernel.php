@@ -13,7 +13,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        Commands\FetchEvents::class
+        Commands\FetchEvents::class,
+        Commands\TweetCrimes::class,
     ];
 
     /**

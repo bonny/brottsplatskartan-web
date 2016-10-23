@@ -44,7 +44,7 @@ class FetchEvents extends Command
     public function handle()
     {
 
-        $this->info('Ok, lets go!');
+        $this->info('Ok, let\'s go!');
         $this->line('Fetching events...');
 
 
