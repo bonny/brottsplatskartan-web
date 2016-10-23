@@ -108,7 +108,7 @@ class TweetCrimes extends Command
                 'format' => 'json'
             ]);
 
-            exit;
+            #exit;
 
             // after tweetet
             $event->tweeted = true;
