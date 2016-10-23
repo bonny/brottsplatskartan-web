@@ -140,6 +140,7 @@ Layout template for web
             <li><a href="{{ route("page", ["pagename" => "om"]) }}">Om brotten och kartan</a></li>
             <li><a href="{{ route("page", ["pagename" => "api"]) }}">Brottsplatser API</a></li>
             <li><a href="https://twitter.com/brottsplatser">Följ @Brottsplatser på Twitter</a></li>
+            <li><a href="https://www.facebook.com/brottsplatskartan">Gilla Brottsplatskartan på Facebook</a></li>
         </ul>
 
     </footer>
