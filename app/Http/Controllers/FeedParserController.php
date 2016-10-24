@@ -342,44 +342,6 @@ class FeedParserController extends Controller
         $matchingHighwayItemsInContent = array_filter($matchingHighwayItemsInContent, function($val) use ($title_location) {
             return ($val !== $title_location);
         });
-        #$matchingHighwayItemsInDescription
-        #$matchingHighwayItemsInContent
-        #echo "\n\ndone";
-        #exit;
-
-        #if ($matchingHighwayItemsInContent) {
-            #print_r($matchingHighwayItemsInContent);
-        #}
-        /*
-        $matchingHighwayItemsInDescription = array_where($highwayItems, function($val, $key) use ($item_description) {
-            $highwaysRegex = '/\b' . preg_quote($val, '/') . '\b/ium';
-            return preg_match($highwaysRegex, $item_description);
-        });
-
-        $matchingHighwayItemsInContent = array_where($highwayItems, function($val, $key) use ($item_parsed_content) {
-            $highwaysRegex = '/\b' . preg_quote($val, '/') . '\b/ium';
-            return preg_match($highwaysRegex, $item_parsed_content);
-        });
-        */
-
-         // || preg_match($highwaysRegex, $item->parsed_content);
-
-        /*
-        Nu har vi förhoppningsvis hittat minst 1 träff
-        Finns flera träffar så beror det på att den träffar på delar av namn
-
-            Array
-            (
-                [119677] => Särö <- ska bort!
-                [120541] => Södra
-                [121237] => Södra Särövägen
-                [131899] => Valebergsvägen
-            )
-
-        */
-        #echo "<br>hittade " . count($matchingHighwayItems) . " orter som matchade";
-        #echo "<pre>matcher i description/teaser (prio 1)\n" . print_r($matchingHighwayItemsInDescription, 1) . "</pre>";
-        #echo "<pre>matcher i content (prio 2)\n" . print_r($matchingHighwayItemsInContent, 1) . "</pre>";
 
         $timetaken = microtime(true) - $starttime;
         Log::info('find locations done', ["time in s", $timetaken]);
@@ -387,7 +349,11 @@ class FeedParserController extends Controller
         return [
             [
                 "prio" => 1,
-                "locations" => $matchingHighwayItemsInDescription
+                "locations" => $matchingHighwayItemsInDescription,
+                "debug" => [
+                    "arr_description_words" => $arr_description_words,
+                    "arr_content_words" => $arr_content_words
+                ]
             ],
             [
                 "prio" => 2,
@@ -399,13 +365,6 @@ class FeedParserController extends Controller
             ]
         ];
 
-        /*
-        $array = [100, '200', 300, '400', 500];
-
-        $array = array_where($array, function ($value, $key) {
-            return is_string($value);
-        });
-        */
 
     }
 
