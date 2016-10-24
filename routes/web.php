@@ -114,6 +114,9 @@ Route::get('/nara', function (Request $request) {
 
 })->name("geo");
 
+/**
+ * Admin-sida
+ */
 Route::group(['prefix' => 'admin'], function () {
 
     Route::get('', function ()    {
@@ -287,8 +290,8 @@ Route::get('/plats/{plats}', function ($plats) {
 
 
 /**
- * sida
- */
+ * Sida, med text typ, t.ex. "om brottsplatskartan" eller "api"
+*/
 Route::get('/sida/{pagename}', function ($pagename = null) {
 
     $data = [
@@ -332,13 +335,13 @@ Route::get('/lan/{lan}', function ($lan) {
 
 
 /**
- * single event page
+ * single event page/en händelse/ett crimeevent
  * ca. såhär:
  *
  * http://brottsplatskartan.se/vastra-gotalands-lan/rattfylleri-2331
  *
  */
-Route::get('/{lan}/{eventName}', function ($lan,  $eventName) {
+Route::get('/{lan}/{eventName}', function ($lan,  $eventName, Request $request) {
 
     preg_match('!\d+!', $eventName, $matches);
     if (!isset($matches[0])) {
@@ -361,11 +364,15 @@ Route::get('/{lan}/{eventName}', function ($lan,  $eventName) {
 
     $breadcrumbs->addCrumb(e($event->parsed_title));
 
+    // optional debug
+    $debugData = CrimeEvent::maybeAddDebugData($request, $event);
+
     $data = [
         "lan" => $lan,
         "eventID" => $eventID,
         "event" => $event,
-        "breadcrumbs" => $breadcrumbs
+        "breadcrumbs" => $breadcrumbs,
+        "debugData" => $debugData
     ];
 
     return view('single-event', $data);

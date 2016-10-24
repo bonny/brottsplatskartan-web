@@ -128,6 +128,12 @@ Layout template for web
 
         @include('parts.breadcrumb', ["single" => true])
 
+        @if (isset($debugData) && ! empty($debugData) )
+            <pre>
+{{ json_encode($debugData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) }}
+            </pre>
+        @endif
+
         @yield('content')
 
     </div>
