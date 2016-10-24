@@ -241,7 +241,11 @@ class FeedParserController extends Controller
         $item_parsed_content = $item->parsed_content;
 
         // Split item description into words
-        $arr_description_words = str_word_count( utf8_decode($item_description), 1, "0123456789");
+
+        // this one, with utf8_decode, works on on local
+        #$arr_description_words = str_word_count( utf8_decode($item_description), 1, "0123456789");
+
+        $arr_description_words = str_word_count( $item_description, 1, "0123456789");
         $arr_description_words = array_map("utf8_encode", $arr_description_words);
         $arr_description_words = array_map("mb_strtolower", $arr_description_words);
 
