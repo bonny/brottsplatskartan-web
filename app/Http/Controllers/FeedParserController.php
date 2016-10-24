@@ -286,6 +286,7 @@ class FeedParserController extends Controller
                 }
             }
 
+            /*
             if ( $i < count($arr_description_words) - 2 ) {
                 $word3 = $arr_description_words[$i] . " " . $arr_description_words[$i+1] . " " . $arr_description_words[$i+2];
                 if ( in_array($word3, $highwayItems) ) {
@@ -293,6 +294,7 @@ class FeedParserController extends Controller
                     $matchingHighwayItemsInDescription[] = $word3;
                 }
             }
+            */
 
         }
 
@@ -317,6 +319,7 @@ class FeedParserController extends Controller
                 }
             }
 
+            /*
             if ( $i < count($arr_content_words) - 2 ) {
                 $word3 = $arr_content_words[$i] . " " . $arr_content_words[$i+1] . " " . $arr_content_words[$i+2];
                 if ( in_array($word3, $highwayItems) ) {
@@ -324,10 +327,11 @@ class FeedParserController extends Controller
                     $matchingHighwayItemsInContent[] = $word3;
                 }
             }
+            */
 
         }
 
-        // remove hits that is the same as the main location find in the title, often city names
+        // remove hits that is the same as the main location found in the title, often city names
         $title_location = mb_strtolower($item->parsed_title_location);
         #echo "\n checking if title_location '$title_location' exists ";
 
