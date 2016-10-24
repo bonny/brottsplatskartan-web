@@ -271,9 +271,9 @@ a:hover {
 }
 
 /* emulate p tags using br */
-.Event__content br {
+/*.Event__content br {
     line-height: 2;
-}
+}*/
 
 .Event__related {
     margin-top: var(--default-margin);
