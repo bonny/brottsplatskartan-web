@@ -8,7 +8,11 @@ Template for start page
 @extends('layouts.web')
 
 @section('title', 'Se brott som hänt nära dig')
-@section('metaDescription', e('Brottsplatskartan visar brott i hela Sverige och hämtar informationen direkt från Polisen.'))
+@section('metaDescription', e('Brottsplatskartan visar visuellt på karta var brott har skett. Informationen hämtas direkt från Polisen.'))
+
+@section('metaImage', "/img/start-share-image.png")
+@section('metaImageWidth', 600)
+@section('metaImageHeight', 315)
 
 @section('content')
 
@@ -34,7 +38,7 @@ Template for start page
             @endforeach
 
         </div>
-        
+
         {{ $events->links() }}
 
     @endif
