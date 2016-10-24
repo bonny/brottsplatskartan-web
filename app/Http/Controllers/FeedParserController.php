@@ -348,7 +348,7 @@ class FeedParserController extends Controller
 
         $timetaken = microtime(true) - $starttime;
         Log::info('find locations done', ["time in s", $timetaken]);
-
+print_r( str_word_count($item_description, 1));exit;
         return [
             [
                 "prio" => 1,
@@ -358,7 +358,10 @@ class FeedParserController extends Controller
                     "item_description" => $item_description,
                     "arr_description_words" => $arr_description_words,
                     "arr_content_words" => $arr_content_words,
-                ]
+                ],
+                #"item_description_words" => str_word_count($item_description, 1),
+                #"item_description_words_2" => str_word_count( utf8_decode( $item_description ), 1),
+                #"item_description_words_3" => str_word_count( utf8_encode( $item_description ), 1),
             ],
             [
                 "prio" => 2,
