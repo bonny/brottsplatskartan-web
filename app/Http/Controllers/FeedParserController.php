@@ -358,10 +358,12 @@ class FeedParserController extends Controller
 #print_r( str_word_count( utf8_decode($item_description), 1));exit;
 
 // on local: Polis grep misst�nkt inbrottstjuv p� S�dermalm.
-echo "<br>\nstrlen: " . strlen($item_description);
-echo "<br>\nmb_strlen: " . mb_strlen($item_description);
-echo iconv("UTF-8", "Windows-1252//TRANSLIT", $item_description);
-print_r( str_word_count( utf8_decode(iconv("UTF-8", "Windows-1252//IGNORE", $item_description)), 1));
+#echo "<br>\nstrlen: " . strlen($item_description);
+#echo "<br>\nmb_strlen: " . mb_strlen($item_description);
+#echo iconv("UTF-8", "Windows-1252//TRANSLIT", $item_description);
+#print_r( str_word_count( utf8_decode(iconv("UTF-8", "Windows-1252//IGNORE", $item_description)), 1));
+preg_match_all('/\pL+/u', $item_description, $matches);
+print_r($matches);
 exit;
 
         return [
