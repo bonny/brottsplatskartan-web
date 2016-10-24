@@ -354,7 +354,15 @@ class FeedParserController extends Controller
 #print_r( str_word_count($item_description, 1));exit;
 
 // on local: works ok. breaks as they should, returns non-utf8 which is correct
-print_r( str_word_count( utf8_decode($item_description), 1));exit;
+// on remote: nah, same as first one..
+#print_r( str_word_count( utf8_decode($item_description), 1));exit;
+
+// on local: Polis grep misst�nkt inbrottstjuv p� S�dermalm.
+echo "<br>\nstrlen: " . strlen($item_description);
+echo "<br>\nmb_strlen: " . mb_strlen($item_description);
+echo iconv("UTF-8", "Windows-1252//TRANSLIT", $item_description);
+print_r( str_word_count( utf8_decode(iconv("UTF-8", "Windows-1252//IGNORE", $item_description)), 1));
+exit;
 
         return [
             [
@@ -362,6 +370,8 @@ print_r( str_word_count( utf8_decode($item_description), 1));exit;
                 "locations" => $matchingHighwayItemsInDescription,
                 "debug" => [
                     "mb_internal_encoding" => mb_internal_encoding(),
+                    "iconv_get_encoding" => iconv_get_encoding(),
+                    #"iconv" => iconv("UTF-8", "ISO-8859-1//TRANSLIT", $item_description),
                     "item_description" => $item_description,
                     "arr_description_words" => $arr_description_words,
                     "arr_content_words" => $arr_content_words,
