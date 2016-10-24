@@ -244,6 +244,8 @@ class FeedParserController extends Controller
 
         // this one, with utf8_decode, works on on local, breaks whole words with åäö inside
         #$arr_description_words = str_word_count( utf8_decode($item_description), 1, "0123456789åäöÅÄÖ");
+        // this was the solution that works BOTH on dev and live:
+        // http://stackoverflow.com/questions/8109997/supporting-special-characters-with-str-word-count
         preg_match_all('/\pL+/u', $item_description, $matches);
         $arr_description_words = $matches[0];
 

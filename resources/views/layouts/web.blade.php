@@ -30,10 +30,12 @@ Layout template for web
 
     @hasSection('metaImage')
         <meta property="og:image" content="@yield('metaImage')" />
-        <meta property="og:image:width" content="640" />
-        <meta property="og:image:height" content="640" />
         <meta name="twitter:image" content="@yield('metaImage')">
         <meta name="twitter:card" content="summary_large_image">
+        @hasSection('metaImageWidth')
+        <meta property="og:image:width" content="@yield('metaImageWidth')" />
+        <meta property="og:image:height" content="@yield('metaImageHeight')" />
+        @endif
     @else
         <meta name="twitter:card" content="summary">
     @endif

@@ -11,6 +11,8 @@ Template for start page
 @section('canonicalLink', $event->getPermalink())
 @section('metaDescription', e($event->getMetaDescription()))
 @section('metaImage', $event->getStaticImageSrc(640,640))
+@section('metaImageWidth', 640)
+@section('metaImageHeight', 640)
 
 @section('content')
 
