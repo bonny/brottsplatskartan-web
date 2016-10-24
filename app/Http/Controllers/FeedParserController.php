@@ -354,6 +354,7 @@ class FeedParserController extends Controller
                 "prio" => 1,
                 "locations" => $matchingHighwayItemsInDescription,
                 "debug" => [
+                    "item_description" => $item_description,
                     "arr_description_words" => $arr_description_words,
                     "arr_content_words" => $arr_content_words
                 ]
