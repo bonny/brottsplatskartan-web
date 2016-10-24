@@ -307,6 +307,9 @@ class CrimeEvent extends Model
      */
     public function autop($text) {
 
+        // replace <br> with new line
+        $text = str_replace("<br>", "\n", $text);
+
         // wrap paragraphs around each line
         $text = '<p>' . preg_replace('/[\r\n]+/', '</p><p>', $text) . '</p>';
 
