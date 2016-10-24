@@ -4,6 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
+use App\Http\Controllers\FeedParserController;
+use App\Http\Controllers\FeedController;
 
 class CrimeEvent extends Model
 {
@@ -25,6 +27,7 @@ class CrimeEvent extends Model
         'parsed_teaser',
         'parsed_content',
     ];
+
 
     /**
      * Get the comments for the blog post.
@@ -324,6 +327,37 @@ class CrimeEvent extends Model
         ->get();
 
         return $events;
+
+    }
+
+    /**
+     * Return some debug stuff if a query contains some debugActions
+     *
+     * @return array
+     */
+    protected function maybeAddDebugData(\Illuminate\Http\Request $request, CrimeEvent $event) {
+
+        $data = [];
+
+        $debugActions = (array) $request->input("debugActions");
+
+        if (!$debugActions) {
+            return $data;
+        }
+
+        if ( in_array("getLocations", $debugActions) ) {
+
+            // re-get location data from event, i.e find street names again and retun some debug
+            $FeedParserController = new FeedParserController;
+            $FeedController = new FeedController($FeedParserController);
+
+            $itemFoundLocations = $FeedParserController->findLocations($event);
+            $data["itemFoundLocations"] = $itemFoundLocations;
+
+        }
+
+
+        return $data;
 
     }
 
