@@ -243,9 +243,11 @@ class FeedParserController extends Controller
         // Split item description into words
 
         // this one, with utf8_decode, works on on local, breaks whole words with åäö inside
-        $arr_description_words = str_word_count( utf8_decode($item_description), 1, "0123456789åäöÅÄÖ");
+        #$arr_description_words = str_word_count( utf8_decode($item_description), 1, "0123456789åäöÅÄÖ");
+        preg_match_all('/\pL+/u', $item_description, $matches);
+        $arr_description_words = $matches[0];
 
-        $arr_description_words = array_map("utf8_encode", $arr_description_words);
+        #$arr_description_words = array_map("utf8_encode", $arr_description_words);
         $arr_description_words = array_map("mb_strtolower", $arr_description_words);
 
         // Remove "Polisen Värmland" etc that's the last line in the content words
@@ -264,8 +266,11 @@ class FeedParserController extends Controller
         #print_r($parsed_content_lines);exit;
 
         // Split content into words
-        $arr_content_words = str_word_count( utf8_decode($item_parsed_content), 1, "0123456789");
-        $arr_content_words = array_map("utf8_encode", $arr_content_words);
+        #$arr_content_words = str_word_count( utf8_decode($item_parsed_content), 1, "0123456789");
+        preg_match_all('/\pL+/u', $item_parsed_content, $matches);
+        $arr_content_words = $matches[0];
+
+        #$arr_content_words = array_map("utf8_encode", $arr_content_words);
         $arr_content_words = array_map("mb_strtolower", $arr_content_words);
 
         $matchingHighwayItemsInDescription = [];
@@ -362,9 +367,9 @@ class FeedParserController extends Controller
 #echo "<br>\nmb_strlen: " . mb_strlen($item_description);
 #echo iconv("UTF-8", "Windows-1252//TRANSLIT", $item_description);
 #print_r( str_word_count( utf8_decode(iconv("UTF-8", "Windows-1252//IGNORE", $item_description)), 1));
-preg_match_all('/\pL+/u', $item_description, $matches);
-print_r($matches);
-exit;
+#preg_match_all('/\pL+/u', $item_description, $matches);
+#print_r($matches);
+#exit;
 
         return [
             [
