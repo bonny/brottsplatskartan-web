@@ -11,7 +11,7 @@ Template för län-översikt
 @section('metaDescription', e("På Brottsplatskartan kan du län för län se på en karta var i Sverige brott sker - direkt från Polisen"))
 @section('canonicalLink', '/lan')
 
-@section('metaImage', "/img/start-share-image.png")
+@section('metaImage', config('app.url') . "/img/start-share-image.png")
 @section('metaImageWidth', 600)
 @section('metaImageHeight', 315)
 

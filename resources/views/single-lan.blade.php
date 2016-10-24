@@ -11,7 +11,7 @@ Template för ett län
 @section('metaDescription', e("Se var brott sker i närheten av $lan. Informationen kommer direkt från Polisen till vår karta!"))
 @section('canonicalLink', "/lan/$lan")
 
-@section('metaImage', "/img/start-share-image.png")
+@section('metaImage', config('app.url') . "/img/start-share-image.png")
 @section('metaImageWidth', 600)
 @section('metaImageHeight', 315)
 
