@@ -33,7 +33,7 @@ Template för sök
 
         </div>
 
-        {{ $events->links() }}
+        {{ $events->appends(["s" => $s])->links() }}
 
     @else
 
