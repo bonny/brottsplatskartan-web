@@ -163,6 +163,9 @@ class FeedParserController extends Controller
             return ! in_array($val, $highwaysStopWords);
         });
 
+        // add some manual roads that i've found missing
+        $highwayItems = array_merge($highwayItems, $this->getHighwaysAddedManually());
+
         $timetaken = microtime(true) - $starttime;
 
         Log::info('Loaded highwayitems, after clean and stop words removed', ["count", count($highwayItems)]);
@@ -173,6 +176,15 @@ class FeedParserController extends Controller
         return $highwayItems;
 
     }
+
+    function getHighwaysAddedManually() {
+
+        return [
+            "brantholmsgränd"
+        ];
+
+    }
+
 
     private function getHighwaysStopwords() {
 
