@@ -130,6 +130,7 @@ Layout template for web
 
         @include('parts.breadcrumb', ["single" => true])
 
+        {{-- Output debug data, if set --}}
         @if (isset($debugData) && ! empty($debugData) )
             <pre>
 {{ json_encode($debugData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) }}

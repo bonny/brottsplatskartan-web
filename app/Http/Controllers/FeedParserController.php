@@ -368,23 +368,6 @@ class FeedParserController extends Controller
         $timetaken = microtime(true) - $starttime;
         Log::info('find locations done', ["time in s", $timetaken]);
 
-// on local: gives utf-8-wrong encoded words, and does not break correctly
-// on remote: same breaking, but wrong utf-chars are not included, is empty intead of "halv" char
-#print_r( str_word_count($item_description, 1));exit;
-
-// on local: works ok. breaks as they should, returns non-utf8 which is correct
-// on remote: nah, same as first one..
-#print_r( str_word_count( utf8_decode($item_description), 1));exit;
-
-// on local: Polis grep misst�nkt inbrottstjuv p� S�dermalm.
-#echo "<br>\nstrlen: " . strlen($item_description);
-#echo "<br>\nmb_strlen: " . mb_strlen($item_description);
-#echo iconv("UTF-8", "Windows-1252//TRANSLIT", $item_description);
-#print_r( str_word_count( utf8_decode(iconv("UTF-8", "Windows-1252//IGNORE", $item_description)), 1));
-#preg_match_all('/\pL+/u', $item_description, $matches);
-#print_r($matches);
-#exit;
-
         return [
             [
                 "prio" => 1,
