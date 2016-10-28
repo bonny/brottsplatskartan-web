@@ -49,6 +49,7 @@ class FeedController extends Controller
 
     public function geocodeItem($itemID) {
 
+        $item = CrimeEvent::findOrFail($itemID);
         $apiUrl = $this->getGeocodeURL($itemID);
 
         #echo "\ngeocoding item with title " . $item->title;
