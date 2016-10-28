@@ -357,6 +357,9 @@ class CrimeEvent extends Model
             $itemFoundLocations = $FeedParserController->findLocations($event);
             $data["itemFoundLocations"] = $itemFoundLocations;
 
+            // get the url that is sent to google to geocode this item
+            $data["itemGeocodeURL"] = $FeedController->getGeocodeURL($event->getKey());
+
         }
 
 

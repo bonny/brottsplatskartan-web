@@ -21,7 +21,7 @@ class FeedController extends Controller
 
     }
 
-    public function geocodeItem($itemID) {
+    public function getGeocodeURL($itemID) {
 
         $item = CrimeEvent::findOrFail($itemID);
         $itemLocations = $item->locations;
@@ -42,6 +42,14 @@ class FeedController extends Controller
         $strLocationURLPartBeforeUrlEncode = $strLocationURLPart;
 
         $apiUrl = sprintf($apiUrlTemplate, urlencode($strLocationURLPart));
+
+        return $apiUrl;
+
+    }
+
+    public function geocodeItem($itemID) {
+
+        $apiUrl = $this->getGeocodeURL($itemID);
 
         #echo "\ngeocoding item with title " . $item->title;
         #echo "\naddress is $strLocationURLPartBeforeUrlEncode";
