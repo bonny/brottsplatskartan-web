@@ -79,7 +79,7 @@ class TweetCrimes extends Command
             // the url counts as 22 chars
             $content_length_before_teaser = 22 + mb_strlen($event->parsed_title) + mb_strlen($event->getLocationString());
             // - n because new lines + getMetaDesc adds "..." (which we change to "…")
-            $teaser_can_be_in_length = 140 - $content_length_before_teaser - $hashTagsLength - 6;
+            $teaser_can_be_in_length = 140 - $content_length_before_teaser - $hashTagsLength - 7;
 
 
             $tweetMessage = sprintf(
