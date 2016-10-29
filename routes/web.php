@@ -349,7 +349,7 @@ Route::get('/{lan}/{eventName}', function ($lan,  $eventName, Request $request) 
     }
 
     $eventID = $matches[0];
-    $event = CrimeEvent::find($eventID);
+    $event = CrimeEvent::findOrFail($eventID);
 
     $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs;
     $breadcrumbs->addCrumb('Hem', '/');
