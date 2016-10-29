@@ -126,6 +126,11 @@ class CrimeEvent extends Model
 
     }
 
+    public function getParsedDateISO8601() {
+
+        return Carbon::createFromTimestamp(strtotime($this->parsed_date))->toIso8601String();
+
+    }
 
 
     /**

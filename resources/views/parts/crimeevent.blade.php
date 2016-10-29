@@ -49,7 +49,8 @@ if $single is set then larger image
         <span class="Event__location">{!! $event->getLocationStringWithLinks() !!}</span>
         <span class="Event__metaDivider"> | </span>
         <span class="Event__dateHuman">
-            <time datetime="{{ $event->getPubDateISO8601() }}">{{ $event->getPubDateFormattedForHumans() }}</time>
+            {{-- <time datetime="{{ $event->getPubDateISO8601() }}">{{ $event->getPubDateFormattedForHumans() }}</time> --}}
+            <time class="Event__dateHuman__time" title="Tidpunkt då Polisen anger att händelsen inträffat" datetime="{{ $event->getParsedDateISO8601() }}">{{ $event->getParsedDateFormattedForHumans() }}</time>
         </span>
     </p>
 
@@ -76,6 +77,8 @@ if $single is set then larger image
         Visa fler brott av typ <a href="{{ route("typeSingle", $event->parsed_title ) }}">{{ $event->parsed_title }}</a>
     </div>
     --}}
+
+    <p class="Event__source">Källa: <a rel="nofollow" href="{{ $event->permalink }}">{{ $event->permalink }}</a></p>
 
     @if ( isset($overview) )
         {{--

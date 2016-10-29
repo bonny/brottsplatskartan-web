@@ -212,6 +212,14 @@ a:hover {
     color: #666;
 }
 
+.Event__source {
+    font-size: var(--font-size-small);
+    color: #666;
+    white-space: pre;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .Event__metaDivider {
     color: var(--color-grey-light);
     margin-left: .25rem;
@@ -221,6 +229,10 @@ a:hover {
 
 .Event__dateHuman {
     white-space: nowrap;
+}
+
+.Event__dateHuman__time {
+    cursor: help;
 }
 
 .Event__dateFormatted {
