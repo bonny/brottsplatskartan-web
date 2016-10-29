@@ -93,6 +93,11 @@ class CrimeEvent extends Model
 
     }
 
+    /**
+     * The pub date is the date from the RSS-feed,
+     * i.e. when the crime is posted by polisen
+     * the actual event may have happened much earlier
+     */
     public function getPubDateISO8601() {
 
         return Carbon::createFromTimestamp($this->pubdate)->toIso8601String();
@@ -110,6 +115,18 @@ class CrimeEvent extends Model
         return Carbon::createFromTimestamp($this->pubdate)->diffForHumans();
 
     }
+
+    /**
+     * Parsed date = the date that is written as text in each crime
+     * Is often much earlier that the RSS data
+     */
+    function getParsedDateFormattedForHumans() {
+
+        return Carbon::createFromTimestamp(strtotime($this->parsed_date))->diffForHumans();
+
+    }
+
+
 
     /**
      * Returns a nice permalink to the page
