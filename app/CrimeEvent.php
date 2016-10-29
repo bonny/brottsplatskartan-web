@@ -141,21 +141,35 @@ class CrimeEvent extends Model
      */
     public function getPermalink($absolute = false) {
 
+        $slugParts = [];
+
         if ( ! empty($this->administrative_area_level_1) ) {
             $lan = $this->toAscii($this->administrative_area_level_1);
         } else {
             $lan = "sverige";
         }
 
-        $eventName = $this->toAscii($this->parsed_title);
+        // "Stöld/inbrott" and so on
+        $slugParts[] = $this->parsed_title;
 
         if ( ! empty($this->parsed_title_location) ) {
-            $eventName .= "-" . $this->toAscii($this->parsed_title_location);
+            $slugParts[] = $this->parsed_title_location;
         } else {
-            $eventName = "";
+            #$eventName = "";
         }
 
-        $eventName .= "-" . $this->getKey();
+        $prio1locations = $this->locations->filter(function($val, $key) {
+            return $val->prio == 1;
+        });
+
+        foreach ($prio1locations as $location) {
+            $slugParts[] = $location->name;
+        }
+
+        $slugParts[] = $this->getKey();
+
+        $eventName = implode("-", $slugParts);
+        $eventName = $this->toAscii($eventName);
 
         $permalink = route("singleEvent", [
             "lan" => $lan,
