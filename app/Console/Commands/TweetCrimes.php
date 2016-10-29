@@ -72,22 +72,27 @@ class TweetCrimes extends Command
             // På Norrmalmsgatan skedde en trafikolycka där 4 fordon var inblandade. Inga personer skadades. Ärendet kommer att utredas vidare.
             // parsed_title: Trafikolycka
 
+            $hashTags = "#polisen #brott";
+            $hashTagsLength = strlen($hashTags);
+
             // calculate how long teaser we can have
             // the url counts as 22 chars
             $content_length_before_teaser = 22 + mb_strlen($event->parsed_title) + mb_strlen($event->getLocationString());
             // - n because new lines + getMetaDesc adds "..." (which we change to "…")
-            $teaser_can_be_in_length = 140 - $content_length_before_teaser - 6;
+            $teaser_can_be_in_length = 140 - $content_length_before_teaser - $hashTagsLength - 6;
+
 
             $tweetMessage = sprintf(
                 '
 %2$s, %3$s
-%4$s
+%4$s %5$s
 %1$s
                 ',
                 $url, // 1
                 $event->parsed_title, // 2
                 $event->getLocationString(), // 3
-                $event->getMetaDescription($teaser_can_be_in_length) // 4
+                $event->getMetaDescription($teaser_can_be_in_length), // 4
+                $hashTags // 5
             );
 
             $tweetMessage = trim($tweetMessage);
