@@ -204,7 +204,8 @@ class FeedParserController extends Controller
             "räddningstjänsten", "väskan",
             "under", "fordon", "patrullen", "information",
             "ansikten", "marken", "hotell", "fallet", "macken",
-            "bilisten", "kosta", "kungs", "rondellen", "god morgon", "stationen", "halsen", "djuret"
+            "bilisten", "kosta", "kungs", "rondellen", "god morgon", "stationen", "halsen", "djuret",
+            "öster"
         ];
 
     }
@@ -363,6 +364,34 @@ class FeedParserController extends Controller
 
         $matchingHighwayItemsInContent = array_filter($matchingHighwayItemsInContent, function($val) use ($title_location) {
             return ($val !== $title_location);
+        });
+
+        // remove duplicates
+        $matchingHighwayItemsInDescription = array_unique($matchingHighwayItemsInDescription);
+        $matchingHighwayItemsInContent = array_unique($matchingHighwayItemsInContent);
+
+
+        // remove locations thats exists as part of other locations
+        // for example if both "eriksgatan" and "sankt eriksgatan" are found
+        // then remove "eriksgatan" because "sankt eriksgatan" is a better, more precise hit
+        $matchingHighwayItemsInContent = array_filter($matchingHighwayItemsInContent, function($val) use ($matchingHighwayItemsInContent) {
+
+            foreach ($matchingHighwayItemsInContent as $arrVal) {
+
+                // dont't check current val
+                if ($arrVal === $val) {
+                    continue;
+                }
+
+                if (strpos(" " . $arrVal, $val) !== false || strpos($arrVal . " " , $val) !== false) {
+                    // string was found, so remove
+                    return false;
+                }
+
+            }
+
+            return true;
+
         });
 
         $timetaken = microtime(true) - $starttime;
