@@ -394,6 +394,26 @@ class FeedParserController extends Controller
 
         });
 
+        $matchingHighwayItemsInDescription = array_filter($matchingHighwayItemsInDescription, function($val) use ($matchingHighwayItemsInDescription) {
+
+            foreach ($matchingHighwayItemsInDescription as $arrVal) {
+
+                // dont't check current val
+                if ($arrVal === $val) {
+                    continue;
+                }
+
+                if (strpos(" " . $arrVal, $val) !== false || strpos($arrVal . " " , $val) !== false) {
+                    // string was found, so remove
+                    return false;
+                }
+
+            }
+
+            return true;
+
+        });
+
         $timetaken = microtime(true) - $starttime;
         Log::info('find locations done', ["time in s", $timetaken]);
 
