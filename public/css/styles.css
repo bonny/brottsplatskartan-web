@@ -106,9 +106,15 @@ a:hover {
 
 .SiteHeader__icon > svg {
     /* width: 40px; */
-    width: auto;
-    height: 40px;
+    /* width: auto;
+    height: 40px; */
 }
+
+.SiteHeader__icon > amp-img {
+    /* width: 100%;
+    height: auto; */
+}
+
 
 /* Site navigation */
 .SiteNav {
