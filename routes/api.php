@@ -21,6 +21,24 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:api');
 */
 
+Route::get('/areas', function (Request $request, Response $response) {
+
+    $data = [];
+
+    // Hämta alla län, grupperat på län och antal
+    $data["lan"] = DB::table('crime_events')
+                ->select("administrative_area_level_1", DB::Raw("count(administrative_area_level_1) as numEvents"))
+                ->groupBy('administrative_area_level_1')
+                ->orderBy('administrative_area_level_1', 'asc')
+                ->where('administrative_area_level_1', "!=", "")
+                ->get();
+
+
+    return response()->json($data)->withCallback($request->input('callback'));
+
+
+});
+
 Route::get('/events', function (Request $request, Response $response) {
 
     // get collection with events
