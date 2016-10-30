@@ -41,6 +41,49 @@ Route::get('/areas', function (Request $request, Response $response) {
 
 });
 
+Route::get('/event/{eventID}', function (Request $request, Response $response, $eventID) {
+
+    $event = CrimeEvent::findOrFail($eventID);
+
+    $eventArray = $event->toArray();
+
+    $eventArray = array_only($eventArray, [
+        "id",
+        #"created_at",
+        #"updated_at",
+        #"title",
+        #"geocoded",
+        #"scanned_for_locations",
+        "description",
+        "permalink",
+        #"pubdate",
+        #"pubdate_iso8601",
+        #"md5",
+        "parsed_date",
+        "parsed_title_location",
+        "parsed_content",
+        "location_lng",
+        "location_lat",
+        "parsed_title",
+        "parsed_teaser",
+        "location_geometry_type",
+        "administrative_area_level_1",
+        "administrative_area_level_2",
+        "viewport_northeast_lat",
+        "viewport_northeast_lng",
+        "viewport_southwest_lat",
+        "viewport_southwest_lng",
+        #"tweeted",
+    ]);
+
+    $json = [
+        "data" => $eventArray
+    ];
+
+    return response()->json($json)->withCallback($request->input('callback'));
+
+});
+
 Route::get('/events', function (Request $request, Response $response) {
 
     // The number of events to get. Max 50. Default 10.
@@ -57,10 +100,11 @@ Route::get('/events', function (Request $request, Response $response) {
     // example: "folkungagatan", "midsommarkransen"
     $location = (string) $request->input("location");
 
-    // area
-    // location
-    // type
-    // nearby
+    // type = inbrott, rån, and so on
+    $type = (string) $request->input("type");
+
+    // nearby = lat,lng to show events nearby
+    // $nearby = (string) $request->input("nearby");
 
     // get collection with events
     $events = CrimeEvent::orderBy("created_at", "desc");
@@ -73,6 +117,10 @@ Route::get('/events', function (Request $request, Response $response) {
         $events = $events->whereHas("locations", function($query) use ($location) {
             $query->where('name', 'like', $location);
         });
+    }
+
+    if ($type) {
+        $events = $events->where("parsed_title", $type);
     }
 
     $events = $events->paginate($limit);
