@@ -84,6 +84,86 @@ Route::get('/event/{eventID}', function (Request $request, Response $response, $
 
 });
 
+
+Route::get('/eventsNearby', function (Request $request, Response $response) {
+
+    // The number of events to get. Max 50. Default 10.
+    $lat = (float) $request->input("lat");
+    $lng = (float) $request->input("lng");
+
+    if (empty($lat) || empty($lng)) {
+        abort(404);
+    }
+
+    $lat = (float) $request->input("lat");
+    $lng = (float) $request->input("lng");
+    $error = (bool) $request->input("error");
+
+    $lat = round($lat, 5);
+    $lng = round($lng, 5);
+
+    $numTries = 0;
+    $nearbyCount = 25;
+    $nearbyInKm = 5;
+
+    $events = CrimeEvent::getEventsNearLocation($lat, $lng, $nearbyCount, $nearbyInKm);
+    $numTries++;
+
+    // we want to show at least 5 events
+    // if less than 5 events is found then increase the range by nn km, until a hit is found
+    while ($events->count() < 5) {
+
+        $nearbyInKm = $nearbyInKm + 10;
+        $events = CrimeEvent::getEventsNearLocation($lat, $lng, $nearbyCount, $nearbyInKm);
+        $numTries++;
+
+    }
+
+    $json = [
+        "links" => [],
+        "meta" => [
+            "nearbyInKm" => $nearbyInKm,
+            "nearbyCount" => $nearbyCount,
+            "numTries" => $numTries,
+        ],
+    ];
+
+    // convert to array so we can modify data before returning to client
+    $eventsAsArray = $events->toArray();
+
+    //$json["links"] = $eventsAsArray;
+    //unset($json["links"]["data"]);
+
+    // create array with data is a format more suited for app and web
+    foreach ($events as $item) {
+
+        $event = [
+            "id" => $item->id,
+            "pubdate_iso8601" => $item->pubdate_iso8601,
+            "pubdate_unix" => $item->pubdate,
+            "title_type" => $item->parsed_title,
+            "title_location" => $item->parsed_title_location,
+            "description" => $item->description,
+            "content" => $item->parsed_content,
+            "locations" => $item->locations,
+            "lat" => (float) $item->location_lat,
+            "lng" => (float) $item->location_lng,
+            "viewport_northeast_lat" => $item->viewport_northeast_lat,
+            "viewport_northeast_lng" => $item->viewport_northeast_lng,
+            "viewport_southwest_lat" => $item->viewport_southwest_lat,
+            "viewport_southwest_lng" => $item->viewport_southwest_lng,
+            "image" => $item->getStaticImageSrc(320, 320, 2)
+        ];
+
+        $json["data"][] = $event;
+
+    }
+
+    // return json or jsonp if ?callback is set
+    return response()->json($json)->withCallback($request->input('callback'));
+
+});
+
 Route::get('/events', function (Request $request, Response $response) {
 
     // The number of events to get. Max 50. Default 10.
