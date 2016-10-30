@@ -109,8 +109,9 @@ a:hover {
     color: inherit;
 }
 
-.SiteHeader__icon {
-    width: 40px;
+.SiteHeader__icon > svg {
+    /* width: 40px; */
+    width: auto;
     height: 40px;
 }
 
