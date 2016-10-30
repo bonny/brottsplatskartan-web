@@ -54,6 +54,7 @@ Layout template for web
     <title>@yield('title')@hasSection('showTitleTagline') → Brottsplatskartan @endif</title>
 
     <meta name="apple-mobile-web-app-title" content="Brottsplatskartan">
+    <meta name="application-name" content="Brottsplatskartan">
 
     <link rel="apple-touch-icon-precomposed" sizes="57x57" href="/apple-touch-icon-57x57.png" />
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/apple-touch-icon-114x114.png" />
