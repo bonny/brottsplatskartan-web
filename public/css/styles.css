@@ -73,12 +73,7 @@ a:hover {
     padding: var(--default-margin);
     box-shadow: 2px 1px 1px rgba(0,0,0,0.15);
     font-size: .75rem;
-
-    /* from http://uigradients.com/ */
-    background: #fceabb; /* fallback for old browsers */
-    background: -webkit-linear-gradient(to left, #fceabb , #f8b500); /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to left, #fceabb , #f8b500); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-
+    background: #ffcc33;
 }
 
 .SiteHeader__inner {
@@ -121,7 +116,7 @@ a:hover {
     margin-left: -1rem;
     margin-right: -1rem;
     margin-bottom: -1rem;
-    background-color: rgba(255, 255, 255, .75);
+    /* background-color: rgba(255, 255, 255, .75); */
     font-size: 1rem;
 }
 
