@@ -23,10 +23,12 @@ Route::get('/user', function (Request $request) {
 
 Route::get('/areas', function (Request $request, Response $response) {
 
-    $data = [];
+    $data = [
+        "data" => []
+    ];
 
     // Hämta alla län, grupperat på län och antal
-    $data["lan"] = DB::table('crime_events')
+    $data["data"]["areas"] = DB::table('crime_events')
                 ->select("administrative_area_level_1", DB::Raw("count(administrative_area_level_1) as numEvents"))
                 ->groupBy('administrative_area_level_1')
                 ->orderBy('administrative_area_level_1', 'asc')
@@ -41,22 +43,52 @@ Route::get('/areas', function (Request $request, Response $response) {
 
 Route::get('/events', function (Request $request, Response $response) {
 
-    // get collection with events
-    $events = CrimeEvent::orderBy("created_at", "desc")->paginate(5);
+    // The number of events to get. Max 50. Default 10.
+    $limit = (int) $request->input("limit", 10);
+    if ($limit > 50) $limit = 50;
+    if ($limit <= 0) $limit = 10;
 
-    // clear the events a bit before returning
-    #print_r($events);
-    #if ($events->items instanceof Illuminate\Database\Eloquent\Collection) {
-    #    echo 1;
-    #} else {
-#        echo 2;#
-    #}
-    #exit;
+    // ?page=n, picked up by Laravel automatically
+
+    // area = administrative_area_level_1 = "Uppsala län" and so on
+    $area = (string) $request->input("area");
+
+    // location = city or street name or whatever, more specific than area (but can be pretty wide too)
+    // example: "folkungagatan", "midsommarkransen"
+    $location = (string) $request->input("location");
+
+    // area
+    // location
+    // type
+    // nearby
+
+    // get collection with events
+    $events = CrimeEvent::orderBy("created_at", "desc");
+
+    if ($area) {
+        $events = $events->where("administrative_area_level_1", $area);
+    }
+
+    if ($location) {
+        $events = $events->whereHas("locations", function($query) use ($location) {
+            $query->where('name', 'like', $location);
+        });
+    }
+
+    $events = $events->paginate($limit);
+
+    $json = [
+        "links" => [],
+        "data" => []
+    ];
 
     // convert to array so we can modify data before returning to client
     $eventsAsArray = $events->toArray();
+
+    $json["links"] = $eventsAsArray;
+    unset($json["links"]["data"]);
+
     // create array with data is a format more suited for app and web
-    $eventsAsArray["events"] = [];
     foreach ($events->items() as $item) {
         /*
         {
@@ -99,14 +131,12 @@ Route::get('/events', function (Request $request, Response $response) {
             "image" => $item->getStaticImageSrc(320, 320, 2)
         ];
 
+        $json["data"][] = $event;
 
-        $eventsAsArray["events"][] = $event;
     }
 
-    unset($eventsAsArray["data"]);
-
     // return json or jsonp if ?callback is set
-    return response()->json($eventsAsArray)->withCallback($request->input('callback'));
+    return response()->json($json)->withCallback($request->input('callback'));
 
 });
 
