@@ -18,16 +18,43 @@ Template for text pages
 
         <h1>Brottsplats API</h1>
 
-        <p>Brottsplatskartan hade tidigare ett öppet API med stöd för både XML och JSON.</p>
+        <p>Brottsplatskartan har ett API med stöd för både JSON och JSONP.</p>
 
-        <p>Vi har under 2016 gjort om sajten helt från början, så den är snabbare,
-            har brott från fler län, samt ett mycket mer stabilt sätt att placera brotten
-            på rätt plats på en karta. </p>
+        <p>Ungefär cirka såhär ser URLarna för APIet ut:</p>
 
-        <p>
-            På grund av denna stora omgörning så har vi inte hunnit göra ett publikt API
-            ännu, men vi hoppas kunna ha ett sådan tillgängligt snart.
-        </p>
+        <h2>Endpoints</h2>
+
+        <h3>Hämta alla län:</h3>
+
+        <p><code>/api/areas</code></p>
+
+        <h3>Hämta händelser</h3>
+
+
+        <p><code>/api/events/</code></p>
+
+        <p>med stöd för parametrar:</p>
+
+
+        <p><code>/api/events/?area=stockholms län</code></p>
+
+        <p><code>/api/events/?area=uppsala län</code></p>
+
+        <p><code>/api/events/?location=nacka</code></p>
+
+        <p><code>/api/events/?location=visby</code></p>
+
+        <p><code>/api/events/?type=inbrott</code></p>
+
+        <h3>Hämta i närheten</h3>
+
+
+        <p><code>/api/eventsNearby/?latlng=59.32,18.06</code></p>
+
+        <h#>Hämta single event</h#>
+
+
+        <p><code>/api/event/4095</code></p>
 
     @endif
 
