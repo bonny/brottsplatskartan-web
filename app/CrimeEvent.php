@@ -46,6 +46,7 @@ class CrimeEvent extends Model
         $image_src .= "key=$google_api_key";
         $image_src .= "&size={$width}x{$height}";
         $image_src .= "&scale={$scale}";
+        $image_src .= "&language=sv";
 
         // if viewport info exists use that and skip manual zoom level
         if ($this->viewport_northeast_lat) {
