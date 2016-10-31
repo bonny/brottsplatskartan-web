@@ -27,6 +27,12 @@ class RedirectOldPages
             // for example 'lan/gotlands-lan'
             $path = $request->path();
 
+            // redirect brottsplatsstockholm-api -> /dev/api
+            // brottsplatsstockholm-api
+            if ($path === "brottsplatsstockholm-api") {
+                return redirect(route("page", ["pagename" => "api"]));
+            }
+
             // redirect gamla län-urls, slutar med 'lan/gotlands-lan'
             // hel url är t.ex. 'www.brottsplatskartan.se/lan/stockholms-lan'
             if (starts_with($path, "lan/") && ends_with($path, "-lan")) {
