@@ -352,6 +352,8 @@ amp-social-share {
 
 .SearchForm__submit {
     width: 4rem;
+    background: #eee;
+    border: 1px solid #999;
 }
 
 .HeaderSearch {
