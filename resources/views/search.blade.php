@@ -16,7 +16,7 @@ Template för sök
 
     <form method="get" action="{{ route("search", null, false) }}" class="SearchForm" target="_top">
         <input type="text" name="s" value="{{ $s }}" class="SearchForm__s" placeholder="Ange sökord" autofocus>
-        <button type="submit" class="SearchForm__submit">Sök</button>
+        <input type="submit" class="SearchForm__submit" value="Sök">
     </form>
 
     @if (isset($events) && $events->count())
