@@ -104,6 +104,10 @@ a:hover {
     color: inherit;
 }
 
+.SiteHeader__icon {
+    text-align: center;
+}
+
 .SiteHeader__icon > svg {
     /* width: 40px; */
     /* width: auto;
@@ -495,6 +499,34 @@ amp-social-share {
 
 /* ~ipad~ iphone 6 liggande and other medium to large screens */
 @media only screen and (min-width: 667px) {
+
+    .SiteHeader__icon {
+        text-align: left;
+    }
+
+    .SiteNav {
+        margin-left: 0;
+    }
+
+    .SiteNav__items {
+        margin-left: calc(-1rem);
+        text-align: left;
+    }
+
+    .SiteNav__item {
+        text-align: left;
+        width: auto;
+    }
+
+    .SiteNav__item a {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
+
+    .SiteNav__item a:hover {
+        text-decoration: none;
+        /* border-bottom: 4px solid rgba(24,98,168, 1); */
+    }
 
     .Events--overview .Event {
         float: left;
