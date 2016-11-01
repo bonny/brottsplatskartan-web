@@ -205,7 +205,8 @@ class FeedParserController extends Controller
             "under", "fordon", "patrullen", "information",
             "ansikten", "marken", "hotell", "fallet", "macken",
             "bilisten", "kosta", "kungs", "rondellen", "god morgon", "stationen", "halsen", "djuret",
-            "öster", "ishall", "ishallen", "ligga", "vapnet", "terrassen", "förskolan", "en plats", "tvättstuga"
+            "öster", "ishall", "ishallen", "ligga", "vapnet", "terrassen", "förskolan", "en plats", "tvättstuga",
+            "viadukten"
         ];
 
     }
