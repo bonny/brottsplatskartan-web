@@ -188,35 +188,14 @@ class FeedParserController extends Controller
     }
 
 
+    /**
+     * Get streenames etc that are not valid streetnames
+     */
     public function getHighwaysStopwords() {
 
-        // @TODO: get from db
-        // $stopwords =
-        // create stopwords model
         $ignored_highways = highways_ignored::all()->pluck("name")->toArray();
-        return $ignored_highways;
 
-        return [
-            "träd", "butik", "brottet", "skolan", "anslutning", "gripen", "lägenheten", "oscar", "radhuset", "polishuset",
-            "diket", "södra", "gränsen", "diesel",
-            "vägen", "istället", "plattformen", "klockan", "klocka", "just nu", "i morgon", "morgon",
-            "polisen", "polis", "baksidan", "omhändertagen", "nedan", "flaskan", "start",
-            "morgon", "backe", "arbetet", "tillfället",
-            "platsen", "byggnaden", "söder", "svängen", "älgen", "trappa", "skolgården", "körning", "tobak",
-            "butiken", "strand", "huvudet", "parkering", "containern", "fönstret", "matsalen",
-            "västra", "förskola", "posten", "branden", "perrongen",
-            "kommer", "hörnet", "frukt", "tomten",
-            "något", "centrum", "hållet", "backa",
-            "ringa", "backa", "naturbruksgymnasiet", "arenan", "stadion",
-            "polisstationen", "stuga", "påsen",
-            "räddningstjänsten", "väskan",
-            "under", "fordon", "patrullen", "information",
-            "ansikten", "marken", "hotell", "fallet", "macken",
-            "bilisten", "kosta", "kungs", "rondellen", "god morgon", "stationen", "halsen", "djuret",
-            "öster", "ishall", "ishallen", "ligga", "vapnet", "terrassen", "förskolan", "en plats", "tvättstuga",
-            "viadukten", "trafikverket", "välkommen", "staben",
-            "sjukhuset"
-        ];
+        return $ignored_highways;
 
     }
 
