@@ -105,9 +105,9 @@ class CrimeEvent extends Model
 
     }
 
-    public function getPubDateFormatted() {
+    public function getPubDateFormatted($format = '%A %d %B %Y') {
 
-        return Carbon::createFromTimestamp($this->pubdate)->formatLocalized('%A %d %B %Y');
+        return Carbon::createFromTimestamp($this->pubdate)->formatLocalized($format);
 
     }
 
