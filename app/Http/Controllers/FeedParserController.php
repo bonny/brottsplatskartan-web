@@ -9,6 +9,7 @@ use App\CrimeEvent;
 use Goutte\Client;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use App\highways_ignored;
 
 class FeedParserController extends Controller
 {
@@ -180,13 +181,20 @@ class FeedParserController extends Controller
     function getHighwaysAddedManually() {
 
         return [
-            "brantholmsgränd"
+            "brantholmsgränd",
+            "sahlgrenska sjukhuset"
         ];
 
     }
 
 
-    private function getHighwaysStopwords() {
+    public function getHighwaysStopwords() {
+
+        // @TODO: get from db
+        // $stopwords =
+        // create stopwords model
+        $ignored_highways = highways_ignored::all()->pluck("name")->toArray();
+        return $ignored_highways;
 
         return [
             "träd", "butik", "brottet", "skolan", "anslutning", "gripen", "lägenheten", "oscar", "radhuset", "polishuset",
@@ -206,7 +214,8 @@ class FeedParserController extends Controller
             "ansikten", "marken", "hotell", "fallet", "macken",
             "bilisten", "kosta", "kungs", "rondellen", "god morgon", "stationen", "halsen", "djuret",
             "öster", "ishall", "ishallen", "ligga", "vapnet", "terrassen", "förskolan", "en plats", "tvättstuga",
-            "viadukten", "trafikverket", "välkommen", "staben"
+            "viadukten", "trafikverket", "välkommen", "staben",
+            "sjukhuset"
         ];
 
     }
