@@ -4,7 +4,10 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Http\Controllers\FeedController;
+use App\Http\Controllers\FeedParserController;
 use App\CrimeEvent;
+use App\highways_ignored;
+use App;
 
 class FetchEvents extends Command
 {
@@ -16,6 +19,7 @@ class FetchEvents extends Command
     protected $signature = 'crimeevents:fetch';
 
     private $feedController;
+    private $feedParser;
 
     /**
      * The console command description.
@@ -29,11 +33,12 @@ class FetchEvents extends Command
      *
      * @return void
      */
-    public function __construct(FeedController $FeedController)
+    public function __construct(FeedController $FeedController, FeedParserController $FeedParser)
     {
         parent::__construct();
 
         $this->feedController = $FeedController;
+        $this->feedParser = $FeedParser;
     }
 
     /**
@@ -44,9 +49,9 @@ class FetchEvents extends Command
     public function handle()
     {
 
+
         $this->info('Ok, let\'s go!');
         $this->line('Fetching events...');
-
 
         // updateFeedsFromPolisen
         $updatedFeedsInfo = $this->feedController->updateFeedsFromPolisen();
