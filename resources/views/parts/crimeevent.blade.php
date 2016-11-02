@@ -23,7 +23,13 @@ if $single is set then larger image
             @if (isset($overview))
                 <amp-img class="Event__mapImage" src="{{ $event->getStaticImageSrc(640,320) }}" width="640" height="320" layout="responsive"></amp-img>
             @else
-                <amp-img class="Event__mapImage" src="{{ $event->getStaticImageSrc(640,320) }}" width="640" height="320" layout="responsive"></amp-img>
+                <amp-img
+                    class="Event__mapImage"
+                    src="{{ $event->getStaticImageSrc(640,320) }}"
+                    width="640"
+                    height="320"
+                    layout="responsive"
+                ></amp-img>
             @endif
 
             @if ( isset($overview) )
