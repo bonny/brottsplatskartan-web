@@ -230,6 +230,7 @@ Route::get('/typ/', function () {
 
 })->name("typeOverview");
 
+
 /**
  * En typ
  */
@@ -256,7 +257,9 @@ Route::get('/typ/{typ}', function ($typ) {
 
     return view('single-typ', $data);
 
-})->name("typeSingle");
+})
+->name("typeSingle")
+->where('typ', '(.*)');
 
 
 /**
