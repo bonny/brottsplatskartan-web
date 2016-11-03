@@ -504,6 +504,7 @@ amp-social-share {
 
 .Ad__intro {
     font-size: var(--font-size-small);
+    color: #666;
 }
 
 /* ~ipad~ iphone 6 liggande and other medium to large screens */
