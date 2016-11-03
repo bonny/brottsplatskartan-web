@@ -280,19 +280,6 @@ Route::get('/plats/{plats}', function ($plats) {
                                 })
                                 ->paginate(10);
 
-    // Leta också i locations-tabellen
-    /*
-    $events2 = CrimeEvent::whereHas('locations', function($query) use($plats) {
-        $query->where('name', '=', $plats);
-    })->paginate();
-    */
-
-    #echo "<br>events count: " . $events->count();
-    #echo "<br>events2 count: " . $events2->count();
-
-    #$events = $events->merge($events2);
-    #echo "<br>joined events count: " . $events->count();
-
     $data["events"] = $events;
 
     if (!$data["events"]->count()) {

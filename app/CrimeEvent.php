@@ -189,6 +189,14 @@ class CrimeEvent extends Model
 
         $locations = [];
 
+        $prioOneLocations = $this->locations->where("prio", 1);
+
+        if ($prioOneLocations->count()) {
+            foreach ($prioOneLocations as $oneLocation) {
+                $locations[] = title_case($oneLocation->name);
+            }
+        }
+
         if ($this->parsed_title_location) {
             $locations[] = $this->parsed_title_location;
         }
@@ -415,6 +423,29 @@ class CrimeEvent extends Model
 
 
         return $data;
+
+    }
+
+    public function getSingleEventTitle() {
+
+        $title = "";
+        $titleParts = [];
+
+
+        $titleParts[] = $this->parsed_title;
+
+        $prioOneLocations = $this->locations->where("prio", 1);
+
+        foreach ($prioOneLocations as $oneLocation) {
+            $titleParts[] = title_case($oneLocation->name);
+        }
+
+        $titleParts[] = $this->parsed_title_location;
+        $titleParts[] = $this->getPubDateFormatted('%d %B %Y');
+
+        $title = implode(", ", $titleParts);
+
+        return $title;
 
     }
 
