@@ -13,7 +13,7 @@ Template för en ort
 
 @section('content')
 
-    <h1>Brott i {{ $plats }}</h1>
+    <h1>Brott i {{ title_case($plats) }}</h1>
 
     <p>
         Visar alla inrapporterade händelser och brott för {{ $plats }}, direkt från polisen.
