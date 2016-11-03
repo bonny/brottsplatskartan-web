@@ -271,10 +271,29 @@ Route::get('/plats/{plats}', function ($plats) {
         "plats" => $plats
     ];
 
-    $data["events"] = CrimeEvent::orderBy("created_at", "desc")
+    // Hämta events där plats är från huvudtabellen
+    $events = CrimeEvent::orderBy("created_at", "desc")
                                 ->where("parsed_title_location", $plats)
                                 ->orWhere("administrative_area_level_2", $plats)
+                                ->orWhereHas('locations', function($query) use($plats) {
+                                        $query->where('name', '=', $plats);
+                                })
                                 ->paginate(10);
+
+    // Leta också i locations-tabellen
+    /*
+    $events2 = CrimeEvent::whereHas('locations', function($query) use($plats) {
+        $query->where('name', '=', $plats);
+    })->paginate();
+    */
+
+    #echo "<br>events count: " . $events->count();
+    #echo "<br>events2 count: " . $events2->count();
+
+    #$events = $events->merge($events2);
+    #echo "<br>joined events count: " . $events->count();
+
+    $data["events"] = $events;
 
     if (!$data["events"]->count()) {
         abort(404);
