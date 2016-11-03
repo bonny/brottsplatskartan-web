@@ -211,6 +211,20 @@ class CrimeEvent extends Model
 
         $locations = [];
 
+        $prioOneLocations = $this->locations->where("prio", 1);
+
+        if ($prioOneLocations->count()) {
+            foreach ($prioOneLocations as $oneLocation) {
+
+                $locations[] = sprintf(
+                    '<a href="%2$s">%1$s</a>',
+                    title_case($oneLocation->name),
+                    route("platsSingle", ["plats" => $oneLocation->name])
+                );
+
+            }
+        }
+
         if ($this->parsed_title_location) {
 
             //$locations[] = $this->parsed_title_location;
