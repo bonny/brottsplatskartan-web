@@ -497,6 +497,15 @@ amp-social-share {
     background: var(--color-link);
 }
 
+.Ad {
+    margin-top: var(--default-margin);
+    margin-bottom: var(--default-margin);
+}
+
+.Ad__intro {
+    font-size: var(--font-size-small);
+}
+
 /* ~ipad~ iphone 6 liggande and other medium to large screens */
 @media only screen and (min-width: 667px) {
 
@@ -560,3 +569,4 @@ amp-social-share {
         display: none;
     }
 }
+sd
