@@ -302,7 +302,7 @@ Route::get('/plats/{plats}', function ($plats) {
     $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs;
     $breadcrumbs->addCrumb('Hem', '/');
     $breadcrumbs->addCrumb('Platser', route("platserOverview"));
-    $breadcrumbs->addCrumb($plats);
+    $breadcrumbs->addCrumb(e(title_case($plats)));
 
     $data["breadcrumbs"] = $breadcrumbs;
 
