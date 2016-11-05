@@ -10,4 +10,12 @@ class Locations extends Model
         "prio",
         "name",
     ];
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = ['id', 'created_at', 'updated_at', 'crime_event_id'];
+
 }
