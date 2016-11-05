@@ -218,6 +218,7 @@ Route::get('/events', function (Request $request, Response $response) {
 
     // create array with data is a format more suited for app and web
     foreach ($events->items() as $item) {
+
         /*
         {
         id: 2056,
@@ -256,6 +257,8 @@ Route::get('/events', function (Request $request, Response $response) {
             "viewport_northeast_lng" => $item->viewport_northeast_lng,
             "viewport_southwest_lat" => $item->viewport_southwest_lat,
             "viewport_southwest_lng" => $item->viewport_southwest_lng,
+            "administrative_area_level_1" => $item->administrative_area_level_1,
+            "administrative_area_level_2" => $item->administrative_area_level_2,
             "image" => $item->getStaticImageSrc(320, 320, 2)
         ];
 
