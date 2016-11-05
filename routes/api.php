@@ -259,7 +259,7 @@ Route::get('/events', function (Request $request, Response $response) {
             "viewport_southwest_lng" => $item->viewport_southwest_lng,
             "administrative_area_level_1" => $item->administrative_area_level_1,
             "administrative_area_level_2" => $item->administrative_area_level_2,
-            "image" => $item->getStaticImageSrc(320, 320, 2)
+            "image" => $item->getStaticImageSrc(640, 320, 1)
         ];
 
         $json["data"][] = $event;
