@@ -250,7 +250,10 @@ Route::get('/events', function (Request $request, Response $response) {
             "title_location" => $item->parsed_title_location,
             "description" => $item->description,
             "content" => $item->parsed_content,
-            "locations" => $item->locations,
+            "content_teaser" => $item->getParsedContentTeaser(),
+            //"locations" => $item->locations,
+            "location_string" => $item->getLocationString(),
+            "date_human" => $item->getParsedDateFormattedForHumans(),
             "lat" => (float) $item->location_lat,
             "lng" => (float) $item->location_lng,
             "viewport_northeast_lat" => $item->viewport_northeast_lat,
@@ -259,7 +262,8 @@ Route::get('/events', function (Request $request, Response $response) {
             "viewport_southwest_lng" => $item->viewport_southwest_lng,
             "administrative_area_level_1" => $item->administrative_area_level_1,
             "administrative_area_level_2" => $item->administrative_area_level_2,
-            "image" => $item->getStaticImageSrc(640, 320, 1)
+            "image" => $item->getStaticImageSrc(640, 320, 1),
+            "external_source_link" => $item->permalink
         ];
 
         $json["data"][] = $event;
