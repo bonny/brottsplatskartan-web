@@ -268,7 +268,7 @@ Route::get('/typ/{typ}', function ($typ) {
 Route::get('/plats/{plats}', function ($plats) {
 
     $data = [
-        "plats" => $plats
+        "plats" => title_case($plats)
     ];
 
     // Hämta events där plats är från huvudtabellen

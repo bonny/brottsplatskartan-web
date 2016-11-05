@@ -16,7 +16,7 @@ Template för en ort
     <h1>Brott i {{ title_case($plats) }}</h1>
 
     <p>
-        Visar alla inrapporterade händelser och brott för {{ $plats }}, direkt från polisen.
+        Inrapporterade händelser och brott för {{ $plats }}.
     </p>
 
     @if ($events)
