@@ -274,7 +274,8 @@ Route::get('/events', function (Request $request, Response $response) {
             "administrative_area_level_1" => $item->administrative_area_level_1,
             "administrative_area_level_2" => $item->administrative_area_level_2,
             "image" => $item->getStaticImageSrc(640, 320, 1),
-            "external_source_link" => $item->permalink
+            "external_source_link" => $item->permalink,
+            "permalink" => $item->getPermalink(true)
         ];
 
         $json["data"][] = $event;
