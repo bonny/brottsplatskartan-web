@@ -205,11 +205,14 @@ Route::get('/events', function (Request $request, Response $response) {
 
     $events = $events->paginate($limit);
 
+    $callback = $request->input('callback');
+
     $events->appends([
         "limit" => $limit,
         "area" => $area,
         "location" => $location,
         "type" => $type,
+        // "callback" => $callback,
     ]);
 
     $json = [
@@ -278,7 +281,7 @@ Route::get('/events', function (Request $request, Response $response) {
     }
 
     // return json or jsonp if ?callback is set
-    return response()->json($json)->withCallback($request->input('callback'));
+    return response()->json($json)->withCallback($callback);
 
 });
 
