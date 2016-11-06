@@ -205,6 +205,13 @@ Route::get('/events', function (Request $request, Response $response) {
 
     $events = $events->paginate($limit);
 
+    $events->appends([
+        "limit" => $limit,
+        "area" => $area,
+        "location" => $location,
+        "type" => $type,
+    ]);
+
     $json = [
         "links" => [],
         "data" => []
