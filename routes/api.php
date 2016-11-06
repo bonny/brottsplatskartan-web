@@ -260,6 +260,7 @@ Route::get('/events', function (Request $request, Response $response) {
             "title_location" => $item->parsed_title_location,
             "description" => $item->description,
             "content" => $item->parsed_content,
+            "content_formatted" => $item->getParsedContent(),
             "content_teaser" => $item->getParsedContentTeaser(),
             //"locations" => $item->locations,
             "location_string" => $item->getLocationString(),
