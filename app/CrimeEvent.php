@@ -441,7 +441,7 @@ class CrimeEvent extends Model
         }
 
         $titleParts[] = $this->parsed_title_location;
-        $titleParts[] = $this->getPubDateFormatted('%d %B %Y');
+        $titleParts[] = $this->getPubDateFormatted('%d %b %Y');
 
         $title = implode(", ", $titleParts);
 
