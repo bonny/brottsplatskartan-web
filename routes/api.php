@@ -86,7 +86,6 @@ Route::get('/event/{eventID}', function (Request $request, Response $response, $
 
 
 Route::get('/eventsNearby', function (Request $request, Response $response) {
-
     // The number of events to get. Max 50. Default 10.
     $lat = (float) $request->input("lat");
     $lng = (float) $request->input("lng");

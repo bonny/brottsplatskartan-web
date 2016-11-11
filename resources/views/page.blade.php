@@ -48,11 +48,9 @@ Template for text pages
 
         <h3>Hämta i närheten</h3>
 
-
-        <p><code>/api/eventsNearby/?latlng=59.32,18.06</code></p>
+        <p><code>/api/eventsNearby?lat=59.32&lng=18.06</code></p>
 
         <h#>Hämta single event</h#>
-
 
         <p><code>/api/event/4095</code></p>
 
