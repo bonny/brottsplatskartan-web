@@ -219,7 +219,7 @@ class CrimeEvent extends Model
 
         $locations = [];
 
-        $prioOneLocations = $this->locations->where("prio", 1);
+        $prioOneLocations = $this->locations->whereIn("prio", [1, 2]);
 
         if ($prioOneLocations->count()) {
             foreach ($prioOneLocations as $oneLocation) {

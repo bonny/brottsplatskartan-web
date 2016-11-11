@@ -18,4 +18,40 @@ Template for start page
 
     @include('parts.crimeevent', ["single" => true])
 
+
+    @if (isset($eventsNearby) && $eventsNearby->count())
+
+        <aside class="RelatedEvents">
+
+            <h2 class="RelatedEvents__title">Andra händelser i närheten</h2>
+
+            <ul class="RelatedEvents__items">
+
+                @foreach ($eventsNearby as $eventNear)
+
+                    <li class="RelatedEvents__item">
+
+                        <h3 class="RelatedEvents__item__title">
+                            <a class="RelatedEvents__item__link" href="{{ $eventNear->getPermalink() }}">
+                                {{ $eventNear->parsed_title }}
+                            </a>
+                        </h3>
+
+                        <p class="RelatedEvents__item__location">{{ $eventNear->getLocationString() }}</p>
+
+                        <p class="RelatedEvents__item__date">{{ $eventNear->getParsedDateFormattedForHumans() }}</p>
+
+                        <p class="RelatedEvents__item__description">{{ $eventNear->getMetaDescription(90) }}</p>
+
+                    </li>
+
+                @endforeach
+
+            </ul>
+
+        </aside>
+
+    @endif
+
+
 @endsection

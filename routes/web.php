@@ -388,10 +388,14 @@ Route::get('/{lan}/{eventName}', function ($lan,  $eventName, Request $request) 
     // optional debug
     $debugData = CrimeEvent::maybeAddDebugData($request, $event);
 
+    // Add nearby events
+    $eventsNearby = CrimeEvent::getEventsNearLocation($event->location_lat, $event->location_lng, $nearbyCount = 10, $nearbyInKm = 25);
+
     $data = [
         "lan" => $lan,
         "eventID" => $eventID,
         "event" => $event,
+        "eventsNearby" => $eventsNearby,
         "breadcrumbs" => $breadcrumbs,
         "debugData" => $debugData
     ];
@@ -424,10 +428,10 @@ Route::get('/sok/', function (Request $request) {
 
         $events = CrimeEvent::where(function($query) use ($s) {
 
-            $query->where("description", "LIKE","%$s%")
-            ->orWhere("parsed_title_location", "LIKE", "%$s%")
-            ->orWhere("parsed_content", "LIKE", "%$s%")
-            ->orWhere("parsed_title", "LIKE", "%$s%");
+            $query->where("description", "LIKE","$s%")
+            ->orWhere("parsed_title_location", "LIKE", "$s%")
+            ->orWhere("parsed_content", "LIKE", "$s%")
+            ->orWhere("parsed_title", "LIKE", "$s%");
 
         })->orderBy("created_at", "desc")->paginate(10);
 
