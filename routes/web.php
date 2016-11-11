@@ -303,9 +303,21 @@ Route::get('/plats/{plats}', function ($plats) {
 */
 Route::get('/sida/{pagename}', function ($pagename = null) {
 
+    $pagetitle = "Sidan $pagename";
+
+    switch($pagename) {
+        case "om";
+            $pagetitle = "Om Brottsplatskartan";
+            break;
+        case "api";
+            $pagetitle = "Brottsplatskartans API för att hämta brott från Polisen";
+            break;
+    }
+
+
     $data = [
         "pagename" => $pagename,
-        "pageTitle" => "Sidan $pagename"
+        "pageTitle" => $pagetitle
     ];
 
     return view('page', $data);
