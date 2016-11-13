@@ -185,24 +185,32 @@ class CrimeEvent extends Model
      * Hämta eventets platser i en rimligt fint formaterad sträng
      * typ såhär: Borås, nnn län
      */
-    public function getLocationString() {
+    public function getLocationString($includePrioLocations = true, $includeParsedTitleLocation = true, $inclueAdministrativeAreaLevel1Locations = true) {
 
         $locations = [];
 
-        $prioOneLocations = $this->locations->where("prio", 1);
+        if ($includePrioLocations) {
 
-        if ($prioOneLocations->count()) {
-            foreach ($prioOneLocations as $oneLocation) {
-                $locations[] = title_case($oneLocation->name);
+            $prioLocations = $this->locations->whereIn("prio", [1, 2]);
+
+            if ($prioLocations->count()) {
+                foreach ($prioLocations as $oneLocation) {
+                    $locations[] = title_case($oneLocation->name);
+                }
+            }
+
+        }
+
+        if ($includeParsedTitleLocation) {
+            if ($this->parsed_title_location) {
+                $locations[] = $this->parsed_title_location;
             }
         }
 
-        if ($this->parsed_title_location) {
-            $locations[] = $this->parsed_title_location;
-        }
-
-        if ($this->administrative_area_level_1 && $this->administrative_area_level_1 !== $this->parsed_title_location) {
-            $locations[] = $this->administrative_area_level_1;
+        if ($inclueAdministrativeAreaLevel1Locations) {
+            if ($this->administrative_area_level_1 && $this->administrative_area_level_1 !== $this->parsed_title_location) {
+                $locations[] = $this->administrative_area_level_1;
+            }
         }
 
         $location = implode(", ", $locations);

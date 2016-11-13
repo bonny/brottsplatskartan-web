@@ -18,7 +18,7 @@ Template for start page
 
     @include('parts.crimeevent', ["single" => true])
 
-
+    {{-- show a card with nearby events --}}
     @if (isset($eventsNearby) && $eventsNearby->count())
 
         <aside class="RelatedEvents">
@@ -33,11 +33,12 @@ Template for start page
 
                         <h3 class="RelatedEvents__item__title">
                             <a class="RelatedEvents__item__link" href="{{ $eventNear->getPermalink() }}">
-                                {{ $eventNear->parsed_title }}
+                                {{ $eventNear->parsed_title }},
+                                {{ $eventNear->getLocationString(true, false, false) }}
                             </a>
                         </h3>
 
-                        <p class="RelatedEvents__item__location">{{ $eventNear->getLocationString() }}</p>
+                        <!-- <p class="RelatedEvents__item__location">{{ $eventNear->getLocationString(true, false, false) }}</p> -->
 
                         <p class="RelatedEvents__item__date">{{ $eventNear->getParsedDateFormattedForHumans() }}</p>
 
