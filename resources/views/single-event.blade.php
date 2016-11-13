@@ -34,7 +34,7 @@ Template for start page
                         <h3 class="RelatedEvents__item__title">
                             <a class="RelatedEvents__item__link" href="{{ $eventNear->getPermalink() }}">
                                 {{ $eventNear->parsed_title }},
-                                {{ $eventNear->getLocationString(true, false, false) }}
+                                {{ $eventNear->getLocationString(true, true, false) }}
                             </a>
                         </h3>
 
