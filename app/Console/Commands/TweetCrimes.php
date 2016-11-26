@@ -54,7 +54,8 @@ class TweetCrimes extends Command
                             ->orderBy("created_at", "desc")
                             ->where([
                                 ["created_at", ">=", $date],
-                                ["tweeted", "=", false]
+                                ["tweeted", "=", false],
+                                ["geocoded", "=", true]
                             ])
                             ->get();
 
