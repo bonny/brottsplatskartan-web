@@ -23,13 +23,15 @@ if $single is set then larger image
             @if (isset($overview))
                 <amp-img class="Event__mapImage" src="{{ $event->getStaticImageSrc(640,320) }}" width="640" height="320" layout="responsive"></amp-img>
             @else
-                <amp-img
-                    class="Event__mapImage"
-                    src="{{ $event->getStaticImageSrc(640,320) }}"
-                    width="640"
-                    height="320"
-                    layout="responsive"
-                ></amp-img>
+                <a href="https://google.se/maps/{{ '@' . $event->location_lat }},{{ $event->location_lng }},12z" target="_blank">
+                    <amp-img
+                        class="Event__mapImage"
+                        src="{{ $event->getStaticImageSrc(640,320) }}"
+                        width="640"
+                        height="320"
+                        layout="responsive"
+                    ></amp-img>
+                </a>
             @endif
 
             @if ( isset($overview) )
