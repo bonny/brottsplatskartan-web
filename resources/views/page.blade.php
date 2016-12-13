@@ -14,6 +14,7 @@ Template for text pages
 
 @section('content')
 
+
     @if ($pagename == "api")
 
         <h1>Brottsplats API</h1>
@@ -56,6 +57,7 @@ Template for text pages
 
     @endif
 
+
     @if ($pagename == "om")
 
         <h1>Om brottsplatskartan.se</h1>
@@ -72,6 +74,7 @@ Template for text pages
         </p>
 
     @endif
+
 
     @if ($pagename == "appar")
 
@@ -95,6 +98,28 @@ Template for text pages
 
         <p>Om du gillar hemsidan mer än apparna så kan du välja att lägga ett bokmärke till brottsplatskartan.se på
         din hemskärm i din telefon.</p>
+
+    @endif
+
+
+    @if ($pagename == "stockholm")
+
+        <h1>Händelser från Polisen i Stockholm</h1>
+
+        <p>
+            Här på Brottsplatskartan kan du se de
+            <a href="{{ route("platsSingle", ["plats" => "Stockholm"]) }}">senaste händelserna från Polisen i Stockholm</a>.
+        </p>
+
+        <p>
+            På vår karta kan du se olika typer av brott som rapporterats till Polisen.
+        </p>
+
+        <h2>Alltid senaste nytt från Polisen</h2>
+
+        <p>Alla händelser på den här sajten hämtas från Polisen i Stockholms hemsida.
+        Direkt när en händelser hämtats så avgör vi var händelsen troligen inträffat och så markeras det
+        på en karta.</p>
 
     @endif
 

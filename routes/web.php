@@ -315,6 +315,9 @@ Route::get('/sida/{pagename}', function ($pagename = null) {
         case "appar";
             $pagetitle = "Brottsplatskartans app för Iphone och Android";
             break;
+        case "stockholm";
+            $pagetitle = "Senaste händelserna från Polisen i Stockholm";
+            break;
     }
 
 
