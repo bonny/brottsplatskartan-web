@@ -73,4 +73,29 @@ Template for text pages
 
     @endif
 
+    @if ($pagename == "appar")
+
+        <h1>Händelser från Polisen i din mobil</h1>
+
+        <p>
+            Med våra brottsplatsappar till Iphone och Android så kan du se de senaste händelserna från polisen
+            direkt i din mobil.
+        </p>
+
+        <h2>Ladda hem apparna</h2>
+
+        <ul>
+            <li>
+                <a href="https://itunes.apple.com/se/app/brottsplatskartan-handelser/id1174082309?mt=8">Brottsplatskartan som app till Iphone/Ipad</a>
+            <li>
+                <a href="https://play.google.com/store/apps/details?id=com.mufflify.brottsplatskartan&hl=sv">Brottsplatskartan som app till Android</a>
+        </ul>
+
+        <h2>Tips!</h2>
+
+        <p>Om du gillar hemsidan mer än apparna så kan du välja att lägga ett bokmärke till brottsplatskartan.se på
+        din hemskärm i din telefon.</p>
+
+    @endif
+
 @endsection
