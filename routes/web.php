@@ -312,6 +312,9 @@ Route::get('/sida/{pagename}', function ($pagename = null) {
         case "api";
             $pagetitle = "Brottsplatskartans API för att hämta brott från Polisen";
             break;
+        case "appar";
+            $pagetitle = "Brottsplatskartans app för Iphone och Android";
+            break;
     }
 
 
