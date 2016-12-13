@@ -75,7 +75,7 @@ Template for text pages
 
     @if ($pagename == "appar")
 
-        <h1>Händelser från Polisen i din mobil</h1>
+        <h1>Polisens händelser direkt i din mobil</h1>
 
         <p>
             Med våra brottsplatsappar till Iphone och Android så kan du se de senaste händelserna från polisen
