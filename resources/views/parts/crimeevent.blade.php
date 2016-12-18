@@ -21,17 +21,41 @@ if $single is set then larger image
             @endif
 
             @if (isset($overview))
+
                 <amp-img class="Event__mapImage" src="{{ $event->getStaticImageSrc(640,320) }}" width="640" height="320" layout="responsive"></amp-img>
+
             @else
-                <a href="https://google.se/maps/{{ '@' . $event->location_lat }},{{ $event->location_lng }},12z" target="_blank">
-                    <amp-img
-                        class="Event__mapImage"
-                        src="{{ $event->getStaticImageSrc(640,320) }}"
-                        width="640"
-                        height="320"
-                        layout="responsive"
-                    ></amp-img>
-                </a>
+
+                {{-- <a href="https://google.se/maps/{{ '@' . $event->location_lat }},{{ $event->location_lng }},12z" target="_blank"> --}}
+
+                {{--
+                640px
+                66.666 % är 640 * 0.66666 = 426
+                33.333 % av det är 640 * 0.33333 = 213 px bred
+                 --}}
+
+                    <span class="Event__mapImageWrap Event__mapImageWrap--near">
+                        <amp-img
+                            class="Event__mapImage Event__mapImage--near"
+                            src="{{ $event->getStaticImageSrc(426,320) }}"
+                            width="426"
+                            height="320"
+                            layout="responsive"
+                        ></amp-img>
+                    </span>
+
+                    <span class="Event__mapImageWrap Event__mapImageWrap--far">
+                        <amp-img
+                            class="Event__mapImage Event__mapImage--far"
+                            src="{{ $event->getStaticImageSrcFar(213,320) }}"
+                            width="213"
+                            height="320"
+                            layout="responsive"
+                        ></amp-img>
+                    </span>
+
+                {{-- </a> --}}
+
             @endif
 
             @if ( isset($overview) )
