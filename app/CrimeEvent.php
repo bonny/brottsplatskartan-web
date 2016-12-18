@@ -94,6 +94,36 @@ class CrimeEvent extends Model
 
     }
 
+    // get image far away, like whole sweden or something
+    public function getStaticImageSrcFar($width = 320, $height = 320, $scale = 1) {
+
+        $google_api_key = env("GOOGLE_API_KEY");
+
+        $image_src = "https://maps.googleapis.com/maps/api/staticmap?";
+        $image_src .= "key=$google_api_key";
+        $image_src .= "&size={$width}x{$height}";
+        $image_src .= "&scale={$scale}";
+        $image_src .= "&language=sv";
+
+        // if viewport info exists use that and skip manual zoom level
+        if ($this->location_lat) {
+
+            // no viewport but location_lat, fallback to center
+            $image_src .= "&center={$this->location_lat},{$this->location_lng}";
+            $image_src .= "&zoom=5";
+
+            $image_src .= "&markers=color:red|{$this->location_lat},{$this->location_lng}";
+
+        } else {
+
+            return "";
+
+        }
+
+        return $image_src;
+
+    }
+
     /**
      * The pub date is the date from the RSS-feed,
      * i.e. when the crime is posted by polisen
