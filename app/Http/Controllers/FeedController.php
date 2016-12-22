@@ -31,17 +31,21 @@ class FeedController extends Controller
         $apiUrlTemplate .= '&address=%1$s';
 
         $strLocationURLPart = "";
+
         foreach ( $itemLocations as $location ) {
             $strLocationURLPart .= ", " . $location->name;
         }
 
-        // append main location
+        // append main location, from title
         $strLocationURLPart .= ", " . $item->parsed_title_location;
         $strLocationURLPart = trim($strLocationURLPart, ", ");
 
         $strLocationURLPartBeforeUrlEncode = $strLocationURLPart;
 
-        $apiUrl = sprintf($apiUrlTemplate, urlencode($strLocationURLPart));
+        $apiUrl = sprintf(
+            $apiUrlTemplate,
+            urlencode($strLocationURLPart) // 1
+        );
 
         return $apiUrl;
 

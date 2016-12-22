@@ -162,8 +162,12 @@ Layout template for web
         {{-- Output debug data, if set --}}
         @if (isset($debugData) && ! empty($debugData) )
             <pre>
-{{ json_encode($debugData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) }}
+{{ json_encode($debugData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) }}
             </pre>
+        @endif
+        @if (isset($debugData) && ! empty($debugData["itemGeocodeURL"]) )
+            itemGeocodeURL:<br>
+            <a href="{{ $debugData["itemGeocodeURL"] }}">{{ $debugData["itemGeocodeURL"] }}</a>
         @endif
 
         @yield('content')

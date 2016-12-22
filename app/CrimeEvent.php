@@ -26,6 +26,8 @@ class CrimeEvent extends Model
         'location_lat',
         'parsed_teaser',
         'parsed_content',
+        'scanned_for_locations',
+        'geocoded'
     ];
 
 
@@ -459,7 +461,6 @@ class CrimeEvent extends Model
 
         }
 
-
         return $data;
 
     }
@@ -486,5 +487,40 @@ class CrimeEvent extends Model
         return $title;
 
     }
+
+    public function maybeClearLocationData(\Illuminate\Http\Request $request) {
+
+        $debugActions = (array) $request->input("debugActions");
+
+        if (in_array("clearLocation", $debugActions)) {
+
+            $FeedParserController = new FeedParserController;
+            $FeedController = new FeedController($FeedParserController);
+
+            $this->locations()->delete();
+
+            $this->fill([
+                "scanned_for_locations" => 0,
+                "geocoded" => 0
+            ]);
+
+            $this->save();
+
+            $FeedController->parseItem($this->getKey());
+            $FeedController->geocodeItem($this->getKey());
+
+            $itemFoundLocations = $FeedParserController->findLocations($this);
+            unset($itemFoundLocations[0]["debug"]);
+            $data["itemFoundLocations"] = $itemFoundLocations;
+
+            // get the url that is sent to google to geocode this item
+            $data["itemGeocodeURL"] = $FeedController->getGeocodeURL($this->getKey());
+
+            return $data;
+
+        }
+
+    }
+
 
 }

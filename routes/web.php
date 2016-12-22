@@ -392,7 +392,10 @@ Route::get('/{lan}/{eventName}', function ($lan,  $eventName, Request $request) 
     $breadcrumbs->addCrumb(e($event->parsed_title));
 
     // optional debug
-    $debugData = CrimeEvent::maybeAddDebugData($request, $event);
+    $debugData = (array) CrimeEvent::maybeAddDebugData($request, $event);
+
+    // maybe clear locations and re-encode
+    $debugData = $debugData + (array) $event->maybeClearLocationData($request);
 
     // Add nearby events
     $eventsNearby = CrimeEvent::getEventsNearLocation($event->location_lat, $event->location_lng, $nearbyCount = 10, $nearbyInKm = 25);
