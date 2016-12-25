@@ -69,6 +69,7 @@ Layout template for web
     <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32" />
     <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16" />
     <link rel="icon" type="image/png" href="/favicon-128.png" sizes="128x128" />
+    <meta name="theme-color" content="#ffcc33">
 
     <meta name="apple-itunes-app" content="app-id=1174082309">
 
