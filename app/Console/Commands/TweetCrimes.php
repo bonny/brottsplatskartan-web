@@ -68,7 +68,7 @@ class TweetCrimes extends Command
 
         foreach ($events as $event) {
 
-            $this->info("\n{$event->title}");
+            $this->info("\n{$event->title} (" . $event->getKey() . ")");
 
             $url = $event->getPermalink(true);
 
@@ -87,6 +87,9 @@ class TweetCrimes extends Command
             // - n because new lines + getMetaDesc adds "..." (which we change to "…")
             $teaser_can_be_in_length = 140 - $content_length_before_teaser - $hashTagsLength - 7;
 
+            if ($teaser_can_be_in_length <= 0) {
+                $teaser_can_be_in_length = 100;
+            }
 
             $tweetMessage = sprintf(
                 '
@@ -105,7 +108,9 @@ class TweetCrimes extends Command
             $tweetMessage = str_replace("...", "…", $tweetMessage);
 
             if (ENV("APP_ENV") == "local") {
+
                 $tweetMessage = str_replace('https://brottsplatskartan.dev','https://brottsplatskartan.se', $tweetMessage);
+
             }
 
             //$this->line("teaser_can_be_in_length: $teaser_can_be_in_length");
@@ -113,13 +118,69 @@ class TweetCrimes extends Command
 
             // comment out this to just test...
 
-            // Do the tweet!
-            $tweetResult = \Twitter::postTweet([
-                'status' => $tweetMessage,
-                'format' => 'json'
-            ]);
+            // Do the tweet
+            if (ENV("APP_ENV") == "local") {
+                
+                // no tweet on local
+                $this->line("No actual tweet because on local");
+
+            } else {
+
+                // use config for global account first
+                \Twitter::reconfig([
+                    'consumer_key' => getenv('TWITTER_CONSUMER_KEY'), 
+                    'consumer_secret' => getenv('TWITTER_CONSUMER_SECRET'), 
+                    'token' => getenv('TWITTER_ACCESS_TOKEN'), 
+                    'secret' => getenv('TWITTER_ACCESS_TOKEN_SECRET'), 
+                ]);
+
+            }
 
             #exit;
+
+            /*
+            
+            tweet to Stockholm twitter account
+
+            twitter::reconfig to switch
+
+            administrative_area_level_1 = Stockholms län
+            eller locations innehåller Stockholms län
+            */
+
+            $isStockholm = false;
+
+            if (strpos($event->administrative_area_level_1, "Stockholm") !== false) {
+                $isStockholm = true;
+            }
+
+            if ($isStockholm) {
+            
+                // $this->line("administrative_area_level_1: " . $event->administrative_area_level_1);
+
+                if (ENV("APP_ENV") == "local") {
+                    
+                    // no tweet on local
+                    $this->line("No actual tweet to stockholm because on local");
+
+                } else {
+
+                    // switch account to stockholm
+                    \Twitter::reconfig([
+                        'consumer_key' => getenv('STOCKHOLMBROTT_TWITTER_CONSUMER_KEY'), 
+                        'consumer_secret' => getenv('STOCKHOLMBROTT_TWITTER_CONSUMER_SECRET'), 
+                        'token' => getenv('STOCKHOLMBROTT_TWITTER_ACCESS_TOKEN'), 
+                        'secret' => getenv('STOCKHOLMBROTT_TWITTER_ACCESS_TOKEN_SECRET'), 
+                    ]);
+
+                    $tweetResult = \Twitter::postTweet([
+                        'status' => $tweetMessage,
+                        'format' => 'json'
+                    ]);
+
+                }
+
+            }
 
             // after tweetet
             $event->tweeted = true;
