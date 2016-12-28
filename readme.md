@@ -13,3 +13,14 @@ Webbsidan [BrottsplatsKartan.se](https://brottsplatskartan.se) har flera fördel
 - Nördig bonusgrej: vi använder på vår sajt [Googles senaste AMP-teknik](https://www.ampproject.org) för att sajten ska bli super-mega-snabb i mobilen. Alltså verkligen supersnabb!
 
 - Den är även mycket finare rent utseendemässigt (ok, vi är lite partiska här kanske...)
+
+## Sajten finns på Twitter också!
+
+Alla händelser som inrapporterats dyker även upp på våra Twitter-konton:
+
+- [@Brottsplatser med händelser från hela Sverige](https://twitter.com/Brottsplatser)
+
+- [@StockholmsBrott med händelser från bara Stockholm](https://twitter.com/StockholmsBrott)
+
+Fler Twitter-konton med fler län kan dyka upp senare!
+
