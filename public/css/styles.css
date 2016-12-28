@@ -352,6 +352,17 @@ amp-social-share {
     border: 5px solid white;
 }
 
+/* typ län, göm sverigekarta pga ser redan var det är */
+.Event--distance_veryfar .Event__mapImageWrap--near,
+.Event--distance_far .Event__mapImageWrap--near {
+    width: 100%;
+}
+
+.Event--distance_veryfar .Event__mapImageWrap--far,
+.Event--distance_far .Event__mapImageWrap--far {
+    display: none;
+}
+
 .SearchForm {
     margin-bottom: var(--default-margin);
 }

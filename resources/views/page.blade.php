@@ -121,6 +121,11 @@ Template for text pages
         Direkt när en händelser hämtats så avgör vi var händelsen troligen inträffat och så markeras det
         på en karta.</p>
 
+        <h2>Följ händelser på Twitter</h2>
+
+        <p>Vi postar alla händelser från Polisen i Stockholm till <a href="https://twitter.com/StockholmsBrott">twittterkontot @StockholmsBrott</a>. 
+        Följ oss där för att få senaste brotten direkt i din twitter!</p>
+
     @endif
 
 @endsection

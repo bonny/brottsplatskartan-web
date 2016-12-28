@@ -370,9 +370,17 @@ Route::get('/lan/{lan}', function ($lan) {
  */
 Route::get('/{lan}/{eventName}', function ($lan,  $eventName, Request $request) {
 
-    preg_match('!\d+!', $eventName, $matches);
+    // event måste innehålla siffra sist = crime event id
+    preg_match('!\d+$!', $eventName, $matches);
     if (!isset($matches[0])) {
         abort(404);
+    }
+
+    // län får inte vara siffra, om det är det så är det en gammal url som besöks (finns träffar kvar i google)
+    // https://brottsplatskartan.dev/20034/misshandel-grov-torget-karlskoga-2611-jun-2013
+    if (is_numeric($lan)) {
+      // dd("old event, abort");
+      abort(404);
     }
 
     $eventID = $matches[0];

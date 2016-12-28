@@ -12,7 +12,30 @@ if $single is set then larger image
         Event
         @if(isset($overview)) Event--overview @endif
         @if(isset($single)) Event--single @endif
+        @if(isset($event->location_geometry_type)) Event--distance_{{ $event->getViewPortSizeAsString() }} @endif
     ">
+
+
+    {{--
+
+    "ROOFTOP" indicates that the returned result is a precise geocode for which we have location information accurate down to street address precision.
+
+    "GEOMETRIC_CENTER" indicates that the returned result is the geometric center of a result such as a polyline (for example, a street) or polygon (region).
+
+    "APPROXIMATE" indicates that the returned result is approximate.
+
+    // typ hela sverige visas, eller en by/stad
+    .Event--location_type_approximate {
+
+    }
+
+    // typ en gata eller nära område
+    .Event--location_type_geometric_center {
+
+    }
+
+    --}}
+
 
     @if ($event->geocoded)
         <p class="Event__map">

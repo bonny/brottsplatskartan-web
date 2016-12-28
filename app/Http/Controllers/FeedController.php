@@ -25,8 +25,9 @@ class FeedController extends Controller
 
         $item = CrimeEvent::findOrFail($itemID);
         $itemLocations = $item->locations;
+        $googleApiKey = getenv('GOOGLE_API_KEY');
 
-        $apiUrlTemplate = 'https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyBNGngVsHlVCo4D26UnHyp3nqcgFa-HEew&language=sv';
+        $apiUrlTemplate = 'https://maps.googleapis.com/maps/api/geocode/json?key=' . $googleApiKey . '&language=sv';
         $apiUrlTemplate .= '&components=country:SE';
         $apiUrlTemplate .= '&address=%1$s';
 

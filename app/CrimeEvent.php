@@ -91,7 +91,7 @@ class CrimeEvent extends Model
         #echo "image: <img src='$image_src'>";
         #exit;
 
-        // src="https://maps.googleapis.com/maps/api/staticmap?center={{ $event->location_lat }},{{ $event->location_lng }}&zoom=14&size=600x400&key=AIzaSyBNGngVsHlVCo4D26UnHyp3nqcgFa-HEew&markers={{ $event->location_lat }},{{ $event->location_lng }}"
+        // src="https://maps.googleapis.com/maps/api/staticmap?center={{ $event->location_lat }},{{ $event->location_lng }}&zoom=14&size=600x400&key=...&markers={{ $event->location_lat }},{{ $event->location_lng }}"
         return $image_src;
 
     }
@@ -429,6 +429,65 @@ class CrimeEvent extends Model
         ->get();
 
         return $events;
+
+    }
+
+    public function getViewportSize() {
+
+        $viewportSize = ($this->viewport_northeast_lat - $this->viewport_southwest_lat) + ($this->viewport_northeast_lng - $this->viewport_southwest_lng);
+
+        return $viewportSize;
+
+    }
+
+    /**
+     * > 26 = hela sverige
+     * ca 12 = norrbotten
+     * ca 10 = västerbotten
+     * ca 8 = jämtland
+     * ca 7 = dalarna
+     * ca 6 = västernorrland
+     * ca 1.5 - 2 = län
+     * ca 0.6 = stockholm
+     * ca 0.2 = södertälje
+     * ca 0.1 = typ kungsholmen
+     * ca 0.005 - 0.06 = typ längre gata
+     * mindre än det = jäkla nära
+     */
+    public function getViewPortSizeAsString() {
+
+        $size = $this->getViewportSize();
+       
+        $sizeAsString = "";
+
+        switch ($size) {
+
+            case $size > 20:
+                $sizeAsString = "veryfar";
+                break;
+
+            case $size > 6:
+                $sizeAsString = "far";
+                break;
+        
+             case $size > 0.8:
+                $sizeAsString = "lan";
+                break;
+
+             case $size > 0.1:
+                $sizeAsString = "town";
+                break;
+
+             case $size > 0.05:
+                $sizeAsString = "street";
+                break;
+
+            default:
+                $sizeAsString = "closest";
+
+        }
+
+        return $sizeAsString;
 
     }
 
