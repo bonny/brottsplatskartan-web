@@ -134,6 +134,12 @@ class TweetCrimes extends Command
                     'secret' => getenv('TWITTER_ACCESS_TOKEN_SECRET'), 
                 ]);
 
+                // Do the tweet!
+                $tweetResult = \Twitter::postTweet([
+                    'status' => $tweetMessage,
+                    'format' => 'json'
+                ]);
+
             }
 
             #exit;
