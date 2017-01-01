@@ -451,6 +451,20 @@ amp-social-share {
     overflow: auto;
 }
 
+.SiteFooter__lanListing {}
+
+.SiteFooter__lanListing__items {
+    list-style-type: none;
+    padding: 0;
+}
+
+.SiteFooter__lanListing__item {
+    float: left;
+    margin-right: 1ex;
+    padding-right: 1ex;
+    border-right: 1px solid #aaa;
+}
+
 .Breadcrumbs {
     list-style: none;
     margin-bottom: var(--default-margin);

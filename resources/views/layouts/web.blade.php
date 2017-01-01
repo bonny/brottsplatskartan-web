@@ -189,6 +189,8 @@ Layout template for web
 
     <footer class="SiteFooter">
 
+        <div><amp-img src="/img/brottsplatskartan-logotyp-symbol-only.png" width=40 height=40></amp-img>
+        
         <p>Länkar om brottsplatskartan</p>
 
         <ul>
@@ -201,15 +203,15 @@ Layout template for web
             <li><a href="https://stats.uptimerobot.com/ADWQ0TZq1">Upptid/status</a></li>
         </ul>
 
-        <div>
+        <div class="SiteFooter__lanListing">
 
             <p>Händelser per län</p>
 
-            <ul>
+            <ul class="SiteFooter__lanListing__items">
 
                 @foreach (App\Helper::getAllLan() as $oneLan)
 
-                    <li class="">
+                    <li class="SiteFooter__lanListing__item">
                         <a href="{{ route("lanSingle", ["lan"=>$oneLan->administrative_area_level_1]) }}">
                             {{ $oneLan->administrative_area_level_1 }}
                         </a>
