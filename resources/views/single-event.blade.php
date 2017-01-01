@@ -23,7 +23,7 @@ Template for start page
 
         <aside class="RelatedEvents">
 
-            <h2 class="RelatedEvents__title">Andra händelser i närheten</h2>
+            <h2 class="RelatedEvents__title">Fler händelser i närheten</h2>
 
             <ul class="RelatedEvents__items">
 
