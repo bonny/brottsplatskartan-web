@@ -552,7 +552,7 @@ amp-social-share {
 }
 .RelatedEvents__item {
     margin-top: 1rem;
-    border-top: 1px solid var(--color-grey-light);
+    /*border-top: 1px solid var(--color-grey-light);*/
 }
 .RelatedEvents__item:first-child {
     border-top: none;
@@ -577,6 +577,11 @@ amp-social-share {
 
 .RelatedEvents__item__description {
     margin-top: var(--default-margin-half);
+}
+
+.RelatedEvents__item__dateDivider {
+    color: var(--color-grey-light);
+    -webkit-font-smoothing: antialiased;
 }
 
 /* ~ipad~ iphone 6 liggande and other medium to large screens */

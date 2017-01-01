@@ -40,9 +40,13 @@ Template for start page
 
                         <!-- <p class="RelatedEvents__item__location">{{ $eventNear->getLocationString(true, false, false) }}</p> -->
 
-                        <p class="RelatedEvents__item__date">{{ $eventNear->getParsedDateFormattedForHumans() }}</p>
+                        {{-- <p class="RelatedEvents__item__date">{{ $eventNear->getParsedDateFormattedForHumans() }}</p> --}}
 
-                        <p class="RelatedEvents__item__description">{{ $eventNear->getMetaDescription(90) }}</p>
+                        <p class="RelatedEvents__item__description">
+                            <span class="RelatedEvents__item__date">{{ $eventNear->getParsedDateFormattedForHumans() }}</span>
+                            <span class="RelatedEvents__item__dateDivider"> | </span>
+                            {{ $eventNear->getMetaDescription(90) }}
+                        </p>
 
                     </li>
 
