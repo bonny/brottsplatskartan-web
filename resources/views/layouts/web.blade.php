@@ -193,13 +193,33 @@ Layout template for web
 
         <ul>
             <li><a href="{{ route("page", ["pagename" => "om"]) }}">Om brotten och kartan</a></li>
+            <li><a href="{{ route("page", ["pagename" => "stockholm"]) }}">Polishändelser i Stockholm</a></li>
             <li><a href="{{ route("page", ["pagename" => "appar"]) }}">Appar till Iphone, Ipad och Android</a></li>
             <li><a href="{{ route("page", ["pagename" => "api"]) }}">Brottsplatser API</a></li>
             <li><a href="https://twitter.com/brottsplatser">Följ @Brottsplatser på Twitter</a></li>
             <li><a href="https://www.facebook.com/brottsplatskartan">Gilla Brottsplatskartan på Facebook</a></li>
             <li><a href="https://stats.uptimerobot.com/ADWQ0TZq1">Upptid/status</a></li>
-            <li><a href="{{ route("page", ["pagename" => "stockholm"]) }}">Polishändelser i Stockholm</a></li>
         </ul>
+
+        <div>
+
+            <p>Händelser per län</p>
+
+            <ul>
+
+                @foreach (App\Helper::getAllLan() as $oneLan)
+
+                    <li class="">
+                        <a href="{{ route("lanSingle", ["lan"=>$oneLan->administrative_area_level_1]) }}">
+                            {{ $oneLan->administrative_area_level_1 }}
+                        </a>
+                    </li>
+
+                @endforeach
+
+            </ul>
+
+        </div>
 
     </footer>
 
