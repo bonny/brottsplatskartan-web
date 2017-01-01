@@ -448,6 +448,7 @@ amp-social-share {
     padding: .5rem;
     margin-top: var(--default-margin);
     margin-top: 4rem;
+    overflow: auto;
 }
 
 .Breadcrumbs {
