@@ -105,7 +105,7 @@ Layout template for web
                                     <path d="M0 0h24v24H0z" fill="none"/>
                                     <path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
                                 </svg>
-                                <span>Senaste</span>
+                                <span>Händelser</span>
                             </a>
 
                         <li class="SiteNav__item SiteNav__item--lan">
