@@ -207,6 +207,21 @@ Route::get('/plats/', function () {
 })->name("platserOverview");
 
 /**
+ * Url för ort så som den såg ut i Brottsplatskartan 2
+ * t.ex.:
+ * https://brottsplatskartan.se/orter/Falkenberg
+ * https://brottsplatskartan.se/orter/Stockholm
+ * redirecta dessa till
+ * https://brottsplatskartan.se/plats/<ortnamn>
+ */
+Route::get('/orter/{ort}', function ($ort = "") {
+
+    return redirect()->route("platsSingle", [ "ort" => $ort ]);
+    // dd($ort);
+
+});
+
+/**
  * Översikt brottstyp/händelsetyp
  */
 Route::get('/typ/', function () {
