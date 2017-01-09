@@ -88,10 +88,18 @@ class FeedParserController extends Controller
 
             $client = new Client();
             $crawler = $client->request('GET', $contentURL);
+            //$crawler = $client->request('GET', "http://polisen.se/fourohfour");
 
             // get content inside #column2-3
             $crawler = $crawler->filter('#column2-3');
-            $html = $crawler->html();
+            if ($crawler->count()) {
+                $html = $crawler->html();
+            } else {
+                // no elements found, maybe a 404 page
+                // did happen once and then polisen had removed the permalink for that page
+                $html = '';
+            }
+            
             Cache::put($cacheKey, $html, 30);
 
         } else {
