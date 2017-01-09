@@ -134,7 +134,7 @@ if $single is set then larger image
     --}}
 
     @if(isset($single))
-    {{-- <p class="Event__source">Källa: <a rel="nofollow" href="{{ $event->permalink }}">{{ $event->permalink }}</a></p> --}}
+        <p class="Event__source">Källa: <a rel="nofollow" href="{{ $event->permalink }}">{{ $event->permalink }}</a></p>
     @endif
 
     @if ( isset($overview) )
