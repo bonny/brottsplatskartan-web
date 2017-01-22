@@ -134,7 +134,6 @@ if $single is set then larger image
     --}}
 
     @if(isset($single) && $event->shouldShowSourceLink())
-        shouldShowSourceLink: {{ $event->shouldShowSourceLink() }}
         <p class="Event__source">Källa: <a rel="nofollow" href="{{ $event->permalink }}">{{ $event->permalink }}</a></p>
     @endif
 
