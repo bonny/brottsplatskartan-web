@@ -151,7 +151,7 @@ class CrimeEvent extends Model
 
     /**
      * Parsed date = the date that is written as text in each crime
-     * Is often much earlier that the RSS data
+     * Is often much earlier than the date in the RSS data
      */
     function getParsedDateFormattedForHumans() {
 
@@ -581,5 +581,20 @@ class CrimeEvent extends Model
 
     }
 
+    /**
+     * Should a link to the page where we got all the info be shown?
+     * Polisen.se removed their page after about a week and then the page is a 404
+     *
+     * @return bool
+     */
+    public function shouldShowSourceLink() {
+        
+        $pubDate = Carbon::createFromTimestamp(strtotime($this->parsed_date));
+        $pubDatePlusSomeTime = $pubDate->addWeek();
+
+        // if pubdate + 1 week is more than today then ok to show
+        return  $pubDatePlusSomeTime->timestamp > time();
+
+    }
 
 }
