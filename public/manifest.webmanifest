@@ -1,0 +1,21 @@
+{
+  "name": "Brottsplatskartan",
+  "short_name": "Brottsplatser",
+  "start_url": "/?utm_source=web_app_manifest",
+  "display": "standalone",
+  "background_color": "#fff",
+  "description": "Händelser från Polisen, på karta",
+  "icons": [{
+    "src": "/apple-touch-icon-72x72.png",
+    "sizes": "72x72",
+    "type": "image/png"
+  }, {
+    "src": "/apple-touch-icon-144x144.png",
+    "sizes": "144x144",
+    "type": "image/png"
+  }, {
+    "src": "/apple-touch-icon-152x152.png",
+    "sizes": "152x152",
+    "type": "image/png"
+  }]
+}
