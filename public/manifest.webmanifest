@@ -2,7 +2,7 @@
   "name": "Brottsplatskartan",
   "short_name": "Brottsplatser",
   "start_url": "/?utm_source=web_app_manifest",
-  "display": "standalone",
+  "display": "minimal-ui",
   "background_color": "#fff",
   "description": "Händelser från Polisen, på karta",
   "icons": [{
