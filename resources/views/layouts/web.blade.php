@@ -13,6 +13,7 @@ Layout template for web
     <script async custom-element="amp-social-share" src="https://cdn.ampproject.org/v0/amp-social-share-0.1.js"></script>
     <script async custom-element="amp-form" src="https://cdn.ampproject.org/v0/amp-form-0.1.js"></script>
     <script async custom-element="amp-iframe" src="https://cdn.ampproject.org/v0/amp-iframe-0.1.js"></script>
+    <script async custom-element="amp-install-serviceworker" src="https://cdn.ampproject.org/v0/amp-install-serviceworker-0.1.js"></script>
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
@@ -251,6 +252,11 @@ Layout template for web
             >
         </amp-ad>
     </amp-sticky-ad>
+
+    <amp-install-serviceworker
+      src="https://brottsplatskartan.se/serviceworker.js"
+      layout="nodisplay">
+    </amp-install-serviceworker>
 
 </body>
 </html>
