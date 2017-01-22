@@ -45,7 +45,8 @@ Template for start page
                         <p class="RelatedEvents__item__description">
                             <span class="RelatedEvents__item__date">{{ $eventNear->getParsedDateFormattedForHumans() }}</span>
                             <span class="RelatedEvents__item__dateDivider"> | </span>
-                            {{ $eventNear->getMetaDescription(90) }}
+                            {{ $eventNear->getDescriptionAsPlainText() }}
+                            {{-- {{ $eventNear->getMetaDescription(90) }} --}}
                         </p>
 
                     </li>

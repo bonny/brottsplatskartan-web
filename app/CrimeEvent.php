@@ -317,7 +317,6 @@ class CrimeEvent extends Model
     }
 
     /**
-     * @TODO: shorten!
      * @return string
      */
     public function getMetaDescription($length = 155) {
@@ -362,6 +361,15 @@ class CrimeEvent extends Model
         $text = $this->description;
 
         $text = $this->autop($text);
+
+        return $text;
+
+    }
+
+    public function getDescriptionAsPlainText() {
+
+        $text = $this->description;
+        $text = trim($text);
 
         return $text;
 

@@ -583,15 +583,22 @@ amp-social-share {
     margin-bottom: var(--default-margin-half);
 }
 
+.RelatedEvents__item__title {
+    font-size: var(--font-size-small);
+    /*font-weight: bold;*/
+    margin-bottom: 0;
+}
+
 .RelatedEvents__item__location,
-.RelatedEvents__item__date,
-.RelatedEvents__item__description {
+.RelatedEvents__item__date {
     font-size: var(--font-size-small);
     color: #666;
 }
 
 .RelatedEvents__item__description {
-    margin-top: var(--default-margin-half);
+    /*margin-top: var(--default-margin-half);*/
+    font-size: var(--font-size-small);
+    margin-top: 0;
 }
 
 .RelatedEvents__item__dateDivider {
