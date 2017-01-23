@@ -606,6 +606,79 @@ amp-social-share {
     -webkit-font-smoothing: antialiased;
 }
 
+.Event--v2 {
+    overflow: auto
+}
+
+/* new overview style, more overview-ish*/
+.Event--v2 .Event__teaser {
+    margin-top: var(--default-margin-half);
+}
+
+.Event--v2 .Event__meta {
+    border-top: 1px solid var(--color-grey-light);
+    border-bottom: none;
+    padding-top: 0.75rem;
+    padding: 0;
+    margin: 0;
+    margin-top: .75em;
+    padding-top: .75em;
+}
+
+.Event--v2 .Event__map {
+    /*width: 30%;*/
+    margin-top: 0;
+    margin-left: 0;
+}
+
+.Event--v2 .Event__col1 {
+    float: left;
+    width: 33.333%;
+}
+
+.Event--v2 .Event__col2 {
+    float: right;
+    width: calc(66.666% - 2rem);
+}
+
+.Event--v2 .Event__contentLink {
+    display: none;
+}
+
+.Event--v2 .Event__title {
+    margin-top: 0;
+    font-size: 1rem;
+}
+
+.Event--v2 .Event__teaser {
+}
+
+.Event--v2 .Event__title,
+.Event--v2 .Event__teaser {
+    font-weight: normal;
+    font-weight: 300;
+    word-break: normal;
+    line-height: 1.3;
+}
+
+.Event--v2 .Event__teaser {
+    color: #111;
+}
+
+.Event--v2 .Event__parsedTitle {
+    font-weight: normal;
+}
+
+.Event--v2 .Event__meta {
+    font-size: var(--font-size-small);;
+}
+
+.Event--v2 .Event__dateHuman {
+    color: var(--color-grey-light);
+    color: #999;
+    font-size: var(--font-size-small);
+}
+
 /* ~ipad~ iphone 6 liggande and other medium to large screens */
 @media only screen and (min-width: 667px) {
 
@@ -660,6 +733,7 @@ amp-social-share {
         margin-right: 2px;
         float: right;
     }
+
 
 }
 

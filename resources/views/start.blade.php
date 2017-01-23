@@ -34,7 +34,7 @@ Template for start page
 
             @foreach ($events as $event)
 
-                @include('parts.crimeevent', ["overview" => true])
+                @include('parts.crimeevent_v2', ["overview" => true])
 
             @endforeach
 

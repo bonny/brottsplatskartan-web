@@ -368,7 +368,8 @@ class CrimeEvent extends Model
 
     public function getDescriptionAsPlainText() {
 
-        $text = $this->description;
+        $text = $this->getDescription();
+        $text = Helper::strip_tags_with_whitespace($text);
         $text = trim($text);
 
         return $text;
@@ -398,7 +399,8 @@ class CrimeEvent extends Model
 
         // strip tags but make sure there is at least a space where the tag was
         // so text paragraphs don't collapse
-        $text = strip_tags(str_replace('<', ' <', $text));
+        #$text = strip_tags(str_replace('<', ' <', $text));
+        $text = Helper::strip_tags_with_whitespace($text);
 
         $text = str_limit($text, $length);
 
