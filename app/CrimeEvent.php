@@ -366,6 +366,9 @@ class CrimeEvent extends Model
 
     }
 
+    /**
+     * Get description with tags stripped
+     */
     public function getDescriptionAsPlainText() {
 
         $text = $this->getDescription();
