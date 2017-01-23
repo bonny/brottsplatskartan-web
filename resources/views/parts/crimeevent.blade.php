@@ -92,6 +92,7 @@ if $single is set then larger image
         <a href="{{ $event->getPermalink() }}">
         @endif
             {{ $event->parsed_title }}
+            <span class="Event__teaser"> – {{ $event->getDescriptionAsPlainText() }}</span>
         @if ( isset($overview) )
         </a>
         @endif
@@ -112,8 +113,6 @@ if $single is set then larger image
     @if ( isset($overview) )
     <a class="Event__contentLink" href="{{ $event->getPermalink() }}">
     @endif
-
-    <div class="Event__teaser">{!! $event->getDescription() !!}</div>
 
     <div class="Event__content">
         @if ( isset($overview) )

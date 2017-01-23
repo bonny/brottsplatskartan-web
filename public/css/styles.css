@@ -250,9 +250,9 @@ a:hover {
 
 
 .Event__teaser {
-    font-weight: bold;
-    margin-top: 0;
-    margin-bottom: var(--default-margin-half);
+    /*font-weight: bold;*/
+    /*margin-top: 0;*/
+    /*margin-bottom: var(--default-margin-half);*/
 }
 
 .Event__teaser p {
