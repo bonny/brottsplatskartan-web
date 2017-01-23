@@ -79,7 +79,7 @@ class FeedParserController extends Controller
             "parsed_content" => ""
         ];
 
-        $cacheKey = md5( $contentURL . "_cachebust1");
+        $cacheKey = md5( $contentURL . "_cachebust3");
         $html = Cache::get($cacheKey, false);
 
         if (! $html || gettype($html) != "string") {
@@ -138,6 +138,8 @@ class FeedParserController extends Controller
 
         $returnParts["parsed_content"] = strip_tags($returnParts["parsed_content"], "<br><strong>");
         $returnParts["parsed_content"] = trim($returnParts["parsed_content"]);
+        // fix one or multiple <p>&nbsp;</p> that causes long "line breaks"
+        // @TODO: get it to work...
 
         return $returnParts;
 
