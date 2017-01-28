@@ -542,9 +542,9 @@ class CrimeEvent extends Model
         $title = "";
         $titleParts = [];
 
-
         $titleParts[] = $this->parsed_title;
-
+        $titleParts[] = $this->getDescriptionAsPlainText();
+        
         $prioOneLocations = $this->locations->where("prio", 1);
 
         foreach ($prioOneLocations as $oneLocation) {
