@@ -520,6 +520,14 @@ amp-social-share {
     color: #999;
 }
 
+.Breadcrumbs__switchLan__belowTitle {
+    margin-top: -.5em;
+}
+
+.Breadcrumbs__switchLan__belowTitle .Breadcrumbs__switchLan {
+    margin-left: 0;
+}
+
 .Breadcrumbs__switchLan {
     background: var(--color-link);
     color: #FFF;

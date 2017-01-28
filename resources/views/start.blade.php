@@ -19,14 +19,13 @@ Template for start page
 
     {{--<h1>Brottsplatskartan visar var brotten sker</h1>--}}
 
-    <h1>
-        Senaste brotten i alla län
-
-        @if (isset($showLanSwitcher))
+    <h1>Senaste polishändelserna</h1>
+    @if (isset($showLanSwitcher))
+        <p class="Breadcrumbs__switchLan__belowTitle">
             <a class="Breadcrumbs__switchLan" href="{{ route("lanOverview") }}">Välj län</a>
-        @endif
-    </h1>
-
+            <a class="Breadcrumbs__switchLan Breadcrumbs__switchLan--geo" href="/geo.php">Visa händelser nära min plats</a>
+        </p>
+    @endif
 
     @if ($events)
 
