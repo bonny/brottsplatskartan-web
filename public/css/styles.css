@@ -616,13 +616,15 @@ amp-social-share {
 }
 
 .Event--v2 .Event__meta {
-    border-top: 1px solid var(--color-grey-light);
+    /*border-top: 1px solid var(--color-grey-light);*/
     border-bottom: none;
     padding-top: 0.75rem;
     padding: 0;
     margin: 0;
-    margin-top: .75em;
-    padding-top: .75em;
+    margin-top: var(--default-margin-half);
+    padding-top: 0;
+    font-size: var(--font-size-small);
+    line-height: 1.3;
 }
 
 .Event--v2 .Event__map {
@@ -669,14 +671,11 @@ amp-social-share {
     font-weight: normal;
 }
 
-.Event--v2 .Event__meta {
-    font-size: var(--font-size-small);;
-}
-
 .Event--v2 .Event__dateHuman {
     color: var(--color-grey-light);
     color: #999;
     font-size: var(--font-size-small);
+    line-height: 1.3;
 }
 
 /* ~ipad~ iphone 6 liggande and other medium to large screens */

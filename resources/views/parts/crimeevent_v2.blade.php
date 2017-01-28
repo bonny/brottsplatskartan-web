@@ -104,10 +104,6 @@ if $single is set then larger image
             @endif
         </h1>
 
-        <span class="Event__dateHuman">
-            <time class="Event__dateHuman__time" title="Tidpunkt då Polisen anger att händelsen inträffat" datetime="{{ $event->getParsedDateISO8601() }}">{{ $event->getParsedDateFormattedForHumans() }}</time>
-        </span>
-
 
         {{--
         Om bara vill visa när skillnad är mer än nn dagar/timmar osv.
@@ -116,9 +112,12 @@ if $single is set then larger image
         <p class="Event__meta">
             <span class="Event__location">{!! $event->getLocationStringWithLinks() !!}</span>
             {{-- <span class="Event__metaDivider"> | </span> --}}
+
+            <span class="Event__dateHuman">
+                <time class="Event__dateHuman__time" title="Tidpunkt då Polisen anger att händelsen inträffat" datetime="{{ $event->getParsedDateISO8601() }}">{{ $event->getParsedDateFormattedForHumans() }}</time>
+            </span>
+
         </p>
-
-
 {{--         @if ( isset($overview) )
         <a class="Event__contentLink" href="{{ $event->getPermalink() }}">
         @endif
