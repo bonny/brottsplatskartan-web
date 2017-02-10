@@ -13,6 +13,7 @@ Layout template for web
     <script async custom-element="amp-social-share" src="https://cdn.ampproject.org/v0/amp-social-share-0.1.js"></script>
     <script async custom-element="amp-form" src="https://cdn.ampproject.org/v0/amp-form-0.1.js"></script>
     <script async custom-element="amp-iframe" src="https://cdn.ampproject.org/v0/amp-iframe-0.1.js"></script>
+    <script async custom-element="amp-install-serviceworker" src="https://cdn.ampproject.org/v0/amp-install-serviceworker-0.1.js"></script>
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
@@ -73,6 +74,8 @@ Layout template for web
 
     <meta name="apple-itunes-app" content="app-id=1174082309">
 
+    <link rel="manifest" href="/manifest.webmanifest">
+
     <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
     <style amp-custom>{!! file_get_contents( public_path("css/styles.css") ) !!}</style>
 
@@ -105,7 +108,7 @@ Layout template for web
                                     <path d="M0 0h24v24H0z" fill="none"/>
                                     <path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
                                 </svg>
-                                <span>Senaste</span>
+                                <span>Händelser</span>
                             </a>
 
                         <li class="SiteNav__item SiteNav__item--lan">
@@ -189,17 +192,39 @@ Layout template for web
 
     <footer class="SiteFooter">
 
+        <div><amp-img src="/img/brottsplatskartan-logotyp-symbol-only.png" width=40 height=40></amp-img>
+        
         <p>Länkar om brottsplatskartan</p>
 
         <ul>
             <li><a href="{{ route("page", ["pagename" => "om"]) }}">Om brotten och kartan</a></li>
+            <li><a href="{{ route("page", ["pagename" => "stockholm"]) }}">Polishändelser i Stockholm</a></li>
             <li><a href="{{ route("page", ["pagename" => "appar"]) }}">Appar till Iphone, Ipad och Android</a></li>
             <li><a href="{{ route("page", ["pagename" => "api"]) }}">Brottsplatser API</a></li>
             <li><a href="https://twitter.com/brottsplatser">Följ @Brottsplatser på Twitter</a></li>
             <li><a href="https://www.facebook.com/brottsplatskartan">Gilla Brottsplatskartan på Facebook</a></li>
             <li><a href="https://stats.uptimerobot.com/ADWQ0TZq1">Upptid/status</a></li>
-            <li><a href="{{ route("page", ["pagename" => "stockholm"]) }}">Polishändelser i Stockholm</a></li>
         </ul>
+
+        <div class="SiteFooter__lanListing">
+
+            <p>Händelser per län</p>
+
+            <ul class="SiteFooter__lanListing__items">
+
+                @foreach (App\Helper::getAllLan() as $oneLan)
+
+                    <li class="SiteFooter__lanListing__item">
+                        <a href="{{ route("lanSingle", ["lan"=>$oneLan->administrative_area_level_1]) }}">
+                            {{ $oneLan->administrative_area_level_1 }}
+                        </a>
+                    </li>
+
+                @endforeach
+
+            </ul>
+
+        </div>
 
     </footer>
 
@@ -229,6 +254,11 @@ Layout template for web
             >
         </amp-ad>
     </amp-sticky-ad>
+
+    <amp-install-serviceworker
+      src="https://brottsplatskartan.se/serviceworker.js"
+      layout="nodisplay">
+    </amp-install-serviceworker>
 
 </body>
 </html>

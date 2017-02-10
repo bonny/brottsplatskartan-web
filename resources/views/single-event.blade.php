@@ -23,7 +23,7 @@ Template for start page
 
         <aside class="RelatedEvents">
 
-            <h2 class="RelatedEvents__title">Andra händelser i närheten</h2>
+            <h2 class="RelatedEvents__title">Fler händelser i närheten</h2>
 
             <ul class="RelatedEvents__items">
 
@@ -40,9 +40,14 @@ Template for start page
 
                         <!-- <p class="RelatedEvents__item__location">{{ $eventNear->getLocationString(true, false, false) }}</p> -->
 
-                        <p class="RelatedEvents__item__date">{{ $eventNear->getParsedDateFormattedForHumans() }}</p>
+                        {{-- <p class="RelatedEvents__item__date">{{ $eventNear->getParsedDateFormattedForHumans() }}</p> --}}
 
-                        <p class="RelatedEvents__item__description">{{ $eventNear->getMetaDescription(90) }}</p>
+                        <p class="RelatedEvents__item__description">
+                            <span class="RelatedEvents__item__date">{{ $eventNear->getParsedDateFormattedForHumans() }}</span>
+                            <span class="RelatedEvents__item__dateDivider"> | </span>
+                            {{ $eventNear->getDescriptionAsPlainText() }}
+                            {{-- {{ $eventNear->getMetaDescription(90) }} --}}
+                        </p>
 
                     </li>
 

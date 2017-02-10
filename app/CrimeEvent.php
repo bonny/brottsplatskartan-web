@@ -151,7 +151,7 @@ class CrimeEvent extends Model
 
     /**
      * Parsed date = the date that is written as text in each crime
-     * Is often much earlier that the RSS data
+     * Is often much earlier than the date in the RSS data
      */
     function getParsedDateFormattedForHumans() {
 
@@ -317,7 +317,6 @@ class CrimeEvent extends Model
     }
 
     /**
-     * @TODO: shorten!
      * @return string
      */
     public function getMetaDescription($length = 155) {
@@ -368,6 +367,19 @@ class CrimeEvent extends Model
     }
 
     /**
+     * Get description with tags stripped
+     */
+    public function getDescriptionAsPlainText() {
+
+        $text = $this->getDescription();
+        $text = Helper::strip_tags_with_whitespace($text);
+        $text = trim($text);
+
+        return $text;
+
+    }
+
+    /**
      * Get the description
      */
     public function getParsedContent() {
@@ -390,7 +402,8 @@ class CrimeEvent extends Model
 
         // strip tags but make sure there is at least a space where the tag was
         // so text paragraphs don't collapse
-        $text = strip_tags(str_replace('<', ' <', $text));
+        #$text = strip_tags(str_replace('<', ' <', $text));
+        $text = Helper::strip_tags_with_whitespace($text);
 
         $text = str_limit($text, $length);
 
@@ -529,9 +542,9 @@ class CrimeEvent extends Model
         $title = "";
         $titleParts = [];
 
-
         $titleParts[] = $this->parsed_title;
-
+        $titleParts[] = $this->getDescriptionAsPlainText();
+        
         $prioOneLocations = $this->locations->where("prio", 1);
 
         foreach ($prioOneLocations as $oneLocation) {
@@ -581,5 +594,20 @@ class CrimeEvent extends Model
 
     }
 
+    /**
+     * Should a link to the page where we got all the info be shown?
+     * Polisen.se removed their page after about a week and then the page is a 404
+     *
+     * @return bool
+     */
+    public function shouldShowSourceLink() {
+        
+        $pubDate = Carbon::createFromTimestamp(strtotime($this->parsed_date));
+        $pubDatePlusSomeTime = $pubDate->addWeek();
+
+        // if pubdate + 1 week is more than today then ok to show
+        return  $pubDatePlusSomeTime->timestamp > time();
+
+    }
 
 }

@@ -185,7 +185,7 @@ a:hover {
     line-height: 1;
     margin-top: var(--default-margin);
     margin-bottom: .25rem;
-    word-break: break-all;
+    /*word-break: break-all;*/
 }
 
 .Event__date {
@@ -250,9 +250,9 @@ a:hover {
 
 
 .Event__teaser {
-    font-weight: bold;
-    margin-top: 0;
-    margin-bottom: var(--default-margin-half);
+    /*font-weight: bold;*/
+    /*margin-top: 0;*/
+    /*margin-bottom: var(--default-margin-half);*/
 }
 
 .Event__teaser p {
@@ -448,6 +448,21 @@ amp-social-share {
     padding: .5rem;
     margin-top: var(--default-margin);
     margin-top: 4rem;
+    overflow: auto;
+}
+
+.SiteFooter__lanListing {}
+
+.SiteFooter__lanListing__items {
+    list-style-type: none;
+    padding: 0;
+}
+
+.SiteFooter__lanListing__item {
+    float: left;
+    margin-right: 1ex;
+    padding-right: 1ex;
+    border-right: 1px solid #aaa;
 }
 
 .Breadcrumbs {
@@ -505,6 +520,14 @@ amp-social-share {
     color: #999;
 }
 
+.Breadcrumbs__switchLan__belowTitle {
+    margin-top: -.5em;
+}
+
+.Breadcrumbs__switchLan__belowTitle .Breadcrumbs__switchLan {
+    margin-left: 0;
+}
+
 .Breadcrumbs__switchLan {
     background: var(--color-link);
     color: #FFF;
@@ -552,7 +575,7 @@ amp-social-share {
 }
 .RelatedEvents__item {
     margin-top: 1rem;
-    border-top: 1px solid var(--color-grey-light);
+    /*border-top: 1px solid var(--color-grey-light);*/
 }
 .RelatedEvents__item:first-child {
     border-top: none;
@@ -568,15 +591,99 @@ amp-social-share {
     margin-bottom: var(--default-margin-half);
 }
 
+.RelatedEvents__item__title {
+    font-size: var(--font-size-small);
+    /*font-weight: bold;*/
+    margin-bottom: 0;
+}
+
 .RelatedEvents__item__location,
-.RelatedEvents__item__date,
-.RelatedEvents__item__description {
+.RelatedEvents__item__date {
     font-size: var(--font-size-small);
     color: #666;
 }
 
 .RelatedEvents__item__description {
+    /*margin-top: var(--default-margin-half);*/
+    font-size: var(--font-size-small);
+    margin-top: 0;
+}
+
+.RelatedEvents__item__dateDivider {
+    color: var(--color-grey-light);
+    -webkit-font-smoothing: antialiased;
+}
+
+.Event--v2 {
+    overflow: auto
+}
+
+/* new overview style, more overview-ish*/
+.Event--v2 .Event__teaser {
     margin-top: var(--default-margin-half);
+}
+
+.Event--v2 .Event__meta {
+    /*border-top: 1px solid var(--color-grey-light);*/
+    border-bottom: none;
+    padding-top: 0.75rem;
+    padding: 0;
+    margin: 0;
+    margin-top: var(--default-margin-half);
+    padding-top: 0;
+    font-size: var(--font-size-small);
+    line-height: 1.3;
+}
+
+.Event--v2 .Event__map {
+    /*width: 30%;*/
+    margin-top: 0;
+    margin-left: 0;
+}
+
+.Event--v2 .Event__col1 {
+    float: left;
+    width: 33.333%;
+}
+
+.Event--v2 .Event__col2 {
+    float: right;
+    width: calc(66.666% - 2rem);
+}
+
+.Event--v2 .Event__contentLink {
+    display: none;
+}
+
+.Event--v2 .Event__title {
+    margin-top: 0;
+    font-size: 1rem;
+}
+
+.Event--v2 .Event__teaser {
+}
+
+.Event--v2 .Event__title,
+.Event--v2 .Event__teaser {
+    font-weight: normal;
+    font-weight: 300;
+    word-break: normal;
+    line-height: 1.3;
+}
+
+.Event--v2 .Event__teaser {
+    color: #111;
+}
+
+.Event--v2 .Event__parsedTitle {
+    font-weight: normal;
+}
+
+.Event--v2 .Event__dateHuman {
+    color: var(--color-grey-light);
+    color: #999;
+    font-size: var(--font-size-small);
+    line-height: 1.3;
 }
 
 /* ~ipad~ iphone 6 liggande and other medium to large screens */
@@ -633,6 +740,7 @@ amp-social-share {
         margin-right: 2px;
         float: right;
     }
+
 
 }
 

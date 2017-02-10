@@ -1,6 +1,7 @@
 {{--
 
 Template för ett län
+med översikt med händelser för länet
 
 --}}
 
@@ -18,7 +19,7 @@ Template för ett län
 @section('content')
 
     <h1>
-        Brott i {{ $lan }}
+        Händelser från Polisen i {{ $lan }}
 
         @if (isset($showLanSwitcher))
             <a class="Breadcrumbs__switchLan" href="{{ route("lanOverview") }}">Byt län</a>
@@ -35,7 +36,7 @@ Template för ett län
 
             @foreach ($events as $event)
 
-                @include('parts.crimeevent', ["overview" => true])
+                @include('parts.crimeevent_v2', ["overview" => true])
 
             @endforeach
 
