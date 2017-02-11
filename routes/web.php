@@ -347,7 +347,7 @@ Route::get('/sida/{pagename}', function ($pagename = null) {
 
 
 /**
- * Ett län
+ * Ett län, t.ex. Stockholms län
  */
 Route::get('/lan/{lan}', function ($lan) {
 
@@ -370,6 +370,11 @@ Route::get('/lan/{lan}', function ($lan) {
 
     $data["breadcrumbs"] = $breadcrumbs;
     $data["showLanSwitcher"] = true;
+
+    // Kolla om förklarande text för län finns
+    // key = like "introtext-lan-Stockholms län"
+    $introtext_key = "introtext-lan-$lan";
+    $data["introtext"] = Setting::get($introtext_key);
 
     return view('single-lan', $data);
 

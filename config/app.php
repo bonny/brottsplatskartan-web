@@ -184,6 +184,7 @@ return [
         Weidner\Goutte\GoutteServiceProvider::class,
         'Creitive\Breadcrumbs\BreadcrumbsServiceProvider',
         'Thujohn\Twitter\TwitterServiceProvider',
+        Unisharp\Setting\SettingServiceProvider::class
 
     ],
 
@@ -237,6 +238,7 @@ return [
         'Goutte' => Weidner\Goutte\GoutteFacade::class,
         'Breadcrumbs' => 'Creitive\Breadcrumbs\Facades\Breadcrumbs',
         'Twitter' => 'Thujohn\Twitter\Facades\Twitter',
+        'Setting' => Unisharp\Setting\SettingFacade::class
     ],
 
 ];

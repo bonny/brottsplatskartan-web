@@ -193,12 +193,12 @@ Layout template for web
     <footer class="SiteFooter">
 
         <div><amp-img src="/img/brottsplatskartan-logotyp-symbol-only.png" width=40 height=40></amp-img>
-        
+
         <p>Länkar om brottsplatskartan</p>
 
         <ul>
             <li><a href="{{ route("page", ["pagename" => "om"]) }}">Om brotten och kartan</a></li>
-            <li><a href="{{ route("page", ["pagename" => "stockholm"]) }}">Polishändelser i Stockholm</a></li>
+            <!-- <li><a href="{{ route("page", ["pagename" => "stockholm"]) }}">Polishändelser i Stockholm</a></li> -->
             <li><a href="{{ route("page", ["pagename" => "appar"]) }}">Appar till Iphone, Ipad och Android</a></li>
             <li><a href="{{ route("page", ["pagename" => "api"]) }}">Brottsplatser API</a></li>
             <li><a href="https://twitter.com/brottsplatser">Följ @Brottsplatser på Twitter</a></li>
