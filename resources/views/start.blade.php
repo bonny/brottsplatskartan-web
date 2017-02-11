@@ -7,9 +7,9 @@ Template for start page
 
 @extends('layouts.web')
 
-@section('title', 'Brott som hänt nära dig')
-@section('showTitleTagline', true)
-@section('metaDescription', e('Brottsplatskartan visar på karta var brott har skett. Informationen hämtas direkt från Polisen.'))
+@section('title', 'Händelser och brott från Polisen')
+@section('showTitleTagline', false)
+@section('metaDescription', e('Brottsplatskartan visar på karta var brott har skett. Händelserna hämtas direkt från Polisen.'))
 
 @section('metaImage', config('app.url') . "/img/start-share-image.png")
 @section('metaImageWidth', 600)
