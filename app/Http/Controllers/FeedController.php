@@ -57,21 +57,17 @@ class FeedController extends Controller
         $item = CrimeEvent::findOrFail($itemID);
         $apiUrl = $this->getGeocodeURL($itemID);
 
-        #echo "\ngeocoding item with title " . $item->title;
-        #echo "\naddress is $strLocationURLPartBeforeUrlEncode";
-        #echo "\napiURL:\n$apiUrl\n";
-
         $result_data = json_decode( file_get_contents($apiUrl) );
         $result_status = $result_data->status;
         $result_results = $result_data->results;
-        #print_r($result_results);
-        // echo "\nstatus code: $result_status";
+
         if ($result_results === "OK") {
             return false;
         }
 
         $geometry_location_lat = null;
         $geometry_location_lng = null;
+        $types = null;
 
         foreach ( $result_results as $one_result ) {
 
@@ -104,36 +100,149 @@ class FeedController extends Controller
                 }
             }
 
-            #echo "\ngeometry_location: " . print_r($geometry_address_components, 1);exit;
-            #echo "\ngeometry_type: " . print_r($geometry_type, 1);
-            #echo "\ngeometry_viewport: " . print_r($geometry_viewport, 1);
-            #exit;
-            #echo "\nlat: $geometry_location_lat";
-            #echo "\nlng: $geometry_location_lng";
+            $types = $one_result->types;
 
-            // only return first
+            // only return first matching place
             break;
 
         }
-        #print_r($result_results);
 
-        if ($geometry_location_lat) {
+        // Non ok is if types contains "Country" because then we have a really zoomed out location.
+        // if bad location then fallback to only using
+        $valid_good_location = ! empty($geometry_location_lat) && ! in_array("country", $types);
+
+        // If ok location then add
+        if ($valid_good_location) {
+
             $item->location_lat = $geometry_location_lat;
             $item->location_lng = $geometry_location_lng;
+
             $item->location_geometry_type = $geometry_type;
+
             $item->viewport_northeast_lat = $geometry_viewport->northeast->lat;
             $item->viewport_northeast_lng = $geometry_viewport->northeast->lng;
             $item->viewport_southwest_lat = $geometry_viewport->southwest->lat;
             $item->viewport_southwest_lng = $geometry_viewport->southwest->lng;
-            #= json_encode($geometry_viewport, JSON_PRETTY_PRINT);
+
             $item->administrative_area_level_1 = $administrative_area_level_1;
             $item->administrative_area_level_2 = $administrative_area_level_2;
+
             $item->geocoded = true;
+
             $item->save();
-            #echo "\nadded location for item";
+
+        } else {
+
+            // location not so good, fallback to checking prio 3 location = location found in text "Polisen nnn"
+            $prioThreeLocation = $item->locations->where("prio", 3)->first();
+            if ($prioThreeLocation) {
+                $fallbackLocation = $prioThreeLocation->name;
+                if ($item->parsed_title_location) {
+                    $fallbackLocation = "{$item->parsed_title_location}, $fallbackLocation";
+                    // echo $fallbackLocation;exit;
+                }
+                $this->geocodeItemFallbackVersion($itemID, $fallbackLocation);
+            }
+
         }
 
         #exit;
+
+    }
+
+    public function geocodeItemFallbackVersion($itemID, $fallbackLocation) {
+
+        $item = CrimeEvent::findOrFail($itemID);
+
+        $apiUrlTemplate = 'https://maps.googleapis.com/maps/api/geocode/json?key=' . getenv('GOOGLE_API_KEY') . '&language=sv';
+        $apiUrlTemplate .= '&components=country:SE';
+        $apiUrlTemplate .= '&address=%1$s';
+
+        $apiUrl = sprintf(
+            $apiUrlTemplate,
+            urlencode($fallbackLocation) // 1
+        );
+
+        $result_data = json_decode( file_get_contents($apiUrl) );
+        // echo "in geocodeItemFallbackVersion, apiurl:\n$apiUrl";exit;
+        $result_status = $result_data->status;
+        $result_results = $result_data->results;
+
+        if ($result_results === "OK") {
+            return false;
+        }
+
+        $geometry_location_lat = null;
+        $geometry_location_lng = null;
+        $types = null;
+
+        foreach ( $result_results as $one_result ) {
+
+            $geometry_location = $one_result->geometry->location;
+            $geometry_location_lat = $geometry_location->lat;
+            $geometry_location_lng = $geometry_location->lng;
+
+            // location_type stores additional data about the specified location.
+            $geometry_type = $one_result->geometry->location_type;
+
+            // viewport contains the recommended viewport for displaying the returned result, specified as two latitude,longitude values defining the southwest and northeast corner of the viewport bounding box. Generally the viewport is used to frame a result when displaying it to a user.
+            $geometry_viewport = $one_result->geometry->viewport;
+
+            $geometry_address_components = $one_result->address_components;
+
+            $administrative_area_level_1 = null;
+            $administrative_area_level_2 = null;
+
+            foreach ($geometry_address_components as $key => $val) {
+                if ( in_array("administrative_area_level_1", $val->types) ) {
+                    $administrative_area_level_1 = $val->long_name;
+                    break;
+                }
+            }
+
+            foreach ($geometry_address_components as $key => $val) {
+                if ( in_array("administrative_area_level_2", $val->types) ) {
+                    $administrative_area_level_2 = $val->long_name;
+                    break;
+                }
+            }
+
+            $types = $one_result->types;
+
+            // only return first matching place
+            break;
+
+        }
+
+        // Non ok is if types contains "Country" because then we have a really zoomed out location.
+        // if bad location then fallback to only using
+        $valid_good_location = ! empty($geometry_location_lat);
+
+        // If ok location then add
+        if ($valid_good_location) {
+
+            $item->location_lat = $geometry_location_lat;
+            $item->location_lng = $geometry_location_lng;
+
+            $item->location_geometry_type = $geometry_type;
+
+            $item->viewport_northeast_lat = $geometry_viewport->northeast->lat;
+            $item->viewport_northeast_lng = $geometry_viewport->northeast->lng;
+            $item->viewport_southwest_lat = $geometry_viewport->southwest->lat;
+            $item->viewport_southwest_lng = $geometry_viewport->southwest->lng;
+
+            $item->administrative_area_level_1 = $administrative_area_level_1;
+            $item->administrative_area_level_2 = $administrative_area_level_2;
+
+            $item->geocoded = true;
+
+            $item->save();
+
+        } else {
+
+            // no fallback beacuse this *is* the fallback :)
+
+        }
 
     }
 
