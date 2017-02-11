@@ -460,10 +460,10 @@ Route::get('/sok/', function (Request $request) {
 
         $events = CrimeEvent::where(function($query) use ($s) {
 
-            $query->where("description", "LIKE","$s%")
-            ->orWhere("parsed_title_location", "LIKE", "$s%")
-            ->orWhere("parsed_content", "LIKE", "$s%")
-            ->orWhere("parsed_title", "LIKE", "$s%");
+            $query->where("description", "LIKE","%$s%")
+            ->orWhere("parsed_title_location", "LIKE", "%$s%")
+            ->orWhere("parsed_content", "LIKE", "%$s%")
+            ->orWhere("parsed_title", "LIKE", "%$s%");
 
         })->orderBy("created_at", "desc")->paginate(10);
 
