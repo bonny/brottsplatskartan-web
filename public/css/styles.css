@@ -234,7 +234,7 @@ a:hover {
 }
 
 .Event__dateHuman {
-    white-space: nowrap;
+    /* white-space: nowrap; */
 }
 
 .Event__dateHuman__time {

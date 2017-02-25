@@ -106,7 +106,15 @@ if $single is set then larger image
         <span class="Event__metaDivider"> | </span>
         <span class="Event__dateHuman">
             {{-- <time datetime="{{ $event->getPubDateISO8601() }}">{{ $event->getPubDateFormattedForHumans() }}</time> --}}
-            <time class="Event__dateHuman__time" title="Tidpunkt då Polisen anger att händelsen inträffat" datetime="{{ $event->getParsedDateISO8601() }}">{{ $event->getParsedDateFormattedForHumans() }}</time>
+            <time class="Event__dateHuman__time"
+                  title="Tidpunkt då Polisen anger att händelsen inträffat"
+                  datetime="{{ $event->getParsedDateISO8601() }}"
+                  >
+                {{ $event->getParsedDateFormattedForHumans() }}
+                @if ($event->pubdate >= DAY_IN_SECONDS)
+                    – {{ $event->getParsedDateYMD() }}
+                @endif
+            </time>
         </span>
     </p>
 
