@@ -119,7 +119,7 @@ if $single is set then larger image
                       datetime="{{ $event->getParsedDateISO8601() }}"
                       >
                         {{ $event->getParsedDateFormattedForHumans() }}
-                        @if ($event->pubdate >= DAY_IN_SECONDS)
+                        @if ($event->getParsedDateDiffInSeconds() >= DAY_IN_SECONDS)
                             – {{ $event->getParsedDateYMD() }}
                         @endif
                     </time>

@@ -157,12 +157,16 @@ class CrimeEvent extends Model
         return Carbon::createFromTimestamp(strtotime($this->parsed_date))->diffForHumans();
     }
 
+    function getParsedDateDiffInSeconds() {
+        return Carbon::createFromTimestamp(strtotime($this->parsed_date))->diffInSeconds();
+    }
+
     public function getParsedDateISO8601() {
         return Carbon::createFromTimestamp(strtotime($this->parsed_date))->toIso8601String();
     }
 
     public function getParsedDateYMD() {
-        return Carbon::createFromTimestamp(strtotime($this->parsed_date))->formatLocalized('%A %d %B %Y');
+        return Carbon::createFromTimestamp(strtotime($this->parsed_date))->formatLocalized('%A %d %B %Y %H:%M');
     }
 
 
