@@ -193,7 +193,7 @@ Layout template for web
 
         <div><amp-img src="/img/brottsplatskartan-logotyp-symbol-only.png" width=40 height=40></amp-img>
 
-        <p>Länkar om brottsplatskartan</p>
+        <h2>Länkar om brottsplatskartan</h2>
 
         <ul>
             <li><a href="{{ route("page", ["pagename" => "om"]) }}">Om brotten och kartan</a></li>
@@ -207,7 +207,7 @@ Layout template for web
 
         <div class="SiteFooter__lanListing">
 
-            <p>Händelser per län</p>
+            <h2>Händelser från Polisen i ditt län</h2>
 
             <ul class="SiteFooter__lanListing__items">
 
