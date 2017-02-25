@@ -88,8 +88,7 @@ Layout template for web
             <div class="SiteHeader__inner">
                 <h1 class="SiteTitle"><a href="/">
                         <div class="SiteHeader__icon">
-                            {{-- {!! file_get_contents( public_path("img/brottsplatskartan-logo.svg") ) !!} --}}
-                            <amp-img src="/img/brottsplatskartan-logotyp.png" width=313 height=40>
+                            <amp-img src="/img/brottsplatskartan-logotyp.png" width=282 height=36>
                         </div>
                 </a></h1>
                 <p class="SiteTagline"><em>Se på karta var brott sker</em></p>
