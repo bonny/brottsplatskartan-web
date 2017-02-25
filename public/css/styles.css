@@ -620,11 +620,30 @@ amp-social-share {
     -webkit-font-smoothing: antialiased;
 }
 
-.Event--v2 {
-    overflow: auto
+
+/* new overview style, more overview-ish */
+
+.Event--v2,
+.Event--v2:nth-of-type(1) {
+    margin-top: var(--default-margin-half);
+    margin-bottom: var(--default-margin-half);
 }
 
-/* new overview style, more overview-ish*/
+/* 2 i bredd */
+.Event--v2 {
+    overflow: auto;
+    float: left;
+    width: 48%;
+}
+
+.Event--v2:nth-of-type(2n+2) {
+    float: right;
+}
+
+.Event--v2:nth-of-type(2n+1) {
+    clear: both;
+}
+
 .Event--v2 .Event__teaser {
     margin-top: var(--default-margin-half);
 }
@@ -643,18 +662,18 @@ amp-social-share {
 
 .Event--v2 .Event__map {
     /*width: 30%;*/
-    margin-top: 0;
-    margin-left: 0;
+    /* margin-top: 0;
+    margin-left: 0; */
 }
 
 .Event--v2 .Event__col1 {
-    float: left;
-    width: 33.333%;
+    /* float: left;
+    width: 33.333%; */
 }
 
 .Event--v2 .Event__col2 {
-    float: right;
-    width: calc(66.666% - 2rem);
+    /* float: right;
+    width: calc(66.666% - 2rem); */
 }
 
 .Event--v2 .Event__contentLink {
@@ -682,7 +701,7 @@ amp-social-share {
 }
 
 .Event--v2 .Event__parsedTitle {
-    font-weight: normal;
+    font-weight: 400;
 }
 
 .Event--v2 .Event__dateHuman {
@@ -752,9 +771,24 @@ amp-social-share {
 
 /* smått, typ iphone 5, göm lite ikoner och sånt */
 @media only screen and (max-width: 320px) {
-    .SiteNav svg {
-        display: none;
+
+    .SiteNav__items {
+        font-size: .9rem;
     }
+
+    .SiteNav__item {
+        width: auto;
+    }
+
+    .SiteNav__item a {
+        padding-left: .3rem;
+        padding-right: .3rem;
+    }
+
+    .SiteNav svg {
+        /* display: none; */
+    }
+
 }
 
 
