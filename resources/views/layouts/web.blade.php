@@ -149,7 +149,7 @@ Layout template for web
         </header>
 
         <div class="Ad">
-            <div class="Ad__intro">Annons:</div>
+            <div class="Ad__intro">Annons</div>
             <amp-ad width=320 height=50
                 type="adsense"
                 data-ad-client="ca-pub-1689239266452655"
@@ -176,7 +176,7 @@ Layout template for web
         @yield('content')
 
         <div class="Ad">
-            <div class="Ad__intro">Annons:</div>
+            <div class="Ad__intro">Annons</div>
                 <amp-ad width=320 height=100
                     type="adsense"
                     data-ad-client="ca-pub-1689239266452655"

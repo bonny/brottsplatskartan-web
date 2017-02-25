@@ -555,8 +555,13 @@ amp-social-share {
 }
 
 .Ad__intro {
-    font-size: var(--font-size-small);
-    color: #666;
+    /* font-size: var(--font-size-small); */
+    position: relative;
+    z-index: 10;
+    line-height: 1;
+    font-size: .6rem;
+    text-transform: uppercase;
+    color: #888;
 }
 
 /* related events on single page */
