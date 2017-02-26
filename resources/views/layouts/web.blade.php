@@ -89,7 +89,7 @@ Layout template for web
 
                 <h1 class="SiteTitle"><a href="/">
                     <div class="SiteHeader__icon">
-                        <amp-img src="/img/brottsplatskartan-logotyp.png" width=282 height=36>
+                        <amp-img src="/img/brottsplatskartan-logotyp.png" width=282 height=36 alt="Brottsplatskartan">
                     </div>
                 </a></h1>
 
