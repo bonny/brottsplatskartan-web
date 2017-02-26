@@ -194,7 +194,7 @@ Layout template for web
 
     <footer class="SiteFooter">
 
-        <div><amp-img src="/img/brottsplatskartan-logotyp-symbol-only.png" width=40 height=40></amp-img>
+        <div><amp-img alt="Brottsplatskartan" src="/img/brottsplatskartan-logotyp-symbol-only.png" width=40 height=40></amp-img>
 
         <h2>Länkar om brottsplatskartan</h2>
 
