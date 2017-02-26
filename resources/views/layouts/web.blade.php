@@ -86,17 +86,14 @@ Layout template for web
 
         <header class="SiteHeader">
             <div class="SiteHeader__inner">
-                <h1 class="SiteTitle"><a href="/">
-                        <div class="SiteHeader__icon">
-                            <amp-img src="/img/brottsplatskartan-logotyp.png" width=282 height=36>
-                        </div>
-                </a></h1>
-                <p class="SiteTagline"><em>Se på karta var brott sker</em></p>
 
-                <!-- <form method="get" action="{{ route("search", null, false) }}" class="HeaderSearch" target="_top">
-                    <input type="text" name="s" value="" class="HeaderSearch__s" placeholder="Sök">
-                    <button type="submit" class="HeaderSearch__submit">Sök</button>
-                </form> -->
+                <h1 class="SiteTitle"><a href="/">
+                    <div class="SiteHeader__icon">
+                        <amp-img src="/img/brottsplatskartan-logotyp.png" width=282 height=36>
+                    </div>
+                </a></h1>
+
+                <p class="SiteTagline"><em>Se på karta var brott sker</em></p>
 
                 <nav class="SiteNav">
                     <ul class="SiteNav__items">
@@ -109,6 +106,7 @@ Layout template for web
                                 </svg>
                                 <span>Händelser</span>
                             </a>
+                        </li>
 
                         <li class="SiteNav__item SiteNav__item--lan">
                             <a href="{{ route('lanOverview', [], false) }}">
@@ -118,19 +116,17 @@ Layout template for web
                                 </svg>
                                 <span>Län</span>
                             </a>
+                        </li>
 
                         <li class="SiteNav__item SiteNav__item--geo">
                             <a href="/geo.php">
-                                <!-- <svg fill="#000000" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M0 0h24v24H0z" fill="none"/>
-                                    <path d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm8.94 3c-.46-4.17-3.77-7.48-7.94-7.94V1h-2v2.06C6.83 3.52 3.52 6.83 3.06 11H1v2h2.06c.46 4.17 3.77 7.48 7.94 7.94V23h2v-2.06c4.17-.46 7.48-3.77 7.94-7.94H23v-2h-2.06zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/>
-                                </svg> -->
                                 <svg fill="#000000" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M0 0h24v24H0V0z" fill="none"/>
                                     <path d="M21 3L3 10.53v.98l6.84 2.65L12.48 21h.98L21 3z"/>
                                 </svg>
                                 <span>Nära mig</span>
                             </a>
+                        </li>
 
                         <li class="SiteNav__item SiteNav__item--search">
                             <a href="{{ route('search', [], false) }}">
@@ -140,6 +136,7 @@ Layout template for web
                                 </svg>
                                 <span>Sök</span>
                             </a>
+                        </li>
 
                     </ul>
                 </nav>
@@ -159,7 +156,6 @@ Layout template for web
             </amp-ad>
         </div>
 
-
         @include('parts.breadcrumb', ["single" => true])
 
         {{-- Output debug data, if set --}}
@@ -173,11 +169,13 @@ Layout template for web
             <a href="{{ $debugData["itemGeocodeURL"] }}">{{ $debugData["itemGeocodeURL"] }}</a>
         @endif
 
-        @yield('content')
+        <main class="MainContent">
 
-        <div class="Ad">
-            <div class="Ad__intro">Annons</div>
-                <amp-ad width=320 height=100
+            @yield('content')
+
+            <div class="Ad">
+                <div class="Ad__intro">Annons</div>
+                <amp-ad width=320 height=50
                     type="adsense"
                     data-ad-client="ca-pub-1689239266452655"
                     data-ad-slot="7743150002"
@@ -185,7 +183,12 @@ Layout template for web
                     >
                 </amp-ad>
             </div>
-        </div>
+
+        </main>
+
+        <aside class="MainSidebar">
+            @yield('sidebar')
+        </aside>
 
     </div>
 

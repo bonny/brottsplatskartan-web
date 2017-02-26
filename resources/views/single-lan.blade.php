@@ -51,3 +51,8 @@ med översikt med händelser för länet
     @endif
 
 @endsection
+
+@section('sidebar')
+    @include('parts.follow-us')
+@endsection
+

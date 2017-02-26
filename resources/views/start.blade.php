@@ -44,3 +44,7 @@ Template for start page
     @endif
 
 @endsection
+
+@section('sidebar')
+    @include('parts.follow-us')
+@endsection
