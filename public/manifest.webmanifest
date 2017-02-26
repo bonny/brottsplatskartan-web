@@ -1,6 +1,6 @@
 {
   "name": "Brottsplatskartan",
-  "short_name": "Brottsplatser",
+  "short_name": "Brottsplats",
   "start_url": "/?utm_source=web_app_manifest",
   "display": "minimal-ui",
   "background_color": "#fff",
