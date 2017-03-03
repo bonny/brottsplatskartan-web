@@ -33,15 +33,15 @@ h1, h2, h3, h4, ul, ol {
 }
 
 h1 {
-    font-size: 1.5rem;
-}
-
-h2 {
     font-size: 1.25rem;
 }
 
+h2 {
+    font-size: 1.15rem;
+}
+
 h3 {
-    font-size: 1.1rem;
+    font-size: 1.05rem;
 }
 
 h4 {
@@ -95,6 +95,7 @@ a:hover {
     font-style:normal;
     line-height: 1;
 }
+
 .SiteTagline em {
     font-style: inherit;
 }
@@ -119,7 +120,6 @@ a:hover {
     height: auto; */
 }
 
-
 /* Site navigation */
 .SiteNav {
     display: block;
@@ -140,7 +140,7 @@ a:hover {
 .SiteNav__item {
     display: inline-block;
     text-align: center;
-    width: 25%;
+    /* width: 25%; */
 }
 
 .SiteNav__item a {
@@ -186,6 +186,11 @@ a:hover {
     margin-top: var(--default-margin);
     margin-bottom: .25rem;
     /*word-break: break-all;*/
+    font-weight: 400;
+}
+
+.Event__teaser {
+    font-weight: 300;
 }
 
 .Event__date {
@@ -234,7 +239,7 @@ a:hover {
 }
 
 .Event__dateHuman {
-    white-space: nowrap;
+    /* white-space: nowrap; */
 }
 
 .Event__dateHuman__time {
@@ -245,7 +250,7 @@ a:hover {
 }
 
 .Event--single .Event__title {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
 }
 
 
@@ -449,6 +454,7 @@ amp-social-share {
     margin-top: var(--default-margin);
     margin-top: 4rem;
     overflow: auto;
+    clear: both;
 }
 
 .SiteFooter__lanListing {}
@@ -547,16 +553,22 @@ amp-social-share {
 .Ad {
     margin-top: var(--default-margin);
     margin-bottom: var(--default-margin);
+    clear: both;
 }
 
 .Ad__intro {
-    font-size: var(--font-size-small);
+    /* font-size: var(--font-size-small); */
+    position: relative;
+    z-index: 10;
+    line-height: 1;
+    font-size: .6rem;
+    text-transform: uppercase;
     color: #666;
 }
 
 /* related events on single page */
 .RelatedEvents {
-    margin-top: 2rem;
+    /* margin-top: 2rem; */
     margin-bottom: 2rem;
     background: white;
     padding: var(--default-margin);
@@ -567,6 +579,7 @@ amp-social-share {
 }
 .RelatedEvents__title {
     margin-top: 0;
+    line-height: 1.1;
 }
 .RelatedEvents__items {
     list-style-type: none;
@@ -614,11 +627,30 @@ amp-social-share {
     -webkit-font-smoothing: antialiased;
 }
 
-.Event--v2 {
-    overflow: auto
+
+/* new overview style, more overview-ish */
+
+.Event--v2,
+.Event--v2:nth-of-type(1) {
+    margin-top: var(--default-margin-half);
+    margin-bottom: var(--default-margin-half);
 }
 
-/* new overview style, more overview-ish*/
+/* 2 i bredd */
+.Event--v2 {
+    overflow: auto;
+    float: left;
+    width: 48%;
+}
+
+.Event--v2:nth-of-type(2n+2) {
+    float: right;
+}
+
+.Event--v2:nth-of-type(2n+1) {
+    clear: both;
+}
+
 .Event--v2 .Event__teaser {
     margin-top: var(--default-margin-half);
 }
@@ -637,18 +669,18 @@ amp-social-share {
 
 .Event--v2 .Event__map {
     /*width: 30%;*/
-    margin-top: 0;
-    margin-left: 0;
+    /* margin-top: 0;
+    margin-left: 0; */
 }
 
 .Event--v2 .Event__col1 {
-    float: left;
-    width: 33.333%;
+    /* float: left;
+    width: 33.333%; */
 }
 
 .Event--v2 .Event__col2 {
-    float: right;
-    width: calc(66.666% - 2rem);
+    /* float: right;
+    width: calc(66.666% - 2rem); */
 }
 
 .Event--v2 .Event__contentLink {
@@ -676,14 +708,23 @@ amp-social-share {
 }
 
 .Event--v2 .Event__parsedTitle {
-    font-weight: normal;
+    font-weight: 400;
 }
 
 .Event--v2 .Event__dateHuman {
     color: var(--color-grey-light);
-    color: #999;
+    color: #888;
     font-size: var(--font-size-small);
     line-height: 1.3;
+}
+
+/* nånstans i mitten... */
+@media only screen and (min-width: 400px) and (max-width: 666px) {
+
+    .SiteNav__item {
+        width: 24%;
+    }
+
 }
 
 /* ~ipad~ iphone 6 liggande and other medium to large screens */
@@ -717,6 +758,16 @@ amp-social-share {
         /* border-bottom: 4px solid rgba(24,98,168, 1); */
     }
 
+    .MainContent {
+        float: left;
+        width: 63%;
+    }
+
+    .MainSidebar {
+        float: right;
+        width: 33%;
+    }
+
     .Events--overview .Event {
         float: left;
         /*break-inside: avoid;*/
@@ -741,14 +792,28 @@ amp-social-share {
         float: right;
     }
 
-
 }
 
 /* smått, typ iphone 5, göm lite ikoner och sånt */
 @media only screen and (max-width: 320px) {
-    .SiteNav svg {
-        display: none;
+
+    .SiteNav__items {
+        font-size: .9rem;
     }
+
+    .SiteNav__item {
+        width: auto;
+    }
+
+    .SiteNav__item a {
+        padding-left: .2rem;
+        padding-right: .2rem;
+    }
+
+    .SiteNav svg {
+        /* display: none; */
+    }
+
 }
 
 

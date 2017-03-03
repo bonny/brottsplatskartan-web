@@ -1,6 +1,6 @@
 {{--
 
-Template for start page
+Template för ett event/händelse
 
 --}}
 
@@ -15,49 +15,23 @@ Template for start page
 @section('metaImageHeight', 640)
 
 @section('content')
-
     @include('parts.crimeevent', ["single" => true])
+    @include('parts.follow-us')
+@endsection
+
+@section('sidebar')
 
     {{-- show a card with nearby events --}}
     @if (isset($eventsNearby) && $eventsNearby->count())
 
         <aside class="RelatedEvents">
-
             <h2 class="RelatedEvents__title">Fler händelser i närheten</h2>
-
             <ul class="RelatedEvents__items">
-
                 @foreach ($eventsNearby as $eventNear)
-
-                    <li class="RelatedEvents__item">
-
-                        <h3 class="RelatedEvents__item__title">
-                            <a class="RelatedEvents__item__link" href="{{ $eventNear->getPermalink() }}">
-                                {{ $eventNear->parsed_title }},
-                                {{ $eventNear->getLocationString(true, true, false) }}
-                            </a>
-                        </h3>
-
-                        <!-- <p class="RelatedEvents__item__location">{{ $eventNear->getLocationString(true, false, false) }}</p> -->
-
-                        {{-- <p class="RelatedEvents__item__date">{{ $eventNear->getParsedDateFormattedForHumans() }}</p> --}}
-
-                        <p class="RelatedEvents__item__description">
-                            <span class="RelatedEvents__item__date">{{ $eventNear->getParsedDateFormattedForHumans() }}</span>
-                            <span class="RelatedEvents__item__dateDivider"> | </span>
-                            {{ $eventNear->getDescriptionAsPlainText() }}
-                            {{-- {{ $eventNear->getMetaDescription(90) }} --}}
-                        </p>
-
-                    </li>
-
+                    @include('parts.event-near')
                 @endforeach
-
             </ul>
-
         </aside>
 
     @endif
-
-
 @endsection

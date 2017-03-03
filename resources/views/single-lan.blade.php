@@ -26,9 +26,13 @@ med översikt med händelser för länet
         @endif
     </h1>
 
-    <p>
-        Visar alla inrapporterade händelser och brott för {{ $lan }}, direkt från polisen.
-    </p>
+    @if (empty($introtext))
+        <p>
+            Visar alla inrapporterade händelser och brott för {{ $lan }}, direkt från polisen.
+        </p>
+    @else
+        {!! $introtext !!}
+    @endif
 
     @if ($events)
 
@@ -47,3 +51,8 @@ med översikt med händelser för länet
     @endif
 
 @endsection
+
+@section('sidebar')
+    @include('parts.follow-us')
+@endsection
+

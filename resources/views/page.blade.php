@@ -123,7 +123,7 @@ Template for text pages
 
         <h2>Följ händelser på Twitter</h2>
 
-        <p>Vi postar alla händelser från Polisen i Stockholm till <a href="https://twitter.com/StockholmsBrott">twittterkontot @StockholmsBrott</a>. 
+        <p>Vi postar alla händelser från Polisen i Stockholm till <a href="https://twitter.com/StockholmsBrott">twittterkontot @StockholmsBrott</a>.
         Följ oss där för att få senaste brotten direkt i din twitter!</p>
 
     @endif

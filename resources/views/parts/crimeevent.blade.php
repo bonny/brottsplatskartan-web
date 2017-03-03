@@ -45,7 +45,7 @@ if $single is set then larger image
 
             @if (isset($overview))
 
-                <amp-img class="Event__mapImage" src="{{ $event->getStaticImageSrc(640,320) }}" width="640" height="320" layout="responsive"></amp-img>
+                <amp-img alt="Karta som visar ungefär var händelsen inträffat" class="Event__mapImage" src="{{ $event->getStaticImageSrc(640,320) }}" width="640" height="320" layout="responsive"></amp-img>
 
             @else
 
@@ -59,6 +59,7 @@ if $single is set then larger image
 
                     <span class="Event__mapImageWrap Event__mapImageWrap--near">
                         <amp-img
+                            alt="Karta som visar ungefär var händelsen inträffat"
                             class="Event__mapImage Event__mapImage--near"
                             src="{{ $event->getStaticImageSrc(426,320) }}"
                             width="426"
@@ -69,6 +70,7 @@ if $single is set then larger image
 
                     <span class="Event__mapImageWrap Event__mapImageWrap--far">
                         <amp-img
+                            alt="Översiktskarta som visar hela Sverige med en markör som visar ungefär var händelsen inträffat"
                             class="Event__mapImage Event__mapImage--far"
                             src="{{ $event->getStaticImageSrcFar(213,320) }}"
                             width="213"
@@ -106,7 +108,15 @@ if $single is set then larger image
         <span class="Event__metaDivider"> | </span>
         <span class="Event__dateHuman">
             {{-- <time datetime="{{ $event->getPubDateISO8601() }}">{{ $event->getPubDateFormattedForHumans() }}</time> --}}
-            <time class="Event__dateHuman__time" title="Tidpunkt då Polisen anger att händelsen inträffat" datetime="{{ $event->getParsedDateISO8601() }}">{{ $event->getParsedDateFormattedForHumans() }}</time>
+            <time class="Event__dateHuman__time"
+                  title="Tidpunkt då Polisen anger att händelsen inträffat"
+                  datetime="{{ $event->getParsedDateISO8601() }}"
+                  >
+                {{ $event->getParsedDateFormattedForHumans() }}
+                @if ($event->getParsedDateDiffInSeconds() >= DAY_IN_SECONDS)
+                    – {{ $event->getParsedDateYMD() }}
+                @endif
+            </time>
         </span>
     </p>
 
