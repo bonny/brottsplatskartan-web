@@ -164,6 +164,16 @@ class CrimeEvent extends Model
 
     }
 
+    function getParsedDateDiffInSeconds() {
+        $date = $this->parsed_date;
+        if (empty($date)) {
+            $date = $this->pubdate_iso8601;
+        }
+
+        return Carbon::createFromTimestamp(strtotime($date))->diffInSeconds();
+    }
+
+
     // ...but fallbacks to pubdate if parsed_date is null
     public function getParsedDateISO8601() {
         
@@ -174,6 +184,10 @@ class CrimeEvent extends Model
 
         return Carbon::createFromTimestamp(strtotime($date))->toIso8601String();
 
+    }
+
+    public function getParsedDateYMD() {
+        return Carbon::createFromTimestamp(strtotime($this->parsed_date))->formatLocalized('%A %d %B %Y %H:%M');
     }
 
 
