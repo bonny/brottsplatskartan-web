@@ -36,6 +36,9 @@ class FeedParserController extends Controller
     - 2016-10-03 17:03, Trafikolycka, personskada, Skara
     - 2016-10-03 20:04, Rattfylleri, Boxholm
 
+    Undantag:
+    Uppsala hade en gång en artikel med följande titel, som gjorde att parsed date blev null
+    - Uppdatering: Misshandel på Uppsalaskola
     */
     public function parseTitle( $title ) {
 

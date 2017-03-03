@@ -155,13 +155,24 @@ class CrimeEvent extends Model
      */
     function getParsedDateFormattedForHumans() {
 
-        return Carbon::createFromTimestamp(strtotime($this->parsed_date))->diffForHumans();
+        $date = $this->parsed_date;
+        if (empty($date)) {
+            $date = $this->pubdate_iso8601;
+        }
+
+        return Carbon::createFromTimestamp(strtotime($date))->diffForHumans();
 
     }
 
+    // ...but fallbacks to pubdate if parsed_date is null
     public function getParsedDateISO8601() {
+        
+        $date = $this->parsed_date;
+        if (empty($date)) {
+            $date = $this->pubdate_iso8601;
+        }
 
-        return Carbon::createFromTimestamp(strtotime($this->parsed_date))->toIso8601String();
+        return Carbon::createFromTimestamp(strtotime($date))->toIso8601String();
 
     }
 
@@ -560,6 +571,12 @@ class CrimeEvent extends Model
 
     }
 
+    /**
+     * Clears the location data for an event
+     * and then re-parses it
+     * useful when locations have been added or removed, so geocode
+     * of item may change
+     */
     public function maybeClearLocationData(\Illuminate\Http\Request $request) {
 
         $debugActions = (array) $request->input("debugActions");
