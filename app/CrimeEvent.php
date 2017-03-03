@@ -154,20 +154,26 @@ class CrimeEvent extends Model
      * Is often much earlier than the date in the RSS data
      */
     function getParsedDateFormattedForHumans() {
-        return Carbon::createFromTimestamp(strtotime($this->parsed_date))->diffForHumans();
-    }
 
-    function getParsedDateDiffInSeconds() {
-        return Carbon::createFromTimestamp(strtotime($this->parsed_date))->diffInSeconds();
+        $date = $this->parsed_date;
+        if (empty($date)) {
+            $date = $this->pubdate_iso8601;
+        }
+
+        return Carbon::createFromTimestamp(strtotime($date))->diffForHumans();
+
     }
 
     // ...but fallbacks to pubdate if parsed_date is null
     public function getParsedDateISO8601() {
-        return Carbon::createFromTimestamp(strtotime($this->parsed_date))->toIso8601String();
-    }
+        
+        $date = $this->parsed_date;
+        if (empty($date)) {
+            $date = $this->pubdate_iso8601;
+        }
 
-    public function getParsedDateYMD() {
-        return Carbon::createFromTimestamp(strtotime($this->parsed_date))->formatLocalized('%A %d %B %Y %H:%M');
+        return Carbon::createFromTimestamp(strtotime($date))->toIso8601String();
+
     }
 
 
@@ -475,7 +481,7 @@ class CrimeEvent extends Model
     public function getViewPortSizeAsString() {
 
         $size = $this->getViewportSize();
-
+       
         $sizeAsString = "";
 
         switch ($size) {
@@ -487,7 +493,7 @@ class CrimeEvent extends Model
             case $size > 6:
                 $sizeAsString = "far";
                 break;
-
+        
              case $size > 0.8:
                 $sizeAsString = "lan";
                 break;
@@ -549,7 +555,7 @@ class CrimeEvent extends Model
 
         $titleParts[] = $this->parsed_title;
         $titleParts[] = $this->getDescriptionAsPlainText();
-
+        
         $prioOneLocations = $this->locations->where("prio", 1);
 
         foreach ($prioOneLocations as $oneLocation) {
@@ -612,7 +618,7 @@ class CrimeEvent extends Model
      * @return bool
      */
     public function shouldShowSourceLink() {
-
+        
         $pubDate = Carbon::createFromTimestamp(strtotime($this->parsed_date));
         $pubDatePlusSomeTime = $pubDate->addWeek();
 
