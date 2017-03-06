@@ -53,6 +53,14 @@ med översikt med händelser för länet
 @endsection
 
 @section('sidebar')
+
+    <div class="Stats Stats--lan">
+        <h2 class="Stats__title">Brottsstatistik</h2>
+        <p>Antal Polisiära händelser per dag för {{$lan}}, 14 dagar tillbaka.</p>
+        <p><amp-img layout="responsive" class="Stats__image" src='{{$lanChartImgUrl}}' alt='Linjediagram som visar antal Polisiära händelser per dag för {{$lan}}' width=400 height=150></amp-img></p>
+    </div>
+
+
     @include('parts.follow-us')
 @endsection
 

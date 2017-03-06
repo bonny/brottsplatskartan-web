@@ -718,6 +718,12 @@ amp-social-share {
     line-height: 1.3;
 }
 
+/* Stats */
+.Stats__image {
+    xmax-width: 100%;
+    xheight: auto;
+}
+
 /* nånstans i mitten... */
 @media only screen and (min-width: 400px) and (max-width: 666px) {
 
@@ -815,5 +821,4 @@ amp-social-share {
     }
 
 }
-
 

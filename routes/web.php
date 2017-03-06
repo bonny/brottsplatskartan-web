@@ -376,50 +376,8 @@ Route::get('/lan/{lan}', function ($lan) {
     $introtext_key = "introtext-lan-$lan";
     $data["introtext"] = Setting::get($introtext_key);
 
-    // Hämta statistik för ett län
-    $stats = App\Helper::getLanStats($lan);
-    $chartImgUrl = 'https://chart.googleapis.com/chart?';
-    // Visible Axes chxt https://developers.google.com/chart/image/docs/gallery/bar_charts#axis_type
-    $chartImgUrl .= 'chxt=x,y';
-    // Chart Types (cht). bvs = Vertical bar chart with stacked bars.
-    $chartImgUrl .= '&cht=bvs';
-    // bar color
-    $chartImgUrl .= '&chco=76A4FB';
-    // size
-    $chartImgUrl .= '&chs=600x200';
-    // Data for almost all charts is sent using the chd parameter. 0-100 when using t:n,n,n
-    // https://developers.google.com/chart/image/docs/data_formats#text
-    // comma separated list of values, %1$s
-    $chartImgUrl .= '&chd=t:%1$s';
-    // Custom Axis Labels chxl
-    // https://developers.google.com/chart/image/docs/chart_params#axis_labels
-    // piped | separated values, like "|Jan|Feb|Mar|Apr|May" as %2$s
-    $chartImgUrl .= '&chxl=0:|%2$s';
-
-    echo "<p>Antal händelser per dag för detta län</p>";
-    $chd = "";
-    $chxl = "";
-
-    foreach ($stats["numEventsPerWeek"] as $statRow) {
-        $chd .= $statRow->count . ",";
-        $chxl .= $statRow->YMD . "|";
-        /*
-        printf(
-            '<li>
-                %1$s %2$s
-            </li>',
-            $statRow->YMD,
-            $statRow->count
-        );
-        */
-    }
-
-    $chd = trim($chd, ',');
-    $chxl = trim($chxl, '|');
-
-    $chartImgUrl = sprintf($chartImgUrl, $chd, $chxl);
-    echo "<img src='$chartImgUrl' alt=''>";
-    echo "<br>$chartImgUrl";
+    // Hämta statistik för ett län   
+    $data["lanChartImgUrl"] = App\Helper::getLangStatsImageChart($lan);
 
     return view('single-lan', $data);
 
