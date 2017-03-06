@@ -7,9 +7,25 @@ use DB;
 class Helper
 {
 
-    public static function getAllLan() 
+    /**
+     * Get stats for a lan
+     */
+    public static function getLanStats($lan) {
+        $stats = [];
+
+        $stats["numEventsPerWeek"] = DB::table('crime_events')
+                       ->select(DB::raw('date_format(created_at, "%Y-%m-%d") as YMD'), DB::raw('count(*) AS count') )
+                       ->where('administrative_area_level_1', $lan)
+                       ->groupBy('YMD')
+                       ->orderBy('YMD', 'desc')
+                       ->limit(7)
+                       ->get();
+        return $stats;
+    }
+
+    public static function getAllLan()
     {
-   	
+
     	$lan = DB::table('crime_events')
                 ->select("administrative_area_level_1")
                 ->groupBy('administrative_area_level_1')
