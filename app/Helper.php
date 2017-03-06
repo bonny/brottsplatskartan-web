@@ -32,6 +32,8 @@ class Helper
         $chartImgUrl .= '&chxl=0:|%2$s';
         // min, max values
         $chartImgUrl .= '&chds=%3$s,%4$s';
+        // chxr, custom numeric range, other wise 0- 100
+        $chartImgUrl .= '&chxr=1,%3$s,%4$s';
         // Bar Width and Spacing chbh
         // https://developers.google.com/chart/image/docs/gallery/bar_charts#chbh
         $chartImgUrl .= '&chbh=a';
