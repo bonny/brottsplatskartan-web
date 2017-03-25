@@ -46,5 +46,13 @@ Template for start page
 @endsection
 
 @section('sidebar')
+
+    <div class="Stats Stats--lan">
+        <h2 class="Stats__title">Brottsstatistik</h2>
+        <p>Antal Polisiära händelser per dag för sverige, 14 dagar tillbaka.</p>
+        <p><amp-img layout="responsive" class="Stats__image" src='{{$chartImgUrl}}' alt='Linjediagram som visar antal Polisiära händelser per dag för Sverige' width=400 height=150></amp-img></p>
+    </div>
+
     @include('parts.follow-us')
+
 @endsection

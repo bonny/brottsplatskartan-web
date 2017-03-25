@@ -60,7 +60,6 @@ med översikt med händelser för länet
         <p><amp-img layout="responsive" class="Stats__image" src='{{$lanChartImgUrl}}' alt='Linjediagram som visar antal Polisiära händelser per dag för {{$lan}}' width=400 height=150></amp-img></p>
     </div>
 
-
     @include('parts.follow-us')
-@endsection
 
+@endsection

@@ -10,8 +10,13 @@ class Helper
     /**
      * Get chart image src for lan stats
      */
-    public static function getLangStatsImageChart($lan) {
-        $stats = self::getLanStats($lan);
+    public static function getStatsImageChartUrl($lan) {
+
+        if ($lan == "home") {
+            $stats = self::getHomeStats($lan);
+        } else {
+            $stats = self::getLanStats($lan);
+        }
 
         $chartImgUrl = 'https://chart.googleapis.com/chart?';
         // Visible Axes chxt https://developers.google.com/chart/image/docs/gallery/bar_charts#axis_type
@@ -45,7 +50,7 @@ class Helper
         $minValue = 0;
         $maxValue = 0;
 
-        foreach ($stats["numEventsPerWeek"] as $statRow) {
+        foreach ($stats["numEventsPerDay"] as $statRow) {
             $date = strtotime($statRow->YMD);
             $date = strftime("%d", $date);
 
@@ -69,9 +74,25 @@ class Helper
     public static function getLanStats($lan) {
         $stats = [];
 
-        $stats["numEventsPerWeek"] = DB::table('crime_events')
+        $stats["numEventsPerDay"] = DB::table('crime_events')
                        ->select(DB::raw('date_format(created_at, "%Y-%m-%d") as YMD'), DB::raw('count(*) AS count') )
                        ->where('administrative_area_level_1', $lan)
+                       ->groupBy('YMD')
+                       ->orderBy('YMD', 'desc')
+                       ->limit(14)
+                       ->get();
+        return $stats;
+    }
+
+    /**
+     * Get stats for all lans
+     */
+    public static function getHomeStats($lan) {
+        $stats = [];
+
+        $stats["numEventsPerDay"] = DB::table('crime_events')
+                       ->select(DB::raw('date_format(created_at, "%Y-%m-%d") as YMD'), DB::raw('count(*) AS count') )
+                       // ->where('administrative_area_level_1', $lan)
                        ->groupBy('YMD')
                        ->orderBy('YMD', 'desc')
                        ->limit(14)

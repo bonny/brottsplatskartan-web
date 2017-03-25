@@ -36,6 +36,9 @@ Route::get('/', function () {
 
     $data["breadcrumbs"] = $breadcrumbs;
 
+    // Hämta statistik för ett län
+    $data["chartImgUrl"] = App\Helper::getStatsImageChartUrl("home");
+
     return view('start', $data);
 
 })->name("start");
@@ -376,8 +379,8 @@ Route::get('/lan/{lan}', function ($lan) {
     $introtext_key = "introtext-lan-$lan";
     $data["introtext"] = Setting::get($introtext_key);
 
-    // Hämta statistik för ett län   
-    $data["lanChartImgUrl"] = App\Helper::getLangStatsImageChart($lan);
+    // Hämta statistik för ett län
+    $data["lanChartImgUrl"] = App\Helper::getStatsImageChartUrl($lan);
 
     return view('single-lan', $data);
 
