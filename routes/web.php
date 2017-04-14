@@ -40,7 +40,6 @@ Route::get('/', function () {
     $data["chartImgUrl"] = App\Helper::getStatsImageChartUrl("home");
 
     return view('start', $data);
-
 })->name("start");
 
 /**
@@ -58,7 +57,7 @@ Route::get('/nara', function (Request $request) {
     $lat = round($lat, 5);
     $lng = round($lng, 5);
 
-    if ($lat && $lng && ! $error ) {
+    if ($lat && $lng && ! $error) {
         // works, but cant use "having"
         #$events = CrimeEvent::selectRaw('*, ( 6371 * acos( cos( radians(?) ) * cos( radians( location_lat ) ) * cos( radians( location_lng ) - radians(?) ) + sin( radians(?) ) * sin( radians( location_lat ) ) ) ) AS distance', [ $lat, $lng, $lat ])
         #->orderBy("distance", "ASC")
@@ -78,17 +77,14 @@ Route::get('/nara', function (Request $request) {
         // we want to show at least 5 events
         // if less than 5 events is found then increase the range by nn km, until a hit is found
         while ($events->count() < 5) {
-
             $nearbyInKm = $nearbyInKm + 10;
             $events = CrimeEvent::getEventsNearLocation($lat, $lng, $nearbyCount, $nearbyInKm);
             $numTries++;
-
         }
 
         $data["nearbyInKm"] = $nearbyInKm;
         $data["nearbyCount"] = $nearbyCount;
         $data["numTries"] = $numTries;
-
     } else {
         $data["error"] = true;
     }
@@ -114,7 +110,6 @@ Route::get('/nara', function (Request $request) {
     $data["breadcrumbs"] = $breadcrumbs;
 
     return view('geo', $data);
-
 })->name("geo");
 
 /**
@@ -122,15 +117,12 @@ Route::get('/nara', function (Request $request) {
  */
 Route::group(['prefix' => 'admin'], function () {
 
-    Route::get('', function ()    {
-
+    Route::get('', function () {
         return redirect()->route("adminDashboard");
-
     });
 
     // /admin/dashboard
-    Route::get('dashboard', function (FeedController $feedController, Request $request )    {
-
+    Route::get('dashboard', function (FeedController $feedController, Request $request) {
         $data = [];
 
         // if parseItem is set and integer then parse that item
@@ -144,9 +136,7 @@ Route::group(['prefix' => 'admin'], function () {
         $data["events"] = CrimeEvent::orderBy("created_at", "desc")->paginate(100);
 
         return view('admin.dashboard', $data);
-
     })->name("adminDashboard");
-
 });
 
 /**
@@ -182,7 +172,6 @@ Route::get('/lan/', function (Request $request) {
     $data["breadcrumbs"] = $breadcrumbs;
 
     return view('overview-lan', $data);
-
 })->name("lanOverview");
 
 /**
@@ -206,7 +195,6 @@ Route::get('/plats/', function () {
     $data["breadcrumbs"] = $breadcrumbs;
 
     return view('overview-platser', $data);
-
 })->name("platserOverview");
 
 /**
@@ -221,7 +209,6 @@ Route::get('/orter/{ort}', function ($ort = "") {
 
     return redirect()->route("platsSingle", [ "ort" => $ort ]);
     // dd($ort);
-
 });
 
 /**
@@ -245,7 +232,6 @@ Route::get('/typ/', function () {
     $data["breadcrumbs"] = $breadcrumbs;
 
     return view('overview-typer', $data);
-
 })->name("typeOverview");
 
 
@@ -274,7 +260,6 @@ Route::get('/typ/{typ}', function ($typ) {
     $data["breadcrumbs"] = $breadcrumbs;
 
     return view('single-typ', $data);
-
 })
 ->name("typeSingle")
 ->where('typ', '(.*)');
@@ -293,7 +278,7 @@ Route::get('/plats/{plats}', function ($plats) {
     $events = CrimeEvent::orderBy("created_at", "desc")
                                 ->where("parsed_title_location", $plats)
                                 ->orWhere("administrative_area_level_2", $plats)
-                                ->orWhereHas('locations', function($query) use($plats) {
+                                ->orWhereHas('locations', function ($query) use ($plats) {
                                         $query->where('name', '=', $plats);
                                 })
                                 ->paginate(10);
@@ -312,9 +297,7 @@ Route::get('/plats/{plats}', function ($plats) {
     $data["breadcrumbs"] = $breadcrumbs;
 
     return view('single-plats', $data);
-
 })->name("platsSingle");
-
 
 /**
  * Sida, med text typ, t.ex. "om brottsplatskartan" eller "api"
@@ -323,17 +306,17 @@ Route::get('/sida/{pagename}', function ($pagename = null) {
 
     $pagetitle = "Sidan $pagename";
 
-    switch($pagename) {
-        case "om";
+    switch ($pagename) {
+        case "om":
             $pagetitle = "Om Brottsplatskartan";
             break;
-        case "api";
+        case "api":
             $pagetitle = "Brottsplatskartans API för att hämta brott från Polisen";
             break;
-        case "appar";
+        case "appar":
             $pagetitle = "Brottsplatskartans app för Iphone och Android";
             break;
-        case "stockholm";
+        case "stockholm":
             $pagetitle = "Senaste händelserna från Polisen i Stockholm";
             break;
     }
@@ -345,7 +328,6 @@ Route::get('/sida/{pagename}', function ($pagename = null) {
     ];
 
     return view('page', $data);
-
 })->name("page");
 
 
@@ -383,7 +365,6 @@ Route::get('/lan/{lan}', function ($lan) {
     $data["lanChartImgUrl"] = App\Helper::getStatsImageChartUrl($lan);
 
     return view('single-lan', $data);
-
 })->name("lanSingle");
 
 
@@ -394,7 +375,7 @@ Route::get('/lan/{lan}', function ($lan) {
  * http://brottsplatskartan.se/vastra-gotalands-lan/rattfylleri-2331
  *
  */
-Route::get('/{lan}/{eventName}', function ($lan,  $eventName, Request $request) {
+Route::get('/{lan}/{eventName}', function ($lan, $eventName, Request $request) {
 
     // event måste innehålla siffra sist = crime event id
     preg_match('!\d+$!', $eventName, $matches);
@@ -405,8 +386,8 @@ Route::get('/{lan}/{eventName}', function ($lan,  $eventName, Request $request) 
     // län får inte vara siffra, om det är det så är det en gammal url som besöks (finns träffar kvar i google)
     // https://brottsplatskartan.dev/20034/misshandel-grov-torget-karlskoga-2611-jun-2013
     if (is_numeric($lan)) {
-      // dd("old event, abort");
-      abort(404);
+        // dd("old event, abort");
+        abort(404);
     }
 
     $eventID = $matches[0];
@@ -444,7 +425,6 @@ Route::get('/{lan}/{eventName}', function ($lan,  $eventName, Request $request) 
     ];
 
     return view('single-event', $data);
-
 })->name("singleEvent");
 
 
@@ -465,19 +445,15 @@ Route::get('/sok/', function (Request $request) {
     $breadcrumbs->addCrumb('Hem', '/');
     $breadcrumbs->addCrumb('Sök', route("search"));
 
-    if ( $s && mb_strlen($s) >= $minSearchLength ) {
-
+    if ($s && mb_strlen($s) >= $minSearchLength) {
         $breadcrumbs->addCrumb(e($s));
 
-        $events = CrimeEvent::where(function($query) use ($s) {
-
-            $query->where("description", "LIKE","%$s%")
-            ->orWhere("parsed_title_location", "LIKE", "%$s%")
-            ->orWhere("parsed_content", "LIKE", "%$s%")
-            ->orWhere("parsed_title", "LIKE", "%$s%");
-
+        $events = CrimeEvent::where(function ($query) use ($s) {
+            $query->where("description", "LIKE", "%$s%")
+                ->orWhere("parsed_title_location", "LIKE", "%$s%")
+                ->orWhere("parsed_content", "LIKE", "%$s%")
+                ->orWhere("parsed_title", "LIKE", "%$s%");
         })->orderBy("created_at", "desc")->paginate(10);
-
     }
 
     $data = [
@@ -487,14 +463,13 @@ Route::get('/sok/', function (Request $request) {
     ];
 
     return view('search', $data);
-
 })->name("search");
 
 
 /**
  * Skicka med data till 404-sidan
  */
-\View::composer('errors/404', function($view) {
+\View::composer('errors/404', function ($view) {
 
     $data = [];
 
@@ -510,5 +485,4 @@ Route::get('/sok/', function (Request $request) {
 
 
     $view->with($data);
-
 });
