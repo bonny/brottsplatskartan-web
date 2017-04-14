@@ -210,13 +210,13 @@ class CrimeEvent extends Model
         // "Stöld/inbrott" and so on
         $slugParts[] = $this->parsed_title;
 
-        if ( ! empty($this->parsed_title_location) ) {
+        if (! empty($this->parsed_title_location)) {
             $slugParts[] = $this->parsed_title_location;
         } else {
             #$eventName = "";
         }
 
-        $prio1locations = $this->locations->filter(function($val, $key) {
+        $prio1locations = $this->locations->filter(function ($val, $key) {
             return $val->prio == 1;
         });
 
@@ -235,7 +235,6 @@ class CrimeEvent extends Model
         ], $absolute);
 
         return $permalink;
-
     }
 
     /**
@@ -316,35 +315,25 @@ class CrimeEvent extends Model
                 $this->administrative_area_level_1,
                 route("lanSingle", ["lan" => $this->administrative_area_level_1])
             );
-
         }
 
         $location = implode(", ", $locations);
 
         return $location;
-
     }
 
     // from http://cubiq.org/the-perfect-php-clean-url-generator
-    // @TODO: put in global helper
-    public function toAscii($str, $replace=array(), $delimiter='-') {
-
-    	if( !empty($replace) ) {
-    		$str = str_replace((array)$replace, ' ', $str);
-    	}
-
-    	$clean = iconv('UTF-8', 'ASCII//TRANSLIT', $str);
-    	$clean = preg_replace("![^a-zA-Z0-9/_|+ -]!", '', $clean);
-    	$clean = strtolower(trim($clean, '-'));
-    	$clean = preg_replace("![/_|+ -]+!", $delimiter, $clean);
-
-    	return $clean;
+    public function toAscii($str, $replace = array(), $delimiter = '-')
+    {
+        $text = Helper::toAscii($str, $replace, $delimiter);
+        return $text;
     }
 
     /**
      * @return string
      */
-    public function getMetaDescription($length = 155) {
+    public function getMetaDescription($length = 155)
+    {
 
         $text = "";
 
@@ -354,7 +343,6 @@ class CrimeEvent extends Model
         $text = str_limit($text, $length);
 
         return $text;
-
     }
 
     // https://laracasts.com/discuss/channels/laravel/search-option-in-laravel-5?page=1
@@ -381,47 +369,47 @@ class CrimeEvent extends Model
      * Get the description (kinda the teaser)
      * replacing new lines with <p>
      */
-    public function getDescription() {
+    public function getDescription()
+    {
 
         $text = $this->description;
-
         $text = $this->autop($text);
 
         return $text;
-
     }
 
     /**
      * Get description with tags stripped
      */
-    public function getDescriptionAsPlainText() {
+    public function getDescriptionAsPlainText()
+    {
 
         $text = $this->getDescription();
         $text = Helper::stripTagsWithWhitespace($text);
         $text = trim($text);
 
         return $text;
-
     }
 
     /**
      * Get the description
      */
-    public function getParsedContent() {
+    public function getParsedContent()
+    {
 
         $text = $this->parsed_content;
 
         $text = $this->autop($text);
 
         return $text;
-
     }
 
     /**
      * Get the description, for overview pages, where text is cropped after nn chars
      * and styles removed to not interfere in listing
      */
-    public function getParsedContentTeaser($length = 160) {
+    public function getParsedContentTeaser($length = 160)
+    {
 
         $text = $this->parsed_content;
 
@@ -435,14 +423,14 @@ class CrimeEvent extends Model
         // $text = $this->autop($text);
 
         return $text;
-
     }
 
     /**
      * Kinda like wp's autop function
      * replaces newlines with paragraphs, removes duplicate <br>:s and so on
      */
-    public function autop($text) {
+    public function autop($text)
+    {
 
         // replace <br> with new line
         $text = str_replace("<br>", "\n", $text);
@@ -454,10 +442,10 @@ class CrimeEvent extends Model
         $text = preg_replace('/(<br>)+/', '<br>', $text);
 
         return $text;
-
     }
 
-    public static function getEventsNearLocation($lat, $lng, $nearbyCount = 10, $nearbyInKm = 25) {
+    public static function getEventsNearLocation($lat, $lng, $nearbyCount = 10, $nearbyInKm = 25)
+    {
 
         $events = CrimeEvent::selectRaw('*, ( 6371 * acos( cos( radians(?) ) * cos( radians( location_lat ) ) * cos( radians( location_lng ) - radians(?) ) + sin( radians(?) ) * sin( radians( location_lat ) ) ) ) AS distance', [ $lat, $lng, $lat ])
         ->having("distance", "<=", $nearbyInKm) // välj de som är rimligt nära, värdet är i km
@@ -467,15 +455,14 @@ class CrimeEvent extends Model
         ->get();
 
         return $events;
-
     }
 
-    public function getViewportSize() {
+    public function getViewportSize()
+    {
 
         $viewportSize = ($this->viewport_northeast_lat - $this->viewport_southwest_lat) + ($this->viewport_northeast_lng - $this->viewport_southwest_lng);
 
         return $viewportSize;
-
     }
 
     /**
