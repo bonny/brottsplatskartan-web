@@ -13,6 +13,7 @@
 
 use App\Http\Controllers\FeedController;
 use App\CrimeEvent;
+use App\Locations;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use Carbon\Carbon;
@@ -266,23 +267,80 @@ Route::get('/typ/{typ}', function ($typ) {
 
 
 /**
- * En ort
+ * En specifik ort
+ *
+ * Nuvarande struktur:
+ *
+ *  /plats/storgatan/
+*
+ * Ny struktur:
+ *
+ *  /plats/storgatan-örebro-län/
+ *  /plats/storgatan-gävleborgs-län/
+ *
  */
 Route::get('/plats/{plats}', function ($plats) {
 
-    $data = [
-        "plats" => title_case($plats)
-    ];
+    $data = [];
 
-    // Hämta events där plats är från huvudtabellen
-    $events = CrimeEvent::orderBy("created_at", "desc")
-                                ->where("parsed_title_location", $plats)
-                                ->orWhere("administrative_area_level_2", $plats)
-                                ->orWhereHas('locations', function ($query) use ($plats) {
-                                        $query->where('name', '=', $plats);
-                                })
-                                ->paginate(10);
+    // Om $plats slutar med namnet på ett län, t.ex. "örebro län", "gävleborgs län" osv
+    // så ska platser i det länet med platsen $plats minus länets namn visas
+    $allLans = App\Helper::getAllLan();
+    $allLansNames = $allLans->pluck("administrative_area_level_1");
+    $foundMatchingLan = false;
+    $matchingLanName = null;
+    $platsWithoutLan = null;
+    foreach ($allLansNames as $oneLanName) {
+        $lanSlug = App\Helper::toAscii($oneLanName);
+        if (ends_with($plats, $lanSlug)) {
+            $matchingLanName = $oneLanName;
+            $foundMatchingLan = true;
+            $platsWithoutLan = str_replace("-{$lanSlug}", "", $plats);
+            break;
+        }
+    }
 
+    if ($foundMatchingLan) {
+        // echo ("Hittade län som matchade, så visa platser som matchar '{$platsWithoutLan}' från länet {$oneLanName} ($lanSlug)");
+
+        // Hämta events där plats är från huvudtabellen
+        // Används när $plats är bara en plats, typ "insjön",
+        // "östersunds centrum", "östra karup", "kungsgatan" osv.
+        $events = CrimeEvent::orderBy("created_at", "desc")
+                    ->where("administrative_area_level_1", $oneLanName)
+                    ->whereExists(function ($query) use ($platsWithoutLan) {
+                        $query->select(DB::raw(1))
+                                ->from('locations')
+                                ->whereRaw(
+                                    'locations.name = ?
+                                    AND locations.crime_event_id = crime_events.id',
+                                    [$platsWithoutLan]
+                                );
+                    })
+                    ->paginate(10);
+
+        // Rensa uppp plats lite
+        $plats = sprintf(
+            '%1$s i %2$s',
+            title_case($platsWithoutLan),
+            title_case($oneLanName)
+        );
+    } else {
+        // Hämta events där plats är från huvudtabellen
+        // Används när $plats är bara en plats, typ "insjön",
+        // "östersunds centrum", "östra karup", "kungsgatan" osv.
+        $events = CrimeEvent::orderBy("created_at", "desc")
+                                    ->where("parsed_title_location", $plats)
+                                    ->orWhere("administrative_area_level_2", $plats)
+                                    ->orWhereHas('locations', function ($query) use ($plats) {
+                                            $query->where('name', '=', $plats);
+                                    })
+                                    ->paginate(10);
+
+        $plats = title_case($plats);
+    }
+
+    $data["plats"] = $plats;
     $data["events"] = $events;
 
     if (!$data["events"]->count()) {

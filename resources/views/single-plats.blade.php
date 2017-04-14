@@ -13,11 +13,11 @@ Template för en ort
 
 @section('content')
 
-    <h1>Brott i {{ title_case($plats) }}</h1>
+    <h1>Brott nära {{ $plats }}</h1>
 
-    <p>
+    {{-- <p>
         Händelser från Polisen för {{ $plats }}.
-    </p>
+    </p> --}}
 
     @if ($events)
 
