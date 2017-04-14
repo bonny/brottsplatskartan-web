@@ -1,6 +1,7 @@
 :root {
     --color-grey-light: #ddd;
     --color-link: #0379C4;
+    --color-link: #15c; /* same colors as lighthouse */
     --default-margin: 1rem;
     --default-margin-half: calc(var(--default-margin)/2);
     --font-size-small: .9rem;
@@ -523,7 +524,7 @@ amp-social-share {
     position: absolute;
     top: 0;
     right: -.9rem;
-    color: #999;
+    color: #555;
 }
 
 .Breadcrumbs__switchLan__belowTitle {
@@ -563,7 +564,7 @@ amp-social-share {
     line-height: 1;
     font-size: .6rem;
     text-transform: uppercase;
-    color: #666;
+    color: #555;
 }
 
 /* related events on single page */
@@ -713,7 +714,7 @@ amp-social-share {
 
 .Event--v2 .Event__dateHuman {
     color: var(--color-grey-light);
-    color: #888;
+    color: #666;
     font-size: var(--font-size-small);
     line-height: 1.3;
 }
