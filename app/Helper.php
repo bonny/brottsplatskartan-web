@@ -3,6 +3,7 @@
 namespace App;
 
 use DB;
+use Illuminate\Support\Facades\Cache;
 
 class Helper
 {
@@ -10,7 +11,8 @@ class Helper
     /**
      * Get chart image src for lan stats
      */
-    public static function getStatsImageChartUrl($lan) {
+    public static function getStatsImageChartUrl($lan)
+    {
 
         if ($lan == "home") {
             $stats = self::getHomeStats($lan);
@@ -65,17 +67,17 @@ class Helper
         $chartImgUrl = sprintf($chartImgUrl, $chd, $chxl, $minValue, $maxValue);
 
         return $chartImgUrl;
-
     }
 
     /**
      * Get stats for a lan
      */
-    public static function getLanStats($lan) {
+    public static function getLanStats($lan)
+    {
         $stats = [];
 
         $stats["numEventsPerDay"] = DB::table('crime_events')
-                       ->select(DB::raw('date_format(created_at, "%Y-%m-%d") as YMD'), DB::raw('count(*) AS count') )
+                       ->select(DB::raw('date_format(created_at, "%Y-%m-%d") as YMD'), DB::raw('count(*) AS count'))
                        ->where('administrative_area_level_1', $lan)
                        ->groupBy('YMD')
                        ->orderBy('YMD', 'desc')
@@ -87,11 +89,12 @@ class Helper
     /**
      * Get stats for all lans
      */
-    public static function getHomeStats($lan) {
+    public static function getHomeStats($lan)
+    {
         $stats = [];
 
         $stats["numEventsPerDay"] = DB::table('crime_events')
-                       ->select(DB::raw('date_format(created_at, "%Y-%m-%d") as YMD'), DB::raw('count(*) AS count') )
+                       ->select(DB::raw('date_format(created_at, "%Y-%m-%d") as YMD'), DB::raw('count(*) AS count'))
                        // ->where('administrative_area_level_1', $lan)
                        ->groupBy('YMD')
                        ->orderBy('YMD', 'desc')
@@ -103,15 +106,20 @@ class Helper
     public static function getAllLan()
     {
 
-    	$lan = DB::table('crime_events')
+        $minutes = 10;
+
+        $lan = Cache::remember('getAllLan', $minutes, function () {
+            $lan = DB::table('crime_events')
                 ->select("administrative_area_level_1")
                 ->groupBy('administrative_area_level_1')
                 ->orderBy('administrative_area_level_1', 'asc')
                 ->where('administrative_area_level_1', "!=", "")
                 ->get();
 
-       return $lan;
+            return $lan;
+        });
 
+        return $lan;
     }
 
     /**
@@ -119,7 +127,7 @@ class Helper
      * @param string|null $allowable_tags
      * @return string
      */
-    public static function strip_tags_with_whitespace($string, $allowable_tags = null)
+    public static function stripTagsWithWhitespace($string, $allowable_tags = null)
     {
         $string = str_replace('<', ' <', $string);
         $string = strip_tags($string, $allowable_tags);
@@ -128,5 +136,4 @@ class Helper
 
         return $string;
     }
-
 }

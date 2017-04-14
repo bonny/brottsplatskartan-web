@@ -176,7 +176,7 @@ class CrimeEvent extends Model
 
     // ...but fallbacks to pubdate if parsed_date is null
     public function getParsedDateISO8601() {
-        
+
         $date = $this->parsed_date;
         if (empty($date)) {
             $date = $this->pubdate_iso8601;
@@ -397,7 +397,7 @@ class CrimeEvent extends Model
     public function getDescriptionAsPlainText() {
 
         $text = $this->getDescription();
-        $text = Helper::strip_tags_with_whitespace($text);
+        $text = Helper::stripTagsWithWhitespace($text);
         $text = trim($text);
 
         return $text;
@@ -428,7 +428,7 @@ class CrimeEvent extends Model
         // strip tags but make sure there is at least a space where the tag was
         // so text paragraphs don't collapse
         #$text = strip_tags(str_replace('<', ' <', $text));
-        $text = Helper::strip_tags_with_whitespace($text);
+        $text = Helper::stripTagsWithWhitespace($text);
 
         $text = str_limit($text, $length);
 
@@ -495,7 +495,7 @@ class CrimeEvent extends Model
     public function getViewPortSizeAsString() {
 
         $size = $this->getViewportSize();
-       
+
         $sizeAsString = "";
 
         switch ($size) {
@@ -507,7 +507,7 @@ class CrimeEvent extends Model
             case $size > 6:
                 $sizeAsString = "far";
                 break;
-        
+
              case $size > 0.8:
                 $sizeAsString = "lan";
                 break;
@@ -569,7 +569,7 @@ class CrimeEvent extends Model
 
         $titleParts[] = $this->parsed_title;
         $titleParts[] = $this->getDescriptionAsPlainText();
-        
+
         $prioOneLocations = $this->locations->where("prio", 1);
 
         foreach ($prioOneLocations as $oneLocation) {
@@ -632,7 +632,7 @@ class CrimeEvent extends Model
      * @return bool
      */
     public function shouldShowSourceLink() {
-        
+
         $pubDate = Carbon::createFromTimestamp(strtotime($this->parsed_date));
         $pubDatePlusSomeTime = $pubDate->addWeek();
 
