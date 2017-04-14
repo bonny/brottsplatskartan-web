@@ -9,7 +9,7 @@ Template för ort-översikt
 
 @section('title', 'Brott på platser och orter i Sverige')
 @section('metaDescription', e("Se var brott sker på en mängd olika orter och platser i Sverige. Brottsplatskartan visar alla brott på en karta - direkt från Polisen."))
-@section('canonicalLink', '/orter')
+@section('canonicalLink', '/plats')
 
 @section('content')
 
