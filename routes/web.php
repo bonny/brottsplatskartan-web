@@ -291,21 +291,36 @@ Route::get('/plats/{plats}', function ($plats) {
     $matchingLanName = null;
     $platsWithoutLan = null;
     $platsSluggified = App\Helper::toAscii($plats);
+
+    // yttre-ringvägen-skåne-län
+    #echo "<br>plats: $plats";
+
+    // yttre-ringvagen-skane-lan
+    #echo "<br>platsSluggified: $platsSluggified";
+
     foreach ($allLansNames as $oneLanName) {
+        // Skåne län
+        // echo "<br>oneLanName: $oneLanName";
+
+        // skane-lan
         $lanSlug = App\Helper::toAscii($oneLanName);
-        #dd($plats);
-        #dd($oneLanName);
-        #echo "<br> $plats - $oneLanName - $lanSlug - $platsSluggified";
+        // echo "<br>lanSlug: $lanSlug";
+
+        // echo "<br> $plats - $oneLanName - $lanSlug - $platsSluggified";
         if (ends_with($platsSluggified, "-" . $lanSlug)) {
             $foundMatchingLan = true;
             $matchingLanName = $oneLanName;
-            $platsWithoutLan = str_replace("-{$lanSlug}", "", $platsSluggified);
+
+            $lanStrLen = mb_strlen($oneLanName);
+            $platsStrLen = mb_strlen($plats);
+            $platsWithoutLan = mb_substr($plats, 0, $platsStrLen - $lanStrLen);
+            $platsWithoutLan = str_replace("-", " ", $platsWithoutLan);
             break;
         }
     }
 
     if ($foundMatchingLan) {
-        #echo "<br><br>Hittade län som matchade, så visa platser som matchar";
+        #echo "<br><br>Hittade län som matchade, så visa platser som matchar ";
         #echo "'{$platsWithoutLan}' från länet {$oneLanName} ($lanSlug)";
 
         // Hämta events där plats är från huvudtabellen

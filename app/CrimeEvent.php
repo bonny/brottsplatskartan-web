@@ -294,10 +294,13 @@ class CrimeEvent extends Model
             foreach ($prioOneLocations as $oneLocation) {
                 $lanNoSpace = preg_replace("![/_|+ -]+!", "-", $lan);
 
+                // $oneLocation->name = "västra kattarpsvägenVästra"
+                $locationNameNoSpace = preg_replace("![/_|+ -]+!", "-", $oneLocation->name);
+
                 // kungsgatan-stockholms-län
                 $platsUrlSlug = sprintf(
                     '%1$s-%2$s',
-                    mb_strtolower($oneLocation->name),
+                    mb_strtolower($locationNameNoSpace),
                     mb_strtolower($lanNoSpace)
                 );
 
