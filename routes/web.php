@@ -290,18 +290,23 @@ Route::get('/plats/{plats}', function ($plats) {
     $foundMatchingLan = false;
     $matchingLanName = null;
     $platsWithoutLan = null;
+    $platsSluggified = App\Helper::toAscii($plats);
     foreach ($allLansNames as $oneLanName) {
         $lanSlug = App\Helper::toAscii($oneLanName);
-        if (ends_with($plats, $lanSlug)) {
-            $matchingLanName = $oneLanName;
+        #dd($plats);
+        #dd($oneLanName);
+        #echo "<br> $plats - $oneLanName - $lanSlug - $platsSluggified";
+        if (ends_with($platsSluggified, $lanSlug)) {
             $foundMatchingLan = true;
-            $platsWithoutLan = str_replace("-{$lanSlug}", "", $plats);
+            $matchingLanName = $oneLanName;
+            $platsWithoutLan = str_replace("-{$lanSlug}", "", $platsSluggified);
             break;
         }
     }
 
     if ($foundMatchingLan) {
-        // echo ("Hittade län som matchade, så visa platser som matchar '{$platsWithoutLan}' från länet {$oneLanName} ($lanSlug)");
+        #echo "Hittade län som matchade, så visa platser som matchar";
+        #echo "'{$platsWithoutLan}' från länet {$oneLanName} ($lanSlug)";
 
         // Hämta events där plats är från huvudtabellen
         // Används när $plats är bara en plats, typ "insjön",
@@ -350,7 +355,7 @@ Route::get('/plats/{plats}', function ($plats) {
     $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs;
     $breadcrumbs->addCrumb('Hem', '/');
     $breadcrumbs->addCrumb('Platser', route("platserOverview"));
-    $breadcrumbs->addCrumb(e(title_case($plats)));
+    $breadcrumbs->addCrumb(e($plats));
 
     $data["breadcrumbs"] = $breadcrumbs;
 
