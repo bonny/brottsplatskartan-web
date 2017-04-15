@@ -24,10 +24,11 @@ Layout template for web
         <meta name="description" content="@yield('metaDescription')">
         <meta property="og:description" content="@yield('metaDescription')">
         <meta name="twitter:description" content="@yield('metaDescription')">
-    @else
-        <meta property="og:description" content="Se var brott sker nära dig">
-        <meta name="twitter:description" content="Se var brott sker nära dig">
     @endif
+
+    {{-- @else
+        <meta property="og:description" content="Se var brott sker nära dig">
+        <meta name="twitter:description" content="Se var brott sker nära dig"> --}}
 
     @hasSection('metaImage')
         <meta property="og:image" content="@yield('metaImage')" />
