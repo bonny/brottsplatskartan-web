@@ -324,6 +324,8 @@ Route::get('/plats/{plats}', function ($plats) {
                     })
                     ->paginate(10);
 
+        $canonicalLink = $plats;
+
         // Rensa uppp plats lite
         $plats = sprintf(
             '%1$s i %2$s',
@@ -341,12 +343,13 @@ Route::get('/plats/{plats}', function ($plats) {
                                             $query->where('name', '=', $plats);
                                     })
                                     ->paginate(10);
-
+        $canonicalLink = $plats;
         $plats = title_case($plats);
     }
 
     $data["plats"] = $plats;
     $data["events"] = $events;
+    $data["canonicalLink"] = "/plats/{$canonicalLink}";
 
     if (!$data["events"]->count()) {
         abort(404);

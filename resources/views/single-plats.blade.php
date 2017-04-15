@@ -9,7 +9,7 @@ Template för en ort
 
 @section('title', "$plats: Brott och händelser i och omkring $plats")
 @section('metaDescription', e("Se brott i $plats på karta. Information direkt från Polisen!"))
-@section('canonicalLink', "/plats/$plats")
+@section('canonicalLink', "$canonicalLink")
 
 @section('content')
 
