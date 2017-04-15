@@ -7,8 +7,8 @@ Template för en ort
 
 @extends('layouts.web')
 
-@section('title', "$plats: Brott och händelser i och omkring $plats")
-@section('metaDescription', e("Se brott i $plats på karta. Information direkt från Polisen!"))
+@section('title', "Brott nära $plats")
+@section('metaDescription', e("Kartor med brott kom skett nära $plats. Brotten och händelserna hämtas direkt från Polisen."))
 @section('canonicalLink', "$canonicalLink")
 
 @section('content')
