@@ -272,48 +272,62 @@ class CrimeEvent extends Model
         $location = implode(", ", $locations);
 
         return $location;
-
     }
 
     /**
      * Som getLocationString
      * men platser kan vara länkade, t.ex. länen
      */
-    public function getLocationStringWithLinks() {
+    public function getLocationStringWithLinks()
+    {
 
         $locations = [];
-
         $prioOneLocations = $this->locations->whereIn("prio", [1, 2]);
 
+        // Stockholms län, Västmanlands län
+        $lan = $this->administrative_area_level_1;
+        //echo "<br>level1: " . $this->administrative_area_level_1;
+        //echo "<br>level2: " . $this->administrative_area_level_2;
+
+        // Locations = Blandat; "Rönninge", "Götaland", "Hästhovsvägen", "Kungsgatan", osv.
         if ($prioOneLocations->count()) {
             foreach ($prioOneLocations as $oneLocation) {
+                $lanNoSpace = preg_replace("![/_|+ -]+!", "-", $lan);
+
+                // kungsgatan-stockholms-län
+                $platsUrlSlug = sprintf(
+                    '%1$s-%2$s',
+                    mb_strtolower($oneLocation->name),
+                    mb_strtolower($lanNoSpace)
+                );
+
+                // $platsUrlSlug = $this->toAscii($platsUrlSlug);
 
                 $locations[] = sprintf(
                     '<a href="%2$s">%1$s</a>',
                     title_case($oneLocation->name),
-                    route("platsSingle", ["plats" => $oneLocation->name])
+                    route("platsSingle", ["plats" => $platsUrlSlug])
                 );
-
             }
         }
 
+        // Title location = oftare typ "Malmö", "Våsterås", osv.
         if ($this->parsed_title_location) {
-
-            //$locations[] = $this->parsed_title_location;
             $locations[] = sprintf(
                 '<a href="%2$s">%1$s</a>',
                 $this->parsed_title_location,
                 route("platsSingle", ["plats" => $this->parsed_title_location])
             );
-
         }
 
-        if ($this->administrative_area_level_1 && $this->administrative_area_level_1 !== $this->parsed_title_location) {
-
+        // Add administrative_area_level_1 only if not already added
+        $someLogic = $lan
+                        && $lan !== $this->parsed_title_location;
+        if ($someLogic) {
             $locations[] = sprintf(
                 '<a href="%2$s">%1$s</a>',
-                $this->administrative_area_level_1,
-                route("lanSingle", ["lan" => $this->administrative_area_level_1])
+                $lan,
+                route("lanSingle", ["lan" => $lan])
             );
         }
 
