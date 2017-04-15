@@ -296,7 +296,7 @@ Route::get('/plats/{plats}', function ($plats) {
         #dd($plats);
         #dd($oneLanName);
         #echo "<br> $plats - $oneLanName - $lanSlug - $platsSluggified";
-        if (ends_with($platsSluggified, $lanSlug)) {
+        if (ends_with($platsSluggified, "-" . $lanSlug)) {
             $foundMatchingLan = true;
             $matchingLanName = $oneLanName;
             $platsWithoutLan = str_replace("-{$lanSlug}", "", $platsSluggified);
@@ -305,7 +305,7 @@ Route::get('/plats/{plats}', function ($plats) {
     }
 
     if ($foundMatchingLan) {
-        #echo "Hittade län som matchade, så visa platser som matchar";
+        #echo "<br><br>Hittade län som matchade, så visa platser som matchar";
         #echo "'{$platsWithoutLan}' från länet {$oneLanName} ($lanSlug)";
 
         // Hämta events där plats är från huvudtabellen
