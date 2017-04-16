@@ -204,7 +204,7 @@ Layout template for web
             <!-- <li><a href="{{ route("page", ["pagename" => "stockholm"]) }}">Polishändelser i Stockholm</a></li> -->
             <li><a href="{{ route("page", ["pagename" => "appar"]) }}">Appar till Iphone, Ipad och Android</a></li>
             <li><a href="{{ route("page", ["pagename" => "api"]) }}">Brottsplatser API</a></li>
-            <li><a href="https://twitter.com/brottsplatser">Följ @Brottsplatser på Twitter</a></li>
+            <li><a href="https://twitter.com/brottsplatser">Följ @Brottsplatser och @stockholmsbrott på Twitter</a></li>
             <li><a href="https://www.facebook.com/brottsplatskartan">Gilla Brottsplatskartan på Facebook</a></li>
             <li><a href="https://stats.uptimerobot.com/ADWQ0TZq1">Upptid/status</a></li>
         </ul>
