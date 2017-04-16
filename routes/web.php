@@ -377,6 +377,9 @@ Route::get('/plats/{plats}', function ($plats) {
 
     $data["breadcrumbs"] = $breadcrumbs;
 
+    // Hämta statistik för platsen
+    // $data["chartImgUrl"] = App\Helper::getStatsImageChartUrl("Stockholms län");
+
     return view('single-plats', $data);
 })->name("platsSingle");
 
