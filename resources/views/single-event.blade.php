@@ -34,4 +34,7 @@ Template för ett event/händelse
         </aside>
 
     @endif
+
+    @include('parts.lan-and-cities')
+
 @endsection

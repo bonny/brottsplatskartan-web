@@ -49,4 +49,6 @@ Template för en ort
 
     @include('parts.follow-us')
 
+    @include('parts.lan-and-cities')
+
 @endsection
