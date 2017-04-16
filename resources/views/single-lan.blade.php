@@ -28,9 +28,11 @@ med översikt med händelser för länet
     </h1>
 
     @if (empty($introtext))
-        <p>
-            Visar alla inrapporterade händelser och brott för {{ $lan }}, direkt från polisen.
-        </p>
+        <div class="Introtext">
+            <p>
+                Visar alla inrapporterade händelser och brott för {{ $lan }}, direkt från polisen.
+            </p>
+        </div>
     @else
         <div class="Introtext">{!! $introtext !!}</div>
     @endif
