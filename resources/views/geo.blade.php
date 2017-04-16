@@ -48,6 +48,10 @@ Template for start page
             Kunde inte avgöra din position.
             <a href="/geo.php">Försök igen</a>
         </p>
+        <p>
+            <i>Nära mig</i> fungerar bäst i din mobiltelefon.
+            Använder du en dator kan du <a href="/lan/">välja län manuellt</a> för att se senaste händelserna i ditt län eller <a href="/">se senaste händelserna i hela Sverige</a>.
+        </p>
     @endif
 
 @endsection
