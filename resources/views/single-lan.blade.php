@@ -65,4 +65,6 @@ med översikt med händelser för länet
 
     @include('parts.follow-us')
 
+    @include('parts.lan-and-cities')
+
 @endsection
