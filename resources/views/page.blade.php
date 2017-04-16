@@ -21,18 +21,21 @@ Template for text pages
 
         <p>Brottsplatskartan har ett API med stöd för både JSON och JSONP.</p>
 
+        <p>Använda gärna API:et men skicka även med en unik <code>app</code>-parameter så vi
+        kan se hur mycket olika tjänster använder API:et.</p>
+
         <p>Ungefär cirka såhär ser URLarna för APIet ut:</p>
 
         <h2>Endpoints</h2>
 
         <h3>Hämta alla län:</h3>
 
-        <p><code>/api/areas</code></p>
+        <p><code>/api/areas?app=unikAppParameter</code></p>
 
         <h3>Hämta händelser</h3>
 
 
-        <p><code>/api/events/</code></p>
+        <p><code>/api/events/?app=unikAppParameter</code></p>
 
         <p>med stöd för parametrar:</p>
 

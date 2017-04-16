@@ -19,7 +19,8 @@ med översikt med händelser för länet
 @section('content')
 
     <h1>
-        Händelser från Polisen i {{ $lan }}
+        Händelser från Polisen i
+        <b>{{ $lan }}</b>
 
         @if (isset($showLanSwitcher))
             <a class="Breadcrumbs__switchLan" href="{{ route("lanOverview") }}">Byt län</a>
