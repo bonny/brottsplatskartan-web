@@ -32,7 +32,7 @@ med översikt med händelser för länet
             Visar alla inrapporterade händelser och brott för {{ $lan }}, direkt från polisen.
         </p>
     @else
-        {!! $introtext !!}
+        <div class="Introtext">{!! $introtext !!}</div>
     @endif
 
     @if ($events)
