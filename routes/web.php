@@ -37,7 +37,10 @@ Route::get('/', function () {
 
     $data["breadcrumbs"] = $breadcrumbs;
 
-    // Hämta statistik för ett län
+    $introtext_key = "introtext-start";
+    $data["introtext"] = Setting::get($introtext_key);
+
+    // Hämta statistik
     $data["chartImgUrl"] = App\Helper::getStatsImageChartUrl("home");
 
     return view('start', $data);
