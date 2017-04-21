@@ -440,7 +440,7 @@ amp-social-share {
     overflow: hidden;
 }
 
-.LanListing__lan {
+.LanListing__title {
     font-size: var(--font-size-large);
     padding-top: var(--default-margin);
     padding-bottom: var(--default-margin-half);
@@ -449,6 +449,7 @@ amp-social-share {
 
 .LanListing__events {
     margin: 0;
+    font-size: var(--font-size-small);
 }
 
 .LanListing__events b {
@@ -820,6 +821,10 @@ amp-social-share {
         float: right;
     }
 
+    .LanListing__lan {
+        float: left;
+        width: 50%;
+    }
 }
 
 /* smått, typ iphone 5, göm lite ikoner och sånt */

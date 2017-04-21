@@ -29,17 +29,21 @@ Template för län-översikt
 
         @foreach ($lan as $oneLan)
 
-            <h2 class="LanListing__lan">
-                <a href="{{ route("lanSingle", ["lan"=>$oneLan->administrative_area_level_1]) }}">
-                    {{ $oneLan->administrative_area_level_1 }}
-                </a>
-            </h2>
+            <div class="LanListing__lan">
 
-            <p class="LanListing__events">
-                <b>{{ $oneLan->numEvents["numEventsToday"] }} händelser</b> idag
-                <br><b>{{ $oneLan->numEvents["last7days"] }} händelser</b> senaste 7 dagarna
-                <br><b>{{ $oneLan->numEvents["last30days"] }}</b> händelser senaste 30 dagarna
-            </p>
+                <h2 class="LanListing__title">
+                    <a href="{{ route("lanSingle", ["lan"=>$oneLan->administrative_area_level_1]) }}">
+                        {{ $oneLan->administrative_area_level_1 }}
+                    </a>
+                </h2>
+
+                <p class="LanListing__events">
+                    <b>{{ $oneLan->numEvents["numEventsToday"] }} händelser</b> idag
+                    <br><b>{{ $oneLan->numEvents["last7days"] }} händelser</b> senaste 7 dagarna
+                    <br><b>{{ $oneLan->numEvents["last30days"] }}</b> händelser senaste 30 dagarna
+                </p>
+
+            </div>
 
         @endforeach
 
