@@ -163,12 +163,42 @@ Route::get('/lan/', function (Request $request) {
     }
 
     // Hämta alla län, grupperat på län och antal
-    $data["lan"] = DB::table('crime_events')
+    $lan = DB::table('crime_events')
                 ->select("administrative_area_level_1")
                 ->groupBy('administrative_area_level_1')
                 ->orderBy('administrative_area_level_1', 'asc')
                 ->where('administrative_area_level_1', "!=", "")
                 ->get();
+
+    // Räkna alla händelser i det här länet för en viss period
+    $lan = $lan->map(function ($item, $key) {
+        // DB::enableQueryLog();
+
+        $numEventsToday = DB::table('crime_events')
+            ->where('administrative_area_level_1', "=", $item->administrative_area_level_1)
+            ->where('created_at', '>', Carbon::now()->subDays(1))
+            ->count();
+
+        $numEvents7Days = DB::table('crime_events')
+            ->where('administrative_area_level_1', "=", $item->administrative_area_level_1)
+            ->where('created_at', '>', Carbon::now()->subDays(7))
+            ->count();
+
+        $numEvents30Days = DB::table('crime_events')
+            ->where('administrative_area_level_1', "=", $item->administrative_area_level_1)
+            ->where('created_at', '>', Carbon::now()->subDays(30))
+            ->count();
+
+        $item->numEvents = [
+            "numEventsToday" => $numEventsToday,
+            "last7days" => $numEvents7Days,
+            "last30days" => $numEvents30Days,
+        ];
+
+        return $item;
+    });
+
+    $data["lan"] = $lan;
 
     $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs;
     $breadcrumbs->addCrumb('Hem', '/');

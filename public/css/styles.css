@@ -4,6 +4,7 @@
     --color-link: #15c; /* same colors as lighthouse */
     --default-margin: 1rem;
     --default-margin-half: calc(var(--default-margin)/2);
+    --font-size-large: 1.5rem;
     --font-size-small: .9rem;
 }
 
@@ -439,7 +440,13 @@ amp-social-share {
     overflow: hidden;
 }
 
-.LanListing__lan,
+.LanListing__lan {
+    font-size: var(--font-size-large);
+    padding-top: var(--default-margin-half);
+    padding-bottom: var(--default-margin-half);
+    margin: 0;
+}
+
 .PlatsListing__plats {
     width: 50%;
     float: left;
