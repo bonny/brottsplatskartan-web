@@ -33,6 +33,7 @@ Route::get('/', function () {
 
     $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs;
     $breadcrumbs->addCrumb('Hem', '/');
+    $breadcrumbs->addCrumb('Län', route("lanOverview"));
     $breadcrumbs->addCrumb('Alla län', route("lanOverview"));
 
     $data["breadcrumbs"] = $breadcrumbs;
