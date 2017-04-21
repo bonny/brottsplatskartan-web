@@ -442,9 +442,17 @@ amp-social-share {
 
 .LanListing__lan {
     font-size: var(--font-size-large);
-    padding-top: var(--default-margin-half);
+    padding-top: var(--default-margin);
     padding-bottom: var(--default-margin-half);
     margin: 0;
+}
+
+.LanListing__events {
+    margin: 0;
+}
+
+.LanListing__events b {
+    font-weight: 500;
 }
 
 .PlatsListing__plats {

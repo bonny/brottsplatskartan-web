@@ -35,11 +35,10 @@ Template för län-översikt
                 </a>
             </h2>
 
-            <p>
-                Antal händelser:
-                <br>idag: {{ $oneLan->numEvents["numEventsToday"] }}
-                <br>senaste 7 dagarna: {{ $oneLan->numEvents["last7days"] }}
-                <br>senaste 30 dagarna: {{ $oneLan->numEvents["last30days"] }}
+            <p class="LanListing__events">
+                <b>{{ $oneLan->numEvents["numEventsToday"] }} händelser</b> idag
+                <br><b>{{ $oneLan->numEvents["last7days"] }} händelser</b> senaste 7 dagarna
+                <br><b>{{ $oneLan->numEvents["last30days"] }}</b> händelser senaste 30 dagarna
             </p>
 
         @endforeach
