@@ -70,7 +70,7 @@
             "shortName" => "Uppsala"
         ],
         [
-            "name" => "Varmland County Värmlands län",
+            "name" => "Värmlands län",
             "shortName" => "Värmland"
         ],
         [
