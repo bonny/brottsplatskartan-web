@@ -174,20 +174,35 @@ Route::get('/lan/', function (Request $request) {
     $lan = $lan->map(function ($item, $key) {
         // DB::enableQueryLog();
 
-        $numEventsToday = DB::table('crime_events')
-            ->where('administrative_area_level_1', "=", $item->administrative_area_level_1)
-            ->where('created_at', '>', Carbon::now()->subDays(1))
-            ->count();
+        $cacheKey = "lan-stats-today-" . $item->administrative_area_level_1;
+        $numEventsToday = Cache::remember($cacheKey, 30, function () use ($item) {
+            $numEventsToday = DB::table('crime_events')
+                ->where('administrative_area_level_1', "=", $item->administrative_area_level_1)
+                ->where('created_at', '>', Carbon::now()->subDays(1))
+                ->count();
 
-        $numEvents7Days = DB::table('crime_events')
-            ->where('administrative_area_level_1', "=", $item->administrative_area_level_1)
-            ->where('created_at', '>', Carbon::now()->subDays(7))
-            ->count();
+            return $numEventsToday;
+        });
 
-        $numEvents30Days = DB::table('crime_events')
-            ->where('administrative_area_level_1', "=", $item->administrative_area_level_1)
-            ->where('created_at', '>', Carbon::now()->subDays(30))
-            ->count();
+        $cacheKey = "lan-stats-7days-" . $item->administrative_area_level_1;
+        $numEvents7Days = Cache::remember($cacheKey, 30, function () use ($item) {
+            $numEvents7Days = DB::table('crime_events')
+                ->where('administrative_area_level_1', "=", $item->administrative_area_level_1)
+                ->where('created_at', '>', Carbon::now()->subDays(7))
+                ->count();
+
+            return $numEvents7Days;
+        });
+
+        $cacheKey = "lan-stats-30days-" . $item->administrative_area_level_1;
+        $numEvents30Days = Cache::remember($cacheKey, 30, function () use ($item) {
+            $numEvents30Days = DB::table('crime_events')
+                ->where('administrative_area_level_1', "=", $item->administrative_area_level_1)
+                ->where('created_at', '>', Carbon::now()->subDays(30))
+                ->count();
+
+            return $numEvents30Days;
+        });
 
         $item->numEvents = [
             "numEventsToday" => $numEventsToday,
