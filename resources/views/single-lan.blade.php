@@ -27,15 +27,21 @@ med översikt med händelser för länet
         @endif
     </h1>
 
-    @if (empty($introtext))
-        <div class="Introtext">
+    <div class="Introtext">
+
+        @if (empty($introtext))
             <p>
                 Visar alla inrapporterade händelser och brott för {{ $lan }}, direkt från polisen.
             </p>
-        </div>
-    @else
-        <div class="Introtext">{!! $introtext !!}</div>
-    @endif
+        @else
+            {!! $introtext !!}
+        @endif
+
+        <p>
+            Idag har <b>{{ $lanInfo->numEvents["today"] }}</b> händelser rapporterats in.
+        </p>
+
+    </div>
 
     @if ($events)
 

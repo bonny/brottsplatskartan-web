@@ -162,57 +162,7 @@ Route::get('/lan/', function (Request $request) {
         return redirect($redirect_to, 301);
     }
 
-    // Hämta alla län, grupperat på län och antal
-    $lan = DB::table('crime_events')
-                ->select("administrative_area_level_1")
-                ->groupBy('administrative_area_level_1')
-                ->orderBy('administrative_area_level_1', 'asc')
-                ->where('administrative_area_level_1', "!=", "")
-                ->get();
-
-    // Räkna alla händelser i det här länet för en viss period
-    $lan = $lan->map(function ($item, $key) {
-        // DB::enableQueryLog();
-
-        $cacheKey = "lan-stats-today-" . $item->administrative_area_level_1;
-        $numEventsToday = Cache::remember($cacheKey, 30, function () use ($item) {
-            $numEventsToday = DB::table('crime_events')
-                ->where('administrative_area_level_1', "=", $item->administrative_area_level_1)
-                ->where('created_at', '>', Carbon::now()->subDays(1))
-                ->count();
-
-            return $numEventsToday;
-        });
-
-        $cacheKey = "lan-stats-7days-" . $item->administrative_area_level_1;
-        $numEvents7Days = Cache::remember($cacheKey, 30, function () use ($item) {
-            $numEvents7Days = DB::table('crime_events')
-                ->where('administrative_area_level_1', "=", $item->administrative_area_level_1)
-                ->where('created_at', '>', Carbon::now()->subDays(7))
-                ->count();
-
-            return $numEvents7Days;
-        });
-
-        $cacheKey = "lan-stats-30days-" . $item->administrative_area_level_1;
-        $numEvents30Days = Cache::remember($cacheKey, 30, function () use ($item) {
-            $numEvents30Days = DB::table('crime_events')
-                ->where('administrative_area_level_1', "=", $item->administrative_area_level_1)
-                ->where('created_at', '>', Carbon::now()->subDays(30))
-                ->count();
-
-            return $numEvents30Days;
-        });
-
-        $item->numEvents = [
-            "numEventsToday" => $numEventsToday,
-            "last7days" => $numEvents7Days,
-            "last30days" => $numEvents30Days,
-        ];
-
-        return $item;
-    });
-
+    $lan = App\Helper::getAllLanWithStats();
     $data["lan"] = $lan;
 
     $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs;
@@ -496,6 +446,8 @@ Route::get('/lan/{lan}', function ($lan) {
 
     // Hämta statistik för ett län
     $data["lanChartImgUrl"] = App\Helper::getStatsImageChartUrl($lan);
+
+    $data["lanInfo"] = App\Helper::getSingleLanWithStats($lan);
 
     return view('single-lan', $data);
 })->name("lanSingle");
