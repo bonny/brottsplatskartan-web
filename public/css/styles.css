@@ -71,7 +71,7 @@ a:hover {
     top: 0;
     left: 0;
     right: 0;
-    z-index: 5;
+    z-index: 15;
     padding: var(--default-margin);
     box-shadow: 2px 1px 1px rgba(0,0,0,0.15);
     font-size: .75rem;
@@ -848,4 +848,3 @@ amp-social-share {
     }
 
 }
-
