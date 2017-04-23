@@ -53,6 +53,7 @@ class TweetCrimes extends Command
         $daysBack = 2;
         $date = strTotime("today -{$daysBack} days");
         $this->line("Fetching all events since {$daysBack} days back (since " .  date("Y-m-d H:i", $date) . ")");
+        exit;
 
         $events = CrimeEvent::select("*")
                             ->orderBy("created_at", "desc")
@@ -94,11 +95,11 @@ class TweetCrimes extends Command
             $statusAfterShortened = mb_substr($statusBeforeShortened, 0, $statusAllowedLength);
             $statusAfterShortened = trim($statusAfterShortened);
 
-            echo "\n\nparsed_title:\n" . $event->parsed_title;
-            echo "\n\nlocation_string:\n" . $event->getLocationString();
-            echo "\n\nmeta desc:\n" . $event->getMetaDescription(1000);
-            echo "\n\nstatusAfterShortened:\n" . $statusAfterShortened;
-            echo "\n\n";
+            #echo "\n\nparsed_title:\n" . $event->parsed_title;
+            #echo "\n\nlocation_string:\n" . $event->getLocationString();
+            #echo "\n\nmeta desc:\n" . $event->getMetaDescription(1000);
+            #echo "\n\nstatusAfterShortened:\n" . $statusAfterShortened;
+            #echo "\n\n";
             #exit;
 
             // calculate how long teaser we can have
