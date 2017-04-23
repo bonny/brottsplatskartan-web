@@ -220,5 +220,4 @@ class Helper
 
         return $clean;
     }
-
 }
