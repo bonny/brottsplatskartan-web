@@ -77,20 +77,38 @@ class TweetCrimes extends Command
             // Inga personer skadades. Ärendet kommer att utredas vidare.
             // parsed_title: Trafikolycka
 
-            $hashTags = "#polisen #brott";
-            $hashTagsLength = strlen($hashTags);
+            #$hashTags = "#polisen #brott";
+            $hashTags = "";
+            $hashTagsLength = mb_strlen($hashTags);
+
+            $maxTweetLength = 140;
+            // the url counts as 22 chars + 1 for the space before it
+            $urlLength = 23;
+
+            $statusAllowedLength = $maxTweetLength - $hashTagsLength - $urlLength;
+
+            // Tweet text can be hashtags length - link length
+            $statusBeforeShortened = trim($event->getLocationString()) . ": " . trim($event->getMetaDescription(1000));
+
+            $statusAfterShortened = mb_substr($statusBeforeShortened, 0, $statusAllowedLength);
+
+            echo "\n\nparsed_title:\n" . $event->parsed_title;
+            echo "\n\nlocation_string:\n" . $event->getLocationString();
+            echo "\n\nmeta desc:\n" . $event->getMetaDescription(1000);
+            echo "\n\nstatusAfterShortened:\n" . $statusAfterShortened;
+            echo "\n\n";
+            #exit;
 
             // calculate how long teaser we can have
-            // the url counts as 22 chars
-            $content_length_before_teaser = 22 + mb_strlen($event->parsed_title) + mb_strlen($event->getLocationString());
+            #$content_length_before_teaser = 22 + mb_strlen($event->parsed_title) + mb_strlen($event->getLocationString());
             // - n because new lines + getMetaDesc adds "..." (which we change to "…")
-            $teaser_can_be_in_length = 140 - $content_length_before_teaser - $hashTagsLength - 7;
+            #$teaser_can_be_in_length = 140 - $content_length_before_teaser - $hashTagsLength - 7;
 
-            if ($teaser_can_be_in_length <= 0) {
-                $teaser_can_be_in_length = 100;
-            }
+            #if ($teaser_can_be_in_length <= 0) {
+            #    $teaser_can_be_in_length = 100;
+            #}
 
-            $tweetMessage = sprintf(
+            /*$tweetMessage = sprintf(
                 '
 %2$s, %3$s
 %4$s %5$s
@@ -102,12 +120,15 @@ class TweetCrimes extends Command
                 $event->getMetaDescription($teaser_can_be_in_length), // 4
                 $hashTags // 5
             );
+            */
+
+            $tweetMessage = $statusAfterShortened . " $url";
 
             $tweetMessage = trim($tweetMessage);
             $tweetMessage = str_replace("...", "…", $tweetMessage);
 
             // My logic above is apparently completely wrong so just cut it to 140 chars here..
-            $tweetMessage = mb_substr($tweetMessage, 0, 140);
+            // $tweetMessage = mb_substr($tweetMessage, 0, 140);
 
             if (ENV("APP_ENV") == "local") {
                 $tweetMessage = str_replace(
