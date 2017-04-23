@@ -85,12 +85,14 @@ class TweetCrimes extends Command
             // the url counts as 24 chars + 1 for the space before it
             $urlLength = 24;
 
-            $statusAllowedLength = $maxTweetLength - $hashTagsLength - $urlLength;
+            // minus 1 "just to be sure"
+            $statusAllowedLength = $maxTweetLength - $hashTagsLength - $urlLength - 1;
 
             // Tweet text can be hashtags length - link length
             $statusBeforeShortened = trim($event->getLocationString()) . ": " . trim($event->getMetaDescription(1000));
 
             $statusAfterShortened = mb_substr($statusBeforeShortened, 0, $statusAllowedLength);
+            $statusAfterShortened = trim($statusAfterShortened);
 
             echo "\n\nparsed_title:\n" . $event->parsed_title;
             echo "\n\nlocation_string:\n" . $event->getLocationString();
