@@ -154,6 +154,7 @@ if $single is set then larger image
         --}}
     @else
         <div class="Event__share">
+            <p class="Event__shareTitle">Dela händelsen:</p>
             <amp-social-share type="twitter"></amp-social-share>
             <amp-social-share type="facebook" data-param-app_id="105986239475133"></amp-social-share>
             <amp-social-share type="email"></amp-social-share>

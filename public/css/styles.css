@@ -319,6 +319,12 @@ a:hover {
     padding-top: 1rem;
 }
 
+.Event__shareTitle {
+    color: #666;
+    margin-top: 0;
+    font-size: var(--font-size-small);
+}
+
 amp-social-share {
     margin-right: .25rem;
 }
