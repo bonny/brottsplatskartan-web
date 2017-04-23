@@ -16,7 +16,6 @@ Template för ett event/händelse
 
 @section('content')
     @include('parts.crimeevent', ["single" => true])
-    @include('parts.follow-us')
 @endsection
 
 @section('sidebar')
@@ -34,6 +33,8 @@ Template för ett event/händelse
         </aside>
 
     @endif
+
+    @include('parts.follow-us')
 
     @include('parts.lan-and-cities')
 

@@ -50,3 +50,10 @@ Template för län-översikt
     </div>
 
 @endsection
+
+@section('sidebar')
+
+    @include('parts.follow-us')
+    @include('parts.lan-and-cities')
+
+@endsection
