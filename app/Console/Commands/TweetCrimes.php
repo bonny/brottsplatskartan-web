@@ -33,7 +33,6 @@ class TweetCrimes extends Command
         // Default command line time limit i 0 = forever.
         // We limit this because something on the server is hanging, perhaps this..
         set_time_limit(45);
-
     }
 
     /**
@@ -67,7 +66,6 @@ class TweetCrimes extends Command
         $this->line("Found {$events->count()} events");
 
         foreach ($events as $event) {
-
             $this->info("\n{$event->title} (" . $event->getKey() . ")");
 
             $url = $event->getPermalink(true);
@@ -75,7 +73,8 @@ class TweetCrimes extends Command
             // description:
             // Trafikolycka 4 fordon Norrmalmsgatan.
             // parsed_content:
-            // På Norrmalmsgatan skedde en trafikolycka där 4 fordon var inblandade. Inga personer skadades. Ärendet kommer att utredas vidare.
+            // På Norrmalmsgatan skedde en trafikolycka där 4 fordon var inblandade. 
+            // Inga personer skadades. Ärendet kommer att utredas vidare.
             // parsed_title: Trafikolycka
 
             $hashTags = "#polisen #brott";
@@ -108,44 +107,54 @@ class TweetCrimes extends Command
             $tweetMessage = str_replace("...", "…", $tweetMessage);
 
             if (ENV("APP_ENV") == "local") {
-
-                $tweetMessage = str_replace('https://brottsplatskartan.dev','https://brottsplatskartan.se', $tweetMessage);
-
+                $tweetMessage = str_replace(
+                    'https://brottsplatskartan.dev',
+                    'https://brottsplatskartan.se',
+                    $tweetMessage
+                );
             }
 
             //$this->line("teaser_can_be_in_length: $teaser_can_be_in_length");
             $this->line("Tweet will be for ID {$event->getKey()}:\n{$tweetMessage}");
 
-            // comment out this to just test...
+            /*
+            The number of digits after the decimal separator passed to lat (up
+            to 8) is tracked so that when the lat is returned in a status object
+            it will have the same number of digits after the decimal separator.
+
+            Use a decimal point as the separator (and not a decimal comma) for
+            the latitude and the longitude - usage of a decimal comma will cause
+            the geo-tagged portion of the status update to be dropped.
+            */
+            $lat = $event->location_lat;
+            $long = $event->location_lng;
 
             // Do the tweet
             if (ENV("APP_ENV") == "local") {
-                
                 // no tweet on local
                 $this->line("No actual tweet because on local");
-
             } else {
-
                 // use config for global account first
                 \Twitter::reconfig([
-                    'consumer_key' => getenv('TWITTER_CONSUMER_KEY'), 
-                    'consumer_secret' => getenv('TWITTER_CONSUMER_SECRET'), 
-                    'token' => getenv('TWITTER_ACCESS_TOKEN'), 
-                    'secret' => getenv('TWITTER_ACCESS_TOKEN_SECRET'), 
+                    'consumer_key' => getenv('TWITTER_CONSUMER_KEY'),
+                    'consumer_secret' => getenv('TWITTER_CONSUMER_SECRET'),
+                    'token' => getenv('TWITTER_ACCESS_TOKEN'),
+                    'secret' => getenv('TWITTER_ACCESS_TOKEN_SECRET'),
                 ]);
 
                 // Do the tweet!
                 $tweetResult = \Twitter::postTweet([
                     'status' => $tweetMessage,
-                    'format' => 'json'
+                    'format' => 'json',
+                    "lat" => $lat,
+                    "long" => $long
                 ]);
-
             }
 
             #exit;
 
             /*
-            
+
             tweet to Stockholm twitter account
 
             twitter::reconfig to switch
@@ -161,37 +170,32 @@ class TweetCrimes extends Command
             }
 
             if ($isStockholm) {
-            
                 // $this->line("administrative_area_level_1: " . $event->administrative_area_level_1);
 
                 if (ENV("APP_ENV") == "local") {
-                    
                     // no tweet on local
                     $this->line("No actual tweet to stockholm because on local");
-
                 } else {
-
                     // switch account to stockholm
                     \Twitter::reconfig([
-                        'consumer_key' => getenv('STOCKHOLMBROTT_TWITTER_CONSUMER_KEY'), 
-                        'consumer_secret' => getenv('STOCKHOLMBROTT_TWITTER_CONSUMER_SECRET'), 
-                        'token' => getenv('STOCKHOLMBROTT_TWITTER_ACCESS_TOKEN'), 
-                        'secret' => getenv('STOCKHOLMBROTT_TWITTER_ACCESS_TOKEN_SECRET'), 
+                        'consumer_key' => getenv('STOCKHOLMBROTT_TWITTER_CONSUMER_KEY'),
+                        'consumer_secret' => getenv('STOCKHOLMBROTT_TWITTER_CONSUMER_SECRET'),
+                        'token' => getenv('STOCKHOLMBROTT_TWITTER_ACCESS_TOKEN'),
+                        'secret' => getenv('STOCKHOLMBROTT_TWITTER_ACCESS_TOKEN_SECRET'),
                     ]);
 
                     $tweetResult = \Twitter::postTweet([
                         'status' => $tweetMessage,
-                        'format' => 'json'
+                        'format' => 'json',
+                        "lat" => $lat,
+                        "long" => $long
                     ]);
-
                 }
-
             }
 
             // after tweetet
             $event->tweeted = true;
             $event->save();
-
         }
 
         /*
@@ -204,6 +208,5 @@ class TweetCrimes extends Command
         */
 
         // return Twitter::postTweet(['status' => 'Laravel is beautiful', 'format' => 'json']);
-
     }
 }
