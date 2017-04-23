@@ -106,6 +106,9 @@ class TweetCrimes extends Command
             $tweetMessage = trim($tweetMessage);
             $tweetMessage = str_replace("...", "…", $tweetMessage);
 
+            // My logic above is apparently completely wrong so just cut it to 140 chars here..
+            $tweetMessage = mb_substr($tweetMessage, 0, 140);
+
             if (ENV("APP_ENV") == "local") {
                 $tweetMessage = str_replace(
                     'https://brottsplatskartan.dev',
