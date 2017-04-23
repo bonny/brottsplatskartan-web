@@ -82,8 +82,8 @@ class TweetCrimes extends Command
             $hashTagsLength = mb_strlen($hashTags);
 
             $maxTweetLength = 140;
-            // the url counts as 22 chars + 1 for the space before it
-            $urlLength = 23;
+            // the url counts as 24 chars + 1 for the space before it
+            $urlLength = 24;
 
             $statusAllowedLength = $maxTweetLength - $hashTagsLength - $urlLength;
 
