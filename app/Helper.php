@@ -93,15 +93,21 @@ class Helper
      */
     public static function getHomeStats($lan)
     {
-        $stats = [];
+        $stats = [
+            "numEventsPerDay" => null
+        ];
 
-        $stats["numEventsPerDay"] = DB::table('crime_events')
-                       ->select(DB::raw('date_format(created_at, "%Y-%m-%d") as YMD'), DB::raw('count(*) AS count'))
-                       // ->where('administrative_area_level_1', $lan)
-                       ->groupBy('YMD')
-                       ->orderBy('YMD', 'desc')
-                       ->limit(14)
-                       ->get();
+        $cacheKey = "lan-homestats-" . $lan;
+        $stats["numEventsPerDay"] = Cache::remember($cacheKey, 5, function () use ($lan) {
+            $numEventsPerDay = DB::table('crime_events')
+                   ->select(DB::raw('date_format(created_at, "%Y-%m-%d") as YMD'), DB::raw('count(*) AS count'))
+                   ->groupBy('YMD')
+                   ->orderBy('YMD', 'desc')
+                   ->limit(14)
+                   ->get();
+            return $numEventsPerDay;
+        });
+
         return $stats;
     }
 

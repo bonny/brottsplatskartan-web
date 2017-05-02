@@ -19,7 +19,7 @@ Template for start page
 
     {{--<h1>Brottsplatskartan visar var brotten sker</h1>--}}
 
-    <h1>Senaste polishändelserna</h1>
+    <h1>Senaste polishändelserna i Sverige</h1>
 
     @if (isset($showLanSwitcher))
         <p class="Breadcrumbs__switchLan__belowTitle">
@@ -34,6 +34,9 @@ Template for start page
     @endif
 
     @if ($events)
+
+        <p><b>Idag har {{$numEventsToday}} händelser rapporterats in från Polisen.</b><p>
+        <p>Total finns det på Brottsplatskartan <b>{{$events->total()}} händelser</b>.</p>
 
         <div class="Events Events--overview">
 

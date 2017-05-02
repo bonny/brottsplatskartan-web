@@ -44,6 +44,17 @@ Route::get('/', function () {
     // Hämta statistik
     $data["chartImgUrl"] = App\Helper::getStatsImageChartUrl("home");
 
+    // Total antal händelser
+    $data["events"]->total();
+
+    // Händelser idag
+    #$stats = App\Helper::getHomeStats('home');
+    #dd($stats);
+
+    $data["numEventsToday"] = DB::table('crime_events')
+                    ->where('created_at', '>', Carbon::now()->subDays(1))
+                    ->count();
+
     return view('start', $data);
 })->name("start");
 
