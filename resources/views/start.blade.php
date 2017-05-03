@@ -36,7 +36,7 @@ Template for start page
     @if ($events)
 
         <p><b>Idag har {{$numEventsToday}} händelser rapporterats in från Polisen.</b><p>
-        <p>Total finns det på Brottsplatskartan <b>{{$events->total()}} händelser</b>.</p>
+        <p>Totalt finns det på Brottsplatskartan <b>{{$events->total()}} händelser</b>.</p>
 
         <div class="Events Events--overview">
 

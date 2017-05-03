@@ -21,9 +21,9 @@ Template for start page
     </h1>
 
     @if ($events)
-
+        <!-- Antal brott hämtade: {{ $events->count() }} -->
         <p>
-            Visar de {{ $events->count() }} senaste brotten som rapporterats inom ungefär {{ $nearbyInKm }} km från din plats.
+            Visar de senaste brotten som rapporterats inom ungefär {{ $nearbyInKm }} km från din plats.
             Nyaste brotten visas först.
         </p>
 
