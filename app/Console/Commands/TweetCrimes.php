@@ -53,7 +53,6 @@ class TweetCrimes extends Command
         $daysBack = 2;
         $date = strTotime("today -{$daysBack} days");
         $this->line("Fetching all events since {$daysBack} days back (since " .  date("Y-m-d H:i", $date) . ")");
-        exit;
 
         $events = CrimeEvent::select("*")
                             ->orderBy("created_at", "desc")
