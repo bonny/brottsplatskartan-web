@@ -20,7 +20,7 @@ Template för sök
     </form>
 
     @if (isset($locations) && $locations->count())
-        <p><b>Platser</b> som innehåller <em>"{{ $s }}"</em></p>
+        <p><b>Platser</b> som matchar <em>"{{ $s }}"</em></p>
         <div class="SearchLocations">
             <ul>
                 @foreach ($locations as $location)
@@ -35,7 +35,7 @@ Template för sök
     @endif
 
     @if (isset($events2) && $events2->count())
-        <p>2: Hittade <b>{{ $events2->total() }} sidor</b> som innehåller <em>"{{ $s }}"</em></p>
+        <p>2: Hittade <b>{{ $events2->total() }} sidor</b> som matchar <em>"{{ $s }}"</em></p>
         <div class="Events Events--overview">
             @foreach ($events2 as $event)
                 @include('parts.crimeevent', ["overview" => true])

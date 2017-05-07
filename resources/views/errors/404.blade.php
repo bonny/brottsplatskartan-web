@@ -13,7 +13,7 @@ Template för 404
     <p>Vi kunde tyvärr inte hitta någon sida på den här adressen.</p>
 
     <p>För att fortsätta så kan du <a href="/">gå till startsidan</a> för att se
-        de senaste brotten i hela Sverige eller så kan du välja ett län nedan för att se senaste brotten i det länet.</p>
+        de senaste brotten i hela Sverige.</p>
 
     {{--
     <h2>Senaste händelserna</h2>
@@ -30,19 +30,23 @@ Template för 404
     --}}
 
     <!-- <h2>Visa händelser från Polisen för ditt län</h2> -->
+    @if (!empty($lan))
+        <div class="LanListing">
 
-    <div class="LanListing">
+            <p>Du kan också fortsätta genom att välja ett län nedan för att se senaste brotten i det länet.</p>
 
-    @foreach ($lan as $oneLan)
+            @foreach ($lan as $oneLan)
 
-        <h2 class="LanListing__lan">
-            <a href="{{ route("lanSingle", ["lan"=>$oneLan->administrative_area_level_1]) }}">
-                {{ $oneLan->administrative_area_level_1 }}
-            </a>
-        </h2>
+                <h2 class="LanListing__lan">
+                    <a href="{{ route("lanSingle", ["lan"=>$oneLan->administrative_area_level_1]) }}">
+                        {{ $oneLan->administrative_area_level_1 }}
+                    </a>
+                </h2>
 
-    @endforeach
+            @endforeach
 
-    </div>
+        </div>
+
+    @endif
 
 @endsection

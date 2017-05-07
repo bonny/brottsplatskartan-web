@@ -19,8 +19,7 @@ class RedirectOldPages
 
         $response = $next($request);
 
-        if ( 404 == $response->status() ) {
-
+        if (404 == $response->status()) {
             // for example 'http://brottsplatskartan.dev/lan/gotlands-lan'
             $url = $request->Url();
 
@@ -36,7 +35,6 @@ class RedirectOldPages
             // redirect gamla län-urls, slutar med 'lan/gotlands-lan'
             // hel url är t.ex. 'www.brottsplatskartan.se/lan/stockholms-lan'
             if (starts_with($path, "lan/") && ends_with($path, "-lan")) {
-
                 // gammal län-url
 
                 // oldLan = 'gotlands-lan'
@@ -70,15 +68,11 @@ class RedirectOldPages
                 #echo "redirect to: " . $arrOldToNewLan[$oldLan];
 
                 return redirect(route("lanSingle", ["lan" => $arrOldToNewLan[$oldLan]]), 301);
-
             } else {
-
                 // echo "<br>404 found for<br>url $url<br>$path";
-
             }
 
             #return redirect("/lan/Uppsala län/");
-
         }
 
         return $response;
