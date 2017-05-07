@@ -563,6 +563,8 @@ Route::get('/sok/', function (Request $request) {
         ])->get();
 
         $foundLocations = [];
+
+        // Behåll bara unika platser
         $locations = $locations->filter(function ($location) use (& $foundLocations) {
             $name = ucwords($location->name);
 
@@ -573,6 +575,12 @@ Route::get('/sok/', function (Request $request) {
             $foundLocations[] = $name;
             return true;
         });
+
+        // Se till att platserna inte blir för många
+        $maxLocationsToShow = 10;
+        if (sizeof($locations) > $maxLocationsToShow) {
+            $locations = $locations->slice(0, $maxLocationsToShow);
+        }
 
         // Sök med hjälp av Eloquence
         $events = CrimeEvent::search($s, [
