@@ -14,7 +14,6 @@
         "creitive/laravel5-breadcrumbs": "^2.0",
         "thujohn/twitter": "~2.0",
         "unisharp/laravel-settings": "^1.0",
-        // "teamtnt/laravel-scout-tntsearch-driver": "^3.0",
         "sofa/eloquence": "~5.4"
     },
     "require-dev": {
