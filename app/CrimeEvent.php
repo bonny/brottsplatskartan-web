@@ -6,9 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use App\Http\Controllers\FeedParserController;
 use App\Http\Controllers\FeedController;
+// use Laravel\Scout\Searchable;
+use Sofa\Eloquence\Eloquence;
 
 class CrimeEvent extends Model
 {
+
+    // use Searchable;
+    use Eloquence;
 
     protected $fillable = [
         'title',
@@ -29,7 +34,6 @@ class CrimeEvent extends Model
         'scanned_for_locations',
         'geocoded'
     ];
-
 
     /**
      * Get the comments for the blog post.
@@ -131,16 +135,14 @@ class CrimeEvent extends Model
      * i.e. when the crime is posted by polisen
      * the actual event may have happened much earlier
      */
-    public function getPubDateISO8601() {
-
+    public function getPubDateISO8601()
+    {
         return Carbon::createFromTimestamp($this->pubdate)->toIso8601String();
-
     }
 
-    public function getPubDateFormatted($format = '%A %d %B %Y') {
-
+    public function getPubDateFormatted($format = '%A %d %B %Y')
+    {
         return Carbon::createFromTimestamp($this->pubdate)->formatLocalized($format);
-
     }
 
     public function getPubDateFormattedForHumans() {
@@ -496,14 +498,14 @@ class CrimeEvent extends Model
      * ca 0.005 - 0.06 = typ längre gata
      * mindre än det = jäkla nära
      */
-    public function getViewPortSizeAsString() {
+    public function getViewPortSizeAsString()
+    {
 
         $size = $this->getViewportSize();
 
         $sizeAsString = "";
 
         switch ($size) {
-
             case $size > 20:
                 $sizeAsString = "veryfar";
                 break;
@@ -512,25 +514,23 @@ class CrimeEvent extends Model
                 $sizeAsString = "far";
                 break;
 
-             case $size > 0.8:
+            case $size > 0.8:
                 $sizeAsString = "lan";
                 break;
 
-             case $size > 0.1:
+            case $size > 0.1:
                 $sizeAsString = "town";
                 break;
 
-             case $size > 0.05:
+            case $size > 0.05:
                 $sizeAsString = "street";
                 break;
 
             default:
                 $sizeAsString = "closest";
-
         }
 
         return $sizeAsString;
-
     }
 
     /**
@@ -538,7 +538,8 @@ class CrimeEvent extends Model
      *
      * @return array
      */
-    protected function maybeAddDebugData(\Illuminate\Http\Request $request, CrimeEvent $event) {
+    protected function maybeAddDebugData(\Illuminate\Http\Request $request, CrimeEvent $event)
+    {
 
         $data = [];
 
@@ -548,8 +549,7 @@ class CrimeEvent extends Model
             return $data;
         }
 
-        if ( in_array("getLocations", $debugActions) ) {
-
+        if (in_array("getLocations", $debugActions)) {
             // re-get location data from event, i.e find street names again and retun some debug
             $FeedParserController = new FeedParserController;
             $FeedController = new FeedController($FeedParserController);
@@ -559,14 +559,13 @@ class CrimeEvent extends Model
 
             // get the url that is sent to google to geocode this item
             $data["itemGeocodeURL"] = $FeedController->getGeocodeURL($event->getKey());
-
         }
 
         return $data;
-
     }
 
-    public function getSingleEventTitle() {
+    public function getSingleEventTitle()
+    {
 
         $title = "";
         $titleParts = [];
@@ -586,7 +585,6 @@ class CrimeEvent extends Model
         $title = implode(", ", $titleParts);
 
         return $title;
-
     }
 
     /**
@@ -595,12 +593,12 @@ class CrimeEvent extends Model
      * useful when locations have been added or removed, so geocode
      * of item may change
      */
-    public function maybeClearLocationData(\Illuminate\Http\Request $request) {
+    public function maybeClearLocationData(\Illuminate\Http\Request $request)
+    {
 
         $debugActions = (array) $request->input("debugActions");
 
         if (in_array("clearLocation", $debugActions)) {
-
             $FeedParserController = new FeedParserController;
             $FeedController = new FeedController($FeedParserController);
 
@@ -624,9 +622,7 @@ class CrimeEvent extends Model
             $data["itemGeocodeURL"] = $FeedController->getGeocodeURL($this->getKey());
 
             return $data;
-
         }
-
     }
 
     /**
@@ -635,14 +631,96 @@ class CrimeEvent extends Model
      *
      * @return bool
      */
-    public function shouldShowSourceLink() {
+    public function shouldShowSourceLink()
+    {
 
         $pubDate = Carbon::createFromTimestamp(strtotime($this->parsed_date));
         $pubDatePlusSomeTime = $pubDate->addWeek();
 
         // if pubdate + 1 week is more than today then ok to show
         return  $pubDatePlusSomeTime->timestamp > time();
-
     }
 
+    /**
+     * Get the indexable data array for the model.
+     *
+     * @return array
+     */
+    public function toSearchableArray()
+    {
+        $array = $this->toArray();
+
+        // Remove some things we don't wanna search
+        // Add some things we wanna search
+        /*
+        array:26 [
+          "id" => 15093
+          "created_at" => "2017-05-06 09:44:18"
+          "updated_at" => "2017-05-06 16:00:19"
+          "title" => "2017-05-06 00:11, Brand, Sollentuna"
+          "geocoded" => 0
+          "scanned_for_locations" => 0
+          "description" => "Räddningstjänsten släckte lägenhetsbrand i Helenlund."
+          "permalink" => "http://polisen.se/Stockholms_lan/Aktuellt/Handelser/Stockholms-lan/2017-05-06-0011-Brand-Sollentuna/"
+          "pubdate" => "1494053478"
+          "pubdate_iso8601" => "2017-05-06T08:51:18+0200"
+          "md5" => "dbe0978ee2d2b646fcff06df023f8a2d"
+          "parsed_date" => "2017-05-06 00:11:00"
+          "parsed_title_location" => "Sollentuna"
+          "parsed_content" => null
+          "location_lng" => null
+          "location_lat" => null
+          "parsed_title" => "Brand"
+          "parsed_teaser" => null
+          "location_geometry_type" => null
+          "administrative_area_level_1" => null
+          "administrative_area_level_2" => null
+          "viewport_northeast_lat" => null
+          "viewport_northeast_lng" => null
+          "viewport_southwest_lat" => null
+          "viewport_southwest_lng" => null
+          "tweeted" => 0
+        ]
+        */
+
+        $arrKeysToRemove = [
+            "geocoded",
+            "scanned_for_locations",
+            "permalink",
+            "md5",
+            "location_geometry_type",
+            "tweeted",
+            "locations", // is array, gives mb_strtolower() expects parameter 1 to be string, array given
+            "viewport_northeast_lat",
+            "viewport_northeast_lng",
+            "viewport_southwest_lat",
+            "viewport_southwest_lng"
+        ];
+
+        $array = array_filter($array, function ($val, $key) use ($arrKeysToRemove) {
+            return !in_array($key, $arrKeysToRemove);
+        }, ARRAY_FILTER_USE_BOTH);
+
+        #if (!empty($array["administrative_area_level_1"])) {
+        #}
+
+        // Add back locations in better format for sarch
+        /*
+        $locations = $this->locations;
+        $strLocations = "{$this->parsed_title_location}, ";
+        foreach ($locations as $location) {
+            $strLocations .= "$location->name, ";
+        }
+        $strLocations = trim($strLocations, ' ,');
+        */
+        $strLocations = $this->getLocationString();
+
+        $array["locationsString"] = $strLocations;
+
+        #if (!empty($array["administrative_area_level_1"])) {
+            #print_r($array);
+        #}
+
+        return $array;
+    }
 }

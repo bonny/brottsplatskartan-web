@@ -19,27 +19,44 @@ Template för sök
         <input type="submit" class="SearchForm__submit" value="Sök">
     </form>
 
-    @if (isset($events) && $events->count())
-
-        <p>Hittade <b>{{ $events->total() }} sidor</b> som innehåller <b>"{{ $s }}"</b></p>
-
-        <div class="Events Events--overview">
-
-            @foreach ($events as $event)
-
-                @include('parts.crimeevent', ["overview" => true])
-
-            @endforeach
-
+    @if (isset($locations) && $locations->count())
+        <p><b>Platser</b> som innehåller <em>"{{ $s }}"</em></p>
+        <div class="SearchLocations">
+            <ul>
+                @foreach ($locations as $location)
+                    <li>
+                        <a href="{{ route("platsSingle", ["plats" => $location->name]) }}">
+                            {{ucwords($location->name)}}
+                        </a>
+                    </li>
+                @endforeach
+            </ul>
         </div>
+    @endif
 
+    @if (isset($events2) && $events2->count())
+        <p>2: Hittade <b>{{ $events2->total() }} sidor</b> som innehåller <em>"{{ $s }}"</em></p>
+        <div class="Events Events--overview">
+            @foreach ($events2 as $event)
+                @include('parts.crimeevent', ["overview" => true])
+            @endforeach
+        </div>
         {{ $events->appends(["s" => $s])->links() }}
+    @endif
 
+    @if (isset($events) && $events->count())
+        <p><b>Händelser</b> som innehåller <em>"{{ $s }}"</em> ({{ $events->total() }} st)</p>
+        <div class="Events Events--overview">
+            @foreach ($events as $event)
+                @include('parts.crimeevent', ["overview" => true])
+            @endforeach
+        </div>
+        {{ $events->appends(["s" => $s])->links() }}
     @else
 
         @if ($s)
 
-            <p>Hittade inga sidor som innehåller <b>"{{ $s }}"</b></p>
+            <p>Hittade inga händelser som innehåller <b>"{{ $s }}"</b></p>
 
             <p>Förslag:</p>
 

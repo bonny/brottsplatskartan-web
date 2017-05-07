@@ -184,8 +184,10 @@ return [
         Weidner\Goutte\GoutteServiceProvider::class,
         'Creitive\Breadcrumbs\BreadcrumbsServiceProvider',
         'Thujohn\Twitter\TwitterServiceProvider',
-        Unisharp\Setting\SettingServiceProvider::class
-
+        Unisharp\Setting\SettingServiceProvider::class,
+        Laravel\Scout\ScoutServiceProvider::class,
+        // TeamTNT\Scout\TNTSearchScoutServiceProvider::class,
+        'Sofa\Eloquence\ServiceProvider'
     ],
 
     /*

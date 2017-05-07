@@ -32,7 +32,7 @@ class TweetCrimes extends Command
 
         // Default command line time limit i 0 = forever.
         // We limit this because something on the server is hanging, perhaps this..
-        set_time_limit(45);
+        // set_time_limit(47);
     }
 
     /**

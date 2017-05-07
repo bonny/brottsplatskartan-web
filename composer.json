@@ -6,19 +6,21 @@
     "type": "project",
     "require": {
         "php": ">=5.6.4",
-        "laravel/framework": "5.3.*",
-        "willvincent/feeds": "1.0.*",
+        "laravel/framework": "5.4.*",
+        "willvincent/feeds": "1.1.*",
         "kozz/laravel-guzzle-provider": "~6.0",
         "weidner/goutte": "@dev",
         "doctrine/dbal": "^2.5",
         "creitive/laravel5-breadcrumbs": "^2.0",
         "thujohn/twitter": "~2.0",
-        "unisharp/laravel-settings": "^1.0"
+        "unisharp/laravel-settings": "^1.0",
+        // "teamtnt/laravel-scout-tntsearch-driver": "^3.0",
+        "sofa/eloquence": "~5.4"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
         "mockery/mockery": "0.9.*",
-        "phpunit/phpunit": "~5.0",
+        "phpunit/phpunit": "~5.7",
         "symfony/css-selector": "3.1.*",
         "symfony/dom-crawler": "3.1.*"
     },
@@ -56,4 +58,5 @@
     "config": {
         "preferred-install": "dist"
     }
+
 }

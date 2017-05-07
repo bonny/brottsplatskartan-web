@@ -544,17 +544,52 @@ Route::get('/sok/', function (Request $request) {
     if ($s && mb_strlen($s) >= $minSearchLength) {
         $breadcrumbs->addCrumb(e($s));
 
+        /*
         $events = CrimeEvent::where(function ($query) use ($s) {
             $query->where("description", "LIKE", "%$s%")
                 ->orWhere("parsed_title_location", "LIKE", "%$s%")
                 ->orWhere("parsed_content", "LIKE", "%$s%")
-                ->orWhere("parsed_title", "LIKE", "%$s%");
+                ->orWhere("parsed_title", "LIKE", "%$s%")
+                #->orWhereHas('locations', function ($query) use ($s) {
+                #    $query->orWhere('name', 'like', "%$s%");
+                #});
+                ;
         })->orderBy("created_at", "desc")->paginate(10);
+        */
+
+        // Leta locations som matchar sökt fras
+        $locations = Locations::search($s, [
+            "name" => 20
+        ])->get();
+
+        $foundLocations = [];
+        $locations = $locations->filter(function ($location) use (& $foundLocations) {
+            $name = ucwords($location->name);
+
+            if (in_array($name, $foundLocations)) {
+                return false;
+            }
+
+            $foundLocations[] = $name;
+            return true;
+        });
+
+        // Sök med hjälp av Eloquence
+        $events = CrimeEvent::search($s, [
+            "parsed_title" => 20,
+            "parsed_title_location" => 20, // crash when 10, works when 20
+            "parsed_teaser" => 10,
+            "administrative_area_level_1" => 10,
+            "administrative_area_level_2" => 7,
+            "description" => 5
+        ])->paginate(10);
     }
 
     $data = [
         "s" => $s,
         "events" => $events,
+        "events2" => isset($events2) ? $events2 : null,
+        "locations" => isset($locations) ? $locations : null,
         "breadcrumbs" => $breadcrumbs
     ];
 
