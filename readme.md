@@ -11,4 +11,5 @@ Några exempel på sidor som sajten har. Både län och enskilda platser (gator,
 
 ## Om datan
 
-Alla uppgifter hämtas från Polisens hemsida.
+Alla uppgifter hämtas från [Polisens hemsida](https://polisen.se/Aktuellt/RSS/Lokala-RSS-floden/).
+
