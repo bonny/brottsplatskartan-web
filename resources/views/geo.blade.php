@@ -1,6 +1,6 @@
 {{--
 
-Template for start page
+Template for geo results
 
 --}}
 
