@@ -10,15 +10,16 @@ use Goutte\Client;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use App\highways_ignored;
+use App\highways_added;
 
 class FeedParserController extends Controller
 {
 
     // The loaded highway items
-    var $highwayItems = null;
+    public $highwayItems = null;
 
     // The loaded cities items
-    var $citiesItems = null;
+    public $citiesItems = null;
 
     /*
 
@@ -102,7 +103,7 @@ class FeedParserController extends Controller
                 // did happen once and then polisen had removed the permalink for that page
                 $html = '';
             }
-            
+
             Cache::put($cacheKey, $html, 30);
 
         } else {
@@ -167,17 +168,17 @@ class FeedParserController extends Controller
         $highwayItems = array_map("mb_strtolower", $highwayItems);
 
         // remove short items
-        $highwayItems = array_filter($highwayItems, function($val) {
+        $highwayItems = array_filter($highwayItems, function ($val) {
             return (mb_strlen($val) > 4);
         });
 
         // ta bort lite för vanliga ord från highwayitems, t.ex. "träd" och "vägen" känns lite för generalla
         $highwaysStopWords = $this->getHighwaysStopwords();
-        $highwayItems = array_where($highwayItems, function($val, $key) use ($highwaysStopWords) {
+        $highwayItems = array_where($highwayItems, function ($val, $key) use ($highwaysStopWords) {
             return ! in_array($val, $highwaysStopWords);
         });
 
-        // add some manual roads that i've found missing
+        // Add some manual roads that I've found missing
         $highwayItems = array_merge($highwayItems, $this->getHighwaysAddedManually());
 
         $timetaken = microtime(true) - $starttime;
@@ -188,28 +189,21 @@ class FeedParserController extends Controller
         $this->highwayItems = $highwayItems;
 
         return $highwayItems;
-
     }
 
-    function getHighwaysAddedManually() {
-
-        return [
-            "brantholmsgränd",
-            "sahlgrenska sjukhuset"
-        ];
-
+    public function getHighwaysAddedManually()
+    {
+        return highways_added::all()->pluck("name")->toArray();
     }
-
 
     /**
      * Get streenames etc that are not valid streetnames
      */
-    public function getHighwaysStopwords() {
-
+    public function getHighwaysStopwords()
+    {
         $ignored_highways = highways_ignored::all()->pluck("name")->toArray();
 
         return $ignored_highways;
-
     }
 
     private function loadCities() {
