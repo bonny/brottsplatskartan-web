@@ -146,11 +146,11 @@ class FeedParserController extends Controller
         // @TODO: get it to work...
 
         return $returnParts;
-
     } // function
 
 
-    private function loadHighways() {
+    private function loadHighways()
+    {
 
         if (isset($this->highwayItems)) {
             return $this->highwayItems;
@@ -162,6 +162,9 @@ class FeedParserController extends Controller
         $highwayItems = file($highwaysFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
         Log::info('Loaded highwayitems', ["count", count($highwayItems)]);
+
+        // Add some manual roads that I've found missing
+        $highwayItems = array_merge($highwayItems, $this->getHighwaysAddedManually());
 
         // trim items and make lowercase
         $highwayItems = array_map("trim", $highwayItems);
@@ -178,9 +181,6 @@ class FeedParserController extends Controller
             return ! in_array($val, $highwaysStopWords);
         });
 
-        // Add some manual roads that I've found missing
-        $highwayItems = array_merge($highwayItems, $this->getHighwaysAddedManually());
-
         $timetaken = microtime(true) - $starttime;
 
         Log::info('Loaded highwayitems, after clean and stop words removed', ["count", count($highwayItems)]);
@@ -193,7 +193,9 @@ class FeedParserController extends Controller
 
     public function getHighwaysAddedManually()
     {
-        return highways_added::all()->pluck("name")->toArray();
+        $added = highways_added::all()->pluck("name")->toArray();
+
+        return $added;
     }
 
     /**
@@ -222,14 +224,14 @@ class FeedParserController extends Controller
         $this->citiesItems = $citiesItems;
 
         return $citiesItems;
-
     }
 
 
     /**
      * Check if item teaser or content contains street names
      */
-    public function findLocations($item) {
+    public function findLocations($item)
+    {
 
         // all street names as a huge array
         $highwayItems = $this->loadHighways();
@@ -258,13 +260,12 @@ class FeedParserController extends Controller
         preg_match_all('/\pL+/u', $item_description, $matches);
         $arr_description_words = $matches[0];
 
-        #$arr_description_words = array_map("utf8_encode", $arr_description_words);
         $arr_description_words = array_map("mb_strtolower", $arr_description_words);
 
         // Remove "Polisen Värmland" etc that's the last line in the content words
         $police_lan = "";
         $parsed_content_lines = explode("\n", $item_parsed_content);
-        if ( false !== strpos($parsed_content_lines[count($parsed_content_lines)-1], "Polisen ") ) {
+        if (false !== strpos($parsed_content_lines[count($parsed_content_lines)-1], "Polisen ")) {
             #echo "\nfound polisen at last line";
             $police_lan = array_pop($parsed_content_lines);
             $police_lan = str_replace("Polisen ", "", $police_lan);
@@ -289,32 +290,32 @@ class FeedParserController extends Controller
 
         // Check if each word[n] + word[n+1] matches a location in $highwayItems
         // we check both n and n + (n+1) so we match street names with 2 words
+        // hm, check one more because "T-bana Skanstull"
         for ($i = 0; $i < count($arr_description_words); $i++) {
-
             $word1 = $arr_description_words[$i];
-            if ( in_array($word1, $highwayItems) ) {
+            if (in_array($word1, $highwayItems)) {
                 #echo "\nword 1 matched: $word1\n";
                 $matchingHighwayItemsInDescription[] = $word1;
             }
 
-            if ( $i < count($arr_description_words) - 1 ) {
+            if ($i < count($arr_description_words) - 1) {
                 $word2 = $arr_description_words[$i] . " " . $arr_description_words[$i+1];
-                if ( in_array($word2, $highwayItems) ) {
+                if (in_array($word2, $highwayItems)) {
                     #echo "\nword 2 matched: $word2\n";
                     $matchingHighwayItemsInDescription[] = $word2;
                 }
             }
 
-            /*
-            if ( $i < count($arr_description_words) - 2 ) {
+            //*
+            if ($i < count($arr_description_words) - 2) {
                 $word3 = $arr_description_words[$i] . " " . $arr_description_words[$i+1] . " " . $arr_description_words[$i+2];
-                if ( in_array($word3, $highwayItems) ) {
+                #echo "<br>word3: $word3";
+                if (in_array($word3, $highwayItems)) {
                     #echo "\nword 3 matched: $word3\n";
                     $matchingHighwayItemsInDescription[] = $word3;
                 }
             }
-            */
-
+            //*/
         }
 
         #if ($matchingHighwayItemsInDescription) {
