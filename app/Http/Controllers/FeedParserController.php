@@ -171,8 +171,11 @@ class FeedParserController extends Controller
         $highwayItems = array_map("mb_strtolower", $highwayItems);
 
         // remove short items
+        // like what? it removed "ösmo" which was bad
         $highwayItems = array_filter($highwayItems, function ($val) {
-            return (mb_strlen($val) > 4);
+            // return (mb_strlen($val) > 4);
+            // 21 May 2017 changed from 4 to 3
+            return (mb_strlen($val) > 3);
         });
 
         // ta bort lite för vanliga ord från highwayitems, t.ex. "träd" och "vägen" känns lite för generalla
