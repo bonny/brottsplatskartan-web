@@ -163,9 +163,6 @@ class FeedParserController extends Controller
 
         Log::info('Loaded highwayitems', ["count", count($highwayItems)]);
 
-        // Add some manual roads that I've found missing
-        $highwayItems = array_merge($highwayItems, $this->getHighwaysAddedManually());
-
         // trim items and make lowercase
         $highwayItems = array_map("trim", $highwayItems);
         $highwayItems = array_map("mb_strtolower", $highwayItems);
@@ -184,6 +181,10 @@ class FeedParserController extends Controller
             return ! in_array($val, $highwaysStopWords);
         });
 
+        // Add some manual roads that I've found missing
+        // Add this last we we can override stopwords and to short ones
+        $highwayItems = array_merge($highwayItems, $this->getHighwaysAddedManually());
+
         $timetaken = microtime(true) - $starttime;
 
         Log::info('Loaded highwayitems, after clean and stop words removed', ["count", count($highwayItems)]);
@@ -198,6 +199,9 @@ class FeedParserController extends Controller
     {
         $added = highways_added::all()->pluck("name")->toArray();
 
+        $added = array_map("trim", $added);
+        $added = array_map("mb_strtolower", $added);
+
         return $added;
     }
 
@@ -206,9 +210,12 @@ class FeedParserController extends Controller
      */
     public function getHighwaysStopwords()
     {
-        $ignored_highways = highways_ignored::all()->pluck("name")->toArray();
+        $ignoredHighways = highways_ignored::all()->pluck("name")->toArray();
 
-        return $ignored_highways;
+        $ignoredHighways = array_map("trim", $ignoredHighways);
+        $ignoredHighways = array_map("mb_strtolower", $ignoredHighways);
+
+        return $ignoredHighways;
     }
 
     private function loadCities() {
