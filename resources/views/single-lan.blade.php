@@ -37,9 +37,11 @@ med översikt med händelser för länet
             {!! $introtext !!}
         @endif
 
-        <p>
-            Idag har <b>{{ $lanInfo->numEvents["today"] }}</b> händelser rapporterats in.
-        </p>
+        @if (!empty($lanInfo))
+            <p>
+                Idag har <b>{{ $lanInfo->numEvents["today"] }}</b> händelser rapporterats in.
+            </p>
+        @endif
 
     </div>
 

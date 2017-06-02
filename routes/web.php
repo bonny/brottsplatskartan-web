@@ -429,8 +429,12 @@ Route::get('/sida/{pagename}', function ($pagename = null) {
 
 /**
  * Ett län, t.ex. Stockholms län
+ * @param string $lan Namn på län, t.ex. "Stockholms län". Kan även vara "stockholms-län" (med minusstreck)
  */
 Route::get('/lan/{lan}', function ($lan) {
+
+    // Om län innehåller minustecken ersätter vi det med mellanslag, pga lagrar länen icke-slug'ade
+    $lan = str_replace('-', ' ', $lan);
 
     $data = [
         "lan" => $lan

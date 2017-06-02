@@ -41,9 +41,10 @@ class FeedParserController extends Controller
     Uppsala hade en gång en artikel med följande titel, som gjorde att parsed date blev null
     - Uppdatering: Misshandel på Uppsalaskola
     */
-    public function parseTitle( $title ) {
+    public function parseTitle($title)
+    {
 
-        $arrTitleParts = explode("," , $title);
+        $arrTitleParts = explode(",", $title);
 
         $returnParts = [
             "parsed_date" => null,
@@ -51,7 +52,7 @@ class FeedParserController extends Controller
             "parsed_title_location" => null
         ];
 
-        if ( count($arrTitleParts) < 3 ) {
+        if (count($arrTitleParts) < 3) {
             return $returnParts;
         }
 
@@ -64,7 +65,6 @@ class FeedParserController extends Controller
         $returnParts["parsed_date"] = date("Y-m-d H:i:s", strtotime($returnParts["parsed_date"]));
 
         return $returnParts;
-
     }
 
     /**
@@ -75,7 +75,8 @@ class FeedParserController extends Controller
      *
      * @return array
      */
-    public function parseContent( $contentURL ) {
+    public function parseContent($contentURL)
+    {
 
         #echo "<br>contentURL: $contentURL";
         $returnParts = [
@@ -83,11 +84,10 @@ class FeedParserController extends Controller
             "parsed_content" => ""
         ];
 
-        $cacheKey = md5( $contentURL . "_cachebust3");
+        $cacheKey = md5($contentURL . "_cachebust3");
         $html = Cache::get($cacheKey, false);
 
         if (! $html || gettype($html) != "string") {
-
             #echo "<br>store in cache";
 
             $client = new Client();
@@ -105,7 +105,6 @@ class FeedParserController extends Controller
             }
 
             Cache::put($cacheKey, $html, 30);
-
         } else {
             #echo "<br>get cached";
         }
@@ -126,14 +125,14 @@ class FeedParserController extends Controller
         $div = $htmlDoc->getElementsByTagName("div");
 
         foreach ($ingress as $item) {
-            if ( "ingress" == $item->getAttribute("class") ) {
+            if ("ingress" == $item->getAttribute("class")) {
                 $returnParts["parsed_teaser"] = trim($item->nodeValue);
                 break;
             }
         }
 
         foreach ($div as $item) {
-            if ( "pagefooter" == $item->getAttribute("id") ) {
+            if ("pagefooter" == $item->getAttribute("id")) {
                 // skip footer
             } else {
                 $returnParts["parsed_content"] .= $htmlDoc->saveHTML($item);
@@ -218,7 +217,8 @@ class FeedParserController extends Controller
         return $ignoredHighways;
     }
 
-    private function loadCities() {
+    private function loadCities()
+    {
 
         if (isset($this->citiesItems)) {
             return $this->citiesItems;
@@ -242,7 +242,6 @@ class FeedParserController extends Controller
      */
     public function findLocations($item)
     {
-
         // all street names as a huge array
         $highwayItems = $this->loadHighways();
         #$citiesItems = $this->loadCities();
@@ -267,6 +266,7 @@ class FeedParserController extends Controller
         #$arr_description_words = str_word_count( utf8_decode($item_description), 1, "0123456789åäöÅÄÖ");
         // this was the solution that works BOTH on dev and live:
         // http://stackoverflow.com/questions/8109997/supporting-special-characters-with-str-word-count
+
         preg_match_all('/\pL+/u', $item_description, $matches);
         $arr_description_words = $matches[0];
 
@@ -294,6 +294,7 @@ class FeedParserController extends Controller
 
         #$arr_content_words = array_map("utf8_encode", $arr_content_words);
         $arr_content_words = array_map("mb_strtolower", $arr_content_words);
+        #echo "<pre>" . print_r($arr_content_words, 1) . "</pre>";
 
         $matchingHighwayItemsInDescription = [];
         $matchingHighwayItemsInContent = [];
@@ -334,42 +335,39 @@ class FeedParserController extends Controller
 
 
         for ($i = 0; $i < count($arr_content_words); $i++) {
-
             $word1 = $arr_content_words[$i];
-            if ( in_array($word1, $highwayItems) ) {
+            if (in_array($word1, $highwayItems)) {
                 #echo "\nword content 1 matched: $word1\n";
                 $matchingHighwayItemsInContent[] = $word1;
             }
 
-            if ( $i < count($arr_content_words) - 1 ) {
+            if ($i < count($arr_content_words) - 1) {
                 $word2 = $arr_content_words[$i] . " " . $arr_content_words[$i+1];
-                if ( in_array($word2, $highwayItems) ) {
+                if (in_array($word2, $highwayItems)) {
                     #echo "\nword content 2 matched: $word2\n";
                     $matchingHighwayItemsInContent[] = $word2;
                 }
             }
 
-            /*
-            if ( $i < count($arr_content_words) - 2 ) {
+            // Aktivera pga vi hittade inte "Elsa Borgs Gata"
+            if ($i < count($arr_content_words) - 2) {
                 $word3 = $arr_content_words[$i] . " " . $arr_content_words[$i+1] . " " . $arr_content_words[$i+2];
-                if ( in_array($word3, $highwayItems) ) {
+                if (in_array($word3, $highwayItems)) {
                     #echo "\nword content 3 matched: $word3\n";
                     $matchingHighwayItemsInContent[] = $word3;
                 }
             }
-            */
-
-        }
+        } // for each $arr_content_words
 
         // remove hits that is the same as the main location found in the title, often city names
         $title_location = mb_strtolower($item->parsed_title_location);
         #echo "\n checking if title_location '$title_location' exists ";
 
-        $matchingHighwayItemsInDescription = array_filter($matchingHighwayItemsInDescription, function($val) use ($title_location) {
+        $matchingHighwayItemsInDescription = array_filter($matchingHighwayItemsInDescription, function ($val) use ($title_location) {
             return ($val !== $title_location);
         });
 
-        $matchingHighwayItemsInContent = array_filter($matchingHighwayItemsInContent, function($val) use ($title_location) {
+        $matchingHighwayItemsInContent = array_filter($matchingHighwayItemsInContent, function ($val) use ($title_location) {
             return ($val !== $title_location);
         });
 
@@ -381,44 +379,38 @@ class FeedParserController extends Controller
         // remove locations thats exists as part of other locations
         // for example if both "eriksgatan" and "sankt eriksgatan" are found
         // then remove "eriksgatan" because "sankt eriksgatan" is a better, more precise hit
-        $matchingHighwayItemsInContent = array_filter($matchingHighwayItemsInContent, function($val) use ($matchingHighwayItemsInContent) {
+        $matchingHighwayItemsInContent = array_filter($matchingHighwayItemsInContent, function ($val) use ($matchingHighwayItemsInContent) {
 
             foreach ($matchingHighwayItemsInContent as $arrVal) {
-
                 // dont't check current val
                 if ($arrVal === $val) {
                     continue;
                 }
 
-                if (strpos(" " . $arrVal, $val) !== false || strpos($arrVal . " " , $val) !== false) {
+                if (strpos(" " . $arrVal, $val) !== false || strpos($arrVal . " ", $val) !== false) {
                     // string was found, so remove
                     return false;
                 }
-
             }
 
             return true;
-
         });
 
-        $matchingHighwayItemsInDescription = array_filter($matchingHighwayItemsInDescription, function($val) use ($matchingHighwayItemsInDescription) {
+        $matchingHighwayItemsInDescription = array_filter($matchingHighwayItemsInDescription, function ($val) use ($matchingHighwayItemsInDescription) {
 
             foreach ($matchingHighwayItemsInDescription as $arrVal) {
-
                 // dont't check current val
                 if ($arrVal === $val) {
                     continue;
                 }
 
-                if (strpos(" " . $arrVal, $val) !== false || strpos($arrVal . " " , $val) !== false) {
+                if (strpos(" " . $arrVal, $val) !== false || strpos($arrVal . " ", $val) !== false) {
                     // string was found, so remove
                     return false;
                 }
-
             }
 
             return true;
-
         });
 
         $timetaken = microtime(true) - $starttime;
@@ -449,8 +441,5 @@ class FeedParserController extends Controller
                 "locations" => [$police_lan]
             ]
         ];
-
-
     }
-
 }
