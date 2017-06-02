@@ -14,6 +14,7 @@
 use App\Http\Controllers\FeedController;
 use App\CrimeEvent;
 use App\Locations;
+use App\Dictionary;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use Carbon\Carbon;
@@ -663,6 +664,13 @@ Route::get('/coyards', function (Request $request) {
 
     return view('coyards', $data);
 })->name("coyards");
+
+Route::get('/ordlista', function (Request $request) {
+    $words = Dictionary::orderByDesc('word')->get();
+    $data["words"] = $words;
+
+    return view('dictionary', $data);
+});
 
 /**
  * Skicka med data till 404-sidan
