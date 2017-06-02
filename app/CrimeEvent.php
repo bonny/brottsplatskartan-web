@@ -351,7 +351,7 @@ class CrimeEvent extends Model
     /**
      * @return string
      */
-    public function getMetaDescription($length = 155)
+    public function getMetaDescription($length = 200)
     {
 
         $text = "";
