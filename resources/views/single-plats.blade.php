@@ -15,6 +15,14 @@ Template för en ort
 
     <h1>Brott nära <b>{{ $plats }}</b></h1>
 
+    <div class="Introtext">
+        @if (empty($introtext))
+        @else
+            {!! $introtext !!}
+        @endif
+    </div>
+
+
     {{-- <p>
         Händelser från Polisen för {{ $plats }}.
     </p> --}}
