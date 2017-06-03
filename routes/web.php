@@ -665,11 +665,23 @@ Route::get('/coyards', function (Request $request) {
     return view('coyards', $data);
 })->name("coyards");
 
+/**
+ * Route för översiktssidan för ordlistan
+ */
 Route::get('/ordlista', function (Request $request) {
     $words = Dictionary::orderByDesc('word')->get();
     $data["words"] = $words;
 
     return view('dictionary', $data);
+});
+
+/**
+ * Testsida för design, så vi lätt kan se hur rubriker
+ * av olika storlekar och listor och stycken och bilder
+ * osv samspelar.
+ */
+Route::get('/design', function (Request $request) {
+    return view('design');
 });
 
 /**
