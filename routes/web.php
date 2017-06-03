@@ -673,7 +673,7 @@ Route::get('/ordlista', function (Request $request) {
     $data["words"] = $words;
 
     return view('dictionary', $data);
-});
+})->name("ordlista");
 
 /**
  * Testsida för design, så vi lätt kan se hur rubriker

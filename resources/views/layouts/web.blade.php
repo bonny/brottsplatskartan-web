@@ -197,14 +197,15 @@ Layout template for web
 
         <div><amp-img alt="Brottsplatskartan" src="/img/brottsplatskartan-logotyp-symbol-only.png" width=40 height=40></amp-img>
 
-        <h2>Länkar om brottsplatskartan</h2>
+        <h2>Länkar om Brottsplatskartan</h2>
 
         <ul>
             <li><a href="{{ route("page", ["pagename" => "om"]) }}">Om brotten och kartan</a></li>
             <!-- <li><a href="{{ route("page", ["pagename" => "stockholm"]) }}">Polishändelser i Stockholm</a></li> -->
             <li><a href="{{ route("page", ["pagename" => "appar"]) }}">Appar till Iphone, Ipad och Android</a></li>
+            <li><a href="{{ route("ordlista") }}">Ordlista</a></li>
             <li><a href="{{ route("page", ["pagename" => "api"]) }}">Brottsplatser API</a></li>
-            <li><a href="https://twitter.com/brottsplatser">Följ @Brottsplatser och @stockholmsbrott på Twitter</a></li>
+            <li>Följ <a href="https://twitter.com/brottsplatser">@Brottsplatser</a> och <a href="https://twitter.com/brottsplatser">@stockholmsbrott</a> på Twitter</a></li>
             <li><a href="https://www.facebook.com/brottsplatskartan">Gilla Brottsplatskartan på Facebook</a></li>
             <li><a href="https://stats.uptimerobot.com/ADWQ0TZq1">Upptid/status</a></li>
         </ul>
