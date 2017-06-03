@@ -13,7 +13,7 @@ Template för ordlista/dictionary
 
 @section('content')
 
-    <h1>Ordlista</h1>
+    <h1>Ordlista med brottsrelaterade ord</h1>
 
     <p>
         Brottsplatskartans ordlista.
@@ -28,7 +28,9 @@ Template för ordlista/dictionary
             <div class="DictionaryListing__word">
 
                 <h2 class="DictionaryListing__title" id="{{str_slug($oneWord->word)}}">
-                    {{ $oneWord->word }}
+                    <a href="{{ route('ordlistaOrd', ['word' => $oneWord->word]) }}">
+                        {{ $oneWord->word }}
+                    </a>
                 </h2>
 
                 @if (empty($oneWord->description))

@@ -427,6 +427,47 @@ Route::get('/sida/{pagename}', function ($pagename = null) {
     return view('page', $data);
 })->name("page");
 
+/**
+ * Route för översiktssidan för ordlistan
+ */
+Route::get('/ordlista/{word}', function ($word, Request $request) {
+
+    $word = Dictionary::where('word', $word)->first();
+
+    if (empty($word)) {
+        abort(404);
+    }
+
+    $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs;
+    $breadcrumbs->addCrumb('Hem', '/');
+    $breadcrumbs->addCrumb('Ordlista', route('ordlista'));
+    $breadcrumbs->addCrumb($word->word, route('ordlistaOrd', ['word' => $word->word]));
+
+    $data = [
+        'word' => $word,
+        'breadcrumbs' => $breadcrumbs
+    ];
+
+    return view('dictionary-word', $data);
+})->name("ordlistaOrd");
+
+/**
+ * Route för översiktssidan för ordlistan
+ */
+Route::get('/ordlista/', function (Request $request) {
+    $words = Dictionary::orderByDesc('word')->get();
+
+    $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs;
+    $breadcrumbs->addCrumb('Hem', '/');
+    $breadcrumbs->addCrumb('Ordlista', route("ordlista"));
+
+    $data = [
+        'words' => $words,
+        'breadcrumbs' => $breadcrumbs
+    ];
+
+    return view('dictionary', $data);
+})->name("ordlista");
 
 /**
  * Ett län, t.ex. Stockholms län
@@ -664,16 +705,6 @@ Route::get('/coyards', function (Request $request) {
 
     return view('coyards', $data);
 })->name("coyards");
-
-/**
- * Route för översiktssidan för ordlistan
- */
-Route::get('/ordlista', function (Request $request) {
-    $words = Dictionary::orderByDesc('word')->get();
-    $data["words"] = $words;
-
-    return view('dictionary', $data);
-})->name("ordlista");
 
 /**
  * Testsida för design, så vi lätt kan se hur rubriker
