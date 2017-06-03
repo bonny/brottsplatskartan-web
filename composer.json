@@ -15,7 +15,8 @@
         "thujohn/twitter": "~2.0",
         "unisharp/laravel-settings": "^1.0",
         "sofa/eloquence": "~5.4",
-        "laravel/scout": "^3.0"
+        "laravel/scout": "^3.0",
+        "alfredo-ramos/parsedown-extra-laravel": "~0.6.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

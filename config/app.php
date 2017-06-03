@@ -187,7 +187,8 @@ return [
         Unisharp\Setting\SettingServiceProvider::class,
         Laravel\Scout\ScoutServiceProvider::class,
         // TeamTNT\Scout\TNTSearchScoutServiceProvider::class,
-        'Sofa\Eloquence\ServiceProvider'
+        'Sofa\Eloquence\ServiceProvider',
+        AlfredoRamos\ParsedownExtra\ParsedownExtraServiceProvider::class
     ],
 
     /*
@@ -240,7 +241,8 @@ return [
         'Goutte' => Weidner\Goutte\GoutteFacade::class,
         'Breadcrumbs' => 'Creitive\Breadcrumbs\Facades\Breadcrumbs',
         'Twitter' => 'Thujohn\Twitter\Facades\Twitter',
-        'Setting' => Unisharp\Setting\SettingFacade::class
+        'Setting' => Unisharp\Setting\SettingFacade::class,
+        'Markdown'  => AlfredoRamos\ParsedownExtra\Facades\ParsedownExtra::class
     ],
 
 ];
