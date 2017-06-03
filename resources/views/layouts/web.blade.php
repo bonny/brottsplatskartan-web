@@ -18,7 +18,9 @@ Layout template for web
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
     <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+    @hasSection('canonicalLink')
     <link rel="canonical" href="@yield('canonicalLink', '/')">
+    @endif
 
     @hasSection('metaDescription')
         <meta name="description" content="@yield('metaDescription')">
