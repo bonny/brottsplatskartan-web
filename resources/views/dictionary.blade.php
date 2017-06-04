@@ -45,7 +45,7 @@ Template för ordlista/dictionary
     </div>
 
     <p>
-        Förklaringarna kommer främst från <a href="https://wikipedia.com">Wikipedia.com</a> och <a gref="https://polisen.se/Lagar-och-regler/Om-olika-brott/">polisen.se</a>.
+        Förklaringarna kommer främst från <a href="https://wikipedia.com">Wikipedia.com</a> och <a href="https://polisen.se/Lagar-och-regler/Om-olika-brott/">polisen.se</a>.
         Saknas något ord eller är något av orden felaktigt beskrivna?
         Hör av dig till <a href="mailto:kontakt@brottsplatskartan.se">kontakt@brottsplatskartan.se</a>.
     </p>
