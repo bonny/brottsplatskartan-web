@@ -805,6 +805,10 @@ amp-social-share {
     float: right;
 }
 
+.Event__dictionaryWord:nth-child(2n+2) {
+    clear: left;
+}
+
 .Event__dictionaryDictionaryLink {
     clear: both;
 }
