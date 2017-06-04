@@ -432,6 +432,9 @@ Route::get('/sida/{pagename}', function ($pagename = null) {
  */
 Route::get('/ordlista/{word}', function ($word, Request $request) {
 
+    // Word kan vara "fylleri-lob" så vi ersätter minustecken med /
+    $word = str_replace('-', '/', $word);
+
     $word = Dictionary::where('word', $word)->first();
 
     if (empty($word)) {

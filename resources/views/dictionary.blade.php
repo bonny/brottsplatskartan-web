@@ -7,8 +7,7 @@ Template för ordlista/dictionary
 
 @extends('layouts.web')
 
-@section('title', 'Ordlista')
-@section('metaDescription', e("Ordlista"))
+@section('title', 'Ordlista | Beskrivningar av orden som Polisen använder')
 @section('canonicalLink', '/ordlista')
 
 @section('content')
@@ -28,7 +27,7 @@ Template för ordlista/dictionary
             <div class="DictionaryListing__word">
 
                 <h2 class="DictionaryListing__title" id="{{str_slug($oneWord->word)}}">
-                    <a href="{{ route('ordlistaOrd', ['word' => $oneWord->word]) }}">
+                    <a href="{{ route('ordlistaOrd', ['word' => App\Helper::toAscii($oneWord->word)]) }}">
                         {{ $oneWord->word }}
                     </a>
                 </h2>
