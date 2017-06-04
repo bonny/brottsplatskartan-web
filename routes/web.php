@@ -455,7 +455,7 @@ Route::get('/ordlista/{word}', function ($word, Request $request) {
  * Route för översiktssidan för ordlistan
  */
 Route::get('/ordlista/', function (Request $request) {
-    $words = Dictionary::orderByDesc('word')->get();
+    $words = Dictionary::orderBy('word', 'asc')->get();
 
     $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs;
     $breadcrumbs->addCrumb('Hem', '/');
