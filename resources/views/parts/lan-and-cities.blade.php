@@ -1,6 +1,10 @@
+{{--
+modul i sidebar med länkar till alla län
+--}}
+
 <section>
 
-    <h2>Brott i Sveriges alla län</h2>
+    <h2>Se senaste brotten i ditt län</h2>
 
     <?php
 
