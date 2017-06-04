@@ -559,13 +559,19 @@ Route::get('/{lan}/{eventName}', function ($lan, $eventName, Request $request) {
     // Add nearby events
     $eventsNearby = CrimeEvent::getEventsNearLocation($event->location_lat, $event->location_lng, $nearbyCount = 10, $nearbyInKm = 25);
 
+    // Hämta alla ord i ordlistan, oavsett om de ligger i word eller synonyms
+    #dd($eventText);
+    $text = $event->getSingleEventTitle() . ' ' . $event->getParsedContentAsPlainText();
+    $dictionaryWordsInText = Dictionary::getWordsInText($text);
+
     $data = [
-        "lan" => $lan,
-        "eventID" => $eventID,
-        "event" => $event,
-        "eventsNearby" => $eventsNearby,
-        "breadcrumbs" => $breadcrumbs,
-        "debugData" => $debugData
+        'lan' => $lan,
+        'eventID' => $eventID,
+        'event' => $event,
+        'eventsNearby' => $eventsNearby,
+        'breadcrumbs' => $breadcrumbs,
+        'debugData' => $debugData,
+        'dictionaryWordsInText' => $dictionaryWordsInText
     ];
 
     return view('single-event', $data);

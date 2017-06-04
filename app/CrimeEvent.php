@@ -30,7 +30,6 @@ class CrimeEvent extends Model
         'location_lng',
         'location_lat',
         'parsed_teaser',
-        'parsed_content',
         'scanned_for_locations',
         'geocoded'
     ];
@@ -412,6 +411,8 @@ class CrimeEvent extends Model
 
     /**
      * Get the description
+     *
+     * @return string The content
      */
     public function getParsedContent()
     {
@@ -419,6 +420,20 @@ class CrimeEvent extends Model
         $text = $this->parsed_content;
 
         $text = $this->autop($text);
+
+        return $text;
+    }
+
+    /**
+     * Get the description as plaint text, with html tags removed
+     *
+     * @return string The content
+     */
+    public function getParsedContentAsPlainText()
+    {
+        $text = $this->getParsedContent();
+        $text = Helper::stripTagsWithWhitespace($text);
+        $text = trim($text);
 
         return $text;
     }

@@ -15,7 +15,6 @@ if $single is set then larger image
         @if(isset($event->location_geometry_type)) Event--distance_{{ $event->getViewPortSizeAsString() }} @endif
     ">
 
-
     {{--
 
     "ROOFTOP" indicates that the returned result is a precise geocode for which we have location information accurate down to street address precision.
@@ -160,5 +159,15 @@ if $single is set then larger image
             <amp-social-share type="email"></amp-social-share>
         </div>
     @endif
+
+    @if ($dictionaryWordsInText)
+        @foreach ($dictionaryWordsInText as $dictionaryWord)
+            <h2>{{ $dictionaryWord->word }}</h2>
+            <div>
+                {!! Markdown::parse($dictionaryWord->description) !!}
+            </div>
+        @endforeach
+    @endif
+
 
 </article>
