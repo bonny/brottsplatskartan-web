@@ -161,15 +161,20 @@ if $single is set then larger image
     @endif
 
     @if ($dictionaryWordsInText)
-        @foreach ($dictionaryWordsInText as $dictionaryWord)
-            <div class="Event__dictionary">
-                <h2 class="Event__dictionaryWordTitle">{{ $dictionaryWord->word }}</h2>
-                <div class="Event__dictionaryWordDescription">
-                    {!! Markdown::parse($dictionaryWord->description) !!}
+        <aside class="Event__dictionaryWords">
+            <h2 class="Event__dictionaryWordsTitle">Ordlista</h2>
+            @foreach ($dictionaryWordsInText as $dictionaryWord)
+                <div class="Event__dictionaryWord">
+                    <h3 class="Event__dictionaryWordTitle">{{ $dictionaryWord->word }}</h3>
+                    <div class="Event__dictionaryWordDescription">
+                        {!! Markdown::parse($dictionaryWord->description) !!}
+                    </div>
                 </div>
-                <p class="Event__dictionaryDictionaryLink"><a href="{{ Route('ordlista') }}">Fler ord hittar du i Ordlistan</a></p>
-            </div>
-        @endforeach
+            @endforeach
+
+            <p class="Event__dictionaryDictionaryLink"><a href="{{ Route('ordlista') }}">Fler ord hittar du i Ordlistan</a></p>
+
+        </aside>
     @endif
 
 

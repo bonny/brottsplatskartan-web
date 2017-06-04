@@ -778,6 +778,55 @@ amp-social-share {
     color: #333;
 }
 
+.Event__dictionaryWords {
+    margin-top: var(--default-margin);
+    border-top: 1px solid var(--color-grey-light);
+    margin-left: -1rem;
+    margin-right: -1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 1rem;
+    font-size: .85rem;
+    overflow: auto;
+    line-height: 1.2;
+}
+
+.Event__dictionaryWords a {
+    color: ;
+}
+
+.Event__dictionaryWord {
+    float: left;
+    width: 48%;
+}
+
+.Event__dictionaryWord:nth-child(2n+1) {
+    float: right;
+}
+
+.Event__dictionaryDictionaryLink {
+    clear: both;
+}
+
+.Event__dictionaryWordsTitle {
+
+}
+
+.Event__dictionaryWordTitle {
+    margin-top: 0;
+}
+
+.Event__dictionaryWordTitle {
+    font-size: 1rem;
+}
+
+.Event__dictionaryWordDescription > p {
+    margin-top: 0;
+}
+
+.Event__dictionaryWordDescription {
+}
+
 /* nånstans i mitten... */
 @media only screen and (min-width: 400px) and (max-width: 666px) {
 
