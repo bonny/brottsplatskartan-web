@@ -277,7 +277,7 @@ dd {
 }
 
 .Event--single .Event__title,
-.Events--overviewSearch .Event__title {
+.Events--overview .Event__title {
     font-size: 1.5rem;
 }
 
