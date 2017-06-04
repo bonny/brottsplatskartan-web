@@ -42,6 +42,7 @@ class Dictionary extends Model
         $text = array_map('trim', $text);
         $text = array_map('mb_strtolower', $text);
         $text = array_filter($text);
+        #dd($text);
 
         // $wordsIntersect är en array som innehåller ordliste-orden som finns i texten
         $wordsIntersect = array_intersect($arrWords, $text);
@@ -49,7 +50,7 @@ class Dictionary extends Model
         // Hämta orden från databasen så vi får ord, synonymer, och beskrivning
         $wordsCollection = collect();
         foreach ($wordsIntersect as $oneIntersectedWord) {
-            $wordsCollection = $wordsCollection->merge(self::whereRaw('FIND_IN_SET("rattonykter", CONCAT_WS(",", word, synonyms))')->get());
+            $wordsCollection = $wordsCollection->merge(self::whereRaw('FIND_IN_SET("' . $oneIntersectedWord . '", CONCAT_WS(",", word, synonyms))')->get());
         }
 
         return $wordsCollection;

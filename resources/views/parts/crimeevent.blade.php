@@ -162,9 +162,12 @@ if $single is set then larger image
 
     @if ($dictionaryWordsInText)
         @foreach ($dictionaryWordsInText as $dictionaryWord)
-            <h2>{{ $dictionaryWord->word }}</h2>
-            <div>
-                {!! Markdown::parse($dictionaryWord->description) !!}
+            <div class="Event__dictionary">
+                <h2 class="Event__dictionaryWordTitle">{{ $dictionaryWord->word }}</h2>
+                <div class="Event__dictionaryWordDescription">
+                    {!! Markdown::parse($dictionaryWord->description) !!}
+                </div>
+                <p class="Event__dictionaryDictionaryLink"><a href="{{ Route('ordlista') }}">Fler ord hittar du i Ordlistan</a></p>
             </div>
         @endforeach
     @endif
