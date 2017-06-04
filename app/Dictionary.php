@@ -37,15 +37,21 @@ class Dictionary extends Model
     {
         $arrWords = self::getAllWordsAndSynonyms();
 
-        $text = str_word_count(utf8_decode($text), 1);
-        $text = array_map('utf8_encode', $text);
+        #preg_match_all('/[\p{L}\p{M}]+/u', $text, $matches, PREG_PATTERN_ORDER);
+        preg_match_all('/\pL+/u', $text, $matches);
+        $text = $matches[0];
+
+        #$text = str_word_count(utf8_decode($text), 1);
+        #$text = array_map('utf8_encode', $text);
         $text = array_map('trim', $text);
         $text = array_map('mb_strtolower', $text);
         $text = array_filter($text);
         #dd($text);
 
         if (isset($_GET["debug3"])) {
-            dd($text);
+            echo "<pre>";
+            print_r(json_encode($text, JSON_PRETTY_PRINT));
+            exit;
         }
 
         // $wordsIntersect är en array som innehåller ordliste-orden som finns i texten
