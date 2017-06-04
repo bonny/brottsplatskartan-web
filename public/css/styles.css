@@ -806,7 +806,7 @@ amp-social-share {
 }
 
 .Event__dictionaryWord:nth-child(2n+2) {
-    clear: left;
+    clear: both;
 }
 
 .Event__dictionaryDictionaryLink {
