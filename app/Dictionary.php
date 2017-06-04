@@ -57,7 +57,7 @@ class Dictionary extends Model
         // $wordsIntersect är en array som innehåller ordliste-orden som finns i texten
         $wordsIntersect = array_intersect($arrWords, $text);
         $wordsIntersect = array_unique($wordsIntersect);
-        3dd($wordsIntersect);
+        #dd($wordsIntersect);
 
         // Hämta orden från databasen så vi får ord, synonymer, och beskrivning
         $wordsCollection = collect();
