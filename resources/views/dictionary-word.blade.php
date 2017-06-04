@@ -9,6 +9,7 @@ Template för ordlista/dictionary och ett enskild ord
 
 @section('title', $word->word)
 @section('metaDescription', e("Ordlista"))
+@section('canonicalLink', "/ordlista/$word->word")
 
 @section('content')
 
