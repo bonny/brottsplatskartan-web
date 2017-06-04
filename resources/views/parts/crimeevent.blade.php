@@ -160,7 +160,7 @@ if $single is set then larger image
         </div>
     @endif
 
-    @if (!empty($dictionaryWordsInText))
+    @if (!empty($dictionaryWordsInText) && $dictionaryWordsInText->count())
         <aside class="Event__dictionaryWords">
             <h2 class="Event__dictionaryWordsTitle">Ordlista</h2>
             @foreach ($dictionaryWordsInText as $dictionaryWord)
