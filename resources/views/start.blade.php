@@ -7,6 +7,7 @@ Template for start page
 
 @extends('layouts.web')
 
+@section('canonicalLink', '/')
 @section('title', 'Händelser och brott från Polisen')
 @section('showTitleTagline', false)
 @section('metaDescription', e('Brottsplatskartan visar på karta var brott har skett. Händelserna hämtas direkt från Polisen.'))
