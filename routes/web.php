@@ -567,6 +567,14 @@ Route::get('/{lan}/{eventName}', function ($lan, $eventName, Request $request) {
     $text = $event->getSingleEventTitle() . ' ' . $event->getParsedContentAsPlainText();
     $dictionaryWordsInText = Dictionary::getWordsInText($text);
 
+    if (isset($_GET["debug1"])) {
+        dd($dictionaryWordsInText);
+    }
+
+    if (isset($_GET["debug2"])) {
+        dd($text);
+    }
+
     $data = [
         'lan' => $lan,
         'eventID' => $eventID,

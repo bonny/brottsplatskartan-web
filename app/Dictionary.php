@@ -44,6 +44,10 @@ class Dictionary extends Model
         $text = array_filter($text);
         #dd($text);
 
+        if (isset($_GET["debug3"])) {
+            dd($text);
+        }
+
         // $wordsIntersect är en array som innehåller ordliste-orden som finns i texten
         $wordsIntersect = array_intersect($arrWords, $text);
         #dd($wordsIntersect);
