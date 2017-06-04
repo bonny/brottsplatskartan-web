@@ -165,7 +165,11 @@ if $single is set then larger image
             <h2 class="Event__dictionaryWordsTitle">Ordlista</h2>
             @foreach ($dictionaryWordsInText as $dictionaryWord)
                 <div class="Event__dictionaryWord">
-                    <h3 class="Event__dictionaryWordTitle">{{ $dictionaryWord->word }}</h3>
+                    <h3 class="Event__dictionaryWordTitle">
+                        <a href="{{ route('ordlistaOrd', ['word' => App\Helper::toAscii($dictionaryWord->word)]) }}">
+                            {{ $dictionaryWord->word }}
+                        </a>
+                    </h3>
                     <div class="Event__dictionaryWordDescription">
                         {!! Markdown::parse($dictionaryWord->description) !!}
                     </div>
