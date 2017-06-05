@@ -11,6 +11,15 @@ Template för en ort
 @section('metaDescription', e("Kartor med brott som skett nära $plats. Brotten och händelserna hämtas direkt från Polisen."))
 @section('canonicalLink', "$canonicalLink")
 
+@section('metaContent')
+    @if ($linkRelPrev)
+        <link rel="prev" href="{{ $linkRelPrev }}" />
+    @endif
+    @if ($linkRelNext)
+        <link rel="next" href="{{ $linkRelNext }}" />
+    @endif
+@endsection
+
 @section('content')
 
     <h1>Brott nära <b>{{ $plats }}</b></h1>

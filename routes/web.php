@@ -311,7 +311,7 @@ Route::get('/typ/{typ}', function ($typ) {
  *  /plats/storgatan-gävleborgs-län/
  *
  */
-Route::get('/plats/{plats}', function ($plats) {
+Route::get('/plats/{plats}', function ($plats, Request $request) {
 
     $data = [];
 
@@ -397,6 +397,27 @@ Route::get('/plats/{plats}', function ($plats) {
     $data["plats"] = $plats;
     $data["events"] = $events;
     $data["canonicalLink"] = "/plats/{$canonicalLink}";
+
+    $page = $request->input("page", 1);
+    $linkRelPrev = null;
+    $linkRelNext = null;
+
+    if ($page > 1) {
+        $linkRelPrev = route('platsSingle', [
+            'plats' => $plats,
+            'page' => $page - 1
+        ]);
+    }
+
+    if ($page < $events->lastpage()) {
+        $linkRelNext = route('platsSingle', [
+            'plats' => $plats,
+            'page' => $page + 1
+        ]);
+    }
+
+    $data["linkRelPrev"] = $linkRelPrev;
+    $data["linkRelNext"] = $linkRelNext;
 
     if (!$data["events"]->count()) {
         abort(404);
