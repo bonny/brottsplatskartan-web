@@ -16,6 +16,15 @@ Template for start page
 @section('metaImageWidth', 600)
 @section('metaImageHeight', 315)
 
+@section('metaContent')
+    @if ($linkRelPrev)
+        <link rel="prev" href="{{ $linkRelPrev }}" />
+    @endif
+    @if ($linkRelNext)
+        <link rel="next" href="{{ $linkRelNext }}" />
+    @endif
+@endsection
+
 @section('content')
 
     {{--<h1>Brottsplatskartan visar var brotten sker</h1>--}}

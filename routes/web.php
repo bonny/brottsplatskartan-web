@@ -25,12 +25,33 @@ setlocale(LC_ALL, 'sv_SE', 'sv_SE.utf8');
 /**
  * startpage: show latest events
  */
-Route::get('/', function () {
+Route::get('/', function (Request $request) {
 
     $data = [];
 
-    $data["events"] = CrimeEvent::orderBy("created_at", "desc")->paginate(10);
+    $page = $request->input("page", 1);
+
+    $events = CrimeEvent::orderBy("created_at", "desc")->paginate(10);
     $data["showLanSwitcher"] = true;
+    $data["events"] = $events;
+
+    $linkRelPrev = null;
+    $linkRelNext = null;
+
+    if ($page > 1) {
+        $linkRelPrev = route('start', [
+            'page' => $page - 1
+        ]);
+    }
+
+    if ($page < $events->lastpage()) {
+        $linkRelNext = route('start', [
+            'page' => $page + 1
+        ]);
+    }
+
+    $data["linkRelPrev"] = $linkRelPrev;
+    $data["linkRelNext"] = $linkRelNext;
 
     $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs;
     $breadcrumbs->addCrumb('Hem', '/');
