@@ -476,18 +476,43 @@ Route::get('/ordlista/', function (Request $request) {
  * Ett län, t.ex. Stockholms län
  * @param string $lan Namn på län, t.ex. "Stockholms län". Kan även vara "stockholms-län" (med minusstreck)
  */
-Route::get('/lan/{lan}', function ($lan) {
+Route::get('/lan/{lan}', function ($lan, Request $request) {
 
     // Om län innehåller minustecken ersätter vi det med mellanslag, pga lagrar länen icke-slug'ade
     $lan = str_replace('-', ' ', $lan);
 
-    $data = [
-        "lan" => $lan
-    ];
+    $page = $request->input("page", 1);
 
-    $data["events"] = CrimeEvent::orderBy("created_at", "desc")
+    $events = CrimeEvent::orderBy("created_at", "desc")
                                 ->where("administrative_area_level_1", $lan)
                                 ->paginate(10);
+
+    $linkRelPrev = null;
+    $linkRelNext = null;
+
+    if ($page > 1) {
+        $linkRelPrev = route('lanSingle', [
+            'lan' => $lan,
+            'page' => $page - 1
+        ]);
+    }
+
+    if ($page < $events->lastpage()) {
+        $linkRelNext = route('lanSingle', [
+            'lan' => $lan,
+            'page' => $page + 1
+        ]);
+    }
+
+    // <link rel="next" href="http://www.example.com/article?story=abc&page=4" />
+
+    $data = [
+        'events' => $events,
+        'lan' => $lan,
+        'page' => $page,
+        'linkRelPrev' => $linkRelPrev,
+        'linkRelNext' => $linkRelNext
+    ];
 
     if (!$data["events"]->count()) {
         abort(404);

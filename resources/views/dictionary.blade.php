@@ -4,7 +4,6 @@ Template för ordlista/dictionary
 
 --}}
 
-
 @extends('layouts.web')
 
 @section('title', 'Ordlista | Beskrivningar av orden som Polisen använder')

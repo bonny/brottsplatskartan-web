@@ -5,7 +5,6 @@ med översikt med händelser för länet
 
 --}}
 
-
 @extends('layouts.web')
 
 @section('title', "Brott och händelser från Polisen i $lan")
@@ -15,6 +14,15 @@ med översikt med händelser för länet
 @section('metaImage', config('app.url') . "/img/start-share-image.png")
 @section('metaImageWidth', 600)
 @section('metaImageHeight', 315)
+
+@section('metaContent')
+    @if ($linkRelPrev)
+        <link rel="prev" href="{{ $linkRelPrev }}" />
+    @endif
+    @if ($linkRelNext)
+        <link rel="next" href="{{ $linkRelNext }}" />
+    @endif
+@endsection
 
 @section('content')
 

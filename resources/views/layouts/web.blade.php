@@ -57,6 +57,10 @@ Layout template for web
 
     <title>@yield('title')@hasSection('showTitleTagline') → Brottsplatskartan @endif</title>
 
+    @hasSection('metaContent')
+        @yield('metaContent', '')
+    @endif
+
     <meta name="apple-mobile-web-app-title" content="Brottsplatskartan">
     <meta name="application-name" content="Brottsplatskartan">
 
