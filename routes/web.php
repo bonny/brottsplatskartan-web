@@ -331,6 +331,7 @@ Route::get('/typ/{typ}', function ($typ) {
  */
 Route::get('/plats/{plats}', function ($plats, Request $request) {
 
+    $platsOriginalFromSlug = $plats;
     $data = [];
 
     // Om $plats slutar med namnet på ett län, t.ex. "örebro län", "gävleborgs län" osv
@@ -342,8 +343,13 @@ Route::get('/plats/{plats}', function ($plats, Request $request) {
     $platsWithoutLan = null;
     $platsSluggified = App\Helper::toAscii($plats);
 
+
     // yttre-ringvägen-skåne-län
+    // hittar inte: plats: Årsta i Stockholms Län
     #echo "<br>plats: $plats";
+
+    // platsSluggified: arsta-i-stockholms-lan
+    // echo "<br>platsSluggified: $platsSluggified";
 
     // yttre-ringvagen-skane-lan
     #echo "<br>platsSluggified: $platsSluggified";
@@ -354,7 +360,7 @@ Route::get('/plats/{plats}', function ($plats, Request $request) {
 
         // skane-lan
         $lanSlug = App\Helper::toAscii($oneLanName);
-        // echo "<br>lanSlug: $lanSlug";
+        #echo "<br>lanSlug: $lanSlug";
 
         // echo "<br> $plats - $oneLanName - $lanSlug - $platsSluggified";
         if (ends_with($platsSluggified, "-" . $lanSlug)) {
@@ -426,14 +432,14 @@ Route::get('/plats/{plats}', function ($plats, Request $request) {
 
     if ($page > 1) {
         $linkRelPrev = route('platsSingle', [
-            'plats' => $plats,
+            'plats' => $platsOriginalFromSlug,
             'page' => $page - 1
         ]);
     }
 
     if ($page < $events->lastpage()) {
         $linkRelNext = route('platsSingle', [
-            'plats' => $plats,
+            'plats' => $platsOriginalFromSlug,
             'page' => $page + 1
         ]);
     }
@@ -442,9 +448,9 @@ Route::get('/plats/{plats}', function ($plats, Request $request) {
     $data["linkRelNext"] = $linkRelNext;
 
     if ($page == 1) {
-        $canonicalLink = route('platsSingle', ['plats' => $plats]);
+        $canonicalLink = route('platsSingle', ['plats' => $platsOriginalFromSlug]);
     } else {
-        $canonicalLink = route('platsSingle', ['plats' => $plats, 'page' => $page]);
+        $canonicalLink = route('platsSingle', ['plats' => $platsOriginalFromSlug, 'page' => $page]);
     }
 
     $data["canonicalLink"] = $canonicalLink;
