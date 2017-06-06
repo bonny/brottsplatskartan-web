@@ -7,8 +7,13 @@ med översikt med händelser för länet
 
 @extends('layouts.web')
 
-@section('title', "Brott och händelser från Polisen i $lan")
-@section('metaDescription', e("Se var brott sker i närheten av $lan. Informationen kommer direkt från Polisen till vår karta!"))
+@if ($page == 1)
+    @section('title', "Brott och händelser från Polisen i $lan")
+    @section('metaDescription', e("Se var brott sker i närheten av $lan. Informationen kommer direkt från Polisen till vår karta!"))
+@else
+    @section('title', 'Sida ' . $page . ' | Brott och händelser från Polisen i $lan')
+@endif
+
 @section('canonicalLink', $canonicalLink)
 
 @section('metaImage', config('app.url') . "/img/start-share-image.png")

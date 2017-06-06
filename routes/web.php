@@ -454,6 +454,7 @@ Route::get('/plats/{plats}', function ($plats, Request $request) {
     }
 
     $data["canonicalLink"] = $canonicalLink;
+    $data["page"] = $page;
 
     if (!$data["events"]->count()) {
         abort(404);

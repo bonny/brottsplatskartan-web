@@ -8,9 +8,13 @@ Template for start page
 @extends('layouts.web')
 
 @section('canonicalLink', $canonicalLink)
-@section('title', 'Händelser och brott från Polisen')
+@if ($page == 1)
+    @section('title', 'Händelser och brott från Polisen')
+    @section('metaDescription', e('Brottsplatskartan visar på karta var brott har skett. Händelserna hämtas direkt från Polisen.'))
+@else
+    @section('title', 'Sida ' . $page . ' | Händelser och brott från Polisen')
+@endif
 @section('showTitleTagline', false)
-@section('metaDescription', e('Brottsplatskartan visar på karta var brott har skett. Händelserna hämtas direkt från Polisen.'))
 
 @section('metaImage', config('app.url') . "/img/start-share-image.png")
 @section('metaImageWidth', 600)

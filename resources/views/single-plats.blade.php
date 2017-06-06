@@ -7,8 +7,12 @@ Template för en ort
 
 @extends('layouts.web')
 
-@section('title', "Brott nära $plats")
-@section('metaDescription', e("Kartor med brott som skett nära $plats. Brotten och händelserna hämtas direkt från Polisen."))
+@if ($page == 1)
+    @section('title', "Brott nära $plats | Senaste brotten & händelserna i $plats från Polisen")
+    @section('metaDescription', e("Se senaste brotten som skett nära $plats. Händelserna hämtas direkt från Polisen."))
+@else
+    @section('title', 'Sida ' . $page .  " | Brott nära $plats | Senaste brotten & händelserna i $plats från Polisen")
+@endif
 @section('canonicalLink', $canonicalLink)
 
 @section('metaContent')
