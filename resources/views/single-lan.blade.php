@@ -9,7 +9,7 @@ med översikt med händelser för länet
 
 @section('title', "Brott och händelser från Polisen i $lan")
 @section('metaDescription', e("Se var brott sker i närheten av $lan. Informationen kommer direkt från Polisen till vår karta!"))
-@section('canonicalLink', "/lan/$lan")
+@section('canonicalLink', $canonicalLink)
 
 @section('metaImage', config('app.url') . "/img/start-share-image.png")
 @section('metaImageWidth', 600)

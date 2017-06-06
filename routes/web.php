@@ -29,9 +29,18 @@ Route::get('/', function (Request $request) {
 
     $data = [];
 
-    $page = $request->input("page", 1);
+    $page = (int) $request->input("page", 1);
 
-    $events = CrimeEvent::orderBy("created_at", "desc")->paginate(10);
+    if (!$page) {
+        $page = 1;
+    }
+
+    $events = CrimeEvent::orderBy("created_at", "desc")->paginate(20);
+
+    if ($page > $events->lastPage()) {
+        abort(404);
+    }
+
     $data["showLanSwitcher"] = true;
     $data["events"] = $events;
 
@@ -50,6 +59,7 @@ Route::get('/', function (Request $request) {
         ]);
     }
 
+    $data["page"] = $page;
     $data["linkRelPrev"] = $linkRelPrev;
     $data["linkRelNext"] = $linkRelNext;
 
@@ -61,13 +71,21 @@ Route::get('/', function (Request $request) {
     $data["breadcrumbs"] = $breadcrumbs;
 
     $introtext_key = "introtext-start";
-    $data["introtext"] = Setting::get($introtext_key);
+    if ($page == 1) {
+        $data["introtext"] = Setting::get($introtext_key);
+    }
 
     // Hämta statistik
     $data["chartImgUrl"] = App\Helper::getStatsImageChartUrl("home");
 
     // Total antal händelser
-    $data["events"]->total();
+    // $data["events"]->total();
+
+    if ($page == 1) {
+        $data["canonicalLink"] = route('start');
+    } else {
+        $data["canonicalLink"] = route('start', ['page' => $page]);
+    }
 
     // Händelser idag
     #$stats = App\Helper::getHomeStats('home');
@@ -396,9 +414,13 @@ Route::get('/plats/{plats}', function ($plats, Request $request) {
 
     $data["plats"] = $plats;
     $data["events"] = $events;
-    $data["canonicalLink"] = "/plats/{$canonicalLink}";
 
-    $page = $request->input("page", 1);
+    $page = (int) $request->input("page", 1);
+
+    if (!$page) {
+        $page = 1;
+    }
+
     $linkRelPrev = null;
     $linkRelNext = null;
 
@@ -418,6 +440,14 @@ Route::get('/plats/{plats}', function ($plats, Request $request) {
 
     $data["linkRelPrev"] = $linkRelPrev;
     $data["linkRelNext"] = $linkRelNext;
+
+    if ($page == 1) {
+        $canonicalLink = route('platsSingle', ['plats' => $plats]);
+    } else {
+        $canonicalLink = route('platsSingle', ['plats' => $plats, 'page' => $page]);
+    }
+
+    $data["canonicalLink"] = $canonicalLink;
 
     if (!$data["events"]->count()) {
         abort(404);
@@ -523,7 +553,11 @@ Route::get('/lan/{lan}', function ($lan, Request $request) {
     // Om län innehåller minustecken ersätter vi det med mellanslag, pga lagrar länen icke-slug'ade
     $lan = str_replace('-', ' ', $lan);
 
-    $page = $request->input("page", 1);
+    $page = (int) $request->input("page", 1);
+
+    if (!$page) {
+        $page = 1;
+    }
 
     $events = CrimeEvent::orderBy("created_at", "desc")
                                 ->where("administrative_area_level_1", $lan)
@@ -546,14 +580,19 @@ Route::get('/lan/{lan}', function ($lan, Request $request) {
         ]);
     }
 
-    // <link rel="next" href="http://www.example.com/article?story=abc&page=4" />
+    if ($page == 1) {
+        $canonicalLink = route('lanSingle', ['lan' => $lan]);
+    } else {
+        $canonicalLink = route('lanSingle', ['lan' => $lan, 'page' => $page]);
+    }
 
     $data = [
         'events' => $events,
         'lan' => $lan,
         'page' => $page,
         'linkRelPrev' => $linkRelPrev,
-        'linkRelNext' => $linkRelNext
+        'linkRelNext' => $linkRelNext,
+        'canonicalLink' => $canonicalLink
     ];
 
     if (!$data["events"]->count()) {

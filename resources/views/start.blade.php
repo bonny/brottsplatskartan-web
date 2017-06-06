@@ -7,7 +7,7 @@ Template for start page
 
 @extends('layouts.web')
 
-@section('canonicalLink', '/')
+@section('canonicalLink', $canonicalLink)
 @section('title', 'Händelser och brott från Polisen')
 @section('showTitleTagline', false)
 @section('metaDescription', e('Brottsplatskartan visar på karta var brott har skett. Händelserna hämtas direkt från Polisen.'))
@@ -45,8 +45,14 @@ Template for start page
 
     @if ($events)
 
-        <p><b>Idag har {{$numEventsToday}} händelser rapporterats in från Polisen.</b><p>
-        <p>Totalt finns det på Brottsplatskartan <b>{{$events->total()}} händelser</b>.</p>
+        @if ($page == 1)
+            <p><b>Idag har {{$numEventsToday}} händelser rapporterats in från Polisen.</b><p>
+            <p>Totalt finns det på Brottsplatskartan <b>{{$events->total()}} händelser</b>.</p>
+        @endif
+
+        @if ($page > 1)
+            <p>Sida {{ $page }} av {{ $events->lastPage() }}</p>
+        @endif
 
         <div class="Events Events--overview">
 
