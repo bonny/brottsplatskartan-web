@@ -13,7 +13,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        // https://stackoverflow.com/questions/24426423/laravel-generate-secure-https-url-from-route
+        \URL::forceScheme('https');
     }
 
     /**
