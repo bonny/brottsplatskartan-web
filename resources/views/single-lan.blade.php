@@ -42,18 +42,24 @@ med översikt med händelser för länet
 
     <div class="Introtext">
 
-        @if (empty($introtext))
-            <p>
-                Visar alla inrapporterade händelser och brott för {{ $lan }}, direkt från polisen.
-            </p>
-        @else
-            {!! $introtext !!}
+        @if ($page == 1)
+            @if (empty($introtext))
+                <p>
+                    Visar alla inrapporterade händelser och brott för {{ $lan }}, direkt från polisen.
+                </p>
+            @else
+                {!! $introtext !!}
+            @endif
+
+            @if (!empty($lanInfo))
+                <p>
+                    Idag har <b>{{ $lanInfo->numEvents["today"] }}</b> händelser rapporterats in.
+                </p>
+            @endif
         @endif
 
-        @if (!empty($lanInfo))
-            <p>
-                Idag har <b>{{ $lanInfo->numEvents["today"] }}</b> händelser rapporterats in.
-            </p>
+        @if ($page > 1)
+            <p>Visar händelser sida {{ $page }} av {{ $events->lastPage() }}</p>
         @endif
 
     </div>
