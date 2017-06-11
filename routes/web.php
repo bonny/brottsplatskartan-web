@@ -343,7 +343,6 @@ Route::get('/plats/{plats}', function ($plats, Request $request) {
     $platsWithoutLan = null;
     $platsSluggified = App\Helper::toAscii($plats);
 
-
     // yttre-ringvägen-skåne-län
     // hittar inte: plats: Årsta i Stockholms Län
     #echo "<br>plats: $plats";
@@ -470,7 +469,13 @@ Route::get('/plats/{plats}', function ($plats, Request $request) {
     // Hämta statistik för platsen
     // $data["chartImgUrl"] = App\Helper::getStatsImageChartUrl("Stockholms län");
     $introtext_key = "introtext-plats-$plats";
-    $data["introtext"] = Setting::get($introtext_key);
+
+    $introtext = null;
+    if ($page == 1) {
+         $introtext = Setting::get($introtext_key);
+    }
+
+    $data["introtext"] = $introtext;
 
     return view('single-plats', $data);
 })->name("platsSingle");

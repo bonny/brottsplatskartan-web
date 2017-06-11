@@ -35,6 +35,9 @@ Template för en ort
         @endif
     </div>
 
+    @if ($page > 1)
+        <p>Visar händelser sida {{ $page }} av {{ $events->lastPage() }}</p>
+    @endif
 
     {{-- <p>
         Händelser från Polisen för {{ $plats }}.
