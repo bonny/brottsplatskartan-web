@@ -11,7 +11,7 @@ med översikt med händelser för länet
     @section('title', "Brott och händelser från Polisen i $lan")
     @section('metaDescription', e("Se var brott sker i närheten av $lan. Informationen kommer direkt från Polisen till vår karta!"))
 @else
-    @section('title', 'Sida ' . $page . ' | Brott och händelser från Polisen i $lan')
+    @section('title', 'Sida ' . $page . " | Brott och händelser från Polisen i $lan")
 @endif
 
 @section('canonicalLink', $canonicalLink)
