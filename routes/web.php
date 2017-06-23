@@ -518,8 +518,13 @@ Route::get('/ordlista/{word}', function ($word, Request $request) {
 
     // Word kan vara "fylleri-lob" så vi ersätter minustecken med /
     $word = str_replace('-', '/', $word);
+    $wordForQuery = DB::connection()->getPdo()->quote($word);
 
-    $word = Dictionary::where('word', $word)->first();
+    // We use COLLATE so a query for "raddningstjanst" also matches "räddningstjänst"
+    $word = Dictionary::whereRaw("word = $wordForQuery COLLATE utf8_general_ci")->first();
+
+    // This gives collate error, not sure why
+    // $word = DB::select('select * from dictionaries where word = ? COLLATE utf8_general_ci', [$wordForQuery]);
 
     if (empty($word)) {
         abort(404);
