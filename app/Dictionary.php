@@ -37,35 +37,27 @@ class Dictionary extends Model
     {
         $arrWords = self::getAllWordsAndSynonyms();
 
-        #preg_match_all('/[\p{L}\p{M}]+/u', $text, $matches, PREG_PATTERN_ORDER);
-        preg_match_all('/\pL+/u', $text, $matches);
-        $text = $matches[0];
+        // Gör texten att kolla + orden att kolla efter lowercase + trim
+        $text = trim($text);
+        $text = mb_strtolower($text);
 
-        #$text = str_word_count(utf8_decode($text), 1);
-        #$text = array_map('utf8_encode', $text);
-        $text = array_map('trim', $text);
-        $text = array_map('mb_strtolower', $text);
-        $text = array_filter($text);
-        #dd($text);
+        $arrWords = array_map('trim', $arrWords);
+        $arrWords = array_map('mb_strtolower', $arrWords);
 
-        if (isset($_GET["debug3"])) {
-            echo "<pre>";
-            print_r(json_encode($text, JSON_PRETTY_PRINT));
-            exit;
+        // Array med ord/fras som matchar
+        $arrMatchingWords = [];
+
+        foreach ($arrWords as $oneWord) {
+            if (strpos($text, $oneWord) !== false) {
+                $arrMatchingWords[] = $oneWord;
+            }
         }
-
-        // $wordsIntersect är en array som innehåller ordliste-orden som finns i texten
-        $wordsIntersect = array_intersect($arrWords, $text);
-        $wordsIntersect = array_unique($wordsIntersect);
-        #dd($wordsIntersect);
 
         // Hämta orden från databasen så vi får ord, synonymer, och beskrivning
         $wordsCollection = collect();
-        foreach ($wordsIntersect as $oneIntersectedWord) {
-            $wordsCollection = $wordsCollection->merge(self::whereRaw('FIND_IN_SET("' . $oneIntersectedWord . '", CONCAT_WS(",", word, synonyms))')->get());
+        foreach ($arrMatchingWords as $oneMatchedWord) {
+            $wordsCollection = $wordsCollection->merge(self::whereRaw('FIND_IN_SET("' . $oneMatchedWord . '", CONCAT_WS(",", word, synonyms))')->get());
         }
-
-        #dd($wordsCollection);
 
         return $wordsCollection;
     }
