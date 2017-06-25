@@ -2,6 +2,7 @@
     --color-grey-light: #ddd;
     --color-link: #0379C4;
     --color-link: #15c; /* same colors as lighthouse */
+    --color-gray-1: #666;
     --default-margin: 1rem;
     --default-margin-half: calc(var(--default-margin) / 2);
     --default-margin-double: calc(var(--default-margin) * 2);
@@ -831,6 +832,45 @@ amp-social-share {
 
 .Event__dictionaryWordDescription {
 }
+
+.Event__media {
+
+}
+
+.Event__mediaTitle {
+
+}
+
+.Event__mediaLinks {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.Event__mediaLink {
+    margin-top: var(--default-margin-half);
+    margin-bottom: var(--default-margin-half);
+}
+
+.Event__mediaLinkTitle {
+
+}
+
+.Event__mediaLinkSource {
+    color: var(--color-gray-1);
+    font-size: var(--font-size-small);
+    margin-left: var(--default-margin-half);
+    text-transform: uppercase;
+}
+
+.Event__mediaLinkShortdesc {
+    font-size: var(--font-size-small);
+    color: var(--color-gray-1);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
 
 /* nånstans i mitten... */
 @media only screen and (min-width: 400px) and (max-width: 666px) {
