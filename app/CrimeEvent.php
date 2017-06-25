@@ -738,4 +738,9 @@ class CrimeEvent extends Model
 
         return $array;
     }
+
+    public function newsarticles()
+    {
+        return $this->hasMany('App\Newsarticle');
+    }
 }

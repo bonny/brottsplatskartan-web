@@ -703,6 +703,9 @@ Route::get('/{lan}/{eventName}', function ($lan, $eventName, Request $request) {
         dd($text);
     }
 
+    // Hämta nyhetsartiklar som hör till händelsen
+    $newsarticles = $event->newsarticles;
+
     $data = [
         'lan' => $lan,
         'eventID' => $eventID,
@@ -710,7 +713,8 @@ Route::get('/{lan}/{eventName}', function ($lan, $eventName, Request $request) {
         'eventsNearby' => $eventsNearby,
         'breadcrumbs' => $breadcrumbs,
         'debugData' => $debugData,
-        'dictionaryWordsInText' => $dictionaryWordsInText
+        'dictionaryWordsInText' => $dictionaryWordsInText,
+        'newsarticles' => $newsarticles
     ];
 
     return view('single-event', $data);

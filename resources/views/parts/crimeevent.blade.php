@@ -152,6 +152,22 @@ if $single is set then larger image
         <amp-social-share type="email" width=40 height=32 data-param-url="{{ $event->getPermalink(true) }}"></amp-social-share>
         --}}
     @else
+
+        @if ($newsarticles->count())
+        <div>
+            <h2>Händelsen i media</h2>
+            <ul>
+                @foreach ($newsarticles as $newsarticle)
+                    <li>
+                        <a href="{{ $newsarticle->url }}">{{ $newsarticle->title }}</a>
+                        <br>
+                        {{ $newsarticle->shortdesc }}
+                    </li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
+
         <div class="Event__share">
             <p class="Event__shareTitle">Dela händelsen:</p>
             <amp-social-share type="twitter"></amp-social-share>

@@ -22,6 +22,7 @@ class Dictionary extends Model
         $arrWords = array_map('trim', $arrWords);
         $arrWords = array_filter($arrWords);
         $arrWords = array_map('mb_strtolower', $arrWords);
+        $arrWords = array_unique($arrWords);
         sort($arrWords, SORT_LOCALE_STRING);
 
         return $arrWords;
