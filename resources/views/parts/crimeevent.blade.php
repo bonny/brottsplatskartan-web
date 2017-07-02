@@ -160,7 +160,7 @@ if $single is set then larger image
                     @foreach ($newsarticles as $newsarticle)
                         <li class="Event__mediaLink">
                             <a class="Event__mediaLinkTitle" href="{{ $newsarticle->url }}">{{ $newsarticle->title }}</a>
-                            <span class="Event__mediaLinkSource">{{ $newsarticle->source }}</span>
+                            <span class="Event__mediaLinkSource">{{ $newsarticle->getSourceName() }}</span>
                             <div class="Event__mediaLinkShortdesc">{{ $newsarticle->shortdesc }}</div>
                         </li>
                     @endforeach
