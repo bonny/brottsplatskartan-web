@@ -7,7 +7,7 @@ Template för ordlista/dictionary och ett enskild ord
 
 @extends('layouts.web')
 
-@section('title', $word->word)
+@section('title', $word->word . ' | Ordlista')
 @section('metaDescription', e("Ordlista"))
 @section('canonicalLink', "/ordlista/$word->word")
 
