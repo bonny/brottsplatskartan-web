@@ -52,6 +52,10 @@ class Newsarticle extends Model
             case 'www.svt.se':
                 $source = 'SVT';
                 break;
+            case 'gp.se':
+            case 'www.gp.se':
+                $source = 'Göteborgsposten';
+                break;
             default:
                 $source = $urlHost;
         }
