@@ -94,6 +94,10 @@ Layout template for web
         <header class="SiteHeader">
             <div class="SiteHeader__inner">
 
+                @if (Auth::check())
+                    <p class='SiteHeader__loggedin'>Inloggad. Coolt.</p>
+                @endif
+
                 <h1 class="SiteTitle"><a href="/">
                     <div class="SiteHeader__icon">
                         <amp-img src="/img/brottsplatskartan-logotyp.png" width=282 height=36 alt="Brottsplatskartan"></amp-img>

@@ -884,3 +884,9 @@ Route::get('/design', function (Request $request) {
 
     $view->with($data);
 });
+
+Route::get('loggain', function () {
+    // Only authenticated users may enter...
+    return redirect('/?inloggad=jajjemensan');
+})->middleware('auth.basic');
+

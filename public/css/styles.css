@@ -85,6 +85,13 @@ dd {
     margin-left: var(--default-margin-double);
 }
 
+button {
+    font-size: 1rem;
+    line-height: 1;
+    padding: var(--default-margin-half);
+    margin: var(--default-margin-half);
+}
+
 .container {
     margin: 0 auto;
     max-width: 1000px;
@@ -113,6 +120,15 @@ dd {
 .SiteHeader__inner {
     max-width: 980px;
     margin: 0 auto;
+    position: relative;
+}
+
+.SiteHeader__loggedin {
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: darkgreen;
+    font-weight: bold;
 }
 
 .SiteTitle {
