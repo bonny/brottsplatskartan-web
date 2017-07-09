@@ -91,6 +91,12 @@ dd {
     padding: 0 10px;
 }
 
+.container:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
 .SiteHeader {
     background: #fff;
     position: fixed;
@@ -499,16 +505,23 @@ amp-social-share {
 }
 
 .SiteFooter {
-    background: var(--color-grey-light);
-    padding: .5rem;
-    margin-top: var(--default-margin);
-    margin-top: 4rem;
+    /*background: var(--color-grey-light);*/
+    padding: var(--default-margin-double);;
+    margin-top: var(--default-margin-double);
+    padding-top: var(--default-margin-double);
     overflow: auto;
     clear: both;
+    border-top: 1px solid var(--color-grey-light);
+    background-color: #eee;
+}
+
+.SiteFooter h2 {
+    font-size: 1rem;
 }
 
 .SiteFooter__lanListing {}
 
+/*
 .SiteFooter__lanListing__items {
     list-style-type: none;
     padding: 0;
@@ -519,6 +532,35 @@ amp-social-share {
     margin-right: 1ex;
     padding-right: 1ex;
     border-right: 1px solid #aaa;
+}
+*/
+
+.SiteFooter__col {
+    display: inline-block;
+    vertical-align: top;
+    margin-right: var(--default-margin-double);
+}
+
+@media only screen and (min-width: 667px) {
+    .SiteFooter__col {
+        width: 38%;
+    }
+}
+
+@media only screen and (min-width: 1024px) {
+    .SiteFooter__col {
+        width: 30%;
+    }
+}
+
+.SiteFooter__navlinks {
+    list-style-type: none;
+    padding: 0;
+}
+
+.SiteFooter__navlinks a {
+    padding: .15rem 0;
+    display: block;
 }
 
 .Breadcrumbs {
@@ -870,7 +912,16 @@ amp-social-share {
     white-space: nowrap;
 }
 
+.PageApps__screenshots {
+    float: right;
+}
 
+.PageApps__screenshots amp-img {
+    display: inline-block;
+    width: 125px;
+    vertical-align: top;
+    margin: var(--default-margin-half);
+}
 
 /* nånstans i mitten... */
 @media only screen and (min-width: 400px) and (max-width: 666px) {

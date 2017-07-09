@@ -201,40 +201,7 @@ Layout template for web
 
     <footer class="SiteFooter">
 
-        <div><amp-img alt="Brottsplatskartan" src="/img/brottsplatskartan-logotyp-symbol-only.png" width=40 height=40></amp-img>
-
-        <h2>Länkar om Brottsplatskartan</h2>
-
-        <ul>
-            <li><a href="{{ route("page", ["pagename" => "om"]) }}">Om brotten och kartan</a></li>
-            <!-- <li><a href="{{ route("page", ["pagename" => "stockholm"]) }}">Polishändelser i Stockholm</a></li> -->
-            <li><a href="{{ route("page", ["pagename" => "appar"]) }}">Appar till Iphone, Ipad och Android</a></li>
-            <li><a href="{{ route("ordlista") }}">Ordlista</a></li>
-            <li><a href="{{ route("page", ["pagename" => "api"]) }}">Brottsplatser API</a></li>
-            <li>Följ <a href="https://twitter.com/brottsplatser">@Brottsplatser</a> och <a href="https://twitter.com/brottsplatser">@stockholmsbrott</a> på Twitter</a></li>
-            <li><a href="https://www.facebook.com/brottsplatskartan">Gilla Brottsplatskartan på Facebook</a></li>
-            <li><a href="https://stats.uptimerobot.com/ADWQ0TZq1">Upptid/status</a></li>
-        </ul>
-
-        <div class="SiteFooter__lanListing">
-
-            <h2>Händelser från Polisen i ditt län</h2>
-
-            <ul class="SiteFooter__lanListing__items">
-
-                @foreach (App\Helper::getAllLan() as $oneLan)
-
-                    <li class="SiteFooter__lanListing__item">
-                        <a href="{{ route("lanSingle", ["lan"=>$oneLan->administrative_area_level_1]) }}">
-                            {{ $oneLan->administrative_area_level_1 }}
-                        </a>
-                    </li>
-
-                @endforeach
-
-            </ul>
-
-        </div>
+        @include('parts.sitefooter')
 
     </footer>
 
