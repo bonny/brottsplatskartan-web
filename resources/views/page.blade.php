@@ -17,6 +17,8 @@ Template for text pages
 
     @if ($pagename == "api")
 
+        @section('canonicalLink', '/sida/api')
+
         <h1>Brottsplats API</h1>
 
         <p>Brottsplatskartan har ett API med stöd för både JSON och JSONP.</p>
@@ -63,11 +65,28 @@ Template for text pages
 
     @if ($pagename == "om")
 
+        @section('canonicalLink', '/sida/om')
+
         <h1>Om brottsplatskartan.se</h1>
+
+        <p>Brottsplatskartan är en <a href="https://brottsplatskartan.se">sajt</a> och <a href="/sida/appar">appar</a>
+        som visar var brott i Sverige har skett. Typ som en poliskarta eller brottskarta.</p>
+
+        <p>Polisen själva har en sajt där dom skriver om vilka händelser som skett, men Polisens webbplats saknas en del funktioner, som vi här på Brottsplatskartan försökt fixa till. T.ex.:</p>
+
+        <ul>
+            <li>Permalänkar till brott och händelser som inte försvinner (hos Polisen så slutar en länk till en händelser att fungera efter en vecka ungefär)</li>
+
+            <li>Platsen för en händelse visas på en karta (på Polisens webbsida så står det bara en adress eller område, men ingen länk till karta eller liknande)</li>
+
+            <li>Möjlighet att visa saker "nära mig" genom att använda GPS:en på en mobiltelefon (Polisen har ingen liknande funktion alls)</li>
+        </ul>
+
+        <h2>Om händelserna och deras position på kartan</h2>
 
         <p>Informationen om de händelser som visas på webbplatserna hämtas från Polisens webbplats.</p>
 
-        <p>Platsen för varje händelse är skapad automatiskt och det är inte helt otroligt att det inte är 100 % korrekt.</p>
+        <p>Platsen för varje händelse är skapad automatiskt och det kan därför förekomma fel.</p>
 
         <h2>Kontakta brottsplatskartan</h2>
 
@@ -81,6 +100,8 @@ Template for text pages
 
     @if ($pagename == "appar")
 
+        @section('canonicalLink', '/sida/appar')
+
         <h1>Polisens händelser direkt i din mobil</h1>
 
         <div class='PageApps__screenshots'>
@@ -92,11 +113,13 @@ Template for text pages
         </div>
 
         <p>
-            Med våra brottsplatsappar till Iphone och Android så kan du se de senaste händelserna från polisen
+            Med våra brottsappar till Iphone och Android så kan du se de senaste händelserna från polisen
             direkt i din mobil.
         </p>
 
         <h2>Ladda hem apparna</h2>
+
+        <p>Apparna med brottskartan hittar du här:</p>
 
         <ul>
             <li>
