@@ -188,7 +188,8 @@ return [
         Laravel\Scout\ScoutServiceProvider::class,
         // TeamTNT\Scout\TNTSearchScoutServiceProvider::class,
         'Sofa\Eloquence\ServiceProvider',
-        AlfredoRamos\ParsedownExtra\ParsedownExtraServiceProvider::class
+        AlfredoRamos\ParsedownExtra\ParsedownExtraServiceProvider::class,
+        Laravel\Tinker\TinkerServiceProvider::class // after upgrade not available by default
     ],
 
     /*

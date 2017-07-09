@@ -83,6 +83,14 @@ Template for text pages
 
         <h1>Polisens händelser direkt i din mobil</h1>
 
+        <div class='PageApps__screenshots'>
+
+            <a href="https://lh3.googleusercontent.com/nIvqRhYj2-fzB0Pv8v2evtdDGcOJQRaSvIrz_L6wcb9oxeDrdaV2SC4l-f_iRE42ZPs=h900-rw"><amp-img layout="responsive" width="506" height="900" src="https://lh3.googleusercontent.com/nIvqRhYj2-fzB0Pv8v2evtdDGcOJQRaSvIrz_L6wcb9oxeDrdaV2SC4l-f_iRE42ZPs=h900-rw" alt="Skärmdump som visar hur appen ser ut på en Android-telefon"></amp-img>
+
+            <a href="http://a5.mzstatic.com/eu/r30/Purple71/v4/05/c9/3d/05c93d0e-d40c-d35a-4eb7-7ca001e36e93/screen696x696.jpeg"><amp-img layout="responsive" width="392" height="596" src="http://a5.mzstatic.com/eu/r30/Purple71/v4/05/c9/3d/05c93d0e-d40c-d35a-4eb7-7ca001e36e93/screen696x696.jpeg" alt="Skärmdump som visar hur appen ser ut på en Iphone-telefon"></amp-img></a>
+
+        </div>
+
         <p>
             Med våra brottsplatsappar till Iphone och Android så kan du se de senaste händelserna från polisen
             direkt i din mobil.
@@ -99,7 +107,7 @@ Template for text pages
 
         <h2>Tips!</h2>
 
-        <p>Om du gillar hemsidan mer än apparna så kan du välja att lägga ett bokmärke till brottsplatskartan.se på
+        <p>Om du gillar <a href="https://brottsplatskartan.se">hemsidan</a> mer än apparna så kan du välja att lägga ett bokmärke till <a href="https://brottsplatskartan.se">brottsplatskartan.se</a> på
         din hemskärm i din telefon.</p>
 
     @endif
