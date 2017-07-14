@@ -95,7 +95,7 @@ Layout template for web
             <div class="SiteHeader__inner">
 
                 @if (Auth::check())
-                    <p class='SiteHeader__loggedin'>Inloggad. Coolt.</p>
+                    <p class='SiteHeader__loggedin'>Inloggad. Coolt. <a href="{{ route('logout') }}">Logga ut</a></p>
                 @endif
 
                 <h1 class="SiteTitle"><a href="/">

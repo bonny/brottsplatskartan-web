@@ -885,8 +885,18 @@ Route::get('/design', function (Request $request) {
     $view->with($data);
 });
 
+/*
 Route::get('loggain', function () {
     // Only authenticated users may enter...
     return redirect('/?inloggad=jajjemensan');
 })->middleware('auth.basic');
+*/
 
+// Added by php artisan make:auth
+Auth::routes();
+Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('logout', function () {
+    Auth::logout();
+    return redirect('/');
+});
