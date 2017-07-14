@@ -89,11 +89,16 @@ if $single is set then larger image
     @endif
 
     <h1 class="Event__title">
-        @if (Auth::check())
-            <form method='get'>
-                <input type="hidden" name="debugActions[]" value="clearLocation">
-                <button>Rensa location-data &amp; hämta info &amp; plats igen</button>
-            </form>
+        @if (!isset($overview) && Auth::check())
+            <div class="Event__admin">
+                <form method='get'>
+                    <fieldset>
+                        <legend>Admin-grejjer</legend>
+                        <input type="hidden" name="debugActions[]" value="clearLocation">
+                        <button>Rensa location-data &amp; hämta info &amp; plats igen</button>
+                    </fieldset>
+                </form>
+            </div>
         @endif
         @if ( isset($overview) )
         <a href="{{ $event->getPermalink() }}">

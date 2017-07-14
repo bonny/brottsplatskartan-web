@@ -939,6 +939,11 @@ amp-social-share {
     margin: var(--default-margin-half);
 }
 
+.Event__admin {
+    margin-top: var(--default-margin);
+    margin-bottom: var(--default-margin);
+}
+
 /* nånstans i mitten... */
 @media only screen and (min-width: 400px) and (max-width: 666px) {
 
