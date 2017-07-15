@@ -89,17 +89,6 @@ if $single is set then larger image
     @endif
 
     <h1 class="Event__title">
-        @if (!isset($overview) && Auth::check())
-            <div class="Event__admin">
-                <form method='get'>
-                    <fieldset>
-                        <legend>Admin-grejjer</legend>
-                        <input type="hidden" name="debugActions[]" value="clearLocation">
-                        <button>Rensa location-data &amp; hämta info &amp; plats igen</button>
-                    </fieldset>
-                </form>
-            </div>
-        @endif
         @if ( isset($overview) )
         <a href="{{ $event->getPermalink() }}">
         @endif
@@ -109,6 +98,42 @@ if $single is set then larger image
         </a>
         @endif
     </h1>
+
+    @if (!isset($overview) && Auth::check())
+
+        <div class="Event__admin">
+
+            <form method='get'>
+                <fieldset>
+                    <legend>Adminstuff</legend>
+
+                    <p>
+                        <label>
+                            Lägg till plats<br>
+                            <input type="text" name="locationAdd" placeholder="Hejsanhoppsangränd">
+                        </label>
+                    </p>
+
+                    <p>
+                        <label>
+                            Ignorera plats<br>
+                            <input type="text" name="locationIgnore" placeholder="Ipsumvägen">
+                        </label>
+                    </p>
+
+                    <p>
+                        <input type="hidden" name="debugActions[]" value="clearLocation">
+                        <button>Rensa location-data &amp; hämta info &amp; plats igen</button>
+                    </p>
+
+                </fieldset>
+            </form>
+
+
+        </div>
+
+    @endif
+
     {{--
     Om bara vill visa när skillnad är mer än nn dagar/timmar osv.
     http://stackoverflow.com/questions/23336261/laravel-carbon-display-date-difference-only-in-days

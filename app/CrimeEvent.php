@@ -626,6 +626,20 @@ class CrimeEvent extends Model
 
             $this->save();
 
+            // Add and remove locatons
+            $locationAdd = trim($request->input('locationAdd', ''));
+            if ($locationAdd) {
+                echo "<br>locationAdd: $locationAdd";
+                \App\highways_added::firstOrCreate(['name' => $locationAdd]);
+            }
+
+            $locationIgnore = mb_strtolower(trim($request->input('locationIgnore', '')));
+            if ($locationIgnore) {
+                echo "<br>locationIgnore: $locationIgnore";
+                \App\highways_ignored::firstOrCreate(['name' => $locationIgnore]);
+            }
+
+
             $FeedController->parseItem($this->getKey());
             $FeedController->geocodeItem($this->getKey());
 

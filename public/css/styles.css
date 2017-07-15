@@ -432,6 +432,7 @@ amp-social-share {
     margin-bottom: var(--default-margin);
 }
 
+input[type='text'],
 .SearchForm__s,
 .SearchForm__submit {
     font-size: 1rem;
@@ -945,6 +946,10 @@ amp-social-share {
 .Event__admin {
     margin-top: var(--default-margin);
     margin-bottom: var(--default-margin);
+}
+
+.Event__admin input[type='text'] {
+    width: 100%;
 }
 
 /* nånstans i mitten... */
