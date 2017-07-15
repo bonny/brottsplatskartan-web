@@ -217,6 +217,9 @@ button {
 .Events {
     /*column-count: 2;*/
     overflow: auto;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
 }
 
 .Event {

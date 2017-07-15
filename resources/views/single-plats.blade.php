@@ -45,7 +45,7 @@ Template för en ort
 
     @if ($events)
 
-        <div class="Events Events--overview">
+        <ul class="Events Events--overview">
 
             @foreach ($events as $event)
 
@@ -53,7 +53,7 @@ Template för en ort
 
             @endforeach
 
-        </div>
+        </ul>
 
         {{ $events->links() }}
 

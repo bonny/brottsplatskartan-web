@@ -36,21 +36,21 @@ Template för sök
 
     @if (isset($events2) && $events2->count())
         <p>2: Hittade <b>{{ $events2->total() }} sidor</b> som matchar <em>"{{ $s }}"</em></p>
-        <div class="Events Events--overview Events--overviewSearch">
+        <ul class="Events Events--overview Events--overviewSearch">
             @foreach ($events2 as $event)
                 @include('parts.crimeevent', ["overview" => true])
             @endforeach
-        </div>
+        </ul>
         {{ $events->appends(["s" => $s])->links() }}
     @endif
 
     @if (isset($events) && $events->count())
         <p><b>Händelser</b> som innehåller <em>"{{ $s }}"</em> ({{ $events->total() }} st)</p>
-        <div class="Events Events--overview Events--overviewSearch">
+        <ul class="Events Events--overview Events--overviewSearch">
             @foreach ($events as $event)
                 @include('parts.crimeevent', ["overview" => true])
             @endforeach
-        </div>
+        </ul>
         {{ $events->appends(["s" => $s])->links() }}
     @else
 

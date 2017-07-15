@@ -29,7 +29,7 @@ Template for geo results
 
         <!-- Antal försök: {{ $numTries }} -->
 
-        <div class="Events Events--overview">
+        <ul class="Events Events--overview">
 
             @foreach ($events as $event)
 
@@ -37,7 +37,7 @@ Template for geo results
 
             @endforeach
 
-        </div>
+        </ul>
 
         {{-- $events->links() --}}
 

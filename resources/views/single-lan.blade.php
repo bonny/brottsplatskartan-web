@@ -66,7 +66,7 @@ med översikt med händelser för länet
 
     @if ($events)
 
-        <div class="Events Events--overview">
+        <ul class="Events Events--overview">
 
             @foreach ($events as $event)
 
@@ -74,7 +74,7 @@ med översikt med händelser för länet
 
             @endforeach
 
-        </div>
+        </ul>
 
         {{ $events->links() }}
 

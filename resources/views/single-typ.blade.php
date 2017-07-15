@@ -20,7 +20,7 @@ Template för ett län
 
     @if ($events)
 
-        <div class="Events Events--overview">
+        <ul class="Events Events--overview">
 
             @foreach ($events as $event)
 
@@ -28,7 +28,7 @@ Template för ett län
 
             @endforeach
 
-        </div>
+        </ul>
 
         {{ $events->links() }}
 
