@@ -611,6 +611,10 @@ class CrimeEvent extends Model
     public function maybeClearLocationData(\Illuminate\Http\Request $request)
     {
 
+        if (!\Auth::check()) {
+            return;
+        }
+
         $debugActions = (array) $request->input("debugActions");
 
         if (in_array("clearLocation", $debugActions)) {
