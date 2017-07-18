@@ -7,13 +7,27 @@ if $single is set then larger image
 
 --}}
 
-<article
-    class="
-        Event
-        @if(isset($overview)) Event--overview @endif
-        @if(isset($single)) Event--single @endif
-        @if(isset($event->location_geometry_type)) Event--distance_{{ $event->getViewPortSizeAsString() }} @endif
-    ">
+@if(isset($overview))
+
+    <li
+        class="
+            Event
+            @if(isset($overview)) Event--overview @endif
+            @if(isset($single)) Event--single @endif
+            @if(isset($event->location_geometry_type)) Event--distance_{{ $event->getViewPortSizeAsString() }} @endif
+        ">
+        <article>
+
+@else
+    <article
+        class="
+            Event
+            @if(isset($overview)) Event--overview @endif
+            @if(isset($single)) Event--single @endif
+            @if(isset($event->location_geometry_type)) Event--distance_{{ $event->getViewPortSizeAsString() }} @endif
+        ">
+@endif
+
 
     {{--
 
@@ -270,4 +284,11 @@ if $single is set then larger image
 
     @endif
 
-</article>
+@if(isset($overview))
+        </li>
+    </article>
+@else
+    </article>
+@endif
+
+
