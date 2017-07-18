@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Newsarticle extends Model
 {
+
+    protected $fillable = ['crime_event_id', 'title', 'shortdesc', 'url', 'source'];
+
     public function crimeevent()
     {
         return $this->belongsTo('App\CrimeEvent');
@@ -55,6 +58,10 @@ class Newsarticle extends Model
             case 'gp.se':
             case 'www.gp.se':
                 $source = 'Göteborgsposten';
+                break;
+            case 'unt.se':
+            case 'www.unt.se':
+                $source = 'UNT';
                 break;
             default:
                 $source = $urlHost;
