@@ -193,7 +193,7 @@ if $single is set then larger image
                         </a>
                     </h3>
                     <div class="Event__dictionaryWordDescription">
-                        {!! str_limit(Markdown::parse($dictionaryWord->description), 100, '…') !!}
+                        <p>{!! str_limit(strip_tags(Markdown::parse($dictionaryWord->description)), 100, '…') !!}</p>
                     </div>
                 </div>
             @endforeach
