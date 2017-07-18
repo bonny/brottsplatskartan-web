@@ -433,6 +433,16 @@ amp-social-share {
 }
 
 input[type='text'],
+input[type='email'],
+input[type='url'] {
+    border-style: solid;
+    border-width: 1px;
+    border-color: var(--color-grey-light);
+}
+
+input[type='text'],
+input[type='email'],
+input[type='url'],
 .SearchForm__s,
 .SearchForm__submit {
     font-size: 1rem;
@@ -950,6 +960,20 @@ input[type='text'],
 
 .Event__admin input[type='text'] {
     width: 100%;
+}
+
+.AddMediaFormFields input[type='text'],
+.AddMediaFormFields input[type='url'] {
+    width: 32%;
+    display: inline-block;
+}
+
+.user-valid {
+    border-color: darkgreen;
+}
+
+.user-invalid {
+    border-color: darkred;
 }
 
 /* nånstans i mitten... */

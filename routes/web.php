@@ -642,6 +642,37 @@ Route::get('/lan/{lan}', function ($lan, Request $request) {
     return view('single-lan', $data);
 })->name("lanSingle");
 
+/**
+ * Uppdatera saker kring ett single event
+ */
+Route::post('/{lan}/{eventName}', function ($lan, $eventName, Request $request) {
+
+    preg_match('!\d+$!', $eventName, $matches);
+    $eventID = $matches[0];
+
+    if (!$eventID) {
+        abort(404);
+    }
+
+    $origin = $request->header('origin');
+
+    \App\Newsarticle::create([
+        'crime_event_id' => $eventID,
+        'title' => $request->title,
+        'shortdesc' => $request->shortdesc,
+        'url' => $request->url,
+        'source' => ''
+    ]);
+
+    return response()
+            ->json([
+                'saved' => true
+            ])
+            ->withHeaders([
+                'AMP-Access-Control-Allow-Source-Origin' => $origin
+            ]);
+
+});
 
 /**
  * single event page/en händelse/ett crimeevent

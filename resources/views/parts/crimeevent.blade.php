@@ -99,41 +99,6 @@ if $single is set then larger image
         @endif
     </h1>
 
-    @if (!isset($overview) && Auth::check())
-
-        <div class="Event__admin">
-
-            <form method='get'>
-                <fieldset>
-                    <legend>Adminstuff</legend>
-
-                    <p>
-                        <label>
-                            Lägg till plats<br>
-                            <input type="text" name="locationAdd" placeholder="Hejsanhoppsangränd">
-                        </label>
-                    </p>
-
-                    <p>
-                        <label>
-                            Ignorera plats<br>
-                            <input type="text" name="locationIgnore" placeholder="Ipsumvägen">
-                        </label>
-                    </p>
-
-                    <p>
-                        <input type="hidden" name="debugActions[]" value="clearLocation">
-                        <button>Rensa location-data &amp; hämta info &amp; plats igen</button>
-                    </p>
-
-                </fieldset>
-            </form>
-
-
-        </div>
-
-    @endif
-
     {{--
     Om bara vill visa när skillnad är mer än nn dagar/timmar osv.
     http://stackoverflow.com/questions/23336261/laravel-carbon-display-date-difference-only-in-days
@@ -233,5 +198,71 @@ if $single is set then larger image
         </aside>
     @endif
 
+    @if (!isset($overview) && Auth::check())
+
+        <div class="Event__admin">
+
+            <h2>Admingrejjer</h2>
+
+            <form method='get' action='{{ url()->current() }}' target="_top">
+                <fieldset>
+                    <legend>Platser</legend>
+
+                    <p>
+                        <label>
+                            Lägg till plats<br>
+                            <input type="text" name="locationAdd" placeholder="Hejsanhoppsangränd">
+                        </label>
+                    </p>
+
+                    <p>
+                        <label>
+                            Ignorera plats<br>
+                            <input type="text" name="locationIgnore" placeholder="Ipsumvägen">
+                        </label>
+                    </p>
+
+                    <p>
+                        <input type="hidden" name="debugActions[]" value="clearLocation">
+                        <button>Rensa location-data &amp; hämta info &amp; plats igen</button>
+                    </p>
+
+                </fieldset>
+            </form>
+
+            <form method='post' class="AdminForm AdminForm--addMediaRef"
+                action-xhr='{{ url()->current() }}'
+                target="_top"
+            >
+                <fieldset>
+                    <legend>Händelsen i media</legend>
+
+                    <p class="AddMediaFormFields">
+                        <input type="text" name="title" placeholder="title">
+                        <input type="text" name="shortdesc" placeholder="shortdesc">
+                        <input type="url" name="url" placeholder="url">
+                    </p>
+
+                    <p>
+                        <input type="hidden" name="eventAction" value="addMediaReference">
+                        {{ csrf_field() }}
+                        <button type="submit">Spara media</button>
+                    </p>
+
+                </fieldset>
+
+                <div submit-success>
+                    <p>Ok! Tillagd!</p>
+                </div>
+
+                <div submit-error>
+                    <p>Dang, något gick fel när media skulle sparas.</p>
+                </div>
+
+            </form>
+
+        </div>
+
+    @endif
 
 </article>
