@@ -72,7 +72,7 @@ Route::get('/', function (Request $request) {
 
     $introtext_key = "introtext-start";
     if ($page == 1) {
-        $data["introtext"] = Setting::get($introtext_key);
+        $data["introtext"] = Markdown::parse(Setting::get($introtext_key));
     }
 
     // Hämta statistik
@@ -472,7 +472,7 @@ Route::get('/plats/{plats}', function ($plats, Request $request) {
 
     $introtext = null;
     if ($page == 1) {
-         $introtext = Setting::get($introtext_key);
+         $introtext = Markdown::parse(Setting::get($introtext_key));
     }
 
     $data["introtext"] = $introtext;
@@ -632,7 +632,7 @@ Route::get('/lan/{lan}', function ($lan, Request $request) {
     // Kolla om förklarande text för län finns
     // key = like "introtext-lan-Stockholms län"
     $introtext_key = "introtext-lan-$lan";
-    $data["introtext"] = Setting::get($introtext_key);
+    $data["introtext"] = Markdown::parse(Setting::get($introtext_key));
 
     // Hämta statistik för ett län
     $data["lanChartImgUrl"] = App\Helper::getStatsImageChartUrl($lan);
