@@ -62,6 +62,18 @@ Template for start page
 
             @foreach ($events as $event)
 
+                {{--
+                @if ($loop->index == 2)
+                    yo 2
+                    <amp-ad width=300 height=250
+                            type="adsense"
+                            data-ad-client="ca-pub-1689239266452655"
+                            data-ad-slot="7852653602"
+                          >
+                     </amp-ad>
+                @endif
+                --}}
+
                 @include('parts.crimeevent_v2', ["overview" => true])
 
             @endforeach
