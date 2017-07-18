@@ -48,7 +48,12 @@ if $single is set then larger image
 
             @else
 
-                {{-- <a href="https://google.se/maps/{{ '@' . $event->location_lat }},{{ $event->location_lng }},12z" target="_blank"> --}}
+                <a
+                    href="https://google.se/maps/{{ '@' . $event->location_lat }},{{ $event->location_lng }},12z"
+                    target="_blank"
+                    class="FreddysGoogleMapsLink"
+                    title="Öppna ungefärlig plats för händelsen/brottet i Google Maps (öppnas i ny flik)"
+                    >
 
                 {{--
                 640px
@@ -78,7 +83,7 @@ if $single is set then larger image
                         ></amp-img>
                     </span>
 
-                {{-- </a> --}}
+                </a>
 
             @endif
 
