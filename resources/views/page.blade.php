@@ -56,7 +56,7 @@ Template for text pages
 
         <p><code>/api/eventsNearby?lat=59.32&lng=18.06</code></p>
 
-        <h#>Hämta single event</h#>
+        <h3>Hämta single event</h3>
 
         <p><code>/api/event/4095</code></p>
 
