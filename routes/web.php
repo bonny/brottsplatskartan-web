@@ -817,7 +817,8 @@ Route::get('/sok/', function (Request $request) {
             "parsed_teaser" => 10,
             "administrative_area_level_1" => 10,
             "administrative_area_level_2" => 7,
-            "description" => 5
+            "description" => 5,
+            "parsed_content" => 20
         ])->paginate(10);
     }
 
