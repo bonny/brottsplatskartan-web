@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use App\highways_ignored;
 use App\highways_added;
+use HTMLPurifier;
+use HTMLPurifier_Config;
 
 class FeedParserController extends Controller
 {
@@ -139,10 +141,20 @@ class FeedParserController extends Controller
             }
         }
 
-        $returnParts["parsed_content"] = strip_tags($returnParts["parsed_content"], "<br><strong>");
-        $returnParts["parsed_content"] = trim($returnParts["parsed_content"]);
+        $returnParts["parsed_content"] = strip_tags($returnParts["parsed_content"], "<br><strong><ol><ul><li>");
+
         // fix one or multiple <p>&nbsp;</p> that causes long "line breaks"
         // @TODO: get it to work...
+
+        // Ibland kan sån här html förekomma hos Polisen.se:
+        // <br style="mso-special-character: line-break"><br style="mso-special-character: line-break"></p><p>Polisen Stockholms län</p>
+        // Så använd HTMLPurifier för att ta bort all style
+        $config = HTMLPurifier_Config::createDefault();
+        $config->set('CSS.AllowedProperties', array());
+        $purifier = new HTMLPurifier($config);
+
+        $returnParts["parsed_content"] = $purifier->purify($returnParts["parsed_content"]);
+        $returnParts["parsed_content"] = trim($returnParts["parsed_content"]);
 
         return $returnParts;
     } // function
