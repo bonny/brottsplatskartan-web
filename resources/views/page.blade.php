@@ -162,4 +162,38 @@ Template for text pages
 
     @endif
 
+
+    @if ($pagename == "press")
+
+        <h1>Press</h1>
+
+        <h2>Logotyp</h2>
+
+        <p>
+            Brottsplatskartans logotyp i PNG-format:
+            <br>
+            <a href="/img/brottsplatskartan-logotyp.png">
+                <amp-img src="/img/brottsplatskartan-logotyp.png" width=282 height=36 alt="Brottsplatskartan"></amp-img>
+            </a>
+            <br>
+            <a href="/img/brottsplatskartan-logotyp.png">brottsplatskartan-logotyp.png</a> (6KB, 626✕80, PNG)
+        </p>
+
+        <!--
+        <p>
+            <a href="/img/brottsplatskartan-logotyp-symbol-only.png">
+                <amp-img alt="Brottsplatskartan" src="/img/brottsplatskartan-logotyp-symbol-only.png" width=40 height=40></amp-img>
+            </a>
+        </p>
+        -->
+
+        <h2>Kontakt</h2>
+
+        <p>För frågor kontakta Brottsplatskartan via e-post <a href="mailto:kontakt@brottsplatskartan.se">kontakt@brottsplatskartan.se</a>.</p>
+
+
+
+
+    @endif
+
 @endsection
