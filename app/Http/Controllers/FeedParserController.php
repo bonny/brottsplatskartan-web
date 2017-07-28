@@ -141,7 +141,7 @@ class FeedParserController extends Controller
             }
         }
 
-        $returnParts["parsed_content"] = strip_tags($returnParts["parsed_content"], "<br><strong><ol><ul><li>");
+        $returnParts["parsed_content"] = strip_tags($returnParts["parsed_content"], "<a><br><strong><ol><ul><li>");
 
         // fix one or multiple <p>&nbsp;</p> that causes long "line breaks"
         // @TODO: get it to work...
