@@ -5,6 +5,7 @@
     <h2>Brottsplatskartan</h2>
     <ul class="SiteFooter__navlinks">
         <li><a href="{{ route("page", ["pagename" => "om"]) }}">Om brotten och kartan</a></li>
+        <li><a href="{{ route("page", ["pagename" => "press"]) }}">Press</a></li>
         <!-- <li><a href="{{ route("page", ["pagename" => "stockholm"]) }}">Polishändelser i Stockholm</a></li> -->
         <li><a href="{{ route("page", ["pagename" => "appar"]) }}">Appar till Iphone, Ipad och Android</a></li>
         <li><a href="{{ route("ordlista") }}">Ordlista</a></li>
