@@ -7,13 +7,21 @@ Template for text pages
 
 @extends('layouts.web')
 
-@section('title', $pageTitle)
-{{-- @section('canonicalLink', $event->getPermalink())
+@if ($pagename == "press")
+    @section('title', 'Logotyp och beskrivning av Brottsplatskartan för press, journalister, bloggar')
+@else
+    {{-- default title --}}
+    @section('title', $pageTitle)
+@endif
+
+@section('canonicalLink', $canonicalLink)
+
+{{--
 @section('metaDescription', e($event->getMetaDescription()))
-@section('metaImage', $event->getStaticImageSrc(640,640)) --}}
+@section('metaImage', $event->getStaticImageSrc(640,640))
+--}}
 
 @section('content')
-
 
     @if ($pagename == "api")
 
@@ -190,9 +198,6 @@ Template for text pages
         <h2>Kontakt</h2>
 
         <p>För frågor kontakta Brottsplatskartan via e-post <a href="mailto:kontakt@brottsplatskartan.se">kontakt@brottsplatskartan.se</a>.</p>
-
-
-
 
     @endif
 
