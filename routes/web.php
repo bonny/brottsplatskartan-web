@@ -502,10 +502,10 @@ Route::get('/sida/{pagename}', function ($pagename = null) {
             break;
     }
 
-
     $data = [
         "pagename" => $pagename,
-        "pageTitle" => $pagetitle
+        "pageTitle" => $pagetitle,
+        "canonicalLink" => route('page', ['pagename' => $pagename])
     ];
 
     return view('page', $data);
