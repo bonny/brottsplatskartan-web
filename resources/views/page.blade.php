@@ -175,6 +175,27 @@ Template for text pages
 
         <h1>Press</h1>
 
+        <h2>Vad är Brottsplatskartan?</h2>
+
+        <p>Brottsplatskartan är en sajt och en app som visar var brott som rapporterats av polisen har skett på en karta. Brottsplatskartan har en unik algoritm som ritar ut en ungefärlig plats, utan att peka ut enskilda platser, hus eller individer.
+
+        <h2>Snabba fakta</h2>
+
+        <ul>
+
+            <li>Första versionen av Brottsplatskartan kom 2010. Det var en vidareutveckling av sajten <em>Brottsplats Stockholm</em>, som endast visade brott i Stockholm.
+
+            <li>2017 skedde en relansering av Brottsplatskartan. Sajten fick då sitt nuvarande
+            utseende och en mängd nya funktioner såsom bättre placering av brott på kartan, händelser från alla sveriges län, och mycket mer.
+
+            <li>Feber skrev om när sajten lanserades http://feber.se/webb/art/165994/brottsplats_stockholm/
+
+            <li>Webbplatsen har 22.000 användare per månad (Juni 2017)
+
+            <li>67 % av användare besöker sajten via en mobiltelefon
+
+        </ul>
+
         <h2>Logotyp</h2>
 
         <p>
