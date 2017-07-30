@@ -370,29 +370,44 @@ Route::get('/plats/{plats}', function ($plats, Request $request) {
             $platsStrLen = mb_strlen($plats);
             $platsWithoutLan = mb_substr($plats, 0, $platsStrLen - $lanStrLen);
             $platsWithoutLan = str_replace("-", " ", $platsWithoutLan);
+            $platsWithoutLan = trim($platsWithoutLan);
             break;
         }
     }
 
-    if ($foundMatchingLan) {
-        #echo "<br><br>Hittade län som matchade, så visa platser som matchar ";
-        #echo "'{$platsWithoutLan}' från länet {$oneLanName} ($lanSlug)";
+    #dd($platsWithoutLan);
+    #dd($foundMatchingLan);
 
-        // Hämta events där plats är från huvudtabellen
-        // Används när $plats är bara en plats, typ "insjön",
-        // "östersunds centrum", "östra karup", "kungsgatan" osv.
+    if ($foundMatchingLan) {
+
+        // Hämta events där vi vet både plats och län
+        // t.ex. "Stockholm" i "Stockholms län"
+        // Query blir ca såhär
+        // select * from `crime_events` where `administrative_area_level_1` = ?
+        // and (
+        //     `parsed_title_location` = ?
+        //      or exists (select 1 from `locations` where locations.name = ? AND locations.crime_event_id = crime_events.id)
+        // )
+        // order by `created_at` desc limit 10 offset 0
+        #DB::enableQueryLog();
         $events = CrimeEvent::orderBy("created_at", "desc")
-                    ->where("administrative_area_level_1", $oneLanName)
-                    ->whereExists(function ($query) use ($platsWithoutLan) {
-                        $query->select(DB::raw(1))
-                                ->from('locations')
-                                ->whereRaw(
-                                    'locations.name = ?
-                                    AND locations.crime_event_id = crime_events.id',
-                                    [$platsWithoutLan]
-                                );
+                    ->where("administrative_area_level_1", $oneLanName) // måste vara med
+                    // gruppera dessa
+                    ->where(function($query) use ($oneLanName, $platsWithoutLan) {
+                        $query->where("parsed_title_location", $platsWithoutLan);
+                        $query->orWhereExists(function ($query) use ($platsWithoutLan) {
+                            $query->select(DB::raw(1))
+                                    ->from('locations')
+                                    ->whereRaw(
+                                        'locations.name = ?
+                                        AND locations.crime_event_id = crime_events.id',
+                                        [$platsWithoutLan]
+                                    );
+                        });
                     })
                     ->paginate(10);
+
+        #dd(DB::getQueryLog());
 
         $canonicalLink = $plats;
 
