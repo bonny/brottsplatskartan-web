@@ -35,7 +35,10 @@ Route::get('/', function (Request $request) {
         $page = 1;
     }
 
-    $events = CrimeEvent::orderBy("created_at", "desc")->paginate(20);
+    // https://laravel.com/docs/5.5/eloquent-relationships#eager-loading
+    $events = CrimeEvent::orderBy("created_at", "desc")
+                ->with('locations')
+                ->paginate(20);
 
     if ($page > $events->lastPage()) {
         abort(404);
