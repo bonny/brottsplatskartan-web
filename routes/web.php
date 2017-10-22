@@ -760,9 +760,6 @@ Route::get('/{lan}/{eventName}', function ($lan, $eventName, Request $request) {
     return view('single-event', $data);
 })->name("singleEvent");
 
-
-
-
 /**
  * sök
  * sökstartsida + sökresultatsida = samma sida
@@ -819,6 +816,7 @@ Route::get('/sok/', function (Request $request) {
         }
 
         // Sök med hjälp av Eloquence
+        // @TODO: jag tog bort Eloquence pga save() slutade funka typ
         $events = CrimeEvent::search($s, [
             "parsed_title" => 20,
             "parsed_title_location" => 20, // crash when 10, works when 20
