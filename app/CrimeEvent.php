@@ -479,12 +479,12 @@ class CrimeEvent extends Model
 
     public static function getEventsNearLocation($lat, $lng, $nearbyCount = 10, $nearbyInKm = 25)
     {
-
         $events = CrimeEvent::selectRaw('*, ( 6371 * acos( cos( radians(?) ) * cos( radians( location_lat ) ) * cos( radians( location_lng ) - radians(?) ) + sin( radians(?) ) * sin( radians( location_lat ) ) ) ) AS distance', [ $lat, $lng, $lat ])
         ->having("distance", "<=", $nearbyInKm) // välj de som är rimligt nära, värdet är i km
         ->orderBy("parsed_date", "DESC")
         ->orderBy("distance", "ASC")
         ->limit($nearbyCount)
+        ->with('locations')
         ->get();
 
         return $events;
