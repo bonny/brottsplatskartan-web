@@ -26,7 +26,6 @@ setlocale(LC_ALL, 'sv_SE', 'sv_SE.utf8');
  * startpage: show latest events
  */
 Route::get('/', function (Request $request) {
-
     $data = [];
 
     $page = (int) $request->input("page", 1);
@@ -105,7 +104,6 @@ Route::get('/', function (Request $request) {
  * nära: show latest events close to position
  */
 Route::get('/nara', function (Request $request) {
-
     $data = [];
     $events = null;
 
@@ -175,7 +173,6 @@ Route::get('/nara', function (Request $request) {
  * Admin-sida
  */
 Route::group(['prefix' => 'admin'], function () {
-
     Route::get('', function () {
         return redirect()->route("adminDashboard");
     });
@@ -202,7 +199,6 @@ Route::group(['prefix' => 'admin'], function () {
  * Alla län översikt
  */
 Route::get('/lan/', function (Request $request) {
-
     $data = [];
 
     // some old pages are indexed by google like this
@@ -232,7 +228,6 @@ Route::get('/lan/', function (Request $request) {
  * Alla orter översikt
  */
 Route::get('/plats/', function () {
-
     $data = [];
 
     $data["orter"] = DB::table('crime_events')
@@ -260,7 +255,6 @@ Route::get('/plats/', function () {
  * https://brottsplatskartan.se/plats/<ortnamn>
  */
 Route::get('/orter/{ort}', function ($ort = "") {
-
     return redirect()->route("platsSingle", [ "ort" => $ort ]);
     // dd($ort);
 });
@@ -269,7 +263,6 @@ Route::get('/orter/{ort}', function ($ort = "") {
  * Översikt brottstyp/händelsetyp
  */
 Route::get('/typ/', function () {
-
     $data = [];
 
     $data["types"] = DB::table('crime_events')
@@ -293,7 +286,6 @@ Route::get('/typ/', function () {
  * En typ
  */
 Route::get('/typ/{typ}', function ($typ) {
-
     $data = [
         "type" => $typ
     ];
@@ -333,7 +325,6 @@ Route::get('/typ/{typ}', function ($typ) {
  *
  */
 Route::get('/plats/{plats}', function ($plats, Request $request) {
-
     $platsOriginalFromSlug = $plats;
     $data = [];
 
@@ -396,7 +387,7 @@ Route::get('/plats/{plats}', function ($plats, Request $request) {
         $events = CrimeEvent::orderBy("created_at", "desc")
                     ->where("administrative_area_level_1", $oneLanName) // måste vara med
                     // gruppera dessa
-                    ->where(function($query) use ($oneLanName, $platsWithoutLan) {
+                    ->where(function ($query) use ($oneLanName, $platsWithoutLan) {
                         $query->where("parsed_title_location", $platsWithoutLan);
                         $query->orWhereExists(function ($query) use ($platsWithoutLan) {
                             $query->select(DB::raw(1))
@@ -428,7 +419,7 @@ Route::get('/plats/{plats}', function ($plats, Request $request) {
                                     ->where("parsed_title_location", $plats)
                                     ->orWhere("administrative_area_level_2", $plats)
                                     ->orWhereHas('locations', function ($query) use ($plats) {
-                                            $query->where('name', '=', $plats);
+                                        $query->where('name', '=', $plats);
                                     })
                                     ->paginate(10);
         $canonicalLink = $plats;
@@ -490,7 +481,7 @@ Route::get('/plats/{plats}', function ($plats, Request $request) {
 
     $introtext = null;
     if ($page == 1) {
-         $introtext = Markdown::parse(Setting::get($introtext_key));
+        $introtext = Markdown::parse(Setting::get($introtext_key));
     }
 
     $data["introtext"] = $introtext;
@@ -502,7 +493,6 @@ Route::get('/plats/{plats}', function ($plats, Request $request) {
  * Sida, med text typ, t.ex. "om brottsplatskartan" eller "api"
 */
 Route::get('/sida/{pagename}', function ($pagename = null) {
-
     $pagetitle = "Sidan $pagename";
 
     switch ($pagename) {
@@ -664,7 +654,6 @@ Route::get('/lan/{lan}', function ($lan, Request $request) {
  * Uppdatera saker kring ett single event
  */
 Route::post('/{lan}/{eventName}', function ($lan, $eventName, Request $request) {
-
     preg_match('!\d+$!', $eventName, $matches);
     $eventID = $matches[0];
 
@@ -689,7 +678,6 @@ Route::post('/{lan}/{eventName}', function ($lan, $eventName, Request $request) 
             ->withHeaders([
                 'AMP-Access-Control-Allow-Source-Origin' => $origin
             ]);
-
 });
 
 /**
@@ -777,7 +765,6 @@ Route::get('/{lan}/{eventName}', function ($lan, $eventName, Request $request) {
  * sökstartsida + sökresultatsida = samma sida
  */
 Route::get('/sok/', function (Request $request) {
-
     $minSearchLength = 2;
 
     $s = $request->input("s");
@@ -861,7 +848,6 @@ Route::get('/sok/', function (Request $request) {
  * @param $count max number of events to get
  */
 Route::get('/coyards', function (Request $request) {
-
     $data = [];
     $events = null;
 
@@ -918,7 +904,6 @@ Route::get('/design', function (Request $request) {
  * Skicka med data till 404-sidan
  */
 \View::composer('errors/404', function ($view) {
-
     $data = [];
 
     $data["events"] = CrimeEvent::orderBy("created_at", "desc")->paginate(10);
