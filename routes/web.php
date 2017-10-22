@@ -399,6 +399,7 @@ Route::get('/plats/{plats}', function ($plats, Request $request) {
                                     );
                         });
                     })
+                    ->with('locations')
                     ->paginate(10);
 
         #dd(DB::getQueryLog());
@@ -421,6 +422,7 @@ Route::get('/plats/{plats}', function ($plats, Request $request) {
                                     ->orWhereHas('locations', function ($query) use ($plats) {
                                         $query->where('name', '=', $plats);
                                     })
+                                    ->with('locations')
                                     ->paginate(10);
         $canonicalLink = $plats;
         $plats = title_case($plats);
@@ -591,6 +593,7 @@ Route::get('/lan/{lan}', function ($lan, Request $request) {
 
     $events = CrimeEvent::orderBy("created_at", "desc")
                                 ->where("administrative_area_level_1", $lan)
+                                ->with('locations')
                                 ->paginate(10);
 
     $linkRelPrev = null;
