@@ -262,6 +262,7 @@ class FeedController extends Controller
 
         // Parse permalink, i.e. get info from remote and store
         $parsed_content_items = $this->feedParser->parseContent($item->permalink);
+
         $item->fill($parsed_content_items);
         $item->save();
 
@@ -298,8 +299,7 @@ class FeedController extends Controller
         }
 
         $item->scanned_for_locations = true;
-        $item->save();
-
+        $saveResult = $item->save();
     }
 
     /*
