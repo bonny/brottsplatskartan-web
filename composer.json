@@ -17,7 +17,7 @@
         "laravel/scout": "^3.0",
         "alfredo-ramos/parsedown-extra-laravel": "~0.7.0",
         "laravel/tinker": "^1.0",
-        "sofa/eloquence": "^5.5"
+        "sofa/eloquence-base": "^5.5"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
@@ -51,12 +51,10 @@
             "php artisan key:generate"
         ],
         "post-install-cmd": [
-            "Illuminate\\Foundation\\ComposerScripts::postInstall",
-            "php artisan optimize"
+            "Illuminate\\Foundation\\ComposerScripts::postInstall"
         ],
         "post-update-cmd": [
-            "Illuminate\\Foundation\\ComposerScripts::postUpdate",
-            "php artisan optimize"
+            "Illuminate\\Foundation\\ComposerScripts::postUpdate"
         ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",

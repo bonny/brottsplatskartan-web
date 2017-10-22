@@ -179,6 +179,7 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         // installed
+        // Sofa\Eloquence\ServiceProvider::class,
         willvincent\Feeds\FeedsServiceProvider::class,
         'Kozz\Laravel\Providers\Guzzle',
         Weidner\Goutte\GoutteServiceProvider::class,
@@ -187,7 +188,6 @@ return [
         Unisharp\Setting\SettingServiceProvider::class,
         Laravel\Scout\ScoutServiceProvider::class,
         // TeamTNT\Scout\TNTSearchScoutServiceProvider::class,
-        'Sofa\Eloquence\ServiceProvider',
         AlfredoRamos\ParsedownExtra\ParsedownExtraServiceProvider::class,
         Laravel\Tinker\TinkerServiceProvider::class // after upgrade not available by default
     ],

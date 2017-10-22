@@ -2,18 +2,17 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use App\Http\Controllers\FeedParserController;
 use App\Http\Controllers\FeedController;
-// use Laravel\Scout\Searchable;
-use Sofa\Eloquence\Eloquence;
+// use Sofa\Eloquence\Eloquence;
+use Illuminate\Database\Eloquent\Model;
 
 class CrimeEvent extends Model
 {
 
     // use Searchable;
-    use Eloquence;
+    // use Eloquence;
 
     protected $fillable = [
         'title',
