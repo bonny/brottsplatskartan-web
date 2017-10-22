@@ -770,6 +770,12 @@ Route::get('/sok/', function (Request $request) {
     $s = $request->input("s");
     $events = null;
 
+    // Redirect to Google search because Laravel search no good at the moment
+    if ($s) {
+        $url = 'https://www.google.se/search?q=site%3Abrottsplatskartan.se+' . urlencode($s);
+        return redirect($url);
+    }
+
     $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs;
     $breadcrumbs->addCrumb('Hem', '/');
     $breadcrumbs->addCrumb('Sök', route("search"));
