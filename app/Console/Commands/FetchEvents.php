@@ -52,8 +52,6 @@ class FetchEvents extends Command
      */
     public function handle()
     {
-
-
         $this->info('Ok, let\'s go!');
         $this->line('Fetching events...');
 
@@ -63,17 +61,15 @@ class FetchEvents extends Command
         $this->line("Added " . $updatedFeedsInfo["numItemsAdded"] . " items");
         $this->line("Skipped " . $updatedFeedsInfo["numItemsAlreadyAdded"] . " already added items");
 
-
         // find items missing locations and add
         $itemsNotScannedForLocations = CrimeEvent::where('scanned_for_locations', 0)->get();
 
         $this->line("Found " . $itemsNotScannedForLocations->count() . " items with locations missing");
 
         foreach ($itemsNotScannedForLocations as $oneItem) {
-            $this->line("Getting locations for $oneItem->title");
+            $this->line("Getting locations for $oneItem->title, id $oneItem->id");
             $this->feedController->parseItem($oneItem->getKey());
         }
-
 
         // find items not geocoded and geocode them
         $itemsNotGeocoded = CrimeEvent::where([
@@ -90,6 +86,5 @@ class FetchEvents extends Command
 
 
         $this->info('Done!');
-
     }
 }
