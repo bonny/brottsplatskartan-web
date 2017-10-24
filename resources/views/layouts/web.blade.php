@@ -239,10 +239,12 @@ Layout template for web
         </amp-ad>
     </amp-sticky-ad>
 
-    <amp-install-serviceworker
-      src="https://brottsplatskartan.se/serviceworker.js"
-      layout="nodisplay">
-    </amp-install-serviceworker>
+    @if (env('APP_ENV')=='production') {
+        <amp-install-serviceworker
+          src="https://brottsplatskartan.se/serviceworker.js"
+          layout="nodisplay">
+        </amp-install-serviceworker>
+    @endif
 
 </body>
 </html>
