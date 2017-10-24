@@ -124,7 +124,7 @@ if $single is set then larger image
     --}}
     <p class="Event__meta">
         <span class="Event__location">{!! $event->getLocationStringWithLinks() !!}</span>
-        <span class="Event__metaDivider"> | </span>
+        {{-- <span class="Event__metaDivider"> | </span> --}}
         <span class="Event__dateHuman">
             {{-- <time datetime="{{ $event->getPubDateISO8601() }}">{{ $event->getPubDateFormattedForHumans() }}</time> --}}
             <time class="Event__dateHuman__time"
@@ -132,9 +132,9 @@ if $single is set then larger image
                   datetime="{{ $event->getParsedDateISO8601() }}"
                   >
                 {{ $event->getParsedDateFormattedForHumans() }}
-                @if ($event->getParsedDateDiffInSeconds() >= DAY_IN_SECONDS)
+                {{-- @if ($event->getParsedDateDiffInSeconds() >= DAY_IN_SECONDS) --}}
                     – {{ $event->getParsedDateYMD() }}
-                @endif
+                {{-- @endif --}}
             </time>
         </span>
     </p>

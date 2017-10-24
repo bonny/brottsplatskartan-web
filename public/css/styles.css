@@ -293,6 +293,9 @@ button {
 
 .Event__dateHuman {
     /* white-space: nowrap; */
+    display: block;
+    margin-top: var(--default-margin-half);
+    margin-bottom: var(--default-margin-half);
 }
 
 .Event__dateHuman__time {
