@@ -792,6 +792,10 @@ input[type='url'],
     line-height: 1.3;
 }
 
+.Event--v2 .Event__dateHuman {
+    margin-bottom: 0;
+}
+
 .Event--v2 .Event__map {
     /*width: 30%;*/
     /* margin-top: 0;
