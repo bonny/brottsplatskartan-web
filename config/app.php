@@ -180,6 +180,7 @@ return [
 
         // installed
         // Sofa\Eloquence\ServiceProvider::class,
+        'HTMLMin\HTMLMin\HTMLMinServiceProvider',
         willvincent\Feeds\FeedsServiceProvider::class,
         'Kozz\Laravel\Providers\Guzzle',
         Weidner\Goutte\GoutteServiceProvider::class,
@@ -188,8 +189,8 @@ return [
         Unisharp\Setting\SettingServiceProvider::class,
         Laravel\Scout\ScoutServiceProvider::class,
         // TeamTNT\Scout\TNTSearchScoutServiceProvider::class,
-        AlfredoRamos\ParsedownExtra\ParsedownExtraServiceProvider::class,
-        Laravel\Tinker\TinkerServiceProvider::class // after upgrade not available by default
+        #AlfredoRamos\ParsedownExtra\ParsedownExtraServiceProvider::class,
+        #Laravel\Tinker\TinkerServiceProvider::class, // after upgrade not available by default
     ],
 
     /*
@@ -243,7 +244,8 @@ return [
         'Breadcrumbs' => 'Creitive\Breadcrumbs\Facades\Breadcrumbs',
         'Twitter' => 'Thujohn\Twitter\Facades\Twitter',
         'Setting' => Unisharp\Setting\SettingFacade::class,
-        'Markdown'  => AlfredoRamos\ParsedownExtra\Facades\ParsedownExtra::class
+        'Markdown'  => AlfredoRamos\ParsedownExtra\Facades\ParsedownExtra::class,
+        'HTMLMin' => HTMLMin\HTMLMin\Facades\HTMLMin::class,
     ],
 
 ];

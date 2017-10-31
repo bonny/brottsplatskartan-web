@@ -17,7 +17,8 @@
         "laravel/scout": "^3.0",
         "alfredo-ramos/parsedown-extra-laravel": "~0.7.0",
         "laravel/tinker": "^1.0",
-        "sofa/eloquence-base": "^5.5"
+        "sofa/eloquence-base": "^5.5",
+        "htmlmin/htmlmin": "^5.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

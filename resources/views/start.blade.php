@@ -32,7 +32,6 @@ Template for start page
 @section('content')
 
     {{--<h1>Brottsplatskartan visar var brotten sker</h1>--}}
-
     <h1>Senaste polishändelserna i Sverige</h1>
 
     @if (isset($showLanSwitcher))
