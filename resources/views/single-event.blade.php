@@ -4,7 +4,6 @@ Template för ett event/händelse
 
 --}}
 
-
 @extends('layouts.web')
 
 @section('title', $event->getSingleEventTitle() )
@@ -13,6 +12,10 @@ Template för ett event/händelse
 @section('metaImage', $event->getStaticImageSrc(640,640))
 @section('metaImageWidth', 640)
 @section('metaImageHeight', 640)
+
+@section('ldJson')
+    {!! $event->getLdJson() !!}
+@endsection
 
 @section('content')
     @include('parts.crimeevent', ["single" => true])

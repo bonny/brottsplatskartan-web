@@ -760,4 +760,49 @@ class CrimeEvent extends Model
     {
         return $this->hasMany('App\Newsarticle');
     }
+
+    /**
+     * Return ld+json for an article
+     */
+    public function getLdJson()
+    {
+        $permalink = $this->getPermalink(true);
+        $title = $this->getSingleEventTitle();
+        $image = $this->getStaticImageSrc(696, 420);
+        $date = $this->getPubDateISO8601();
+        $description = $this->getDescriptionAsPlainText();
+
+        $str = <<<SQL
+            <script type="application/ld+json">
+                {
+                  "@context": "http://schema.org",
+                  "@type": "NewsArticle",
+                  "mainEntityOfPage": {
+                    "@type": "WebPage",
+                    "@id": "{$permalink}"
+                  },
+                  "headline": "{$title}",
+                  "image": [
+                    "$image",
+                   ],
+                  "datePublished": "$date",
+                  "author": {
+                    "@type": "Organization",
+                    "name": "Brottsplatskartan"
+                  },
+                   "publisher": {
+                    "@type": "Organization",
+                    "name": "Brottsplatskartan",
+                    "logo": {
+                      "@type": "ImageObject",
+                      "url": "https://brottsplatskartan.se/img/brottsplatskartan-logotyp.png"
+                    }
+                  },
+                  "description": "$description"
+                }
+            </script>
+SQL;
+
+        return $str;
+    }
 }

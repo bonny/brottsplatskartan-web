@@ -29,6 +29,10 @@ Layout template for web
         <meta name="twitter:description" content="@yield('metaDescription')">
     @endif
 
+    @hasSection('ldJson')
+        @yield('ldJson')
+    @endif
+
     {{-- @else
         <meta property="og:description" content="Se var brott sker nära dig">
         <meta name="twitter:description" content="Se var brott sker nära dig"> --}}
