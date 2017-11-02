@@ -783,7 +783,7 @@ class CrimeEvent extends Model
                   },
                   "headline": "{$title}",
                   "image": [
-                    "$image",
+                    "$image"
                    ],
                   "datePublished": "$date",
                   "author": {
