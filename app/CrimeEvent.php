@@ -801,6 +801,8 @@ class CrimeEvent extends Model
         $datePublished = $this->getPubDateISO8601();
         $dateModified = $datePublished;
         $description = $this->getDescriptionAsPlainText();
+        $locationLat = $this->location_lat;
+        $locationLng = $this->location_lng;
 
         $str = <<<SQL
             <script type="application/ld+json">
@@ -833,6 +835,15 @@ class CrimeEvent extends Model
                 }
             </script>
 SQL;
+
+        /*
+              "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": "$locationLat",
+                "longitude": "$locationLng"
+              }
+
+        */
 
         return $str;
     }
