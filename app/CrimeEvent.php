@@ -578,10 +578,17 @@ class CrimeEvent extends Model
         return $data;
     }
 
+    /**
+     * Get title for an event
+     * Result is like:
+     * Brand, Bilbrand, Gustav Adolfs gata/Nytorgsbacken, Helsingborg.,
+     * Gustav Adolfs Gata, Nytorgsbacken, Helsingborg, 02 nov 2017",
+     *
+     *
+     * @return string
+     */
     public function getSingleEventTitle()
     {
-
-        $title = "";
         $titleParts = [];
 
         $titleParts[] = $this->parsed_title;
@@ -596,9 +603,31 @@ class CrimeEvent extends Model
         $titleParts[] = $this->parsed_title_location;
         $titleParts[] = $this->getPubDateFormatted('%d %b %Y');
 
-        $title = implode(", ", $titleParts);
+        return implode(", ", $titleParts);
+    }
 
-        return $title;
+    /**
+     * Get a slightly shorter version of the title, used for ld+json
+     *
+     * @return string
+     */
+    public function getSingleEventTitleShort()
+    {
+        $titleParts = [];
+
+        $titleParts[] = $this->parsed_title;
+        $titleParts[] = $this->getDescriptionAsPlainText();
+
+        // $prioOneLocations = $this->locations->where("prio", 1);
+
+        // foreach ($prioOneLocations as $oneLocation) {
+        //     $titleParts[] = title_case($oneLocation->name);
+        // }
+
+        // $titleParts[] = $this->parsed_title_location;
+        // $titleParts[] = $this->getPubDateFormatted('%d %b %Y');
+
+        return implode(", ", $titleParts);
     }
 
     /**
@@ -767,9 +796,10 @@ class CrimeEvent extends Model
     public function getLdJson()
     {
         $permalink = $this->getPermalink(true);
-        $title = $this->getSingleEventTitle();
+        $title = $this->getSingleEventTitleShort();
         $image = $this->getStaticImageSrc(696, 420);
-        $date = $this->getPubDateISO8601();
+        $datePublished = $this->getPubDateISO8601();
+        $dateModified = $datePublished;
         $description = $this->getDescriptionAsPlainText();
 
         $str = <<<SQL
@@ -785,7 +815,8 @@ class CrimeEvent extends Model
                   "image": [
                     "$image"
                    ],
-                  "datePublished": "$date",
+                  "datePublished": "$datePublished",
+                  "dateModified": "$dateModified",
                   "author": {
                     "@type": "Organization",
                     "name": "Brottsplatskartan"
