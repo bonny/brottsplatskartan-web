@@ -45,7 +45,6 @@ class FeedParserController extends Controller
     */
     public function parseTitle($title)
     {
-
         $arrTitleParts = explode(",", $title);
 
         $returnParts = [
@@ -75,26 +74,30 @@ class FeedParserController extends Controller
      *
      * We find "parsed_teaser" and "parsed_content" here
      *
-     * @return array
+     * @return mixed Array with parsed teaser and content if sucess
+     *               Bool false if error occured, for example if page returned 404
      */
     public function parseContent($contentURL)
     {
-
-        #echo "<br>contentURL: $contentURL";
         $returnParts = [
-            "parsed_teaser" => "",
-            "parsed_content" => ""
+            'parsed_teaser' => '',
+            'parsed_content' => ''
         ];
 
         $cacheKey = md5($contentURL . "_cachebust3");
         $html = Cache::get($cacheKey, false);
 
         if (! $html || gettype($html) != "string") {
-            #echo "<br>store in cache";
-
             $client = new Client();
+            // $contentURL .= '-make-it-a-404-to-test';
             $crawler = $client->request('GET', $contentURL);
-            //$crawler = $client->request('GET', "http://polisen.se/fourohfour");
+
+            // Only continue if valid response code, i.e. 20x
+            $response = $client->getResponse();
+            $responseStatusCode = $response->getStatus();
+            if ($responseStatusCode !== 200) {
+                return false;
+            }
 
             // get content inside #column2-3
             $crawler = $crawler->filter('#column2-3');
@@ -106,6 +109,7 @@ class FeedParserController extends Controller
                 $html = '';
             }
 
+            // Store page in cache for 30 minutes
             Cache::put($cacheKey, $html, 30);
         } else {
             #echo "<br>get cached";
