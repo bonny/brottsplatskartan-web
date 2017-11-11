@@ -1,6 +1,6 @@
 # Brottsplatskartan
 
-En sajt som visar Polisens händelser lite finare och bättre. Fokus på karta.
+En sajt som visar [Polisens händelser](https://brottsplatskartan.se) lite finare och bättre. Fokus på karta.
 
 ## Exempel
 
