@@ -60,6 +60,16 @@ class CheckForEventsUpdates extends Command
         $this->line("Found " . $recentEvents->count() . " events created within the last $hoursBackToCheck hours");
         $this->line("Checking if any of those have text changes");
 
+        foreach ($recentEvents as $oneRecentEvent) {
+            $this->line("Checking updates for $oneRecentEvent->title, id $oneRecentEvent->id");
+            $itemContentsWasUpdated = $this->feedController->parseItemContentAndUpdateIfChanges($oneRecentEvent->id);
+            if ($itemContentsWasUpdated === 'CHANGED') {
+                $this->feedController->geocodeItem($oneItem->getKey());
+                dump('$itemContentsWasUpdated', $itemContentsWasUpdated);
+                dd('alrajt, geocode item again too');
+            }
+        }
+
         $this->info('Done!');
     }
 }
