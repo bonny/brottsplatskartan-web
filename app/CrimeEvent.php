@@ -638,7 +638,6 @@ class CrimeEvent extends Model
      */
     public function maybeClearLocationData(\Illuminate\Http\Request $request)
     {
-
         if (!\Auth::check()) {
             return;
         }
@@ -670,7 +669,6 @@ class CrimeEvent extends Model
                 // echo "<br>locationIgnore: $locationIgnore";
                 \App\highways_ignored::firstOrCreate(['name' => $locationIgnore]);
             }
-
 
             $FeedController->parseItem($this->getKey());
             $FeedController->geocodeItem($this->getKey());
