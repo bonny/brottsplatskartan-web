@@ -37,10 +37,6 @@ class FetchEvents extends Command
     {
         parent::__construct();
 
-        // Default command line time limit i 0 = forever.
-        // We limit this because something on the server is hanging, perhaps this..
-        // set_time_limit(46);
-
         $this->feedController = $FeedController;
         $this->feedParser = $FeedParser;
     }

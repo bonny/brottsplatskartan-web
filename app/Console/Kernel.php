@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         Commands\FetchEvents::class,
+        Commands\CheckForEventsUpdates::class,
         Commands\TweetCrimes::class,
     ];
 
