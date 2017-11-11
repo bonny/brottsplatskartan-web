@@ -155,14 +155,14 @@ if $single is set then larger image
     </a>
     @endif
 
-    {{--
-    <div class="Event__related">
+
+    {{--     <div class="Event__related">
         Visa fler brott av typ <a href="{{ route("typeSingle", $event->parsed_title ) }}">{{ $event->parsed_title }}</a>
-    </div>
-    --}}
+    </div> --}}
+
 
     @if(isset($single) && $event->shouldShowSourceLink())
-        <p class="Event__source">Källa: <a rel="nofollow" href="{{ $event->permalink }}">{{ $event->permalink }}</a></p>
+        <p class="Event__source">Källa: {{ $event->permalink }}</p>
     @endif
 
     @if ( isset($overview) )
