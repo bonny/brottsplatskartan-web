@@ -237,52 +237,57 @@ class FeedController extends Controller
             $item->geocoded = true;
 
             $item->save();
-
         } else {
-
             // no fallback beacuse this *is* the fallback :)
-
         }
-
     }
 
     /**
-     * Parse an item
-     * Fetches remote info
-     * and finds locations/street names in the text
+     * Get item content from polisen.se and parse it if contents was updated
+     * and save changes to crime event.
+     *
+     * @param int $itemID Crime event id
+     * @return string Status NOT_CHANGED, ERROR, CHANGED
      */
-    public function parseItem($itemID) {
-
+    public function parseItemContentAndUpdateIfChanges($itemID)
+    {
         $item = CrimeEvent::findOrFail($itemID);
 
-        // Parse title
-        $parsed_title_items = $this->feedParser->parseTitle($item->title);
-        $item->fill($parsed_title_items);
-        $item->save();
-
-        // Parse permalink, i.e. get info from remote and store
         $parsed_content_items = $this->feedParser->parseContent($item->permalink);
+
+        if ($parsed_content_items === false) {
+            return 'ERROR';
+        }
+
+        // We got remote contents, but are they new or same as old?
+        if ($parsed_content_items['parsed_teaser'] == $item['parsed_teaser'] && $parsed_content_items['parsed_content'] == $item['parsed_content']) {
+            return 'NOT_CHANGED';
+        }
 
         $item->fill($parsed_content_items);
         $item->save();
 
-        // Find possible locations in teaser and content
+        return 'CHANGED';
+    }
+
+    /**
+     * Find locations in crime event and save
+     *
+     * @param int $itemID Crime event ID
+     * @return bool
+     */
+    public function parseItemForLocations($itemID){
+        $item = CrimeEvent::findOrFail($itemID);
+
         $locationsByPrio = $this->feedParser->findLocations($item);
 
-        foreach ( $locationsByPrio as $locations) {
-
+        foreach ($locationsByPrio as $locations) {
             foreach ($locations["locations"] as $locationName) {
-
                 // Add location of not already added
-                #$item->fresh(['locations']);
-                if ( $item->locations->contains("name", $locationName) ) {
-
+                if ($item->locations->contains("name", $locationName)) {
                     // echo "\nskipping, location already added $locationName";
-
                 } else {
-
                     // echo "\nadding location $locationName";
-
                     $locationModel = new \App\Locations([
                         "name" => $locationName,
                         "prio" => $locations["prio"],
@@ -293,21 +298,56 @@ class FeedController extends Controller
                     // we must reload locations so ->contains() will work in the next loop
                     $item->load('locations');
                 }
-
             }
-
         }
 
         $item->scanned_for_locations = true;
-        $saveResult = $item->save();
+        $item->save();
+
+        return true;
     }
 
-    /*
-    Feeds use https://github.com/willvincent/feeds
-    */
+    /**
+     * Parse an item/event:
+     * - Fetches remote info from polisen.se
+     * - Finds locations/street names in the text
+     *
+     * @param int $itemID Crime event id
+     * @return Bool true on success, false on fail
+     */
+    public function parseItem($itemID)
+    {
+        $item = CrimeEvent::findOrFail($itemID);
+
+        // Parse title
+        $parsed_title_items = $this->feedParser->parseTitle($item->title);
+        $item->fill($parsed_title_items);
+        $item->save();
+
+        // Parse permalink, i.e. get info from remote and store
+        // This can be called a bit later to check if item has remote updates
+        $itemContentsWasUpdated = $this->parseItemContentAndUpdateIfChanges($itemID);
+        // dd('itemContentsWasUpdated', $itemContentsWasUpdated);
+
+        // If contents was not changed bail
+        if ($itemContentsWasUpdated == 'NOT_CHANGED' && $itemContentsWasUpdated == 'ERROR') {
+            return false;
+        }
+
+        // Find and save locations in teaser and content
+        $this->parseItemForLocations($itemID);
+
+        return true;
+    }
+
+    /**
+     * Hämtar RSS-feeden från Polisen
+     * och lägger till händelser i DB
+     *
+     * Uses https://github.com/willvincent/feeds
+     */
     public function updateFeedsFromPolisen()
     {
-
         $feed = \Feeds::make($this->RssURL);
         $feed_items = $feed->get_items();
 
@@ -318,12 +358,11 @@ class FeedController extends Controller
         ];
 
         foreach ($feed_items as $item) {
-
             $item_md5 = md5($item->get_id());
 
             $item_data = [
                 "title" => $item->get_title(),
-                "description" => html_entity_decode( $item->get_description() ),
+                "description" => html_entity_decode($item->get_description()),
                 "permalink" => $item->get_permalink(),
                 "pubdate" => $item->get_date("U"),
                 "pubdate_iso8601" => $item->get_date(\DateTime::ISO8601),
@@ -333,21 +372,18 @@ class FeedController extends Controller
             // Store items not already stored
             $existingItem = CrimeEvent::where("md5", $item_md5)->get();
 
+            // Continue to next item if event already is in db
             if ($existingItem->count()) {
                 $data["numItemsAlreadyAdded"]++;
                 continue;
             }
 
-            // $data["itemsAdded"][] = $item_data;
             $data["numItemsAdded"]++;
 
             $event = CrimeEvent::create($item_data);
             $data["itemsAdded"][] = $event;
-
         }
 
         return $data;
-
     }
-
 }
