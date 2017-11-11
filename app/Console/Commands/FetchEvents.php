@@ -55,13 +55,12 @@ class FetchEvents extends Command
         $this->info('Ok, let\'s go!');
         $this->line('Fetching events...');
 
-        // updateFeedsFromPolisen
         $updatedFeedsInfo = $this->feedController->updateFeedsFromPolisen();
 
         $this->line("Added " . $updatedFeedsInfo["numItemsAdded"] . " items");
         $this->line("Skipped " . $updatedFeedsInfo["numItemsAlreadyAdded"] . " already added items");
 
-        // find items missing locations and add
+        // Find items missing locations and add
         $itemsNotScannedForLocations = CrimeEvent::where('scanned_for_locations', 0)->get();
 
         $this->line("Found " . $itemsNotScannedForLocations->count() . " items with locations missing");
@@ -70,8 +69,9 @@ class FetchEvents extends Command
             $this->line("Getting locations for $oneItem->title, id $oneItem->id");
             $this->feedController->parseItem($oneItem->getKey());
         }
+        // End add locations.
 
-        // find items not geocoded and geocode them
+        // Find items not geocoded and geocode them
         $itemsNotGeocoded = CrimeEvent::where([
             'scanned_for_locations' => 1,
             'geocoded' => 0
@@ -83,7 +83,7 @@ class FetchEvents extends Command
             $this->line("Getting geocode info for $oneItem->title");
             $this->feedController->geocodeItem($oneItem->getKey());
         }
-
+        // End geocode.
 
         $this->info('Done!');
     }
