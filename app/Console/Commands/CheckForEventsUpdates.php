@@ -10,6 +10,7 @@ use App\Http\Controllers\FeedParserController;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class CheckForEventsUpdates extends Command
 {
@@ -53,7 +54,7 @@ class CheckForEventsUpdates extends Command
         $this->info('Ok, let\'s go!');
         $this->line('Fetching existing events that are recent...');
 
-        $hoursBackToCheck = 2;
+        $hoursBackToCheck = 12;
         $dateSomeTimeAgo = Carbon::now()->subHours($hoursBackToCheck);
         $recentEvents = CrimeEvent::where('created_at', '>=', $dateSomeTimeAgo)->get();
 
@@ -62,11 +63,14 @@ class CheckForEventsUpdates extends Command
 
         foreach ($recentEvents as $oneRecentEvent) {
             $this->line("Checking updates for $oneRecentEvent->title, id $oneRecentEvent->id");
+
             $itemContentsWasUpdated = $this->feedController->parseItemContentAndUpdateIfChanges($oneRecentEvent->id);
+
             if ($itemContentsWasUpdated === 'CHANGED') {
-                $this->feedController->geocodeItem($oneItem->getKey());
+                $this->feedController->geocodeItem($oneRecentEvent->id);
                 dump('$itemContentsWasUpdated', $itemContentsWasUpdated);
-                dd('alrajt, geocode item again too');
+                Log::info('Item was updated from remote after a while', ['id' => $oneRecentEvent->id]);
+                // dd('alrajt, geocode item again too');
             }
         }
 
