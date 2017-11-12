@@ -66,10 +66,22 @@ class CheckForEventsUpdates extends Command
 
             $itemContentsWasUpdated = $this->feedController->parseItemContentAndUpdateIfChanges($oneRecentEvent->id);
 
+            Log::info(
+                'Item was updated from remote after a while',
+                [
+                    'itemContentsWasUpdated' => $itemContentsWasUpdated
+                ]
+            );
+
             if ($itemContentsWasUpdated === 'CHANGED') {
                 $this->feedController->geocodeItem($oneRecentEvent->id);
                 dump('$itemContentsWasUpdated', $itemContentsWasUpdated);
-                Log::debug('Item was updated from remote after a while', ['id' => $oneRecentEvent->id]);
+                Log::debug(
+                    'Item was updated from remote after a while',
+                    [
+                        'id' => $oneRecentEvent->id
+                    ]
+                );
                 // dd('alrajt, geocode item again too');
             }
         }
