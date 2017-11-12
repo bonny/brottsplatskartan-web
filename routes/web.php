@@ -942,3 +942,7 @@ Route::get('logout', function () {
     Auth::logout();
     return redirect('/');
 });
+
+// Add route for log viewer
+// https://github.com/rap2hpoutre/laravel-log-viewer
+Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');

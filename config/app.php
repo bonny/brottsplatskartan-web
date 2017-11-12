@@ -188,6 +188,7 @@ return [
         'Thujohn\Twitter\TwitterServiceProvider',
         Unisharp\Setting\SettingServiceProvider::class,
         Laravel\Scout\ScoutServiceProvider::class,
+        Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class
         // TeamTNT\Scout\TNTSearchScoutServiceProvider::class,
         #AlfredoRamos\ParsedownExtra\ParsedownExtraServiceProvider::class,
         #Laravel\Tinker\TinkerServiceProvider::class, // after upgrade not available by default
