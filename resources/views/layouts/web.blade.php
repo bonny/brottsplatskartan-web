@@ -243,7 +243,7 @@ Layout template for web
         </amp-ad>
     </amp-sticky-ad>
 
-    @if (env('APP_ENV')=='production') {
+    @if (env('APP_ENV')=='production')
         <amp-install-serviceworker
           src="https://brottsplatskartan.se/serviceworker.js"
           layout="nodisplay">
