@@ -123,7 +123,7 @@ if $single is set then larger image
     http://stackoverflow.com/questions/23336261/laravel-carbon-display-date-difference-only-in-days
     --}}
     <p class="Event__meta">
-        x<span class="Event__location">{!! $event->getLocationStringWithLinks() !!}</span>
+        <span class="Event__location">{!! $event->getLocationStringWithLinks() !!}</span>
         {{-- <span class="Event__metaDivider"> | </span> --}}
         <span class="Event__dateHuman">
             {{-- <time datetime="{{ $event->getPubDateISO8601() }}">{{ $event->getPubDateFormattedForHumans() }}</time> --}}
