@@ -280,7 +280,6 @@ class CrimeEvent extends Model
      */
     public function getLocationStringWithLinks()
     {
-
         $locations = [];
         $prioOneLocations = $this->locations->whereIn("prio", [1, 2]);
 
@@ -319,18 +318,17 @@ class CrimeEvent extends Model
             $locations[] = sprintf(
                 '<a href="%2$s">%1$s</a>',
                 $this->parsed_title_location,
-                route("platsSingle", ["plats" => $this->parsed_title_location])
+                route("platsSingle", ["plats" => mb_strtolower($this->parsed_title_location)])
             );
         }
 
         // Add administrative_area_level_1 only if not already added
-        $someLogic = $lan
-                        && $lan !== $this->parsed_title_location;
+        $someLogic = $lan && $lan !== $this->parsed_title_location;
         if ($someLogic) {
             $locations[] = sprintf(
                 '<a href="%2$s">%1$s</a>',
                 $lan,
-                route("lanSingle", ["lan" => $lan])
+                route("lanSingle", ["lan" => mb_strtolower($lan)])
             );
         }
 

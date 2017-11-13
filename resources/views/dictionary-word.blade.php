@@ -9,7 +9,7 @@ Template för ordlista/dictionary och ett enskild ord
 
 @section('title', $word->word . ' | Ordlista')
 @section('metaDescription', e("Ordlista"))
-@section('canonicalLink', "/ordlista/$word->word")
+@section('canonicalLink', "/ordlista/" . mb_strtolower($word->word))
 
 @section('content')
 

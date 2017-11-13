@@ -8,7 +8,7 @@ Template för ett län
 @extends('layouts.web')
 
 @section('title', "$type: brott och händelser av typen $type")
-@section('canonicalLink', "/typ/$type")
+@section('canonicalLink', "/typ/" . mb_strtolower($type))
 
 @section('content')
 
