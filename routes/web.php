@@ -314,15 +314,16 @@ Route::get('/typ/{typ}', function ($typ) {
 /**
  * En specifik ort
  *
- * Nuvarande struktur:
- *
- *  /plats/storgatan/
-*
- * Ny struktur:
+ * Ny struktur, med plats + län pga samma gatunamn finns på flera ställen ibland
+ * och även om detta inte är exakt så är det mer nära rätt iaf:
  *
  *  /plats/storgatan-örebro-län/
  *  /plats/storgatan-gävleborgs-län/
  *
+ * Gammal struktur, med plats utan län:
+ *
+ *  /plats/storgatan/
+
  */
 Route::get('/plats/{plats}', function ($plats, Request $request) {
     $platsOriginalFromSlug = $plats;
@@ -373,7 +374,6 @@ Route::get('/plats/{plats}', function ($plats, Request $request) {
     #dd($foundMatchingLan);
 
     if ($foundMatchingLan) {
-
         // Hämta events där vi vet både plats och län
         // t.ex. "Stockholm" i "Stockholms län"
         // Query blir ca såhär
@@ -412,6 +412,8 @@ Route::get('/plats/{plats}', function ($plats, Request $request) {
             title_case($platsWithoutLan),
             title_case($oneLanName)
         );
+
+        // Debugbar::info('Hämta events där vi vet både platsnamn och län');
     } else {
         // Hämta events där plats är från huvudtabellen
         // Används när $plats är bara en plats, typ "insjön",
@@ -426,6 +428,9 @@ Route::get('/plats/{plats}', function ($plats, Request $request) {
                                     ->paginate(10);
         $canonicalLink = $plats;
         $plats = title_case($plats);
+
+        // Debugbar::info('Hämta events där vi bara vet platsnamn');
+        $data['robotsNoindex'] = true;
     }
 
     $data["plats"] = $plats;
@@ -515,7 +520,7 @@ Route::get('/sida/{pagename}', function ($pagename = null) {
     $data = [
         "pagename" => $pagename,
         "pageTitle" => $pagetitle,
-        "canonicalLink" => route('page', ['pagename' => $pagename])
+        "canonicalLink" => route('page', ['pagename' => mb_strtolower($pagename)])
     ];
 
     return view('page', $data);

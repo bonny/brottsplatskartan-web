@@ -62,6 +62,11 @@ Layout template for web
 
     <title>@yield('title')@hasSection('showTitleTagline') → Brottsplatskartan @endif</title>
 
+    {{-- Don't index some pages --}}
+    @if (isset($robotsNoindex) && $robotsNoindex)
+        <meta name="robots" content="noindex, follow">
+    @endif
+
     @hasSection('metaContent')
         @yield('metaContent', '')
     @endif
