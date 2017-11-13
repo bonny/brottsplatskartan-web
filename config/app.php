@@ -247,6 +247,7 @@ return [
         'Setting' => Unisharp\Setting\SettingFacade::class,
         'Markdown'  => AlfredoRamos\ParsedownExtra\Facades\ParsedownExtra::class,
         'HTMLMin' => HTMLMin\HTMLMin\Facades\HTMLMin::class,
+        'Debugbar' => Barryvdh\Debugbar\Facade::class,
     ],
 
 ];
