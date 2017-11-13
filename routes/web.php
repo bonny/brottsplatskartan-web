@@ -463,9 +463,9 @@ Route::get('/plats/{plats}', function ($plats, Request $request) {
     $data["linkRelNext"] = $linkRelNext;
 
     if ($page == 1) {
-        $canonicalLink = route('platsSingle', ['plats' => $platsOriginalFromSlug]);
+        $canonicalLink = route('platsSingle', ['plats' => mb_strtolower($platsOriginalFromSlug)]);
     } else {
-        $canonicalLink = route('platsSingle', ['plats' => $platsOriginalFromSlug, 'page' => $page]);
+        $canonicalLink = route('platsSingle', ['plats' => mb_strtolower($platsOriginalFromSlug), 'page' => $page]);
     }
 
     $data["canonicalLink"] = $canonicalLink;
