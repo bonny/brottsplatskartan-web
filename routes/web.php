@@ -430,7 +430,9 @@ Route::get('/plats/{plats}', function ($plats, Request $request) {
         $plats = title_case($plats);
 
         // Debugbar::info('Hämta events där vi bara vet platsnamn');
-        $data['robotsNoindex'] = true;
+        // Indexera inte denna sida om det är en gata, men indexera om det är en ort osv.
+        // Får avvakta med denna pga vet inte exakt vad en plats är för en..eh..plats.
+        // $data['robotsNoindex'] = true;
     }
 
     $data["plats"] = $plats;
