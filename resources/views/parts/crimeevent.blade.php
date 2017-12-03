@@ -257,9 +257,18 @@ if $single is set then larger image
                     <legend>Händelsen i media</legend>
 
                     <p class="AddMediaFormFields">
-                        <input type="text" name="title" placeholder="title">
-                        <input type="text" name="shortdesc" placeholder="shortdesc">
-                        <input type="url" name="url" placeholder="url">
+                        <label>
+                            URL<br>
+                            <input type="url" name="url" placeholder="">
+                        </label>
+                        <label>
+                            Titel<br>
+                            <input type="text" name="title" placeholder="">
+                        </label>
+                        <label>
+                            Kort beskrivning<br>
+                            <input type="text" name="shortdesc" placeholder="">
+                        </label>
                     </p>
 
                     <p>
