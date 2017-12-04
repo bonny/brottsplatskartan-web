@@ -75,7 +75,6 @@ class CheckForEventsUpdates extends Command
 
             if ($itemContentsWasUpdated === 'CHANGED') {
                 $this->feedController->geocodeItem($oneRecentEvent->id);
-                dump('$itemContentsWasUpdated', $itemContentsWasUpdated);
                 Log::debug(
                     'Item was updated from remote after a while',
                     [

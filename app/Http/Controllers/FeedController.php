@@ -52,6 +52,12 @@ class FeedController extends Controller
 
     }
 
+    /**
+     * Geocode an crime event
+     *
+     * @param int $itemID ID of crime event to geovode.
+     * @return array with info if, key [error] = false is ok, [error] = true if error, [message] with error message
+     */
     public function geocodeItem($itemID) {
 
         $item = CrimeEvent::findOrFail($itemID);
@@ -61,8 +67,12 @@ class FeedController extends Controller
         $result_status = $result_data->status;
         $result_results = $result_data->results;
 
-        if ($result_results === "OK") {
-            return false;
+        // What? OK is false?
+        if ($result_status !== "OK") {
+            return [
+                'error' => true,
+                'error_message' => "status: {$result_status}, url: {$apiUrl}"
+            ];
         }
 
         $geometry_location_lat = null;
@@ -146,7 +156,9 @@ class FeedController extends Controller
 
         }
 
-        #exit;
+        return [
+            'error' => false
+        ];
 
     }
 

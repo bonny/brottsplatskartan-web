@@ -77,7 +77,10 @@ class FetchEvents extends Command
 
         foreach ($itemsNotGeocoded as $oneItem) {
             $this->line("Getting geocode info for $oneItem->title, id " . $oneItem->getKey());
-            $this->feedController->geocodeItem($oneItem->getKey());
+            $geocodeResult = $this->feedController->geocodeItem($oneItem->getKey());
+            if ($geocodeResult['error']) {
+                $this->error('Error during geocodeItem(): ' . $geocodeResult['error_message']);
+            }
         }
         // End geocode.
 
