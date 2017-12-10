@@ -230,14 +230,14 @@ if $single is set then larger image
                     <p>
                         <label>
                             Lägg till plats<br>
-                            <input type="text" name="locationAdd" placeholder="Hejsanhoppsangränd">
+                            <input type="text" name="locationAdd" placeholder="Hejsanhoppsangränd" autocomplete="off">
                         </label>
                     </p>
 
                     <p>
                         <label>
                             Ignorera plats<br>
-                            <input type="text" name="locationIgnore" placeholder="Ipsumvägen">
+                            <input type="text" name="locationIgnore" placeholder="Ipsumvägen" autocomplete="off">
                         </label>
                     </p>
 
@@ -259,15 +259,15 @@ if $single is set then larger image
                     <p class="AddMediaFormFields">
                         <label>
                             URL<br>
-                            <input type="url" name="url" placeholder="">
+                            <input type="url" name="url" placeholder="" autocomplete="off">
                         </label>
                         <label>
                             Titel<br>
-                            <input type="text" name="title" placeholder="">
+                            <input type="text" name="title" placeholder="" autocomplete="off">
                         </label>
                         <label>
                             Kort beskrivning<br>
-                            <input type="text" name="shortdesc" placeholder="">
+                            <input type="text" name="shortdesc" placeholder="" autocomplete="off">
                         </label>
                     </p>
 
