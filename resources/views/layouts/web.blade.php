@@ -216,7 +216,7 @@ Layout template for web
     </div>
 
     <!-- matchat innehåll - since 16 Dec 2017 -->
-    <amp-ad width=300 height=1200
+    <amp-ad width=300 height=520
         type="adsense"
         data-ad-client="ca-pub-1689239266452655"
         data-ad-slot="9696533065"
@@ -224,7 +224,9 @@ Layout template for web
         >
     </amp-ad>
 
-{{--     <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+{{--
+320x520 hade nån annan
+     <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     <ins class="adsbygoogle"
          style="display:block"
          data-ad-format="autorelaxed"
