@@ -233,7 +233,12 @@ class Helper
         }
 
         $polisenDomain = config('app.polisen_domain');
+
         $orgDomain = 'https://polisen.se';
+        $url = str_replace($orgDomain, $polisenDomain, $url);
+
+        // RSS feed links seems to be non-https
+        $orgDomain = 'http://polisen.se';
         $url = str_replace($orgDomain, $polisenDomain, $url);
 
         return $url;
