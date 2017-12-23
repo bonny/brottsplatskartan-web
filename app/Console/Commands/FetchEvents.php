@@ -59,12 +59,25 @@ class FetchEvents extends Command
         // Find items missing locations and add
         $itemsNotScannedForLocations = CrimeEvent::where('scanned_for_locations', 0)->get();
 
-        $this->line("Found " . $itemsNotScannedForLocations->count() . " items with locations missing");
+        $this->info("Found " . $itemsNotScannedForLocations->count() . " items with locations missing");
+
+        // $bar = $this->output->createProgressBar($itemsNotScannedForLocations->count());
 
         foreach ($itemsNotScannedForLocations as $oneItem) {
-            $this->line("Getting locations for $oneItem->title, id $oneItem->id");
-            $this->feedController->parseItem($oneItem->getKey());
+            $this->line("Parse item $oneItem->title, id $oneItem->id");
+
+            try {
+                $this->feedController->parseItem($oneItem->getKey());
+            } catch (\Exception $e) {
+                $this->warning('Got exception');
+                $this->info($e);
+            }
+
+            // $bar->advance();
         }
+
+        // $bar->finish();
+
         // End add locations.
 
         // Find items not geocoded and geocode them
@@ -73,7 +86,8 @@ class FetchEvents extends Command
             'geocoded' => 0
         ])->get();
 
-        $this->line("Found " . $itemsNotGeocoded->count() . " items not geocoded");
+        $this->info("Found " . $itemsNotGeocoded->count() . " items not geocoded");
+        // $bar = $this->output->createProgressBar($itemsNotGeocoded->count());
 
         foreach ($itemsNotGeocoded as $oneItem) {
             $this->line("Getting geocode info for $oneItem->title, id " . $oneItem->getKey());
@@ -81,7 +95,11 @@ class FetchEvents extends Command
             if ($geocodeResult['error']) {
                 $this->error('Error during geocodeItem(): ' . $geocodeResult['error_message']);
             }
+
+            // $bar->advance();
         }
+
+        // $bar->finish();
         // End geocode.
 
         $this->info('Done!');
