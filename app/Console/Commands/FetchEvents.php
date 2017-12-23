@@ -69,7 +69,7 @@ class FetchEvents extends Command
             try {
                 $this->feedController->parseItem($oneItem->getKey());
             } catch (\Exception $e) {
-                $this->warning('Got exception');
+                $this->info('Got exception');
                 $this->info($e);
             }
 
