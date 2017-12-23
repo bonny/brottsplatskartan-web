@@ -2,6 +2,8 @@
 
 return [
 
+    'polisen_domain' => env('POLISEN_DOMAIN', 'https://polisen.se'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Name

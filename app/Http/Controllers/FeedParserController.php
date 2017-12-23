@@ -90,7 +90,7 @@ class FeedParserController extends Controller
         if (! $html || gettype($html) != "string") {
             $client = new Client();
             // $contentURL .= '-make-it-a-404-to-test';
-            $crawler = $client->request('GET', $contentURL);
+            $crawler = $client->request('GET', \App\Helper::makeUrlUsePolisenDomain($contentURL));
 
             // Only continue if valid response code, i.e. 20x
             $response = $client->getResponse();

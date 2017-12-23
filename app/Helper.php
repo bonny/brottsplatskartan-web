@@ -226,4 +226,17 @@ class Helper
 
         return $clean;
     }
+
+    public static function makeUrlUsePolisenDomain($url = null) {
+        if (empty($url)) {
+            return $url;
+        }
+
+        $polisenDomain = config('app.polisen_domain');
+        $orgDomain = 'https://polisen.se';
+        $url = str_replace($orgDomain, $polisenDomain, $url);
+
+        return $url;
+    }
+
 }

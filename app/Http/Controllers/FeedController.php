@@ -12,13 +12,15 @@ use App\Http\Controllers\FeedParserController;
 class FeedController extends Controller
 {
 
-    protected $RssURL = 'https://polisen.se/Stockholms_lan/Aktuellt/Handelser/Handelser-i-hela-landet/?feed=rss';
+    protected $RssURL;
     protected $feedParser;
 
     public function __construct(FeedParserController $feedParser) {
+        $this->RssURL = 'https://polisen.se/Stockholms_lan/Aktuellt/Handelser/Handelser-i-hela-landet/?feed=rss';
+
+        $this->RssURL = \App\Helper::makeUrlUsePolisenDomain($this->RssURL);
 
         $this->feedParser = $feedParser;
-
     }
 
     public function getGeocodeURL($itemID) {
