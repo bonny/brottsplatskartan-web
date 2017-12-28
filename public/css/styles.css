@@ -216,10 +216,16 @@ button {
 
 .Events {
     /*column-count: 2;*/
-    overflow: auto;
+    /*overflow: auto;*/
     list-style-type: none;
     margin: 0;
     padding: 0;
+}
+
+.Events:after {
+    content: "";
+    display: table;
+    clear: both;
 }
 
 .Event {
@@ -228,6 +234,11 @@ button {
     background: white;
     padding: var(--default-margin);
     box-shadow: 0 1px 2px rgba(0,0,0,.3);
+    transition: box-shadow .1s ease-out;
+}
+
+.Events--overview .Event:hover {
+    box-shadow: 1px 2px 6px rgba(0,0,0,.3);
 }
 
 .Event:nth-of-type(1) {
@@ -240,6 +251,11 @@ button {
     margin-bottom: .25rem;
     /*word-break: break-all;*/
     font-weight: 400;
+}
+
+.Event__titleLink {
+    display: block;
+    word-wrap: break-word;
 }
 
 .Event__teaser {
