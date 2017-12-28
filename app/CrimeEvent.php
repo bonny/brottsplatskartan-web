@@ -94,6 +94,9 @@ class CrimeEvent extends Model
         #exit;
 
         // src="https://maps.googleapis.com/maps/api/staticmap?center={{ $event->location_lat }},{{ $event->location_lng }}&zoom=14&size=600x400&key=...&markers={{ $event->location_lat }},{{ $event->location_lng }}"
+
+        $image_src = Helper::signUrl($image_src);
+
         return $image_src;
 
     }
@@ -123,6 +126,8 @@ class CrimeEvent extends Model
             return "";
 
         }
+
+        $image_src = Helper::signUrl($image_src);
 
         return $image_src;
 
