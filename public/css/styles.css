@@ -1005,6 +1005,10 @@ input[type='url'],
     border-color: darkred;
 }
 
+.BlogItem img {
+    max-width: 100%;
+}
+
 /* nånstans i mitten... */
 @media only screen and (min-width: 400px) and (max-width: 666px) {
 
