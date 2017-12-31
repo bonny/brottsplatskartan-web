@@ -707,19 +707,19 @@ Route::prefix('blogg')->group(function () {
     Route::get('/', function () {
         // Matches The "/admin/users" URL
         return "blogg/";
-    });
+    })->name('blog');
 
     // https://brottsplatskartan.localhost/blogg/2017/hejsan
     Route::get('{year}', function ($year) {
         // Matches The "/admin/users" URL
         return "blogg/year: $year";
-    });
+    })->name('blogYear');
 
     // https://brottsplatskartan.localhost/blogg/2017/hejsan
     Route::get('{year}/{slug}', function ($year, $slug) {
         // Matches The "/admin/users" URL
         return "blogg/year/slug: $year, slug $slug";
-    });
+    })->name('blogItem');
 });
 
 /**
