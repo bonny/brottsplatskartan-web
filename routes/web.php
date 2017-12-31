@@ -691,6 +691,38 @@ Route::post('/{lan}/{eventName}', function ($lan, $eventName, Request $request) 
 });
 
 /**
+ * Routes för blogg
+ *
+ * Senaste inläggen
+ * - brottsplatskartan.se/blogg
+ *
+ * Inlägg från 2017
+ * - brottsplatskartan.se/blogg/2017/
+ *
+ * Enskild inlägg från 2017
+ * - brottsplatskartan.se/blogg/2017/polisen-se-nere
+ */
+Route::prefix('blogg')->group(function () {
+    // https://brottsplatskartan.localhost/blogg
+    Route::get('/', function () {
+        // Matches The "/admin/users" URL
+        return "blogg/";
+    });
+
+    // https://brottsplatskartan.localhost/blogg/2017/hejsan
+    Route::get('{year}', function ($year) {
+        // Matches The "/admin/users" URL
+        return "blogg/year: $year";
+    });
+
+    // https://brottsplatskartan.localhost/blogg/2017/hejsan
+    Route::get('{year}/{slug}', function ($year, $slug) {
+        // Matches The "/admin/users" URL
+        return "blogg/year/slug: $year, slug $slug";
+    });
+});
+
+/**
  * single event page/en händelse/ett crimeevent
  * ca. såhär:
  *
@@ -933,6 +965,7 @@ Route::get('/design', function (Request $request) {
 
     $view->with($data);
 });
+
 
 /*
 Route::get('loggain', function () {
