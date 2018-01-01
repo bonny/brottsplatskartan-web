@@ -16,9 +16,20 @@ Template för bloggens startsida
 --}}
 
 @section('content')
-    @foreach ($blogItems as $blog)
-        @include('parts.blog-item')
-    @endforeach
+
+    <h1>Brottsplatskartans blogg</h1>
+
+    <p class="">
+        Här på vår blogg kan du läsa om hur vi utvecklar sajten och
+        få diverse länktips som handlar om polis och brandkår om brott
+        andra typer av polisiära händelser.
+    </p>
+
+    <ol class="BlogItems">
+        @foreach ($blogItems as $blog)
+            @include('parts.blog-item-overview', ['overview' => true])
+        @endforeach
+    </ol>
 @endsection
 
 @section('sidebar')

@@ -1005,9 +1005,55 @@ input[type='url'],
     border-color: darkred;
 }
 
+.BlogItems {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.BlogItems .BlogItem {
+    margin-bottom: var(--default-margin-double);
+    padding-bottom: var(--default-margin-double);
+    border-bottom: 1px solid var(--color-grey-light);
+}
+
+.BlogItems li:first-of-type .BlogItem {
+    margin-top: var(--default-margin-double);
+    padding-top: var(--default-margin-double);
+    border-top: 1px solid var(--color-grey-light);
+}
+
+.BlogItems li:first-of-type h2 {
+    margin-top: 0;
+}
+
+.BlogItems .BlogItem:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
 .BlogItem img {
     max-width: 100%;
 }
+
+.BlogItem .Event__meta {
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: 0;
+    margin-right: 0;
+    padding-bottom: 0;
+    border: none;
+}
+
+.u-margin-bottom {
+    margin-bottom: var(--default-margin);
+}
+
+.u-margin-bottom-double {
+    margin-bottom: var(--default-margin-double);
+}
+
 
 /* nånstans i mitten... */
 @media only screen and (min-width: 400px) and (max-width: 666px) {
