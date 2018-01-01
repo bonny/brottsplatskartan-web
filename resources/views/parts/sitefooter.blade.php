@@ -5,8 +5,8 @@
     <h2>Brottsplatskartan</h2>
     <ul class="SiteFooter__navlinks">
         <li><a href="{{ route("page", ["pagename" => "om"]) }}">Om brotten och kartan</a></li>
+        <li><a href="{{ route("blog") }}">Blogg</a></li>
         <li><a href="{{ route("page", ["pagename" => "press"]) }}">Press</a></li>
-        <!-- <li><a href="{{ route("page", ["pagename" => "stockholm"]) }}">Polishändelser i Stockholm</a></li> -->
         <li><a href="{{ route("page", ["pagename" => "appar"]) }}">Appar till Iphone, Ipad och Android</a></li>
         <li><a href="{{ route("ordlista") }}">Ordlista</a></li>
         <li><a href="{{ route("page", ["pagename" => "api"]) }}">Brottsplatser API</a></li>
@@ -21,17 +21,13 @@
         <h2>Händelser från Polisen i ditt län</h2>
 
         <ul class="SiteFooter__lanListing__items SiteFooter__navlinks">
-
             @foreach (App\Helper::getAllLan() as $oneLan)
-
                 <li class="SiteFooter__lanListing__item">
                     <a href="{{ route("lanSingle", ["lan"=>$oneLan->administrative_area_level_1]) }}">
                         {{ $oneLan->administrative_area_level_1 }}
                     </a>
                 </li>
-
             @endforeach
-
         </ul>
 
     </div>
@@ -40,6 +36,7 @@
 <div class="SiteFooter__col">
 
     <h2>Händelser i 10 största städerna</h2>
+
     <ul class="SiteFooter__navlinks">
         <li>
             <a title="Händelser från Polisen i Stockholm" href="{{ route("platsSingle", ['plats' => 'Stockholm']) }}">Stockholm</a>
