@@ -3,6 +3,7 @@
 
 <div class="SiteFooter__col">
     <h2>Brottsplatskartan</h2>
+
     <ul class="SiteFooter__navlinks">
         <li><a href="{{ route("page", ["pagename" => "om"]) }}">Om brotten och kartan</a></li>
         <li><a href="{{ route("blog") }}">Blogg</a></li>
