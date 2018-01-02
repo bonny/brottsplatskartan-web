@@ -217,13 +217,13 @@ Layout template for web
     </div>
 
     <!-- matchat innehåll - since 16 Dec 2017 -->
-    <amp-ad width=300 height=520
+    {{-- <amp-ad width=300 height=520
         type="adsense"
         data-ad-client="ca-pub-1689239266452655"
         data-ad-slot="9696533065"
         layout="responsive"
         >
-    </amp-ad>
+    </amp-ad>--}}
 
 {{--
 320x520 hade nån annan
