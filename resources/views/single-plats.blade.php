@@ -32,28 +32,30 @@ https://brottsplatskartan.localhost/plats/nacka
     <h1>Brott &amp; händelser nära <b>{{ $plats }}</b></h1>
 
     <div class="Introtext">
+
         @if (empty($introtext))
             <p>Inrapporterade händelser från Polisen.</p>
         @else
             {!! $introtext !!}
         @endif
-    </div>
 
-    @if ($mostCommonCrimeTypes && $mostCommonCrimeTypes->count() >= 5)
-        <p>
-            De 5 mest förekommande typerna av händelser här är
-            @foreach ($mostCommonCrimeTypes as $oneCrimeType)
-                @if ($loop->remaining == 0)
-                    och <strong>{{ mb_strtolower($oneCrimeType->parsed_title) }}</strong>.
-                @elseif ($loop->remaining == 1)
-                    <strong>{{ mb_strtolower($oneCrimeType->parsed_title) }}</strong>
-                @else
-                    <strong>{{ mb_strtolower($oneCrimeType->parsed_title) }}</strong>,
-                @endif
-                <!-- {{ $oneCrimeType->antal }} -->
-            @endforeach
-        </p>
-    @endif
+        @if ($mostCommonCrimeTypes && $mostCommonCrimeTypes->count() >= 5)
+            <p>
+                De 5 mest förekommande typerna av händelser här är
+                @foreach ($mostCommonCrimeTypes as $oneCrimeType)
+                    @if ($loop->remaining == 0)
+                        och <strong>{{ mb_strtolower($oneCrimeType->parsed_title) }}</strong>.
+                    @elseif ($loop->remaining == 1)
+                        <strong>{{ mb_strtolower($oneCrimeType->parsed_title) }}</strong>
+                    @else
+                        <strong>{{ mb_strtolower($oneCrimeType->parsed_title) }}</strong>,
+                    @endif
+                    <!-- {{ $oneCrimeType->antal }} -->
+                @endforeach
+            </p>
+        @endif
+
+    </div>
 
     @if ($page > 1)
         <p>Visar sida {{ $page }} av {{ $events->lastPage() }}.</p>
