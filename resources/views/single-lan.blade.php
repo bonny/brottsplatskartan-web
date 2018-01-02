@@ -3,6 +3,9 @@
 Template för ett län
 med översikt med händelser för länet
 
+Exempel på URL:
+https://brottsplatskartan.localhost/lan/Stockholms%20l%C3%A4n
+
 --}}
 
 @extends('layouts.web')
@@ -49,6 +52,24 @@ med översikt med händelser för länet
                 </p>
             @else
                 {!! $introtext !!}
+            @endif
+
+            @if ($mostCommonCrimeTypes && $mostCommonCrimeTypes->count() >= 5)
+                <p>
+                    @foreach ($mostCommonCrimeTypes as $oneCrimeType)
+                        @if ($loop->remaining == 0)
+                            och <strong>{{ mb_strtolower($oneCrimeType->parsed_title) }}</strong>
+                        @elseif ($loop->remaining == 1)
+                            <strong>{{ mb_strtolower($oneCrimeType->parsed_title) }}</strong>
+                        @elseif ($loop->first)
+                            <strong>{{ $oneCrimeType->parsed_title }}</strong>,
+                        @else
+                            <strong>{{ mb_strtolower($oneCrimeType->parsed_title) }}</strong>,
+                        @endif
+                        <!-- {{ $oneCrimeType->antal }} -->
+                    @endforeach
+                    är de vanligaste händelserna för länet.
+                </p>
             @endif
 
             @if (!empty($lanInfo))

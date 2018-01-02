@@ -404,6 +404,26 @@ Route::get('/plats/{plats}', function ($plats, Request $request) {
 
         #dd(DB::getQueryLog());
 
+        // Hämta mest vanligt förekommande händelsetyperna
+        $mostCommonCrimeTypes = CrimeEvent::selectRaw('parsed_title, count(id) as antal')
+            ->where("administrative_area_level_1", $oneLanName) // måste vara med
+                    ->where(function ($query) use ($oneLanName, $platsWithoutLan) {
+                        $query->where("parsed_title_location", $platsWithoutLan);
+                        $query->orWhereExists(function ($query) use ($platsWithoutLan) {
+                            $query->select(DB::raw(1))
+                                    ->from('locations')
+                                    ->whereRaw(
+                                        'locations.name = ?
+                                        AND locations.crime_event_id = crime_events.id',
+                                        [$platsWithoutLan]
+                                    );
+                        });
+                    })
+            ->groupBy('parsed_title')
+            ->orderByRaw('antal DESC')
+            ->limit(5)
+            ->get();
+
         $canonicalLink = $plats;
 
         // Rensa uppp plats lite
@@ -429,14 +449,27 @@ Route::get('/plats/{plats}', function ($plats, Request $request) {
         $canonicalLink = $plats;
         $plats = title_case($plats);
 
+        // Hämta mest vanligt förekommande händelsetyperna
+        $mostCommonCrimeTypes = CrimeEvent::selectRaw('parsed_title, count(id) as antal')
+            ->where("parsed_title_location", $plats)
+            ->orWhere("administrative_area_level_2", $plats)
+            ->orWhereHas('locations', function ($query) use ($plats) {
+                $query->where('name', '=', $plats);
+            })
+            ->groupBy('parsed_title')
+            ->orderByRaw('antal DESC')
+            ->limit(5)
+            ->get();
+
         // Debugbar::info('Hämta events där vi bara vet platsnamn');
         // Indexera inte denna sida om det är en gata, men indexera om det är en ort osv.
         // Får avvakta med denna pga vet inte exakt vad en plats är för en..eh..plats.
         // $data['robotsNoindex'] = true;
     }
 
-    $data["plats"] = $plats;
-    $data["events"] = $events;
+    $data['plats'] = $plats;
+    $data['events'] = $events;
+    $data['mostCommonCrimeTypes'] = $mostCommonCrimeTypes;
 
     $page = (int) $request->input("page", 1);
 
@@ -603,6 +636,14 @@ Route::get('/lan/{lan}', function ($lan, Request $request) {
                                 ->with('locations')
                                 ->paginate(10);
 
+    // Hämta mest vanligt förekommande brotten
+    $mostCommonCrimeTypes = CrimeEvent::selectRaw('parsed_title, count(id) as antal')
+        ->where("administrative_area_level_1", $lan)
+        ->groupBy('parsed_title')
+        ->orderByRaw('antal DESC')
+        ->limit(5)
+        ->get();
+
     $linkRelPrev = null;
     $linkRelNext = null;
 
@@ -632,7 +673,8 @@ Route::get('/lan/{lan}', function ($lan, Request $request) {
         'page' => $page,
         'linkRelPrev' => $linkRelPrev,
         'linkRelNext' => $linkRelNext,
-        'canonicalLink' => $canonicalLink
+        'canonicalLink' => $canonicalLink,
+        'mostCommonCrimeTypes' => $mostCommonCrimeTypes
     ];
 
     if (!$data["events"]->count()) {
