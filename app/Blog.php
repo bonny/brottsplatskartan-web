@@ -24,6 +24,11 @@ class Blog extends Model
     {
         $str = $this->content;
         $str = \Markdown::parse($str);
+
+        // Behöver köra tweet-embedningen, även om vi inte ska visa tweets,
+        // annars riskerar vi att det står "AMPTWEET: [...]" i utdraget.
+        $str = $this->embedTweets($str);
+
         $str = strip_tags($str);
         $str = Str::words($str, $length);
 
