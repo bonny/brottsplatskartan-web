@@ -40,4 +40,52 @@ class Blog extends Model
             ]
         );
     }
+
+    public function getContentFormatted()
+    {
+        $str = $this->content;
+        $str = \Markdown::parse($str);
+        $str = $this->embedTweets($str);
+        return $str;
+    }
+
+    /**
+     * Convert lines like
+     * AMPTWEET: https://twitter.com/eskapism/status/944609719179796480
+     *
+     * to
+     *
+     * <amp-twitter
+     *    width="375"
+     *    height="472"
+     *    layout="responsive"
+     *    data-tweetid="944609719179796480">
+     * </amp-twitter>
+    */
+    public static function embedTweets($str)
+    {
+        $lines = preg_split('/\R/', $str);
+
+        foreach ($lines as $key => $val) {
+            #if (starts_with($val, 'https://twitter.com/')) {
+            if (starts_with($val, '<p>AMPTWEET:')) {
+                preg_match('!/status/(\d+)!', $val, $matches);
+                if (sizeof($matches) === 2) {
+                    $tweetId = $matches[1];
+                    $lines[$key] = sprintf(
+                        '<amp-twitter
+                             width="375"
+                             height="472"
+                             layout="responsive"
+                             data-tweetid="%1$s">
+                            </amp-twitter>
+                        ',
+                        $tweetId
+                    );
+                }
+            }
+        }
+
+        return implode("\n", $lines);
+    }
 }

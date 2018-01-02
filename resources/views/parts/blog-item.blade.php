@@ -5,5 +5,5 @@
         Postat <time datetime='{{ $blog->getCreatedAtAsW3cString() }}'>{{ $blog->getCreatedAtFormatted() }}</time>
     </p>
 
-    {!! Markdown::parse($blog->content) !!}
+    {!! $blog->getContentFormatted() !!}
 </article>
