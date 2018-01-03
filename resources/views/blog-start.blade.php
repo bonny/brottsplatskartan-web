@@ -25,11 +25,16 @@ Template för bloggens startsida
         andra typer av polisiära händelser.
     </p>
 
-    <ol class="BlogItems">
-        @foreach ($blogItems as $blog)
-            @include('parts.blog-item-overview', ['overview' => true])
-        @endforeach
-    </ol>
+
+    @if (isset($blogItems) && $blogItems->count())
+        <ol class="BlogItems">
+            @foreach ($blogItems as $blog)
+                @include('parts.blog-item-overview', ['overview' => true])
+            @endforeach
+        </ol>
+    @else
+        <p>Hittade inga inlägg. <a href="{{ route('blog') }}">Gå till bloggens startsidan</a>.</p>
+    @endif
 @endsection
 
 @section('sidebar')

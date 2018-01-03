@@ -745,7 +745,6 @@ Route::post('/{lan}/{eventName}', function ($lan, $eventName, Request $request) 
  * - brottsplatskartan.se/blogg/2017/polisen-se-nere
  */
 Route::prefix('blogg')->group(function () {
-    // https://brottsplatskartan.localhost/blogg
     Route::get('/', function () {
         // Matchar https://brottsplatskartan.localhost/blogg
         $blogItems = App\Blog::orderBy("created_at", "desc")->paginate(10);
@@ -764,8 +763,27 @@ Route::prefix('blogg')->group(function () {
 
     // https://brottsplatskartan.localhost/blogg/2017/hejsan
     Route::get('{year}', function ($year) {
-        // Matches The "/admin/users" URL
-        return "blogg/year: $year";
+        // Matchar https://brottsplatskartan.localhost/blogg/2017
+
+        if (!is_numeric($year)) {
+            abort(404);
+        }
+
+        $blogItems = App\Blog::
+            whereYear('created_at', $year)
+            ->orderBy("created_at", "desc")
+            ->paginate(10);
+
+        $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs;
+        $breadcrumbs->addCrumb('Hem', '/');
+        $breadcrumbs->addCrumb('Blogg');
+
+        $data = [
+            'blogItems' => $blogItems,
+            'breadcrumbs' => $breadcrumbs
+        ];
+
+        return view('blog-start', $data);
     })->name('blogYear');
 
     // Matchar https://brottsplatskartan.localhost/blogg/2017/mitt-blogginlagg
@@ -773,7 +791,8 @@ Route::prefix('blogg')->group(function () {
         $blog = App\Blog::where('slug', $slug)->first();
 
         if (!$blog) {
-            abort(404);
+            // abort(404);
+            return view('blog-start', []);
         }
 
         $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs;
