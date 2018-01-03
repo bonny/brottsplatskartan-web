@@ -28,6 +28,7 @@ class Blog extends Model
         // Behöver köra tweet-embedningen, även om vi inte ska visa tweets,
         // annars riskerar vi att det står "AMPTWEET: [...]" i utdraget.
         $str = $this->embedTweets($str);
+        $str = $this->embedFacebook($str);
 
         $str = strip_tags($str);
         $str = Str::words($str, $length);
@@ -51,6 +52,7 @@ class Blog extends Model
         $str = $this->content;
         $str = \Markdown::parse($str);
         $str = $this->embedTweets($str);
+        $str = $this->embedFacebook($str);
         return $str;
     }
 
@@ -66,7 +68,10 @@ class Blog extends Model
      *    layout="responsive"
      *    data-tweetid="944609719179796480">
      * </amp-twitter>
-    */
+     *
+     * @param string $str
+     * @return string
+     */
     public static function embedTweets($str)
     {
         $lines = preg_split('/\R/', $str);
@@ -86,6 +91,43 @@ class Blog extends Model
                             </amp-twitter>
                         ',
                         $tweetId
+                    );
+                }
+            }
+        }
+
+        return implode("\n", $lines);
+    }
+
+    /**
+     * Like embedTweets() but for facebook
+     *
+     * @param string $str
+     * @return string
+     */
+    public static function embedFacebook($str)
+    {
+        $lines = preg_split('/\R/', $str);
+
+        foreach ($lines as $key => $val) {
+            // AMPFB: https://www.facebook.com/Brottsplatskartan/posts/1107232239332768
+            $strToFind = '<p>AMPFB:';
+            if (starts_with($val, $strToFind)) {
+                #$str = $val;
+                #$str = trim(str_replace($strToFind, '', $str));
+                #echo $str;exit;
+                $a = new \SimpleXMLElement($val);
+                $href = $a->a['href'];
+
+                if ($href) {
+                    $lines[$key] = sprintf(
+                        '
+                        <amp-facebook width="552" height="310"
+                            layout="responsive"
+                            data-href="%1$s">
+                        </amp-facebook>
+                        ',
+                        $href
                     );
                 }
             }
