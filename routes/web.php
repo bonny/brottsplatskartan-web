@@ -576,7 +576,7 @@ Route::get('/ordlista/{word}', function ($word, Request $request) {
     #dd($wordSpacesForQuery);
 
     // We use COLLATE so a query for "raddningstjanst" also matches "räddningstjänst"
-    $word = Dictionary::whereRaw("word IN($wordForQuery, $wordSpacesForQuery COLLATE utf8_general_ci)")->first();
+    $word = Dictionary::whereRaw("word IN($wordForQuery, $wordSpacesForQuery COLLATE utf8mb4_general_ci)")->first();
 
     // This gives collate error, not sure why
     // $word = DB::select('select * from dictionaries where word = ? COLLATE utf8_general_ci', [$wordForQuery]);
