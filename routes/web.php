@@ -44,10 +44,30 @@ Route::get('/datum/{monthAndYear}', function ($monthAndYear, Request $request) {
         ->with('locations')
         ->get();
 
+    $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs;
+    $breadcrumbs->addCrumb('Hem', '/');
+    $breadcrumbs->addCrumb('Län', route("lanOverview"));
+    $breadcrumbs->addCrumb('Alla län', route("lanOverview"));
+
+    // $introtext_key = "introtext-start";
+    // if ($page == 1) {
+    //     $data["introtext"] = Markdown::parse(Setting::get($introtext_key));
+    // }
+
+    // @TODO:
+    // Link + text to next page
+    // Link + text to prev page
+
+    // Hämta statistik
+    $chartImgUrl = App\Helper::getStatsImageChartUrl("home");
+
     // 1330 för alla län i december 2017
     // Lite för mkt, så startsidan får vara per dag
     $data = [
-        'events' => $events
+        'events' => $events,
+        'showLanSwitcher' => true,
+        'breadcrumbs' => $breadcrumbs,
+        'chartImgUrl' => $chartImgUrl
     ];
 
     return view('start', $data);
