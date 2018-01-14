@@ -283,4 +283,32 @@ class Helper
 
     // echo signUrl("http://maps.google.com/maps/api/geocode/json?address=New+York&sensor=false&client=clientID", 'vNIXE0xscrmjlyV-12Nj_BvUPaw=');
 
+    public static function getMonthAndYearFromMonthAndYearSlug($monthAndYear)
+    {
+        $monthAndYear = strtolower($monthAndYear);
+        $monthAndYear = str_replace('-', ' ', $monthAndYear);
+
+        $search = ['januari', 'februari', 'mars', 'april', 'maj', 'juni', 'juli', 'augusti', 'september', 'oktober', 'november', 'december'];
+        $replace = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
+
+        // Translate swedish months to english months, so we can parse
+        $monthAndYearInEnglish = str_replace($search, $replace, $monthAndYear);
+
+        try {
+            $date = Carbon::parse($monthAndYearInEnglish);
+            $year = $date->format('Y');
+            $month = $date->format('m');
+            $day = $date->format('d');
+        } catch (\Exception $e) {
+            return false;
+        }
+
+        return [
+            'date' => $date,
+            'monthAndYear' => $monthAndYear,
+            'year' => $year,
+            'month' => $month,
+            'day' => $day
+        ];
+    }
 }

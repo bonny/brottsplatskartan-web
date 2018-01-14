@@ -23,6 +23,37 @@ Carbon::setLocale('sv');
 setlocale(LC_ALL, 'sv_SE', 'sv_SE.utf8');
 
 /**
+ * startpage: visa senaste händelserna, månadsarkiv-versionen
+ * URL är som
+ * https://brottsplatskartan.se/datum/december-2017
+ * @param string $year Year in format "december-2017"
+ */
+Route::get('/datum/{monthAndYear}', function ($monthAndYear, Request $request) {
+
+    $monthAndYear = App\Helper::getMonthAndYearFromMonthAndYearSlug($monthAndYear);
+
+    if (!$monthAndYear) {
+        abort(500, 'Knas med datum hörru');
+    }
+
+    // Hämnta events från denna dag
+    #dd($monthAndYear['date']->format('Y-m-d'));
+    $events = CrimeEvent::
+        whereDate('created_at', $monthAndYear['date']->format('Y-m-d'))
+        ->orderBy("created_at", "desc")
+        ->with('locations')
+        ->get();
+
+    // 1330 för alla län i december 2017
+    // Lite för mkt, så startsidan får vara per dag
+    $data = [
+        'events' => $events
+    ];
+
+    return view('start', $data);
+});
+
+/**
  * startpage: show latest events
  */
 Route::get('/', function (Request $request) {
