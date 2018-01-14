@@ -7,12 +7,17 @@ Template for start page
 
 @extends('layouts.web')
 
-@section('canonicalLink', $canonicalLink)
-@if ($page == 1)
-    @section('title', 'Händelser och brott från Polisen')
-    @section('metaDescription', e('Brottsplatskartan visar på karta var brott har skett. Händelserna hämtas direkt från Polisen.'))
-@else
-    @section('title', 'Sida ' . $page . ' | Händelser och brott från Polisen')
+@hasSection('canonicalLink')
+    @section('canonicalLink', $canonicalLink)
+@endif
+
+@if (isset($page))
+    @if ($page == 1)
+        @section('title', 'Händelser och brott från Polisen')
+        @section('metaDescription', e('Brottsplatskartan visar på karta var brott har skett. Händelserna hämtas direkt från Polisen.'))
+    @else
+        @section('title', 'Sida ' . $page . ' | Händelser och brott från Polisen')
+    @endif
 @endif
 @section('showTitleTagline', false)
 
@@ -21,10 +26,10 @@ Template for start page
 @section('metaImageHeight', 315)
 
 @section('metaContent')
-    @if ($linkRelPrev)
+    @if (isset($linkRelPrev))
         <link rel="prev" href="{{ $linkRelPrev }}" />
     @endif
-    @if ($linkRelNext)
+    @if (isset($linkRelNext))
         <link rel="next" href="{{ $linkRelNext }}" />
     @endif
 @endsection
@@ -48,13 +53,15 @@ Template for start page
 
     @if ($events)
 
-        @if ($page == 1)
-            <p><b>Idag har {{$numEventsToday}} händelser rapporterats in från Polisen.</b><p>
-            <p>Totalt finns det på Brottsplatskartan <b>{{$events->total()}} händelser</b>.</p>
-        @endif
+        @if (isset($page))
+            @if ($page == 1)
+                <p><b>Idag har {{$numEventsToday}} händelser rapporterats in från Polisen.</b><p>
+                <p>Totalt finns det på Brottsplatskartan <b>{{$events->total()}} händelser</b>.</p>
+            @endif
 
-        @if ($page > 1)
-            <p>Sida {{ $page }} av {{ $events->lastPage() }}</p>
+            @if ($page > 1)
+                <p>Sida {{ $page }} av {{ $events->lastPage() }}</p>
+            @endif
         @endif
 
         <div class="Events Events--overview">
@@ -79,7 +86,9 @@ Template for start page
 
         </div>
 
-        {{ $events->links() }}
+        @if (method_exists($events, 'links'))
+            {{ $events->links() }}
+        @endif
 
     @endif
 
@@ -87,11 +96,13 @@ Template for start page
 
 @section('sidebar')
 
-    <div class="Stats Stats--lan">
-        <h2 class="Stats__title">Brottsstatistik</h2>
-        <p>Antal rapporterade händelser från Polisen per dag i Sverige, 14 dagar tillbaka.</p>
-        <p><amp-img layout="responsive" class="Stats__image" src='{{$chartImgUrl}}' alt='Linjediagram som visar antal Polisiära händelser per dag för Sverige' width=400 height=150></amp-img></p>
-    </div>
+    @if (isset($chartImgUrl))
+        <div class="Stats Stats--lan">
+            <h2 class="Stats__title">Brottsstatistik</h2>
+            <p>Antal rapporterade händelser från Polisen per dag i Sverige, 14 dagar tillbaka.</p>
+            <p><amp-img layout="responsive" class="Stats__image" src='{{$chartImgUrl}}' alt='Linjediagram som visar antal Polisiära händelser per dag för Sverige' width=400 height=150></amp-img></p>
+        </div>
+    @endif
 
     @include('parts.follow-us')
 
