@@ -37,7 +37,11 @@ Template for start page
 @section('content')
 
     {{--<h1>Brottsplatskartan visar var brotten sker</h1>--}}
-    <h1>Senaste polishändelserna i Sverige</h1>
+    @if (!empty($title))
+        <h1>{{$title}}</h1>
+    @else
+        <h1>Senaste polishändelserna i Sverige</h1>
+    @endif
 
     @if (isset($showLanSwitcher))
         <p class="Breadcrumbs__switchLan__belowTitle">
