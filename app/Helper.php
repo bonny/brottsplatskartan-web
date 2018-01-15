@@ -283,7 +283,7 @@ class Helper
 
     // echo signUrl("http://maps.google.com/maps/api/geocode/json?address=New+York&sensor=false&client=clientID", 'vNIXE0xscrmjlyV-12Nj_BvUPaw=');
 
-    public static function getMonthAndYearFromMonthAndYearSlug($monthAndYear)
+    public static function getdateFromDateSlug($monthAndYear)
     {
         $monthAndYear = strtolower($monthAndYear);
         $monthAndYear = str_replace('-', ' ', $monthAndYear);
