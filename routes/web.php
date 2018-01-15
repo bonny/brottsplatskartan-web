@@ -23,55 +23,13 @@ Carbon::setLocale('sv');
 setlocale(LC_ALL, 'sv_SE', 'sv_SE.utf8');
 
 /**
- * startpage: visa senaste händelserna, månadsarkiv-versionen
+ * startpage: visa senaste händelserna, datum/dag-versionen
  * URL är som
- * https://brottsplatskartan.se/datum/december-2017
+ * https://brottsplatskartan.se/datum/15-januari-2018
+ *
  * @param string $year Year in format "december-2017"
  */
-Route::get('/datum/{monthAndYear}', function ($monthAndYear, Request $request) {
-
-    $monthAndYear = App\Helper::getMonthAndYearFromMonthAndYearSlug($monthAndYear);
-
-    if (!$monthAndYear) {
-        abort(500, 'Knas med datum hörru');
-    }
-
-    // Hämnta events från denna dag
-    #dd($monthAndYear['date']->format('Y-m-d'));
-    $events = CrimeEvent::
-        whereDate('created_at', $monthAndYear['date']->format('Y-m-d'))
-        ->orderBy("created_at", "desc")
-        ->with('locations')
-        ->get();
-
-    $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs;
-    $breadcrumbs->addCrumb('Hem', '/');
-    $breadcrumbs->addCrumb('Län', route("lanOverview"));
-    $breadcrumbs->addCrumb('Alla län', route("lanOverview"));
-
-    // $introtext_key = "introtext-start";
-    // if ($page == 1) {
-    //     $data["introtext"] = Markdown::parse(Setting::get($introtext_key));
-    // }
-
-    // @TODO:
-    // Link + text to next page
-    // Link + text to prev page
-
-    // Hämta statistik
-    $chartImgUrl = App\Helper::getStatsImageChartUrl("home");
-
-    // 1330 för alla län i december 2017
-    // Lite för mkt, så startsidan får vara per dag
-    $data = [
-        'events' => $events,
-        'showLanSwitcher' => true,
-        'breadcrumbs' => $breadcrumbs,
-        'chartImgUrl' => $chartImgUrl
-    ];
-
-    return view('start', $data);
-});
+Route::get('/datum/{date}', 'StartController@day');
 
 /**
  * startpage: show latest events
