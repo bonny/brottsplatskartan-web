@@ -214,6 +214,26 @@ button {
 .SiteNav__item span {
 }
 
+.DayNav {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+.DayNav__item {
+    /*display: inline-block;*/
+    width: 50%;
+}
+
+.DayNav__item--next {
+    text-align: right;
+}
+
+.DayNav__link {
+
+}
+
 .Events {
     /*column-count: 2;*/
     /*overflow: auto;*/

@@ -283,6 +283,10 @@ class Helper
 
     // echo signUrl("http://maps.google.com/maps/api/geocode/json?address=New+York&sensor=false&client=clientID", 'vNIXE0xscrmjlyV-12Nj_BvUPaw=');
 
+    /**
+     * @param string Like "15-januari-2018"
+     * @return mixed array on success, false on error
+     */
     public static function getdateFromDateSlug($monthAndYear)
     {
         $monthAndYear = strtolower($monthAndYear);
@@ -310,5 +314,31 @@ class Helper
             'month' => $month,
             'day' => $day
         ];
+    }
+
+    public static function getPrevDaysNavInfo($date = null, $numDays = 5)
+    {
+        $prevDayEvents = CrimeEvent::
+            selectRaw('date(created_at) as dateYMD, count(*) as dateCount')
+            ->whereDate('created_at', '<', $date->format('Y-m-d'))
+            ->groupBy(\DB::raw('dateYMD'))
+            ->orderBy('created_at', 'desc')
+            ->limit($numDays)
+            ->get();
+
+        return $prevDayEvents;
+    }
+
+    public static function getNextDaysNavInfo($date = null, $numDays = 5)
+    {
+        $nextDayEvents = CrimeEvent::
+            selectRaw('date(created_at) as dateYMD, count(*) as dateCount')
+            ->whereDate('created_at', '>', $date->format('Y-m-d'))
+            ->groupBy(\DB::raw('dateYMD'))
+            ->orderBy('created_at', 'asc')
+            ->limit($numDays)
+            ->get();
+
+        return $nextDayEvents;
     }
 }

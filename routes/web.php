@@ -29,12 +29,14 @@ setlocale(LC_ALL, 'sv_SE', 'sv_SE.utf8');
  *
  * @param string $year Year in format "december-2017"
  */
-Route::get('/datum/{date}', 'StartController@day');
+Route::get('/', 'StartController@day')->name('start');
+Route::get('/datum/{date}', 'StartController@day')->name('startDatum');
+Route::redirect('/datum/', '/');
 
 /**
- * startpage: show latest events
+ * startpage: start, show current day
  */
-Route::get('/', function (Request $request) {
+Route::get('/oldhome', function (Request $request) {
     $data = [];
 
     $page = (int) $request->input("page", 1);
@@ -99,15 +101,12 @@ Route::get('/', function (Request $request) {
     }
 
     // Händelser idag
-    #$stats = App\Helper::getHomeStats('home');
-    #dd($stats);
-
     $data["numEventsToday"] = DB::table('crime_events')
                     ->where('created_at', '>', Carbon::now()->subDays(1))
                     ->count();
 
     return view('start', $data);
-})->name("start");
+})->name("startOld");
 
 /**
  * nära: show latest events close to position

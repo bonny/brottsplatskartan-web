@@ -36,12 +36,13 @@ Template for start page
 
 @section('content')
 
-    {{--<h1>Brottsplatskartan visar var brotten sker</h1>--}}
     @if (!empty($title))
         <h1>{{$title}}</h1>
     @else
         <h1>Senaste polishändelserna i Sverige</h1>
     @endif
+
+    @include('parts.daynav')
 
     @if (isset($showLanSwitcher))
         <p class="Breadcrumbs__switchLan__belowTitle">
@@ -56,6 +57,8 @@ Template for start page
     @endif
 
     @if ($events)
+
+        <p><b>{{$numEventsToday}} händelser från Polisen:</b><p>
 
         @if (isset($page))
             @if ($page == 1)
@@ -93,6 +96,8 @@ Template for start page
         @if (method_exists($events, 'links'))
             {{ $events->links() }}
         @endif
+
+        @include('parts.daynav')
 
     @endif
 

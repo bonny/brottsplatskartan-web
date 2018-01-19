@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\CrimeEvent;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 
 /**
@@ -18,7 +19,7 @@ class StartController extends Controller
      * https://brottsplatskartan.se/datum/15-januari-2018
      * @param string $year Year in format "december-2017"
      */
-    public function day($date, Request $request)
+    public function day(Request $request, $date = null)
     {
         $date = \App\Helper::getdateFromDateSlug($date);
 
@@ -52,38 +53,46 @@ class StartController extends Controller
         // aktuellt datum + 1 dag
         // om dag är nyare än dagens datum = false
         // annars: hämta antal händelser
-        $prevDayEvents = CrimeEvent::
-            selectRaw('date(created_at) as dateYMD, count(*) as dateCount')
-            ->whereDate('created_at', '<', $date['date']->addDay())
-            ->groupBy(\DB::raw('DATE(created_at)'))
-            ->orderBy('created_at', 'desc')
-            ->limit(5)
-            ->get();
+        $prevDaysNavInfo = \App\Helper::getPrevDaysNavInfo($date['date']);
+        $nextDaysNavInfo = \App\Helper::getNextDaysNavInfo($date['date']);
 
-        $nextDayEvents = CrimeEvent::
-            selectRaw('date(created_at) as dateYMD, count(*) as dateCount')
-            ->whereDate('created_at', '>', $date['date']->addDay())
-            ->groupBy(\DB::raw('DATE(created_at)'))
-            ->orderBy('created_at', 'desc')
-            ->limit(5)
-            ->get();
+        $prevDayLink = null;
+        if ($prevDaysNavInfo->count()) {
+            $firstDay = $prevDaysNavInfo->first();
+            $firstDayDate = Carbon::parse($firstDay['dateYMD']);
+            $formattedDate = str::lower($firstDayDate->formatLocalized('%d-%B-%Y'));
+            $formattedDateFortitle = $firstDayDate->formatLocalized('%A %d %B %Y');
+            $prevDayLink = [
+                'title' => sprintf('‹ %1$s', $formattedDateFortitle),
+                'link' => route("startDatum", ['date' => $formattedDate])
+            ];
+        }
 
+        $nextDayLink = null;
+        if ($nextDaysNavInfo->count()) {
+            $firstDay = $nextDaysNavInfo->first();
+            $firstDayDate = Carbon::parse($firstDay['dateYMD']);
+            $formattedDate = str::lower($firstDayDate->formatLocalized('%d-%B-%Y'));
+            $formattedDateFortitle = $firstDayDate->formatLocalized('%A %d %B %Y');
+            $nextDayLink = [
+                'title' => sprintf('%1$s ›', $formattedDateFortitle),
+                'link' => route("startDatum", ['date' => $formattedDate])
+            ];
+        }
 
-        $nextDay = [
-            'title' => ''
-        ];
-
-        $datePrev = [
-        ];
-
-        dd($prevDayEvents->toArray(), $nextDayEvents->toArray());
+        $numEventsToday = \DB::table('crime_events')
+                    ->whereDate('created_at', $date['date']->format('Y-m-d'))
+                    ->count();
 
         $data = [
             'events' => $events,
             'showLanSwitcher' => true,
             'breadcrumbs' => $breadcrumbs,
             'chartImgUrl' => \App\Helper::getStatsImageChartUrl("home"),
-            'title' => "Händelser  " . $date['date']->formatLocalized('%A %d %B %Y')
+            'title' => sprintf('%1$s', $date['date']->formatLocalized('%A %e %B %Y')),
+            'nextDayLink' => $nextDayLink,
+            'prevDayLink' => $prevDayLink,
+            'numEventsToday' => $numEventsToday
         ];
 
         return view('start', $data);
