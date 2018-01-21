@@ -9,14 +9,14 @@ Template for start page
 
 @section('canonicalLink', $canonicalLink)
 
-@if (isset($page))
-    @if ($page == 1)
-        @section('title', 'Händelser och brott från Polisen')
-        @section('metaDescription', e('Brottsplatskartan visar på karta var brott har skett. Händelserna hämtas direkt från Polisen.'))
-    @else
-        @section('title', 'Sida ' . $page . ' | Händelser och brott från Polisen')
-    @endif
+@if (!empty($pageTitle))
+    @section('title', $pageTitle)
 @endif
+
+@if (!empty($pageMetaDescription))
+    @section('metaDescription', e('Se på karta var händelser och brott som Polisen rapporterat har skett. Händelserna hämtas direkt från Polisens webbplats.'))
+@endif
+
 @section('showTitleTagline', false)
 
 @section('metaImage', config('app.url') . "/img/start-share-image.png")

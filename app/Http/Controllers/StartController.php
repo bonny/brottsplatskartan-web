@@ -141,6 +141,20 @@ class StartController extends Controller
             );
         }
 
+        $pageTitle = '';
+        $pageMetaDescription = '';
+
+        if ($isToday) {
+            $pageTitle = 'Händelser och brott från Polisen – senaste nytt från hela Sverige';
+            $pageMetaDescription = 'Se på karta var händelser och brott som Polisen rapporterat har skett. Händelserna hämtas direkt från Polisens webbplats.';
+        } else {
+            $pageTitle = sprintf(
+                'Händelser från Polisen %2$s - %1$d händelser',
+                $numEventsToday,
+                $date['date']->formatLocalized('%A %e %B %Y')
+            );
+        }
+
         $data = [
             'events' => $events,
             'eventsCount' => CrimeEvent::count(),
@@ -155,7 +169,9 @@ class StartController extends Controller
             'numEventsToday' => $numEventsToday,
             'isToday' => $isToday,
             'introtext' => $introtext,
-            'canonicalLink' => $canonicalLink
+            'canonicalLink' => $canonicalLink,
+            'pageTitle' => $pageTitle,
+            'pageMetaDescription' => $pageMetaDescription
         ];
 
         return view('start', $data);
