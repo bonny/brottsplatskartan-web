@@ -17,6 +17,9 @@ class StartController extends Controller
      * startpage: visa senaste händelserna, datum/dag-versionen
      * URL är som
      * https://brottsplatskartan.se/datum/15-januari-2018
+     * eller som startsida, då blir datum dagens datum
+     * https://brottsplatskartan.se/
+     *
      * @param string $year Year in format "december-2017"
      */
     public function day(Request $request, $date = null)
@@ -28,7 +31,6 @@ class StartController extends Controller
         }
 
         // Hämnta events från denna dag
-        #dd($date['date']->format('Y-m-d'));
         $events = CrimeEvent::
             whereDate('created_at', $date['date']->format('Y-m-d'))
             ->orderBy("created_at", "desc")
@@ -84,15 +86,76 @@ class StartController extends Controller
                     ->whereDate('created_at', $date['date']->format('Y-m-d'))
                     ->count();
 
+        $isToday = $date['date']->isToday();
+        $isYesterday = $date['date']->isYesterday();
+        $isCurrentYear = $date['date']->year == date('Y');
+
+        $introtext = null;
+        $introtext_key = "introtext-start";
+        if ($isToday) {
+            $introtext = \Markdown::parse(\Setting::get($introtext_key));
+        }
+
+        if ($isCurrentYear) {
+            // Skriv inte ut datum om det är nuvarande år
+            $dateLocalized = $date['date']->formatLocalized('%A %e %B');
+        } else {
+            $dateLocalized = $date['date']->formatLocalized('%A %e %B %Y');
+        }
+
+        $title = '';
+        if ($isToday) {
+            $title = sprintf(
+                '
+                    Händelser från Polisen
+                    <br><strong>Idag %1$s</strong>
+                ',
+                $dateLocalized
+            );
+        } elseif ($isYesterday) {
+            $title = sprintf(
+                '
+                    Händelser från Polisen
+                    <br><strong>Igår %1$s</strong>
+                ',
+                $dateLocalized
+            );
+        } else {
+            $title = sprintf(
+                '
+                    Händelser från Polisen
+                    <br><strong>%1$s</strong>
+                ',
+                $dateLocalized
+            );
+        }
+
+        if ($isToday) {
+            $canonicalLink = route('start');
+        } else {
+            $canonicalLink = route(
+                'startDatum',
+                [
+                    'date' => str::lower($date['date']->formatLocalized('%d-%B-%Y'))
+                ]
+            );
+        }
+
         $data = [
             'events' => $events,
+            'eventsCount' => CrimeEvent::count(),
             'showLanSwitcher' => true,
             'breadcrumbs' => $breadcrumbs,
             'chartImgUrl' => \App\Helper::getStatsImageChartUrl("home"),
-            'title' => sprintf('%1$s', $date['date']->formatLocalized('%A %e %B %Y')),
+            'title' => $title,
             'nextDayLink' => $nextDayLink,
             'prevDayLink' => $prevDayLink,
-            'numEventsToday' => $numEventsToday
+            'linkRelPrev' => !empty($prevDayLink) ? $prevDayLink['link'] : null,
+            'linkRelNext' => !empty($nextDayLink) ? $nextDayLink['link'] : null,
+            'numEventsToday' => $numEventsToday,
+            'isToday' => $isToday,
+            'introtext' => $introtext,
+            'canonicalLink' => $canonicalLink
         ];
 
         return view('start', $data);

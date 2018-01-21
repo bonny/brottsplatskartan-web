@@ -7,9 +7,7 @@ Template for start page
 
 @extends('layouts.web')
 
-@hasSection('canonicalLink')
-    @section('canonicalLink', $canonicalLink)
-@endif
+@section('canonicalLink', $canonicalLink)
 
 @if (isset($page))
     @if ($page == 1)
@@ -37,7 +35,7 @@ Template for start page
 @section('content')
 
     @if (!empty($title))
-        <h1>{{$title}}</h1>
+        <h1>{!!$title!!}</h1>
     @else
         <h1>Senaste polishändelserna i Sverige</h1>
     @endif
@@ -56,19 +54,13 @@ Template for start page
         <div class="Introtext">{!! $introtext !!}</div>
     @endif
 
-    @if ($events)
+    @if ($events && $numEventsToday)
 
-        <p><b>{{$numEventsToday}} händelser från Polisen:</b><p>
-
-        @if (isset($page))
-            @if ($page == 1)
-                <p><b>Idag har {{$numEventsToday}} händelser rapporterats in från Polisen.</b><p>
-                <p>Totalt finns det på Brottsplatskartan <b>{{$events->total()}} händelser</b>.</p>
-            @endif
-
-            @if ($page > 1)
-                <p>Sida {{ $page }} av {{ $events->lastPage() }}</p>
-            @endif
+        @if ($isToday)
+            <p><b>Idag har {{$numEventsToday}} händelser rapporterats in från Polisen.</b><p>
+            <p>Totalt finns det på Brottsplatskartan <b>{{$eventsCount}} händelser</b>.</p>
+        @else
+            <p><b>{{$numEventsToday}} händelser från Polisen:</b><p>
         @endif
 
         <div class="Events Events--overview">
@@ -98,7 +90,8 @@ Template for start page
         @endif
 
         @include('parts.daynav')
-
+    @else
+        <p>Inga händelser inrapporterade denna dag.</p>
     @endif
 
 @endsection

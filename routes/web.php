@@ -100,6 +100,9 @@ Route::get('/oldhome', function (Request $request) {
         $data["canonicalLink"] = route('start', ['page' => $page]);
     }
 
+    $data['isToday'] = true;
+    $data['eventsCount'] = $events->count();
+
     // Händelser idag
     $data["numEventsToday"] = DB::table('crime_events')
                     ->where('created_at', '>', Carbon::now()->subDays(1))
