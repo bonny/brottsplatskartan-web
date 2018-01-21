@@ -45,7 +45,7 @@ h1, h2, h3, h4, ul, ol {
 }
 
 h1 {
-    font-size: 1.75rem;
+    font-size: 2.5rem;
 }
 
 h2 {
@@ -266,7 +266,7 @@ button {
 }
 
 .Event__title {
-    line-height: 1;
+    line-height: 1.2;
     margin-top: var(--default-margin);
     margin-bottom: .25rem;
     /*word-break: break-all;*/
@@ -341,9 +341,12 @@ button {
 .Event__dateFormatted {
 }
 
-.Event--single .Event__title,
 .Events--overview .Event__title {
     font-size: 1.4rem;
+}
+
+.Event--single .Event__title {
+    font-size: 2.0rem;
 }
 
 
