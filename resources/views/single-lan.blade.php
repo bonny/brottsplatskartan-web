@@ -12,7 +12,7 @@ https://brottsplatskartan.localhost/lan/Stockholms%20l%C3%A4n
 
 @if ($page == 1)
     @section('title', "Brott och händelser från Polisen i $lan")
-    @section('metaDescription', e("Se var brott sker i närheten av $lan. Informationen kommer direkt från Polisen till vår karta!"))
+    @section('metaDescription', $metaDescription)
 @else
     @section('title', 'Sida ' . $page . " | Brott och händelser från Polisen i $lan")
 @endif
@@ -36,7 +36,12 @@ https://brottsplatskartan.localhost/lan/Stockholms%20l%C3%A4n
 
     <h1>
         Händelser från Polisen i
-        <b>{{ $lan }}</b>
+        <strong>{{ $lan }}</strong>
+
+        {{--
+        <strong>{{ $lan }}</strong>:
+        händelser från Polisen
+        --}}
 
         @if (isset($showLanSwitcher))
             <a class="Breadcrumbs__switchLan" href="{{ route("lanOverview") }}">Byt län</a>

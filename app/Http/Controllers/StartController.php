@@ -37,11 +37,6 @@ class StartController extends Controller
             ->with('locations')
             ->get();
 
-        $breadcrumbs = new \Creitive\Breadcrumbs\Breadcrumbs;
-        $breadcrumbs->addCrumb('Hem', '/');
-        $breadcrumbs->addCrumb('Län', route("lanOverview"));
-        $breadcrumbs->addCrumb('Alla län', route("lanOverview"));
-
         // $introtext_key = "introtext-start";
         // if ($page == 1) {
         //     $data["introtext"] = Markdown::parse(Setting::get($introtext_key));
@@ -86,9 +81,25 @@ class StartController extends Controller
                     ->whereDate('created_at', $date['date']->format('Y-m-d'))
                     ->count();
 
+        $mostCommonCrimeTypes = CrimeEvent::selectRaw('parsed_title, count(id) as antal')
+            ->whereDate('created_at', $date['date']->format('Y-m-d'))
+            ->groupBy('parsed_title')
+            ->orderByRaw('antal DESC')
+            ->limit(5)
+            ->get();
+
         $isToday = $date['date']->isToday();
         $isYesterday = $date['date']->isYesterday();
         $isCurrentYear = $date['date']->year == date('Y');
+
+        // Add breadcrumbs for dates before today
+        if (!$isToday) {
+            // $breadcrumbs = new \Creitive\Breadcrumbs\Breadcrumbs;
+            // $breadcrumbs->addCrumb('Hem', '/');
+            // $breadcrumbs->addCrumb('Datum', route("start"));
+            // $breadcrumbs->addCrumb('Län', route("lanOverview"));
+            // $breadcrumbs->addCrumb('Alla län', route("lanOverview"));
+        }
 
         $introtext = null;
         $introtext_key = "introtext-start";
@@ -146,7 +157,7 @@ class StartController extends Controller
 
         if ($isToday) {
             $pageTitle = 'Händelser och brott från Polisen – senaste nytt från hela Sverige';
-            $pageMetaDescription = 'Se på karta var händelser och brott som Polisen rapporterat har skett. Händelserna hämtas direkt från Polisens webbplats.';
+            $pageMetaDescription = 'Läs de senaste händelserna & brotten som Polisen rapporterat. Se polishändelser ✔ nära dig ✔ i din ort ✔ i ditt län. Händelserna hämtas direkt från Polisens webbplats.';
         } else {
             $pageTitle = sprintf(
                 'Händelser från Polisen %2$s - %1$d händelser',
@@ -159,7 +170,7 @@ class StartController extends Controller
             'events' => $events,
             'eventsCount' => CrimeEvent::count(),
             'showLanSwitcher' => true,
-            'breadcrumbs' => $breadcrumbs,
+            'breadcrumbs' => isset($breadcrumbs) ? $breadcrumbs : null,
             'chartImgUrl' => \App\Helper::getStatsImageChartUrl("home"),
             'title' => $title,
             'nextDayLink' => $nextDayLink,
@@ -171,7 +182,9 @@ class StartController extends Controller
             'introtext' => $introtext,
             'canonicalLink' => $canonicalLink,
             'pageTitle' => $pageTitle,
-            'pageMetaDescription' => $pageMetaDescription
+            'pageMetaDescription' => $pageMetaDescription,
+            'mostCommonCrimeTypes' => $mostCommonCrimeTypes,
+            'dateFormattedForMostCommonCrimeTypes' => $date['date']->formatLocalized('%d %B')
         ];
 
         return view('start', $data);

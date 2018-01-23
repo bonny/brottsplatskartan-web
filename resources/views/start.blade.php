@@ -56,9 +56,29 @@ Template for start page
 
     @if ($events && $numEventsToday)
 
+         @if ($mostCommonCrimeTypes && $mostCommonCrimeTypes->count() >= 5)
+            <p>
+                @if ($isToday)
+                    De vanligaste händelserna idag är
+                @else
+                    De vanligaste händelserna {{$dateFormattedForMostCommonCrimeTypes}} var
+                @endif
+                @foreach ($mostCommonCrimeTypes as $oneCrimeType)
+                    @if ($loop->remaining == 0)
+                        och <strong>{{ mb_strtolower($oneCrimeType->parsed_title) }}</strong>.
+                    @elseif ($loop->remaining == 1)
+                        <strong>{{ mb_strtolower($oneCrimeType->parsed_title) }}</strong>
+                    @else
+                        <strong>{{ mb_strtolower($oneCrimeType->parsed_title) }}</strong>,
+                    @endif
+                    <!-- {{ $oneCrimeType->antal }} -->
+                @endforeach
+            </p>
+        @endif
+
         @if ($isToday)
             <p><b>Idag har {{$numEventsToday}} händelser rapporterats in från Polisen.</b><p>
-            <p>Totalt finns det på Brottsplatskartan <b>{{$eventsCount}} händelser</b>.</p>
+            {{-- <p>Totalt finns det på Brottsplatskartan <b>{{$eventsCount}} händelser</b>.</p> --}}
         @else
             <p><b>{{$numEventsToday}} händelser från Polisen:</b><p>
         @endif

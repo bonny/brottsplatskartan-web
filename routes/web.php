@@ -482,6 +482,15 @@ Route::get('/plats/{plats}', function ($plats, Request $request) {
     $data['events'] = $events;
     $data['mostCommonCrimeTypes'] = $mostCommonCrimeTypes;
 
+    $mostCommonCrimeTypesMetaDescString = '';
+    foreach ($mostCommonCrimeTypes as $oneCrimeType) {
+        $mostCommonCrimeTypesMetaDescString .= $oneCrimeType->parsed_title . ', ';
+    }
+    $mostCommonCrimeTypesMetaDescString = trim($mostCommonCrimeTypesMetaDescString, ', ');
+
+    $metaDescription = "Se senaste brotten som skett i och omkring $plats. $mostCommonCrimeTypesMetaDescString är vanliga händelser nära $plats. Informationen hämtas direkt från Polisen.";
+    $data['metaDescription'] = $metaDescription;
+
     $page = (int) $request->input("page", 1);
 
     if (!$page) {
@@ -709,6 +718,17 @@ Route::get('/lan/{lan}', function ($lan, Request $request) {
     $data["lanChartImgUrl"] = App\Helper::getStatsImageChartUrl($lan);
 
     $data["lanInfo"] = App\Helper::getSingleLanWithStats($lan);
+
+
+    $mostCommonCrimeTypesMetaDescString = '';
+    foreach ($mostCommonCrimeTypes as $oneCrimeType) {
+        $mostCommonCrimeTypesMetaDescString .= $oneCrimeType->parsed_title . ', ';
+    }
+    $mostCommonCrimeTypesMetaDescString = trim($mostCommonCrimeTypesMetaDescString, ', ');
+
+    $metaDescription = "Se var brott sker i närheten av {$lan}. Vanliga händelser i {$lan} är: {$mostCommonCrimeTypesMetaDescString}. Informationen kommer direkt från Polisen till vår karta.";
+
+    $data['metaDescription'] = $metaDescription;
 
     return view('single-lan', $data);
 })->name("lanSingle");

@@ -11,8 +11,8 @@ https://brottsplatskartan.localhost/plats/nacka
 @extends('layouts.web')
 
 @if ($page == 1)
-    @section('title', "Brott nära $plats | Senaste brotten & händelserna i $plats från Polisen")
-    @section('metaDescription', e("Se senaste brotten som skett nära $plats. Händelserna hämtas direkt från Polisen."))
+    @section('title', "Brott och polishändelser i $plats. Karta med platsinfo. Information direkt från Polisen.")
+    @section('metaDescription', $metaDescription)
 @else
     @section('title', 'Sida ' . $page .  " | Brott nära $plats | Senaste brotten & händelserna i $plats från Polisen")
 @endif
@@ -29,7 +29,7 @@ https://brottsplatskartan.localhost/plats/nacka
 
 @section('content')
 
-    <h1>Brott &amp; händelser nära <b>{{ $plats }}</b></h1>
+    <h1><strong>{{$plats}}</strong>: brott &amp; händelser</h1>
 
     <div class="Introtext">
 

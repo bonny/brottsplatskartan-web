@@ -352,7 +352,7 @@ class CrimeEvent extends Model
     /**
      * @return string
      */
-    public function getMetaDescription($length = 200)
+    public function getMetaDescription($length = 250)
     {
 
         $text = "";
@@ -360,7 +360,7 @@ class CrimeEvent extends Model
         $text .= trim($this->description) . " " . trim($this->parsed_content);
 
         $text = strip_tags(str_replace('<', ' <', $text));
-        $text = str_limit($text, $length);
+        $text = str_limit($text, $length, '');
 
         return $text;
     }

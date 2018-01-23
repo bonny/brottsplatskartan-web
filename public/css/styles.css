@@ -3,6 +3,7 @@
     --color-link: #0379C4;
     --color-link: #15c; /* same colors as lighthouse */
     --color-gray-1: #666;
+    --color-red: #CB4739;
     --default-margin: 1rem;
     --default-margin-half: calc(var(--default-margin) / 2);
     --default-margin-double: calc(var(--default-margin) * 2);
@@ -172,12 +173,23 @@ button {
 
 /* Site navigation */
 .SiteNav {
+    position: relative;
     display: block;
     margin-left: -1rem;
     margin-right: -1rem;
     margin-bottom: -1rem;
-    /* background-color: rgba(255, 255, 255, .75); */
+    /*background-color: rgba(255, 255, 255, .75);*/
     font-size: 1rem;
+    margin-top: 1rem;
+}
+
+.SiteNav::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: calc(var(--default-margin) * -1);
+    right: 0;
+    border-top: 1px solid rgba(0,0,0,0.1);
 }
 
 .SiteNav__items {
@@ -191,14 +203,21 @@ button {
     display: inline-block;
     text-align: center;
     /* width: 25%; */
+    white-space: nowrap;
 }
 
 .SiteNav__item a {
     display: block;
     padding-top: .5rem;
     padding-bottom: .5rem;
-    /*background: #FFF;*/
     color: inherit;
+    border-bottom: 2px solid transparent;
+    transition: border .2s ease-out;
+}
+
+.SiteNav__item a:hover {
+    border-bottom-color: var(--color-red);
+    text-decoration: none;
 }
 
 .SiteNav__item svg,
