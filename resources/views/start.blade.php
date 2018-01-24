@@ -14,7 +14,7 @@ Template for start page
 @endif
 
 @if (!empty($pageMetaDescription))
-    @section('metaDescription', e('Se på karta var händelser och brott som Polisen rapporterat har skett. Händelserna hämtas direkt från Polisens webbplats.'))
+    @section('metaDescription', $pageMetaDescription)
 @endif
 
 @section('showTitleTagline', false)
