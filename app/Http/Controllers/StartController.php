@@ -16,7 +16,7 @@ class StartController extends Controller
     /**
      * startpage: visa senaste händelserna, datum/dag-versionen
      * URL är som
-     * https://brottsplatskartan.se/datum/15-januari-2018
+     * https://brottsplatskartan.se/handelser/15-januari-2018
      * eller som startsida, då blir datum dagens datum
      * https://brottsplatskartan.se/
      *

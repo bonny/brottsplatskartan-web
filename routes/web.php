@@ -25,13 +25,21 @@ setlocale(LC_ALL, 'sv_SE', 'sv_SE.utf8');
 /**
  * startpage: visa senaste händelserna, datum/dag-versionen
  * URL är som
- * https://brottsplatskartan.se/datum/15-januari-2018
+ * https://brottsplatskartan.se/handelser/15-januari-2018
  *
  * @param string $year Year in format "december-2017"
  */
 Route::get('/', 'StartController@day')->name('start');
-Route::get('/datum/{date}', 'StartController@day')->name('startDatum');
-Route::redirect('/datum/', '/');
+Route::get('/handelser/{date}', 'StartController@day')->name('startDatum');
+Route::redirect('/handelser/', '/');
+
+/**
+ * Redirect /datum -> /handelser
+ */
+Route::redirect('/datum/', '/handelser/');
+Route::get('/datum/{date}', function ($date) {
+    return redirect()->route('startDatum', ['date' => $date]);
+});
 
 /**
  * startpage: start, show current day
