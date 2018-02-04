@@ -22,6 +22,9 @@ use Carbon\Carbon;
 Carbon::setLocale('sv');
 setlocale(LC_ALL, 'sv_SE', 'sv_SE.utf8');
 
+// To disable debugbar temporarily on local development, uncomment the line below.
+// \Debugbar::disable();
+
 /**
  * startpage: visa senaste händelserna, datum/dag-versionen
  * URL är som
