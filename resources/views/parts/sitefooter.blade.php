@@ -24,7 +24,10 @@
         <ul class="SiteFooter__lanListing__items SiteFooter__navlinks">
             @foreach (App\Helper::getAllLan() as $oneLan)
                 <li class="SiteFooter__lanListing__item">
-                    <a href="{{ route("lanSingle", ["lan"=>$oneLan->administrative_area_level_1]) }}">
+                    <a
+                        href="{{ route("lanSingle", ["lan" => $oneLan->administrative_area_level_1]) }}"
+                        title="Händelser i {{ $oneLan->administrative_area_level_1 }}"
+                        >
                         {{ $oneLan->administrative_area_level_1 }}
                     </a>
                 </li>
