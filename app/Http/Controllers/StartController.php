@@ -57,8 +57,8 @@ class StartController extends Controller
         if ($prevDaysNavInfo->count()) {
             $firstDay = $prevDaysNavInfo->first();
             $firstDayDate = Carbon::parse($firstDay['dateYMD']);
-            $formattedDate = str::lower($firstDayDate->formatLocalized('%d-%B-%Y'));
-            $formattedDateFortitle = $firstDayDate->formatLocalized('%A %d %B %Y');
+            $formattedDate = trim(str::lower($firstDayDate->formatLocalized('%e-%B-%Y')));
+            $formattedDateFortitle = trim($firstDayDate->formatLocalized('%A %e %B %Y'));
             $prevDayLink = [
                 'title' => sprintf('‹ %1$s', $formattedDateFortitle),
                 'link' => route("startDatum", ['date' => $formattedDate])
@@ -69,8 +69,8 @@ class StartController extends Controller
         if ($nextDaysNavInfo->count()) {
             $firstDay = $nextDaysNavInfo->first();
             $firstDayDate = Carbon::parse($firstDay['dateYMD']);
-            $formattedDate = str::lower($firstDayDate->formatLocalized('%d-%B-%Y'));
-            $formattedDateFortitle = $firstDayDate->formatLocalized('%A %d %B %Y');
+            $formattedDate = trim(str::lower($firstDayDate->formatLocalized('%e-%B-%Y')));
+            $formattedDateFortitle = trim($firstDayDate->formatLocalized('%A %e %B %Y'));
             $nextDayLink = [
                 'title' => sprintf('%1$s ›', $formattedDateFortitle),
                 'link' => route("startDatum", ['date' => $formattedDate])
@@ -109,9 +109,9 @@ class StartController extends Controller
 
         if ($isCurrentYear) {
             // Skriv inte ut datum om det är nuvarande år
-            $dateLocalized = $date['date']->formatLocalized('%A %e %B');
+            $dateLocalized = trim($date['date']->formatLocalized('%A %e %B'));
         } else {
-            $dateLocalized = $date['date']->formatLocalized('%A %e %B %Y');
+            $dateLocalized = trim($date['date']->formatLocalized('%A %e %B %Y'));
         }
 
         $title = '';
@@ -147,7 +147,7 @@ class StartController extends Controller
             $canonicalLink = route(
                 'startDatum',
                 [
-                    'date' => str::lower($date['date']->formatLocalized('%d-%B-%Y'))
+                    'date' => trim(str::lower($date['date']->formatLocalized('%e-%B-%Y')))
                 ]
             );
         }
@@ -162,7 +162,7 @@ class StartController extends Controller
             $pageTitle = sprintf(
                 'Händelser från Polisen %2$s - %1$d händelser',
                 $numEventsToday,
-                $date['date']->formatLocalized('%A %e %B %Y')
+                trim($date['date']->formatLocalized('%A %e %B %Y'))
             );
         }
 
@@ -184,7 +184,7 @@ class StartController extends Controller
             'pageTitle' => $pageTitle,
             'pageMetaDescription' => $pageMetaDescription,
             'mostCommonCrimeTypes' => $mostCommonCrimeTypes,
-            'dateFormattedForMostCommonCrimeTypes' => $date['date']->formatLocalized('%d %B')
+            'dateFormattedForMostCommonCrimeTypes' => trim($date['date']->formatLocalized('%e %B'))
         ];
 
         return view('start', $data);
