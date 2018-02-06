@@ -10,16 +10,8 @@ https://brottsplatskartan.localhost/lan/Stockholms%20l%C3%A4n
 
 @extends('layouts.web')
 
-@if (!empty($page)) {
-    @if ($page == 1)
-        @section('title', "Brott och händelser från Polisen i $lan")
-        @section('metaDescription', $metaDescription)
-    @else
-        @section('title', 'Sida ' . $page . " | Brott och händelser från Polisen i $lan")
-    @endif
-@else
-    @section('metaDescription', $metaDescription)
-@endif
+@section('title', $pageTitle)
+@section('metaDescription', $metaDescription)
 
 @section('canonicalLink', $canonicalLink)
 

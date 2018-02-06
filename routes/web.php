@@ -47,6 +47,7 @@ Route::get('/datum/{date}', function ($date) {
 /**
  * startpage: start, show current day
  */
+/*
 Route::get('/oldhome', function (Request $request) {
     $data = [];
 
@@ -121,6 +122,7 @@ Route::get('/oldhome', function (Request $request) {
 
     return view('start', $data);
 })->name("startOld");
+*/
 
 /**
  * nära: show latest events close to position

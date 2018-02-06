@@ -268,21 +268,21 @@ class LanController extends Controller
         }
 
         $pageTitle = '';
-        $pageMetaDescription = '';
 
         if ($isToday) {
-            $pageTitle = 'Händelser och brott från Polisen – senaste nytt från hela Sverige';
-            $pageMetaDescription = 'Läs de senaste händelserna & brotten som Polisen rapporterat. Se polishändelser ✔ nära dig ✔ i din ort ✔ i ditt län. Händelserna hämtas direkt från Polisens webbplats.';
+            $pageTitle = "Brott och händelser från Polisen i $lan";
         } else {
             $pageTitle = sprintf(
-                'Händelser från Polisen %2$s - %1$d händelser',
+                '%2$s: %1$d händelser från Polisen i %3$s',
                 $events->count(),
-                trim($date['date']->formatLocalized('%A %e %B %Y'))
+                trim($date['date']->formatLocalized('%A %e %B %Y')),
+                $lan
             );
         }
 
         $data = [
             'title' => $title,
+            'pageTitle' => $pageTitle,
             'events' => $events,
             'lan' => $lan,
             'linkRelPrev' => !empty($prevDayLink) ? $prevDayLink['link'] : null,
@@ -326,7 +326,13 @@ class LanController extends Controller
         }
         $mostCommonCrimeTypesMetaDescString = trim($mostCommonCrimeTypesMetaDescString, ', ');
 
-        $metaDescription = "Se var brott sker i närheten av {$lan}. Vanliga händelser i {$lan} är: {$mostCommonCrimeTypesMetaDescString}. Informationen kommer direkt från Polisen till vår karta.";
+        $metaDescription = null;
+        if ($isToday) {
+            $metaDescription = "Se var brott sker i närheten av {$lan}. Vanliga händelser i {$lan} är: {$mostCommonCrimeTypesMetaDescString}. Informationen kommer direkt från Polisen till vår karta.";
+        } else {
+            // $metaDescription = '';
+        }
+
 
         $data['metaDescription'] = $metaDescription;
         $data['mostCommonCrimeTypes'] = $mostCommonCrimeTypes;
