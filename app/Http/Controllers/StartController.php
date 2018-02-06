@@ -77,10 +77,6 @@ class StartController extends Controller
             ];
         }
 
-        $numEventsToday = \DB::table('crime_events')
-                    ->whereDate('created_at', $date['date']->format('Y-m-d'))
-                    ->count();
-
         $mostCommonCrimeTypes = CrimeEvent::selectRaw('parsed_title, count(id) as antal')
             ->whereDate('created_at', $date['date']->format('Y-m-d'))
             ->groupBy('parsed_title')
@@ -161,7 +157,7 @@ class StartController extends Controller
         } else {
             $pageTitle = sprintf(
                 'Händelser från Polisen %2$s - %1$d händelser',
-                $numEventsToday,
+                $events->count(),
                 trim($date['date']->formatLocalized('%A %e %B %Y'))
             );
         }
@@ -177,7 +173,7 @@ class StartController extends Controller
             'prevDayLink' => $prevDayLink,
             'linkRelPrev' => !empty($prevDayLink) ? $prevDayLink['link'] : null,
             'linkRelNext' => !empty($nextDayLink) ? $nextDayLink['link'] : null,
-            'numEventsToday' => $numEventsToday,
+            'numEventsToday' => $events->count(),
             'isToday' => $isToday,
             'introtext' => $introtext,
             'canonicalLink' => $canonicalLink,

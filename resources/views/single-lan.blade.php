@@ -10,11 +10,15 @@ https://brottsplatskartan.localhost/lan/Stockholms%20l%C3%A4n
 
 @extends('layouts.web')
 
-@if ($page == 1)
-    @section('title', "Brott och händelser från Polisen i $lan")
-    @section('metaDescription', $metaDescription)
+@if (!empty($page)) {
+    @if ($page == 1)
+        @section('title', "Brott och händelser från Polisen i $lan")
+        @section('metaDescription', $metaDescription)
+    @else
+        @section('title', 'Sida ' . $page . " | Brott och händelser från Polisen i $lan")
+    @endif
 @else
-    @section('title', 'Sida ' . $page . " | Brott och händelser från Polisen i $lan")
+    @section('metaDescription', $metaDescription)
 @endif
 
 @section('canonicalLink', $canonicalLink)
@@ -34,23 +38,41 @@ https://brottsplatskartan.localhost/lan/Stockholms%20l%C3%A4n
 
 @section('content')
 
-    <h1>
-        Händelser från Polisen i
-        <strong>{{ $lan }}</strong>
+    @if (!empty($title))
+        <h1>
+            {!!$title!!}
+            @if (isset($showLanSwitcher))
+                <a class="Breadcrumbs__switchLan" href="{{ route("lanOverview") }}">Byt län</a>
+            @endif
+        </h1>
+{{--     @else
+        <h1>Senaste polishändelserna i Sverige</h1>
+ --}}    @endif
 
-        {{--
-        <strong>{{ $lan }}</strong>:
-        händelser från Polisen
-        --}}
+    @include('parts.daynav')
 
-        @if (isset($showLanSwitcher))
-            <a class="Breadcrumbs__switchLan" href="{{ route("lanOverview") }}">Byt län</a>
-        @endif
-    </h1>
+     @if ($mostCommonCrimeTypes && $mostCommonCrimeTypes->count() >= 2)
+        <p>
+            @if ($isToday)
+                De vanligaste händelserna idag är
+            @else
+                De vanligaste händelserna {{$dateFormattedForMostCommonCrimeTypes}} var
+            @endif
+            @foreach ($mostCommonCrimeTypes as $oneCrimeType)
+                @if ($loop->remaining == 0)
+                    och <strong>{{ mb_strtolower($oneCrimeType->parsed_title) }}</strong>.
+                @elseif ($loop->remaining == 1)
+                    <strong>{{ mb_strtolower($oneCrimeType->parsed_title) }}</strong>
+                @else
+                    <strong>{{ mb_strtolower($oneCrimeType->parsed_title) }}</strong>,
+                @endif
+            @endforeach
+        </p>
+    @endif
 
     <div class="Introtext">
 
-        @if ($page == 1)
+        @if ($isToday)
             @if (empty($introtext))
                 <p>
                     Visar alla inrapporterade händelser och brott för {{ $lan }}, direkt från polisen.
@@ -58,37 +80,17 @@ https://brottsplatskartan.localhost/lan/Stockholms%20l%C3%A4n
             @else
                 {!! $introtext !!}
             @endif
-
-            @if ($mostCommonCrimeTypes && $mostCommonCrimeTypes->count() >= 5)
-                <p>
-                    @foreach ($mostCommonCrimeTypes as $oneCrimeType)
-                        @if ($loop->remaining == 0)
-                            och <strong>{{ mb_strtolower($oneCrimeType->parsed_title) }}</strong>
-                        @elseif ($loop->remaining == 1)
-                            <strong>{{ mb_strtolower($oneCrimeType->parsed_title) }}</strong>
-                        @elseif ($loop->first)
-                            <strong>{{ $oneCrimeType->parsed_title }}</strong>,
-                        @else
-                            <strong>{{ mb_strtolower($oneCrimeType->parsed_title) }}</strong>,
-                        @endif
-                        <!-- {{ $oneCrimeType->antal }} -->
-                    @endforeach
-                    är de vanligaste händelserna för länet.
-                </p>
-            @endif
-
-            @if (!empty($lanInfo))
-                <p>
-                    Idag har <b>{{ $lanInfo->numEvents["today"] }}</b> händelser rapporterats in.
-                </p>
-            @endif
-        @endif
-
-        @if ($page > 1)
-            <p>Visar händelser sida {{ $page }} av {{ $events->lastPage() }}</p>
         @endif
 
     </div>
+
+    @if (!empty($numEventsToday))
+        @if ($isToday)
+            <p>Idag har <b>{{$numEventsToday}} händelser</b> rapporterats in från Polisen.<p>
+        @else
+            <p><b>{{$numEventsToday}} händelser</b> från Polisen:<p>
+        @endif
+    @endif
 
     @if ($events)
 
@@ -102,7 +104,9 @@ https://brottsplatskartan.localhost/lan/Stockholms%20l%C3%A4n
 
         </ul>
 
-        {{ $events->links() }}
+        @if (method_exists($events, 'links'))
+            {{ $events->links() }}
+        @endif
 
     @endif
 

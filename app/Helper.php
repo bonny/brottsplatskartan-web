@@ -341,4 +341,32 @@ class Helper
 
         return $nextDayEvents;
     }
+
+    public static function getLanPrevDaysNavInfo($date = null, $lan, $numDays = 5)
+    {
+        $prevDayEvents = CrimeEvent::
+            selectRaw('date(created_at) as dateYMD, count(*) as dateCount')
+            ->whereDate('created_at', '<', $date->format('Y-m-d'))
+            ->where("administrative_area_level_1", $lan)
+            ->groupBy(\DB::raw('dateYMD'))
+            ->orderBy('created_at', 'desc')
+            ->limit($numDays)
+            ->get();
+
+        return $prevDayEvents;
+    }
+
+    public static function getLanNextDaysNavInfo($date = null, $lan, $numDays = 5)
+    {
+        $nextDayEvents = CrimeEvent::
+            selectRaw('date(created_at) as dateYMD, count(*) as dateCount')
+            ->whereDate('created_at', '>', $date->format('Y-m-d'))
+            ->where("administrative_area_level_1", $lan)
+            ->groupBy(\DB::raw('dateYMD'))
+            ->orderBy('created_at', 'asc')
+            ->limit($numDays)
+            ->get();
+
+        return $nextDayEvents;
+    }
 }

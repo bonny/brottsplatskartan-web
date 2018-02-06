@@ -218,12 +218,16 @@ Route::group(['prefix' => 'admin'], function () {
 });
 
 /**
- * Alla län översikt
- *
- * URL är t.ex.:
- * https://brottsplatskartan.localhost/lan/Stockholms%20l%C3%A4n
+ * Län
+ * - översikt över alla län
+ * - enskild län
  */
 Route::get('/lan/', 'lanController@listLan')->name("lanOverview");
+Route::get('/lan/{lan}', 'LanController@day')->name("lanSingle");
+Route::get('/lan/{lan}/handelser/{date}', 'LanController@day')->name('lanDate');
+Route::get('/lan/{lan}/handelser', function ($lan) {
+    return redirect()->route('lanSingle', ['lan' => $lan]);
+});
 
 /**
  * Alla orter översikt
@@ -625,19 +629,6 @@ Route::get('/ordlista/', function (Request $request) {
 
     return view('dictionary', $data);
 })->name("ordlista");
-
-/**
- * Ett län, t.ex. Stockholms län
- *
- * URL är t.ex.
- * https://brottsplatskartan.localhost/lan/Stockholms%20l%C3%A4n
- *
- * Med paginering är URL t.ex.
- * https://brottsplatskartan.localhost/lan/Stockholms%20l%C3%A4n?page=2
- *
- * @param string $lan Namn på län, t.ex. "Stockholms län". Kan även vara "stockholms-län" (med minusstreck)
- */
-Route::get('/lan/{lan}', 'LanController@lan')->name("lanSingle");
 
 /**
  * Uppdatera saker kring ett single event
