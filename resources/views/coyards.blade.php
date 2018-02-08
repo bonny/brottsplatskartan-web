@@ -6,8 +6,14 @@ Template for Coyards in app view
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Coyards</title>
+    <title>Coyards | Händelser och brott rapporterade till Polisen</title>
     <meta charset="utf-8">
+    <script>
+    window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+    ga('create', 'UA-181460-13', 'auto');
+    ga('send', 'pageview');
+    </script>
+    <script async src='https://www.google-analytics.com/analytics.js'></script>
     <style>
         body {
             font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
@@ -74,7 +80,7 @@ Template for Coyards in app view
 
     <h1>Händelser nära lat {{$lat}}, long {{$lng}}.</h1>
 
-    <p>Detta är vyn för Coyards. Alla texter här går att styra.</p>
+    {{-- <p>Detta är vyn för Coyards. Alla texter här går att styra.</p> --}}
 
     @if ($events)
         <!-- Antal brott hämtade: {{ $events->count() }} -->
