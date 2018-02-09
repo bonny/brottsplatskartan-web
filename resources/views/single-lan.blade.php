@@ -102,6 +102,8 @@ https://brottsplatskartan.localhost/lan/Stockholms%20l%C3%A4n
 
     @endif
 
+    @include('parts.daynav')
+
 @endsection
 
 @section('sidebar')
