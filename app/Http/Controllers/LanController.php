@@ -160,7 +160,6 @@ class LanController extends Controller
     public function day(Request $request, $lan, $date = null)
     {
         $date = \App\Helper::getdateFromDateSlug($date);
-
         if (!$date) {
             abort(500, 'Knas med datum hörru');
         }
@@ -298,7 +297,7 @@ class LanController extends Controller
             'numEventsToday' => $events->count()
         ];
 
-        if (!$data["events"]->count()) {
+        if (!$isToday && !$data["events"]->count()) {
             abort(404);
         }
 
