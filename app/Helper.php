@@ -356,7 +356,7 @@ class Helper
         return $prevDayEvents;
     }
 
-    public static function getLanNextDaysNavInfo($date = null, $lan, $numDays = 5)
+    public static function getLanNextDaysNavInfo($date = null, $lan = null, $numDays = 5)
     {
         $nextDayEvents = CrimeEvent::
             selectRaw('date(created_at) as dateYMD, count(*) as dateCount')
@@ -369,4 +369,16 @@ class Helper
 
         return $nextDayEvents;
     }
+
+    public static function getOrter()
+    {
+        $orter = \DB::table('crime_events')
+                            ->select("parsed_title_location")
+                            ->where('parsed_title_location', "!=", "")
+                            ->orderBy('parsed_title_location', 'asc')
+                            ->distinct()
+                            ->get();
+        return $orter;
+    }
+
 }

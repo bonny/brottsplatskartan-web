@@ -220,6 +220,10 @@ Route::get('/typ/{typ}', function ($typ) {
 
  */
 Route::get('/plats/{plats}', 'PlatsController@single')->name("platsSingle");
+Route::get('/plats/{plats}/handelser', function ($plats) {
+    return redirect()->route('platsSingle', ['plats' => $plats]);
+});
+Route::get('/plats/{plats}/handelser/{date}', 'PlatsController@day')->name('platsDatum');
 
 /**
  * Sida, med text typ, t.ex. "om brottsplatskartan" eller "api"

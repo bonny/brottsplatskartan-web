@@ -16,12 +16,7 @@ class PlatsController extends Controller
     {
         $data = [];
 
-        $data["orter"] = \DB::table('crime_events')
-                    ->select("parsed_title_location")
-                    ->where('parsed_title_location', "!=", "")
-                    ->orderBy('parsed_title_location', 'asc')
-                    ->distinct()
-                    ->get();
+        $data["orter"] = \App\Helper::getOrter();
 
         $breadcrumbs = new \Creitive\Breadcrumbs\Breadcrumbs;
         $breadcrumbs->addCrumb('Hem', '/');
@@ -46,25 +41,11 @@ class PlatsController extends Controller
         $platsWithoutLan = null;
         $platsSluggified = \App\Helper::toAscii($plats);
 
-        // yttre-ringvägen-skåne-län
-        // hittar inte: plats: Årsta i Stockholms Län
-        #echo "<br>plats: $plats";
-
-        // platsSluggified: arsta-i-stockholms-lan
-        // echo "<br>platsSluggified: $platsSluggified";
-
-        // yttre-ringvagen-skane-lan
-        #echo "<br>platsSluggified: $platsSluggified";
-
+        // Kolla om platsen $plats även inkluderar ett län
+        // T.ex. om URL är # så ska vi hitta "stockholms län"
         foreach ($allLansNames as $oneLanName) {
-            // Skåne län
-            // echo "<br>oneLanName: $oneLanName";
-
-            // skane-lan
             $lanSlug = \App\Helper::toAscii($oneLanName);
-            #echo "<br>lanSlug: $lanSlug";
 
-            // echo "<br> $plats - $oneLanName - $lanSlug - $platsSluggified";
             if (ends_with($platsSluggified, "-" . $lanSlug)) {
                 $foundMatchingLan = true;
                 $matchingLanName = $oneLanName;
@@ -78,96 +59,32 @@ class PlatsController extends Controller
             }
         }
 
-        #dd($platsWithoutLan);
-        #dd($foundMatchingLan);
-
         if ($foundMatchingLan) {
             // Hämta events där vi vet både plats och län
             // t.ex. "Stockholm" i "Stockholms län"
-            // Query blir ca såhär
-            // select * from `crime_events` where `administrative_area_level_1` = ?
-            // and (
-            //     `parsed_title_location` = ?
-            //      or exists (select 1 from `locations` where locations.name = ? AND locations.crime_event_id = crime_events.id)
-            // )
-            // order by `created_at` desc limit 10 offset 0
-            #DB::enableQueryLog();
-            $events = CrimeEvent::orderBy("created_at", "desc")
-                        ->where("administrative_area_level_1", $oneLanName) // måste vara med
-                        // gruppera dessa
-                        ->where(function ($query) use ($oneLanName, $platsWithoutLan) {
-                            $query->where("parsed_title_location", $platsWithoutLan);
-                            $query->orWhereExists(function ($query) use ($platsWithoutLan) {
-                                $query->select(\DB::raw(1))
-                                        ->from('locations')
-                                        ->whereRaw(
-                                            'locations.name = ?
-                                            AND locations.crime_event_id = crime_events.id',
-                                            [$platsWithoutLan]
-                                        );
-                            });
-                        })
-                        ->with('locations')
-                        ->paginate(10);
-
-            #dd(DB::getQueryLog());
+            $events = $this->getEventsInPlatsWithLan($platsWithoutLan, $oneLanName);
 
             // Hämta mest vanligt förekommande händelsetyperna
-            $mostCommonCrimeTypes = CrimeEvent::selectRaw('parsed_title, count(id) as antal')
-                ->where("administrative_area_level_1", $oneLanName) // måste vara med
-                        ->where(function ($query) use ($oneLanName, $platsWithoutLan) {
-                            $query->where("parsed_title_location", $platsWithoutLan);
-                            $query->orWhereExists(function ($query) use ($platsWithoutLan) {
-                                $query->select(\DB::raw(1))
-                                        ->from('locations')
-                                        ->whereRaw(
-                                            'locations.name = ?
-                                            AND locations.crime_event_id = crime_events.id',
-                                            [$platsWithoutLan]
-                                        );
-                            });
-                        })
-                ->groupBy('parsed_title')
-                ->orderByRaw('antal DESC')
-                ->limit(5)
-                ->get();
+            $mostCommonCrimeTypes = $this->getMostCommonCrimeTypesInPlatsWithLan($platsWithoutLan, $oneLanName);
 
             $canonicalLink = $plats;
 
-            // Rensa uppp plats lite
+            // Skapa fint namn av platsen och länet, blir t.ex. "Orminge i Stockholms Län"
             $plats = sprintf(
                 '%1$s i %2$s',
                 title_case($platsWithoutLan),
                 title_case($oneLanName)
             );
-
-            // Debugbar::info('Hämta events där vi vet både platsnamn och län');
         } else {
             // Hämta events där plats är från huvudtabellen
             // Används när $plats är bara en plats, typ "insjön",
             // "östersunds centrum", "östra karup", "kungsgatan" osv.
-            $events = CrimeEvent::orderBy("created_at", "desc")
-                                        ->where("parsed_title_location", $plats)
-                                        ->orWhere("administrative_area_level_2", $plats)
-                                        ->orWhereHas('locations', function ($query) use ($plats) {
-                                            $query->where('name', '=', $plats);
-                                        })
-                                        ->with('locations')
-                                        ->paginate(10);
+            $events = $this->getEventsInPlats($plats);
             $canonicalLink = $plats;
             $plats = title_case($plats);
 
             // Hämta mest vanligt förekommande händelsetyperna
-            $mostCommonCrimeTypes = CrimeEvent::selectRaw('parsed_title, count(id) as antal')
-                ->where("parsed_title_location", $plats)
-                ->orWhere("administrative_area_level_2", $plats)
-                ->orWhereHas('locations', function ($query) use ($plats) {
-                    $query->where('name', '=', $plats);
-                })
-                ->groupBy('parsed_title')
-                ->orderByRaw('antal DESC')
-                ->limit(5)
-                ->get();
+            $mostCommonCrimeTypes = $this->getMostCommonCrimeTypesInPlats($plats);
 
             // Debugbar::info('Hämta events där vi bara vet platsnamn');
             // Indexera inte denna sida om det är en gata, men indexera om det är en ort osv.
@@ -246,5 +163,95 @@ class PlatsController extends Controller
         $data["introtext"] = $introtext;
 
         return view('single-plats', $data);
+    }
+
+    /**
+     * https://brottsplatskartan.localhost/plats/orminge-stockholms-län/handelser/2017-02-01
+     */
+    public function day(Request $request, $plats, $date)
+    {
+        $date = \App\Helper::getdateFromDateSlug($date);
+        if (!$date) {
+            abort(500, 'Knas med datum hörru');
+        }
+
+        dd('yo', $date);
+    }
+
+    public function getEventsInPlatsWithLan($platsWithoutLan, $oneLanName)
+    {
+        $events = CrimeEvent::orderBy("created_at", "desc")
+                ->where("administrative_area_level_1", $oneLanName) // måste vara med
+                // gruppera dessa
+                ->where(function ($query) use ($oneLanName, $platsWithoutLan) {
+                    $query->where("parsed_title_location", $platsWithoutLan);
+                    $query->orWhereExists(function ($query) use ($platsWithoutLan) {
+                        $query->select(\DB::raw(1))
+                                ->from('locations')
+                                ->whereRaw(
+                                    'locations.name = ?
+                                    AND locations.crime_event_id = crime_events.id',
+                                    [$platsWithoutLan]
+                                );
+                    });
+                })
+                ->with('locations')
+                ->paginate(10);
+
+        return $events;
+    }
+
+    public function getMostCommonCrimeTypesInPlatsWithLan($platsWithoutLan, $oneLanName)
+    {
+        $mostCommonCrimeTypes = CrimeEvent::selectRaw('parsed_title, count(id) as antal')
+            ->where("administrative_area_level_1", $oneLanName) // måste vara med
+                    ->where(function ($query) use ($oneLanName, $platsWithoutLan) {
+                        $query->where("parsed_title_location", $platsWithoutLan);
+                        $query->orWhereExists(function ($query) use ($platsWithoutLan) {
+                            $query->select(\DB::raw(1))
+                                    ->from('locations')
+                                    ->whereRaw(
+                                        'locations.name = ?
+                                        AND locations.crime_event_id = crime_events.id',
+                                        [$platsWithoutLan]
+                                    );
+                        });
+                    })
+            ->groupBy('parsed_title')
+            ->orderByRaw('antal DESC')
+            ->limit(5)
+            ->get();
+
+        return $mostCommonCrimeTypes;
+    }
+
+    public function getEventsInPlats($plats)
+    {
+        $events = CrimeEvent::orderBy("created_at", "desc")
+                    ->where("parsed_title_location", $plats)
+                    ->orWhere("administrative_area_level_2", $plats)
+                    ->orWhereHas('locations', function ($query) use ($plats) {
+                        $query->where('name', '=', $plats);
+                    })
+                    ->with('locations')
+                    ->paginate(10);
+
+        return $events;
+    }
+
+    public function getMostCommonCrimeTypesInPlats($plats)
+    {
+        $mostCommonCrimeTypes = CrimeEvent::selectRaw('parsed_title, count(id) as antal')
+            ->where("parsed_title_location", $plats)
+            ->orWhere("administrative_area_level_2", $plats)
+            ->orWhereHas('locations', function ($query) use ($plats) {
+                $query->where('name', '=', $plats);
+            })
+            ->groupBy('parsed_title')
+            ->orderByRaw('antal DESC')
+            ->limit(5)
+            ->get();
+
+        return $mostCommonCrimeTypes;
     }
 }
