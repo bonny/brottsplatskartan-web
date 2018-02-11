@@ -27,8 +27,11 @@ setlocale(LC_ALL, 'sv_SE', 'sv_SE.utf8');
 
 /**
  * startpage: visa senaste händelserna, datum/dag-versionen
- * URL är som
+ *
+ * URL är t.ex:
+ * https://brottsplatskartan.se/
  * https://brottsplatskartan.se/handelser/15-januari-2018
+ * https://brottsplatskartan.se/handelser/ › https://brottsplatskartan.se/
  *
  * @param string $year Year in format "december-2017"
  */
@@ -37,92 +40,12 @@ Route::get('/handelser/{date}', 'StartController@day')->name('startDatum');
 Route::redirect('/handelser/', '/');
 
 /**
- * Redirect /datum -> /handelser
+ * Skicka vidare gamla /datum-urlar till /handelser
  */
 Route::redirect('/datum/', '/handelser/');
 Route::get('/datum/{date}', function ($date) {
     return redirect()->route('startDatum', ['date' => $date]);
 });
-
-/**
- * startpage: start, show current day
- */
-/*
-Route::get('/oldhome', function (Request $request) {
-    $data = [];
-
-    $page = (int) $request->input("page", 1);
-
-    if (!$page) {
-        $page = 1;
-    }
-
-    // https://laravel.com/docs/5.5/eloquent-relationships#eager-loading
-    $events = CrimeEvent::orderBy("created_at", "desc")
-                ->with('locations')
-                ->paginate(20);
-
-    if ($page > $events->lastPage()) {
-        abort(404);
-    }
-
-    $data["showLanSwitcher"] = true;
-    $data["events"] = $events;
-
-    $linkRelPrev = null;
-    $linkRelNext = null;
-
-    if ($page > 1) {
-        $linkRelPrev = route('start', [
-            'page' => $page - 1
-        ]);
-    }
-
-    if ($page < $events->lastpage()) {
-        $linkRelNext = route('start', [
-            'page' => $page + 1
-        ]);
-    }
-
-    $data["page"] = $page;
-    $data["linkRelPrev"] = $linkRelPrev;
-    $data["linkRelNext"] = $linkRelNext;
-
-    $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs;
-    $breadcrumbs->addCrumb('Hem', '/');
-    $breadcrumbs->addCrumb('Län', route("lanOverview"));
-    $breadcrumbs->addCrumb('Alla län', route("lanOverview"));
-
-    $data["breadcrumbs"] = $breadcrumbs;
-
-    $introtext_key = "introtext-start";
-    if ($page == 1) {
-        $data["introtext"] = Markdown::parse(Setting::get($introtext_key));
-    }
-
-    // Hämta statistik
-    $data["chartImgUrl"] = App\Helper::getStatsImageChartUrl("home");
-
-    // Total antal händelser
-    // $data["events"]->total();
-
-    if ($page == 1) {
-        $data["canonicalLink"] = route('start');
-    } else {
-        $data["canonicalLink"] = route('start', ['page' => $page]);
-    }
-
-    $data['isToday'] = true;
-    $data['eventsCount'] = $events->count();
-
-    // Händelser idag
-    $data["numEventsToday"] = DB::table('crime_events')
-                    ->where('created_at', '>', Carbon::now()->subDays(1))
-                    ->count();
-
-    return view('start', $data);
-})->name("startOld");
-*/
 
 /**
  * nära: show latest events close to position
@@ -194,35 +117,15 @@ Route::get('/nara', function (Request $request) {
 })->name("geo");
 
 /**
- * Admin-sida
- */
-Route::group(['prefix' => 'admin'], function () {
-    Route::get('', function () {
-        return redirect()->route("adminDashboard");
-    });
-
-    // /admin/dashboard
-    Route::get('dashboard', function (FeedController $feedController, Request $request) {
-        $data = [];
-
-        // if parseItem is set and integer then parse that item
-        $parseItemID = (int) $request->input("parseItem");
-        if ($parseItemID) {
-            $feedController->parseItem($parseItemID);
-        }
-
-        // $data["feedsUpdateResult"] = $feedController->updateFeedsFromPolisen();
-
-        $data["events"] = CrimeEvent::orderBy("created_at", "desc")->paginate(100);
-
-        return view('admin.dashboard', $data);
-    })->name("adminDashboard");
-});
-
-/**
  * Län
  * - översikt över alla län
- * - enskild län
+ * - listning av händelser i enskild län
+ * - listning av händelser i enskild län per datum
+ *
+ * URL är t.ex.:
+ * https://brottsplatskartan.se/lan/Stockholms%20l%C3%A4n
+ * https://brottsplatskartan.se/lan/Stockholms%20l%C3%A4n/handelser/9-februari-2018
+ * https://brottsplatskartan.se/lan/Stockholms%20l%C3%A4n/handelser/ › länets url
  */
 Route::get('/lan/', 'lanController@listLan')->name("lanOverview");
 Route::get('/lan/{lan}', 'LanController@day')->name("lanSingle");
