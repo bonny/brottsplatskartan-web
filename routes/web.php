@@ -219,7 +219,7 @@ Route::get('/typ/{typ}', function ($typ) {
  *  /plats/storgatan/
 
  */
-Route::get('/plats/{plats}', 'PlatsController@single')->name("platsSingle");
+Route::get('/plats/{plats}', 'PlatsController@day')->name("platsSingle");
 Route::get('/plats/{plats}/handelser', function ($plats) {
     return redirect()->route('platsSingle', ['plats' => $plats]);
 });

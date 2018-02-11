@@ -12,6 +12,9 @@ use Illuminate\Http\Request;
  */
 class PlatsController extends Controller
 {
+    /**
+     * Översikt, lista alla platser/orter
+     */
     public function overview(Request $request)
     {
         $data = [];
@@ -27,10 +30,21 @@ class PlatsController extends Controller
         return view('overview-platser', $data);
     }
 
-    public function single($plats, Request $request)
+    /**
+     * Enskild plats/ort
+     */
+    public function day(Request $request, $plats, $date = null)
     {
+
+        $date = \App\Helper::getdateFromDateSlug($date);
+
+        if (!$date) {
+            abort(500, 'Knas med datum hörru');
+        }
+
         $platsOriginalFromSlug = $plats;
         $data = [];
+        $dateYMD = $date['date']->format('Y-m-d');
 
         // Om $plats slutar med namnet på ett län, t.ex. "örebro län", "gävleborgs län" osv
         // så ska platser i det länet med platsen $plats minus länets namn visas
@@ -62,10 +76,10 @@ class PlatsController extends Controller
         if ($foundMatchingLan) {
             // Hämta events där vi vet både plats och län
             // t.ex. "Stockholm" i "Stockholms län"
-            $events = $this->getEventsInPlatsWithLan($platsWithoutLan, $oneLanName);
+            $events = $this->getEventsInPlatsWithLan($platsWithoutLan, $oneLanName, $dateYMD);
 
             // Hämta mest vanligt förekommande händelsetyperna
-            $mostCommonCrimeTypes = $this->getMostCommonCrimeTypesInPlatsWithLan($platsWithoutLan, $oneLanName);
+            $mostCommonCrimeTypes = $this->getMostCommonCrimeTypesInPlatsWithLan($platsWithoutLan, $oneLanName, $dateYMD);
 
             $canonicalLink = $plats;
 
@@ -79,12 +93,12 @@ class PlatsController extends Controller
             // Hämta events där plats är från huvudtabellen
             // Används när $plats är bara en plats, typ "insjön",
             // "östersunds centrum", "östra karup", "kungsgatan" osv.
-            $events = $this->getEventsInPlats($plats);
+            $events = $this->getEventsInPlats($plats, $dateYMD);
             $canonicalLink = $plats;
             $plats = title_case($plats);
 
             // Hämta mest vanligt förekommande händelsetyperna
-            $mostCommonCrimeTypes = $this->getMostCommonCrimeTypesInPlats($plats);
+            $mostCommonCrimeTypes = $this->getMostCommonCrimeTypesInPlats($plats, $dateYMD);
 
             // Debugbar::info('Hämta events där vi bara vet platsnamn');
             // Indexera inte denna sida om det är en gata, men indexera om det är en ort osv.
@@ -168,19 +182,20 @@ class PlatsController extends Controller
     /**
      * https://brottsplatskartan.localhost/plats/orminge-stockholms-län/handelser/2017-02-01
      */
-    public function day(Request $request, $plats, $date)
-    {
-        $date = \App\Helper::getdateFromDateSlug($date);
-        if (!$date) {
-            abort(500, 'Knas med datum hörru');
-        }
+    // public function day(Request $request, $plats, $date)
+    // {
+    //     $date = \App\Helper::getdateFromDateSlug($date);
+    //     if (!$date) {
+    //         abort(500, 'Knas med datum hörru');
+    //     }
 
-        dd('yo', $date);
-    }
+    //     dd('yo', $date);
+    // }
 
-    public function getEventsInPlatsWithLan($platsWithoutLan, $oneLanName)
+    public function getEventsInPlatsWithLan($platsWithoutLan, $oneLanName, $dateYMD)
     {
         $events = CrimeEvent::orderBy("created_at", "desc")
+                ->whereDate('created_at', $dateYMD)
                 ->where("administrative_area_level_1", $oneLanName) // måste vara med
                 // gruppera dessa
                 ->where(function ($query) use ($oneLanName, $platsWithoutLan) {
@@ -201,9 +216,10 @@ class PlatsController extends Controller
         return $events;
     }
 
-    public function getMostCommonCrimeTypesInPlatsWithLan($platsWithoutLan, $oneLanName)
+    public function getMostCommonCrimeTypesInPlatsWithLan($platsWithoutLan, $oneLanName, $dateYMD)
     {
         $mostCommonCrimeTypes = CrimeEvent::selectRaw('parsed_title, count(id) as antal')
+            ->whereDate('created_at', $dateYMD)
             ->where("administrative_area_level_1", $oneLanName) // måste vara med
                     ->where(function ($query) use ($oneLanName, $platsWithoutLan) {
                         $query->where("parsed_title_location", $platsWithoutLan);
@@ -225,13 +241,19 @@ class PlatsController extends Controller
         return $mostCommonCrimeTypes;
     }
 
-    public function getEventsInPlats($plats)
+    public function getEventsInPlats($plats, $dateYMD)
     {
+        // dd($dateYMD);
         $events = CrimeEvent::orderBy("created_at", "desc")
-                    ->where("parsed_title_location", $plats)
-                    ->orWhere("administrative_area_level_2", $plats)
-                    ->orWhereHas('locations', function ($query) use ($plats) {
-                        $query->where('name', '=', $plats);
+                    ->where(function ($query) use ($dateYMD) {
+                        $query->whereDate('created_at', $dateYMD);
+                    })
+                    ->where(function ($query) use ($plats) {
+                        $query->where("parsed_title_location", $plats);
+                        $query->orWhere("administrative_area_level_2", $plats);
+                        $query->orWhereHas('locations', function ($query) use ($plats) {
+                            $query->where('name', '=', $plats);
+                        });
                     })
                     ->with('locations')
                     ->paginate(10);
@@ -239,9 +261,10 @@ class PlatsController extends Controller
         return $events;
     }
 
-    public function getMostCommonCrimeTypesInPlats($plats)
+    public function getMostCommonCrimeTypesInPlats($plats, $dateYMD)
     {
         $mostCommonCrimeTypes = CrimeEvent::selectRaw('parsed_title, count(id) as antal')
+            ->whereDate('created_at', $dateYMD)
             ->where("parsed_title_location", $plats)
             ->orWhere("administrative_area_level_2", $plats)
             ->orWhereHas('locations', function ($query) use ($plats) {
@@ -255,3 +278,7 @@ class PlatsController extends Controller
         return $mostCommonCrimeTypes;
     }
 }
+
+/*
+->whereDate('created_at', $date['date']->format('Y-m-d'))
+*/
