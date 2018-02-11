@@ -39,12 +39,12 @@ class PlatsController extends Controller
 
         // Om $plats slutar med namnet på ett län, t.ex. "örebro län", "gävleborgs län" osv
         // så ska platser i det länet med platsen $plats minus länets namn visas
-        $allLans = App\Helper::getAllLan();
+        $allLans = \App\Helper::getAllLan();
         $allLansNames = $allLans->pluck("administrative_area_level_1");
         $foundMatchingLan = false;
         $matchingLanName = null;
         $platsWithoutLan = null;
-        $platsSluggified = App\Helper::toAscii($plats);
+        $platsSluggified = \App\Helper::toAscii($plats);
 
         // yttre-ringvägen-skåne-län
         // hittar inte: plats: Årsta i Stockholms Län
@@ -61,7 +61,7 @@ class PlatsController extends Controller
             // echo "<br>oneLanName: $oneLanName";
 
             // skane-lan
-            $lanSlug = App\Helper::toAscii($oneLanName);
+            $lanSlug = \App\Helper::toAscii($oneLanName);
             #echo "<br>lanSlug: $lanSlug";
 
             // echo "<br> $plats - $oneLanName - $lanSlug - $platsSluggified";
@@ -98,7 +98,7 @@ class PlatsController extends Controller
                         ->where(function ($query) use ($oneLanName, $platsWithoutLan) {
                             $query->where("parsed_title_location", $platsWithoutLan);
                             $query->orWhereExists(function ($query) use ($platsWithoutLan) {
-                                $query->select(DB::raw(1))
+                                $query->select(\DB::raw(1))
                                         ->from('locations')
                                         ->whereRaw(
                                             'locations.name = ?
@@ -118,7 +118,7 @@ class PlatsController extends Controller
                         ->where(function ($query) use ($oneLanName, $platsWithoutLan) {
                             $query->where("parsed_title_location", $platsWithoutLan);
                             $query->orWhereExists(function ($query) use ($platsWithoutLan) {
-                                $query->select(DB::raw(1))
+                                $query->select(\DB::raw(1))
                                         ->from('locations')
                                         ->whereRaw(
                                             'locations.name = ?
@@ -227,7 +227,7 @@ class PlatsController extends Controller
             abort(404);
         }
 
-        $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs;
+        $breadcrumbs = new \Creitive\Breadcrumbs\Breadcrumbs;
         $breadcrumbs->addCrumb('Hem', '/');
         $breadcrumbs->addCrumb('Platser', route("platserOverview"));
         $breadcrumbs->addCrumb(e($plats));
@@ -235,17 +235,16 @@ class PlatsController extends Controller
         $data["breadcrumbs"] = $breadcrumbs;
 
         // Hämta statistik för platsen
-        // $data["chartImgUrl"] = App\Helper::getStatsImageChartUrl("Stockholms län");
+        // $data["chartImgUrl"] = \App\Helper::getStatsImageChartUrl("Stockholms län");
         $introtext_key = "introtext-plats-$plats";
 
         $introtext = null;
         if ($page == 1) {
-            $introtext = Markdown::parse(Setting::get($introtext_key));
+            $introtext = \Markdown::parse(\Setting::get($introtext_key));
         }
 
         $data["introtext"] = $introtext;
 
         return view('single-plats', $data);
     }
-
 }
