@@ -35,7 +35,6 @@ class PlatsController extends Controller
      */
     public function day(Request $request, $plats, $date = null)
     {
-
         $date = \App\Helper::getdateFromDateSlug($date);
 
         if (!$date) {
@@ -170,11 +169,58 @@ class PlatsController extends Controller
         $introtext_key = "introtext-plats-$plats";
 
         $introtext = null;
+
         if ($page == 1) {
             $introtext = \Markdown::parse(\Setting::get($introtext_key));
         }
 
         $data["introtext"] = $introtext;
+
+        // Start daynav
+        if ($foundMatchingLan) {
+            $prevDaysNavInfo = $this->getPlatsPrevDaysNavInfo($date['date'], 5, $platsWithoutLan, $oneLanName);
+            $nextDaysNavInfo = $this->getPlatsNextDaysNavInfo($date['date'], 5, $platsWithoutLan, $oneLanName);
+        } else {
+            // $mostCommonCrimeTypes = $this->getMostCommonCrimeTypesInPlatsWithLan($platsWithoutLan, $oneLanName, $dateYMD);
+            // $events = $this->getEventsInPlats($plats, $dateYMD);
+            $prevDaysNavInfo = $this->getPlatsPrevDaysNavInfo($date['date'], 5, $plats);
+            $nextDaysNavInfo = $this->getPlatsNextDaysNavInfo($date['date'], 5, $plats);
+        }
+
+        $prevDayLink = null;
+        if ($prevDaysNavInfo->count()) {
+            $firstDay = $prevDaysNavInfo->first();
+            $firstDayDate = Carbon::parse($firstDay['dateYMD']);
+            $formattedDate = trim(str::lower($firstDayDate->formatLocalized('%e-%B-%Y')));
+            $formattedDateFortitle = trim($firstDayDate->formatLocalized('%A %e %B %Y'));
+            $prevDayLink = [
+                'title' => sprintf('‹ %1$s', $formattedDateFortitle),
+                'link' => route("platsDatum", ['plats' => $platsOriginalFromSlug, 'date' => $formattedDate])
+            ];
+        }
+
+        // Here, få next day link att funka (prev day funkar)
+        $nextDayLink = null;
+        if ($nextDaysNavInfo->count()) {
+            $firstDay = $nextDaysNavInfo->first();
+            $firstDayDate = Carbon::parse($firstDay['dateYMD']);
+            $formattedDate = trim(str::lower($firstDayDate->formatLocalized('%e-%B-%Y')));
+            $formattedDateFortitle = trim($firstDayDate->formatLocalized('%A %e %B %Y'));
+            $nextDayLink = [
+                'title' => sprintf('%1$s ›', $formattedDateFortitle),
+                'link' => route("platsDatum", ['plats' => $platsOriginalFromSlug, 'date' => $formattedDate])
+            ];
+        }
+
+        // dd($prevDayLink, $nextDayLink);
+
+        $isToday = $date['date']->isToday();
+        $isYesterday = $date['date']->isYesterday();
+        $isCurrentYear = $date['date']->year == date('Y');
+
+        // End daynav
+        $data['prevDayLink'] = $prevDayLink;
+        $data['nextDayLink'] = $nextDayLink;
 
         return view('single-plats', $data);
     }
@@ -195,23 +241,22 @@ class PlatsController extends Controller
     public function getEventsInPlatsWithLan($platsWithoutLan, $oneLanName, $dateYMD)
     {
         $events = CrimeEvent::orderBy("created_at", "desc")
-                ->whereDate('created_at', $dateYMD)
-                ->where("administrative_area_level_1", $oneLanName) // måste vara med
-                // gruppera dessa
-                ->where(function ($query) use ($oneLanName, $platsWithoutLan) {
-                    $query->where("parsed_title_location", $platsWithoutLan);
-                    $query->orWhereExists(function ($query) use ($platsWithoutLan) {
-                        $query->select(\DB::raw(1))
-                                ->from('locations')
-                                ->whereRaw(
-                                    'locations.name = ?
-                                    AND locations.crime_event_id = crime_events.id',
-                                    [$platsWithoutLan]
-                                );
-                    });
-                })
-                ->with('locations')
-                ->paginate(10);
+            ->whereDate('created_at', $dateYMD)
+            ->where("administrative_area_level_1", $oneLanName)
+            ->where(function ($query) use ($oneLanName, $platsWithoutLan) {
+                $query->where("parsed_title_location", $platsWithoutLan);
+                $query->orWhereExists(function ($query) use ($platsWithoutLan) {
+                    $query->select(\DB::raw(1))
+                            ->from('locations')
+                            ->whereRaw(
+                                'locations.name = ?
+                                AND locations.crime_event_id = crime_events.id',
+                                [$platsWithoutLan]
+                            );
+                });
+            })
+            ->with('locations')
+            ->paginate(10);
 
         return $events;
     }
@@ -220,19 +265,19 @@ class PlatsController extends Controller
     {
         $mostCommonCrimeTypes = CrimeEvent::selectRaw('parsed_title, count(id) as antal')
             ->whereDate('created_at', $dateYMD)
-            ->where("administrative_area_level_1", $oneLanName) // måste vara med
-                    ->where(function ($query) use ($oneLanName, $platsWithoutLan) {
-                        $query->where("parsed_title_location", $platsWithoutLan);
-                        $query->orWhereExists(function ($query) use ($platsWithoutLan) {
-                            $query->select(\DB::raw(1))
-                                    ->from('locations')
-                                    ->whereRaw(
-                                        'locations.name = ?
-                                        AND locations.crime_event_id = crime_events.id',
-                                        [$platsWithoutLan]
-                                    );
-                        });
-                    })
+            ->where("administrative_area_level_1", $oneLanName)
+            ->where(function ($query) use ($oneLanName, $platsWithoutLan) {
+                $query->where("parsed_title_location", $platsWithoutLan);
+                $query->orWhereExists(function ($query) use ($platsWithoutLan) {
+                    $query->select(\DB::raw(1))
+                            ->from('locations')
+                            ->whereRaw(
+                                'locations.name = ?
+                                AND locations.crime_event_id = crime_events.id',
+                                [$platsWithoutLan]
+                            );
+                });
+            })
             ->groupBy('parsed_title')
             ->orderByRaw('antal DESC')
             ->limit(5)
@@ -243,7 +288,6 @@ class PlatsController extends Controller
 
     public function getEventsInPlats($plats, $dateYMD)
     {
-        // dd($dateYMD);
         $events = CrimeEvent::orderBy("created_at", "desc")
                     ->where(function ($query) use ($dateYMD) {
                         $query->whereDate('created_at', $dateYMD);
@@ -276,6 +320,94 @@ class PlatsController extends Controller
             ->get();
 
         return $mostCommonCrimeTypes;
+    }
+
+    // Om plats med län, skicka med plats + län-namnet ($platsWithoutLan, $oneLanName)
+    // Om inte plats med län: skicka bara plats ($plats)
+    public static function getPlatsPrevDaysNavInfo($date = null, $numDays = 5, $platsWithoutLan = null, $oneLanName = null)
+    {
+        if ($platsWithoutLan && $oneLanName) {
+            $prevDayEvents = CrimeEvent::
+                selectRaw('date(created_at) as dateYMD, count(*) as dateCount')
+                ->whereDate('created_at', '<', $date->format('Y-m-d'))
+                ->where("administrative_area_level_1", $oneLanName)
+                ->where(function ($query) use ($oneLanName, $platsWithoutLan) {
+                    $query->where("parsed_title_location", $platsWithoutLan);
+                    $query->orWhereExists(function ($query) use ($platsWithoutLan) {
+                        $query->select(\DB::raw(1))
+                                ->from('locations')
+                                ->whereRaw(
+                                    'locations.name = ?
+                                    AND locations.crime_event_id = crime_events.id',
+                                    [$platsWithoutLan]
+                                );
+                    });
+                })
+                ->groupBy(\DB::raw('dateYMD'))
+                ->orderBy("created_at", "desc")
+                ->limit($numDays)
+                ->get();
+        } else {
+            $prevDayEvents = CrimeEvent::
+                selectRaw('date(created_at) as dateYMD, count(*) as dateCount')
+                ->whereDate('created_at', '<', $date->format('Y-m-d'))
+                ->where(function ($query) use ($platsWithoutLan) {
+                    $query->where("parsed_title_location", $platsWithoutLan);
+                    $query->orWhere("administrative_area_level_2", $platsWithoutLan);
+                    $query->orWhereHas('locations', function ($query) use ($platsWithoutLan) {
+                        $query->where('name', '=', $platsWithoutLan);
+                    });
+                })
+                ->groupBy(\DB::raw('dateYMD'))
+                ->orderBy("created_at", "desc")
+                ->limit($numDays)
+                ->get();
+        }
+
+        return $prevDayEvents;
+    }
+
+    public static function getPlatsNextDaysNavInfo($date = null, $numDays = 5, $platsWithoutLan = null, $oneLanName = null)
+    {
+        if ($platsWithoutLan && $oneLanName) {
+            $prevDayEvents = CrimeEvent::
+                selectRaw('date(created_at) as dateYMD, count(*) as dateCount')
+                ->whereDate('created_at', '>', $date->format('Y-m-d'))
+                ->where("administrative_area_level_1", $oneLanName)
+                ->where(function ($query) use ($oneLanName, $platsWithoutLan) {
+                    $query->where("parsed_title_location", $platsWithoutLan);
+                    $query->orWhereExists(function ($query) use ($platsWithoutLan) {
+                        $query->select(\DB::raw(1))
+                                ->from('locations')
+                                ->whereRaw(
+                                    'locations.name = ?
+                                    AND locations.crime_event_id = crime_events.id',
+                                    [$platsWithoutLan]
+                                );
+                    });
+                })
+                ->groupBy(\DB::raw('dateYMD'))
+                ->orderBy("created_at", "desc")
+                ->limit($numDays)
+                ->get();
+        } else {
+            $prevDayEvents = CrimeEvent::
+                selectRaw('date(created_at) as dateYMD, count(*) as dateCount')
+                ->whereDate('created_at', '>', $date->format('Y-m-d'))
+                ->where(function ($query) use ($platsWithoutLan) {
+                    $query->where("parsed_title_location", $platsWithoutLan);
+                    $query->orWhere("administrative_area_level_2", $platsWithoutLan);
+                    $query->orWhereHas('locations', function ($query) use ($platsWithoutLan) {
+                        $query->where('name', '=', $platsWithoutLan);
+                    });
+                })
+                ->groupBy(\DB::raw('dateYMD'))
+                ->orderBy("created_at", "desc")
+                ->limit($numDays)
+                ->get();
+        }
+
+        return $prevDayEvents;
     }
 }
 

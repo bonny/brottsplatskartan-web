@@ -57,6 +57,8 @@ https://brottsplatskartan.localhost/plats/nacka
 
     </div>
 
+    @include('parts.daynav')
+
     @if ($page > 1)
         <p>Visar sida {{ $page }} av {{ $events->lastPage() }}.</p>
     @endif
@@ -80,6 +82,8 @@ https://brottsplatskartan.localhost/plats/nacka
         {{ $events->links() }}
 
     @endif
+
+    @include('parts.daynav')
 
 @endsection
 
