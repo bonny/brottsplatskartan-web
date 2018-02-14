@@ -127,7 +127,7 @@ Route::get('/nara', function (Request $request) {
  * https://brottsplatskartan.se/lan/Stockholms%20l%C3%A4n/handelser/9-februari-2018
  * https://brottsplatskartan.se/lan/Stockholms%20l%C3%A4n/handelser/ › länets url
  */
-Route::get('/lan/', 'lanController@listLan')->name("lanOverview");
+Route::get('/lan/', 'LanController@listLan')->name("lanOverview");
 Route::get('/lan/{lan}', 'LanController@day')->name("lanSingle");
 Route::get('/lan/{lan}/handelser/{date}', 'LanController@day')->name('lanDate');
 Route::get('/lan/{lan}/handelser', function ($lan) {
