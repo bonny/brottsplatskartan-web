@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use DB;
 
@@ -61,5 +62,21 @@ class Dictionary extends Model
         }
 
         return $wordsCollection;
+    }
+
+    /**
+     * Get excerpt, useful for overview.
+     * 
+     * @param int $length Lenght of excerpt, in words.
+     * 
+     * @return string Possible shortened word description.
+     */
+    function getExcerpt($length = 22) 
+    {
+        $str = $this->description;
+        $str = strip_tags($str);
+        $str = str::words($str, $length);
+
+        return $str;
     }
 }

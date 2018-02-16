@@ -952,8 +952,20 @@ input[type='url'],
 }
 
 .Event__dictionaryDictionaryLink {
+    overflow: auto;
     clear: both;
 }
+
+.Event__dictionaryDictionaryLink a {
+    display: block;
+    margin-top: var(--default-margin);
+}
+
+/* .Event__dictionaryDictionaryLink:after {
+    content: "";
+    display: table;
+    clear: both;
+} */
 
 .Event__dictionaryWordsTitle {
 

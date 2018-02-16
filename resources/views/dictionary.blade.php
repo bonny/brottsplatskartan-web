@@ -19,6 +19,16 @@ Template för ordlista/dictionary
         betyder.
     </p>
 
+    <p>
+        Hittar du inte ordet du söker här så testa ordlistan hos
+        <a href="https://www.brottsoffermyndigheten.se/utsatt-for-brott/ordlista">Brottsoffermyndigheten</a>, 
+        eller
+        <a href="https://www.aklagare.se/ordlista/">Åklararmyndigeten</a>.
+        Även 
+        <a href="https://snutkoll.se/dina-rattigheter/ordlista/">Snutkoll</a> och 
+        <a href="https://www.flashback.org/t1356594">Flashbacks forum för aktuella brott och kriminalfall</a> har ordlistor med många ord.
+    </p>
+
     <div class="DictionaryListing">
 
         @foreach ($words as $oneWord)
@@ -34,7 +44,7 @@ Template för ordlista/dictionary
                 @if (empty($oneWord->description))
                     <p>Beskrivning saknas</p>
                 @else
-                    {!! Markdown::parse($oneWord->description) !!}
+                    {!! Markdown::parse( $oneWord->getExcerpt() ) !!}
                 @endif
 
             </div>
