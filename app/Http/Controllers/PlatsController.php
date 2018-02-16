@@ -36,7 +36,6 @@ class PlatsController extends Controller
     public function day(Request $request, $plats, $date = null)
     {
         $date = \App\Helper::getdateFromDateSlug($date);
-
         if (!$date) {
             abort(500, 'Knas med datum hörru');
         }
@@ -71,7 +70,6 @@ class PlatsController extends Controller
                 break;
             }
         }
-
         if ($foundMatchingLan) {
             // Hämta events där vi vet både plats och län
             // t.ex. "Stockholm" i "Stockholms län"
@@ -152,10 +150,6 @@ class PlatsController extends Controller
 
         $data["canonicalLink"] = $canonicalLink;
         $data["page"] = $page;
-
-        if (!$data["events"]->count()) {
-            abort(404);
-        }
 
         $breadcrumbs = new \Creitive\Breadcrumbs\Breadcrumbs;
         $breadcrumbs->addCrumb('Hem', '/');
@@ -288,6 +282,7 @@ class PlatsController extends Controller
 
     public function getEventsInPlats($plats, $dateYMD)
     {
+        // \DB::enableQueryLog();
         $events = CrimeEvent::orderBy("created_at", "desc")
                     ->where(function ($query) use ($dateYMD) {
                         $query->whereDate('created_at', $dateYMD);
@@ -301,7 +296,7 @@ class PlatsController extends Controller
                     })
                     ->with('locations')
                     ->paginate(10);
-
+        // dd($plats, $dateYMD, $events, \DB::getQueryLog());
         return $events;
     }
 
