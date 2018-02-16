@@ -312,6 +312,10 @@ button {
     margin-bottom: .75rem;
 }
 
+.Event__location a {
+    color: var(--color-gray-1);
+}
+
 .Event__date,
 .Event__location {
     /*font-size: .8rem;*/
@@ -891,7 +895,7 @@ input[type='url'],
 }
 
 .Event--v2 .Event__teaser {
-    color: #111;
+    /* color: #111; */
 }
 
 .Event--v2 .Event__parsedTitle {
