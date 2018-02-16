@@ -67,7 +67,7 @@ https://brottsplatskartan.localhost/plats/nacka
         Händelser från Polisen för {{ $plats }}.
     </p> --}}
 
-    @if ($events)
+    @if ($events->count())
 
         <ul class="Events Events--overview">
 
@@ -81,6 +81,8 @@ https://brottsplatskartan.localhost/plats/nacka
 
         {{ $events->links() }}
 
+    @else
+        <p>Inga händelser har rapporterats från Polisen denna dag.</p>
     @endif
 
     @include('parts.daynav')
