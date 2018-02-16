@@ -46,7 +46,7 @@ h1, h2, h3, h4, ul, ol {
 }
 
 h1 {
-    font-size: 2.5rem;
+    font-size: 2.25rem;
 }
 
 h2 {
@@ -312,7 +312,7 @@ button {
     margin-bottom: .75rem;
 }
 
-.Event__location a {
+.Event--overview .Event__location a {
     color: var(--color-gray-1);
 }
 
@@ -880,7 +880,7 @@ input[type='url'],
 
 .Event--v2 .Event__title {
     margin-top: 0;
-    font-size: 1rem;
+    font-size: 1.4rem;
 }
 
 .Event--v2 .Event__teaser {
