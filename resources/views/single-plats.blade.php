@@ -79,7 +79,7 @@ https://brottsplatskartan.localhost/plats/nacka
 
         </ul>
 
-        {{ $events->links() }}
+        {{ method_exists($events, 'link') && $events->links() }}
 
     @else
         <p>Inga händelser har rapporterats från Polisen denna dag.</p>
