@@ -10,11 +10,11 @@ https://brottsplatskartan.localhost/plats/nacka
 
 @extends('layouts.web')
 
-@if ($page == 1)
-    @section('title', "Brott och polishändelser i $plats. Karta med platsinfo. Information direkt från Polisen.")
+@if ($isToday)
+    @section('title', "Senaste nytt från Polisen i $plats – händelser &amp; brott")
     @section('metaDescription', $metaDescription)
 @else
-    @section('title', 'Sida ' . $page .  " | Brott nära $plats | Senaste brotten & händelserna i $plats från Polisen")
+    @section('title', "$dateForTitle - Brott och polishändelser i $plats. Karta med platsinfo. Information direkt från Polisen.")
 @endif
 @section('canonicalLink', $canonicalLink)
 
@@ -29,7 +29,13 @@ https://brottsplatskartan.localhost/plats/nacka
 
 @section('content')
 
-    <h1><strong>{{$plats}}</strong>: brott &amp; händelser</h1>
+    <h1>
+        @if ($isToday)
+            <strong>{{$plats}}</strong>: brott &amp; händelser
+        @else
+            Brott &amp; händelser i {{$plats}} {{$dateForTitle}}
+        @endif
+    </h1>
 
     <div class="Introtext">
 

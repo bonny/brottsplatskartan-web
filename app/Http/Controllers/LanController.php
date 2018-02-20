@@ -182,6 +182,7 @@ class LanController extends Controller
             ->orderByRaw('antal DESC')
             ->limit(5)
             ->get();
+
         $prevDaysNavInfo = \App\Helper::getLanPrevDaysNavInfo($date['date'], $lan);
         $nextDaysNavInfo = \App\Helper::getLanNextDaysNavInfo($date['date'], $lan);
 

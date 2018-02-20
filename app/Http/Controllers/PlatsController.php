@@ -34,7 +34,7 @@ class PlatsController extends Controller
      * Enskild plats/ort
      */
     public function day(Request $request, $plats, $date = null)
-    {   
+    {
         $dateOriginalFromArg = $date;
         $platsOriginalFromSlug = $plats;
 
@@ -147,13 +147,13 @@ class PlatsController extends Controller
             ]);
         }
 
-        
+
         if ($page == 1) {
             $canonicalLink = route('platsSingle', ['plats' => mb_strtolower($platsOriginalFromSlug)]);
         } else {
             $canonicalLink = route('platsSingle', ['plats' => mb_strtolower($platsOriginalFromSlug), 'page' => $page]);
         }
-        
+
         */
 
         $data["linkRelPrev"] = $linkRelPrev;
@@ -219,6 +219,9 @@ class PlatsController extends Controller
         $isToday = $date['date']->isToday();
         $isYesterday = $date['date']->isYesterday();
         $isCurrentYear = $date['date']->year == date('Y');
+        $data['isToday'] = $isToday;
+        $data['isYesterday'] = $isYesterday;
+        $data['isCurrentYear'] = $isCurrentYear;
 
         // Inkludera inte datum i canonical url om det är idag vi tittar på
         if ($dateOriginalFromArg) {
@@ -240,6 +243,7 @@ class PlatsController extends Controller
         // End daynav
         $data['prevDayLink'] = $prevDayLink;
         $data['nextDayLink'] = $nextDayLink;
+        $data['dateForTitle'] = $date['date']->formatLocalized('%e %B %Y');
 
         return view('single-plats', $data);
     }
