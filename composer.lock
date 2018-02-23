@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "9543e3b73bd43f6972aceaf9885e5884",
+    "content-hash": "927d44ad68f7a0e75e2ed1a75ffc374a",
     "packages": [
         {
             "name": "alfredo-ramos/parsedown-extra-laravel",
@@ -674,6 +674,65 @@
                 "parser"
             ],
             "time": "2014-09-09T13:34:57+00:00"
+        },
+        {
+            "name": "duzun/hquery",
+            "version": "1.7.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/duzun/hQuery.php.git",
+                "reference": "900b82a0b905c30a863cfe3335283b421368732c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/duzun/hQuery.php/zipball/900b82a0b905c30a863cfe3335283b421368732c",
+                "reference": "900b82a0b905c30a863cfe3335283b421368732c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.0.0"
+            },
+            "require-dev": {
+                "apigen/apigen": "~4.1",
+                "phpunit/phpunit": "^6.1"
+            },
+            "suggest": {
+                "php-http/curl-client": "Planing to use this lib automatically when available"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "hquery.php"
+                ],
+                "psr-4": {
+                    "duzun\\": "psr-4"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Dumitru Uzun",
+                    "email": "contact@duzun.me",
+                    "homepage": "https://DUzun.Me",
+                    "role": "Developer"
+                }
+            ],
+            "description": "An extremely fast web scraper that parses megabytes of HTML in a blink of an eye. No dependencies. PHP5+",
+            "homepage": "https://duzun.me/playground/hquery",
+            "keywords": [
+                "crawling",
+                "html",
+                "php",
+                "scraper",
+                "scraping",
+                "web",
+                "xhtml",
+                "xml"
+            ],
+            "time": "2018-02-03T00:56:26+00:00"
         },
         {
             "name": "egulias/email-validator",

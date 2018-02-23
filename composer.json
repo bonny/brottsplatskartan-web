@@ -20,7 +20,8 @@
         "sofa/eloquence-base": "^5.5",
         "htmlmin/htmlmin": "^5.0",
         "predis/predis": "^1.1",
-        "rap2hpoutre/laravel-log-viewer": "^0.10.4"
+        "rap2hpoutre/laravel-log-viewer": "^0.10.4",
+        "duzun/hquery": "^1.7"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
