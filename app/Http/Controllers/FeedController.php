@@ -15,15 +15,20 @@ class FeedController extends Controller
     protected $RssURL;
     protected $feedParser;
 
-    public function __construct(FeedParserController $feedParser) {
-        $this->RssURL = 'https://polisen.se/Stockholms_lan/Aktuellt/Handelser/Handelser-i-hela-landet/?feed=rss';
+    public function __construct(FeedParserController $feedParser)
+    {
+        // URL innan Polisen ändrade sin webbplats
+        // 22 Feb 2018
+        # $this->RssURL = 'https://polisen.se/Stockholms_lan/Aktuellt/Handelser/Handelser-i-hela-landet/?feed=rss';
+        $this->RssURL = 'https://polisen.se/aktuellt/rss/hela-landet/handelser-i-hela-landet/';
 
         $this->RssURL = \App\Helper::makeUrlUsePolisenDomain($this->RssURL);
 
         $this->feedParser = $feedParser;
     }
 
-    public function getGeocodeURL($itemID) {
+    public function getGeocodeURL($itemID)
+    {
 
         $item = CrimeEvent::findOrFail($itemID);
         $itemLocations = $item->locations;
@@ -290,9 +295,9 @@ class FeedController extends Controller
      * @param int $itemID Crime event ID
      * @return bool
      */
-    public function parseItemForLocations($itemID){
+    public function parseItemForLocations($itemID)
+    {
         $item = CrimeEvent::findOrFail($itemID);
-
         $locationsByPrio = $this->feedParser->findLocations($item);
 
         foreach ($locationsByPrio as $locations) {
@@ -332,7 +337,6 @@ class FeedController extends Controller
     public function parseItem($itemID)
     {
         $item = CrimeEvent::findOrFail($itemID);
-
         // Parse title
         $parsed_title_items = $this->feedParser->parseTitle($item->title);
         $item->fill($parsed_title_items);
