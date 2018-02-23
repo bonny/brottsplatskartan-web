@@ -283,6 +283,16 @@ class Helper
 
     // echo signUrl("http://maps.google.com/maps/api/geocode/json?address=New+York&sensor=false&client=clientID", 'vNIXE0xscrmjlyV-12Nj_BvUPaw=');
 
+    public static function convertSwedishYearsToEnglish($str)
+    {
+        $search = ['januari', 'februari', 'mars', 'april', 'maj', 'juni', 'juli', 'augusti', 'september', 'oktober', 'november', 'december'];
+        $replace = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
+
+        $str = str_replace($search, $replace, $str);
+
+        return $str;
+    }
+
     /**
      * @param string Like "15-januari-2018"
      * @return mixed array on success, false on error
@@ -296,7 +306,7 @@ class Helper
         $replace = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
 
         // Translate swedish months to english months, so we can parse
-        $monthAndYearInEnglish = str_replace($search, $replace, $monthAndYear);
+        $monthAndYearInEnglish = self::convertSwedishYearsToEnglish($monthAndYear);
 
         try {
             $date = Carbon::parse($monthAndYearInEnglish);
