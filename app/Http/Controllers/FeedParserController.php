@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Http\Requests;
-use Feeds;
 use App\CrimeEvent;
-use Goutte\Client;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
-use App\highways_ignored;
 use App\highways_added;
+use App\highways_ignored;
+use App\Http\Requests;
+use Carbon\Carbon;
+use Feeds;
+use Goutte\Client;
 use HTMLPurifier;
 use HTMLPurifier_Config;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class FeedParserController extends Controller
 {
@@ -39,6 +40,9 @@ class FeedParserController extends Controller
     - 2016-10-03 17:03, Trafikolycka, personskada, Skara
     - 2016-10-03 20:04, Rattfylleri, Boxholm
 
+    Sedan 22 Feb 2018 är formatet:
+    - 22 februari 21.15, Rattfylleri, Sundsvall
+
     Undantag:
     Uppsala hade en gång en artikel med följande titel, som gjorde att parsed date blev null
     - Uppdatering: Misshandel på Uppsalaskola
@@ -63,7 +67,19 @@ class FeedParserController extends Controller
 
         $returnParts = array_map("trim", $returnParts);
 
-        $returnParts["parsed_date"] = date("Y-m-d H:i:s", strtotime($returnParts["parsed_date"]));
+        // parsed_date = 22 februari 21.15
+        $date = $returnParts["parsed_date"];
+        $date = \App\Helper::convertSwedishYearsToEnglish($date);
+
+        // Add comma ',' before time
+        $date = preg_replace('/ \d{2}\.\d{2}/', ', ${0}', $date);
+        $date = Carbon::parse($date);
+        # echo $date->format('Y-m-d H:i:s');
+        $returnParts["parsed_date"] = $date;
+        #>format('Y-m-d H:i:s');
+        #var_dump($returnParts["parsed_date"]);exit;
+
+        #$returnParts["parsed_date"] = date("Y-m-d H:i:s", strtotime($returnParts["parsed_date"]));
 
         return $returnParts;
     }
@@ -73,6 +89,8 @@ class FeedParserController extends Controller
      * Info exists in div with id #column2-3
      *
      * We find "parsed_teaser" and "parsed_content" here
+     *
+     * @param string $contentURL URL to fetch, is like "https://polisen.se/aktuellt/handelser/2018/februari/22/22-februari-11.45-stold-ringa-karlstad/"
      *
      * @return mixed Array with parsed teaser and content if sucess
      *               Bool false if error occured, for example if page returned 404
@@ -87,6 +105,8 @@ class FeedParserController extends Controller
         $cacheKey = md5($contentURL . "_cachebust3");
         $html = Cache::get($cacheKey, false);
 
+        // contentURL: https://polisen.se/aktuellt/handelser/2018/februari/22/22-februari-11.45-stold-ringa-karlstad/
+
         if (! $html || gettype($html) != "string") {
             $client = new Client();
             // $contentURL .= '-make-it-a-404-to-test';
@@ -100,7 +120,11 @@ class FeedParserController extends Controller
             }
 
             // get content inside #column2-3
-            $crawler = $crawler->filter('#column2-3');
+            #print_r($crawler);
+            #exit;
+
+            #$crawler = $crawler->filter('#column2-3');
+            $crawler = $crawler->filter('.event-page.editorial-content');
             if ($crawler->count()) {
                 $html = $crawler->html();
             } else {
@@ -112,43 +136,41 @@ class FeedParserController extends Controller
             // Store page in cache for nn minutes
             Cache::put($cacheKey, $html, 5);
         } else {
-            #echo "<br>get cached";
+            // echo "<br>got cached html";
         }
 
-        // the content we want starts after
-        // <!--googleon: all-->
-        $arrHtml = explode("<!--googleon: all-->", $html);
-        $html = array_pop($arrHtml);
+        // Parse HTML using hQuery
+        // https://github.com/duzun/hQuery.php
+        $hQueryDoc = \duzun\hQuery::fromHTML($html);
 
-        // find .ingress
-        // fins everything afer .ingress until #pagefooter
-        libxml_use_internal_errors(true);
-        $htmlDoc = new \DOMDocument();
-        $htmlDoc->loadHTML('<?xml encoding="UTF-8">' . $html);
-        libxml_clear_errors();
+        $returnParts = [
+            'parsed_teaser' => '',
+            'parsed_content' => ''
+        ];
+        /*
+        Hämta de delar i HTML:en vi behöver.
+        Nytt format på polisen.se 22 Feb 2018:
 
-        $ingress = $htmlDoc->getElementsByTagName("*");
-        $div = $htmlDoc->getElementsByTagName("div");
+        - h1: datum + sammanfattning, t.ex "22 februari 19.02, Bråk, Karlstad"
+        - .preamble: ingress/sammanfattning, t.ex. "Flera personer slåss på Fredsgatan i Karlstad."
+        - .text-body.editorial-html: mer text/detaljer
+        - .meta-data-container: textförfattare, datum publicerat, datum uppdaterat
+        */
 
-        foreach ($ingress as $item) {
-            if ("ingress" == $item->getAttribute("class")) {
-                $returnParts["parsed_teaser"] = trim($item->nodeValue);
-                break;
-            }
+        $docPreamble = $hQueryDoc->find('.preamble');
+        if ($docPreamble->count() === 1) {
+            $returnParts['parsed_teaser'] = trim($docPreamble[0]->html());
         }
 
-        foreach ($div as $item) {
-            if ("pagefooter" == $item->getAttribute("id")) {
-                // skip footer
-            } else {
-                $returnParts["parsed_content"] .= $htmlDoc->saveHTML($item);
-            }
+        $docTextBody = $hQueryDoc->find('.text-body');
+        if ($docTextBody->count() === 1) {
+            $returnParts['parsed_content'] = trim($docTextBody[0]->html());
         }
 
-        $returnParts["parsed_content"] = strip_tags($returnParts["parsed_content"], "<a><br><strong><ol><ul><li>");
-
-        // fix one or multiple <p>&nbsp;</p> that causes long "line breaks"
-        // @TODO: get it to work...
+        // Remove tags, but keep for example links and lists.
+        $tagsToKeep = "<a><br><strong><ol><ul><li><p>";
+        $returnParts["parsed_teaser"] = strip_tags($returnParts["parsed_teaser"], $tagsToKeep);
+        $returnParts["parsed_content"] = strip_tags($returnParts["parsed_content"], $tagsToKeep);
 
         // Ibland kan sån här html förekomma hos Polisen.se:
         // <br style="mso-special-character: line-break"><br style="mso-special-character: line-break"></p><p>Polisen Stockholms län</p>
@@ -157,8 +179,17 @@ class FeedParserController extends Controller
         $config->set('CSS.AllowedProperties', array());
         $purifier = new HTMLPurifier($config);
 
-        $returnParts["parsed_content"] = $purifier->purify($returnParts["parsed_content"]);
-        $returnParts["parsed_content"] = trim($returnParts["parsed_content"]);
+        $returnParts["parsed_teaser"] = trim($purifier->purify($returnParts["parsed_teaser"]));
+        $returnParts["parsed_content"] = trim($purifier->purify($returnParts["parsed_content"]));
+
+        // Ta bort lite stuff som t.ex.
+        // <p> </p>
+        $returnParts["parsed_content"] = str_replace('<p> </p>', '', $returnParts["parsed_content"]);
+        $returnParts["parsed_content"] = str_replace('<br /></p>', '</p>', $returnParts["parsed_content"]);
+
+        #echo "\n----------\n$contentURL\n";
+        #print_r($returnParts);
+        #exit;
 
         return $returnParts;
     } // function
@@ -285,32 +316,36 @@ class FeedParserController extends Controller
 
         preg_match_all('/\pL+/u', $item_description, $matches);
         $arr_description_words = $matches[0];
-
         $arr_description_words = array_map("mb_strtolower", $arr_description_words);
 
-        // Remove "Polisen Värmland" etc that's the last line in the content words
+        // Länet, t.ex. "Stockholms län"
+        // Användbart för att grovt avgränsa plats för händelsen.
+        // Borttaget efter omgörning av polisen.se 22 Feb 2018,
+        // dock borde vi kunna ta det från URL istället?
+        // Nej... varje län har dock en egen RSS-feed, så hämta via det på nåt vis istället då..
         $police_lan = "";
-        $parsed_content_lines = explode("\n", $item_parsed_content);
-        if (false !== strpos($parsed_content_lines[count($parsed_content_lines)-1], "Polisen ")) {
-            #echo "\nfound polisen at last line";
-            $police_lan = array_pop($parsed_content_lines);
-            $police_lan = str_replace("Polisen ", "", $police_lan);
-            #echo "\ntext before removal: $item_parsed_content";
-            $item_parsed_content = implode($parsed_content_lines);
-            #echo "\ntext after removal: $item_parsed_content";
-            #echo "\n\n";
-        }
+
+        // Remove "Polisen Värmland" etc that's the last line in the content words
+        // $parsed_content_lines = explode("\n", $item_parsed_content);
+        // if (false !== strpos($parsed_content_lines[count($parsed_content_lines)-1], "Polisen ")) {
+        //     #echo "\nfound polisen at last line";
+        //     $police_lan = array_pop($parsed_content_lines);
+        //     $police_lan = str_replace("Polisen ", "", $police_lan);
+        //     #echo "\ntext before removal: $item_parsed_content";
+        //     $item_parsed_content = implode($parsed_content_lines);
+        //     #echo "\ntext after removal: $item_parsed_content";
+        //     #echo "\n\n";
+        // }
         #exit;
+
         #print_r($parsed_content_lines);exit;
 
         // Split content into words
-        #$arr_content_words = str_word_count( utf8_decode($item_parsed_content), 1, "0123456789");
+        $item_parsed_content = strip_tags($item_parsed_content);
         preg_match_all('/\pL+/u', $item_parsed_content, $matches);
         $arr_content_words = $matches[0];
 
-        #$arr_content_words = array_map("utf8_encode", $arr_content_words);
         $arr_content_words = array_map("mb_strtolower", $arr_content_words);
-        #echo "<pre>" . print_r($arr_content_words, 1) . "</pre>";
 
         $matchingHighwayItemsInDescription = [];
         $matchingHighwayItemsInContent = [];
@@ -345,11 +380,7 @@ class FeedParserController extends Controller
             //*/
         }
 
-        #if ($matchingHighwayItemsInDescription) {
-        #    print_r($matchingHighwayItemsInDescription);
-        #}
-
-
+        // Find in parsed content
         for ($i = 0; $i < count($arr_content_words); $i++) {
             $word1 = $arr_content_words[$i];
             if (in_array($word1, $highwayItems)) {
@@ -391,7 +422,6 @@ class FeedParserController extends Controller
         $matchingHighwayItemsInDescription = array_unique($matchingHighwayItemsInDescription);
         $matchingHighwayItemsInContent = array_unique($matchingHighwayItemsInContent);
 
-
         // remove locations thats exists as part of other locations
         // for example if both "eriksgatan" and "sankt eriksgatan" are found
         // then remove "eriksgatan" because "sankt eriksgatan" is a better, more precise hit
@@ -432,7 +462,7 @@ class FeedParserController extends Controller
         $timetaken = microtime(true) - $starttime;
         Log::info('find locations done', ["time in s", $timetaken]);
 
-        return [
+        $returnArr = [
             [
                 "prio" => 1,
                 "locations" => $matchingHighwayItemsInDescription,
@@ -457,5 +487,9 @@ class FeedParserController extends Controller
                 "locations" => [$police_lan]
             ]
         ];
+
+        #print_r($returnArr);exit;
+
+        return $returnArr;
     }
 }
