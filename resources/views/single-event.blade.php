@@ -12,6 +12,7 @@ Template för ett event/händelse
 @section('metaImage', $event->getStaticImageSrc(640,640))
 @section('metaImageWidth', 640)
 @section('metaImageHeight', 640)
+@section('ogType', 'article')
 
 @section('ldJson')
     {!! $event->getLdJson() !!}

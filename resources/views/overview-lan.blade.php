@@ -17,7 +17,7 @@ Template för län-översikt
 
 @section('content')
 
-    <h1>Se senaste händelserna &amp; brotten i ditt län</h1>
+    <h1>Senaste händelserna &amp; brotten i ditt län</h1>
 
     <p>
         Välj län nedan för att se de senaste brotten

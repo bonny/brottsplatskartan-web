@@ -4,6 +4,8 @@
     --color-link: #15c; /* same colors as lighthouse */
     --color-gray-1: #666;
     --color-red: #CB4739;
+    --color-blue-police: #1862a8;
+    --color-blue-police-active: #0c3256;
     --default-margin: 1rem;
     --default-margin-half: calc(var(--default-margin) / 2);
     --default-margin-double: calc(var(--default-margin) * 2);
@@ -106,7 +108,6 @@ button {
 }
 
 .SiteHeader {
-    background: #fff;
     position: fixed;
     top: 0;
     left: 0;
@@ -118,10 +119,21 @@ button {
     background: #ffcc33;
 }
 
+.SiteHeader::after {
+    content: '';
+    background-color: var(--color-blue-police);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 42px;
+}
+
 .SiteHeader__inner {
     max-width: 980px;
     margin: 0 auto;
     position: relative;
+    z-index: 1; /* above background color elm */
 }
 
 .SiteHeader__loggedin {
@@ -181,15 +193,16 @@ button {
     /*background-color: rgba(255, 255, 255, .75);*/
     font-size: 1rem;
     margin-top: 1rem;
+    color: #fff;
 }
 
 .SiteNav::before {
-    content: '';
+    /* content: '';
     position: absolute;
     top: 0;
     left: calc(var(--default-margin) * -1);
     right: 0;
-    border-top: 1px solid rgba(0,0,0,0.1);
+    border-top: 1px solid rgba(0,0,0,0.1); */
 }
 
 .SiteNav__items {
@@ -213,10 +226,17 @@ button {
     color: inherit;
     border-bottom: 2px solid transparent;
     transition: border .2s ease-out;
+    border-right: 1px solid rgb(104, 154, 200);
 }
 
+.SiteNav__item:first-of-type a {
+    border-left: 1px solid rgb(104, 154, 200);
+}
+
+
 .SiteNav__item a:hover {
-    border-bottom-color: var(--color-red);
+    /* border-bottom-color: var(--color-red); */
+    background-color: var(--color-blue-police-active);
     text-decoration: none;
 }
 

@@ -133,47 +133,61 @@ class Helper
         $lan = self::getAllLan();
 
         // Räkna alla händelser i det här länet för en viss period
-        $lan = $lan->map(function ($item, $key) {
-            // DB::enableQueryLog();
+        $lan = $lan->map(
+            function ($item, $key) {
+                // DB::enableQueryLog();
 
-            $cacheKey = "lan-stats-today-" . $item->administrative_area_level_1;
-            $numEventsToday = Cache::remember($cacheKey, 30, function () use ($item) {
-                $numEventsToday = DB::table('crime_events')
-                    ->where('administrative_area_level_1', "=", $item->administrative_area_level_1)
-                    ->where('created_at', '>', Carbon::now()->subDays(1))
-                    ->count();
+                $cacheKey = "lan-stats-today-" . $item->administrative_area_level_1;
+                $numEventsToday = Cache::remember(
+                    $cacheKey,
+                    10,
+                    function () use ($item) {
+                        $numEventsToday = DB::table('crime_events')
+                            ->where('administrative_area_level_1', "=", $item->administrative_area_level_1)
+                            ->where('created_at', '>', Carbon::now()->subDays(1))
+                            ->count();
 
-                return $numEventsToday;
-            });
+                        return $numEventsToday;
+                    }
+                );
 
-            $cacheKey = "lan-stats-7days-" . $item->administrative_area_level_1;
-            $numEvents7Days = Cache::remember($cacheKey, 60, function () use ($item) {
-                $numEvents7Days = DB::table('crime_events')
-                    ->where('administrative_area_level_1', "=", $item->administrative_area_level_1)
-                    ->where('created_at', '>', Carbon::now()->subDays(7))
-                    ->count();
+                $cacheKey = "lan-stats-7days-" . $item->administrative_area_level_1;
+                $numEvents7Days = Cache::remember(
+                    $cacheKey,
+                    30,
+                    function () use ($item) {
+                        $numEvents7Days = DB::table('crime_events')
+                            ->where('administrative_area_level_1', "=", $item->administrative_area_level_1)
+                            ->where('created_at', '>', Carbon::now()->subDays(7))
+                            ->count();
 
-                return $numEvents7Days;
-            });
+                        return $numEvents7Days;
+                    }
+                );
 
-            $cacheKey = "lan-stats-30days-" . $item->administrative_area_level_1;
-            $numEvents30Days = Cache::remember($cacheKey, 70, function () use ($item) {
-                $numEvents30Days = DB::table('crime_events')
-                    ->where('administrative_area_level_1', "=", $item->administrative_area_level_1)
-                    ->where('created_at', '>', Carbon::now()->subDays(30))
-                    ->count();
+                $cacheKey = "lan-stats-30days-" . $item->administrative_area_level_1;
+                $numEvents30Days = Cache::remember(
+                    $cacheKey,
+                    70,
+                    function () use ($item) {
+                        $numEvents30Days = DB::table('crime_events')
+                            ->where('administrative_area_level_1', "=", $item->administrative_area_level_1)
+                            ->where('created_at', '>', Carbon::now()->subDays(30))
+                            ->count();
 
-                return $numEvents30Days;
-            });
+                        return $numEvents30Days;
+                    }
+                );
 
-            $item->numEvents = [
-                "today" => $numEventsToday,
-                "last7days" => $numEvents7Days,
-                "last30days" => $numEvents30Days,
-            ];
+                $item->numEvents = [
+                    "today" => $numEventsToday,
+                    "last7days" => $numEvents7Days,
+                    "last30days" => $numEvents30Days,
+                ];
 
-            return $item;
-        });
+                return $item;
+            }
+        );
 
         return $lan;
     }

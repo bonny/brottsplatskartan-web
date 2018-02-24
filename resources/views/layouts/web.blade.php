@@ -56,7 +56,13 @@ Layout template for web
     <meta property="fb:admins" content="523547944" />
     <meta property="fb:app_id" content="105986239475133" />
     <meta property="og:locale" content="sv_SE" />
-    <meta property="og:type" content="website" />
+
+    @hasSection('ogType')
+        <meta property="og:type" content="@yield('ogType')" />
+    @else
+        <meta property="og:type" content="website" />
+    @endif
+
     <meta property="og:title" content="@yield('title')" />
 
     <meta name="twitter:site" content="@brottsplatser">
@@ -124,38 +130,32 @@ Layout template for web
                     <ul class="SiteNav__items">
                         <li class="SiteNav__item SiteNav__item--latest">
                             <a href="{{ route('start', [], false) }}">
-                                <svg fill="#000000" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg">
+                                <svg fill="#fff" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/>
                                     <path d="M0 0h24v24H0z" fill="none"/>
                                     <path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
                                 </svg>
                                 <span>Händelser</span>
                             </a>
-                        </li>
-
-                        <li class="SiteNav__item SiteNav__item--lan">
+                        </li><li class="SiteNav__item SiteNav__item--lan">
                             <a href="{{ route('lanOverview', [], false) }}">
-                                <svg fill="#000000" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg">
+                                <svg fill="#fff" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M15 11V5l-3-3-3 3v2H3v14h18V11h-6zm-8 8H5v-2h2v2zm0-4H5v-2h2v2zm0-4H5V9h2v2zm6 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V9h2v2zm0-4h-2V5h2v2zm6 12h-2v-2h2v2zm0-4h-2v-2h2v2z"/>
                                     <path d="M0 0h24v24H0z" fill="none"/>
                                 </svg>
                                 <span>Län</span>
                             </a>
-                        </li>
-
-                        <li class="SiteNav__item SiteNav__item--geo">
+                        </li><li class="SiteNav__item SiteNav__item--geo">
                             <a href="/geo.php">
-                                <svg fill="#000000" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg">
+                                <svg fill="#fff" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M0 0h24v24H0V0z" fill="none"/>
                                     <path d="M21 3L3 10.53v.98l6.84 2.65L12.48 21h.98L21 3z"/>
                                 </svg>
                                 <span>Nära mig</span>
                             </a>
-                        </li>
-
-                        <li class="SiteNav__item SiteNav__item--search">
+                        </li><li class="SiteNav__item SiteNav__item--search">
                             <a href="{{ route('search', [], false) }}">
-                                <svg fill="#000000" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg">
+                                <svg fill="#fff" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
                                     <path d="M0 0h24v24H0z" fill="none"/>
                                 </svg>
