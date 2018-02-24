@@ -900,7 +900,7 @@ input[type='url'],
 
 .Event--v2 .Event__title {
     margin-top: 0;
-    font-size: 1.4rem;
+    font-size: 1.2rem;
 }
 
 .Event--v2 .Event__teaser {
@@ -1132,7 +1132,15 @@ input[type='url'],
     margin-bottom: var(--default-margin-double);
 }
 
+/* typ iphone 8 */
+@media only screen and (min-width: 360px) and (max-width: 400px) {
+    .SiteNav__item a {
 
+    }
+    .SiteNav__item {
+        width: 24%;
+    }
+}
 /* nånstans i mitten... */
 @media only screen and (min-width: 400px) and (max-width: 666px) {
 
@@ -1140,6 +1148,20 @@ input[type='url'],
         width: 24%;
     }
 
+}
+
+@media only screen and (max-width: 667px) {
+    .SiteNav__item:first-of-type a {
+        border-left-color: transparent;
+    }
+
+    .SiteNav__item:last-of-type a {
+        border-right-color: transparent;
+    }
+
+    .SiteNav__item svg {
+        display: none;
+    }
 }
 
 /* ~ipad~ iphone 6 liggande and other medium to large screens */
@@ -1234,3 +1256,4 @@ input[type='url'],
     }
 
 }
+
