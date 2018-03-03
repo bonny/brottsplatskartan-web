@@ -110,17 +110,32 @@ class FeedParserController extends Controller
         if (! $html || gettype($html) != "string") {
             $client = new Client();
             // $contentURL .= '-make-it-a-404-to-test';
-            $crawler = $client->request('GET', \App\Helper::makeUrlUsePolisenDomain($contentURL));
+            $crawler = $client->request(
+                'GET',
+                \App\Helper::makeUrlUsePolisenDomain($contentURL)
+            );
 
             // Only continue if valid response code, i.e. 20x
+            // Redirect from http to https with code 200
+            // Redirect from old url to overview page using HTTP/1.1 301 Moved Permanently
             $response = $client->getResponse();
             $responseStatusCode = $response->getStatus();
+
             if ($responseStatusCode !== 200) {
                 return false;
             }
 
             // get content inside #column2-3
-            #print_r($crawler);
+            #echo '<pre>';
+            #echo sizeof($client->getHistory());
+            #print_r($client->getHistory());
+
+            // https://polisen.se/aktuellt/polisens-nyheter/
+           # print_r($client->getHistory()->current()->getUri());
+            // $url = $client->getHistory()->current()->getUri();
+            #echo "\n$contentURL\n";
+            #print_r($response);
+            #print_r($responseStatusCode);
             #exit;
 
             #$crawler = $crawler->filter('#column2-3');
@@ -143,6 +158,7 @@ class FeedParserController extends Controller
         // https://github.com/duzun/hQuery.php
         $hQueryDoc = \duzun\hQuery::fromHTML($html);
 
+
         $returnParts = [
             'parsed_teaser' => '',
             'parsed_content' => ''
@@ -151,20 +167,29 @@ class FeedParserController extends Controller
         Hämta de delar i HTML:en vi behöver.
         Nytt format på polisen.se 22 Feb 2018:
 
-        - h1: datum + sammanfattning, t.ex "22 februari 19.02, Bråk, Karlstad"
-        - .preamble: ingress/sammanfattning, t.ex. "Flera personer slåss på Fredsgatan i Karlstad."
-        - .text-body.editorial-html: mer text/detaljer
-        - .meta-data-container: textförfattare, datum publicerat, datum uppdaterat
-        */
+            - h1: datum + sammanfattning, t.ex "22 februari 19.02, Bråk, Karlstad"
+            - .preamble: ingress/sammanfattning, t.ex. "Flera personer slåss på Fredsgatan i Karlstad."
+            - .text-body.editorial-html: mer text/detaljer
+            - .meta-data-container: textförfattare, datum publicerat, datum uppdaterat
+            */
 
         $docPreamble = $hQueryDoc->find('.preamble');
-        if ($docPreamble->count() === 1) {
-            $returnParts['parsed_teaser'] = trim($docPreamble[0]->html());
+        if (!empty($docPreamble)) {
+            if ($docPreamble->count() === 1) {
+                $returnParts['parsed_teaser'] = trim($docPreamble[0]->html());
+            }
         }
 
         $docTextBody = $hQueryDoc->find('.text-body');
-        if ($docTextBody->count() === 1) {
-            $returnParts['parsed_content'] = trim($docTextBody[0]->html());
+        if (!empty($docTextBody)) {
+            if ($docTextBody->count() === 1) {
+                $returnParts['parsed_content'] = trim($docTextBody[0]->html());
+            }
+        }
+
+        // If we got nothing the fail, so we don't remove the existing html
+        if (empty($returnParts['parsed_teaser']) && empty($returnParts['parsed_content'])) {
+            return false;
         }
 
         // Remove tags, but keep for example links and lists.
