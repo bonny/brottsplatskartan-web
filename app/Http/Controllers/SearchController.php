@@ -31,64 +31,11 @@ class SearchController extends Controller
         $breadcrumbs->addCrumb('Hem', '/');
         $breadcrumbs->addCrumb('Sök', route("search"));
 
-        if ($s && mb_strlen($s) >= $minSearchLength) {
-            $breadcrumbs->addCrumb(e($s));
-
-            /*
-            $events = CrimeEvent::where(function ($query) use ($s) {
-                $query->where("description", "LIKE", "%$s%")
-                    ->orWhere("parsed_title_location", "LIKE", "%$s%")
-                    ->orWhere("parsed_content", "LIKE", "%$s%")
-                    ->orWhere("parsed_title", "LIKE", "%$s%")
-                    #->orWhereHas('locations', function ($query) use ($s) {
-                    #    $query->orWhere('name', 'like', "%$s%");
-                    #});
-                    ;
-            })->orderBy("created_at", "desc")->paginate(10);
-            */
-
-            // Leta locations som matchar sökt fras
-            $locations = Locations::search($s, [
-                "name" => 20
-            ])->get();
-
-            $foundLocations = [];
-
-            // Behåll bara unika platser
-            $locations = $locations->filter(function ($location) use (& $foundLocations) {
-                $name = ucwords($location->name);
-
-                if (in_array($name, $foundLocations)) {
-                    return false;
-                }
-
-                $foundLocations[] = $name;
-                return true;
-            });
-
-            // Se till att platserna inte blir för många
-            $maxLocationsToShow = 10;
-            if (sizeof($locations) > $maxLocationsToShow) {
-                $locations = $locations->slice(0, $maxLocationsToShow);
-            }
-
-            // Sök med hjälp av Eloquence
-            // @TODO: jag tog bort Eloquence pga save() slutade funka typ
-            $events = CrimeEvent::search($s, [
-                "parsed_title" => 20,
-                "parsed_title_location" => 20, // crash when 10, works when 20
-                "parsed_teaser" => 10,
-                "administrative_area_level_1" => 10,
-                "administrative_area_level_2" => 7,
-                "description" => 5,
-                "parsed_content" => 20
-            ])->paginate(10);
-        }
-
+        // Get latest events
         $events = CrimeEvent::
             orderBy("created_at", "desc")
             ->with('locations')
-            ->limit(5)
+            ->limit(20)
             ->get();
 
         $data = [
