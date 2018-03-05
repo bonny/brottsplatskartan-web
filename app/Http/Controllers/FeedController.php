@@ -376,7 +376,12 @@ class FeedController extends Controller
         ];
 
         foreach ($feed_items as $item) {
+            // Previously we used get_id for md5 but
+            // after Polisen relaunched their site sometimes
+            // we get duplicates. Try to solve this by
+            // using permalink instead.
             $item_md5 = md5($item->get_id());
+            $item_md5_permalink = md5($item->get_permalink());
 
             $item_data = [
                 "title" => $item->get_title(),
@@ -384,11 +389,16 @@ class FeedController extends Controller
                 "permalink" => $item->get_permalink(),
                 "pubdate" => $item->get_date("U"),
                 "pubdate_iso8601" => $item->get_date(\DateTime::ISO8601),
-                "md5" => $item_md5,
+                "md5" => $item_md5_permalink,
             ];
 
             // Store items not already stored
-            $existingItem = CrimeEvent::where("md5", $item_md5)->get();
+            $existingItem = CrimeEvent::
+                where("md5", $item_md5)
+                ->orWhere("md5", $item_md5_permalink)
+                ->get();
+
+            #dd($existingItem);exit;
 
             // Continue to next item if event already is in db
             if ($existingItem->count()) {
