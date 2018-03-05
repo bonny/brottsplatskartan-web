@@ -529,10 +529,15 @@ input[type='text'],
 input[type='email'],
 input[type='url'],
 .SearchForm__s,
-.SearchForm__submit {
+.SearchForm__submit,
+.SearchForm__select {
     font-size: 1rem;
     padding: var(--default-margin-half);
     display: inline-block;
+}
+
+.SearchForm__select {
+    margin-top: .5rem;
 }
 
 .SearchForm__s {
