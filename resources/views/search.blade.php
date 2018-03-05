@@ -38,13 +38,18 @@ qdr:h
     <form method="get" action="{{ route("search", null, false) }}" class="SearchForm" target="_top">
         <input type="text" name="s" value="{{ $s }}" class="SearchForm__s" placeholder="Sök inbrott, stöld, stad eller län" autofocus>
         <input type="submit" class="SearchForm__submit" value="Sök">
-        <select name="tbs">
+        <select name="tbs" class="SearchForm__select">
             <option value="qdr:w">Den här veckan</option>
             <option value="qdr:m">Den här månaden</option>
             <option value="qdr:d">Senaste dygnet</option>
             <option value="qdr:h">Senaste timmen</option>
         </select>
     </form>
+
+    <p>
+        <strong>Söktips:</strong> Kombinera händelsetyp (rån, stöld osv.) med platsnamn för bättre sökresultat.
+        För att t.ex. hitta skadegörelse i Stockholm så kan du söka efter "skadegörelse stockholm östermalm".
+    </p>
 
     <hr>
 
