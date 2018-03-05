@@ -2,10 +2,10 @@
   "name": "Brottsplatskartan",
   "short_name": "Brottskartan",
   "start_url": "/?utm_source=web_app_manifest",
-  "display": "minimal-ui",
+  "display": "browser",
   "background_color": "#fff",
   "theme_color": "#ffcc33",
-  "description": "Händelser från Polisen, på karta",
+  "description": "Händelser från Polisen",
   "icons": [{
     "src": "/apple-touch-icon-72x72.png",
     "sizes": "72x72",
