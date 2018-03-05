@@ -7,6 +7,7 @@ use App\Http\Controllers\FeedController;
 use App\Http\Controllers\FeedParserController;
 use App\CrimeEvent;
 use App\highways_ignored;
+use Carbon\Carbon;
 use App;
 
 class FetchEvents extends Command
@@ -60,6 +61,7 @@ class FetchEvents extends Command
         $itemsNotScannedForLocations = CrimeEvent::where('scanned_for_locations', 0)->get();
 
         $this->info("Found " . $itemsNotScannedForLocations->count() . " items with locations missing");
+        $this->info("Checking these for locations in text");
 
         // $bar = $this->output->createProgressBar($itemsNotScannedForLocations->count());
 
@@ -82,9 +84,12 @@ class FetchEvents extends Command
 
         // Find items not geocoded and geocode them
         $itemsNotGeocoded = CrimeEvent::where([
-            'scanned_for_locations' => 1,
-            'geocoded' => 0
-        ])->get();
+            ['scanned_for_locations', '=', 1],
+            ['geocoded', '=', 0]
+        ])
+        // Do not include to old items, because we don't want to try to encode them forever
+        ->whereDate('created_at', '>', Carbon::now()->subDays(15))
+        ->get();
 
         $this->info("Found " . $itemsNotGeocoded->count() . " items not geocoded");
         // $bar = $this->output->createProgressBar($itemsNotGeocoded->count());
@@ -93,7 +98,7 @@ class FetchEvents extends Command
             $this->line("Getting geocode info for $oneItem->title, id " . $oneItem->getKey());
             $geocodeResult = $this->feedController->geocodeItem($oneItem->getKey());
             if ($geocodeResult['error']) {
-                $this->error('Error during geocodeItem(): ' . $geocodeResult['error_message']);
+                $this->error("Error during geocodeItem():\n" . $geocodeResult['error_message']);
             }
 
             // $bar->advance();

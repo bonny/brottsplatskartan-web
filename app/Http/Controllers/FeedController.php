@@ -78,7 +78,7 @@ class FeedController extends Controller
         if ($result_status !== "OK") {
             return [
                 'error' => true,
-                'error_message' => "status: {$result_status}, url: {$apiUrl}"
+                'error_message' => "itemID: {$itemID}\nstatus: {$result_status}\nurl: {$apiUrl}"
             ];
         }
 

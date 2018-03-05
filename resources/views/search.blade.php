@@ -7,18 +7,63 @@ Template för sök
 
 @extends('layouts.web')
 
-@section('title', 'Sök brott')
+@section('title', 'Sök brott och händelser från Polisen')
 @section('canonicalLink', '/sok')
 
 @section('content')
 
-    <h1>Sök brott</h1>
+{{--
+https://www.google.se/search?q=wordpress&source=lnt&tbs=qdr:w
+
+Bestäm tidsperiod
+&tbs=qdr:w
+
+Senaste veckan
+qdr:m
+
+Senaste månaden
+qdr:m
+
+Senaste dygnet
+qdr:d
+
+Senaste timmen
+qdr:h
+--}}
+
+    <h1>Sök brott och händelser</h1>
+
+    <p>Här kan du söka efter brott och andra typer av händelser som rapporterats in av Polisen.</p>
 
     <form method="get" action="{{ route("search", null, false) }}" class="SearchForm" target="_top">
-        <input type="text" name="s" value="{{ $s }}" class="SearchForm__s" placeholder="Ange sökord" autofocus>
+        <input type="text" name="s" value="{{ $s }}" class="SearchForm__s" placeholder="Sök inbrott, stöld, stad eller län" autofocus>
         <input type="submit" class="SearchForm__submit" value="Sök">
+        <select name="tbs">
+            <option value="qdr:w">Den här veckan</option>
+            <option value="qdr:m">Den här månaden</option>
+            <option value="qdr:d">Senaste dygnet</option>
+            <option value="qdr:h">Senaste timmen</option>
+        </select>
     </form>
 
+    <hr>
+
+    <h2>Senaste händelserna i Sverige</h2>
+
+    @if ($events)
+
+        <ul class="Events Events--overview">
+
+            @foreach ($events as $event)
+
+                @include('parts.crimeevent_v2', ["overview" => true])
+
+            @endforeach
+
+        </ul>
+    @endif
+
+    {{--
     @if (isset($locations) && $locations->count())
         <p><b>Platser</b> som matchar <em>"{{ $s }}"</em></p>
         <div class="SearchLocations">
@@ -69,5 +114,6 @@ Template för sök
         @endif
 
     @endif
+    --}}
 
 @endsection
