@@ -43,7 +43,6 @@ class PlatsController extends Controller
             abort(500, 'Knas med datum hörru');
         }
 
-        $data = [];
 
         // Om page finns så är det en gammal URL, skriv om till ny (eller hänvisa canonical iaf och använd dagens datum)
         $page = (int) $request->input("page", 0);
@@ -112,10 +111,6 @@ class PlatsController extends Controller
             // $data['robotsNoindex'] = true;
         }
 
-        $data['plats'] = $plats;
-        $data['events'] = $events;
-        $data['mostCommonCrimeTypes'] = $mostCommonCrimeTypes;
-
         $mostCommonCrimeTypesMetaDescString = '';
         foreach ($mostCommonCrimeTypes as $oneCrimeType) {
             $mostCommonCrimeTypesMetaDescString .= $oneCrimeType->parsed_title . ', ';
@@ -123,49 +118,14 @@ class PlatsController extends Controller
         $mostCommonCrimeTypesMetaDescString = trim($mostCommonCrimeTypesMetaDescString, ', ');
 
         $metaDescription = "Se senaste brotten som skett i och omkring $plats. $mostCommonCrimeTypesMetaDescString är vanliga händelser nära $plats. Informationen hämtas direkt från Polisen.";
-        $data['metaDescription'] = $metaDescription;
 
         $linkRelPrev = null;
         $linkRelNext = null;
-        /*
-        if (!$page) {
-            $page = 1;
-        }
-
-
-        if ($page > 1) {
-            $linkRelPrev = route('platsSingle', [
-                'plats' => $platsOriginalFromSlug,
-                'page' => $page - 1
-            ]);
-        }
-
-        if ($page < $events->lastpage()) {
-            $linkRelNext = route('platsSingle', [
-                'plats' => $platsOriginalFromSlug,
-                'page' => $page + 1
-            ]);
-        }
-
-
-        if ($page == 1) {
-            $canonicalLink = route('platsSingle', ['plats' => mb_strtolower($platsOriginalFromSlug)]);
-        } else {
-            $canonicalLink = route('platsSingle', ['plats' => mb_strtolower($platsOriginalFromSlug), 'page' => $page]);
-        }
-
-        */
-
-        $data["linkRelPrev"] = $linkRelPrev;
-        $data["linkRelNext"] = $linkRelNext;
-        $data["page"] = $page;
 
         $breadcrumbs = new \Creitive\Breadcrumbs\Breadcrumbs;
         $breadcrumbs->addCrumb('Hem', '/');
         $breadcrumbs->addCrumb('Platser', route("platserOverview"));
         $breadcrumbs->addCrumb(e($plats));
-
-        $data["breadcrumbs"] = $breadcrumbs;
 
         // Hämta statistik för platsen
         // $data["chartImgUrl"] = \App\Helper::getStatsImageChartUrl("Stockholms län");
@@ -177,15 +137,11 @@ class PlatsController extends Controller
             $introtext = \Markdown::parse(\Setting::get($introtext_key));
         }
 
-        $data["introtext"] = $introtext;
-
         // Start daynav
         if ($foundMatchingLan) {
             $prevDaysNavInfo = $this->getPlatsPrevDaysNavInfo($date['date'], 5, $platsWithoutLan, $oneLanName);
             $nextDaysNavInfo = $this->getPlatsNextDaysNavInfo($date['date'], 5, $platsWithoutLan, $oneLanName);
         } else {
-            // $mostCommonCrimeTypes = $this->getMostCommonCrimeTypesInPlatsWithLan($platsWithoutLan, $oneLanName, $dateYMD);
-            // $events = $this->getEventsInPlats($plats, $dateYMD);
             $prevDaysNavInfo = $this->getPlatsPrevDaysNavInfo($date['date'], 5, $plats);
             $nextDaysNavInfo = $this->getPlatsNextDaysNavInfo($date['date'], 5, $plats);
         }
@@ -215,13 +171,9 @@ class PlatsController extends Controller
             ];
         }
 
-        // dd($prevDayLink, $nextDayLink);
         $isToday = $date['date']->isToday();
         $isYesterday = $date['date']->isYesterday();
         $isCurrentYear = $date['date']->year == date('Y');
-        $data['isToday'] = $isToday;
-        $data['isYesterday'] = $isYesterday;
-        $data['isCurrentYear'] = $isCurrentYear;
 
         // Inkludera inte datum i canonical url om det är idag vi tittar på
         if ($dateOriginalFromArg) {
@@ -238,12 +190,24 @@ class PlatsController extends Controller
             );
         }
 
-        $data["canonicalLink"] = $canonicalLink;
-
-        // End daynav
-        $data['prevDayLink'] = $prevDayLink;
-        $data['nextDayLink'] = $nextDayLink;
-        $data['dateForTitle'] = $date['date']->formatLocalized('%e %B %Y');
+        $data = [
+            'plats' => $plats,
+            'events' => $events,
+            'mostCommonCrimeTypes' => $mostCommonCrimeTypes,
+            'metaDescription' => $metaDescription,
+            "linkRelPrev" => $linkRelPrev,
+            "linkRelNext" => $linkRelNext,
+            "page" => $page,
+            "breadcrumbs" => $breadcrumbs,
+            "introtext" => $introtext,
+            'isToday' => $isToday,
+            'isYesterday' => $isYesterday,
+            'isCurrentYear' => $isCurrentYear,
+            "canonicalLink" => $canonicalLink,
+            'prevDayLink' => $prevDayLink,
+            'nextDayLink' => $nextDayLink,
+            'dateForTitle' => $date['date']->formatLocalized('%e %B %Y'),
+        ];
 
         return view('single-plats', $data);
     }
@@ -310,9 +274,14 @@ class PlatsController extends Controller
         return $mostCommonCrimeTypes;
     }
 
+    /**
+     * Get events.
+     *
+     * @param string $plats For example "tierp"
+     * @param string $dateYMD Date in YMD format
+     */
     public function getEventsInPlats($plats, $dateYMD)
     {
-        // \DB::enableQueryLog();
         $events = CrimeEvent::orderBy("created_at", "desc")
                     ->where(function ($query) use ($dateYMD) {
                         $query->whereDate('created_at', $dateYMD);
@@ -326,8 +295,6 @@ class PlatsController extends Controller
                     })
                     ->with('locations')
                     ->get();
-                    // ->paginate(10);
-        // dd($plats, $dateYMD, $events, \DB::getQueryLog());
         return $events;
     }
 
