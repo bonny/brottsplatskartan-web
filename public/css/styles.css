@@ -309,6 +309,7 @@ button {
 
 .Events--dayTitle {
     padding-top: var(--default-margin-double);
+    margin-bottom: var(--default-margin);
     font-size: var(--font-size-medium);
 }
 
@@ -925,7 +926,7 @@ input[type='url'],
 
 .Event--v2 .Event__title {
     margin-top: 0;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
 }
 
 .Event--v2 .Event__teaser {
