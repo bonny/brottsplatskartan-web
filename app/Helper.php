@@ -2,9 +2,9 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use DB;
 use Illuminate\Support\Facades\Cache;
-use Carbon\Carbon;
 
 class Helper
 {
@@ -79,12 +79,12 @@ class Helper
         $stats = [];
 
         $stats["numEventsPerDay"] = DB::table('crime_events')
-                       ->select(DB::raw('date_format(created_at, "%Y-%m-%d") as YMD'), DB::raw('count(*) AS count'))
-                       ->where('administrative_area_level_1', $lan)
-                       ->groupBy('YMD')
-                       ->orderBy('YMD', 'desc')
-                       ->limit(14)
-                       ->get();
+            ->select(DB::raw('date_format(created_at, "%Y-%m-%d") as YMD'), DB::raw('count(*) AS count'))
+            ->where('administrative_area_level_1', $lan)
+            ->groupBy('YMD')
+            ->orderBy('YMD', 'desc')
+            ->limit(14)
+            ->get();
         return $stats;
     }
 
@@ -94,17 +94,17 @@ class Helper
     public static function getHomeStats($lan)
     {
         $stats = [
-            "numEventsPerDay" => null
+            "numEventsPerDay" => null,
         ];
 
         $cacheKey = "lan-homestats-" . $lan;
         $stats["numEventsPerDay"] = Cache::remember($cacheKey, 5, function () use ($lan) {
             $numEventsPerDay = DB::table('crime_events')
-                   ->select(DB::raw('date_format(created_at, "%Y-%m-%d") as YMD'), DB::raw('count(*) AS count'))
-                   ->groupBy('YMD')
-                   ->orderBy('YMD', 'desc')
-                   ->limit(14)
-                   ->get();
+                ->select(DB::raw('date_format(created_at, "%Y-%m-%d") as YMD'), DB::raw('count(*) AS count'))
+                ->groupBy('YMD')
+                ->orderBy('YMD', 'desc')
+                ->limit(14)
+                ->get();
             return $numEventsPerDay;
         });
 
@@ -229,8 +229,8 @@ class Helper
     // from http://cubiq.org/the-perfect-php-clean-url-generator
     public static function toAscii($str, $replace = array(), $delimiter = '-')
     {
-        if (! empty($replace)) {
-            $str = str_replace((array)$replace, ' ', $str);
+        if (!empty($replace)) {
+            $str = str_replace((array) $replace, ' ', $str);
         }
 
         $clean = iconv('UTF-8', 'ASCII//TRANSLIT', $str);
@@ -241,7 +241,8 @@ class Helper
         return $clean;
     }
 
-    public static function makeUrlUsePolisenDomain($url = null) {
+    public static function makeUrlUsePolisenDomain($url = null)
+    {
         if (empty($url)) {
             return $url;
         }
@@ -261,15 +262,15 @@ class Helper
     // Encode a string to URL-safe base64
     public static function encodeBase64UrlSafe($value)
     {
-      return str_replace(array('+', '/'), array('-', '_'),
-        base64_encode($value));
+        return str_replace(array('+', '/'), array('-', '_'),
+            base64_encode($value));
     }
 
     // Decode a string from URL-safe base64
     public static function decodeBase64UrlSafe($value)
     {
-      return base64_decode(str_replace(array('-', '_'), array('+', '/'),
-        $value));
+        return base64_decode(str_replace(array('-', '_'), array('+', '/'),
+            $value));
     }
 
     // Sign a URL with a given crypto key
@@ -278,21 +279,21 @@ class Helper
     {
         $privateKey = env("GOOGLE_SIGNING_SECRET");
 
-      // parse the url
-      $url = parse_url($myUrlToSign);
+        // parse the url
+        $url = parse_url($myUrlToSign);
 
-      $urlPartToSign = $url['path'] . "?" . $url['query'];
+        $urlPartToSign = $url['path'] . "?" . $url['query'];
 
-      // Decode the private key into its binary format
-      $decodedKey = self::decodeBase64UrlSafe($privateKey);
+        // Decode the private key into its binary format
+        $decodedKey = self::decodeBase64UrlSafe($privateKey);
 
-      // Create a signature using the private key and the URL-encoded
-      // string using HMAC SHA1. This signature will be binary.
-      $signature = hash_hmac("sha1",$urlPartToSign, $decodedKey,  true);
+        // Create a signature using the private key and the URL-encoded
+        // string using HMAC SHA1. This signature will be binary.
+        $signature = hash_hmac("sha1", $urlPartToSign, $decodedKey, true);
 
-      $encodedSignature = self::encodeBase64UrlSafe($signature);
+        $encodedSignature = self::encodeBase64UrlSafe($signature);
 
-      return $myUrlToSign."&signature=".$encodedSignature;
+        return $myUrlToSign . "&signature=" . $encodedSignature;
     }
 
     // echo signUrl("http://maps.google.com/maps/api/geocode/json?address=New+York&sensor=false&client=clientID", 'vNIXE0xscrmjlyV-12Nj_BvUPaw=');
@@ -308,7 +309,10 @@ class Helper
     }
 
     /**
-     * @param string Like "15-januari-2018"
+     * Return some date info from a string.
+     *
+     * @param string $monthAndYear Like "15-januari-2018"
+     *
      * @return mixed array on success, false on error
      */
     public static function getdateFromDateSlug($monthAndYear)
@@ -336,32 +340,72 @@ class Helper
             'monthAndYear' => $monthAndYear,
             'year' => $year,
             'month' => $month,
-            'day' => $day
+            'day' => $day,
         ];
     }
 
+    /**
+     * Hämta info om antal händelser per dag tidigare än idag.
+     *
+     * @param object $date Carbon Date Object.
+     * @param int    $numDays Antal dagar att hämta info för.
+     *
+     * @return array Array med lite info.
+     */
     public static function getPrevDaysNavInfo($date = null, $numDays = 5)
     {
-        $prevDayEvents = CrimeEvent::
-            selectRaw('date(created_at) as dateYMD, count(*) as dateCount')
-            ->whereDate('created_at', '<', $date->format('Y-m-d'))
-            ->groupBy(\DB::raw('dateYMD'))
-            ->orderBy('created_at', 'desc')
-            ->limit($numDays)
-            ->get();
+        $dateYmd = $date->format('Y-m-d');
+        $cacheKey = "getPrevDaysNavInfo:date:{$dateYmd}:numDays:$numDays";
+
+        $prevDayEvents = Cache::remember(
+            $cacheKey,
+            5,
+            function () use ($dateYmd, $numDays) {
+                $prevDayEvents = CrimeEvent::
+                    selectRaw('date(created_at) as dateYMD, count(*) as dateCount')
+                    ->whereDate('created_at', '<', $dateYmd)
+                    ->groupBy(\DB::raw('dateYMD'))
+                    ->orderBy('created_at', 'desc')
+                    ->limit($numDays)
+                    ->get();
+
+                    return $prevDayEvents;
+            }
+        );
 
         return $prevDayEvents;
     }
 
+    /**
+     * Hämta info om antal händelser per dag senare än idag.
+     *
+     * @param object $date Carbon Date Object.
+     * @param int    $numDays Antal dagar att hämta info för.
+     *
+     * @return array Array med lite info.
+     */
+
     public static function getNextDaysNavInfo($date = null, $numDays = 5)
     {
-        $nextDayEvents = CrimeEvent::
-            selectRaw('date(created_at) as dateYMD, count(*) as dateCount')
-            ->whereDate('created_at', '>', $date->format('Y-m-d'))
-            ->groupBy(\DB::raw('dateYMD'))
-            ->orderBy('created_at', 'asc')
-            ->limit($numDays)
-            ->get();
+
+        $dateYmd = $date->format('Y-m-d');
+        $cacheKey = "getNextDaysNavInfo:date:{$dateYmd}:numDays:$numDays";
+
+        $nextDayEvents = Cache::remember(
+            $cacheKey,
+            5,
+            function () use ($dateYmd, $numDays) {
+                $nextDayEvents = CrimeEvent::
+                    selectRaw('date(created_at) as dateYMD, count(*) as dateCount')
+                    ->whereDate('created_at', '>', $dateYmd)
+                    ->groupBy(\DB::raw('dateYMD'))
+                    ->orderBy('created_at', 'asc')
+                    ->limit($numDays)
+                    ->get();
+
+                return $nextDayEvents;
+            }
+        );
 
         return $nextDayEvents;
     }
@@ -397,11 +441,11 @@ class Helper
     public static function getOrter()
     {
         $orter = \DB::table('crime_events')
-                            ->select("parsed_title_location")
-                            ->where('parsed_title_location', "!=", "")
-                            ->orderBy('parsed_title_location', 'asc')
-                            ->distinct()
-                            ->get();
+            ->select("parsed_title_location")
+            ->where('parsed_title_location', "!=", "")
+            ->orderBy('parsed_title_location', 'asc')
+            ->distinct()
+            ->get();
         return $orter;
     }
 

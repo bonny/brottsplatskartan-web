@@ -848,4 +848,15 @@ SQL;
 
         return $str;
     }
+
+    /**
+     * Hämta created_at i fint localized format, t.ex. "Onsdag 21 Mars 2018"
+     *
+     * @return string
+     */
+    public function getCreatedAtLocalized() {
+        $createdAtCarbon = Carbon::parse($this->created_at);
+        $createdAtLocalized = $createdAtCarbon->formatLocalized('%A %e %B %Y');
+        return $createdAtLocalized;
+    }
 }

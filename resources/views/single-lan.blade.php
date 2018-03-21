@@ -76,11 +76,11 @@ https://brottsplatskartan.localhost/lan/Stockholms%20l%C3%A4n
 
     </div>
 
-    @if (!empty($numEventsToday))
+    @if (!empty($numEvents))
         @if ($isToday)
-            <p>Idag har <b>{{$numEventsToday}} händelser</b> rapporterats in från Polisen.<p>
+            <p>Idag har <b>{{$numEvents}} händelser</b> rapporterats in från Polisen.<p>
         @else
-            <p><b>{{$numEventsToday}} händelser</b> från Polisen:<p>
+            <p><b>{{$numEvents}} händelser</b> från Polisen:<p>
         @endif
     @endif
 

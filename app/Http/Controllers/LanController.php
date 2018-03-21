@@ -295,7 +295,7 @@ class LanController extends Controller
             'isToday' => $isToday,
             'isYesterday' => $isYesterday,
             'isCurrentYear' => $isCurrentYear,
-            'numEventsToday' => $events->count()
+            'numEvents' => $events->count()
         ];
 
         if (!$isToday && !$data["events"]->count()) {

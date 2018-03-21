@@ -30,12 +30,51 @@ class StartController extends Controller
             abort(500, 'Knas med datum hörru');
         }
 
-        // Hämnta events från denna dag
-        $events = CrimeEvent::
-            whereDate('created_at', $date['date']->format('Y-m-d'))
-            ->orderBy("created_at", "desc")
-            ->with('locations')
-            ->get();
+        $isToday = $date['date']->isToday();
+        $isYesterday = $date['date']->isYesterday();
+        $isCurrentYear = $date['date']->year == date('Y');
+
+        // Hämnta events från vald dag
+        if ($isToday) {
+            // Om startsida så hämta för flera dagar,
+            // så vi inte står där utan händelser.
+            $daysBack = 5;
+            $events = CrimeEvent::
+                whereDate('created_at', '<=', $date['date']->format('Y-m-d'))
+                ->orWhereDate('created_at', '>=', $date['date']->copy()->subDays($daysBack)->format('Y-m-d'))
+                ->orderBy("created_at", "desc")
+                ->with('locations')
+                ->limit(500)
+                ->get();
+
+            $mostCommonCrimeTypes = CrimeEvent::
+                selectRaw('parsed_title, count(id) as antal')
+                ->whereDate('created_at', '<=', $date['date']->format('Y-m-d'))
+                ->orWhereDate('created_at', '>=', $date['date']->copy()->subDays($daysBack)->format('Y-m-d'))
+                ->groupBy('parsed_title')
+                ->orderByRaw('antal DESC')
+                ->limit(5)
+                ->get();
+
+        } else {
+            $events = CrimeEvent::
+                whereDate('created_at', $date['date']->format('Y-m-d'))
+                ->orderBy("created_at", "desc")
+                ->with('locations')
+                ->get();
+
+            $mostCommonCrimeTypes = CrimeEvent::selectRaw('parsed_title, count(id) as antal')
+                ->whereDate('created_at', $date['date']->format('Y-m-d'))
+                ->groupBy('parsed_title')
+                ->orderByRaw('antal DESC')
+                ->limit(5)
+                ->get();
+        }
+
+        // Group events by day
+        $eventsByDay = $events->groupBy(function ($item, $key) {
+            return date('Y-m-d', strtotime($item->created_at));
+        });
 
         // $introtext_key = "introtext-start";
         // if ($page == 1) {
@@ -77,17 +116,6 @@ class StartController extends Controller
             ];
         }
 
-        $mostCommonCrimeTypes = CrimeEvent::selectRaw('parsed_title, count(id) as antal')
-            ->whereDate('created_at', $date['date']->format('Y-m-d'))
-            ->groupBy('parsed_title')
-            ->orderByRaw('antal DESC')
-            ->limit(5)
-            ->get();
-
-        $isToday = $date['date']->isToday();
-        $isYesterday = $date['date']->isYesterday();
-        $isCurrentYear = $date['date']->year == date('Y');
-
         // Add breadcrumbs for dates before today
         if (!$isToday) {
             // $breadcrumbs = new \Creitive\Breadcrumbs\Breadcrumbs;
@@ -110,12 +138,11 @@ class StartController extends Controller
             $dateLocalized = trim($date['date']->formatLocalized('%A %e %B %Y'));
         }
 
-        $title = '';
+        // Skapa fin titel.
         if ($isToday) {
             $title = sprintf(
                 '
                     Händelser från Polisen
-                    <br><strong>Idag %1$s</strong>
                 ',
                 $dateLocalized
             );
@@ -164,6 +191,7 @@ class StartController extends Controller
 
         $data = [
             'events' => $events,
+            'eventsByDay' => $eventsByDay,
             'eventsCount' => CrimeEvent::count(),
             'showLanSwitcher' => true,
             'breadcrumbs' => isset($breadcrumbs) ? $breadcrumbs : null,
@@ -173,7 +201,7 @@ class StartController extends Controller
             'prevDayLink' => $prevDayLink,
             'linkRelPrev' => !empty($prevDayLink) ? $prevDayLink['link'] : null,
             'linkRelNext' => !empty($nextDayLink) ? $nextDayLink['link'] : null,
-            'numEventsToday' => $events->count(),
+            'numEvents' => $events->count(),
             'isToday' => $isToday,
             'introtext' => $introtext,
             'canonicalLink' => $canonicalLink,

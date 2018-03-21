@@ -1,6 +1,7 @@
 {{--
 
-Template for start page
+Sidmall för startsidan
+samt för äldre dagar när man bläddrar i arkivet.
 
 --}}
 
@@ -54,7 +55,7 @@ Template for start page
         <div class="Introtext">{!! $introtext !!}</div>
     @endif
 
-    @if ($events && $numEventsToday)
+    @if ($events && $numEvents)
 
          @if ($mostCommonCrimeTypes && $mostCommonCrimeTypes->count() >= 5)
             <p>
@@ -77,37 +78,30 @@ Template for start page
         @endif
 
         @if ($isToday)
-            <p><b>Idag har {{$numEventsToday}} händelser rapporterats in från Polisen.</b><p>
+            <p><b>{{$numEvents}} händelser har rapporterats in från Polisen de senaste dagarna.</b><p>
             {{-- <p>Totalt finns det på Brottsplatskartan <b>{{$eventsCount}} händelser</b>.</p> --}}
         @else
-            <p><b>{{$numEventsToday}} händelser från Polisen:</b><p>
+            <p><b>{{$numEvents}} händelser från Polisen för detta datum.</b><p>
         @endif
 
-        <div class="Events Events--overview">
+        <ul class="Events Events--overview">
+            @foreach ($eventsByDay as $dayYmd => $events)
+                <li class="Events--day">
 
-            @foreach ($events as $event)
+                    <h3 class="Events--dayTitle">
+                        <time>{{ $events->get(0)->getCreatedAtLocalized() }}</time>
+                        <span>– {{ $events->count() }} händelser inhämtade</span>
+                    </h3>
 
-                {{--
-                @if ($loop->index == 2)
-                    yo 2
-                    <amp-ad width=300 height=250
-                            type="adsense"
-                            data-ad-client="ca-pub-1689239266452655"
-                            data-ad-slot="7852653602"
-                          >
-                     </amp-ad>
-                @endif
-                --}}
+                    <ul class="Events--dayEvents">
+                        @foreach ($events as $event)
+                            @include('parts.crimeevent_v2', ["overview" => true])
+                        @endforeach
+                    </ul>
 
-                @include('parts.crimeevent_v2', ["overview" => true])
-
+                </li>
             @endforeach
-
-        </div>
-
-        @if (method_exists($events, 'links'))
-            {{ $events->links() }}
-        @endif
+        </ul>
 
         @include('parts.daynav')
     @else
