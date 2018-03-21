@@ -15,6 +15,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * Klass för att parsa polisens RSS-flöden.
+ */
 class FeedParserController extends Controller
 {
 
