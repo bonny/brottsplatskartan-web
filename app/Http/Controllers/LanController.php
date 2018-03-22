@@ -243,7 +243,6 @@ class LanController extends Controller
             $title = sprintf(
                 '
                     Händelser i %2$s
-                    <strong>idag</strong>
                 ',
                 $dateLocalized,
                 $lan
