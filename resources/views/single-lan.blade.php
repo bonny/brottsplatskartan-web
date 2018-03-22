@@ -86,15 +86,7 @@ https://brottsplatskartan.localhost/lan/Stockholms%20l%C3%A4n
 
     @if ($events)
 
-        <ul class="Events Events--overview">
-
-            @foreach ($events as $event)
-
-                @include('parts.crimeevent_v2', ["overview" => true])
-
-            @endforeach
-
-        </ul>
+        @include('parts.events-by-day')
 
         @if (method_exists($events, 'links'))
             {{ $events->links() }}

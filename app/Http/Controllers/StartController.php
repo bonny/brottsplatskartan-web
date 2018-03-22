@@ -32,16 +32,16 @@ class StartController extends Controller
 
         $isToday = $date['date']->isToday();
         $isYesterday = $date['date']->isYesterday();
-        $isCurrentYear = $date['date']->year == date('Y');
+        $isCurrentYear = $date['date']->isCurrentYear();
 
         // Hämnta events från vald dag
         if ($isToday) {
             // Om startsida så hämta för flera dagar,
             // så vi inte står där utan händelser.
-            $daysBack = 5;
+            $daysBack = 3;
             $events = CrimeEvent::
                 whereDate('created_at', '<=', $date['date']->format('Y-m-d'))
-                ->orWhereDate('created_at', '>=', $date['date']->copy()->subDays($daysBack)->format('Y-m-d'))
+                ->whereDate('created_at', '>=', $date['date']->copy()->subDays($daysBack)->format('Y-m-d'))
                 ->orderBy("created_at", "desc")
                 ->with('locations')
                 ->limit(500)
@@ -50,12 +50,11 @@ class StartController extends Controller
             $mostCommonCrimeTypes = CrimeEvent::
                 selectRaw('parsed_title, count(id) as antal')
                 ->whereDate('created_at', '<=', $date['date']->format('Y-m-d'))
-                ->orWhereDate('created_at', '>=', $date['date']->copy()->subDays($daysBack)->format('Y-m-d'))
+                ->whereDate('created_at', '>=', $date['date']->copy()->subDays($daysBack)->format('Y-m-d'))
                 ->groupBy('parsed_title')
                 ->orderByRaw('antal DESC')
                 ->limit(5)
                 ->get();
-
         } else {
             $events = CrimeEvent::
                 whereDate('created_at', $date['date']->format('Y-m-d'))

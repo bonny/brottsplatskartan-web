@@ -155,7 +155,8 @@ class LanController extends Controller
      * Visa händelser för ett län ett specifikt datum.
      *
      * URL är t.ex.
-     * https://brottsplatskartan.se/lan/Stockholms%20l%C3%A4n/handelser/3-februari-2018
+     * - https://brottsplatskartan.localhost/lan/Stockholms%20l%C3%A4n
+     * - https://brottsplatskartan.se/lan/Stockholms%20l%C3%A4n/handelser/3-februari-2018
      */
     public function day(Request $request, $lan, $date = null)
     {
@@ -164,15 +165,31 @@ class LanController extends Controller
             abort(500, 'Knas med datum hörru');
         }
 
+        $isToday = $date['date']->isToday();
+        $isYesterday = $date['date']->isYesterday();
+        $isCurrentYear = $date['date']->isCurrentYear();
+
         // Om län innehåller minustecken ersätter vi det med mellanslag, pga lagrar länen icke-slug'ade
         $lan = str_replace('-', ' ', $lan);
 
-        // Hämta alla händelser för detta datum.
-        $events = CrimeEvent::orderBy("created_at", "desc")
-            ->whereDate('created_at', $date['date']->format('Y-m-d'))
-            ->where("administrative_area_level_1", $lan)
-            ->with('locations')
-            ->get();
+        $daysBack = 3;
+        if ($isToday) {
+            // Hämta händelser för flera dagar pga vi vill inte riskera att få en tom lista.
+            $events = CrimeEvent::orderBy("created_at", "desc")
+                ->whereDate('created_at', '<=', $date['date']->format('Y-m-d'))
+                ->whereDate('created_at', '>=', $date['date']->copy()->subDays($daysBack)->format('Y-m-d'))
+                ->where("administrative_area_level_1", $lan)
+                ->with('locations')
+                ->limit(500)
+                ->get();
+        } else {
+            // Hämta alla händelser för detta datum.
+            $events = CrimeEvent::orderBy("created_at", "desc")
+                ->whereDate('created_at', $date['date']->format('Y-m-d'))
+                ->where("administrative_area_level_1", $lan)
+                ->with('locations')
+                ->get();
+        }
 
         // Hämta mest vanligt förekommande brotten
         $mostCommonCrimeTypes = CrimeEvent::selectRaw('parsed_title, count(id) as antal')
@@ -182,6 +199,11 @@ class LanController extends Controller
             ->orderByRaw('antal DESC')
             ->limit(5)
             ->get();
+
+        // Group events by day
+        $eventsByDay = $events->groupBy(function ($item, $key) {
+            return date('Y-m-d', strtotime($item->created_at));
+        });
 
         $prevDaysNavInfo = \App\Helper::getLanPrevDaysNavInfo($date['date'], $lan);
         $nextDaysNavInfo = \App\Helper::getLanNextDaysNavInfo($date['date'], $lan);
@@ -210,10 +232,6 @@ class LanController extends Controller
             ];
         }
 
-        $isToday = $date['date']->isToday();
-        $isYesterday = $date['date']->isYesterday();
-        $isCurrentYear = $date['date']->year == date('Y');
-
         if ($isCurrentYear) {
             // Skriv inte ut datum om det är nuvarande år
             $dateLocalized = trim($date['date']->formatLocalized('%A %e %B'));
@@ -221,7 +239,6 @@ class LanController extends Controller
             $dateLocalized = trim($date['date']->formatLocalized('%A %e %B %Y'));
         }
 
-        $title = '';
         if ($isToday) {
             $title = sprintf(
                 '
@@ -267,8 +284,6 @@ class LanController extends Controller
             );
         }
 
-        $pageTitle = '';
-
         if ($isToday) {
             $pageTitle = "Brott och händelser från Polisen i $lan";
         } else {
@@ -284,6 +299,7 @@ class LanController extends Controller
             'title' => $title,
             'pageTitle' => $pageTitle,
             'events' => $events,
+            'eventsByDay' => $eventsByDay,
             'lan' => $lan,
             'linkRelPrev' => !empty($prevDayLink) ? $prevDayLink['link'] : null,
             'linkRelNext' => !empty($nextDayLink) ? $nextDayLink['link'] : null,
