@@ -1,4 +1,4 @@
-<section>
+<section class="widget widget--follow">
 
     <h2>Följ Brottsplatskartan på Twitter och Facebook</h2>
 

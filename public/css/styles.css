@@ -1158,6 +1158,11 @@ input[type='url'],
     margin-bottom: var(--default-margin-double);
 }
 
+.widget--follow ul {
+    margin: 0 0 0 1.2rem;
+    padding: 0;
+}
+
 /* typ iphone 8 */
 @media only screen and (min-width: 360px) and (max-width: 400px) {
     .SiteNav__item a {
