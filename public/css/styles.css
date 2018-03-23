@@ -301,19 +301,24 @@ button {
     clear: both;
 }
 
-.Events--dayEvents {
+.Events__dayEvents {
     list-style-type: none;
     margin: 0;
     padding: 0;
 }
 
-.Events--dayTitle {
+.Events__dayTitle {
     padding-top: var(--default-margin-double);
     margin-bottom: var(--default-margin);
     font-size: var(--font-size-medium);
 }
+.Events__dayTitle time {
+    background: url(/img/ic_today_black_24px.svg);
+    background-repeat: no-repeat;
+    padding-left: 30px;
+}
 
-.Events--dayTitle span {
+.Events__dayTitle span {
     font-weight: normal;
 }
 
