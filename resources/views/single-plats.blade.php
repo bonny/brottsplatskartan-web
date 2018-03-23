@@ -63,30 +63,10 @@ https://brottsplatskartan.localhost/plats/nacka
 
     </div>
 
-    @include('parts.daynav')
-
-    @if ($page > 1)
-        <p>Visar sida {{ $page }} av {{ $events->lastPage() }}.</p>
-    @endif
-
-    {{-- <p>
-        Händelser från Polisen för {{ $plats }}.
-    </p> --}}
+    @includeWhen(!$isToday, 'parts.daynav')
 
     @if ($events->count())
-
-        <ul class="Events Events--overview">
-
-            @foreach ($events as $event)
-
-                @include('parts.crimeevent_v2', ["overview" => true])
-
-            @endforeach
-
-        </ul>
-
-        {{ method_exists($events, 'link') && $events->links() }}
-
+        @include('parts.events-by-day')
     @else
         <p>Inga händelser har rapporterats från Polisen denna dag.</p>
     @endif

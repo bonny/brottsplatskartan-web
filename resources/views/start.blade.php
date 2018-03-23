@@ -41,7 +41,7 @@ samt för äldre dagar när man bläddrar i arkivet.
         <h1>Senaste polishändelserna i Sverige</h1>
     @endif
 
-    @include('parts.daynav')
+    @includeWhen(!$isToday, 'parts.daynav')
 
     @if (isset($showLanSwitcher))
         <p class="Breadcrumbs__switchLan__belowTitle">

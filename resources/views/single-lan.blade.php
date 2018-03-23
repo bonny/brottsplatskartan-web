@@ -41,7 +41,7 @@ https://brottsplatskartan.localhost/lan/Stockholms%20l%C3%A4n
         <h1>Senaste polishändelserna i Sverige</h1>
  --}}    @endif
 
-    @include('parts.daynav')
+    @includeWhen(!$isToday, 'parts.daynav')
 
      @if ($mostCommonCrimeTypes && $mostCommonCrimeTypes->count() >= 2)
         <p>
@@ -84,15 +84,7 @@ https://brottsplatskartan.localhost/lan/Stockholms%20l%C3%A4n
         @endif
     @endif
 
-    @if ($events)
-
-        @include('parts.events-by-day')
-
-        @if (method_exists($events, 'links'))
-            {{ $events->links() }}
-        @endif
-
-    @endif
+    @includeWhen($events, 'parts.events-by-day')
 
     @include('parts.daynav')
 

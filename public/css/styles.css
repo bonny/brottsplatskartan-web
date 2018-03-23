@@ -297,7 +297,7 @@ button {
     transition: box-shadow .1s ease-out;
 }
 
-.Events--day {
+.Events__day {
     clear: both;
 }
 

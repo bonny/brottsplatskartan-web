@@ -43,8 +43,8 @@ class PlatsController extends Controller
             abort(500, 'Knas med datum hörru');
         }
 
-
-        // Om page finns så är det en gammal URL, skriv om till ny (eller hänvisa canonical iaf och använd dagens datum)
+        // Om page finns så är det en gammal URL,
+        // skriv om till ny (eller hänvisa canonical iaf och använd dagens datum)
         $page = (int) $request->input("page", 0);
         if ($page) {
             $page = 0;
@@ -52,6 +52,9 @@ class PlatsController extends Controller
         }
 
         $dateYMD = $date['date']->format('Y-m-d');
+        $isToday = $date['date']->isToday();
+        $isYesterday = $date['date']->isYesterday();
+        $isCurrentYear = $date['date']->isCurrentYear();
 
         // Om $plats slutar med namnet på ett län, t.ex. "örebro län", "gävleborgs län" osv
         // så ska platser i det länet med platsen $plats minus länets namn visas
@@ -83,7 +86,7 @@ class PlatsController extends Controller
         if ($foundMatchingLan) {
             // Hämta events där vi vet både plats och län
             // t.ex. "Stockholm" i "Stockholms län"
-            $events = $this->getEventsInPlatsWithLan($platsWithoutLan, $oneLanName, $dateYMD);
+            $events = $this->getEventsInPlatsWithLan($platsWithoutLan, $oneLanName, $date, 7, $isToday);
 
             // Hämta mest vanligt förekommande händelsetyperna
             $mostCommonCrimeTypes = $this->getMostCommonCrimeTypesInPlatsWithLan($platsWithoutLan, $oneLanName, $dateYMD);
@@ -98,7 +101,7 @@ class PlatsController extends Controller
             // Hämta events där plats är från huvudtabellen
             // Används när $plats är bara en plats, typ "insjön",
             // "östersunds centrum", "östra karup", "kungsgatan" osv.
-            $events = $this->getEventsInPlats($plats, $dateYMD);
+            $events = $this->getEventsInPlats($plats, $date, 14, $isToday);
             $plats = title_case($plats);
             // dd($plats, $dateYMD, $events);
 
@@ -110,6 +113,11 @@ class PlatsController extends Controller
             // Får avvakta med denna pga vet inte exakt vad en plats är för en..eh..plats.
             // $data['robotsNoindex'] = true;
         }
+
+        // Group events by day
+        $eventsByDay = $events->groupBy(function ($item, $key) {
+            return date('Y-m-d', strtotime($item->created_at));
+        });
 
         $mostCommonCrimeTypesMetaDescString = '';
         foreach ($mostCommonCrimeTypes as $oneCrimeType) {
@@ -130,7 +138,6 @@ class PlatsController extends Controller
         // Hämta statistik för platsen
         // $data["chartImgUrl"] = \App\Helper::getStatsImageChartUrl("Stockholms län");
         $introtext_key = "introtext-plats-$plats";
-
         $introtext = null;
 
         if ($page == 1) {
@@ -158,7 +165,6 @@ class PlatsController extends Controller
             ];
         }
 
-        // Here, få next day link att funka (prev day funkar)
         $nextDayLink = null;
         if ($nextDaysNavInfo->count()) {
             $firstDay = $nextDaysNavInfo->first();
@@ -170,10 +176,6 @@ class PlatsController extends Controller
                 'link' => route("platsDatum", ['plats' => $platsOriginalFromSlug, 'date' => $formattedDate])
             ];
         }
-
-        $isToday = $date['date']->isToday();
-        $isYesterday = $date['date']->isYesterday();
-        $isCurrentYear = $date['date']->year == date('Y');
 
         // Inkludera inte datum i canonical url om det är idag vi tittar på
         if ($dateOriginalFromArg) {
@@ -193,6 +195,7 @@ class PlatsController extends Controller
         $data = [
             'plats' => $plats,
             'events' => $events,
+            'eventsByDay' => $eventsByDay,
             'mostCommonCrimeTypes' => $mostCommonCrimeTypes,
             'metaDescription' => $metaDescription,
             "linkRelPrev" => $linkRelPrev,
@@ -225,10 +228,17 @@ class PlatsController extends Controller
     //     dd('yo', $date);
     // }
 
-    public function getEventsInPlatsWithLan($platsWithoutLan, $oneLanName, $dateYMD)
+    public function getEventsInPlatsWithLan($platsWithoutLan, $oneLanName, $date, $numDaysBack = 7, $isToday = false)
     {
         $events = CrimeEvent::orderBy("created_at", "desc")
-            ->whereDate('created_at', $dateYMD)
+            ->where(function ($query) use ($date, $numDaysBack, $isToday) {
+                if ($isToday) {
+                    $query->whereDate('created_at', '<=', $date['date']->format('Y-m-d'));
+                    $query->whereDate('created_at', '>=', $date['date']->copy()->subDays($numDaysBack)->format('Y-m-d'));
+                } else {
+                    $query->whereDate('created_at', $date['date']->format('Y-m-d'));
+                }
+            })
             ->where("administrative_area_level_1", $oneLanName)
             ->where(function ($query) use ($oneLanName, $platsWithoutLan) {
                 $query->where("parsed_title_location", $platsWithoutLan);
@@ -280,11 +290,18 @@ class PlatsController extends Controller
      * @param string $plats For example "tierp"
      * @param string $dateYMD Date in YMD format
      */
-    public function getEventsInPlats($plats, $dateYMD)
+    public function getEventsInPlats($plats, $date, $numDaysBack = 7, $isToday = false)
     {
+        /*
+        */
         $events = CrimeEvent::orderBy("created_at", "desc")
-                    ->where(function ($query) use ($dateYMD) {
-                        $query->whereDate('created_at', $dateYMD);
+                    ->where(function ($query) use ($date, $numDaysBack, $isToday) {
+                        if ($isToday) {
+                            $query->whereDate('created_at', '<=', $date['date']->format('Y-m-d'));
+                            $query->whereDate('created_at', '>=', $date['date']->copy()->subDays($numDaysBack)->format('Y-m-d'));
+                        } else {
+                            $query->whereDate('created_at', $date['date']->format('Y-m-d'));
+                        }
                     })
                     ->where(function ($query) use ($plats) {
                         $query->where("parsed_title_location", $plats);
