@@ -361,9 +361,32 @@ button {
 }
 
 .Event__location {
-    /*color: #999;*/
-    /*margin-bottom: .25rem;*/
     margin-bottom: .75rem;
+    /* padding-left: 30px; */
+}
+
+.Event__location,
+.Event__dateHuman {
+    display: block;
+    padding-left: 22px;
+}
+
+.Event__location::before,
+.Event__dateHuman::before {
+    content: '';
+    position: absolute;
+    display: inline-block;
+    background: url(/img/ic_place_black_18px.svg);
+    background-repeat: no-repeat;
+    width: 18px;
+    height: 18px;
+    vertical-align: top;
+    margin-left: -24px;
+}
+
+.Event__dateHuman::before {
+    background-image: url(/img/ic_today_black_18px.svg);
+    background-image: url(/img/ic_access_time_black_18px.svg);
 }
 
 .Event--overview .Event__location a {

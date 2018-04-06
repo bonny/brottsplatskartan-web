@@ -115,20 +115,14 @@ if $single is set then larger image
             --}}
             <p class="Event__meta">
                 <span class="Event__location">{!! $event->getLocationStringWithLinks() !!}</span>
-                {{-- <span class="Event__metaDivider"> | </span> --}}
-
-                <span class="Event__dateHuman">
-                    <time class="Event__dateHuman__time"
+                <span class="Event__dateHuman"><time class="Event__dateHuman__time"
                           title="Tidpunkt då Polisen anger att händelsen inträffat"
                           datetime="{{ $event->getParsedDateISO8601() }}"
-                          >
-                            {{ $event->getParsedDateFormattedForHumans() }}
+                          >{{ $event->getParsedDateFormattedForHumans() }}
                             @if ($event->getParsedDateDiffInSeconds() >= DAY_IN_SECONDS)
                                 – {{ $event->getParsedDateYMD() }}
                             @endif
-                        </time>
-                </span>
-
+                </time></span>
             </p>
     {{--         @if ( isset($overview) )
             <a class="Event__contentLink" href="{{ $event->getPermalink() }}">

@@ -228,6 +228,18 @@ class PlatsController extends Controller
     //     dd('yo', $date);
     // }
 
+    /**
+     * Hämta händelser för en plats som inkluderar län.
+     * URL är t.ex.
+     * https://brottsplatskartan.localhost/plats/fru%C3%A4ngen-stockholms-l%C3%A4n
+     *
+     * @param [type] $platsWithoutLan
+     * @param [type] $oneLanName
+     * @param [type] $date
+     * @param integer $numDaysBack
+     * @param boolean $isToday
+     * @return void
+     */
     public function getEventsInPlatsWithLan($platsWithoutLan, $oneLanName, $date, $numDaysBack = 7, $isToday = false)
     {
         $events = CrimeEvent::orderBy("created_at", "desc")
@@ -254,7 +266,6 @@ class PlatsController extends Controller
             })
             ->with('locations')
             ->get();
-            // ->paginate(10);
 
         return $events;
     }
