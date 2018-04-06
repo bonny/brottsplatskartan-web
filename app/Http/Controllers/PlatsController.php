@@ -83,6 +83,14 @@ class PlatsController extends Controller
             }
         }
 
+        // Om en plats är i "sverige" snarare än ett specifikt län så blir plats-url fel:
+        // https://brottsplatskartan.localhost/plats/basvägen-
+        // Ta bort '-' och redirecta till platsen.
+        if (ends_with($plats, '-')) {
+            $plats = trim($plats, '-');
+            return redirect()->route('platsSingle', ['plats' => $plats]);
+        }
+
         if ($foundMatchingLan) {
             // Hämta events där vi vet både plats och län
             // t.ex. "Stockholm" i "Stockholms län"
