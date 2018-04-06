@@ -305,6 +305,14 @@ button {
     list-style-type: none;
     margin: 0;
     padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.Events__dayEvents .Event.Event {
+    /* outline: 2px solid #fab; */
+
 }
 
 .Events__dayTitle {
