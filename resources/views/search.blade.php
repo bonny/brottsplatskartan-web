@@ -56,16 +56,7 @@ qdr:h
     <h2>Senaste händelserna i Sverige</h2>
 
     @if ($events)
-
-        <ul class="Events Events--overview">
-
-            @foreach ($events as $event)
-
-                @include('parts.crimeevent_v2', ["overview" => true])
-
-            @endforeach
-
-        </ul>
+        @include('parts.events-by-day', ["overview" => true])
     @endif
 
     {{--

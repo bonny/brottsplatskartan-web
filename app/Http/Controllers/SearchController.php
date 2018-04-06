@@ -38,10 +38,15 @@ class SearchController extends Controller
             ->limit(20)
             ->get();
 
+        $eventsByDay = $events->groupBy(function ($item, $key) {
+            return date('Y-m-d', strtotime($item->created_at));
+        });
+
         $data = [
             "s" => $s,
             "events" => $events,
             "events2" => isset($events2) ? $events2 : null,
+            'eventsByDay' => $eventsByDay,
             "locations" => isset($locations) ? $locations : null,
             "breadcrumbs" => $breadcrumbs
         ];
