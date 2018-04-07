@@ -29,17 +29,7 @@ Template for geo results
 
         <!-- Antal försök: {{ $numTries }} -->
 
-        <ul class="Events Events--overview">
-
-            @foreach ($events as $event)
-
-                @include('parts.crimeevent', ["overview" => true])
-
-            @endforeach
-
-        </ul>
-
-        {{-- $events->links() --}}
+        @includeWhen($eventsByDay->count(), 'parts.events-by-day', ["overview" => true])
 
     @endif
 
