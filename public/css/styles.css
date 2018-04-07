@@ -1292,12 +1292,14 @@ input[type="url"],
     .MainContent {
         /* float: left;
         width: 63%; */
+        width: 63%;
         -webkit-box-flex: 0;
             -ms-flex: 0 1 63%;
                 flex: 0 1 63%;
     }
 
     .MainSidebar {
+        width: 33%;
         -webkit-box-flex: 0;
             -ms-flex: 0 1 33%;
                 flex: 0 1 33%;
