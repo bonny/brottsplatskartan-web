@@ -262,7 +262,6 @@ button {
 }
 
 .DayNav__item {
-    /*display: inline-block;*/
     width: 50%;
 }
 
@@ -312,6 +311,9 @@ button {
 
 .Events__dayEvents .Event.Event {
     /* outline: 2px solid #fab; */
+    width: auto;
+    float: none;
+    flex: 0 1 48%;
 
 }
 
@@ -1273,10 +1275,10 @@ input[type='url'],
     }
 
     .Events--overview .Event {
-        float: left;
+        /* float: left; */
         /*break-inside: avoid;*/
         /*display: inline-block;*/
-        width: 48.5%;
+        /* width: 48.5%; */
         margin-top: var(--default-margin);
         margin-bottom: var(--default-margin);
     }
@@ -1287,13 +1289,13 @@ input[type='url'],
     }
 
     .Events--overview .Event:nth-child(odd) {
-        clear: left;
+        /* clear: left; */
     }
 
     .Events--overview .Event:nth-child(even) {
         /* margin to show box shadow */
-        margin-right: 2px;
-        float: right;
+        /* margin-right: 2px;
+        float: right; */
     }
 
     .LanListing__lan {
