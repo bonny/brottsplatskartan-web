@@ -25,7 +25,6 @@ Template för bloggens startsida
         andra typer av polisiära händelser.
     </p>
 
-
     @if (isset($blogItems) && $blogItems->count())
         <ol class="BlogItems">
             @foreach ($blogItems as $blog)
