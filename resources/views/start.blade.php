@@ -79,7 +79,6 @@ samt för äldre dagar när man bläddrar i arkivet.
 
         @if ($isToday)
             <p><b>{{$numEvents}} händelser har rapporterats in från Polisen de senaste dagarna.</b><p>
-            {{-- <p>Totalt finns det på Brottsplatskartan <b>{{$eventsCount}} händelser</b>.</p> --}}
         @else
             <p><b>{{$numEvents}} händelser från Polisen för detta datum.</b><p>
         @endif

@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use App\CrimeEvent;
 use Carbon\Carbon;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Cache;
 
 /**
  * Startsidan
@@ -14,13 +15,15 @@ class StartController extends Controller
 {
 
     /**
-     * startpage: visa senaste händelserna, datum/dag-versionen
+     * Startpage: visa senaste händelserna, datum/dag-versionen.
+     *
      * URL är som
      * https://brottsplatskartan.se/handelser/15-januari-2018
      * eller som startsida, då blir datum dagens datum
      * https://brottsplatskartan.se/
      *
-     * @param string $year Year in format "december-2017"
+     * @param Request $request Request-object.
+     * @param Carbon  $date    Year in format "december-2017".
      */
     public function day(Request $request, $date = null)
     {
@@ -39,23 +42,14 @@ class StartController extends Controller
             // Om startsida så hämta för flera dagar,
             // så vi inte står där utan händelser.
             $daysBack = 3;
-            $events = CrimeEvent::
-                whereDate('created_at', '<=', $date['date']->format('Y-m-d'))
-                ->whereDate('created_at', '>=', $date['date']->copy()->subDays($daysBack)->format('Y-m-d'))
-                ->orderBy("created_at", "desc")
-                ->with('locations')
-                ->limit(500)
-                ->get();
 
-            $mostCommonCrimeTypes = CrimeEvent::
-                selectRaw('parsed_title, count(id) as antal')
-                ->whereDate('created_at', '<=', $date['date']->format('Y-m-d'))
-                ->whereDate('created_at', '>=', $date['date']->copy()->subDays($daysBack)->format('Y-m-d'))
-                ->groupBy('parsed_title')
-                ->orderByRaw('antal DESC')
-                ->limit(5)
-                ->get();
+            // Innan cache: 8 queries, 2.24s, 2.39s, 2.54s,
+            // Efter cache: 1 query! 1.95s, 1.84s,
+            $events = $this->getEventsForToday($date, $daysBack);
+            $mostCommonCrimeTypes = $this->getMostCommonCrimeTypesForToday($date, $daysBack);
+
         } else {
+            // Om inte idag.
             $events = CrimeEvent::
                 whereDate('created_at', $date['date']->format('Y-m-d'))
                 ->orderBy("created_at", "desc")
@@ -99,7 +93,7 @@ class StartController extends Controller
             $formattedDateFortitle = trim($firstDayDate->formatLocalized('%A %e %B %Y'));
             $prevDayLink = [
                 'title' => sprintf('‹ %1$s', $formattedDateFortitle),
-                'link' => route("startDatum", ['date' => $formattedDate])
+                'link' => route("startDatum", ['date' => $formattedDate]),
             ];
         }
 
@@ -111,7 +105,7 @@ class StartController extends Controller
             $formattedDateFortitle = trim($firstDayDate->formatLocalized('%A %e %B %Y'));
             $nextDayLink = [
                 'title' => sprintf('%1$s ›', $formattedDateFortitle),
-                'link' => route("startDatum", ['date' => $formattedDate])
+                'link' => route("startDatum", ['date' => $formattedDate]),
             ];
         }
 
@@ -169,7 +163,7 @@ class StartController extends Controller
             $canonicalLink = route(
                 'startDatum',
                 [
-                    'date' => trim(str::lower($date['date']->formatLocalized('%e-%B-%Y')))
+                    'date' => trim(str::lower($date['date']->formatLocalized('%e-%B-%Y'))),
                 ]
             );
         }
@@ -191,7 +185,6 @@ class StartController extends Controller
         $data = [
             'events' => $events,
             'eventsByDay' => $eventsByDay,
-            'eventsCount' => CrimeEvent::count(),
             'showLanSwitcher' => true,
             'breadcrumbs' => isset($breadcrumbs) ? $breadcrumbs : null,
             'chartImgUrl' => \App\Helper::getStatsImageChartUrl("home"),
@@ -207,9 +200,74 @@ class StartController extends Controller
             'pageTitle' => $pageTitle,
             'pageMetaDescription' => $pageMetaDescription,
             'mostCommonCrimeTypes' => $mostCommonCrimeTypes,
-            'dateFormattedForMostCommonCrimeTypes' => trim($date['date']->formatLocalized('%e %B'))
+            'dateFormattedForMostCommonCrimeTypes' => trim($date['date']->formatLocalized('%e %B')),
         ];
 
         return view('start', $data);
+    }
+
+    /**
+     * Hämta händelser till startsidan för idag.
+     *
+     * @param Carbon  $date Dagens datum.
+     * @param integer $daysBack Antal dagar tillbaka att hämta för
+     *
+     * @return Collection Händelser.
+     */
+    function getEventsForToday($date, $daysBack = 3)
+    {
+        $cacheKey = 'getEventsForToday:date:' . $date['date']->format('Y-m-d') . ':daysback:' . $daysBack;
+
+        $events = Cache::remember(
+            $cacheKey,
+            1,
+            function () use ($date, $daysBack) {
+                echo "get cached";
+                $events = CrimeEvent::
+                    whereDate('created_at', '<=', $date['date']->format('Y-m-d'))
+                    ->whereDate('created_at', '>=', $date['date']->copy()->subDays($daysBack)->format('Y-m-d'))
+                    ->orderBy("created_at", "desc")
+                    ->with('locations')
+                    ->limit(500)
+                    ->get();
+
+                return $events;
+            }
+        );
+
+        return $events;
+    }
+
+    /**
+     * Hämta händelsetyper till startsidan för idag.
+     *
+     * @param Carbon  $date Dagens datum.
+     * @param integer $daysBack Antal dagar tillbaka att hämta för
+     *
+     * @return Collection Händelser.
+     */
+
+    function getMostCommonCrimeTypesForToday($date, $daysBack)
+    {
+        $cacheKey = 'getMostCommonCrimeTypesForToday:date:' . $date['date']->format('Y-m-d') . ':daysback:' . $daysBack;
+
+        $mostCommonCrimeTypes = Cache::remember(
+            $cacheKey,
+            1,
+            function () use ($date, $daysBack) {
+                $mostCommonCrimeTypes = CrimeEvent::
+                    selectRaw('parsed_title, count(id) as antal')
+                    ->whereDate('created_at', '<=', $date['date']->format('Y-m-d'))
+                    ->whereDate('created_at', '>=', $date['date']->copy()->subDays($daysBack)->format('Y-m-d'))
+                    ->groupBy('parsed_title')
+                    ->orderByRaw('antal DESC')
+                    ->limit(5)
+                    ->get();
+
+                return $mostCommonCrimeTypes;
+            }
+        );
+
+        return $mostCommonCrimeTypes;
     }
 }
