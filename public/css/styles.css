@@ -109,13 +109,16 @@ button {
     margin: 0 auto;
     max-width: 1000px;
     padding: 0 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
 }
 
-.container:after {
+/* .container:after {
     content: "";
     display: table;
     clear: both;
-}
+} */
 
 .SiteHeader {
     position: fixed;
@@ -773,6 +776,7 @@ input[type="url"],
     padding: 0;
     line-height: 1.2;
     font-size: var(--font-size-small);
+    flex: 1 1 100%;
 }
 
 .breadcrumbs {
@@ -846,6 +850,7 @@ input[type="url"],
     margin-top: var(--default-margin);
     margin-bottom: var(--default-margin);
     clear: both;
+    flex: 1 1 100%;
 }
 
 .Ad__intro {
@@ -1276,13 +1281,13 @@ input[type="url"],
     }
 
     .MainContent {
-        float: left;
-        width: 63%;
+        /* float: left;
+        width: 63%; */
+        flex: 0 1 63%;
     }
 
     .MainSidebar {
-        float: right;
-        width: 33%;
+        flex: 0 1 33%;
     }
 
     .Events--overview .Event {
