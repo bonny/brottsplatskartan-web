@@ -110,8 +110,12 @@ Route::get('/nara', function (Request $request) {
     */
 
     $data["events"] = $events;
-    #$data["events"] = CrimeEvent::orderBy("created_at", "desc")->paginate(10);
-    // $data["showLanSwitcher"] = true;
+
+    $eventsByDay = $events->groupBy(function ($item, $key) {
+        return date('Y-m-d', strtotime($item->created_at));
+    });
+
+    $data['eventsByDay'] = $eventsByDay;
 
     $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs;
     $breadcrumbs->addCrumb('Hem', '/');
