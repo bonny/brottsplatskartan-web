@@ -24,6 +24,12 @@ setlocale(LC_ALL, 'sv_SE', 'sv_SE.utf8');
 
 // To disable debugbar temporarily on local development, uncomment the line below.
 // \Debugbar::disable();
+if ($_GET['debugbar-disable'] ?? false) {
+    \Debugbar::disable();
+} else if ($_GET['debugbar-enable'] ?? false) {
+    \Debugbar::enable();
+} else {
+}
 
 /**
  * startpage: visa senaste händelserna, datum/dag-versionen
