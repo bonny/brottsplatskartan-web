@@ -4,35 +4,57 @@ namespace App;
 
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 use DB;
 
 class Dictionary extends Model
 {
     /**
-     * Hämta alla ord och synonymer
+     * Hämta alla ord och synonymer.
      *
-     * @return array Array med alla ord och synonymer
+     * Resultatet cachas i en timme.
+     *
+     * @return array Array med alla ord och synonymer, kommaseparerat.
      */
     public static function getAllWordsAndSynonyms()
     {
-        $wordsAndSynonyms = self::select(DB::raw('id, CONCAT_WS(",", word, synonyms) as words'))->get();
-        $arrWords = [];
-        foreach ($wordsAndSynonyms as $oneWordAndSynonyms) {
-            $arrWords = array_merge($arrWords, explode(',', $oneWordAndSynonyms->words));
-        }
-        $arrWords = array_map('trim', $arrWords);
-        $arrWords = array_filter($arrWords);
-        $arrWords = array_map('mb_strtolower', $arrWords);
-        $arrWords = array_unique($arrWords);
-        sort($arrWords, SORT_LOCALE_STRING);
+        $cacheKey = 'dictionaryAllWordsAndSynonyms';
+
+        $arrWords = Cache::remember(
+            $cacheKey,
+            60,
+            function () {
+                $wordsAndSynonyms = self::select(
+                    DB::raw('id, CONCAT_WS(",", word, synonyms) as words')
+                )->get();
+
+                $arrWords = [];
+
+                foreach ($wordsAndSynonyms as $oneWordAndSynonyms) {
+                    $arrWords = array_merge(
+                        $arrWords,
+                        explode(',', $oneWordAndSynonyms->words)
+                    );
+                }
+
+                $arrWords = array_map('trim', $arrWords);
+                $arrWords = array_filter($arrWords);
+                $arrWords = array_map('mb_strtolower', $arrWords);
+                $arrWords = array_unique($arrWords);
+                sort($arrWords, SORT_LOCALE_STRING);
+
+                return $arrWords;
+            }
+        );
 
         return $arrWords;
     }
 
     /**
-     * Get all words foud in text
+     * Get all words found in text
      *
-     * @param string $text Block of text, like the full text for an event (with stripped tags and so on)
+     * @param  string $text Block of text, like the full text for an event
+     *                      (with stripped tags and so on)
      * @return words collection
      */
     public static function getWordsInText($text)
@@ -58,7 +80,11 @@ class Dictionary extends Model
         // Hämta orden från databasen så vi får ord, synonymer, och beskrivning
         $wordsCollection = collect();
         foreach ($arrMatchingWords as $oneMatchedWord) {
-            $wordsCollection = $wordsCollection->merge(self::whereRaw('FIND_IN_SET("' . $oneMatchedWord . '", CONCAT_WS(",", word, synonyms))')->get());
+            $wordsCollection = $wordsCollection->merge(
+                self::whereRaw(
+                    'FIND_IN_SET("' . $oneMatchedWord . '", CONCAT_WS(",", word, synonyms))'
+                )->get()
+            );
         }
 
         return $wordsCollection;
@@ -66,12 +92,12 @@ class Dictionary extends Model
 
     /**
      * Get excerpt, useful for overview.
-     * 
+     *
      * @param int $length Lenght of excerpt, in words.
-     * 
+     *
      * @return string Possible shortened word description.
      */
-    function getExcerpt($length = 22) 
+    function getExcerpt($length = 22)
     {
         $str = $this->description;
         $str = strip_tags($str);
