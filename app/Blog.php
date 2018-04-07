@@ -36,6 +36,11 @@ class Blog extends Model
         return $str;
     }
 
+    /**
+     * Hämta permalink för ett blogginlägg.
+     *
+     * @return string URL till blogginlägg.
+     */
     public function getPermalink()
     {
         return route(
@@ -47,6 +52,13 @@ class Blog extends Model
         );
     }
 
+    /**
+     * Hämta innehållet för ett blogginlägg HTML-formaterat,
+     * dvs. Markdown har parse'ats och Twitter och Facebook-strängar har
+     * konverterats till embeds.
+     *
+     * @return string HTML.
+     */
     public function getContentFormatted()
     {
         $str = $this->content;
@@ -60,7 +72,7 @@ class Blog extends Model
      * Convert lines like
      * AMPTWEET: https://twitter.com/eskapism/status/944609719179796480
      *
-     * to
+     * To
      *
      * <amp-twitter
      *    width="375"
