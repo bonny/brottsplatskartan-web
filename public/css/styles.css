@@ -928,17 +928,17 @@ input[type="url"],
 
 /* 2 i bredd */
 .Event--v2 {
-    overflow: auto;
+    /* overflow: auto;
     float: left;
-    width: 48%;
+    width: 48%; */
 }
 
 .Event--v2:nth-of-type(2n + 2) {
-    float: right;
+    /* float: right; */
 }
 
 .Event--v2:nth-of-type(2n + 1) {
-    clear: both;
+    /* clear: both; */
 }
 
 .Event--v2 .Event__teaser {
