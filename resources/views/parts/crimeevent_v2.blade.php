@@ -113,8 +113,11 @@ if $single is set then larger image
             Om bara vill visa när skillnad är mer än nn dagar/timmar osv.
             http://stackoverflow.com/questions/23336261/laravel-carbon-display-date-difference-only-in-days
             --}}
+            @php
+            $locationStringWithLinks = $event->getLocationStringWithLinks();
+            @endphp
             <p class="Event__meta">
-                <span class="Event__location">{!! $event->getLocationStringWithLinks() !!}</span>
+                @if ($locationStringWithLinks)<span class="Event__location">{!! $event->getLocationStringWithLinks() !!}</span>@endif
                 <span class="Event__dateHuman"><time class="Event__dateHuman__time"
                           title="Tidpunkt då Polisen anger att händelsen inträffat"
                           datetime="{{ $event->getParsedDateISO8601() }}"
