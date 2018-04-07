@@ -7,8 +7,8 @@ Template för bloggens startsida
 @extends('layouts.web')
 
 @section('title', 'Blogg: Brottsplatskartans blogg med uppdateringar om sajten med mera')
+@section('canonicalLink', route('blog'))
 {{--
-@section('canonicalLink', $event->getPermalink())
 @section('metaDescription', e($event->getMetaDescription()))
 @section('metaImage', $event->getStaticImageSrc(640,640))
 @section('metaImageWidth', 640)
