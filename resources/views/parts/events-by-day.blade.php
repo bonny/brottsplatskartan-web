@@ -7,7 +7,7 @@
                 @if ($events->count() == 1)
                     <span>– En händelse inhämtad</span>
                 @else
-                    <span>– {{ $events->count() }} händelser inhämtade</span>
+                    <span>– {{ $events->count() }} händelser</span>
                 @endif
             </h3>
 
