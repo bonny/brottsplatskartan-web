@@ -5,7 +5,7 @@
             <h3 class="Events__dayTitle">
                 <time>{{ $events->get(0)->getCreatedAtLocalized() }}</time>
                 @if ($events->count() == 1)
-                    <span>– En händelse inhämtad</span>
+                    <span>– En händelse</span>
                 @else
                     <span>– {{ $events->count() }} händelser</span>
                 @endif
