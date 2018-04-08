@@ -31,6 +31,8 @@ if ($_GET['debugbar-disable'] ?? false) {
 } else {
 }
 
+Route::get('/debug/{what}', 'DebugController@debug')->name('debug');
+
 /**
  * startpage: visa senaste händelserna, datum/dag-versionen
  *
