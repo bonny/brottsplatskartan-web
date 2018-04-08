@@ -221,7 +221,6 @@ class StartController extends Controller
             $cacheKey,
             1,
             function () use ($date, $daysBack) {
-                echo "get cached";
                 $events = CrimeEvent::
                     whereDate('created_at', '<=', $date['date']->format('Y-m-d'))
                     ->whereDate('created_at', '>=', $date['date']->copy()->subDays($daysBack)->format('Y-m-d'))
