@@ -1,0 +1,2 @@
+sv_SE
+en_US
