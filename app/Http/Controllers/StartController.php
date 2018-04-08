@@ -47,7 +47,6 @@ class StartController extends Controller
             // Efter cache: 1 query! 1.95s, 1.84s,
             $events = $this->getEventsForToday($date, $daysBack);
             $mostCommonCrimeTypes = $this->getMostCommonCrimeTypesForToday($date, $daysBack);
-
         } else {
             // Om inte idag.
             $events = CrimeEvent::
