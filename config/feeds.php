@@ -35,6 +35,16 @@ return [
 
   /*
   |--------------------------------------------------------------------------
+  | Disable Check for SSL certificates (enable for self signed certificates)
+  |--------------------------------------------------------------------------
+  |
+  |
+  |
+  */
+  'ssl_check.disabled' => false,
+
+  /*
+  |--------------------------------------------------------------------------
   | Strip Html Tags Disabled
   |--------------------------------------------------------------------------
   |
@@ -75,4 +85,14 @@ return [
   // 'bgsound', 'class', 'expr', 'id', 'style', 'onclick', 'onerror', 'onfinish', 'onmouseover', 'onmouseout', 'onfocus', 'onblur', 'lowsrc', 'dynsrc'
     'strip_attributes.tags'=> [ 'bgsound', 'class', 'expr', 'id', 'style', 'onclick', 'onerror', 'onfinish', 'onmouseover', 'onmouseout', 'onfocus', 'onblur', 'lowsrc', 'dynsrc'],
 
+  /*
+  |--------------------------------------------------------------------------
+  | CURL Options
+  |--------------------------------------------------------------------------
+  |
+  | Array of CURL options (see curl_setopt())
+  | Set to null to disable
+  |
+  */
+  'curl.options' => null,
 ];
