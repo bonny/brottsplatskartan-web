@@ -44,7 +44,7 @@ class DebugController extends Controller
             echo "<br><br>setlocale(LC_ALL, 0):<br>";
             var_dump($currentLocal);
 
-            // Denna fanns inte på DO/Dokku
+            // "Locale" fanns inte på DO/Dokku
             // $currentLocal = \Locale::getDefault();
             // echo "<br><br>$currentLocal:<br>$currentLocal";
         } elseif ($what == 'cache') {
