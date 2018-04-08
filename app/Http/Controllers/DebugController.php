@@ -41,11 +41,12 @@ class DebugController extends Controller
             echo "<br><br>strftime($format):<br>$strftimestr";
 
             $currentLocal = setlocale(LC_ALL, 0);
-            echo "<br><br>setlocale(LC_ALL, 0):<br>$currentLocal";
+            echo "<br><br>setlocale(LC_ALL, 0):<br>";
+            var_dump($currentLocal);
 
-            $currentLocal = \Locale::getDefault();
-            echo "<br><br>$currentLocal:<br>$currentLocal";
-
+            // Denna fanns inte på DO/Dokku
+            // $currentLocal = \Locale::getDefault();
+            // echo "<br><br>$currentLocal:<br>$currentLocal";
         } elseif ($what == 'cache') {
             $date = \App\Helper::getdateFromDateSlug(null);
 
