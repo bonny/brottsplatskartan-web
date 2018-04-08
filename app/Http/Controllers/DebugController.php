@@ -27,6 +27,25 @@ class DebugController extends Controller
     {
         if ($what == 'phpinfo') {
             phpinfo();
+        } elseif ($what == 'date') {
+
+            $format = 'Y-m-d H:i';
+            echo "<br><br>date($format):<br>" . date($format);
+
+            $format = '%A %d %B %Y %H:%M';
+            $carbonDate = Carbon::now();
+            $carbonDateFormatted = $carbonDate->formatLocalized($format);
+            echo "<br><br>carbon::formatLocalized($format):<br>$carbonDateFormatted";
+
+            $strftimestr = strftime($format);
+            echo "<br><br>strftime($format):<br>$strftimestr";
+
+            $currentLocal = setlocale(LC_ALL, 0);
+            echo "<br><br>setlocale(LC_ALL, 0):<br>$currentLocal";
+
+            $currentLocal = \Locale::getDefault();
+            echo "<br><br>$currentLocal:<br>$currentLocal";
+
         } elseif ($what == 'cache') {
             $date = \App\Helper::getdateFromDateSlug(null);
 
