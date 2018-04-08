@@ -119,6 +119,10 @@ button {
             justify-content: space-between;
 }
 
+.MainContent {
+    width: 100%;
+}
+
 /* .container:after {
     content: "";
     display: table;
