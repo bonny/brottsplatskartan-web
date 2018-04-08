@@ -21,8 +21,7 @@
         "htmlmin/htmlmin": "^5.0",
         "predis/predis": "^1.1",
         "rap2hpoutre/laravel-log-viewer": "^0.10.4",
-        "duzun/hquery": "^1.7",
-        "barryvdh/laravel-debugbar": "^3.1"
+        "duzun/hquery": "^1.7"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
@@ -30,7 +29,8 @@
         "phpunit/phpunit": "~6.0",
         "symfony/css-selector": "3.1.*",
         "symfony/dom-crawler": "3.1.*",
-        "filp/whoops": "~2.0"
+        "filp/whoops": "~2.0",
+        "barryvdh/laravel-debugbar": "^3.1"
     },
     "autoload": {
         "classmap": [
