@@ -149,7 +149,7 @@ Route::get('/lan/{lan}/handelser', function ($lan) {
 /**
  * Alla orter översikt
  */
-Route::get('/plats/', 'platsController@overview')->name("platserOverview");
+Route::get('/plats/', 'PlatsController@overview')->name("platserOverview");
 
 /**
  * Url för ort så som den såg ut i Brottsplatskartan 2.
