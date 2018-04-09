@@ -1,11 +1,5 @@
 <?php
 
-$debugbarEnabled = env('DEBUGBAR_ENABLED', null);
-
-if (isset($_GET['debugbar-enable'])) {
-    $debugbarEnabled = true;
-}
-
 return [
 
     /*
@@ -20,7 +14,7 @@ return [
      |
      */
 
-    'enabled' => $debugbarEnabled,
+    'enabled' => env('DEBUGBAR_ENABLED', null),
     'except' => [
         //
     ],
@@ -193,7 +187,7 @@ return [
      | from trying to overcome bugs like this: http://trac.nginx.org/nginx/ticket/97
      |
      */
-    'route_prefix' => 'db',
+    'route_prefix' => '_debugbar',
 
     /*
      |--------------------------------------------------------------------------
