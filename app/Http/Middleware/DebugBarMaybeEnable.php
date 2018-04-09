@@ -19,8 +19,9 @@ class DebugBarMaybeEnable
      */
     public function handle($request, Closure $next)
     {
-        //if (Cookie::has('debugbar')) {
-        if (\Auth::check() && $request->has('debugbar-enable')) {
+        // This works both for regular pages/routes
+        // but also for debug bar urls like https://brottsplatskartan.localhost/_debugbar/assets/stylesheets?v=1520325331
+        if (\Cookie::has('show-debugbar')) {
             \Debugbar::enable();
         }
 
