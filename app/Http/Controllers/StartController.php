@@ -37,7 +37,7 @@ class StartController extends Controller
         $isYesterday = $date['date']->isYesterday();
         $isCurrentYear = $date['date']->isCurrentYear();
 
-        // Hämnta events från vald dag
+        // Hämta events från vald dag
         if ($isToday) {
             // Om startsida så hämta för flera dagar,
             // så vi inte står där utan händelser.
@@ -67,6 +67,12 @@ class StartController extends Controller
         $eventsByDay = $events->groupBy(function ($item, $key) {
             return date('Y-m-d', strtotime($item->created_at));
         });
+
+        // Om idag så behåll bara idag, om events finns, pga blir så sjukt många annars
+        // alltså flera hundra = tar långt tid att ladda sidan.
+        if ($isToday) {
+            $eventsByDay = $eventsByDay->splice(0, 2);
+        }
 
         // $introtext_key = "introtext-start";
         // if ($page == 1) {
