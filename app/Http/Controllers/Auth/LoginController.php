@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
@@ -38,4 +39,9 @@ class LoginController extends Controller
             'except' => 'logout'
         ]);
     }
+
+    public function authenticated(Request $request, $user) {
+        \Cookie::queue('show-debugbar', true, 60 * 24 * 7); // 7 days
+    }
+
 }
