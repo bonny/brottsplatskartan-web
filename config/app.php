@@ -1,5 +1,10 @@
 <?php
 
+$appDebug = env('APP_DEBUG', false);
+if (isset($_GET['debugbar-enable'])) {
+    $appDebug = true;
+}
+
 return [
 
     'polisen_domain' => env('POLISEN_DOMAIN', 'https://polisen.se'),
@@ -40,7 +45,7 @@ return [
     |
     */
 
-    'debug' => env('APP_DEBUG', false),
+    'debug' => $appDebug,
 
     /*
     |--------------------------------------------------------------------------
