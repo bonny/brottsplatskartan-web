@@ -56,25 +56,31 @@ class DebugController extends Controller
             ";
 
             $delimiter = '-';
-            $str = '/händelser/stockholms län/vägen gränden 123';
+            $str = '/händelser/stockholms län/vägen gränden 123/ABCÅÄÖ';
 
             if ($request->get('url')) {
                 $str = $request->get('url');
             }
 
             echo "<br><br>str innan: $str";
+            $clean = $str;
 
-            $clean = iconv('UTF-8', 'ASCII//TRANSLIT', $str);
+            $clean = mb_strtolower($clean);
+
+            setlocale(LC_ALL, 'en_US');
+
+            $clean = iconv('UTF-8', 'ASCII//TRANSLIT', $clean);
             echo "<br><br>str efter iconv:<br>$clean";
 
             $clean = preg_replace("![^a-zA-Z0-9/_|+ -]!", '', $clean);
             echo "<br><br>str efter preg_replace:<br>$clean";
 
-            $clean = strtolower(trim($clean, '-'));
-            echo "<br><br>str efter strtolower:<br>$clean";
+            #$clean = strtolower(trim($clean, '-'));
+            #echo "<br><br>str efter strtolower:<br>$clean";
 
             $clean = preg_replace("![/_|+ -]+!", $delimiter, $clean);
             echo "<br><br>str efter preg_replace:<br>$clean";
+            setlocale(LC_ALL, 'sv_SE', 'sv_SE.utf8');
         } elseif ($what == 'cache') {
             $date = \App\Helper::getdateFromDateSlug(null);
 
