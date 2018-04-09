@@ -1,5 +1,11 @@
 <?php
 
+$debugbarEnabled = env('DEBUGBAR_ENABLED', null);
+
+if (isset($_GET['debugbar-enable'])) {
+    $debugbarEnabled = true;
+}
+
 return [
 
     /*
@@ -14,7 +20,7 @@ return [
      |
      */
 
-    'enabled' => env('DEBUGBAR_ENABLED', null),
+    'enabled' => $debugbarEnabled,
     'except' => [
         //
     ],
