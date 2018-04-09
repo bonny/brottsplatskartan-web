@@ -233,10 +233,17 @@ class Helper
             $str = str_replace((array) $replace, ' ', $str);
         }
 
+        // Switch locale or iconv will convert "ä" to "ae".
+        // If we use english "ä" till be "ä".
+        setlocale(LC_ALL, 'en_US');
+
         $clean = iconv('UTF-8', 'ASCII//TRANSLIT', $str);
         $clean = preg_replace("![^a-zA-Z0-9/_|+ -]!", '', $clean);
         $clean = strtolower(trim($clean, '-'));
         $clean = preg_replace("![/_|+ -]+!", $delimiter, $clean);
+
+        // Switch back locale.
+        setlocale(LC_ALL, 'sv_SE', 'sv_SE.utf8');
 
         return $clean;
     }
