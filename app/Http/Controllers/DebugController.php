@@ -57,6 +57,11 @@ class DebugController extends Controller
 
             $delimiter = '-';
             $str = '/händelser/stockholms län/vägen gränden 123';
+
+            if ($request->get('url')) {
+                $str = $request->get('url');
+            }
+
             echo "<br><br>str innan: $str";
 
             $clean = iconv('UTF-8', 'ASCII//TRANSLIT', $str);
