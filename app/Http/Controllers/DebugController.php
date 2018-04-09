@@ -47,6 +47,29 @@ class DebugController extends Controller
             // "Locale" fanns inte på DO/Dokku
             // $currentLocal = \Locale::getDefault();
             // echo "<br><br>$currentLocal:<br>$currentLocal";
+        } elseif ($what == 'urls') {
+
+            echo "
+            <head>
+                <meta charset='utf-8'>
+            </head>
+            ";
+
+            $delimiter = '-';
+            $str = '/händelser/stockholms län/vägen gränden 123';
+            echo "<br><br>str innan: $str";
+
+            $clean = iconv('UTF-8', 'ASCII//TRANSLIT', $str);
+            echo "<br><br>str efter iconv:<br>$clean";
+
+            $clean = preg_replace("![^a-zA-Z0-9/_|+ -]!", '', $clean);
+            echo "<br><br>str efter preg_replace:<br>$clean";
+
+            $clean = strtolower(trim($clean, '-'));
+            echo "<br><br>str efter strtolower:<br>$clean";
+
+            $clean = preg_replace("![/_|+ -]+!", $delimiter, $clean);
+            echo "<br><br>str efter preg_replace:<br>$clean";
         } elseif ($what == 'cache') {
             $date = \App\Helper::getdateFromDateSlug(null);
 
