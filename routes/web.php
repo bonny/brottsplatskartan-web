@@ -406,7 +406,8 @@ Route::prefix('blogg')->group(function () {
         return view('blog-start', $data);
     })->name('blogYear');
 
-    // Matchar https://brottsplatskartan.localhost/blogg/2017/mitt-blogginlagg
+    // Enskilt inlägg.
+    // Matchar https://brottsplatskartan.localhost/blogg/2017/mitt-blogginlagg.
     Route::get('{year}/{slug}', function ($year, $slug) {
         $blog = App\Blog::where('slug', $slug)->first();
 

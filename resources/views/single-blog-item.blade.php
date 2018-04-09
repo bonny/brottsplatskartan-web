@@ -7,8 +7,8 @@ Template för ett event/händelse
 @extends('layouts.web')
 
 @section('title', $blog->title)
+@section('canonicalLink', $blog->getPermalink())
 {{--
-@section('canonicalLink', $event->getPermalink())
 @section('metaDescription', e($event->getMetaDescription()))
 @section('metaImage', $event->getStaticImageSrc(640,640))
 @section('metaImageWidth', 640)
