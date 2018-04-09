@@ -58,9 +58,9 @@ class DebugController extends Controller
                 \Debugbar::stopMeasure('cacheTest');
             }
 
-            \Debugbar::startMeasure('cacheTest', 'Hämta händelser, med cache');
+            // \Debugbar::startMeasure('cacheTest', 'Hämta händelser, med cache');
             for ($i = 0; $i < $numTimesToTest; $i++) {
-                \Debugbar::startMeasure('cacheTest', 'Hämta händelser, utan cache');
+                \Debugbar::startMeasure('cacheTest', 'Hämta händelser, med cache');
                 $events = $this->getEventsForTodayMaybeCached($date, 3, true);
                 \Debugbar::stopMeasure('cacheTest');
             }
