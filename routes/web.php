@@ -279,7 +279,6 @@ Route::get('/ordlista/{word}', function ($word, Request $request) {
 
     $wordForQuery = DB::connection()->getPdo()->quote($word);
     $wordSpacesForQuery = DB::connection()->getPdo()->quote($wordSpaces);
-    #dd($wordSpacesForQuery);
 
     // We use COLLATE so a query for "raddningstjanst" also matches "räddningstjänst"
     $word = Dictionary::whereRaw("word IN($wordForQuery, $wordSpacesForQuery COLLATE utf8mb4_general_ci)")->first();
@@ -296,9 +295,12 @@ Route::get('/ordlista/{word}', function ($word, Request $request) {
     $breadcrumbs->addCrumb('Ordlista', route('ordlista'));
     $breadcrumbs->addCrumb($word->word, route('ordlistaOrd', ['word' => $word->word]));
 
+    $allWords = Dictionary::pluck('word');
+
     $data = [
         'word' => $word,
-        'breadcrumbs' => $breadcrumbs
+        'allWords' => $allWords,
+        'breadcrumbs' => $breadcrumbs,
     ];
 
     return view('dictionary-word', $data);

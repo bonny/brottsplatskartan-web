@@ -1217,12 +1217,34 @@ input[type="url"],
     margin-top: var(--default-margin-double);
 }
 
+.DictionaryAllWordsListing__items {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.DictionaryAllWordsListing__item {
+    display: inline-block;
+}
+
+.DictionaryAllWordsListing__link {
+    display: inline-block;
+}
+
 .u-margin-bottom {
     margin-bottom: var(--default-margin);
 }
 
 .u-margin-bottom-double {
     margin-bottom: var(--default-margin-double);
+}
+
+.u-margin-top {
+    margin-top: var(--default-margin);
+}
+
+.u-margin-top-double {
+    margin-top: var(--default-margin-double);
 }
 
 .widget--follow ul {
