@@ -213,7 +213,6 @@ button {
     margin-left: -1rem;
     margin-right: -1rem;
     margin-bottom: -1rem;
-    /*background-color: rgba(255, 255, 255, .75);*/
     font-size: 1rem;
     margin-top: 1rem;
     color: #fff;
@@ -229,6 +228,8 @@ button {
 }
 
 .SiteNav__items {
+    display: flex;
+    justify-content: space-between;
     margin: 0;
     padding: 0;
     list-style-type: none;
@@ -236,10 +237,11 @@ button {
 }
 
 .SiteNav__item {
-    display: inline-block;
+    /* display: inline-block; */
     text-align: center;
     /* width: 25%; */
     white-space: nowrap;
+    flex: 1 1 100%;
 }
 
 .SiteNav__item a {
@@ -1257,23 +1259,23 @@ input[type="url"],
     .SiteNav__item a {
     }
     .SiteNav__item {
-        width: 24%;
+        /* width: 24%; */
     }
 }
 /* nånstans i mitten... */
 @media only screen and (min-width: 400px) and (max-width: 666px) {
     .SiteNav__item {
-        width: 24%;
+        /* width: 24%; */
     }
 }
 
 @media only screen and (max-width: 667px) {
     .SiteNav__item:first-of-type a {
-        border-left-color: transparent;
+        /* border-left-color: transparent; */
     }
 
     .SiteNav__item:last-of-type a {
-        border-right-color: transparent;
+        /* border-right-color: transparent; */
     }
 
     .SiteNav__item svg {
@@ -1288,22 +1290,22 @@ input[type="url"],
     }
 
     .SiteNav {
-        margin-left: 0;
+        /* margin-left: 0; */
     }
 
     .SiteNav__items {
-        margin-left: calc(-1rem);
+        /* margin-left: calc(-1rem); */
         text-align: left;
     }
 
     .SiteNav__item {
-        text-align: left;
-        width: auto;
+        /* text-align: left;
+        width: auto; */
     }
 
     .SiteNav__item a {
-        padding-left: 1.5rem;
-        padding-right: 1.5rem;
+        /* padding-left: 1.5rem;
+        padding-right: 1.5rem; */
     }
 
     .SiteNav__item a:hover {
