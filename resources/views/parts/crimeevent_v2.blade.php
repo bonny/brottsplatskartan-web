@@ -40,7 +40,6 @@ if $single is set then larger image
         --}}
 
         <div class="Event__col1">
-
             @if ($event->geocoded)
                 <p class="Event__map">
                     @if ( isset($overview) )
@@ -48,9 +47,10 @@ if $single is set then larger image
                     @endif
 
                     @if (isset($overview))
-
+                        @if (isset($hideMapImage) && $hideMapImage)
+                        @else
                         <amp-img alt="Karta som visar ungefär var händelsen inträffat" class="Event__mapImage" src="{{ $event->getStaticImageSrc(640,320) }}" width="640" height="320" layout="responsive"></amp-img>
-
+                        @endif
                     @else
 
                         {{-- <a href="https://google.se/maps/{{ '@' . $event->location_lat }},{{ $event->location_lng }},12z" target="_blank"> --}}

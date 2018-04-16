@@ -13,7 +13,8 @@ use Illuminate\Support\Str;
  */
 class SearchController extends Controller
 {
-    public function index (Request $request) {
+    public function index(Request $request)
+    {
         $minSearchLength = 2;
 
         $s = $request->input('s');
@@ -44,9 +45,8 @@ class SearchController extends Controller
 
         $data = [
             "s" => $s,
-            "events" => $events,
-            "events2" => isset($events2) ? $events2 : null,
             'eventsByDay' => $eventsByDay,
+            'hideMapImage' => true,
             "locations" => isset($locations) ? $locations : null,
             "breadcrumbs" => $breadcrumbs
         ];
