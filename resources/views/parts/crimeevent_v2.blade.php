@@ -72,7 +72,8 @@ if $single is set then larger image
                                 ></amp-img>
                             </span>
 
-                            <span class="Event__mapImageWrap Event__mapImageWrap--far">
+                            {{--
+                                <span class="Event__mapImageWrap Event__mapImageWrap--far">
                                 <amp-img
                                     alt="Översiktskarta som visar hela Sverige med en markör som visar ungefär var händelsen inträffat"
                                     class="Event__mapImage Event__mapImage--far"
@@ -82,6 +83,7 @@ if $single is set then larger image
                                     layout="responsive"
                                 ></amp-img>
                             </span>
+                            --}}
 
                         {{-- </a> --}}
 
