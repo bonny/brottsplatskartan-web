@@ -4,9 +4,9 @@ namespace App;
 
 use Carbon\Carbon;
 use DB;
+use Illuminate\Support\Facades\Cache;
 use App\Http\Controllers\FeedParserController;
 use App\Http\Controllers\FeedController;
-// use Sofa\Eloquence\Eloquence;
 use Illuminate\Database\Eloquent\Model;
 
 class CrimeEvent extends Model
@@ -483,22 +483,32 @@ class CrimeEvent extends Model
 
     public static function getEventsNearLocation($lat, $lng, $nearbyCount = 10, $nearbyInKm = 25)
     {
-        # DB::enableQueryLog();
+        // DB::enableQueryLog();
 
-        $events = CrimeEvent::selectRaw(
-            '*, ( 6371 * acos( cos( radians(?) ) * cos( radians( location_lat ) ) * cos( radians( location_lng ) - radians(?) ) + sin( radians(?) ) * sin( radians( location_lat ) ) ) ) AS distance',
-            [$lat, $lng, $lat]
-        )
-        // Do not include to old items, to perhaps save some query time
-        ->whereDate('created_at', '>', Carbon::now()->subDays(15))
-        ->having("distance", "<=", $nearbyInKm) // välj de som är rimligt nära, värdet är i km
-        ->orderBy("parsed_date", "DESC")
-        ->orderBy("distance", "ASC")
-        ->limit($nearbyCount)
-        ->with('locations')
-        ->get();
+        $cacheKey = "getEventsNearLocation:lat{$lat}:lng{$lng}:nearby{$nearbyCount}:nearbyKm{$nearbyInKm}";
 
-        # dd($events, DB::getQueryLog());
+        $events = Cache::remember(
+            $cacheKey,
+            10,
+            function () use ($lat, $lng, $nearbyCount, $nearbyInKm) {
+                $events = CrimeEvent::selectRaw(
+                    '*, ( 6371 * acos( cos( radians(?) ) * cos( radians( location_lat ) ) * cos( radians( location_lng ) - radians(?) ) + sin( radians(?) ) * sin( radians( location_lat ) ) ) ) AS distance',
+                    [$lat, $lng, $lat]
+                )
+                // Do not include to old items, to perhaps save some query time
+                ->whereDate('created_at', '>', Carbon::now()->subDays(15))
+                ->having("distance", "<=", $nearbyInKm) // välj de som är rimligt nära, värdet är i km
+                ->orderBy("parsed_date", "DESC")
+                ->orderBy("distance", "ASC")
+                ->limit($nearbyCount)
+                ->with('locations')
+                ->get();
+
+                return $events;
+            }
+        );
+
+        // dd($events, DB::getQueryLog());
 
         return $events;
     }
