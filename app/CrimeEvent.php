@@ -3,6 +3,7 @@
 namespace App;
 
 use Carbon\Carbon;
+use DB;
 use App\Http\Controllers\FeedParserController;
 use App\Http\Controllers\FeedController;
 // use Sofa\Eloquence\Eloquence;
@@ -482,16 +483,22 @@ class CrimeEvent extends Model
 
     public static function getEventsNearLocation($lat, $lng, $nearbyCount = 10, $nearbyInKm = 25)
     {
+        # DB::enableQueryLog();
+
         $events = CrimeEvent::selectRaw(
             '*, ( 6371 * acos( cos( radians(?) ) * cos( radians( location_lat ) ) * cos( radians( location_lng ) - radians(?) ) + sin( radians(?) ) * sin( radians( location_lat ) ) ) ) AS distance',
             [$lat, $lng, $lat]
         )
+        // Do not include to old items, to perhaps save some query time
+        ->whereDate('created_at', '>', Carbon::now()->subDays(15))
         ->having("distance", "<=", $nearbyInKm) // välj de som är rimligt nära, värdet är i km
         ->orderBy("parsed_date", "DESC")
         ->orderBy("distance", "ASC")
         ->limit($nearbyCount)
         ->with('locations')
         ->get();
+
+        # dd($events, DB::getQueryLog());
 
         return $events;
     }
