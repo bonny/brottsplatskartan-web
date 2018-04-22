@@ -483,7 +483,6 @@ class CrimeEvent extends Model
 
     public static function getEventsNearLocation($lat, $lng, $nearbyCount = 10, $nearbyInKm = 25)
     {
-        // DB::enableQueryLog();
 
         $cacheKey = "getEventsNearLocation:lat{$lat}:lng{$lng}:nearby{$nearbyCount}:nearbyKm{$nearbyInKm}";
 
@@ -491,24 +490,30 @@ class CrimeEvent extends Model
             $cacheKey,
             10,
             function () use ($lat, $lng, $nearbyCount, $nearbyInKm) {
-                $events = CrimeEvent::selectRaw(
-                    '*, ( 6371 * acos( cos( radians(?) ) * cos( radians( location_lat ) ) * cos( radians( location_lng ) - radians(?) ) + sin( radians(?) ) * sin( radians( location_lat ) ) ) ) AS distance',
-                    [$lat, $lng, $lat]
-                )
-                // Do not include to old items, to perhaps save some query time
-                ->whereDate('created_at', '>', Carbon::now()->subDays(15))
-                ->having("distance", "<=", $nearbyInKm) // välj de som är rimligt nära, värdet är i km
-                ->orderBy("parsed_date", "DESC")
-                ->orderBy("distance", "ASC")
-                ->limit($nearbyCount)
-                ->with('locations')
-                ->get();
-
-                return $events;
+                return self::getEventsNearLocationUncached($lat, $lng, $nearbyCount, $nearbyInKm);
             }
         );
 
-        // dd($events, DB::getQueryLog());
+        return $events;
+    }
+
+    public static function getEventsNearLocationUncached($lat, $lng, $nearbyCount = 10, $nearbyInKm = 25) {
+        $someDaysAgoYMD = Carbon::now()->subDays(15)->format('Y-m-d');
+
+        $events = CrimeEvent::selectRaw(
+            '*, ( 6371 * acos( cos( radians(?) ) * cos( radians( location_lat ) ) * cos( radians( location_lng ) - radians(?) ) + sin( radians(?) ) * sin( radians( location_lat ) ) ) ) AS distance',
+            [$lat, $lng, $lat]
+        )
+        // Do not include to old items, to perhaps save some query time
+        // Don't use whereDate() https://stackoverflow.com/questions/25139948/laravel-eloquent-compare-date-from-datetime-field
+        // ->whereDate('created_at', '>', Carbon::now()->subDays(15))
+        ->where('created_at', '>', $someDaysAgoYMD)
+        ->having("distance", "<=", $nearbyInKm) // välj de som är rimligt nära, värdet är i km
+        ->orderBy("parsed_date", "DESC")
+        ->orderBy("distance", "ASC")
+        ->limit($nearbyCount)
+        ->with('locations')
+        ->get();
 
         return $events;
     }
