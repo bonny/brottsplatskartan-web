@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use App\CrimeEvent;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -254,15 +255,17 @@ class StartController extends Controller
     function getMostCommonCrimeTypesForToday($date, $daysBack)
     {
         $cacheKey = 'getMostCommonCrimeTypesForToday:date:' . $date['date']->format('Y-m-d') . ':daysback:' . $daysBack;
-
+        // DB::enableQueryLog();
         $mostCommonCrimeTypes = Cache::remember(
             $cacheKey,
-            1,
+            10,
             function () use ($date, $daysBack) {
                 $mostCommonCrimeTypes = CrimeEvent::
                     selectRaw('parsed_title, count(id) as antal')
-                    ->whereDate('created_at', '<=', $date['date']->format('Y-m-d'))
-                    ->whereDate('created_at', '>=', $date['date']->copy()->subDays($daysBack)->format('Y-m-d'))
+                    // ->whereDate('created_at', '<=', $date['date']->format('Y-m-d'))
+                    // ->whereDate('created_at', '>=', $date['date']->copy()->subDays($daysBack)->format('Y-m-d'))
+                    ->where('created_at', '<=', $date['date']->format('Y-m-d'))
+                    ->where('created_at', '>=', $date['date']->copy()->subDays($daysBack)->format('Y-m-d'))
                     ->groupBy('parsed_title')
                     ->orderByRaw('antal DESC')
                     ->limit(5)
@@ -271,7 +274,7 @@ class StartController extends Controller
                 return $mostCommonCrimeTypes;
             }
         );
-
+        // dd(DB::getQueryLog(), $mostCommonCrimeTypes->toArray());
         return $mostCommonCrimeTypes;
     }
 }
