@@ -113,9 +113,15 @@ Route::get('/nara', function (Request $request) {
 
     $data["events"] = $events;
 
-    $eventsByDay = $events->groupBy(function ($item, $key) {
-        return date('Y-m-d', strtotime($item->created_at));
-    });
+    if ($events) {
+        $eventsByDay = $events->groupBy(
+            function ($item, $key) {
+                return date('Y-m-d', strtotime($item->created_at));
+            }
+        );
+    } else {
+        $eventsByDay = null;
+    }
 
     $data['eventsByDay'] = $eventsByDay;
 
