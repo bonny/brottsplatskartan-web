@@ -9,6 +9,7 @@ use App\CrimeEvent;
 use App\highways_ignored;
 use Carbon\Carbon;
 use App;
+use DB;
 
 class FetchEvents extends Command
 {
@@ -88,6 +89,7 @@ class FetchEvents extends Command
             ['geocoded', '=', 0]
         ])
         // Do not include to old items, because we don't want to try to encode them forever
+        // Indexkoll: Kollat 24 Apr 2018 och använde index
         ->whereDate('created_at', '>', Carbon::now()->subDays(15))
         ->get();
 
