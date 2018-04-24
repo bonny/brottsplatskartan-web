@@ -226,11 +226,17 @@ class StartController extends Controller
 
         $events = Cache::remember(
             $cacheKey,
-            1,
+            2,
             function () use ($date, $daysBack) {
+
+                $beforeDate = $date['date']->copy()->addDays(1)->format('Y-m-d');
+                $afterDate = $date['date']->copy()->subDays($daysBack)->format('Y-m-d');
+
                 $events = CrimeEvent::
-                    whereDate('created_at', '<=', $date['date']->format('Y-m-d'))
-                    ->whereDate('created_at', '>=', $date['date']->copy()->subDays($daysBack)->format('Y-m-d'))
+                    #whereDate('created_at', '<=', $beforeDate)
+                    #->whereDate('created_at', '>=', $afterDate)
+                    where('created_at', '<', $beforeDate)
+                    ->where('created_at', '>', $afterDate)
                     ->orderBy("created_at", "desc")
                     ->with('locations')
                     ->limit(500)
