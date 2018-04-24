@@ -233,8 +233,6 @@ class StartController extends Controller
                 $afterDate = $date['date']->copy()->subDays($daysBack)->format('Y-m-d');
 
                 $events = CrimeEvent::
-                    #whereDate('created_at', '<=', $beforeDate)
-                    #->whereDate('created_at', '>=', $afterDate)
                     where('created_at', '<', $beforeDate)
                     ->where('created_at', '>', $afterDate)
                     ->orderBy("created_at", "desc")
