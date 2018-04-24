@@ -72,7 +72,7 @@ class StartController extends Controller
         // Om idag så behåll bara idag, om events finns, pga blir så sjukt många annars
         // alltså flera hundra = tar långt tid att ladda sidan.
         if ($isToday) {
-            $eventsByDay = $eventsByDay->splice(0, 2);
+            $eventsByDay = $eventsByDay->splice(0, 1);
         }
 
         // $introtext_key = "introtext-start";
