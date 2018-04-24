@@ -506,7 +506,6 @@ class CrimeEvent extends Model
         )
         // Do not include to old items, to perhaps save some query time
         // Don't use whereDate() https://stackoverflow.com/questions/25139948/laravel-eloquent-compare-date-from-datetime-field
-        // ->whereDate('created_at', '>', Carbon::now()->subDays(15))
         ->where('created_at', '>', $someDaysAgoYMD)
         ->having("distance", "<=", $nearbyInKm) // välj de som är rimligt nära, värdet är i km
         ->orderBy("parsed_date", "DESC")
