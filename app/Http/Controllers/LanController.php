@@ -176,8 +176,8 @@ class LanController extends Controller
         if ($isToday) {
             // Hämta händelser för flera dagar pga vi vill inte riskera att få en tom lista.
             $events = CrimeEvent::orderBy("created_at", "desc")
-                ->whereDate('created_at', '<=', $date['date']->format('Y-m-d'))
-                ->whereDate('created_at', '>=', $date['date']->copy()->subDays($daysBack)->format('Y-m-d'))
+                ->where('created_at', '<', $date['date']->copy()->addDays(1)->format('Y-m-d'))
+                ->where('created_at', '>', $date['date']->copy()->subDays($daysBack)->format('Y-m-d'))
                 ->where("administrative_area_level_1", $lan)
                 ->with('locations')
                 ->limit(500)
@@ -185,7 +185,8 @@ class LanController extends Controller
         } else {
             // Hämta alla händelser för detta datum.
             $events = CrimeEvent::orderBy("created_at", "desc")
-                ->whereDate('created_at', $date['date']->format('Y-m-d'))
+                ->where('created_at', '<', $date['date']->copy()->addDays(1)->format('Y-m-d'))
+                ->where('created_at', '>', $date['date']->format('Y-m-d'))
                 ->where("administrative_area_level_1", $lan)
                 ->with('locations')
                 ->get();
@@ -193,7 +194,9 @@ class LanController extends Controller
 
         // Hämta mest vanligt förekommande brotten
         $mostCommonCrimeTypes = CrimeEvent::selectRaw('parsed_title, count(id) as antal')
-            ->whereDate('created_at', $date['date']->format('Y-m-d'))
+            #->whereDate('created_at', $date['date']->format('Y-m-d'))
+            ->where('created_at', '<', $date['date']->copy()->addDays(1)->format('Y-m-d'))
+            ->where('created_at', '>', $date['date']->format('Y-m-d'))
             ->where("administrative_area_level_1", $lan)
             ->groupBy('parsed_title')
             ->orderByRaw('antal DESC')
