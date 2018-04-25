@@ -50,18 +50,24 @@ class StartController extends Controller
             $mostCommonCrimeTypes = $this->getMostCommonCrimeTypesForToday($date, $daysBack);
         } else {
             // Om inte idag.
+            $beforeDate = $date['date']->copy()->addDays(1)->format('Y-m-d');
+            $afterDate = $date['date']->format('Y-m-d');
+
             $events = CrimeEvent::
-                whereDate('created_at', $date['date']->format('Y-m-d'))
+                where('created_at', '<', $beforeDate)
+                ->where('created_at', '>', $afterDate)
                 ->orderBy("created_at", "desc")
                 ->with('locations')
                 ->get();
 
             $mostCommonCrimeTypes = CrimeEvent::selectRaw('parsed_title, count(id) as antal')
-                ->whereDate('created_at', $date['date']->format('Y-m-d'))
+                ->where('created_at', '<', $beforeDate)
+                ->where('created_at', '>', $afterDate)
                 ->groupBy('parsed_title')
                 ->orderByRaw('antal DESC')
                 ->limit(5)
                 ->get();
+
         }
 
         // Group events by day
