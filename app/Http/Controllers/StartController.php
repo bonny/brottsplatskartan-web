@@ -44,8 +44,6 @@ class StartController extends Controller
             // så vi inte står där utan händelser.
             $daysBack = 3;
 
-            // Innan cache: 8 queries, 2.24s, 2.39s, 2.54s,
-            // Efter cache: 1 query! 1.95s, 1.84s,
             $events = $this->getEventsForToday($date, $daysBack);
             $mostCommonCrimeTypes = $this->getMostCommonCrimeTypesForToday($date, $daysBack);
         } else {
@@ -67,7 +65,6 @@ class StartController extends Controller
                 ->orderByRaw('antal DESC')
                 ->limit(5)
                 ->get();
-
         }
 
         // Group events by day
