@@ -504,8 +504,6 @@ class CrimeEvent extends Model
             '*, ( 6371 * acos( cos( radians(?) ) * cos( radians( location_lat ) ) * cos( radians( location_lng ) - radians(?) ) + sin( radians(?) ) * sin( radians( location_lat ) ) ) ) AS distance',
             [$lat, $lng, $lat]
         )
-        // Do not include to old items, to perhaps save some query time
-        // Don't use whereDate() https://stackoverflow.com/questions/25139948/laravel-eloquent-compare-date-from-datetime-field
         ->where('created_at', '>', $someDaysAgoYMD)
         ->having("distance", "<=", $nearbyInKm) // välj de som är rimligt nära, värdet är i km
         ->orderBy("parsed_date", "DESC")
