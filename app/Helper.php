@@ -89,7 +89,10 @@ class Helper
     }
 
     /**
-     * Get stats for all lans
+     * Hämta statistik för alla län,
+     * ger antal händelser per dag för alla län.
+     *
+     * @return array med datum => antal.
      */
     public static function getHomeStats($lan)
     {
@@ -98,14 +101,21 @@ class Helper
         ];
 
         $cacheKey = "lan-homestats-" . $lan;
-        $stats["numEventsPerDay"] = Cache::remember($cacheKey, 5, function () use ($lan) {
-            $numEventsPerDay = DB::table('crime_events')
-                ->select(DB::raw('date_format(created_at, "%Y-%m-%d") as YMD'), DB::raw('count(*) AS count'))
-                ->groupBy('YMD')
-                ->orderBy('YMD', 'desc')
-                ->limit(14)
-                ->get();
-            return $numEventsPerDay;
+        $cacheTTL = 120;
+        $dateDaysBack = Carbon::now()->subDays(13)->format('Y-m-d');
+
+        $stats["numEventsPerDay"] = Cache::remember(
+            $cacheKey,
+            $cacheTTL,
+            function () use ($lan, $dateDaysBack) {
+                $numEventsPerDay = DB::table('crime_events')
+                    ->select(DB::raw('date_format(created_at, "%Y-%m-%d") as YMD'), DB::raw('count(*) AS count'))
+                    ->where('created_at', '>', $dateDaysBack)
+                    ->groupBy('YMD')
+                    ->orderBy('YMD', 'desc')
+                    ->get();
+
+                return $numEventsPerDay;
         });
 
         return $stats;
