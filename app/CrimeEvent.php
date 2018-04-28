@@ -485,10 +485,11 @@ class CrimeEvent extends Model
     {
 
         $cacheKey = "getEventsNearLocation:lat{$lat}:lng{$lng}:nearby{$nearbyCount}:nearbyKm{$nearbyInKm}";
+        $cacheTTL = 9;
 
         $events = Cache::remember(
             $cacheKey,
-            10,
+            $cacheTTL,
             function () use ($lat, $lng, $nearbyCount, $nearbyInKm) {
                 return self::getEventsNearLocationUncached($lat, $lng, $nearbyCount, $nearbyInKm);
             }
