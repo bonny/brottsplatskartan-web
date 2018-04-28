@@ -412,10 +412,37 @@ class PlatsController extends Controller
         return $events;
     }
 
+    /**
+     * Hämta mest vanligt förekommande brottstyperna för en plats utan län.
+     *
+     * @param [type] $plats
+     * @param [type] $dateYMD
+     * @return array
+     */
     public function getMostCommonCrimeTypesInPlats($plats, $dateYMD)
     {
-        $mostCommonCrimeTypes = CrimeEvent::selectRaw('parsed_title, count(id) as antal')
-            ->whereDate('created_at', $dateYMD)
+        $date = Carbon::parse($dateYMD);
+        $dateYmdPlusOneDay = $date->copy()->addDays(1)->format('Y-m-d');
+
+        $cacheKey = "getMostCommonCrimeTypesInPlats:$plats:$dateYMD";
+        $cacheTTL = 45;
+
+        $mostCommonCrimeTypes = Cache::Remember(
+            $cacheKey,
+            $cacheTTL,
+            function () use ($plats, $dateYMD, $dateYmdPlusOneDay) {
+                return self::getMostCommonCrimeTypesInPlatsUncached($plats, $dateYMD, $dateYmdPlusOneDay);
+            }
+        );
+
+        return $mostCommonCrimeTypes;
+    }
+
+    public function getMostCommonCrimeTypesInPlatsUncached($plats, $dateYMD, $dateYmdPlusOneDay)
+    {
+        $mostCommonCrimeTypes = CrimeEvent::selectRaw('parsed_title, count(id) as antal, 1 as xxx')
+            ->where('created_at', '<', $dateYmdPlusOneDay)
+            ->where('created_at', '>', $dateYMD)
             ->where("parsed_title_location", $plats)
             ->orWhere("administrative_area_level_2", $plats)
             ->orWhereHas('locations', function ($query) use ($plats) {
@@ -428,6 +455,8 @@ class PlatsController extends Controller
 
         return $mostCommonCrimeTypes;
     }
+
+
 
     // Om plats med län, skicka med plats + län-namnet ($platsWithoutLan, $oneLanName)
     // Om inte plats med län: skicka bara plats ($plats)
