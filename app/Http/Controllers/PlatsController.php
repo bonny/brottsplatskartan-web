@@ -314,7 +314,21 @@ class PlatsController extends Controller
     {
         $date = new Carbon($dateYMD);
         $dateYmdPlusOneDay = $date->copy()->addDays(1)->format('Y-m-d');
+        $cacheKey = "getMostCommonCrimeTypesInPlatsWithLan:$platsWithoutLan:$oneLanName:$dateYMD";
+        $cacheTTL = 20;
 
+        $mostCommonCrimeTypes = Cache::Remember(
+            $cacheKey,
+            $cacheTTL,
+            function () use($platsWithoutLan, $oneLanName, $dateYMD, $dateYmdPlusOneDay) {
+                return self::getMostCommonCrimeTypesInPlatsWithLanUncached($platsWithoutLan, $oneLanName, $dateYMD, $dateYmdPlusOneDay);
+            }
+        );
+
+        return $mostCommonCrimeTypes;
+    }
+
+    function getMostCommonCrimeTypesInPlatsWithLanUncached($platsWithoutLan, $oneLanName, $dateYMD, $dateYmdPlusOneDay) {
         $mostCommonCrimeTypes = DB::table('crime_events')
             ->selectRaw('parsed_title, count(id) as antal, 1 as xxx ')
             ->where('created_at', '>', $dateYMD)
