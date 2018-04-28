@@ -6,6 +6,7 @@ use App\CrimeEvent;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 /**
  * Controller för plats, översikt och detalj
@@ -250,13 +251,36 @@ class PlatsController extends Controller
      */
     public function getEventsInPlatsWithLan($platsWithoutLan, $oneLanName, $date, $numDaysBack = 7, $isToday = false)
     {
+        $dateYmd = $date['date']->format('Y-m-d');
+        $cacheKey = 'getEventsInPlatsWithLan:' . md5("{$platsWithoutLan}:{$oneLanName}:{$dateYmd}:{$numDaysBack}:{$isToday}");
+        $cacheTTL = 6;
+
+        $events = Cache::Remember(
+            $cacheKey,
+            $cacheTTL,
+            function () use ($platsWithoutLan, $oneLanName, $date, $numDaysBack , $isToday) {
+                $events = self::getEventsInPlatsWithLanUncached($platsWithoutLan, $oneLanName, $date, $numDaysBack , $isToday);
+                return $events;
+            }
+        );
+
+        return $events;
+    }
+
+    public function getEventsInPlatsWithLanUncached($platsWithoutLan, $oneLanName, $date, $numDaysBack = 7, $isToday = false) {
+        // $date['date']->copy()->addDays(1)->format('Y-m-d')
+        $dateYmd = $date['date']->format('Y-m-d');
+        $dateYmdPlusOneDay = $date['date']->copy()->addDays(1)->format('Y-m-d');
+        $dateYmdMinusNumDaysBack = $date['date']->copy()->subDays($numDaysBack)->format('Y-m-d');
+
         $events = CrimeEvent::orderBy("created_at", "desc")
-            ->where(function ($query) use ($date, $numDaysBack, $isToday) {
+            ->where(function ($query) use ($date, $dateYmd, $dateYmdPlusOneDay, $dateYmdMinusNumDaysBack, $numDaysBack, $isToday) {
                 if ($isToday) {
-                    $query->whereDate('created_at', '<=', $date['date']->format('Y-m-d'));
-                    $query->whereDate('created_at', '>=', $date['date']->copy()->subDays($numDaysBack)->format('Y-m-d'));
+                    $query->where('created_at', '<', $dateYmdPlusOneDay);
+                    $query->where('created_at', '>', $dateYmdMinusNumDaysBack);
                 } else {
-                    $query->whereDate('created_at', $date['date']->format('Y-m-d'));
+                    $query->where('created_at', '<', $dateYmdPlusOneDay);
+                    $query->where('created_at', '>', $dateYmd);
                 }
             })
             ->where("administrative_area_level_1", $oneLanName)
