@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use App\CrimeEvent;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
@@ -301,10 +302,23 @@ class PlatsController extends Controller
         return $events;
     }
 
+    /**
+     * Hämta de mest vanliga brotten för en plats, som inkluderar län i urlen.
+     *
+     * @param [type] $platsWithoutLan
+     * @param [type] $oneLanName
+     * @param [type] $dateYMD
+     * @return collection Array händelsetyp => antal
+     */
     public function getMostCommonCrimeTypesInPlatsWithLan($platsWithoutLan, $oneLanName, $dateYMD)
     {
-        $mostCommonCrimeTypes = CrimeEvent::selectRaw('parsed_title, count(id) as antal')
-            ->whereDate('created_at', $dateYMD)
+        $date = new Carbon($dateYMD);
+        $dateYmdPlusOneDay = $date->copy()->addDays(1)->format('Y-m-d');
+
+        $mostCommonCrimeTypes = DB::table('crime_events')
+            ->selectRaw('parsed_title, count(id) as antal, 1 as xxx ')
+            ->where('created_at', '>', $dateYMD)
+            ->where('created_at', '<', $dateYmdPlusOneDay)
             ->where("administrative_area_level_1", $oneLanName)
             ->where(function ($query) use ($oneLanName, $platsWithoutLan) {
                 $query->where("parsed_title_location", $platsWithoutLan);
@@ -313,7 +327,7 @@ class PlatsController extends Controller
                             ->from('locations')
                             ->whereRaw(
                                 'locations.name = ?
-                                AND locations.crime_event_id = crime_events.id',
+                                AND locations.crime_event_id = crime_events.id ',
                                 [$platsWithoutLan]
                             );
                 });
