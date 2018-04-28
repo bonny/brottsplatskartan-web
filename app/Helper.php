@@ -422,7 +422,6 @@ class Helper
 
     public static function getLanPrevDaysNavInfo($date = null, $lan, $numDays = 5)
     {
-        // innan: 33ms
         $dateYmd = $date->format('Y-m-d');
         $cacheKey = "getLanPrevDaysNavInfo:date{$dateYmd}:lan:{$lan}:numDays:{$numDays}";
         $cacheTTL = 15;
@@ -455,9 +454,29 @@ class Helper
 
     public static function getLanNextDaysNavInfo($date = null, $lan = null, $numDays = 5)
     {
+        $dateYmdPlusOneDay = $date->copy()->addDays(1)->format('Y-m-d');
+
+        $dateYmd = $date->format('Y-m-d');
+        $cacheKey = "getLanNextDaysNavInfo:date{$dateYmd}:lan:{$lan}:numDays:{$numDays}";
+        $cacheTTL = 15;
+
+        $nextDayEvents = Cache::remember(
+            $cacheKey,
+            $cacheTTL,
+            function () use ($date, $lan, $numDays) {
+                return self::getLanNextDaysNavInfoUncached($date, $lan, $numDays);
+            }
+        );
+
+        return $nextDayEvents;
+    }
+
+    public static function getLanNextDaysNavInfoUncached($date = null, $lan = null, $numDays = 5) {
+        $dateYmdPlusOneDay = $date->copy()->addDays(1)->format('Y-m-d');
+
         $nextDayEvents = CrimeEvent::
-            selectRaw('date(created_at) as dateYMD, count(*) as dateCount')
-            ->whereDate('created_at', '>', $date->format('Y-m-d'))
+            selectRaw('date(created_at) as dateYMD, count(*) as dateCount, 1 as ppp')
+            ->where('created_at', '>', $dateYmdPlusOneDay)
             ->where("administrative_area_level_1", $lan)
             ->groupBy(\DB::raw('dateYMD'))
             ->orderBy('created_at', 'asc')
