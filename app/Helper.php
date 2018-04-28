@@ -352,7 +352,7 @@ class Helper
     }
 
     /**
-     * Hämta info om antal händelser per dag tidigare än idag.
+     * Hämta info om antal händelser per dag tidigare än valt datum.
      *
      * @param object $date Carbon Date Object.
      * @param int    $numDays Antal dagar att hämta info för.
@@ -363,14 +363,15 @@ class Helper
     {
         $dateYmd = $date->format('Y-m-d');
         $cacheKey = "getPrevDaysNavInfo:date:{$dateYmd}:numDays:$numDays";
+        $cacheTTL = 15;
 
         $prevDayEvents = Cache::remember(
             $cacheKey,
-            5,
+            $cacheTTL,
             function () use ($dateYmd, $numDays) {
                 $prevDayEvents = CrimeEvent::
                     selectRaw('date(created_at) as dateYMD, count(*) as dateCount')
-                    ->whereDate('created_at', '<', $dateYmd)
+                    ->where('created_at', '<', $dateYmd)
                     ->groupBy(\DB::raw('dateYMD'))
                     ->orderBy('created_at', 'desc')
                     ->limit($numDays)
@@ -396,15 +397,17 @@ class Helper
     {
 
         $dateYmd = $date->format('Y-m-d');
+        $dateYmdPlusOneDay = $date->copy()->addDays(1)->format('Y-m-d');
         $cacheKey = "getNextDaysNavInfo:date:{$dateYmd}:numDays:$numDays";
+        $cacheTTL = 15;
 
         $nextDayEvents = Cache::remember(
             $cacheKey,
-            5,
-            function () use ($dateYmd, $numDays) {
+            $cacheTTL,
+            function () use ($dateYmd, $dateYmdPlusOneDay, $numDays) {
                 $nextDayEvents = CrimeEvent::
-                    selectRaw('date(created_at) as dateYMD, count(*) as dateCount')
-                    ->whereDate('created_at', '>', $dateYmd)
+                    selectRaw('date(created_at) as dateYMD, count(*) as dateCount, 1 as yyy')
+                    ->where('created_at', '>', $dateYmdPlusOneDay)
                     ->groupBy(\DB::raw('dateYMD'))
                     ->orderBy('created_at', 'asc')
                     ->limit($numDays)
