@@ -194,7 +194,6 @@ class LanController extends Controller
 
         // Hämta mest vanligt förekommande brotten
         $mostCommonCrimeTypes = CrimeEvent::selectRaw('parsed_title, count(id) as antal')
-            #->whereDate('created_at', $date['date']->format('Y-m-d'))
             ->where('created_at', '<', $date['date']->copy()->addDays(1)->format('Y-m-d'))
             ->where('created_at', '>', $date['date']->format('Y-m-d'))
             ->where("administrative_area_level_1", $lan)
