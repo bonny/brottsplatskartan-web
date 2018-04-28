@@ -330,7 +330,7 @@ class PlatsController extends Controller
 
     function getMostCommonCrimeTypesInPlatsWithLanUncached($platsWithoutLan, $oneLanName, $dateYMD, $dateYmdPlusOneDay) {
         $mostCommonCrimeTypes = DB::table('crime_events')
-            ->selectRaw('parsed_title, count(id) as antal, 1 as xxx ')
+            ->selectRaw('parsed_title, count(id) as antal')
             ->where('created_at', '>', $dateYMD)
             ->where('created_at', '<', $dateYmdPlusOneDay)
             ->where("administrative_area_level_1", $oneLanName)
@@ -355,22 +355,43 @@ class PlatsController extends Controller
     }
 
     /**
-     * Get events.
+     * Hämta händelser för en plats, utan län. T.ex. "tierp".
+     * Exempelurl:
+     * https://brottsplatskartan.se/plats/tierp
      *
      * @param string $plats For example "tierp"
      * @param string $dateYMD Date in YMD format
      */
     public function getEventsInPlats($plats, $date, $numDaysBack = 7, $isToday = false)
     {
-        /*
-        */
+
+        $dateYmd = $date['date']->format('Y-m-d');
+        $dateYmdPlusOneDay = $date['date']->copy()->addDays(1)->format('Y-m-d');
+        $dateYmdMinusNumDaysBack = $date['date']->copy()->subDays($numDaysBack)->format('Y-m-d');
+
+        $cacheKey = "getEventsInPlats:$plats:$dateYmd:$numDaysBack:$isToday";
+        $cacheTTL = 1;
+
+        $events = Cache::Remember(
+            $cacheKey,
+            $cacheTTL,
+            function () use ($dateYmd, $dateYmdPlusOneDay, $dateYmdMinusNumDaysBack, $numDaysBack, $isToday, $plats) {
+                return self::getEventsInPlatsUncached($dateYmd, $dateYmdPlusOneDay, $dateYmdMinusNumDaysBack, $numDaysBack, $isToday, $plats);
+            }
+        );
+
+        return $events;
+    }
+
+    public function getEventsInPlatsUncached($dateYmd, $dateYmdPlusOneDay, $dateYmdMinusNumDaysBack, $numDaysBack, $isToday, $plats) {
         $events = CrimeEvent::orderBy("created_at", "desc")
-                    ->where(function ($query) use ($date, $numDaysBack, $isToday) {
+                    ->where(function ($query) use ($numDaysBack, $isToday, $dateYmd, $dateYmdPlusOneDay, $dateYmdMinusNumDaysBack, $plats) {
                         if ($isToday) {
-                            $query->whereDate('created_at', '<=', $date['date']->format('Y-m-d'));
-                            $query->whereDate('created_at', '>=', $date['date']->copy()->subDays($numDaysBack)->format('Y-m-d'));
+                            $query->where('created_at', '<', $dateYmdPlusOneDay);
+                            $query->where('created_at', '>', $dateYmdMinusNumDaysBack);
                         } else {
-                            $query->whereDate('created_at', $date['date']->format('Y-m-d'));
+                            $query->where('created_at', '<', $dateYmdPlusOneDay);
+                            $query->where('created_at', '>', $dateYmd);
                         }
                     })
                     ->where(function ($query) use ($plats) {
