@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use DB;
 use App\CrimeEvent;
 use Carbon\Carbon;
-use Illuminate\Support\Str;
+use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 
 /**
  * Controller för plats, översikt och detalj
@@ -171,7 +171,7 @@ class PlatsController extends Controller
             $formattedDateFortitle = trim($firstDayDate->formatLocalized('%A %e %B %Y'));
             $prevDayLink = [
                 'title' => sprintf('‹ %1$s', $formattedDateFortitle),
-                'link' => route("platsDatum", ['plats' => $platsOriginalFromSlug, 'date' => $formattedDate])
+                'link' => route("platsDatum", ['plats' => $platsOriginalFromSlug, 'date' => $formattedDate]),
             ];
         }
 
@@ -183,21 +183,25 @@ class PlatsController extends Controller
             $formattedDateFortitle = trim($firstDayDate->formatLocalized('%A %e %B %Y'));
             $nextDayLink = [
                 'title' => sprintf('%1$s ›', $formattedDateFortitle),
-                'link' => route("platsDatum", ['plats' => $platsOriginalFromSlug, 'date' => $formattedDate])
+                'link' => route("platsDatum", ['plats' => $platsOriginalFromSlug, 'date' => $formattedDate]),
             ];
         }
 
         // Inkludera inte datum i canonical url om det är idag vi tittar på
         if ($dateOriginalFromArg) {
             // There was a date included
-            $canonicalLink = route('platsDatum', [
-                'plats' => mb_strtolower($platsOriginalFromSlug),
-                'date' => trim(str::lower($date['date']->formatLocalized('%e-%B-%Y')))
+            $canonicalLink = route(
+                'platsDatum',
+                [
+                    'plats' => mb_strtolower($platsOriginalFromSlug),
+                    'date' => trim(str::lower($date['date']->formatLocalized('%e-%B-%Y'))),
                 ]
             );
         } else {
-            $canonicalLink = route('platsSingle', [
-                'plats' => mb_strtolower($platsOriginalFromSlug)
+            $canonicalLink = route(
+                'platsSingle',
+                [
+                    'plats' => mb_strtolower($platsOriginalFromSlug),
                 ]
             );
         }
@@ -259,8 +263,8 @@ class PlatsController extends Controller
         $events = Cache::Remember(
             $cacheKey,
             $cacheTTL,
-            function () use ($platsWithoutLan, $oneLanName, $date, $numDaysBack , $isToday) {
-                $events = self::getEventsInPlatsWithLanUncached($platsWithoutLan, $oneLanName, $date, $numDaysBack , $isToday);
+            function () use ($platsWithoutLan, $oneLanName, $date, $numDaysBack, $isToday) {
+                $events = self::getEventsInPlatsWithLanUncached($platsWithoutLan, $oneLanName, $date, $numDaysBack, $isToday);
                 return $events;
             }
         );
@@ -268,7 +272,8 @@ class PlatsController extends Controller
         return $events;
     }
 
-    public function getEventsInPlatsWithLanUncached($platsWithoutLan, $oneLanName, $date, $numDaysBack = 7, $isToday = false) {
+    public function getEventsInPlatsWithLanUncached($platsWithoutLan, $oneLanName, $date, $numDaysBack = 7, $isToday = false)
+    {
         $dateYmd = $date['date']->format('Y-m-d');
         $dateYmdPlusOneDay = $date['date']->copy()->addDays(1)->format('Y-m-d');
         $dateYmdMinusNumDaysBack = $date['date']->copy()->subDays($numDaysBack)->format('Y-m-d');
@@ -288,12 +293,12 @@ class PlatsController extends Controller
                 $query->where("parsed_title_location", $platsWithoutLan);
                 $query->orWhereExists(function ($query) use ($platsWithoutLan) {
                     $query->select(\DB::raw(1))
-                            ->from('locations')
-                            ->whereRaw(
-                                'locations.name = ?
+                        ->from('locations')
+                        ->whereRaw(
+                            'locations.name = ?
                                 AND locations.crime_event_id = crime_events.id',
-                                [$platsWithoutLan]
-                            );
+                            [$platsWithoutLan]
+                        );
                 });
             })
             ->with('locations')
@@ -320,7 +325,7 @@ class PlatsController extends Controller
         $mostCommonCrimeTypes = Cache::Remember(
             $cacheKey,
             $cacheTTL,
-            function () use($platsWithoutLan, $oneLanName, $dateYMD, $dateYmdPlusOneDay) {
+            function () use ($platsWithoutLan, $oneLanName, $dateYMD, $dateYmdPlusOneDay) {
                 return self::getMostCommonCrimeTypesInPlatsWithLanUncached($platsWithoutLan, $oneLanName, $dateYMD, $dateYmdPlusOneDay);
             }
         );
@@ -328,7 +333,8 @@ class PlatsController extends Controller
         return $mostCommonCrimeTypes;
     }
 
-    function getMostCommonCrimeTypesInPlatsWithLanUncached($platsWithoutLan, $oneLanName, $dateYMD, $dateYmdPlusOneDay) {
+    public function getMostCommonCrimeTypesInPlatsWithLanUncached($platsWithoutLan, $oneLanName, $dateYMD, $dateYmdPlusOneDay)
+    {
         $mostCommonCrimeTypes = DB::table('crime_events')
             ->selectRaw('parsed_title, count(id) as antal')
             ->where('created_at', '>', $dateYMD)
@@ -338,12 +344,12 @@ class PlatsController extends Controller
                 $query->where("parsed_title_location", $platsWithoutLan);
                 $query->orWhereExists(function ($query) use ($platsWithoutLan) {
                     $query->select(\DB::raw(1))
-                            ->from('locations')
-                            ->whereRaw(
-                                'locations.name = ?
+                        ->from('locations')
+                        ->whereRaw(
+                            'locations.name = ?
                                 AND locations.crime_event_id = crime_events.id ',
-                                [$platsWithoutLan]
-                            );
+                            [$platsWithoutLan]
+                        );
                 });
             })
             ->groupBy('parsed_title')
@@ -364,7 +370,6 @@ class PlatsController extends Controller
      */
     public function getEventsInPlats($plats, $date, $numDaysBack = 7, $isToday = false)
     {
-
         $dateYmd = $date['date']->format('Y-m-d');
         $dateYmdPlusOneDay = $date['date']->copy()->addDays(1)->format('Y-m-d');
         $dateYmdMinusNumDaysBack = $date['date']->copy()->subDays($numDaysBack)->format('Y-m-d');
@@ -383,26 +388,27 @@ class PlatsController extends Controller
         return $events;
     }
 
-    public function getEventsInPlatsUncached($dateYmd, $dateYmdPlusOneDay, $dateYmdMinusNumDaysBack, $numDaysBack, $isToday, $plats) {
+    public function getEventsInPlatsUncached($dateYmd, $dateYmdPlusOneDay, $dateYmdMinusNumDaysBack, $numDaysBack, $isToday, $plats)
+    {
         $events = CrimeEvent::orderBy("created_at", "desc")
-                    ->where(function ($query) use ($numDaysBack, $isToday, $dateYmd, $dateYmdPlusOneDay, $dateYmdMinusNumDaysBack, $plats) {
-                        if ($isToday) {
-                            $query->where('created_at', '<', $dateYmdPlusOneDay);
-                            $query->where('created_at', '>', $dateYmdMinusNumDaysBack);
-                        } else {
-                            $query->where('created_at', '<', $dateYmdPlusOneDay);
-                            $query->where('created_at', '>', $dateYmd);
-                        }
-                    })
-                    ->where(function ($query) use ($plats) {
-                        $query->where("parsed_title_location", $plats);
-                        $query->orWhere("administrative_area_level_2", $plats);
-                        $query->orWhereHas('locations', function ($query) use ($plats) {
-                            $query->where('name', '=', $plats);
-                        });
-                    })
-                    ->with('locations')
-                    ->get();
+            ->where(function ($query) use ($numDaysBack, $isToday, $dateYmd, $dateYmdPlusOneDay, $dateYmdMinusNumDaysBack, $plats) {
+                if ($isToday) {
+                    $query->where('created_at', '<', $dateYmdPlusOneDay);
+                    $query->where('created_at', '>', $dateYmdMinusNumDaysBack);
+                } else {
+                    $query->where('created_at', '<', $dateYmdPlusOneDay);
+                    $query->where('created_at', '>', $dateYmd);
+                }
+            })
+            ->where(function ($query) use ($plats) {
+                $query->where("parsed_title_location", $plats);
+                $query->orWhere("administrative_area_level_2", $plats);
+                $query->orWhereHas('locations', function ($query) use ($plats) {
+                    $query->where('name', '=', $plats);
+                });
+            })
+            ->with('locations')
+            ->get();
         return $events;
     }
 
@@ -436,12 +442,12 @@ class PlatsController extends Controller
                     $query->where("parsed_title_location", $platsWithoutLan);
                     $query->orWhereExists(function ($query) use ($platsWithoutLan) {
                         $query->select(\DB::raw(1))
-                                ->from('locations')
-                                ->whereRaw(
-                                    'locations.name = ?
+                            ->from('locations')
+                            ->whereRaw(
+                                'locations.name = ?
                                     AND locations.crime_event_id = crime_events.id',
-                                    [$platsWithoutLan]
-                                );
+                                [$platsWithoutLan]
+                            );
                     });
                 })
                 ->groupBy(\DB::raw('dateYMD'))
@@ -479,12 +485,12 @@ class PlatsController extends Controller
                     $query->where("parsed_title_location", $platsWithoutLan);
                     $query->orWhereExists(function ($query) use ($platsWithoutLan) {
                         $query->select(\DB::raw(1))
-                                ->from('locations')
-                                ->whereRaw(
-                                    'locations.name = ?
+                            ->from('locations')
+                            ->whereRaw(
+                                'locations.name = ?
                                     AND locations.crime_event_id = crime_events.id',
-                                    [$platsWithoutLan]
-                                );
+                                [$platsWithoutLan]
+                            );
                     });
                 })
                 ->groupBy(\DB::raw('dateYMD'))
@@ -514,4 +520,4 @@ class PlatsController extends Controller
 
 /*
 ->whereDate('created_at', $date['date']->format('Y-m-d'))
-*/
+ */
