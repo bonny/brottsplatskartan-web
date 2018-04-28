@@ -253,7 +253,7 @@ class PlatsController extends Controller
     {
         $dateYmd = $date['date']->format('Y-m-d');
         $cacheKey = 'getEventsInPlatsWithLan:' . md5("{$platsWithoutLan}:{$oneLanName}:{$dateYmd}:{$numDaysBack}:{$isToday}");
-        $cacheTTL = 6;
+        $cacheTTL = 1;
 
         $events = Cache::Remember(
             $cacheKey,
@@ -268,7 +268,6 @@ class PlatsController extends Controller
     }
 
     public function getEventsInPlatsWithLanUncached($platsWithoutLan, $oneLanName, $date, $numDaysBack = 7, $isToday = false) {
-        // $date['date']->copy()->addDays(1)->format('Y-m-d')
         $dateYmd = $date['date']->format('Y-m-d');
         $dateYmdPlusOneDay = $date['date']->copy()->addDays(1)->format('Y-m-d');
         $dateYmdMinusNumDaysBack = $date['date']->copy()->subDays($numDaysBack)->format('Y-m-d');
