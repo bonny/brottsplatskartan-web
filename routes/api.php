@@ -102,6 +102,7 @@ Route::get('/eventsNearby', function (Request $request, Response $response) {
     $lng = round($lng, 5);
 
     $numTries = 0;
+    $maxNumTries = 20;
     $nearbyCount = 25;
     $nearbyInKm = 5;
 
@@ -110,12 +111,11 @@ Route::get('/eventsNearby', function (Request $request, Response $response) {
 
     // we want to show at least 5 events
     // if less than 5 events is found then increase the range by nn km, until a hit is found
-    while ($events->count() < 5) {
-
+    // but limit to $maxNumTries because we don't want to get ddosed
+    while ($events->count() < 5 && $numTries < $maxNumTries) {
         $nearbyInKm = $nearbyInKm + 10;
         $events = CrimeEvent::getEventsNearLocation($lat, $lng, $nearbyCount, $nearbyInKm);
         $numTries++;
-
     }
 
     $json = [
