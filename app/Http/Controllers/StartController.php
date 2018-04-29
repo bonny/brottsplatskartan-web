@@ -240,7 +240,7 @@ class StartController extends Controller
                     ->where('created_at', '>', $afterDate)
                     ->orderBy("created_at", "desc")
                     ->with('locations')
-                    ->limit(500)
+                    ->limit(300)
                     ->get();
 
                 return $events;
