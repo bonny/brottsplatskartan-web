@@ -22,7 +22,7 @@ class Dictionary extends Model
 
         $arrWords = Cache::remember(
             $cacheKey,
-            60,
+            71,
             function () {
                 $wordsAndSynonyms = self::select(
                     DB::raw('id, CONCAT_WS(",", word, synonyms) as words')
@@ -44,6 +44,21 @@ class Dictionary extends Model
                 sort($arrWords, SORT_LOCALE_STRING);
 
                 return $arrWords;
+            }
+        );
+
+        return $arrWords;
+    }
+
+    public static function getWordsInTextCached($text) {
+        $cacheKey = "getWordsInText:" . md5($text);
+        $cacheTTL = 720;
+
+        $arrWords = Cache::Remember(
+            $cacheKey,
+            $cacheTTL,
+            function () use ($text) {
+                return self::getWordsInText($text);
             }
         );
 

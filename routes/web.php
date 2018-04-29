@@ -488,7 +488,7 @@ Route::get('/{lan}/{eventName}', function ($lan, $eventName, Request $request) {
     // Hämta alla ord i ordlistan, oavsett om de ligger i word eller synonyms
     #dd($eventText);
     $text = $event->getSingleEventTitle() . ' ' . $event->getParsedContentAsPlainText();
-    $dictionaryWordsInText = Dictionary::getWordsInText($text);
+    $dictionaryWordsInText = Dictionary::getWordsInTextCached($text);
 
     if (isset($_GET["debug1"])) {
         dd($dictionaryWordsInText);
