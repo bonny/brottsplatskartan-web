@@ -472,7 +472,7 @@ class PlatsController extends Controller
     {
         $dateYmd = $date->format('Y-m-d');
 
-        $cacheKey = "getPlatsPrevDaysNavInfo:$dateYmd:$numDays:$platsWithoutLan:$oneLanName";
+        $cacheKey = "getPlatsPrevDaysNavInfo4:$dateYmd:$numDays:$platsWithoutLan:$oneLanName";
         $cacheTTL = 22;
 
         $prevDayEvents = Cache::Remember(
@@ -499,8 +499,8 @@ class PlatsController extends Controller
         if ($platsWithoutLan && $oneLanName) {
             // Både plats och län
             $prevDayEvents = CrimeEvent::
-                selectRaw('date(created_at) as dateYMD, count(*) as dateCount')
-                ->where('created_at', '<', $dateYmdPlusOneDay)
+                selectRaw('date(created_at) as dateYMD, count(*) as dateCount, 1 as vvv')
+                ->where('created_at', '<', $dateYmd)
                 ->where('created_at', '>', $dateYmdMinusManyDaysBack)
                 ->where("administrative_area_level_1", $oneLanName)
                 ->where(function ($query) use ($oneLanName, $platsWithoutLan) {
@@ -523,7 +523,7 @@ class PlatsController extends Controller
             // Plats utan län
             $prevDayEvents = CrimeEvent::
                 selectRaw('date(created_at) as dateYMD, count(*) as dateCount')
-                ->where('created_at', '<', $dateYmdPlusOneDay)
+                ->where('created_at', '<', $dateYmd)
                 ->where('created_at', '>', $dateYmdMinusManyDaysBack)
                 ->where(function ($query) use ($platsWithoutLan) {
                     $query->where("parsed_title_location", $platsWithoutLan);
@@ -543,10 +543,34 @@ class PlatsController extends Controller
 
     public static function getPlatsNextDaysNavInfo($date = null, $numDays = 5, $platsWithoutLan = null, $oneLanName = null)
     {
+        $dateYmd = $date->format('Y-m-d');
+
+        $cacheKey = "getPlatsNextDaysNavInfo:$dateYmd:$numDays:$platsWithoutLan:$oneLanName";
+        $cacheTTL = 23;
+
+        $prevDayEvents = Cache::Remember(
+            $cacheKey,
+            $cacheTTL,
+            function () use ($date, $numDays, $platsWithoutLan, $oneLanName) {
+                return self::getPlatsNextDaysNavInfoUncached($date, $numDays, $platsWithoutLan, $oneLanName);
+            }
+        );
+
+        return $prevDayEvents;
+    }
+
+    public static function getPlatsNextDaysNavInfoUncached($date = null, $numDays = 5, $platsWithoutLan = null, $oneLanName = null)
+    {
+        $dateYmd = $date->format('Y-m-d');
+        $dateYmdPlusOneDay = $date->copy()->addDays(1)->format('Y-m-d');
+        $dateYmdMinusNumDaysBack = $date->copy()->subDays($numDays)->format('Y-m-d');
+        $dateYmdPlusManyDaysForward = $date->copy()->addDays(180)->format('Y-m-d');
+
         if ($platsWithoutLan && $oneLanName) {
             $prevDayEvents = CrimeEvent::
                 selectRaw('date(created_at) as dateYMD, count(*) as dateCount')
-                ->whereDate('created_at', '>', $date->format('Y-m-d'))
+                ->where('created_at', '>', $dateYmdPlusOneDay)
+                ->where('created_at', '<', $dateYmdPlusManyDaysForward)
                 ->where("administrative_area_level_1", $oneLanName)
                 ->where(function ($query) use ($oneLanName, $platsWithoutLan) {
                     $query->where("parsed_title_location", $platsWithoutLan);
@@ -561,13 +585,14 @@ class PlatsController extends Controller
                     });
                 })
                 ->groupBy(\DB::raw('dateYMD'))
-                ->orderBy("created_at", "desc")
+                ->orderBy("created_at", "asc")
                 ->limit($numDays)
                 ->get();
         } else {
             $prevDayEvents = CrimeEvent::
                 selectRaw('date(created_at) as dateYMD, count(*) as dateCount')
-                ->whereDate('created_at', '>', $date->format('Y-m-d'))
+                ->where('created_at', '>', $dateYmdPlusOneDay)
+                ->where('created_at', '<', $dateYmdPlusManyDaysForward)
                 ->where(function ($query) use ($platsWithoutLan) {
                     $query->where("parsed_title_location", $platsWithoutLan);
                     $query->orWhere("administrative_area_level_2", $platsWithoutLan);
@@ -576,13 +601,14 @@ class PlatsController extends Controller
                     });
                 })
                 ->groupBy(\DB::raw('dateYMD'))
-                ->orderBy("created_at", "desc")
+                ->orderBy("created_at", "asc")
                 ->limit($numDays)
                 ->get();
         }
 
         return $prevDayEvents;
     }
+
 }
 
 /*
