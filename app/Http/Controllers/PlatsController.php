@@ -479,9 +479,11 @@ class PlatsController extends Controller
         $dateYmdMinusManyDaysBack = $date->copy()->subDays(180)->format('Y-m-d');
 
         if ($platsWithoutLan && $oneLanName) {
+            // Både plats och län
             $prevDayEvents = CrimeEvent::
-                selectRaw('date(created_at) as dateYMD, count(*) as dateCount')
-                ->whereDate('created_at', '<', $dateYmd)
+                selectRaw('date(created_at) as dateYMD, count(*) as dateCount, 1 as bbb')
+                ->where('created_at', '<', $dateYmdPlusOneDay)
+                ->where('created_at', '>', $dateYmdMinusManyDaysBack)
                 ->where("administrative_area_level_1", $oneLanName)
                 ->where(function ($query) use ($oneLanName, $platsWithoutLan) {
                     $query->where("parsed_title_location", $platsWithoutLan);
