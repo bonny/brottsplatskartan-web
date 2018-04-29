@@ -610,7 +610,3 @@ class PlatsController extends Controller
     }
 
 }
-
-/*
-->whereDate('created_at', $date['date']->format('Y-m-d'))
- */
