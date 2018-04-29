@@ -409,7 +409,7 @@ class Helper
         $dateYmd = $date->format('Y-m-d');
         $dateYmdPlusOneDay = $date->copy()->addDays(1)->format('Y-m-d');
         $cacheKey = "getNextDaysNavInfo:date:{$dateYmd}:numDays:$numDays";
-        $cacheTTL = 15;
+        $cacheTTL = 16;
 
         $nextDayEvents = Cache::remember(
             $cacheKey,
@@ -434,7 +434,7 @@ class Helper
     {
         $dateYmd = $date->format('Y-m-d');
         $cacheKey = "getLanPrevDaysNavInfo:date{$dateYmd}:lan:{$lan}:numDays:{$numDays}";
-        $cacheTTL = 15;
+        $cacheTTL = 14;
 
         $prevDayEvents = Cache::remember(
             $cacheKey,
