@@ -43,8 +43,8 @@ class CrimeEvent extends Model
     }
 
     // return src for an image
-    public function getStaticImageSrc($width = 320, $height = 320, $scale = 1) {
-
+    public function getStaticImageSrc($width = 320, $height = 320, $scale = 1)
+    {
         $google_api_key = env("GOOGLE_API_KEY");
 
         $image_src = "https://maps.googleapis.com/maps/api/staticmap?";
@@ -55,7 +55,6 @@ class CrimeEvent extends Model
 
         // if viewport info exists use that and skip manual zoom level
         if ($this->viewport_northeast_lat) {
-
             $image_src .= "&path=";
             $image_src .= "color:0x00000000|weight:2|fillcolor:0xFF660044";
 
@@ -78,8 +77,7 @@ class CrimeEvent extends Model
 
             $image_src .= "|{$this->viewport_southwest_lat},{$this->viewport_southwest_lng}";
             $image_src .= "|{$this->viewport_northeast_lat},{$this->viewport_southwest_lng}";
-
-        } else if ($this->location_lat) {
+        } elseif ($this->location_lat) {
 
             // no viewport but location_lat, fallback to center
             $image_src .= "&center={$this->location_lat},{$this->location_lng}";
@@ -88,7 +86,6 @@ class CrimeEvent extends Model
 
             // @TODO: return fallback iamge
             return "";
-
         }
 
         #echo "image: <img src='$image_src'>";
@@ -99,12 +96,11 @@ class CrimeEvent extends Model
         $image_src = Helper::signUrl($image_src);
 
         return $image_src;
-
     }
 
     // get image far away, like whole sweden or something
-    public function getStaticImageSrcFar($width = 320, $height = 320, $scale = 1) {
-
+    public function getStaticImageSrcFar($width = 320, $height = 320, $scale = 1)
+    {
         $google_api_key = env("GOOGLE_API_KEY");
 
         $image_src = "https://maps.googleapis.com/maps/api/staticmap?";
@@ -121,17 +117,13 @@ class CrimeEvent extends Model
             $image_src .= "&zoom=5";
 
             $image_src .= "&markers=color:red|{$this->location_lat},{$this->location_lng}";
-
         } else {
-
             return "";
-
         }
 
         $image_src = Helper::signUrl($image_src);
 
         return $image_src;
-
     }
 
     /**
@@ -149,28 +141,27 @@ class CrimeEvent extends Model
         return Carbon::createFromTimestamp($this->pubdate)->formatLocalized($format);
     }
 
-    public function getPubDateFormattedForHumans() {
-
+    public function getPubDateFormattedForHumans()
+    {
         return Carbon::createFromTimestamp($this->pubdate)->diffForHumans();
-
     }
 
     /**
      * Parsed date = the date that is written as text in each crime
      * Is often much earlier than the date in the RSS data
      */
-    function getParsedDateFormattedForHumans() {
-
+    public function getParsedDateFormattedForHumans()
+    {
         $date = $this->parsed_date;
         if (empty($date)) {
             $date = $this->pubdate_iso8601;
         }
 
         return Carbon::createFromTimestamp(strtotime($date))->diffForHumans();
-
     }
 
-    function getParsedDateDiffInSeconds() {
+    public function getParsedDateDiffInSeconds()
+    {
         $date = $this->parsed_date;
         if (empty($date)) {
             $date = $this->pubdate_iso8601;
@@ -181,18 +172,18 @@ class CrimeEvent extends Model
 
 
     // ...but fallbacks to pubdate if parsed_date is null
-    public function getParsedDateISO8601() {
-
+    public function getParsedDateISO8601()
+    {
         $date = $this->parsed_date;
         if (empty($date)) {
             $date = $this->pubdate_iso8601;
         }
 
         return Carbon::createFromTimestamp(strtotime($date))->toIso8601String();
-
     }
 
-    public function getParsedDateYMD() {
+    public function getParsedDateYMD()
+    {
         return Carbon::createFromTimestamp(strtotime($this->parsed_date))->formatLocalized('%A %d %B %Y %H:%M');
     }
 
@@ -203,11 +194,11 @@ class CrimeEvent extends Model
      * Example return value:
      * /varmlands-lan/rattfylleri-2440
      */
-    public function getPermalink($absolute = false) {
-
+    public function getPermalink($absolute = false)
+    {
         $slugParts = [];
 
-        if ( ! empty($this->administrative_area_level_1) ) {
+        if (! empty($this->administrative_area_level_1)) {
             $lan = $this->toAscii($this->administrative_area_level_1);
         } else {
             $lan = "sverige";
@@ -247,12 +238,11 @@ class CrimeEvent extends Model
      * Hämta eventets platser i en rimligt fint formaterad sträng
      * typ såhär: Borås, nnn län
      */
-    public function getLocationString($includePrioLocations = true, $includeParsedTitleLocation = true, $inclueAdministrativeAreaLevel1Locations = true) {
-
+    public function getLocationString($includePrioLocations = true, $includeParsedTitleLocation = true, $inclueAdministrativeAreaLevel1Locations = true)
+    {
         $locations = [];
 
         if ($includePrioLocations) {
-
             $prioLocations = $this->locations->whereIn("prio", [1, 2]);
 
             if ($prioLocations->count()) {
@@ -260,7 +250,6 @@ class CrimeEvent extends Model
                     $locations[] = title_case($oneLocation->name);
                 }
             }
-
         }
 
         if ($includeParsedTitleLocation) {
@@ -355,7 +344,6 @@ class CrimeEvent extends Model
      */
     public function getMetaDescription($length = 250)
     {
-
         $text = "";
 
         $text .= trim($this->description) . " " . trim($this->parsed_content);
@@ -392,7 +380,6 @@ class CrimeEvent extends Model
      */
     public function getDescription()
     {
-
         $text = $this->description;
         $text = $this->autop($text);
 
@@ -404,7 +391,6 @@ class CrimeEvent extends Model
      */
     public function getDescriptionAsPlainText()
     {
-
         $text = $this->getDescription();
         $text = Helper::stripTagsWithWhitespace($text);
         $text = trim($text);
@@ -419,7 +405,6 @@ class CrimeEvent extends Model
      */
     public function getParsedContent()
     {
-
         $text = $this->parsed_content;
 
         $text = $this->autop($text);
@@ -447,7 +432,6 @@ class CrimeEvent extends Model
      */
     public function getParsedContentTeaser($length = 160)
     {
-
         $text = $this->parsed_content;
 
         // strip tags but make sure there is at least a space where the tag was
@@ -483,7 +467,6 @@ class CrimeEvent extends Model
 
     public static function getEventsNearLocation($lat, $lng, $nearbyCount = 10, $nearbyInKm = 25)
     {
-
         $cacheKey = "getEventsNearLocation:lat{$lat}:lng{$lng}:nearby{$nearbyCount}:nearbyKm{$nearbyInKm}";
         $cacheTTL = 9;
 
@@ -498,7 +481,8 @@ class CrimeEvent extends Model
         return $events;
     }
 
-    public static function getEventsNearLocationUncached($lat, $lng, $nearbyCount = 10, $nearbyInKm = 25) {
+    public static function getEventsNearLocationUncached($lat, $lng, $nearbyCount = 10, $nearbyInKm = 25)
+    {
         $someDaysAgoYMD = Carbon::now()->subDays(15)->format('Y-m-d');
 
         $events = CrimeEvent::selectRaw(
@@ -518,7 +502,6 @@ class CrimeEvent extends Model
 
     public function getViewportSize()
     {
-
         $viewportSize = ($this->viewport_northeast_lat - $this->viewport_southwest_lat) + ($this->viewport_northeast_lng - $this->viewport_southwest_lng);
 
         return $viewportSize;
@@ -540,7 +523,6 @@ class CrimeEvent extends Model
      */
     public function getViewPortSizeAsString()
     {
-
         $size = $this->getViewportSize();
 
         $sizeAsString = "";
@@ -580,7 +562,6 @@ class CrimeEvent extends Model
      */
     protected function maybeAddDebugData(\Illuminate\Http\Request $request, CrimeEvent $event)
     {
-
         $data = [];
 
         $debugActions = (array) $request->input("debugActions");
@@ -718,7 +699,6 @@ class CrimeEvent extends Model
      */
     public function shouldShowSourceLink()
     {
-
         $pubDate = Carbon::createFromTimestamp(strtotime($this->parsed_date));
         $pubDatePlusSomeTime = $pubDate->addWeek();
 
@@ -803,7 +783,7 @@ class CrimeEvent extends Model
         $array["locationsString"] = $strLocations;
 
         #if (!empty($array["administrative_area_level_1"])) {
-            #print_r($array);
+        #print_r($array);
         #}
 
         return $array;
@@ -877,7 +857,8 @@ SQL;
      *
      * @return string
      */
-    public function getCreatedAtLocalized() {
+    public function getCreatedAtLocalized()
+    {
         $createdAtCarbon = Carbon::parse($this->created_at);
         $createdAtLocalized = $createdAtCarbon->formatLocalized('%A %e %B %Y');
         return $createdAtLocalized;
