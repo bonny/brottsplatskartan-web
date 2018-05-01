@@ -10,7 +10,7 @@ server {
   listen      {{ $listen_port }};
   {{ if $.NOSSL_SERVER_NAME }}server_name {{ $.NOSSL_SERVER_NAME }}; {{ end }}
   access_log  /var/log/nginx/{{ $.APP }}-access.log main;
-  error_log   /var/log/nginx/{{ $.APP }}-error.log main;
+  error_log   /var/log/nginx/{{ $.APP }}-error.log;
 {{ if (and (eq $listen_port "80") ($.SSL_INUSE)) }}
   return 301 https://$host:{{ $.PROXY_SSL_PORT }}$request_uri;
 {{ else }}
@@ -61,7 +61,7 @@ server {
   {{ if $.SSL_SERVER_NAME }}server_name {{ $.SSL_SERVER_NAME }}; {{ end }}
   {{ if $.NOSSL_SERVER_NAME }}server_name {{ $.NOSSL_SERVER_NAME }}; {{ end }}
   access_log  /var/log/nginx/{{ $.APP }}-access.log main;
-  error_log   /var/log/nginx/{{ $.APP }}-error.log main;
+  error_log   /var/log/nginx/{{ $.APP }}-error.log;
 
   ssl_certificate     {{ $.APP_SSL_PATH }}/server.crt;
   ssl_certificate_key {{ $.APP_SSL_PATH }}/server.key;
