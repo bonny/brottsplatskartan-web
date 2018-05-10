@@ -11,7 +11,7 @@ https://brottsplatskartan.localhost/plats/nacka
 @extends('layouts.web')
 
 @if ($isToday)
-    @section('title', "Senaste nytt från Polisen i $plats – händelser &amp; brott")
+    @section('title', "Senaste nytt från Polisen i $plats – händelser & brott")
     @section('metaDescription', $metaDescription)
 @else
     @section('title', "$dateForTitle - Brott och polishändelser i $plats. Karta med platsinfo. Information direkt från Polisen.")
