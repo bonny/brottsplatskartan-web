@@ -1,26 +1,37 @@
 {
-  "name": "Brottsplatskartan",
-  "short_name": "Brottskartan",
-  "start_url": "/?utm_source=web_app_manifest",
-  "display": "browser",
-  "background_color": "#fff",
-  "theme_color": "#ffcc33",
-  "description": "Händelser från Polisen",
-  "icons": [{
-    "src": "/apple-touch-icon-72x72.png",
-    "sizes": "72x72",
-    "type": "image/png"
-  }, {
-    "src": "/apple-touch-icon-144x144.png",
-    "sizes": "144x144",
-    "type": "image/png"
-  }, {
-    "src": "/apple-touch-icon-152x152.png",
-    "sizes": "152x152",
-    "type": "image/png"
-  }, {
-    "src": "/favicon-196x196.png",
-    "sizes": "192x192",
-    "type": "image/png"
-  }]
+    "name": "Brottsplatskartan",
+    "short_name": "Brottskartan",
+    "start_url": "/?utm_source=web_app_manifest",
+    "display": "browser",
+    "background_color": "#fff",
+    "theme_color": "#ffcc33",
+    "description": "Händelser från Polisen",
+    "display": "minimal-ui",
+    "icons": [
+        {
+            "src": "/apple-touch-icon-72x72.png",
+            "sizes": "72x72",
+            "type": "image/png"
+        },
+        {
+            "src": "/apple-touch-icon-144x144.png",
+            "sizes": "144x144",
+            "type": "image/png"
+        },
+        {
+            "src": "/apple-touch-icon-152x152.png",
+            "sizes": "152x152",
+            "type": "image/png"
+        },
+        {
+            "src": "/favicon-196x196.png",
+            "sizes": "196x196",
+            "type": "image/png"
+        },
+        {
+            "src": "/favicon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
 }
