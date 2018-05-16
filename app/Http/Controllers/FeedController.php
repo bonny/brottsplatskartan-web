@@ -182,7 +182,7 @@ class FeedController extends Controller
             urlencode($fallbackLocation) // 1
         );
 
-        $result_data = json_decode( file_get_contents($apiUrl) );
+        $result_data = json_decode(file_get_contents($apiUrl));
         // echo "in geocodeItemFallbackVersion, apiurl:\n$apiUrl";exit;
         $result_status = $result_data->status;
         $result_results = $result_data->results;
