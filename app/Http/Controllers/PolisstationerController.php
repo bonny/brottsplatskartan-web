@@ -14,9 +14,10 @@ class PolisstationerController extends Controller
 {
     const APIURL = 'https://polisen.se/api/policestations';
 
-    public function index(Request $request)
+    private function getLocations()
     {
         $locations = json_decode(file_get_contents($this::APIURL));
+
         $locationsCollection = collect($locations);
 
         // "blekinge-lan" => "Blekinge län" osv.
@@ -42,6 +43,8 @@ class PolisstationerController extends Controller
         stockholms-lan/stockholm-syd/farsta/
 
         */
+
+        // Skapa ny collection där polisstationerna är grupperade på län.
         $locationsByPlace = $locationsCollection->groupBy(function ($item, $key) use ($slugsToNames) {
             $place = $item->Url;
             $place = str_replace('https://polisen.se/kontakt/polisstationer/', '', $place);
@@ -59,7 +62,26 @@ class PolisstationerController extends Controller
         // Sortera listan efter länsnamn.
         $locationsByPlace = $locationsByPlace->sortKeys();
 
-        #dd($locationsByPlace);
+        return $locationsByPlace;
+    }
+
+    private function getLocationsCached()
+    {
+        $locations = Cache::remember(
+            'PoliceStationsLocations',
+            60 * 24,
+            function () {
+                return $this->getLocations();
+            }
+        );
+
+        return $locations;
+    }
+
+    public function index(Request $request)
+    {
+
+        $locationsByPlace = $this->getLocationsCached();
 
         return view(
             'polisstationer',
