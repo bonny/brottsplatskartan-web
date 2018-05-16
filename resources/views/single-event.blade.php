@@ -8,6 +8,7 @@ Template för ett event/händelse
 
 @section('title', $event->getSingleEventTitle() )
 @section('canonicalLink', $event->getPermalink())
+@section('ogUrl', $event->getPermalink(true))
 @section('metaDescription', e($event->getMetaDescription()))
 @section('metaImage')
     {!! $event->getStaticImageSrc(640,640) !!}
