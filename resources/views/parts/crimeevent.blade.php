@@ -68,18 +68,11 @@ if $single is set then larger image
                     class="FreddysGoogleMapsLink"
                     title="Öppna ungefärlig plats för händelsen/brottet i Google Maps (öppnas i ny flik)"
                     >
-
-                {{--
-                640px
-                66.666 % är 640 * 0.66666 = 426
-                33.333 % av det är 640 * 0.33333 = 213 px bred
-                 --}}
-
                     <span class="Event__mapImageWrap Event__mapImageWrap--near">
                         <amp-img
                             alt="Karta som visar ungefär var händelsen inträffat"
                             class="Event__mapImage Event__mapImage--near"
-                            src="{{ $event->getStaticImageSrc(426,320) }}"
+                            src="{{ $event->getStaticImageSrc(617,463) }}"
                             width="426"
                             height="320"
                             layout="responsive"
