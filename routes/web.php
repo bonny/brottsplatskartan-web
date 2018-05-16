@@ -33,6 +33,8 @@ if ($_GET['debugbar-disable'] ?? false) {
 
 Route::get('/debug/{what}', 'DebugController@debug')->name('debug');
 
+Route::get('/polisstationer', 'PolisstationerController@index')->name('polisstationer');
+
 /**
  * startpage: visa senaste händelserna, datum/dag-versionen
  *

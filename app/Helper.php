@@ -481,7 +481,8 @@ class Helper
         return $nextDayEvents;
     }
 
-    public static function getLanNextDaysNavInfoUncached($date = null, $lan = null, $numDays = 5) {
+    public static function getLanNextDaysNavInfoUncached($date = null, $lan = null, $numDays = 5)
+    {
         $dateYmdPlusOneDay = $date->copy()->addDays(1)->format('Y-m-d');
 
         $nextDayEvents = CrimeEvent::
@@ -507,4 +508,48 @@ class Helper
         return $orter;
     }
 
+    public static function getLanSlugsToNameArray()
+    {
+        $arr = [
+            'blekinge-lan' => 'Blekinge län',
+            'blekinge' => 'Blekinge län',
+            'dalarnas-lan' => 'Dalarnas län',
+            'dalarna' => 'Dalarnas län',
+            'gotlands-lan' => 'Gotlands län',
+            'gotland' => 'Gotlands län',
+            'gavleborgs-lan' => 'Gävleborgs län',
+            'gavleborg' => 'Gävleborgs län',
+            'hallands-lan' => 'Hallands län',
+            'halland' => 'Hallands län',
+            'jamtlands-lan' => 'Jämtlands län',
+            'jamtland' => 'Jämtlands län',
+            'jonkopings-lan' => 'Jönköpings län',
+            'kalmar-lan' => 'Kalmar län',
+            'kronobergs-lan' => 'Kronobergs län',
+            'kronoberg' => 'Kronobergs län',
+            'norrbottens-lan' => 'Norrbottens län',
+            'norrbotten' => 'Norrbottens län',
+            'skane-lan' => 'Skåne län',
+            'skane' => 'Skåne län',
+            'stockholms-lan' => 'Stockholms län',
+            'sodermanlands-lan' => 'Södermanlands län',
+            'sodermanland' => 'Södermanlands län',
+            'uppsala-lan' => 'Uppsala län',
+            'varmlands-lan' => 'Värmlands län',
+            'varmland' => 'Värmlands län',
+            'vasterbottens-lan' => 'Västerbottens län',
+            'vasterbotten' => 'Västerbottens län',
+            'vasternorrlands-lan' => 'Västernorrlands län',
+            'vasternorrland' => 'Västernorrlands län',
+            'vastmanlands-lan' => 'Västmanlands län',
+            'vastmanland' => 'Västmanlands län',
+            'vastra-gotalands-lan' => 'Västra Götalands län ',
+            'vastra-gotaland' => 'Västra Götalands län ',
+            'orebro-lan' => 'Örebro län',
+            'ostergotlands-lan' => 'Östergötlands län',
+            'ostergotland' => 'Östergötlands län',
+        ];
+
+        return $arr;
+    }
 }

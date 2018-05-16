@@ -1270,6 +1270,18 @@ input[type="url"],
     padding: 0;
 }
 
+.PoliceStation-locationsNav,
+.PoliceStation-services {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.PoliceStation-service,
+.PoliceStation-locationsNav-item {
+    display: inline-block;
+}
+
 /* typ iphone 8 */
 @media only screen and (min-width: 360px) and (max-width: 400px) {
     .SiteNav__item a {
