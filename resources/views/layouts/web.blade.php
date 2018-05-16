@@ -63,6 +63,10 @@ Layout template for web
         <meta property="og:type" content="website" />
     @endif
 
+    @hasSection('ogUrl')
+    <meta property="og:url" content="@yield('ogUrl')" />
+    @endif
+
     <meta property="og:title" content="@yield('title')" />
 
     <meta name="twitter:site" content="@brottsplatser">
