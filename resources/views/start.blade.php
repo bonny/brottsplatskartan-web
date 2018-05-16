@@ -9,6 +9,7 @@ samt för äldre dagar när man bläddrar i arkivet.
 @extends('layouts.web')
 
 @section('canonicalLink', $canonicalLink)
+@section('ogUrl', $canonicalLink)
 
 @if (!empty($pageTitle))
     @section('title', $pageTitle)

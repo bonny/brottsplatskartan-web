@@ -206,6 +206,7 @@ class StartController extends Controller
             'isToday' => $isToday,
             'introtext' => $introtext,
             'canonicalLink' => $canonicalLink,
+            'ogUrl' => $canonicalLink,
             'pageTitle' => $pageTitle,
             'pageMetaDescription' => $pageMetaDescription,
             'mostCommonCrimeTypes' => $mostCommonCrimeTypes,
