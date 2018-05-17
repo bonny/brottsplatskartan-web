@@ -1249,29 +1249,13 @@ input[type="url"],
     display: inline-block;
 }
 
-.u-margin-bottom {
-    margin-bottom: var(--default-margin);
-}
-
-.u-margin-bottom-double {
-    margin-bottom: var(--default-margin-double);
-}
-
-.u-margin-top {
-    margin-top: var(--default-margin);
-}
-
-.u-margin-top-double {
-    margin-top: var(--default-margin-double);
-}
-
 .widget--follow ul {
     margin: 0 0 0 1.2rem;
     padding: 0;
 }
 
 .PoliceStation-locationsNav,
-.PoliceStation-services {
+.PoliceStation-servicesItems {
     list-style: none;
     margin: 0;
     padding: 0;
@@ -1280,6 +1264,53 @@ input[type="url"],
 .PoliceStation-service,
 .PoliceStation-locationsNav-item {
     display: inline-block;
+}
+
+.PoliceStations-mainListing {
+
+}
+
+.PoliceStations-lanName {
+    margin-top: var(--default-margin-double);
+    margin-bottom: var(--default-margin-double);
+    padding-top: var(--default-margin-double);
+    border-top: 1px solid var(--color-grey-light);
+}
+
+.PoliceStation-name {
+    margin-top: var(--default-margin);
+}
+
+.PoliceStation-street {
+    text-indent: 20px;
+    margin-top: var(--default-margin-half);
+    margin-bottom: var(--default-margin-half);
+}
+
+.PoliceStation-street::before {
+    content: "";
+    position: absolute;
+    display: inline-block;
+    background: url(/img/ic_place_black_18px.svg);
+    background-repeat: no-repeat;
+    width: 18px;
+    height: 18px;
+    vertical-align: top;
+    margin-left: -20px;
+    margin-top: 2px;
+}
+
+.PoliceStation-services {
+    font-size: var(--font-size-small);
+}
+
+.PoliceStation-servicesTitle {
+    margin-bottom: 0;
+}
+
+.PoliceStation-servicesTitle,
+.PoliceStation-servicesItems {
+    display: inline;
 }
 
 /* typ iphone 8 */
@@ -1405,4 +1436,45 @@ input[type="url"],
     .SiteNav svg {
         /* display: none; */
     }
+}
+
+/* Utilities */
+.u-margin-bottom {
+    margin-bottom: var(--default-margin);
+}
+
+.u-margin-bottom-double {
+    margin-bottom: var(--default-margin-double);
+}
+
+.u-margin-top {
+    margin-top: var(--default-margin);
+}
+
+.u-margin-top-double {
+    margin-top: var(--default-margin-double);
+}
+
+.u-padding-bottom {
+    padding-bottom: var(--default-margin);
+}
+
+.u-padding-bottom-double {
+    padding-bottom: var(--default-margin-double);
+}
+
+.u-padding-top {
+    padding-top: var(--default-margin);
+}
+
+.u-padding-top-double {
+    padding-top: var(--default-margin-double);
+}
+
+.u-border-top {
+    border-top: 1px solid var(--color-grey-light);
+}
+
+.u-border-bottom {
+    border-bottom: 1px solid var(--color-grey-light);
 }
