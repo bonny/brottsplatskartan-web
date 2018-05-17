@@ -543,13 +543,57 @@ class Helper
             'vasternorrland' => 'Västernorrlands län',
             'vastmanlands-lan' => 'Västmanlands län',
             'vastmanland' => 'Västmanlands län',
-            'vastra-gotalands-lan' => 'Västra Götalands län ',
-            'vastra-gotaland' => 'Västra Götalands län ',
+            'vastra-gotalands-lan' => 'Västra Götalands län',
+            'vastra-gotaland' => 'Västra Götalands län',
             'orebro-lan' => 'Örebro län',
             'ostergotlands-lan' => 'Östergötlands län',
             'ostergotland' => 'Östergötlands län',
         ];
 
         return $arr;
+    }
+
+    /**
+     * Konverterar från t.ex.
+     * Västra Götalands län -> Västra Götaland
+     * Uppsala län -> Uppsla
+     * Stockholms län -> Stockholm
+     * Skåne län -> Skåne
+     *
+     * @param string $lan Långt länsnamn, t.ex. "Stockholm län"
+     *
+     * @return string Kortat länsnamn, t.ex. "Stockhol"
+     */
+    public static function lanLongNameToShortName($lan)
+    {
+        $arr = [
+            'Blekinge län' => 'Blekinge',
+            'Dalarnas län' => 'Dalarna',
+            'Gävleborgs län' => 'Gävleborg',
+            'Gotlands län' => 'Gotland',
+            'Hallands län' => 'Halland',
+            'Jämtlands län' => 'Jämtland',
+            'Jönköpings län' => 'Jönköping',
+            'Kalmar län' => 'Kalmar',
+            'Kronobergs län' => 'Kronoberg',
+            'Norrbottens län' => 'Norrbotten',
+            'Örebro län' => 'Örebro',
+            'Östergötlands län' => 'Östergötland',
+            'Skåne län' => 'Skåne',
+            'Södermanlands län' => 'Södermanland',
+            'Stockholms län' => 'Stockholm',
+            'Uppsala län' => 'Uppsala',
+            'Värmlands län' => 'Värmland',
+            'Västerbottens län' => 'Västerbotten',
+            'Västernorrlands län' => 'Västernorrland',
+            'Västmanlands län' => 'Västmanland',
+            'Västra Götalands län' => 'Västra Götaland',
+        ];
+
+        if (isset($arr[$lan])) {
+            $lan = $arr[$lan];
+        }
+
+        return $lan;
     }
 }
