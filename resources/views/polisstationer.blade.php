@@ -10,7 +10,7 @@ Template för polisstationer
 
 @section('content')
 
-    <h1>Polisstationer</h1>
+    <h1>Polisstationer - Hitta din Polisstation</h1>
 
     <p>
         Sveriges alla polisstationer i Sverige, grupperat på län.
