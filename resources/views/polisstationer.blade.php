@@ -6,14 +6,15 @@ Template för polisstationer
 --}}
 
 @extends('layouts.web')
-@section('title', 'Polisstationer')
+@section('title', 'Polisstationer - hitta din Polisstation')
 
 @section('content')
 
-    <h1>Polisstationer - Hitta din Polisstation</h1>
+    <h1>Polisstationer i Sverige</h1>
 
     <p>
-        Sveriges alla polisstationer i Sverige, grupperat på län.
+        Hitta din närmsta polisstation i vår lista med Sveriges alla polisstationer i Sverige, grupperade på län.
+
     </p>
 
     {{-- Översikt med ankarsnabblänkar till respektive län --}}
