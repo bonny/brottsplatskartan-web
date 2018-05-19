@@ -494,7 +494,7 @@ class PlatsController extends Controller
 
         // Vi vill ha $numDays dagar tillbaka, men har inget hänt på väldigt långt tid kan
         // det bli många rader som gås igenom, så vi begränsar till typ ett halvt år max.
-        $dateYmdMinusManyDaysBack = $date->copy()->subDays(180)->format('Y-m-d');
+        $dateYmdMinusManyDaysBack = $date->copy()->subDays(90)->format('Y-m-d');
 
         if ($platsWithoutLan && $oneLanName) {
             // Både plats och län
@@ -521,6 +521,8 @@ class PlatsController extends Controller
                 ->get();
         } else {
             // Plats utan län
+            DB::enableQueryLog();
+
             $prevDayEvents = CrimeEvent::
                 selectRaw('date(created_at) as dateYMD, count(*) as dateCount')
                 ->where('created_at', '<', $dateYmd)
@@ -536,6 +538,8 @@ class PlatsController extends Controller
                 ->orderBy("created_at", "desc")
                 ->limit($numDays)
                 ->get();
+
+            dd(DB::getQueryLog());
         }
 
         return $prevDayEvents;
@@ -564,7 +568,7 @@ class PlatsController extends Controller
         $dateYmd = $date->format('Y-m-d');
         $dateYmdPlusOneDay = $date->copy()->addDays(1)->format('Y-m-d');
         $dateYmdMinusNumDaysBack = $date->copy()->subDays($numDays)->format('Y-m-d');
-        $dateYmdPlusManyDaysForward = $date->copy()->addDays(180)->format('Y-m-d');
+        $dateYmdPlusManyDaysForward = $date->copy()->addDays(90)->format('Y-m-d');
 
         if ($platsWithoutLan && $oneLanName) {
             $prevDayEvents = CrimeEvent::
