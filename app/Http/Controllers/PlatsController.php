@@ -521,7 +521,7 @@ class PlatsController extends Controller
                 ->get();
         } else {
             // Plats utan län
-            DB::enableQueryLog();
+            #DB::enableQueryLog();
 
             $prevDayEvents = CrimeEvent::
                 selectRaw('date(created_at) as dateYMD, count(*) as dateCount')
@@ -539,7 +539,7 @@ class PlatsController extends Controller
                 ->limit($numDays)
                 ->get();
 
-            dd(DB::getQueryLog());
+            #dd(DB::getQueryLog());
         }
 
         return $prevDayEvents;
