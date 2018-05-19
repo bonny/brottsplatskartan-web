@@ -10,9 +10,7 @@ Template för ett event/händelse
 @section('canonicalLink', $event->getPermalink())
 @section('ogUrl', $event->getPermalink(true))
 @section('metaDescription', e($event->getMetaDescription()))
-@section('metaImage')
-    {!! $event->getStaticImageSrc(640,640) !!}
-@endsection
+@section('metaImage'){!! $event->getStaticImageSrc(640,640) !!}@endsection
 @section('metaImageWidth', 640)
 @section('metaImageHeight', 640)
 @section('ogType', 'article')
