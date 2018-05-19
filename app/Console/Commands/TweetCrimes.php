@@ -81,7 +81,8 @@ class TweetCrimes extends Command
             $hashTags = "";
             $hashTagsLength = mb_strlen($hashTags);
 
-            $maxTweetLength = 140;
+            // 19 May 2018: ändrade från 140 till 280
+            $maxTweetLength = 280;
             // the url counts as 24 chars + 1 for the space before it
             $urlLength = 24;
 
