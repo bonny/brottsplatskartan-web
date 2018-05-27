@@ -11,6 +11,7 @@ Template for Coyards in app view
     <script>
     window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
     ga('create', 'UA-181460-13', 'auto');
+    ga('set', 'anonymizeIp', true);
     ga('send', 'pageview');
     </script>
     <script async src='https://www.google-analytics.com/analytics.js'></script>
