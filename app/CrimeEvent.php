@@ -8,8 +8,10 @@ use Illuminate\Support\Facades\Cache;
 use App\Http\Controllers\FeedParserController;
 use App\Http\Controllers\FeedController;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Feed\Feedable;
+use Spatie\Feed\FeedItem;
 
-class CrimeEvent extends Model
+class CrimeEvent extends Model implements Feedable
 {
 
     // use Searchable;
@@ -862,5 +864,37 @@ SQL;
         $createdAtCarbon = Carbon::parse($this->created_at);
         $createdAtLocalized = $createdAtCarbon->formatLocalized('%A %e %B %Y');
         return $createdAtLocalized;
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return void
+     */
+    public function toFeedItem()
+    {
+        return FeedItem::create()
+            ->id($this->id)
+            ->title($this->getSingleEventTitle())
+            ->updated($this->updated_at)
+            ->link($this->getPermalink())
+            ->author('Brottsplatskartan.se')
+            ->summary($this->getMetaDescription(300));
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return void
+     */
+    public function getFeedItems()
+    {
+        $events = CrimeEvent::
+            orderBy("created_at", "desc")
+            ->with('locations')
+            ->limit(50)
+            ->get();
+
+        return $events;
     }
 }
