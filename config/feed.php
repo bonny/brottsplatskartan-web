@@ -18,7 +18,7 @@ return [
              */
             'url' => 'rss',
 
-            'title' => 'Brottssplatskartan.se - senaste nytt och händelser från Polisen',
+            'title' => 'Senaste nytt och händelser från Polisen via Brottsplatskartan.se',
 
             /*
              * The view that will render the feed.

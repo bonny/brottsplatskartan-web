@@ -25,6 +25,8 @@ Layout template for web
     <link rel="canonical" href="@yield('canonicalLink', '/')">
     @endif
 
+    @include('feed::links')
+
     @hasSection('metaDescription')
         <meta name="description" content="@yield('metaDescription')">
         <meta property="og:description" content="@yield('metaDescription')">
