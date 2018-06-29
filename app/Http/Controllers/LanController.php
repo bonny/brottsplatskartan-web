@@ -349,8 +349,8 @@ class LanController extends Controller
             // $metaDescription = '';
         }
 
-        #$policeStations = \App\Helper::getPoliceStationsCached();
-        #\Debugbar::info('$policeStations', $policeStations);
+        $policeStations = \App\Helper::getPoliceStationsCached()->firstWhere('lanName', $lan);
+        $data['policeStations'] = $policeStations;
 
         $data['metaDescription'] = $metaDescription;
         $data['mostCommonCrimeTypes'] = $mostCommonCrimeTypes;

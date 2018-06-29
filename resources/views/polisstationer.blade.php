@@ -14,7 +14,6 @@ Template för polisstationer
 
     <p>
         Hitta din närmsta polisstation i vår lista med Sveriges alla polisstationer i Sverige, grupperade på län.
-
     </p>
 
     {{-- Översikt med ankarsnabblänkar till respektive län --}}
@@ -22,7 +21,7 @@ Template för polisstationer
     <ul class="PoliceStation-locationsNav">
         @foreach ($locationsByPlace as $place)
             <li class="PoliceStation-locationsNav-item">
-                <a href="#{{str_slug($place['lanName'])}}">{{\App\Helper::lanLongNameToShortName($place['lanName'])}}</a>@if (!$loop->last),@endif
+                <a href="#{{str_slug($place['lanName'])}}">{{$place['lanShortName']}}</a>@if (!$loop->last),@endif
             </li>
         @endforeach
     </ul>
@@ -36,9 +35,8 @@ Template för polisstationer
             <div class="PoliceStations-lanLocations">
                 @foreach ($place['policeStations'] as $station)
 
-                    <h3 class="PoliceStation-name">{{$station->name}}</h3>
+                    <h3 id="{{str_slug($place['lanName'] . '-' . $station->name)}}" class="PoliceStation-name">{{$station->name}}</h3>
 
-                    {{-- $station->location->gps --}}
                     <p class="PoliceStation-street">
                         <a href="https://www.google.com/maps/search/?api=1&query={{$station->location->gps}}" rel="noopener" target="_blank">
                             {{$station->location->name}}
