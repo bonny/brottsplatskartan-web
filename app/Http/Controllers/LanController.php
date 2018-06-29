@@ -301,6 +301,7 @@ class LanController extends Controller
             'events' => $events,
             'eventsByDay' => $eventsByDay,
             'lan' => $lan,
+            'isLan' => true,
             'linkRelPrev' => !empty($prevDayLink) ? $prevDayLink['link'] : null,
             'linkRelNext' => !empty($nextDayLink) ? $nextDayLink['link'] : null,
             'nextDayLink' => $nextDayLink,
