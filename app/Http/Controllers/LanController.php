@@ -349,7 +349,10 @@ class LanController extends Controller
             // $metaDescription = '';
         }
 
-        $policeStations = \App\Helper::getPoliceStationsCached()->firstWhere('lanName', $lan);
+        $policeStations = \App\Helper::getPoliceStationsCached()->first(function ($val, $key) use ($lan) {
+            // ('lanName', $lan);
+            return mb_strtolower($val['lanName']) === mb_strtolower($lan);
+        });
         $data['policeStations'] = $policeStations;
 
         $data['metaDescription'] = $metaDescription;
