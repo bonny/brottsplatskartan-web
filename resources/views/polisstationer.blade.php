@@ -20,21 +20,21 @@ Template för polisstationer
     {{-- Översikt med ankarsnabblänkar till respektive län --}}
     <p>Hoppa direkt till län:</p>
     <ul class="PoliceStation-locationsNav">
-        @foreach ($locationsByPlace as $place => $placeLocations)
+        @foreach ($locationsByPlace as $place)
             <li class="PoliceStation-locationsNav-item">
-                <a href="#{{str_slug($place)}}">{{\App\Helper::lanLongNameToShortName($place)}}</a>@if (!$loop->last),@endif
+                <a href="#{{str_slug($place['lanName'])}}">{{\App\Helper::lanLongNameToShortName($place['lanName'])}}</a>@if (!$loop->last),@endif
             </li>
         @endforeach
     </ul>
 
     <div class="PoliceStations-mainListing PoliceStations-mainListing">
 
-        @foreach ($locationsByPlace as $place => $placeLocations)
+        @foreach ($locationsByPlace as $place)
 
-            <h2 class="PoliceStations-lanName" id="{{str_slug($place)}}">{{$place}}</h2>
+            <h2 class="PoliceStations-lanName" id="{{str_slug($place['lanName'])}}">{{$place['lanName']}}</h2>
 
             <div class="PoliceStations-lanLocations">
-                @foreach ($placeLocations as $station)
+                @foreach ($place['policeStations'] as $station)
 
                     <h3 class="PoliceStation-name">{{$station->name}}</h3>
 

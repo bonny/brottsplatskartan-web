@@ -33,7 +33,9 @@ class PlatsController extends Controller
     }
 
     /**
-     * Enskild plats/ort
+     * Enskild plats/ort.
+     * Exempel på URL:
+     * https://brottsplatskartan.localhost/plats/stockholm
      */
     public function day(Request $request, $plats, $date = null)
     {
@@ -206,6 +208,22 @@ class PlatsController extends Controller
             );
         }
 
+        /*
+        $latLngs = [];
+        $events->each(function ($elm, $idx) use (& $latLngs) {
+            $latLngs[] = [
+                $elm->location_lat,
+                $elm->location_lng
+            ];
+        });
+
+        \Debugbar::info('events', $events->toArray());
+        \Debugbar::info('$latLngs', $latLngs);
+        $latLngsCenter = \App\Helper::getCenterFromDegrees($latLngs);
+        \Debugbar::info('$latLngsCenter', $latLngsCenter);
+        \Debugbar::info('$latLngsCenter lat,nlng', "{$latLngsCenter[0]},{$latLngsCenter[1]}");
+        */
+
         $data = [
             'plats' => $plats,
             'events' => $events,
@@ -228,19 +246,6 @@ class PlatsController extends Controller
 
         return view('single-plats', $data);
     }
-
-    /**
-     * https://brottsplatskartan.localhost/plats/orminge-stockholms-län/handelser/2017-02-01
-     */
-    // public function day(Request $request, $plats, $date)
-    // {
-    //     $date = \App\Helper::getdateFromDateSlug($date);
-    //     if (!$date) {
-    //         abort(500, 'Knas med datum hörru');
-    //     }
-
-    //     dd('yo', $date);
-    // }
 
     /**
      * Hämta händelser för en plats som inkluderar län.

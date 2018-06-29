@@ -18,12 +18,10 @@ class LanController extends Controller
      * URL är t.ex.
      * https://brottsplatskartan.localhost/lan/Stockholms%20l%C3%A4n
      *
-     * Med paginering är URL t.ex.
-     * https://brottsplatskartan.localhost/lan/Stockholms%20l%C3%A4n?page=2
-     *
      * @param string $lan Namn på län, t.ex. "Stockholms län". Kan även vara "stockholms-län" (med minusstreck)
      * @param Request $request Illuminate request
      */
+    /*
     public function lan($lan, Request $request)
     {
 
@@ -117,6 +115,7 @@ class LanController extends Controller
 
         return view('single-lan', $data);
     }
+    */
 
     /**
      * Lista alla län
@@ -350,6 +349,8 @@ class LanController extends Controller
             // $metaDescription = '';
         }
 
+        #$policeStations = \App\Helper::getPoliceStationsCached();
+        #\Debugbar::info('$policeStations', $policeStations);
 
         $data['metaDescription'] = $metaDescription;
         $data['mostCommonCrimeTypes'] = $mostCommonCrimeTypes;
