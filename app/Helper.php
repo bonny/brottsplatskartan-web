@@ -657,7 +657,12 @@ class Helper
     {
         $APIURL = 'https://polisen.se/api/policestations';
 
-        $locations = json_decode(file_get_contents($APIURL));
+        // If polisen.se down then exception is thrown.
+        try {
+            $locations = json_decode(file_get_contents($APIURL));
+        } catch (\Exception $e) {
+            $locations = collect();
+        }
 
         $locationsCollection = collect($locations);
 
@@ -703,10 +708,11 @@ class Helper
         // Sortera listan efter länsnamn.
         $locationsByPlace = $locationsByPlace->sortKeys();
 
-        // Lägg län en nivå ner i arrayen och platserna ett steg ner.
+        // Lägg län en nivå ner i arrayen och platserna ett steg ner + lägg på shortname för län.
         $locationsByPlace = $locationsByPlace->map(function ($item, $key) {
             return [
                 'lanName' => $key,
+                'lanShortName' => self::lanLongNameToShortName($key),
                 'policeStations' => $item
             ];
         });
@@ -720,9 +726,10 @@ class Helper
      */
     public static function getPoliceStationsCached()
     {
+        // return \App\Helper::getPoliceStations();
         $locations = Cache::remember(
-            'PoliceStationsLocations',
-            60 * 24,
+            'PoliceStationsLocations2',
+            60 * 2,
             function () {
                 return \App\Helper::getPoliceStations();
             }
