@@ -65,11 +65,16 @@ https://brottsplatskartan.localhost/plats/nacka
 
     @includeWhen(!$isToday, 'parts.daynav')
 
+    <p>län: {{$place->lan}}
+    <p>lat: {{$place->lat}}
+    <p>lng: {{$place->lng}}
+
     @if ($events->count())
         @include('parts.events-by-day')
     @else
         <p>Inga händelser har rapporterats från Polisen denna dag.</p>
     @endif
+
 
     @include('parts.daynav')
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\CrimeEvent;
+use App\Place;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Http\Request;
@@ -16,16 +17,44 @@ class PlatsController extends Controller
 {
     /**
      * Översikt, lista alla platser/orter
+     *
+     * Exempel på URL:
+     * https://brottsplatskartan.localhost/plats
+     *
+     * URL för att skapa platser som inte finns i plats-db
+     * (ofarligt, men lite overhead så därför on demand):
+     * https://brottsplatskartan.localhost/plats?skapaPlatser=1
      */
     public function overview(Request $request)
     {
         $data = [];
 
-        $data["orter"] = \App\Helper::getOrter();
+        $orter = \App\Helper::getOrter();
+        $data["orter"] = $orter;
+        // \Debugbar::info('$orter', $orter);
+        // print_r($orter);
 
         $breadcrumbs = new \Creitive\Breadcrumbs\Breadcrumbs;
         $breadcrumbs->addCrumb('Hem', '/');
         $breadcrumbs->addCrumb('Platser', route("platserOverview"));
+
+        // Skapa rader i tabellen om inte finns.
+        // Kör on demand pga lite overhead.
+        // @TODO: Denna borta finnas i import?
+        if ($request->get('skapaPlatser')) {
+            $orter->each(function ($ort) {
+                $ortName = $ort->parsed_title_location;
+                $ortName = trim($ortName);
+                $place = Place::firstOrCreate([
+                    'name' => $ortName
+                ]);
+
+                if ($place->wasRecentlyCreated) {
+                    \Debugbar::info('$place skapades nyligen, så geocodar och grejjar', $place);
+                    $place->geocode();
+                } // if recently created
+            });
+        }
 
         $data["breadcrumbs"] = $breadcrumbs;
 
@@ -142,11 +171,6 @@ class PlatsController extends Controller
         $linkRelPrev = null;
         $linkRelNext = null;
 
-        $breadcrumbs = new \Creitive\Breadcrumbs\Breadcrumbs;
-        $breadcrumbs->addCrumb('Hem', '/');
-        $breadcrumbs->addCrumb('Platser', route("platserOverview"));
-        $breadcrumbs->addCrumb(e($plats));
-
         // Hämta statistik för platsen
         // $data["chartImgUrl"] = \App\Helper::getStatsImageChartUrl("Stockholms län");
         $introtext_key = "introtext-plats-$plats";
@@ -224,8 +248,22 @@ class PlatsController extends Controller
         \Debugbar::info('$latLngsCenter lat,nlng', "{$latLngsCenter[0]},{$latLngsCenter[1]}");
         */
 
+        $place = Place::where('name', $plats)->first();
+
+        // Add breadcrumb.
+        $breadcrumbs = new \Creitive\Breadcrumbs\Breadcrumbs;
+        $breadcrumbs->addCrumb('Hem', '/');
+        $breadcrumbs->addCrumb('Platser', route("platserOverview"));
+
+        if ($place) {
+            $breadcrumbs->addCrumb($place->lan, route("lanSingle", ['lan' => $place->lan]));
+        }
+
+        $breadcrumbs->addCrumb(e($plats));
+
         $data = [
             'plats' => $plats,
+            'place' => $place,
             'events' => $events,
             'eventsByDay' => $eventsByDay,
             'mostCommonCrimeTypes' => $mostCommonCrimeTypes,
