@@ -12,6 +12,7 @@ class VerifyCsrfToken extends BaseVerifier
      * @var array
      */
     protected $except = [
-        //
+        'https://brottsplatskartan.se',
+        'https://brottsplatskartan.se/'
     ];
 }
