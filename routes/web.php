@@ -45,7 +45,6 @@ Route::get('/polisstationer', 'PolisstationerController@index')->name('polisstat
  *
  * @param string $year Year in format "december-2017"
  */
-// Route::get('/', 'StartController@day')->name('start');
 Route::match(['get', 'post'], '/', 'StartController@day')->name('start');
 
 Route::get('/handelser/{date}', 'StartController@day')->name('startDatum');
