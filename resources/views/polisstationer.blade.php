@@ -35,26 +35,28 @@ Template för polisstationer
             <div class="PoliceStations-lanLocations">
                 @foreach ($place['policeStations'] as $station)
 
-                    <h3 id="{{str_slug($place['lanName'] . '-' . $station->name)}}" class="PoliceStation-name">{{$station->name}}</h3>
+                    <div class="PoliceStation-wrap" id="{{str_slug($place['lanName'] . '-' . $station->name)}}">
+                        <h3 class="PoliceStation-name">{{$station->name}}</h3>
 
-                    <p class="PoliceStation-street">
-                        <a href="https://www.google.com/maps/search/?api=1&query={{$station->location->gps}}" rel="noopener" target="_blank">
-                            {{$station->location->name}}
-                        </a>
-                    </p>
+                        <p class="PoliceStation-street">
+                            <a href="https://www.google.com/maps/search/?api=1&query={{$station->location->gps}}" rel="noopener" target="_blank">
+                                {{$station->location->name}}
+                            </a>
+                        </p>
 
-                    @if (is_array($station->services) && !empty($station->services))
-                        <div class="PoliceStation-services">
-                            <p class="PoliceStation-servicesTitle">Tjänster:</p>
-                            <ul class="PoliceStation-servicesItems">
-                                @foreach ($station->services as $service)
-                                    <li class="PoliceStation-service">
-                                        {{$service->name}}@if (!$loop->last),@endif
-                                    </li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
+                        @if (is_array($station->services) && !empty($station->services))
+                            <div class="PoliceStation-services">
+                                <p class="PoliceStation-servicesTitle">Tjänster:</p>
+                                <ul class="PoliceStation-servicesItems">
+                                    @foreach ($station->services as $service)
+                                        <li class="PoliceStation-service">
+                                            {{$service->name}}@if (!$loop->last),@endif
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+                    </div>
 
                 @endforeach
             </div>

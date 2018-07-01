@@ -42,4 +42,28 @@ class Place extends Model
             }
         } // if response
     }
+
+    public function getClosestPolicestations()
+    {
+        $geotools = new \League\Geotools\Geotools();
+        $coordPlace = new \League\Geotools\Coordinate\Coordinate([$this->lat, $this->lng]);
+
+        $policeStations = \App\Helper::getPoliceStationsCached();
+
+        // Hämta polisstationer i länet
+        $lanPolicestations = $policeStations->firstWhere('lanName', $this->lan);
+        $lanPolicestations = collect($lanPolicestations['policeStations']);
+        if ($lanPolicestations) {
+            $lanPolicestations->each(function ($policeStation) use ($geotools, $coordPlace) {
+                $locationGps = $policeStation->location->gps;
+                $locationLatlng = explode(',', $locationGps);
+                $coordPoliceStation = new \League\Geotools\Coordinate\Coordinate([$locationLatlng[0], $locationLatlng[1]]);
+                $distance = $geotools->distance()->setFrom($coordPlace)->setTo($coordPoliceStation);
+                $policeStation->distance = $distance->flat();
+            });
+        }
+        $lanPolicestations = $lanPolicestations->sortBy('distance');
+
+        return $lanPolicestations;
+    }
 }

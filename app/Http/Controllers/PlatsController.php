@@ -261,9 +261,17 @@ class PlatsController extends Controller
 
         $breadcrumbs->addCrumb(e($plats));
 
+        // Hämta närmaste polisstation.
+        // https://github.com/thephpleague/geotools
+        $lanPolicestations = null;
+        if ($place) {
+            $lanPolicestations = $place->getClosestPolicestations();
+        }
+
         $data = [
             'plats' => $plats,
             'place' => $place,
+            'policeStations' => $lanPolicestations,
             'events' => $events,
             'eventsByDay' => $eventsByDay,
             'mostCommonCrimeTypes' => $mostCommonCrimeTypes,

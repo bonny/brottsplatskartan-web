@@ -65,10 +65,6 @@ https://brottsplatskartan.localhost/plats/nacka
 
     @includeWhen(!$isToday, 'parts.daynav')
 
-    <p>län: {{$place->lan}}
-    <p>lat: {{$place->lat}}
-    <p>lng: {{$place->lng}}
-
     @if ($events->count())
         @include('parts.events-by-day')
     @else
@@ -89,6 +85,23 @@ https://brottsplatskartan.localhost/plats/nacka
         <p><amp-img layout="responsive" class="Stats__image" src='{{$chartImgUrl}}' alt='Linjediagram som visar antal Polisiära händelser per dag för {{$plats}}' width=400 height=150></amp-img></p>
     </div>
     --}}
+
+    {{-- Lista närmaste polisstationerna --}}
+    @if ($policeStations)
+        <h2>Polisstationer nära {{$plats}}</h2>
+        @foreach ($policeStations->slice(0, 3) as $policeStation)
+            <h3>
+                <a href="{{route('polisstationer')}}#{{str_slug($place->lan . '-' . $policeStation->name)}}">
+                    {{$policeStation->name}}
+                </a>
+            </h3>
+            <p>
+                {{$policeStation->location->name}}
+            </p>
+            <p class="u-hidden">{{$policeStation->distance}} meter från mitten av {{$plats}}</p>
+        @endforeach
+    @endif
+
 
     @include('parts.follow-us')
 
