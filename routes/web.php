@@ -26,12 +26,17 @@ setlocale(LC_ALL, 'sv_SE', 'sv_SE.utf8');
 // \Debugbar::disable();
 if ($_GET['debugbar-disable'] ?? false) {
     \Debugbar::disable();
-} else if ($_GET['debugbar-enable'] ?? false) {
+} elseif ($_GET['debugbar-enable'] ?? false) {
     \Debugbar::enable();
 } else {
 }
 
 Route::get('/debug/{what}', 'DebugController@debug')->name('debug');
+
+// URL is like
+// https://brottsplatskartan.localhost/pixel?path=%2Fstockholms-lan%2Ftrafikolycka-taby-taby-kyrkby-37653&rand=0.1843466328440977
+//
+Route::get('/pixel', 'PixelController@pixel');
 
 Route::get('/polisstationer', 'PolisstationerController@index')->name('polisstationer');
 
@@ -45,7 +50,8 @@ Route::get('/polisstationer', 'PolisstationerController@index')->name('polisstat
  *
  * @param string $year Year in format "december-2017"
  */
-Route::get('/', 'StartController@day')->name('start');
+Route::match(['get', 'post'], '/', 'StartController@day')->name('start');
+
 Route::get('/handelser/{date}', 'StartController@day')->name('startDatum');
 Route::redirect('/handelser/', '/');
 

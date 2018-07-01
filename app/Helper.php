@@ -596,4 +596,145 @@ class Helper
 
         return $lan;
     }
+
+    /**
+     * Get a center latitude,longitude from an array of like geopoints
+     *
+     * @param array data 2 dimensional array of latitudes and longitudes
+     * For Example:
+     * $data = array
+     * (
+     *   0 = > array(45.849382, 76.322333),
+     *   1 = > array(45.843543, 75.324143),
+     *   2 = > array(45.765744, 76.543223),
+     *   3 = > array(45.784234, 74.542335)
+     * );
+     *
+     * From
+     * https://stackoverflow.com/questions/6671183/calculate-the-center-point-of-multiple-latitude-longitude-coordinate-pairs
+     */
+    public static function getCenterFromDegrees($data)
+    {
+        if (!is_array($data)) {
+            return false;
+        }
+
+        $num_coords = count($data);
+
+        $X = 0.0;
+        $Y = 0.0;
+        $Z = 0.0;
+
+        foreach ($data as $coord) {
+            $lat = $coord[0] * pi() / 180;
+            $lon = $coord[1] * pi() / 180;
+
+            $a = cos($lat) * cos($lon);
+            $b = cos($lat) * sin($lon);
+            $c = sin($lat);
+
+            $X += $a;
+            $Y += $b;
+            $Z += $c;
+        }
+
+        $X /= $num_coords;
+        $Y /= $num_coords;
+        $Z /= $num_coords;
+
+        $lon = atan2($Y, $X);
+        $hyp = sqrt($X * $X + $Y * $Y);
+        $lat = atan2($Z, $hyp);
+
+        return array($lat * 180 / pi(), $lon * 180 / pi());
+    }
+
+    /**
+     * [getPoliceStations description]
+     * @return [type] [description]
+     */
+    public static function getPoliceStations()
+    {
+        $APIURL = 'https://polisen.se/api/policestations';
+
+        // If polisen.se down then exception is thrown.
+        try {
+            $locations = json_decode(file_get_contents($APIURL));
+        } catch (\Exception $e) {
+            $locations = collect();
+        }
+
+        $locationsCollection = collect($locations);
+
+        // "blekinge-lan" => "Blekinge län" osv.
+        $slugsToNames = \App\Helper::getLanSlugsToNameArray();
+
+        /*
+
+        Alla URLar verkar bestå av län/plats
+        Förutom stockholm som har en del till (stockholm-syd)
+
+        gavleborg/bollnas/
+        gavleborg/gavle/
+
+        kalmar-lan/borgholm/
+        kalmar-lan/emmaboda/
+
+        vastra-gotaland/bollebygd/
+        vastra-gotaland/boras/
+
+        stockholms-lan/stockholm-syd/botkyrka/
+        stockholms-lan/stockholm-nord/danderyd/
+        stockholms-lan/stockholm-nord/ekero/
+        stockholms-lan/stockholm-syd/farsta/
+
+        */
+
+        // Skapa ny collection där polisstationerna är grupperade på län.
+        $locationsByPlace = $locationsCollection->groupBy(function ($item, $key) use ($slugsToNames) {
+            $place = $item->Url;
+            $place = str_replace('https://polisen.se/kontakt/polisstationer/', '', $place);
+            $place = trim($place, '/');
+            $placeParts = explode('/', $place);
+            $placeLan = $placeParts[0];
+
+            if (isset($slugsToNames[$placeLan])) {
+                $placeLan = $slugsToNames[$placeLan];
+            }
+
+            return $placeLan;
+        });
+
+        // Sortera listan efter länsnamn.
+        $locationsByPlace = $locationsByPlace->sortKeys();
+
+        // Lägg län en nivå ner i arrayen och platserna ett steg ner + lägg på shortname för län.
+        $locationsByPlace = $locationsByPlace->map(function ($item, $key) {
+            return [
+                'lanName' => $key,
+                'lanShortName' => self::lanLongNameToShortName($key),
+                'policeStations' => $item
+            ];
+        });
+
+        return $locationsByPlace;
+    }
+
+    /**
+     * [getPoliceStationsCached description]
+     * @return [type] [description]
+     */
+    public static function getPoliceStationsCached()
+    {
+        // return \App\Helper::getPoliceStations();
+        $locations = Cache::remember(
+            'PoliceStationsLocations2',
+            60 * 2,
+            function () {
+                return \App\Helper::getPoliceStations();
+            }
+        );
+
+        return $locations;
+    }
 }

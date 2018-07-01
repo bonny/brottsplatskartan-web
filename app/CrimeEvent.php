@@ -275,15 +275,13 @@ class CrimeEvent extends Model implements Feedable
      * Som getLocationString
      * men platser kan vara länkade, t.ex. länen
      */
-    public function getLocationStringWithLinks()
+    public function getLocationStringWithLinks($args = [])
     {
         $locations = [];
         $prioOneLocations = $this->locations->whereIn("prio", [1, 2]);
 
         // Stockholms län, Västmanlands län
         $lan = $this->administrative_area_level_1;
-        //echo "<br>level1: " . $this->administrative_area_level_1;
-        //echo "<br>level2: " . $this->administrative_area_level_2;
 
         // Locations = Blandat; "Rönninge", "Götaland", "Hästhovsvägen", "Kungsgatan", osv.
         if ($prioOneLocations->count()) {
@@ -319,9 +317,13 @@ class CrimeEvent extends Model implements Feedable
             );
         }
 
-        // Add administrative_area_level_1 only if not already added
-        $someLogic = $lan && $lan !== $this->parsed_title_location;
-        if ($someLogic) {
+        // Add administrative_area_level_1, if not already added.
+        // administrative_area_level_1 = lan = Stockholms län
+        $outputLan = $lan && $lan !== $this->parsed_title_location;
+        if (isset($args['skipLan']) && $args['skipLan']) {
+            $outputLan = false;
+        }
+        if ($outputLan) {
             $locations[] = sprintf(
                 '<a href="%2$s">%1$s</a>',
                 $lan,
