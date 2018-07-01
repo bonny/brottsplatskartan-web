@@ -33,6 +33,27 @@ if ($_GET['debugbar-disable'] ?? false) {
 
 Route::get('/debug/{what}', 'DebugController@debug')->name('debug');
 
+// URL is like
+// https://brottsplatskartan.localhost/pixel?path=%2Fstockholms-lan%2Ftrafikolycka-taby-taby-kyrkby-37653&rand=0.1843466328440977
+//
+Route::get('/pixel', function (Request $req) {
+    // path: /stockholms-lan/trafikolycka-taby-taby-kyrkby-37653
+    $path = $req->input('path');
+    $path = urldecode($path);
+
+    $data = [];
+
+    // Om path slutar med siffror är det ett brott/händelse.
+    if (preg_match('/-(\d+)$/', $path, $matches)) {
+        $eventId = intval($matches[1]);
+        $crimeEvent = CrimeEvent::find($eventId);
+        $data['eventId'] = $eventId;
+        // $data['event'] = $crimeEvent;
+    }
+
+    return $data;
+});
+
 Route::get('/polisstationer', 'PolisstationerController@index')->name('polisstationer');
 
 /**

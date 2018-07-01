@@ -266,6 +266,8 @@ Layout template for web
     </amp-analytics>
     @endif
 
+    <amp-pixel src="<?php echo env('APP_URL')?>/pixel?path=CANONICAL_PATH&rand=RANDOM" layout="nodisplay"></amp-pixel>
+
     <amp-sticky-ad layout="nodisplay">
         <amp-ad width=320 height=50
             type="adsense"
