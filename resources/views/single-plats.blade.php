@@ -88,20 +88,21 @@ https://brottsplatskartan.localhost/plats/nacka
 
     {{-- Lista närmaste polisstationerna --}}
     @if ($policeStations)
-        <h2>Polisstationer nära {{$plats}}</h2>
-        @foreach ($policeStations->slice(0, 3) as $policeStation)
-            <h3>
-                <a href="{{route('polisstationer')}}#{{str_slug($place->lan . '-' . $policeStation->name)}}">
-                    {{$policeStation->name}}
-                </a>
-            </h3>
-            <p>
-                {{$policeStation->location->name}}
-            </p>
-            <p class="u-hidden">{{$policeStation->distance}} meter från mitten av {{$plats}}</p>
-        @endforeach
+        <section class="widget">
+            <h2>Polisstationer nära {{$plats}}</h2>
+            @foreach ($policeStations->slice(0, 3) as $policeStation)
+                <h3>
+                    <a href="{{route('polisstationer')}}#{{str_slug($place->lan . '-' . $policeStation->name)}}">
+                        {{$policeStation->name}}
+                    </a>
+                </h3>
+                <p>
+                    {{$policeStation->location->name}}
+                </p>
+                <p class="u-hidden">{{$policeStation->distance}} meter från mitten av {{$plats}}</p>
+            @endforeach
+        </section>
     @endif
-
 
     @include('parts.follow-us')
 
