@@ -1277,6 +1277,12 @@ input[type="url"],
     border-top: 1px solid var(--color-grey-light);
 }
 
+.PoliceStation-wrap:target {
+    background: lightyellow;
+    padding: 0px 0;
+    padding-top: 100px;
+}
+
 .PoliceStation-name {
     margin-top: var(--default-margin);
 }
@@ -1492,4 +1498,8 @@ input[type="url"],
 
 .u-inline-block {
     display: inline-block;
+}
+
+.u-hidden {
+    display: none;
 }
