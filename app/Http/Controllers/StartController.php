@@ -121,6 +121,7 @@ class StartController extends Controller
         // Add breadcrumbs for dates before today
         if (!$isToday) {
             // $breadcrumbs = new \Creitive\Breadcrumbs\Breadcrumbs;
+            // $breadcrumbs->setDivider('›');
             // $breadcrumbs->addCrumb('Hem', '/');
             // $breadcrumbs->addCrumb('Datum', route("start"));
             // $breadcrumbs->addCrumb('Län', route("lanOverview"));

@@ -85,6 +85,7 @@ class LanController extends Controller
         }
 
         $breadcrumbs = new \Creitive\Breadcrumbs\Breadcrumbs;
+        $breadcrumbs->setDivider('›');
         $breadcrumbs->addCrumb('Hem', '/');
         $breadcrumbs->addCrumb('Län', route("lanOverview"));
         $breadcrumbs->addCrumb(e($lan), e($lan));
@@ -142,6 +143,7 @@ class LanController extends Controller
         $data["lan"] = $lan;
 
         $breadcrumbs = new \Creitive\Breadcrumbs\Breadcrumbs;
+        $breadcrumbs->setDivider('›');
         $breadcrumbs->addCrumb('Hem', '/');
         $breadcrumbs->addCrumb('Län', route("lanOverview"));
 
@@ -320,6 +322,7 @@ class LanController extends Controller
         }
 
         $breadcrumbs = new \Creitive\Breadcrumbs\Breadcrumbs;
+        $breadcrumbs->setDivider('›');
         $breadcrumbs->addCrumb('Hem', '/');
         $breadcrumbs->addCrumb('Län', route("lanOverview"));
         $breadcrumbs->addCrumb(e($lan), e($lan));

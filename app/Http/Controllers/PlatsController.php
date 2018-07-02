@@ -35,6 +35,7 @@ class PlatsController extends Controller
         // print_r($orter);
 
         $breadcrumbs = new \Creitive\Breadcrumbs\Breadcrumbs;
+        $breadcrumbs->setDivider('›');
         $breadcrumbs->addCrumb('Hem', '/');
         $breadcrumbs->addCrumb('Platser', route("platserOverview"));
 
@@ -252,6 +253,7 @@ class PlatsController extends Controller
 
         // Add breadcrumb.
         $breadcrumbs = new \Creitive\Breadcrumbs\Breadcrumbs;
+        $breadcrumbs->setDivider('›');
         $breadcrumbs->addCrumb('Hem', '/');
         $breadcrumbs->addCrumb('Platser', route("platserOverview"));
 

@@ -134,6 +134,7 @@ Route::get('/nara', function (Request $request) {
     $data['eventsByDay'] = $eventsByDay;
 
     $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs;
+    $breadcrumbs->setDivider('›');
     $breadcrumbs->addCrumb('Hem', '/');
     $breadcrumbs->addCrumb('Nära dig', route("geo"));
 
@@ -193,6 +194,7 @@ Route::get('/typ/', function () {
                 ->get();
 
     $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs;
+    $breadcrumbs->setDivider('›');
     $breadcrumbs->addCrumb('Hem', '/');
     $breadcrumbs->addCrumb('Brottstyper', route("typeOverview"));
 
@@ -219,6 +221,7 @@ Route::get('/typ/{typ}', function ($typ) {
     }
 
     $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs;
+    $breadcrumbs->setDivider('›');
     $breadcrumbs->addCrumb('Hem', '/');
     $breadcrumbs->addCrumb('Brottstyper', route("typeOverview"));
     $breadcrumbs->addCrumb(e($typ), route("typeSingle", ["typ" => $typ]));
@@ -305,6 +308,7 @@ Route::get('/ordlista/{word}', function ($word, Request $request) {
     }
 
     $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs;
+    $breadcrumbs->setDivider('›');
     $breadcrumbs->addCrumb('Hem', '/');
     $breadcrumbs->addCrumb('Ordlista', route('ordlista'));
     $breadcrumbs->addCrumb($word->word, route('ordlistaOrd', ['word' => $word->word]));
@@ -327,6 +331,7 @@ Route::get('/ordlista/', function (Request $request) {
     $words = Dictionary::orderBy('word', 'asc')->get();
 
     $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs;
+    $breadcrumbs->setDivider('›');
     $breadcrumbs->addCrumb('Hem', '/');
     $breadcrumbs->addCrumb('Ordlista', route("ordlista"));
 
@@ -386,6 +391,7 @@ Route::prefix('blogg')->group(function () {
         $blogItems = App\Blog::orderBy("created_at", "desc")->paginate(10);
 
         $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs;
+        $breadcrumbs->setDivider('›');
         $breadcrumbs->addCrumb('Hem', '/');
         $breadcrumbs->addCrumb('Blogg');
 
@@ -411,6 +417,7 @@ Route::prefix('blogg')->group(function () {
             ->paginate(10);
 
         $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs;
+        $breadcrumbs->setDivider('›');
         $breadcrumbs->addCrumb('Hem', '/');
         $breadcrumbs->addCrumb('Blogg');
 
@@ -433,6 +440,7 @@ Route::prefix('blogg')->group(function () {
         }
 
         $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs;
+        $breadcrumbs->setDivider('›');
         $breadcrumbs->addCrumb('Hem', '/');
         $breadcrumbs->addCrumb('Blogg', route("blog"));
         $breadcrumbs->addCrumb($blog->title);
@@ -472,6 +480,7 @@ Route::get('/{lan}/{eventName}', function ($lan, $eventName, Request $request) {
     $event = CrimeEvent::findOrFail($eventID);
 
     $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs;
+    $breadcrumbs->setDivider('›');
     $breadcrumbs->addCrumb('Hem', '/');
     $breadcrumbs->addCrumb('Län', route("lanOverview"));
 
