@@ -13,7 +13,7 @@ Template för 404
     <p>Vi kunde tyvärr inte hitta någon sida på den här adressen.</p>
 
     <p>För att fortsätta så kan du <a href="/">gå till startsidan</a> för att se
-        de senaste brotten i hela Sverige.</p>
+        de <a href="/">senaste brotten i hela Sverige</a>.</p>
 
     {{--
     <h2>Senaste händelserna</h2>
