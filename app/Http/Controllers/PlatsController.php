@@ -143,9 +143,28 @@ class PlatsController extends Controller
             // Hämta events där plats är från huvudtabellen
             // Används när $plats är bara en plats, typ "insjön",
             // "östersunds centrum", "östra karup", "kungsgatan" osv.
+            // Exempel på url:
+            // https://brottsplatskartan.localhost/plats/bananskal
             $events = $this->getEventsInPlats($plats, $date, 14, $isToday);
+
+            // Om inga events för vald period, kolla om något finns alls.
+            if (!$events->count()) {
+                $eventsExists = CrimeEvent::where(function ($query) use ($plats) {
+                    $query->where("parsed_title_location", $plats);
+                    $query->orWhere("administrative_area_level_2", $plats);
+                    $query->orWhereHas('locations', function ($query) use ($plats) {
+                        $query->where('name', '=', $plats);
+                    });
+                })
+                ->exists();
+
+                if (!$eventsExists) {
+                    abort(404);
+                }
+            }
+
+            // Gör så att plats blir "Västra Hejsan Hoppsan" och inte "västra hejsan hoppsan".
             $plats = title_case($plats);
-            // dd($plats, $dateYMD, $events);
 
             // Hämta mest vanligt förekommande händelsetyperna
             $mostCommonCrimeTypes = $this->getMostCommonCrimeTypesInPlats($plats, $dateYMD);
@@ -266,14 +285,17 @@ class PlatsController extends Controller
         // Hämta närmaste polisstation.
         // https://github.com/thephpleague/geotools
         $lanPolicestations = null;
+        $relatedLinks = null;
         if ($place) {
             $lanPolicestations = $place->getClosestPolicestations();
+            $relatedLinks = \App\Helper::getRelatedLinks($place->name);
         }
 
         $data = [
             'plats' => $plats,
             'place' => $place,
             'policeStations' => $lanPolicestations,
+            'relatedLinks' => $relatedLinks,
             'events' => $events,
             'eventsByDay' => $eventsByDay,
             'mostCommonCrimeTypes' => $mostCommonCrimeTypes,
