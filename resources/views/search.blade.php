@@ -39,8 +39,8 @@ qdr:h
         <input type="text" name="s" value="{{ $s }}" class="SearchForm__s" placeholder="Sök inbrott, stöld, stad eller län" autofocus>
         <input type="submit" class="SearchForm__submit" value="Sök">
         <select name="tbs" class="SearchForm__select">
-            <option value="qdr:w">Den här veckan</option>
             <option value="qdr:m">Den här månaden</option>
+            <option value="qdr:w">Den här veckan</option>
             <option value="qdr:d">Senaste dygnet</option>
             <option value="qdr:h">Senaste timmen</option>
         </select>
@@ -56,7 +56,10 @@ qdr:h
     <h2>Senaste händelserna i Sverige</h2>
 
     @if ($eventsByDay)
-        @include('parts.events-by-day', ["overview" => true])
+        @include('parts.events-by-day', [
+            "overview" => true,
+            'hideMapImage' => true
+        ])
     @endif
 
 @endsection
