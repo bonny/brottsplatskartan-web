@@ -737,4 +737,14 @@ class Helper
 
         return $locations;
     }
+
+    public static function getRelatedLinks($place = null, $lan = null)
+    {
+        $place = is_string($place) ? mb_strtolower($place) : $place;
+        $lan = is_string($lan) ? mb_strtolower($lan) : $lan;
+
+        $relatedLinks = RelatedLinks::where(['place' => $place, 'lan' => $lan])->orderBy('prio', 'desc')->get();
+
+        return $relatedLinks;
+    }
 }
