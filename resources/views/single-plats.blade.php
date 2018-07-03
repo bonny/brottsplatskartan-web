@@ -86,6 +86,51 @@ https://brottsplatskartan.localhost/plats/nacka
     </div>
     --}}
 
+    @if ($relatedLinks)
+        <div class="Widget">
+
+            <h2>Relaterade länkar</h2>
+            @foreach ($relatedLinks as $relatedLink)
+                <h3>
+                    <a href="{{$relatedLink->url}}">
+                        {{$relatedLink->title}}
+                    </a>
+                </h3>
+                <p>{{$relatedLink->desc}}</p>
+            @endforeach
+
+            @if ($plats == 'Täby')
+                <amp-facebook-page
+                    width="340"
+                    height="440"
+                    layout="responsive"
+                    data-hide-cover="true"
+                    data-hide-cta="true"
+                    data-small-header ="true"
+                    data-href="https://www.facebook.com/PolisenTaby/"
+                    data-tabs="timeline"
+                    >
+                </amp-facebook-page>
+
+                <amp-facebook-page
+                    width="340"
+                    height="440"
+                    layout="responsive"
+                    data-hide-cover="true"
+                    data-hide-cta="true"
+                    data-small-header ="true"
+                    data-href="https://www.facebook.com/tabynyheter/"
+                    data-tabs="timeline"
+                    >
+                </amp-facebook-page>
+            @endif
+
+        </div>
+
+    @endif
+
+
+
     {{-- Lista närmaste polisstationerna --}}
     @if ($policeStations)
         <section class="widget">
