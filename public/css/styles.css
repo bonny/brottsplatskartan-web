@@ -1277,10 +1277,12 @@ input[type="url"],
     border-top: 1px solid var(--color-grey-light);
 }
 
-.PoliceStation-wrap:target {
+.PoliceStation-wrap:target,
+.PoliceStations-wrap:target {
     background: lightyellow;
     padding: 0px 0;
-    padding-top: 100px;
+    margin-top: 260px;
+    padding-top: 50px;
 }
 
 .PoliceStation-name {
