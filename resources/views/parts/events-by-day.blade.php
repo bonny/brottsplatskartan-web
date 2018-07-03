@@ -17,7 +17,7 @@
                         'overview' => true,
                         // Om det är väldigt många grejjer på en sida så se till att bara de första 20
                         // får bild, annars blir det för dyrt med alla API-anrop.
-                        'hideMapImage' => $loop->index > 20
+                        'hideMapImage' => ($loop->index > 20) || (isset($hideMapImage) && $hideMapImage)
                     ])
                 @endforeach
             </ul>
