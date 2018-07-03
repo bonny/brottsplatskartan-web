@@ -62,7 +62,7 @@
     <h2>Följ oss på Twitter och få senaste Polishändelserna</h2>
     <ul class="SiteFooter__navlinks">
         <li><a href="https://twitter.com/brottsplatser">Följ @Brottsplatser på Twitter</a></li>
-        <li><a href="https://twitter.com/brottsplatser">Följ @stockholmsbrott på Twitter</a> </a></li>
+        <li><a href="https://twitter.com/brottsplatser">Följ @Stockholmsbrott på Twitter</a> </a></li>
         <li><a href="https://www.facebook.com/brottsplatskartan">Gilla Brottsplatskartan på Facebook</a></li>
     </ul>
 </div>
