@@ -63,6 +63,14 @@ class Newsarticle extends Model
             case 'www.unt.se':
                 $source = 'UNT';
                 break;
+            case 'www.skd.se':
+            case 'skd.se':
+                $source = 'Skånska Dagbladet';
+                break;
+            case 'www.sydsvenskan.se':
+            case 'sydsvenskan.se':
+                $source = 'Sydsvenskan';
+                break;
             default:
                 $source = $urlHost;
         }
