@@ -87,17 +87,21 @@ https://brottsplatskartan.localhost/plats/nacka
     --}}
 
     @if ($relatedLinks)
-        <div class="Widget">
+        <section class="widget RelatedLinks">
 
-            <h2>Relaterade länkar</h2>
-            @foreach ($relatedLinks as $relatedLink)
-                <h3>
-                    <a href="{{$relatedLink->url}}">
-                        {{$relatedLink->title}}
-                    </a>
-                </h3>
-                <p>{{$relatedLink->desc}}</p>
-            @endforeach
+            <h2 class="RelatedLinks__title">Relaterade länkar</h2>
+            <ul class="RelatedLinks__items">
+                @foreach ($relatedLinks as $relatedLink)
+                    <li class="RelatedLinks__item">
+                        <h3 class="RelatedLinks__title">
+                            <a class="RelatedLinks__link" href="{{$relatedLink->url}}">
+                                {{$relatedLink->title}}
+                            </a>
+                        </h3>
+                        <p class="RelatedLinks__description">{{$relatedLink->desc}}</p>
+                    </li>
+                @endforeach
+            </ul>
 
             @if ($plats == 'Täby')
                 <amp-facebook-page
@@ -125,7 +129,7 @@ https://brottsplatskartan.localhost/plats/nacka
                 </amp-facebook-page>
             @endif
 
-        </div>
+        </section>
 
     @endif
 

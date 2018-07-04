@@ -3,6 +3,7 @@
     --color-link: #0379c4;
     --color-link: #15c; /* same colors as lighthouse */
     --color-gray-1: #666;
+    --color-gray-2: #ccc;
     --color-red: #cb4739;
     --color-blue-police: #1862a8;
     --color-blue-police-active: #0c3256;
@@ -1122,17 +1123,27 @@ input[type="url"],
 .Event__mediaTitle {
 }
 
-.Event__mediaLinks {
+.Event__mediaLinks,
+.RelatedLinks__items {
     list-style-type: none;
     padding-left: 0;
 }
 
-.Event__mediaLink {
-    margin-top: var(--default-margin);
+.Event__mediaLink,
+.RelatedLinks__item {
     margin-bottom: var(--default-margin);
+    border-top: 1px solid var(--color-gray-2);
+    padding-top: var(--default-margin);
+    margin-top: var(--default-margin);
 }
 
-.Event__mediaLinkTitle {
+.RelatedLinks__title {
+    margin: 0;
+}
+
+.Event__mediaLinkTitle,
+.RelatedLinks__link {
+    font-weight: normal;
 }
 
 .Event__mediaLinkSource {
@@ -1143,7 +1154,8 @@ input[type="url"],
     display: block;
 }
 
-.Event__mediaLinkShortdesc {
+.Event__mediaLinkShortdesc,
+.RelatedLinks__description {
     font-size: var(--font-size-small);
     color: var(--color-gray-1);
     /*

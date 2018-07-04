@@ -7,9 +7,9 @@ Template för ordlista/dictionary
 
 @extends('layouts.web')
 
-@section('title', 'Ordlista')
-@section('metaDescription', e("Ordlista"))
-@section('canonicalLink', '/ordlista')
+@section('title', 'Designkomponenter')
+@section('metaDescription', e("Brottsplatskartans designkomponenter"))
+@section('canonicalLink', '/design')
 
 @section('content')
 
@@ -82,6 +82,54 @@ Template för ordlista/dictionary
 
     </dl>
 
+    <div class="Event__media"> <h2 class="Event__mediaTitle">Händelsen i media</h2>
+        <ul class="Event__mediaLinks">
+            <li class="Event__mediaLink"> <span class="Event__mediaLinkSource">Skånska Dagbladet</span>
+                <a class="Event__mediaLinkTitle" href="http://www.skd.se/2018/07/04/polisen-vadjar-om-hjalp-efter-forsvunnen/">Polisen vädjar om hjälp efter försvunnen</a> <div class="Event__mediaLinkShortdesc">Just nu pågår en större polisinsats i Bunkeflostrand för att eftersöka en person som är anmäld försvunnen. Polisen använder sig bland annat av helikopter i arbetet.</div>
+            </li>
+            <li class="Event__mediaLink"> <span class="Event__mediaLinkSource">Sydsvenskan</span>
+                <a class="Event__mediaLinkTitle" href="https://www.sydsvenskan.se/2018-07-04/stor-polisinsats-i-bunkeflostrand-nar-79-arig-man-forsvann">Stor polisinsats i Bunkeflostrand när 79-årig man försvann från sitt hem</a> <div class="Event__mediaLinkShortdesc">På onsdagskvällen pågick en stor polisinsats i Bunkeflostrand efter att en 79-årig man hade anmälts försvunnen. Mannen återfanns senare vid liv.</div>
+            </li>
+        </ul>
+    </div>
+
+    <section class="widget RelatedLinks"> <h2 class="RelatedLinks__title">Relaterade länkar</h2>
+        <ul class="RelatedLinks__items">
+            <li class="RelatedLinks__item">
+                <h3 class="RelatedLinks__title">
+                    <a class="RelatedLinks__link" href="https://www.facebook.com/PolisenTaby/"> Polisen Täby/Danderyd/Vallentuna/Åkersberga/Vaxholm på Facebook
+                    </a>
+                </h3>
+                <p class="RelatedLinks__description">Täbys lokalpolisområdes officiella sida på Facebook. Kommunerna Österåker, Vaxholm, Vallentuna, Täby och Danderyd ingår i polisområdet.</p>
+            </li>
+            <li class="RelatedLinks__item">
+                <h3 class="RelatedLinks__title">
+                    <a class="RelatedLinks__link" href="https://www.facebook.com/tabynyheter/"> Täby Nyheter
+                    </a>
+                </h3>
+                <p class="RelatedLinks__description">Täbybornas egen lokaltidning.</p>
+            </li>
+            <li class="RelatedLinks__item">
+                <h3 class="RelatedLinks__title">
+                    <a class="RelatedLinks__link" href="https://www.facebook.com/groups/196332037169754/?ref=br_rs"> Näsby Park Grannsamverkan
+                    </a>
+                </h3>
+                <p class="RelatedLinks__description"></p>
+            </li>
+            <li class="RelatedLinks__item">
+                <h3 class="RelatedLinks__title">
+                    <a class="RelatedLinks__link" href="https://www.facebook.com/groups/217660818650507/?ref=group_header"> Grannsamverkan Gribbylund Täby
+                    </a>
+                </h3>
+                <p class="RelatedLinks__description">Facebookgrupp för informationsdelning mellan boende i Gribbylund i Täby. Det kan vara inbrottsvarningar, tips om kommande aktiviteter i området, efterlysningar och annat som rör boende i Gribbylund.</p> </li>
+            <li class="RelatedLinks__item">
+                <h3 class="RelatedLinks__title">
+                    <a class="RelatedLinks__link" href="https://www.facebook.com/groups/451706138354924/?ref=br_rs"> Grannsamverkan Erikslund Täby</a>
+                </h3>
+                <p class="RelatedLinks__description">En samverkansgrupp för grannar i Erikslund. Tips, råd, efterlysningar mm.</p>
+            </li>
+        </ul>
+    </section>
 @endsection
 
 @section('sidebar')
