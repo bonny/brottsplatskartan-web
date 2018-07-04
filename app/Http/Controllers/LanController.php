@@ -362,6 +362,10 @@ class LanController extends Controller
         $data['metaDescription'] = $metaDescription;
         $data['mostCommonCrimeTypes'] = $mostCommonCrimeTypes;
 
+        $relatedLinks = \App\Helper::getRelatedLinks(null, $lan);
+
+        $data['relatedLinks'] = $relatedLinks;
+
         return view('single-lan', $data);
     }
 }
