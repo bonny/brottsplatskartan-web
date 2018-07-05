@@ -165,6 +165,19 @@ Template för ordlista/dictionary
             <a href="https://brottsplatskartan.localhost/lan/V%C3%A4sternorrlands%20l%C3%A4n">Västernorrland</a>, <a href="https://brottsplatskartan.localhost/lan/V%C3%A4stmanlands%20l%C3%A4n">Västmanland</a>, <a href="https://brottsplatskartan.localhost/lan/V%C3%A4stra%20G%C3%B6talands%20l%C3%A4n">Västa Götaland</a></p>
     </section>
 
+    <section class="widget">
+        <h2 class="widget__title">Polisstationer nära Göteborg</h2>
+        <h3> <a href="https://brottsplatskartan.se/polisstationer#vastra-gotalands-lan-goteborg-delgivningscentralen"> Göteborg Delgivningscentralen </a> </h3>
+        <p> Stampgatan 28, Göteborg </p>
+        <p class="u-hidden">545,46522681242 meter från mitten av Göteborg</p>
+        <h3> <a href="https://brottsplatskartan.se/polisstationer#vastra-gotalands-lan-goteborg-city"> Göteborg City </a> </h3>
+        <p> Stampgatan 28, Göteborg </p>
+        <p class="u-hidden">545,46522681242 meter från mitten av Göteborg</p>
+        <h3> <a href="https://brottsplatskartan.se/polisstationer#vastra-gotalands-lan-goteborg-passcentralen"> Göteborg Passcentralen </a> </h3>
+        <p> Stampgatan 34, Göteborg </p>
+        <p class="u-hidden">545,46522681242 meter från mitten av Göteborg</p>
+    </section>
+
 @endsection
 
 @section('sidebar')
