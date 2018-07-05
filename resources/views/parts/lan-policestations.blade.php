@@ -1,6 +1,6 @@
 @if ($policeStations)
     <section class="widget LanPolicestations" id="polisstationer">
-        <h2 class="LanPolicestations-title">Polisstationer</h2>
+        <h2 class="widget__title LanPolicestations-title">Polisstationer</h2>
         <p class="LanPolicestations-intro">
             Det finns {{$policeStations['policeStations']->count()}}
             <a href="{{route('polisstationer')}}#{{str_slug($policeStations['lanName'])}}">polisstationer i {{$policeStations['lanName']}}</a>.
