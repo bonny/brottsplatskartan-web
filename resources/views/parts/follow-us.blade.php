@@ -1,5 +1,5 @@
 <section class="widget widget--follow">
-    <h2 class="widget__title">Följ Brottsplatskartan på Twitter och Facebook</h2>
+    <h2 class="widget__title">Följ oss på Twitter och Facebook</h2>
     <ul>
         <li>Följ <a href="https://twitter.com/brottsplatser">@Brottsplatser</a> för att få alla
     rapporterade brott i ditt Twitterflöde.</li>
