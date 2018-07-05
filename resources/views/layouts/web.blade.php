@@ -260,6 +260,16 @@ Layout template for web
           "trackPageview": {
             "on": "visible",
             "request": "pageview"
+            },
+          "outboundLinks": {
+            "on": "click",
+            "selector": "a",
+            "request": "event",
+            "vars": {
+              "eventCategory": "outbound",
+              "eventAction": "click",
+              "eventLabel": "${outboundLink}"
+            }
           }
         }
       }
