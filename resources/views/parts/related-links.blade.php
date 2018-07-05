@@ -1,4 +1,5 @@
-@if ($relatedLinks)
+@if ($relatedLinks && $relatedLinks->count())
+
     <section class="widget RelatedLinks" id="relaterade-lankar">
 
         <h2 class="RelatedLinks__title">Relaterade länkar</h2>
