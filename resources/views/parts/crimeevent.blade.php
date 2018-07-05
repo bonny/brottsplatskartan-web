@@ -162,14 +162,20 @@ if $single is set then larger image
     @else
 
         @if ($newsarticles->count())
-            <div class="Event__media">
-                <h2 class="Event__mediaTitle">Händelsen i media</h2>
-                <ul class="Event__mediaLinks">
+            <div class="Event__media widget">
+                <h2 class="Event__mediaTitle widget__title">Händelsen i media</h2>
+                <ul class="Event__mediaLinks widget__listItems">
                     @foreach ($newsarticles as $newsarticle)
-                        <li class="Event__mediaLink">
-                            <span class="Event__mediaLinkSource">{{ $newsarticle->getSourceName() }}</span>
-                            <a class="Event__mediaLinkTitle" href="{{ $newsarticle->url }}">{{ $newsarticle->title }}</a>
-                            <div class="Event__mediaLinkShortdesc">{{ $newsarticle->shortdesc }}</div>
+                        <li class="Event__mediaLink widget__listItem">
+                            <p class="widget__listItem__preTitle Event__mediaLinkSource">{{ $newsarticle->getSourceName() }}</p>
+                            <h3 class="widget__listItem__title">
+                                <a
+                                    class="Event__mediaLinkTitle"
+                                    href="{{ $newsarticle->url }}"
+                                    data-vars-outbound-link="{{ $newsarticle->url }}"
+                                    >{{ $newsarticle->title }}</a>
+                            </h3>
+                            <div class="widget__listItem__text Event__mediaLinkShortdesc">{{ $newsarticle->shortdesc }}</div>
                         </li>
                     @endforeach
                 </ul>

@@ -92,17 +92,23 @@ https://brottsplatskartan.localhost/plats/nacka
     @if ($policeStations)
         <section class="widget">
             <h2 class="widget__title">Polisstationer nära {{$plats}}</h2>
-            @foreach ($policeStations->slice(0, 3) as $policeStation)
-                <h3>
-                    <a href="{{route('polisstationer')}}#{{str_slug($place->lan . '-' . $policeStation->name)}}">
-                        {{$policeStation->name}}
-                    </a>
-                </h3>
-                <p>
-                    {{$policeStation->location->name}}
-                </p>
-                <p class="u-hidden">{{$policeStation->distance}} meter från mitten av {{$plats}}</p>
-            @endforeach
+            <ul class="widget__listItems">
+                @foreach ($policeStations->slice(0, 3) as $policeStation)
+                    <li class="widget__listItem">
+                        <h3 class="widget__listItem__title">
+                            <a href="{{route('polisstationer')}}#{{str_slug($place->lan . '-' . $policeStation->name)}}">
+                                {{$policeStation->name}}
+                            </a>
+                        </h3>
+                        <div class="widget__listItem__text">
+                            <p>
+                                {{$policeStation->location->name}}
+                            </p>
+                        </div>
+                        <p class="u-hidden">{{$policeStation->distance}} meter från mitten av {{$plats}}</p>
+                    </li>
+                @endforeach
+            </ul>
         </section>
     @endif
 

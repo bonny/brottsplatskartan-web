@@ -28,9 +28,9 @@ Template för ett event/händelse
     {{-- show a card with nearby events --}}
     @if (isset($eventsNearby) && $eventsNearby->count())
 
-        <aside class="RelatedEvents">
-            <h2 class="RelatedEvents__title">Fler händelser i närheten</h2>
-            <ul class="RelatedEvents__items">
+        <aside class="RelatedEvents widget">
+            <h2 class="widget__title RelatedEvents__title">Fler händelser i närheten</h2>
+            <ul class="widget__listItems RelatedEvents__items">
                 @foreach ($eventsNearby as $eventNear)
                     @include('parts.event-near')
                 @endforeach

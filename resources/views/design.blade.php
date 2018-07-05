@@ -58,7 +58,7 @@ Template för ordlista/dictionary
         <li>Ut id aliis narrare gestiant? Quare hoc videndum est, possitne nobis hoc ratio philosophorum dare. Ego quoque, inquit, didicerim libentius si quid attuleris, quam te reprehenderim. Non igitur potestis voluptate omnia dirigentes aut tueri aut retinere virtutem. Quod ea non occurrentia fingunt.</li>
     </ul>
 
-    <p>Och en deinitionslista (dl/dt/dl)</p>
+    <p>Och en definitionslista (dl/dt/dl)</p>
 
     <dl>
         <dt>Jag är en dt</dt>
@@ -75,66 +75,76 @@ Template för ordlista/dictionary
 
     </dl>
 
+@endsection
+
+@section('sidebar')
+
     <div class="widget">
         <h2 class="widget__title">Färger</h2>
-        <ul>
-            <li><span class="u-color-white u-color-bg-red">--color-red</li>
-            <li><span class="u-color-white u-color-bg-blue-police">--color-blue-police</li>
-            <li><span class="u-color-white u-color-bg-yellow">--color-yellow</li>
+        <ul class="widget__listItems">
+            <li class="widget__listItem"><span class="u-color-white u-color-bg-red">--color-red</li>
+            <li class="widget__listItem"><span class="u-color-white u-color-bg-blue-police">--color-blue-police</li>
+            <li class="widget__listItem"><span class="u-color-white u-color-bg-yellow">--color-yellow</li>
         </ul>
     </div>
 
     <div class="widget Event__media">
         <h2 class="widget__title Event__mediaTitle">Händelsen i media</h2>
-        <ul class="Event__mediaLinks">
-            <li class="Event__mediaLink"> <span class="Event__mediaLinkSource">Skånska Dagbladet</span>
-                <a class="Event__mediaLinkTitle" href="http://www.skd.se/2018/07/04/polisen-vadjar-om-hjalp-efter-forsvunnen/">Polisen vädjar om hjälp efter försvunnen</a>
-                <div class="Event__mediaLinkShortdesc">Just nu pågår en större polisinsats i Bunkeflostrand för att eftersöka en person som är anmäld försvunnen. Polisen använder sig bland annat av helikopter i arbetet.</div>
+        <ul class="widget__listItems Event__mediaLinks">
+            <li class="widget__listItem Event__mediaLink">
+                <p class="widget__listItem__preTitle Event__mediaLinkSource">Skånska Dagbladet</p>
+                <h3 class="widget__listItem__title">
+                    <a class="Event__mediaLinkTitle" href="http://www.skd.se/2018/07/04/polisen-vadjar-om-hjalp-efter-forsvunnen/">Polisen vädjar om hjälp efter försvunnen</a>
+                </h3>
+                <div class="widget__listItem__text Event__mediaLinkShortdesc">Just nu pågår en större polisinsats i Bunkeflostrand för att eftersöka en person som är anmäld försvunnen. Polisen använder sig bland annat av helikopter i arbetet.</div>
             </li>
-            <li class="Event__mediaLink"> <span class="Event__mediaLinkSource">Sydsvenskan</span>
-                <a class="Event__mediaLinkTitle" href="https://www.sydsvenskan.se/2018-07-04/stor-polisinsats-i-bunkeflostrand-nar-79-arig-man-forsvann">Stor polisinsats i Bunkeflostrand när 79-årig man försvann från sitt hem</a>
-                <div class="Event__mediaLinkShortdesc">På onsdagskvällen pågick en stor polisinsats i Bunkeflostrand efter att en 79-årig man hade anmälts försvunnen. Mannen återfanns senare vid liv.</div>
+            <li class="widget__listItem Event__mediaLink">
+                <p class="widget__listItem__preTitle Event__mediaLinkSource">Sydsvenskan</p>
+                <h3 class="widget__listItem__title">
+                    <a class="Event__mediaLinkTitle" href="https://www.sydsvenskan.se/2018-07-04/stor-polisinsats-i-bunkeflostrand-nar-79-arig-man-forsvann">Stor polisinsats i Bunkeflostrand när 79-årig man försvann från sitt hem</a>
+                </h3>
+                <div class="widget__listItem__text Event__mediaLinkShortdesc">På onsdagskvällen pågick en stor polisinsats i Bunkeflostrand efter att en 79-årig man hade anmälts försvunnen. Mannen återfanns senare vid liv.</div>
             </li>
         </ul>
     </div>
 
     <section class="widget RelatedLinks" id="relaterade-lankar">
         <h2 class="widget__title RelatedLinks__title">Relaterade länkar</h2>
-        <ul class="RelatedLinks__items">
-            <li class="RelatedLinks__item">
-                <h3 class="RelatedLinks__title">
-                        <a class="RelatedLinks__link" href="https://www.facebook.com/PolisenTaby/"> Polisen Täby/Danderyd/Vallentuna/Åkersberga/Vaxholm på Facebook
-                        </a>
-                    </h3>
-                <p class="RelatedLinks__description">Täbys lokalpolisområdes officiella sida på Facebook. Kommunerna Österåker, Vaxholm, Vallentuna, Täby och Danderyd ingår i polisområdet.</p>
+        <ul class="widget__listItems RelatedLinks__items">
+            <li class="widget__listItem RelatedLinks__item">
+                <p class="widget__listItem__preTitle">Facebook</p>
+                <h3 class="widget__listItem__title RelatedLinks__title">
+                    <a class="RelatedLinks__link" href="https://www.facebook.com/PolisenTaby/"> Polisen Täby/Danderyd/Vallentuna/Åkersberga/Vaxholm på Facebook</a>
+                </h3>
+                <div class="widget__listItem__text">
+                    <p>Täbys lokalpolisområdes officiella sida på Facebook.</p>
+                    <p>Kommunerna Österåker, Vaxholm, Vallentuna, Täby och Danderyd ingår i polisområdet.</p>
+                </div>
             </li>
-            <li class="RelatedLinks__item">
-                <h3 class="RelatedLinks__title">
-                        <a class="RelatedLinks__link" href="https://www.facebook.com/tabynyheter/"> Täby Nyheter
-                        </a>
-                    </h3>
-                <p class="RelatedLinks__description">Täbybornas egen lokaltidning.</p>
+            <li class="widget__listItem RelatedLinks__item">
+                <h3 class="widget__listItem__title RelatedLinks__title">
+                    <a class="RelatedLinks__link" href="https://www.facebook.com/tabynyheter/"> Täby Nyheter</a>
+                </h3>
+                <div class="widget__listItem__text">
+                    <p class="RelatedLinks__description">Täbybornas egen lokaltidning.</p>
+                </div>
             </li>
-            <li class="RelatedLinks__item">
-                <h3 class="RelatedLinks__title">
-                        <a class="RelatedLinks__link" href="https://www.facebook.com/groups/196332037169754/?ref=br_rs"> Näsby Park Grannsamverkan
-                        </a>
-                    </h3>
-                <p class="RelatedLinks__description"></p>
-            </li>
-            <li class="RelatedLinks__item">
-                <h3 class="RelatedLinks__title">
-                        <a class="RelatedLinks__link" href="https://www.facebook.com/groups/217660818650507/?ref=group_header"> Grannsamverkan Gribbylund Täby
-                        </a>
-                    </h3>
-                <p class="RelatedLinks__description">Facebookgrupp för informationsdelning mellan boende i Gribbylund i Täby. Det kan vara inbrottsvarningar, tips om kommande aktiviteter i området, efterlysningar och annat som rör boende i Gribbylund.</p>
+            <li class="widget__listItem RelatedLinks__item">
+                <h3 class="widget__listItem__title RelatedLinks__title">
+                    <a class="RelatedLinks__link" href="https://www.facebook.com/groups/217660818650507/?ref=group_header"> Grannsamverkan Gribbylund Täby</a>
+                </h3>
+                <div class="widget__listItem__text">
+                    <p class="RelatedLinks__description">Facebookgrupp för informationsdelning mellan boende i Gribbylund i Täby. Det kan vara inbrottsvarningar, tips om kommande aktiviteter i området, efterlysningar och annat som rör boende i Gribbylund.</p>
+                </div>
             </li>
         </ul>
     </section>
 
     <div class="widget Stats Stats--lan">
         <h2 class="widget__title Stats__title">Brottsstatistik</h2>
-        <p>Antal rapporterade händelser från Polisen per dag i Sverige, 14 dagar tillbaka.</p>
+        <div class="widget__listItem__text">
+            <p>Antal rapporterade händelser från Polisen per dag i Sverige, 14 dagar tillbaka.</p>
+        </div>
         <p>
             <amp-img layout="fixed" class="Stats__image" src="https://chart.googleapis.com/chart?chxt=x,y&amp;cht=bvg&amp;chco=76A4FB&amp;chs=300x125&amp;chd=t:27,162,87,51,54,70,92,210&amp;chxl=0:|05|04|03|02|01|30|29|28&amp;chds=0,210&amp;chxr=1,0,210&amp;chbh=a&amp;chf=bg,s,FFFFFF00"
               alt="Linjediagram som visar antal Polisiära händelser per dag för Sverige" width="300" height="125"></amp-img>
@@ -167,22 +177,29 @@ Template för ordlista/dictionary
 
     <section class="widget">
         <h2 class="widget__title">Polisstationer nära Göteborg</h2>
-        <h3> <a href="https://brottsplatskartan.se/polisstationer#vastra-gotalands-lan-goteborg-delgivningscentralen"> Göteborg Delgivningscentralen </a> </h3>
-        <p> Stampgatan 28, Göteborg </p>
-        <p class="u-hidden">545,46522681242 meter från mitten av Göteborg</p>
-        <h3> <a href="https://brottsplatskartan.se/polisstationer#vastra-gotalands-lan-goteborg-city"> Göteborg City </a> </h3>
-        <p> Stampgatan 28, Göteborg </p>
-        <p class="u-hidden">545,46522681242 meter från mitten av Göteborg</p>
-        <h3> <a href="https://brottsplatskartan.se/polisstationer#vastra-gotalands-lan-goteborg-passcentralen"> Göteborg Passcentralen </a> </h3>
-        <p> Stampgatan 34, Göteborg </p>
-        <p class="u-hidden">545,46522681242 meter från mitten av Göteborg</p>
+        <ul class="widget__listItems">
+            <li class="widget__listItem">
+                <h3 class="widget__listItem__title">
+                    <a href="https://brottsplatskartan.se/polisstationer#vastra-gotalands-lan-goteborg-delgivningscentralen"> Göteborg Delgivningscentralen </a>
+                </h3>
+                <div class="widget__listItem__text"><p> Stampgatan 28, Göteborg </p></div>
+                <p class="u-hidden">545,46522681242 meter från mitten av Göteborg</p>
+            </li>
+            <li class="widget__listItem">
+                <h3 class="widget__listItem__title">
+                    <a href="https://brottsplatskartan.se/polisstationer#vastra-gotalands-lan-goteborg-city"> Göteborg City </a>
+                </h3>
+                <div class="widget__listItem__text"><p>Stampgatan 28, Göteborg </p></div>
+                <p class="u-hidden">545,46522681242 meter från mitten av Göteborg</p>
+            </li>
+            <li class="widget__listItem">
+                <h3 class="widget__listItem__title">
+                    <a href="https://brottsplatskartan.se/polisstationer#vastra-gotalands-lan-goteborg-passcentralen"> Göteborg Passcentralen </a>
+                </h3>
+                <div class="widget__listItem__text"><p>Stampgatan 34, Göteborg </p></div>
+                <p class="u-hidden">545,46522681242 meter från mitten av Göteborg</p>
+            </li>
+        </ul>
     </section>
-
-@endsection
-
-@section('sidebar')
-
-    @include('parts.follow-us')
-    @include('parts.lan-and-cities')
 
 @endsection

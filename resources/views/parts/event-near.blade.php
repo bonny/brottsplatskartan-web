@@ -1,6 +1,6 @@
-<li class="RelatedEvents__item">
+<li class="RelatedEvents__item widget__listItem">
 
-    <h3 class="RelatedEvents__item__title">
+    <h3 class="widget__listItem__title RelatedEvents__item__title">
         <a class="RelatedEvents__item__link" href="{{ $eventNear->getPermalink() }}">
             {{ $eventNear->parsed_title }},
             {{ $eventNear->getDescriptionAsPlainText() }}
