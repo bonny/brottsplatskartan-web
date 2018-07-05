@@ -13,7 +13,7 @@ Template för ordlista/dictionary
 
 @section('content')
 
-    <h1>Design</h1>
+    <h1>En huvudrubrik av storlek h1. Lite överdrivet lång kanske men vi måste ju testa radbrytningar och så vidare</h1>
 
     <p>
         Testsida för att testa designen här på Brottsplatskartan.se.
@@ -21,14 +21,11 @@ Template för ordlista/dictionary
         även om vi inte tror du får ut så mycket av titten :).
     </p>
 
-    <h1>En huvudrubrik av storlek h1. Lite överdrivet lång kanske men vi måste ju testa radbrytningar och så vidare</h1>
     <h2>En mellanrubrik av storlek h2</h2>
     <h3>Följd av en mellanrubrik av storlek h3</h3>
 
     <p>Här följer ett stycke.</p>
     <p>Och ett lite längre stycke. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Non enim, si omnia non sequebatur, idcirco non erat ortus illinc. Haeret in salebra. Cetera illa adhibebat, quibus demptis negat se Epicurus intellegere quid sit bonum.</p>
-
-    <p>Summus dolor plures dies manere non potest? Igitur neque stultorum quisquam beatus neque sapientium non beatus. Sic, et quidem diligentius saepiusque ista loquemur inter nos agemusque communiter. Isto modo, ne si avia quidem eius nata non esset. An potest, inquit ille, quicquam esse suavius quam nihil dolere? De ingenio eius in his disputationibus, non de moribus quaeritur. Vos autem cum perspicuis dubia debeatis illustrare, dubiis perspicua conamini tollere. Sic consequentibus vestris sublatis prima tolluntur. Sed haec nihil sane ad rem; </p>
 
     <h2>Mellanrubrik av storlek h2 kommer här igen</h2>
     <p>Sin eam, quam Hieronymus, ne fecisset idem, ut voluptatem illam Aristippi in prima commendatione poneret. Et hunc idem dico, inquieta sed ad virtutes et ad vitia nihil interesse. Qui est in parvis malis. Bonum incolumis acies: misera caecitas. Non est enim vitium in oratione solum, sed etiam in moribus. Ut proverbia non nulla veriora sint quam vestra dogmata. </p>
@@ -40,10 +37,6 @@ Template för ordlista/dictionary
     <p>At ille non pertimuit saneque fidenter: Istis quidem ipsis verbis, inquit; Videamus animi partes, quarum est   conspectus illustrior; Haec para/doca illi, nos admirabilia dicamus. Cupit enim dícere nihil posse ad beatam vitam deesse sapienti. Morbo gravissimo affectus, exul, orbus, egens, torqueatur eculeo: quem hunc appellas, Zeno? Nobis aliter videtur, recte secusne, postea; </p>
 
     <h3>En till h3 är detta</h3>
-
-    <p>Iubet igitur nos Pythius Apollo noscere nosmet ipsos. Mihi, inquam, qui te id ipsum rogavi? Sed quia studebat laudi et dignitati, multum in virtute processerat. </p>
-
-    <h2>Tillbaka med en h2 då. Graccho, eius fere, aequalí.</h2>
 
     <p>Här kommer en ordnad ol-lista</p>
 
@@ -82,54 +75,96 @@ Template för ordlista/dictionary
 
     </dl>
 
-    <div class="Event__media"> <h2 class="Event__mediaTitle">Händelsen i media</h2>
+    <div class="widget">
+        <h2 class="widget__title">Färger</h2>
+        <ul>
+            <li><span class="u-color-white u-color-bg-red">--color-red</li>
+            <li><span class="u-color-white u-color-bg-blue-police">--color-blue-police</li>
+            <li><span class="u-color-white u-color-bg-yellow">--color-yellow</li>
+        </ul>
+    </div>
+
+    <div class="widget Event__media">
+        <h2 class="widget__title Event__mediaTitle">Händelsen i media</h2>
         <ul class="Event__mediaLinks">
             <li class="Event__mediaLink"> <span class="Event__mediaLinkSource">Skånska Dagbladet</span>
-                <a class="Event__mediaLinkTitle" href="http://www.skd.se/2018/07/04/polisen-vadjar-om-hjalp-efter-forsvunnen/">Polisen vädjar om hjälp efter försvunnen</a> <div class="Event__mediaLinkShortdesc">Just nu pågår en större polisinsats i Bunkeflostrand för att eftersöka en person som är anmäld försvunnen. Polisen använder sig bland annat av helikopter i arbetet.</div>
+                <a class="Event__mediaLinkTitle" href="http://www.skd.se/2018/07/04/polisen-vadjar-om-hjalp-efter-forsvunnen/">Polisen vädjar om hjälp efter försvunnen</a>
+                <div class="Event__mediaLinkShortdesc">Just nu pågår en större polisinsats i Bunkeflostrand för att eftersöka en person som är anmäld försvunnen. Polisen använder sig bland annat av helikopter i arbetet.</div>
             </li>
             <li class="Event__mediaLink"> <span class="Event__mediaLinkSource">Sydsvenskan</span>
-                <a class="Event__mediaLinkTitle" href="https://www.sydsvenskan.se/2018-07-04/stor-polisinsats-i-bunkeflostrand-nar-79-arig-man-forsvann">Stor polisinsats i Bunkeflostrand när 79-årig man försvann från sitt hem</a> <div class="Event__mediaLinkShortdesc">På onsdagskvällen pågick en stor polisinsats i Bunkeflostrand efter att en 79-årig man hade anmälts försvunnen. Mannen återfanns senare vid liv.</div>
+                <a class="Event__mediaLinkTitle" href="https://www.sydsvenskan.se/2018-07-04/stor-polisinsats-i-bunkeflostrand-nar-79-arig-man-forsvann">Stor polisinsats i Bunkeflostrand när 79-årig man försvann från sitt hem</a>
+                <div class="Event__mediaLinkShortdesc">På onsdagskvällen pågick en stor polisinsats i Bunkeflostrand efter att en 79-årig man hade anmälts försvunnen. Mannen återfanns senare vid liv.</div>
             </li>
         </ul>
     </div>
 
-    <section class="widget RelatedLinks"> <h2 class="RelatedLinks__title">Relaterade länkar</h2>
+    <section class="widget RelatedLinks" id="relaterade-lankar">
+        <h2 class="widget__title RelatedLinks__title">Relaterade länkar</h2>
         <ul class="RelatedLinks__items">
             <li class="RelatedLinks__item">
                 <h3 class="RelatedLinks__title">
-                    <a class="RelatedLinks__link" href="https://www.facebook.com/PolisenTaby/"> Polisen Täby/Danderyd/Vallentuna/Åkersberga/Vaxholm på Facebook
-                    </a>
-                </h3>
+                        <a class="RelatedLinks__link" href="https://www.facebook.com/PolisenTaby/"> Polisen Täby/Danderyd/Vallentuna/Åkersberga/Vaxholm på Facebook
+                        </a>
+                    </h3>
                 <p class="RelatedLinks__description">Täbys lokalpolisområdes officiella sida på Facebook. Kommunerna Österåker, Vaxholm, Vallentuna, Täby och Danderyd ingår i polisområdet.</p>
             </li>
             <li class="RelatedLinks__item">
                 <h3 class="RelatedLinks__title">
-                    <a class="RelatedLinks__link" href="https://www.facebook.com/tabynyheter/"> Täby Nyheter
-                    </a>
-                </h3>
+                        <a class="RelatedLinks__link" href="https://www.facebook.com/tabynyheter/"> Täby Nyheter
+                        </a>
+                    </h3>
                 <p class="RelatedLinks__description">Täbybornas egen lokaltidning.</p>
             </li>
             <li class="RelatedLinks__item">
                 <h3 class="RelatedLinks__title">
-                    <a class="RelatedLinks__link" href="https://www.facebook.com/groups/196332037169754/?ref=br_rs"> Näsby Park Grannsamverkan
-                    </a>
-                </h3>
+                        <a class="RelatedLinks__link" href="https://www.facebook.com/groups/196332037169754/?ref=br_rs"> Näsby Park Grannsamverkan
+                        </a>
+                    </h3>
                 <p class="RelatedLinks__description"></p>
             </li>
             <li class="RelatedLinks__item">
                 <h3 class="RelatedLinks__title">
-                    <a class="RelatedLinks__link" href="https://www.facebook.com/groups/217660818650507/?ref=group_header"> Grannsamverkan Gribbylund Täby
-                    </a>
-                </h3>
-                <p class="RelatedLinks__description">Facebookgrupp för informationsdelning mellan boende i Gribbylund i Täby. Det kan vara inbrottsvarningar, tips om kommande aktiviteter i området, efterlysningar och annat som rör boende i Gribbylund.</p> </li>
-            <li class="RelatedLinks__item">
-                <h3 class="RelatedLinks__title">
-                    <a class="RelatedLinks__link" href="https://www.facebook.com/groups/451706138354924/?ref=br_rs"> Grannsamverkan Erikslund Täby</a>
-                </h3>
-                <p class="RelatedLinks__description">En samverkansgrupp för grannar i Erikslund. Tips, råd, efterlysningar mm.</p>
+                        <a class="RelatedLinks__link" href="https://www.facebook.com/groups/217660818650507/?ref=group_header"> Grannsamverkan Gribbylund Täby
+                        </a>
+                    </h3>
+                <p class="RelatedLinks__description">Facebookgrupp för informationsdelning mellan boende i Gribbylund i Täby. Det kan vara inbrottsvarningar, tips om kommande aktiviteter i området, efterlysningar och annat som rör boende i Gribbylund.</p>
             </li>
         </ul>
     </section>
+
+    <div class="widget Stats Stats--lan">
+        <h2 class="widget__title Stats__title">Brottsstatistik</h2>
+        <p>Antal rapporterade händelser från Polisen per dag i Sverige, 14 dagar tillbaka.</p>
+        <p>
+            <amp-img layout="fixed" class="Stats__image" src="https://chart.googleapis.com/chart?chxt=x,y&amp;cht=bvg&amp;chco=76A4FB&amp;chs=300x125&amp;chd=t:27,162,87,51,54,70,92,210&amp;chxl=0:|05|04|03|02|01|30|29|28&amp;chds=0,210&amp;chxr=1,0,210&amp;chbh=a&amp;chf=bg,s,FFFFFF00"
+              alt="Linjediagram som visar antal Polisiära händelser per dag för Sverige" width="300" height="125"></amp-img>
+        </p>
+    </div>
+
+    <section class="widget widget--follow">
+        <h2 class="widget__title">Följ Brottsplatskartan på Twitter och Facebook</h2>
+        <ul>
+            <li>Följ
+                <a href="https://twitter.com/brottsplatser">
+                    @Brottsplatser</a> för att få alla rapporterade brott i ditt Twitterflöde.</li>
+            <li>Följ
+                <a href="https://twitter.com/StockholmsBrott">
+                    @StockholmsBrott</a> för att bara få brott i Stockholms län.</li>
+            <li>Gilla <a href="https://facebook.com/Brottsplatskartan/">facebook.com/Brottsplatskartan</a> på Facebook för att få nyheter och knasiga brott i ditt flöde.</li>
+        </ul>
+    </section>
+
+    <section class="widget">
+        <h2 class="widget__title">Se senaste händelserna &amp; brotten i ditt län</h2>
+        <p><a href="https://brottsplatskartan.localhost/lan/Blekinge%20l%C3%A4n">Blekinge</a>, <a href="https://brottsplatskartan.localhost/lan/Dalarnas%20l%C3%A4n">Dalarna</a>, <a href="https://brottsplatskartan.localhost/lan/G%C3%A4vleborgs%20l%C3%A4n">Gävleborg</a>,
+            <a href="https://brottsplatskartan.localhost/lan/Gotlands%20l%C3%A4n">Gotland</a>, <a href="https://brottsplatskartan.localhost/lan/Hallands%20l%C3%A4n">Halland</a>, <a href="https://brottsplatskartan.localhost/lan/J%C3%A4mtlands%20l%C3%A4n">Jämtland</a>,
+            <a href="https://brottsplatskartan.localhost/lan/J%C3%B6nk%C3%B6pings%20l%C3%A4n">Jönköping</a>, <a href="https://brottsplatskartan.localhost/lan/Kalmar%20l%C3%A4n">Kalmar</a>, <a href="https://brottsplatskartan.localhost/lan/Kronobergs%20l%C3%A4n">Kronoberg</a>,
+            <a href="https://brottsplatskartan.localhost/lan/Norrbottens%20l%C3%A4n">Norrbotten</a>, <a href="https://brottsplatskartan.localhost/lan/%C3%96rebro%20l%C3%A4n">Örebro</a>, <a href="https://brottsplatskartan.localhost/lan/%C3%96sterg%C3%B6tlands%20l%C3%A4n">Östergötland</a>,
+            <a href="https://brottsplatskartan.localhost/lan/Sk%C3%A5ne%20l%C3%A4n">Skåne</a>, <a href="https://brottsplatskartan.localhost/lan/S%C3%B6dermanland%20and%20Uppland%20S%C3%B6dermanlands%20l%C3%A4n">Södermanland</a>, <a href="https://brottsplatskartan.localhost/lan/Stockholms%20l%C3%A4n">Stockholm</a>,
+            <a href="https://brottsplatskartan.localhost/lan/Uppsala%20l%C3%A4n">Uppsala</a>, <a href="https://brottsplatskartan.localhost/lan/V%C3%A4rmlands%20l%C3%A4n">Värmland</a>, <a href="https://brottsplatskartan.localhost/lan/V%C3%A4sterbottens%20l%C3%A4n">Västerbotten</a>,
+            <a href="https://brottsplatskartan.localhost/lan/V%C3%A4sternorrlands%20l%C3%A4n">Västernorrland</a>, <a href="https://brottsplatskartan.localhost/lan/V%C3%A4stmanlands%20l%C3%A4n">Västmanland</a>, <a href="https://brottsplatskartan.localhost/lan/V%C3%A4stra%20G%C3%B6talands%20l%C3%A4n">Västa Götaland</a></p>
+    </section>
+
 @endsection
 
 @section('sidebar')

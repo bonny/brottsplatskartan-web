@@ -1,5 +1,5 @@
 @if ($policeStations)
-    <section class="widget LanPolicestations">
+    <section class="widget LanPolicestations" id="polisstationer">
         <h2 class="LanPolicestations-title">Polisstationer</h2>
         <p class="LanPolicestations-intro">
             Det finns {{$policeStations['policeStations']->count()}}

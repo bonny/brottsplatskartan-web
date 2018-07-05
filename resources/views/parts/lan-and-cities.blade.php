@@ -2,9 +2,9 @@
 modul i sidebar med länkar till alla län
 --}}
 
-<section>
+<section class="widget">
 
-    <h2>Se senaste händelserna &amp; brotten i ditt län</h2>
+    <h2 class="widget__title">Se senaste händelserna &amp; brotten i ditt län</h2>
 
     <?php
 

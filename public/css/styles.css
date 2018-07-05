@@ -7,6 +7,8 @@
     --color-red: #cb4739;
     --color-blue-police: #1862a8;
     --color-blue-police-active: #0c3256;
+    --color-white: #eee;
+    --color-yellow: #ffcc33;
     --default-margin: 1rem;
     --default-margin-half: calc(var(--default-margin) / 2);
     --default-margin-double: calc(var(--default-margin) * 2);
@@ -140,7 +142,7 @@ button {
     -webkit-box-shadow: 2px 1px 1px rgba(0, 0, 0, 0.15);
             box-shadow: 2px 1px 1px rgba(0, 0, 0, 0.15);
     font-size: 0.75rem;
-    background: #ffcc33;
+    background: var(--color-yellow);
 }
 
 .SiteHeader::after {
@@ -1516,4 +1518,33 @@ input[type="url"],
 
 .u-hidden {
     display: none;
+}
+
+/* Widgets */
+.widget {
+    background: #fff;
+    padding: var(--default-margin);
+    margin-top: var(--default-margin);
+    margin-bottom: var(--default-margin);
+}
+
+.widget__title {
+    margin-top: 0;
+    margin-bottom: var(--default-margin);
+}
+
+.u-color-bg-red {
+    background-color: var(--color-red);
+}
+
+.u-color-bg-blue-police {
+    background-color: var(--color-blue-police);
+}
+
+.u-color-bg-yellow {
+    background-color: var(--color-yellow);
+}
+
+.u-color-white {
+    color: var(--color-white);
 }

@@ -1,5 +1,5 @@
 @if ($relatedLinks)
-    <section class="widget RelatedLinks">
+    <section class="widget RelatedLinks" id="relaterade-lankar">
 
         <h2 class="RelatedLinks__title">Relaterade länkar</h2>
         <ul class="RelatedLinks__items">
