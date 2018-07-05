@@ -8,7 +8,7 @@
                 <li class="RelatedLinks__item">
                     <h3 class="RelatedLinks__title">
                         <a class="RelatedLinks__link" href="{{$relatedLink->url}}">
-                            {{$relatedLink->title}}
+                            {{$relatedLink->title or $relatedLink->url}}
                         </a>
                     </h3>
                     <p class="RelatedLinks__description">{{$relatedLink->desc}}</p>
