@@ -33,10 +33,10 @@ https://brottsplatskartan.localhost/lan/Stockholms%20l%C3%A4n
     @if (!empty($title))
         <h1>
             {!!$title!!}
-            @if (isset($showLanSwitcher))
-                <a class="Breadcrumbs__switchLan" href="{{ route("lanOverview") }}">Byt län</a>
-            @endif
         </h1>
+        @if (isset($showLanSwitcher))
+            <p class="Breadcrumbs__switchLan__belowTitle"><a class="Breadcrumbs__switchLan" href="{{ route("lanOverview", ['utm_source' => 'switchLan']) }}">Byt län</a></p>
+        @endif
 {{--     @else
         <h1>Senaste polishändelserna i Sverige</h1>
  --}}    @endif
