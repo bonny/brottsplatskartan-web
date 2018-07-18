@@ -172,7 +172,7 @@ Template för ordlista/dictionary
             <a href="https://brottsplatskartan.localhost/lan/Norrbottens%20l%C3%A4n">Norrbotten</a>, <a href="https://brottsplatskartan.localhost/lan/%C3%96rebro%20l%C3%A4n">Örebro</a>, <a href="https://brottsplatskartan.localhost/lan/%C3%96sterg%C3%B6tlands%20l%C3%A4n">Östergötland</a>,
             <a href="https://brottsplatskartan.localhost/lan/Sk%C3%A5ne%20l%C3%A4n">Skåne</a>, <a href="https://brottsplatskartan.localhost/lan/S%C3%B6dermanland%20and%20Uppland%20S%C3%B6dermanlands%20l%C3%A4n">Södermanland</a>, <a href="https://brottsplatskartan.localhost/lan/Stockholms%20l%C3%A4n">Stockholm</a>,
             <a href="https://brottsplatskartan.localhost/lan/Uppsala%20l%C3%A4n">Uppsala</a>, <a href="https://brottsplatskartan.localhost/lan/V%C3%A4rmlands%20l%C3%A4n">Värmland</a>, <a href="https://brottsplatskartan.localhost/lan/V%C3%A4sterbottens%20l%C3%A4n">Västerbotten</a>,
-            <a href="https://brottsplatskartan.localhost/lan/V%C3%A4sternorrlands%20l%C3%A4n">Västernorrland</a>, <a href="https://brottsplatskartan.localhost/lan/V%C3%A4stmanlands%20l%C3%A4n">Västmanland</a>, <a href="https://brottsplatskartan.localhost/lan/V%C3%A4stra%20G%C3%B6talands%20l%C3%A4n">Västa Götaland</a></p>
+            <a href="https://brottsplatskartan.localhost/lan/V%C3%A4sternorrlands%20l%C3%A4n">Västernorrland</a>, <a href="https://brottsplatskartan.localhost/lan/V%C3%A4stmanlands%20l%C3%A4n">Västmanland</a>, <a href="https://brottsplatskartan.localhost/lan/V%C3%A4stra%20G%C3%B6talands%20l%C3%A4n">Västra Götaland</a></p>
     </section>
 
     <section class="widget">
