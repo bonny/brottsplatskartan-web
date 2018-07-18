@@ -31,8 +31,10 @@ Template for text pages
 
         <p>Brottsplatskartan har ett API med stöd för både JSON och JSONP.</p>
 
-        <p>Använda gärna API:et men skicka även med en unik <code>app</code>-parameter så vi
+        <p>Använda gärna API:et för icke-kommersielltbruk och skicka med en unik <code>app</code>-parameter så vi
         kan se hur mycket olika tjänster använder API:et.</p>
+
+        <p>För kommersiellt bruk kontakta oss på <a href="mailto:kontakt@brottsplatskartan.se">kontakt@brottsplatskartan.se</a>.</p>
 
         <p>Ungefär cirka såhär ser URLarna för APIet ut:</p>
 
