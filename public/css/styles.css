@@ -907,6 +907,10 @@ input[type="url"],
     margin-bottom: 0;
 }
 
+.RelatedEvents__item__titleType {
+    line-height: 1;
+}
+
 .RelatedEvents__item__location,
 .RelatedEvents__item__date {
     font-size: var(--font-size-small);
@@ -1473,9 +1477,17 @@ input[type="url"],
     margin-top: var(--default-margin);
 }
 
-.widget__listItem__preTitle {
+.widget__listItem:first-of-type {
+    border-top: none;
+    padding-top: 0;
+}
+
+.widget__listItem__preTitle,
+.RelatedEvents__item__titleType,
+.Event__type {
     color: var(--color-gray-1);
     font-size: var(--font-size-small);
+    line-height: 1.2;
     margin-top: 0;
     margin-bottom: var(--default-margin-third);
     text-transform: uppercase;

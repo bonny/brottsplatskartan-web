@@ -2,8 +2,8 @@
 
     <h3 class="widget__listItem__title RelatedEvents__item__title">
         <a class="RelatedEvents__item__link" href="{{ $eventNear->getPermalink() }}">
-            {{ $eventNear->parsed_title }},
-            {{ $eventNear->getDescriptionAsPlainText() }}
+            <span class="RelatedEvents__item__titleType">{{ $eventNear->parsed_title }}</span>
+            <span class="RelatedEvents__item__titleDesc">{{ $eventNear->getDescriptionAsPlainText() }}</span>
         </a>
     </h3>
 
