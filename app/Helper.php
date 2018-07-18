@@ -846,4 +846,25 @@ class Helper
 
         return $relatedLinks;
     }
+
+    public static function getMostViewedEvents($date = null, $limit = 10) {
+        if (!$date) {
+            $date = Carbon::now();
+        }
+
+        $tomorrow = $date->copy()->modify('+1 day')->format('Y-m-d');
+        $yesterday = $date->copy()->subDays(1);
+
+        $mostViewed = CrimeView::
+                        select(DB::raw('count(*) as views'), 'crime_event_id', DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d") AS createdYMD'))
+                        ->where('created_at', '<', $tomorrow)
+                        ->where('created_at', '>', $yesterday)
+                        ->groupBy('createdYMD', 'crime_event_id')
+                        ->orderBy('views', 'desc')
+                        ->limit($limit)
+                        ->with('CrimeEvent')
+                        ->get();
+
+        return $mostViewed;
+    }
 }

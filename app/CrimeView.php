@@ -17,4 +17,12 @@ class CrimeView extends Model
     // {
     //     return $this->hasOne('App\CrimeEvent');
     // }
+
+    /**
+     * Get the crime event that this is a view for.
+     */
+    public function crimeEvent()
+    {
+        return $this->belongsTo('App\CrimeEvent');
+    }
 }

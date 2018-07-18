@@ -1304,7 +1304,8 @@ input[type="url"],
 
 .widget__listItem__preTitle,
 .RelatedEvents__item__titleType,
-.Event__type {
+.Event__type,
+.u-ucase-grey {
     color: var(--color-gray-1);
     font-size: var(--font-size-small);
     line-height: 1.2;
@@ -1334,6 +1335,11 @@ input[type="url"],
 
 .widget__listItem__text p:not(:first-child) {
     margin-top: var(--default-margin-third);
+}
+
+.MostViewed__item {
+    width: 80%;
+    white-space: initial;
 }
 
 .u-color-bg-red {

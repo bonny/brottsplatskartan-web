@@ -21,11 +21,30 @@ Template för ett event/händelse
 
 @section('content')
     @include('parts.crimeevent', ["single" => true])
+
+    @if (empty($mostViewed))
+        <p>Inget mest tittat på idag ännu.</p>
+    @else
+        <section class="widget widget--mostViewed">
+            <h2 class="widget__title">Mest visat idag</h2>
+            <amp-carousel width="450" height="200" layout="fixed-height">
+                @foreach ($mostViewed as $view)
+                    <article data-views="{{$view->views}}" class="MostViewed__item">
+                        <p class="u-ucase-grey">{{$view->crimeEvent->parsed_title}}</p>
+                        <h3>{{$view->crimeEvent->getDescriptionAsPlainText()}}</h3>
+                        <p class="RelatedEvents__item__location">{{ $view->crimeEvent->getLocationString(false, true, true) }}</p>
+                        <div>{{ $view->crimeEvent->getParsedContentTeaser(100) }}</div>
+                    </article>
+                @endforeach
+            </amp-carousel>
+        </section>
+    @endif
+
 @endsection
 
 @section('sidebar')
 
-    {{-- show a card with nearby events --}}
+    <p>{{-- show a card with nearby events --}}
     @if (isset($eventsNearby) && $eventsNearby->count())
 
         <aside class="RelatedEvents widget">

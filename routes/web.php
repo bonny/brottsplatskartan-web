@@ -515,7 +515,7 @@ Route::get('/{lan}/{eventName}', function ($lan, $eventName, Request $request) {
         dd($text);
     }
 
-    // Hämta nyhetsartiklar som hör till händelsen
+    // Hämta nyhetsartiklar som hör till händelsen.
     $newsarticles = $event->newsarticles;
 
     $data = [
@@ -526,7 +526,8 @@ Route::get('/{lan}/{eventName}', function ($lan, $eventName, Request $request) {
         'breadcrumbs' => $breadcrumbs,
         'debugData' => $debugData,
         'dictionaryWordsInText' => $dictionaryWordsInText,
-        'newsarticles' => $newsarticles
+        'newsarticles' => $newsarticles,
+        'mostViewed' => \App\Helper::getMostViewedEvents(Carbon::now(), 5)
     ];
 
     return view('single-event', $data);

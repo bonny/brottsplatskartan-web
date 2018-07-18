@@ -7,7 +7,7 @@
         </a>
     </h3>
 
-    {{-- <p class="RelatedEvents__item__location">{{ $eventNear->getLocationString(true, false, false) }}</p> --}}
+    {{-- <p class="RelatedEvents__item__location">{{ $eventNear->getLocationString(false, false, true) }}</p> --}}
 
     {{-- <p class="RelatedEvents__item__date">{{ $eventNear->getParsedDateFormattedForHumans() }}</p> --}}
 
