@@ -114,7 +114,7 @@ Template för ordlista/dictionary
             <li class="widget__listItem RelatedLinks__item">
                 <p class="widget__listItem__preTitle">Facebook</p>
                 <h3 class="widget__listItem__title RelatedLinks__title">
-                    <a class="RelatedLinks__link" href="https://www.facebook.com/PolisenTaby/"> Polisen Täby/Danderyd/Vallentuna/Åkersberga/Vaxholm på Facebook</a>
+                    <a class="RelatedLinks__link external" href="https://www.facebook.com/PolisenTaby/"> Polisen Täby/Danderyd/Vallentuna/Åkersberga/Vaxholm på Facebook</a>
                 </h3>
                 <div class="widget__listItem__text">
                     <p>Täbys lokalpolisområdes officiella sida på Facebook.</p>
@@ -123,7 +123,7 @@ Template för ordlista/dictionary
             </li>
             <li class="widget__listItem RelatedLinks__item">
                 <h3 class="widget__listItem__title RelatedLinks__title">
-                    <a class="RelatedLinks__link" href="https://www.facebook.com/tabynyheter/"> Täby Nyheter</a>
+                    <a class="RelatedLinks__link external" href="https://www.facebook.com/tabynyheter/"> Täby Nyheter</a>
                 </h3>
                 <div class="widget__listItem__text">
                     <p class="RelatedLinks__description">Täbybornas egen lokaltidning.</p>
@@ -131,7 +131,7 @@ Template för ordlista/dictionary
             </li>
             <li class="widget__listItem RelatedLinks__item">
                 <h3 class="widget__listItem__title RelatedLinks__title">
-                    <a class="RelatedLinks__link" href="https://www.facebook.com/groups/217660818650507/?ref=group_header"> Grannsamverkan Gribbylund Täby</a>
+                    <a class="RelatedLinks__link external" href="https://www.facebook.com/groups/217660818650507/?ref=group_header"> Grannsamverkan Gribbylund Täby</a>
                 </h3>
                 <div class="widget__listItem__text">
                     <p class="RelatedLinks__description">Facebookgrupp för informationsdelning mellan boende i Gribbylund i Täby. Det kan vara inbrottsvarningar, tips om kommande aktiviteter i området, efterlysningar och annat som rör boende i Gribbylund.</p>

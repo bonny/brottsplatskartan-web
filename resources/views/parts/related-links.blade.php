@@ -8,7 +8,7 @@
             @foreach ($relatedLinks as $relatedLink)
                 <li class="widget__listItem RelatedLinks__item">
                     <h3 class="widget__listItem__title RelatedLinks__title">
-                        <a class="RelatedLinks__link"
+                        <a class="RelatedLinks__link external"
                             href="{{$relatedLink->url}}"
                             data-vars-outbound-link="{{$relatedLink->url}}"
                             >

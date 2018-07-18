@@ -263,7 +263,7 @@ Layout template for web
             },
           "outboundLinks": {
             "on": "click",
-            "selector": "a",
+            "selector": "a.external",
             "request": "event",
             "vars": {
               "eventCategory": "outbound",
