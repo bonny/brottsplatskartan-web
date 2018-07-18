@@ -1072,6 +1072,10 @@ input[type="url"],
     padding: 0;
 }
 
+.widget--counties p:last-child {
+    margin-bottom: 0;
+}
+
 .PoliceStation-locationsNav,
 .PoliceStation-servicesItems {
     list-style: none;
