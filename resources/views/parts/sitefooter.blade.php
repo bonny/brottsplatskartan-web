@@ -28,7 +28,7 @@
                 <li class="SiteFooter__lanListing__item">
                     <a
                         href="{{ route("lanSingle", ["lan" => $oneLan->administrative_area_level_1]) }}"
-                        title="Händelser i {{ $oneLan->administrative_area_level_1 }}"
+                        title="Händelser och brott från Polisen i {{ $oneLan->administrative_area_level_1 }}"
                         >
                         {{ $oneLan->administrative_area_level_1 }}
                     </a>
