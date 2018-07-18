@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\CrimeEvent;
+use App\CrimeView;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -16,7 +17,7 @@ class PixelController extends Controller
     /**
      * Tracka saker via pixel.
      *
-     * @param Request $request Request.
+     * @param Request $req Request.
      *
      * @return $response Response.
      */
@@ -31,9 +32,12 @@ class PixelController extends Controller
         // Om path slutar med siffror är det ett brott/händelse.
         if (preg_match('/-(\d+)$/', $path, $matches)) {
             $eventId = intval($matches[1]);
-            $crimeEvent = CrimeEvent::find($eventId);
             $data['eventId'] = $eventId;
+            // $crimeEvent = CrimeEvent::find($eventId);
             // $data['event'] = $crimeEvent;
+            $view = new CrimeView;
+            $view->crime_event_id = $eventId;
+            $view->save();
         }
 
         return $data;

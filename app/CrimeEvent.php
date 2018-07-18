@@ -899,4 +899,9 @@ SQL;
 
         return $events;
     }
+
+    public function crimeViews()
+    {
+        return $this->hasMany('App\CrimeView');
+    }
 }
