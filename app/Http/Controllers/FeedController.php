@@ -27,9 +27,15 @@ class FeedController extends Controller
         $this->feedParser = $feedParser;
     }
 
+    /**
+     * Hämta URL för att geocoda ett feed item.
+     *
+     * @param int $itemID $itemID Item.
+     *
+     * @return string URL för geocode.
+     */
     public function getGeocodeURL($itemID)
     {
-
         $item = CrimeEvent::findOrFail($itemID);
         $itemLocations = $item->locations;
         $googleApiKey = getenv('GOOGLE_API_KEY');
@@ -56,7 +62,6 @@ class FeedController extends Controller
         );
 
         return $apiUrl;
-
     }
 
     /**
@@ -70,11 +75,10 @@ class FeedController extends Controller
         $item = CrimeEvent::findOrFail($itemID);
         $apiUrl = $this->getGeocodeURL($itemID);
 
-        $result_data = json_decode( file_get_contents($apiUrl) );
+        $result_data = json_decode(file_get_contents($apiUrl));
         $result_status = $result_data->status;
         $result_results = $result_data->results;
 
-        // What? OK is false?
         if ($result_status !== "OK") {
             return [
                 'error' => true,
