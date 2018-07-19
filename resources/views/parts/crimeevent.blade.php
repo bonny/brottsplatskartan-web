@@ -191,8 +191,8 @@ if $single is set then larger image
     @endif
 
     @if (!empty($dictionaryWordsInText) && $dictionaryWordsInText->count())
-        <aside class="Event__dictionaryWords">
-            <h2 class="Event__dictionaryWordsTitle">Ordlista</h2>
+        <aside class="Event__dictionaryWords widget widget--dictionaryWords">
+            <h2 class="Event__dictionaryWordsTitle widget__title">Ordlista – ord som förekommer i händelsen</h2>
 
             @foreach ($dictionaryWordsInText as $dictionaryWord)
                 <div class="Event__dictionaryWord">
