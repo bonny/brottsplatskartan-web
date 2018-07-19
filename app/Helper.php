@@ -853,7 +853,7 @@ class Helper
         }
 
         $tomorrow = $date->copy()->modify('+1 day')->format('Y-m-d');
-        $yesterday = $date->copy()->subDays(1);
+        $yesterday = $date->copy()->subDays(1)->format('Y-m-d');
 
         $mostViewed = CrimeView::
                         select(DB::raw('count(*) as views'), 'crime_event_id', DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d") AS createdYMD'))
