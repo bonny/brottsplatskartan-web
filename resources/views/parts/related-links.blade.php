@@ -24,7 +24,7 @@
 
     </section>
 
-    @if (isset($plats) && $plats == 'Täby')
+    @if (false && isset($plats) && $plats == 'Täby')
         <section class="widget">
             <amp-facebook-page
                 width="340"
