@@ -27,7 +27,7 @@ Template för ett event/händelse
     @else
         <section class="widget widget--mostViewed">
             <h2 class="widget__title">Mest visat idag</h2>
-            <amp-carousel width="auto" height="200" layout="responsive">
+            <amp-carousel width="auto" height="175" layout="fixed-height" type="carousel">
                 @foreach ($mostViewed as $view)
                     <article data-views="{{$view->views}}" class="MostViewed__item">
                         <h3 class="widget__listItem__title">
