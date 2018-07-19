@@ -94,14 +94,14 @@ Template för ordlista/dictionary
             <li class="widget__listItem Event__mediaLink">
                 <p class="widget__listItem__preTitle Event__mediaLinkSource">Skånska Dagbladet</p>
                 <h3 class="widget__listItem__title">
-                    <a class="Event__mediaLinkTitle" href="http://www.skd.se/2018/07/04/polisen-vadjar-om-hjalp-efter-forsvunnen/">Polisen vädjar om hjälp efter försvunnen</a>
+                    <a class="Event__mediaLinkTitle external" href="http://www.skd.se/2018/07/04/polisen-vadjar-om-hjalp-efter-forsvunnen/">Polisen vädjar om hjälp efter försvunnen</a>
                 </h3>
                 <div class="widget__listItem__text Event__mediaLinkShortdesc">Just nu pågår en större polisinsats i Bunkeflostrand för att eftersöka en person som är anmäld försvunnen. Polisen använder sig bland annat av helikopter i arbetet.</div>
             </li>
             <li class="widget__listItem Event__mediaLink">
                 <p class="widget__listItem__preTitle Event__mediaLinkSource">Sydsvenskan</p>
                 <h3 class="widget__listItem__title">
-                    <a class="Event__mediaLinkTitle" href="https://www.sydsvenskan.se/2018-07-04/stor-polisinsats-i-bunkeflostrand-nar-79-arig-man-forsvann">Stor polisinsats i Bunkeflostrand när 79-årig man försvann från sitt hem</a>
+                    <a class="Event__mediaLinkTitle external" href="https://www.sydsvenskan.se/2018-07-04/stor-polisinsats-i-bunkeflostrand-nar-79-arig-man-forsvann">Stor polisinsats i Bunkeflostrand när 79-årig man försvann från sitt hem</a>
                 </h3>
                 <div class="widget__listItem__text Event__mediaLinkShortdesc">På onsdagskvällen pågick en stor polisinsats i Bunkeflostrand efter att en 79-årig man hade anmälts försvunnen. Mannen återfanns senare vid liv.</div>
             </li>

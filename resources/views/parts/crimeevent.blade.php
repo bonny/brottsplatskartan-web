@@ -170,7 +170,7 @@ if $single is set then larger image
                             <p class="widget__listItem__preTitle Event__mediaLinkSource">{{ $newsarticle->getSourceName() }}</p>
                             <h3 class="widget__listItem__title">
                                 <a
-                                    class="Event__mediaLinkTitle"
+                                    class="Event__mediaLinkTitle external"
                                     href="{{ $newsarticle->url }}"
                                     data-vars-outbound-link="{{ $newsarticle->url }}"
                                     >{{ $newsarticle->title }}</a>
