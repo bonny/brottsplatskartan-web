@@ -1338,8 +1338,13 @@ input[type="url"],
 }
 
 .MostViewed__item {
-    width: 80%;
+    width: 90%;
     white-space: initial;
+    margin-bottom: var(--default-margin);
+    vertical-align: top;
+    border-right: 1px solid #ddd;
+    padding-right: var(--default-margin);
+    margin-left: var(--default-margin);
 }
 
 .u-color-bg-red {
