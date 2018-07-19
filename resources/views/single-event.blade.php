@@ -26,7 +26,7 @@ Template för ett event/händelse
         <p>Inget mest tittat på idag ännu.</p>
     @else
         <section class="widget widget--mostViewed">
-            <h2 class="widget__title">Mest visat idag</h2>
+            <h2 class="widget__title">Mest läst</h2>
             <amp-carousel width="auto" height="175" layout="fixed-height" type="carousel">
                 @foreach ($mostViewed as $view)
                     <article data-views="{{$view->views}}" class="MostViewed__item">
