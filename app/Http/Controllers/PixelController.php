@@ -29,15 +29,25 @@ class PixelController extends Controller
 
         $data = [];
 
-        // Om path slutar med siffror är det ett brott/händelse.
+        // Om path slutar med siffror är det kanske ett brott/händelse.
         if (preg_match('/-(\d+)$/', $path, $matches)) {
             $eventId = intval($matches[1]);
-            $data['eventId'] = $eventId;
-            // $crimeEvent = CrimeEvent::find($eventId);
-            // $data['event'] = $crimeEvent;
-            $view = new CrimeView;
-            $view->crime_event_id = $eventId;
-            $view->save();
+
+            // URL slutar med ID, dock kan det vara t.ex. året om URL är
+            // "/lan/Västmanlands län/handelser/18-juli-2018"
+            // så vi fortsätter bara om siffran inte är 4 siffror, pga
+            // alla händelser har numera högre värden än så. Fult. Men borde funka.
+            if (strlen($eventId) === 4) {
+                // Verkar vara år.
+            } else {
+                // Inte år, förhoppningsvis event. Spara.
+                $data['eventId'] = $eventId;
+                // $crimeEvent = CrimeEvent::find($eventId);
+                // $data['event'] = $crimeEvent;
+                $view = new CrimeView;
+                $view->crime_event_id = $eventId;
+                $view->save();
+            }
         }
 
         return $data;
