@@ -76,7 +76,7 @@ class Dictionary extends Model
     {
         $arrWords = self::getAllWordsAndSynonyms();
 
-        // Gör texten att kolla + orden att kolla efter lowercase + trim
+        // Gör texten att kolla + orden att kolla efter lowercase + trim.
         $text = trim($text);
         $text = mb_strtolower($text);
 
@@ -101,6 +101,8 @@ class Dictionary extends Model
                 )->get()
             );
         }
+
+        $wordsCollection = $wordsCollection->unique();
 
         return $wordsCollection;
     }
