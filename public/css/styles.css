@@ -1339,6 +1339,7 @@ input[type="url"],
 
 .MostViewed__item {
     width: 90%;
+    max-width: 400px;
     white-space: initial;
     margin-bottom: var(--default-margin);
     vertical-align: top;
