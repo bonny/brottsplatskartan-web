@@ -838,6 +838,10 @@ input[type="url"],
 }
 
 /* related events on single page */
+.RelatedEvents__item__link {
+    display: block;
+}
+
 .RelatedEvents__item__title,
 .RelatedEvents__item__location,
 .RelatedEvents__item__date {
