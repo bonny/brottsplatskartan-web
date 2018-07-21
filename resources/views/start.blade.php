@@ -36,60 +36,64 @@ samt för äldre dagar när man bläddrar i arkivet.
 
 @section('content')
 
-    @if (!empty($title))
-        <h1>{!!$title!!}</h1>
-    @else
-        <h1>Senaste polishändelserna i Sverige</h1>
-    @endif
+    <div class="widget">
+        <h1 class="widget__title">
+            @if (!empty($title))
+                {!!$title!!}
+            @else
+                Senaste polishändelserna i Sverige
+            @endif
+        </h1>
 
-    @includeWhen(!$isToday, 'parts.daynav')
+        @includeWhen(!$isToday, 'parts.daynav')
 
-    @if (isset($showLanSwitcher))
-        <p class="Breadcrumbs__switchLan__belowTitle">
-            <a class="Breadcrumbs__switchLan" href="{{ route("lanOverview") }}">Välj län</a>
-            <a class="Breadcrumbs__switchLan Breadcrumbs__switchLan--geo" href="/geo.php">Visa händelser nära min plats</a>
-        </p>
-    @endif
-
-    @if (empty($introtext))
-    @else
-        <div class="Introtext">{!! $introtext !!}</div>
-    @endif
-
-    @if ($events && $numEvents)
-
-         @if ($mostCommonCrimeTypes && $mostCommonCrimeTypes->count() >= 5)
-            <p>
-                @if ($isToday)
-                    De vanligaste händelserna idag är
-                @else
-                    De vanligaste händelserna {{$dateFormattedForMostCommonCrimeTypes}} var
-                @endif
-                @foreach ($mostCommonCrimeTypes as $oneCrimeType)
-                    @if ($loop->remaining == 0)
-                        och <strong>{{ mb_strtolower($oneCrimeType->parsed_title) }}</strong>.
-                    @elseif ($loop->remaining == 1)
-                        <strong>{{ mb_strtolower($oneCrimeType->parsed_title) }}</strong>
-                    @else
-                        <strong>{{ mb_strtolower($oneCrimeType->parsed_title) }}</strong>,
-                    @endif
-                    <!-- {{ $oneCrimeType->antal }} -->
-                @endforeach
+        @if (isset($showLanSwitcher))
+            <p class="Breadcrumbs__switchLan__belowTitle">
+                <a class="Breadcrumbs__switchLan" href="{{ route("lanOverview") }}">Välj län</a>
+                <a class="Breadcrumbs__switchLan Breadcrumbs__switchLan--geo" href="/geo.php">Visa händelser nära min plats</a>
             </p>
         @endif
 
-        @if ($isToday)
-            {{-- <p><b>{{$numEvents}} händelser har rapporterats in från Polisen de senaste dagarna.</b><p> --}}
+        @if (empty($introtext))
         @else
-            <p><b>{{$numEvents}} händelser från Polisen för detta datum.</b><p>
+            <div class="Introtext">{!! $introtext !!}</div>
         @endif
 
-        @include('parts.events-by-day')
+        @if ($events && $numEvents)
 
-        @include('parts.daynav')
-    @else
-        <p>Inga händelser inrapporterade denna dag.</p>
-    @endif
+            @if ($mostCommonCrimeTypes && $mostCommonCrimeTypes->count() >= 5)
+                <p>
+                    @if ($isToday)
+                        De vanligaste händelserna idag är
+                    @else
+                        De vanligaste händelserna {{$dateFormattedForMostCommonCrimeTypes}} var
+                    @endif
+                    @foreach ($mostCommonCrimeTypes as $oneCrimeType)
+                        @if ($loop->remaining == 0)
+                            och <strong>{{ mb_strtolower($oneCrimeType->parsed_title) }}</strong>.
+                        @elseif ($loop->remaining == 1)
+                            <strong>{{ mb_strtolower($oneCrimeType->parsed_title) }}</strong>
+                        @else
+                            <strong>{{ mb_strtolower($oneCrimeType->parsed_title) }}</strong>,
+                        @endif
+                        <!-- {{ $oneCrimeType->antal }} -->
+                    @endforeach
+                </p>
+            @endif
+
+            @if ($isToday)
+                {{-- <p><b>{{$numEvents}} händelser har rapporterats in från Polisen de senaste dagarna.</b><p> --}}
+            @else
+                <p><b>{{$numEvents}} händelser från Polisen för detta datum.</b><p>
+            @endif
+
+            @include('parts.events-by-day')
+
+            @include('parts.daynav')
+        @else
+            <p>Inga händelser inrapporterade denna dag.</p>
+        @endif
+    </div>
 
 @endsection
 

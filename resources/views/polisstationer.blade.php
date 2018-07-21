@@ -10,65 +10,71 @@ Template för polisstationer
 
 @section('content')
 
-    <h1>Polisstationer i Sverige</h1>
+    <div class="widget">
 
-    <p>
-        Hitta din närmsta polisstation i vår lista med Sveriges alla polisstationer i Sverige, grupperade på län.
-    </p>
+        <h1 class="widget__title">Polisstationer i Sverige</h1>
 
-    {{-- Översikt med ankarsnabblänkar till respektive län --}}
-    <p>Hoppa direkt till län:</p>
-    <ul class="PoliceStation-locationsNav">
-        @foreach ($locationsByPlace as $place)
-            <li class="PoliceStation-locationsNav-item">
-                <a href="#{{str_slug($place['lanName'])}}">{{$place['lanShortName']}}</a>@if (!$loop->last),@endif
-            </li>
-        @endforeach
-    </ul>
+        <p>
+            Hitta din närmsta polisstation i vår lista med Sveriges alla polisstationer i Sverige, grupperade på län.
+        </p>
 
-    <div class="PoliceStations-mainListing PoliceStations-mainListing">
+        {{-- Översikt med ankarsnabblänkar till respektive län --}}
+        <p>Hoppa direkt till län:</p>
+        <ul class="PoliceStation-locationsNav">
+            @foreach ($locationsByPlace as $place)
+                <li class="PoliceStation-locationsNav-item">
+                    <a href="#{{str_slug($place['lanName'])}}">{{$place['lanShortName']}}</a>@if (!$loop->last),@endif
+                </li>
+            @endforeach
+        </ul>
 
-        @foreach ($locationsByPlace as $place)
+        <div class="PoliceStations-mainListing PoliceStations-mainListing">
 
-            <div class="PoliceStations-wrap" id="{{str_slug($place['lanName'])}}">
+            @foreach ($locationsByPlace as $place)
 
-                <h2 class="PoliceStations-lanName">{{$place['lanName']}}</h2>
+                <div class="PoliceStations-wrap" id="{{str_slug($place['lanName'])}}">
 
-                <div class="PoliceStations-lanLocations">
-                    @foreach ($place['policeStations'] as $station)
+                    <h2 class="PoliceStations-lanName">{{$place['lanName']}}</h2>
 
-                        <div class="PoliceStation-wrap" id="{{str_slug($place['lanName'] . '-' . $station->name)}}">
-                            <h3 class="PoliceStation-name">{{$station->name}}</h3>
+                    <div class="PoliceStations-lanLocations">
+                        @foreach ($place['policeStations'] as $station)
 
-                            <p class="PoliceStation-street">
-                                <a href="https://www.google.com/maps/search/?api=1&query={{$station->location->gps}}" rel="noopener" target="_blank">
-                                    {{$station->location->name}}
-                                </a>
-                            </p>
+                            <div class="PoliceStation-wrap" id="{{str_slug($place['lanName'] . '-' . $station->name)}}">
+                                <h3 class="PoliceStation-name">{{$station->name}}</h3>
 
-                            @if (is_array($station->services) && !empty($station->services))
-                                <div class="PoliceStation-services">
-                                    <p class="PoliceStation-servicesTitle">Tjänster:</p>
-                                    <ul class="PoliceStation-servicesItems">
-                                        @foreach ($station->services as $service)
-                                            <li class="PoliceStation-service">
-                                                {{$service->name}}@if (!$loop->last),@endif
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            @endif
-                        </div>
+                                <p class="PoliceStation-street">
+                                    <a href="https://www.google.com/maps/search/?api=1&query={{$station->location->gps}}" rel="noopener" target="_blank">
+                                        {{$station->location->name}}
+                                    </a>
+                                </p>
 
-                    @endforeach
+                                @if (is_array($station->services) && !empty($station->services))
+                                    <div class="PoliceStation-services">
+                                        <p class="PoliceStation-servicesTitle">Tjänster:</p>
+                                        <ul class="PoliceStation-servicesItems">
+                                            @foreach ($station->services as $service)
+                                                <li class="PoliceStation-service">
+                                                    {{$service->name}}@if (!$loop->last),@endif
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                @endif
+                            </div>
+
+                        @endforeach
+                    </div>
+
                 </div>
 
-            </div>
+            @endforeach
+        </div>
 
-        @endforeach
     </div>
 
-    {{--
-    @json($location)
-    --}}
+@endsection
+
+@section('sidebar')
+    @include('parts.lan-and-cities')
+    @include('parts.follow-us')
 @endsection

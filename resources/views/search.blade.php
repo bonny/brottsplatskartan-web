@@ -31,35 +31,45 @@ Senaste timmen
 qdr:h
 --}}
 
-    <h1>Sök brott och händelser</h1>
+    <div class="widget">
 
-    <p>Här kan du söka efter brott och andra typer av händelser som rapporterats in av Polisen.</p>
+        <h1 class="widget__title">Sök brott och händelser</h1>
 
-    <form method="get" action="{{ route("search", null, false) }}" class="SearchForm" target="_top">
-        <input type="text" name="s" value="{{ $s }}" class="SearchForm__s" placeholder="Sök inbrott, stöld, stad eller län" autofocus>
-        <input type="submit" class="SearchForm__submit" value="Sök">
-        <select name="tbs" class="SearchForm__select">
-            <option value="qdr:m">Den här månaden</option>
-            <option value="qdr:w">Den här veckan</option>
-            <option value="qdr:d">Senaste dygnet</option>
-            <option value="qdr:h">Senaste timmen</option>
-        </select>
-    </form>
+        <p>Här kan du söka efter brott och andra typer av händelser som rapporterats in av Polisen.</p>
 
-    <p>
-        <strong>Söktips:</strong> Kombinera händelsetyp (rån, stöld osv.) med platsnamn för bättre sökresultat.
-        För att t.ex. hitta skadegörelse i Stockholm så kan du söka efter "skadegörelse stockholm östermalm".
-    </p>
+        <form method="get" action="{{ route("search", null, false) }}" class="SearchForm" target="_top">
+            <input type="text" name="s" value="{{ $s }}" class="SearchForm__s" placeholder="Sök inbrott, stöld, stad eller län" autofocus>
+            <input type="submit" class="SearchForm__submit" value="Sök">
+            <select name="tbs" class="SearchForm__select">
+                <option value="qdr:m">Den här månaden</option>
+                <option value="qdr:w">Den här veckan</option>
+                <option value="qdr:d">Senaste dygnet</option>
+                <option value="qdr:h">Senaste timmen</option>
+            </select>
+        </form>
 
-    <hr>
+        <p>
+            <strong>Söktips:</strong> Kombinera händelsetyp (rån, stöld osv.) med platsnamn för bättre sökresultat.
+            För att t.ex. hitta skadegörelse i Stockholm så kan du söka efter "skadegörelse stockholm östermalm".
+        </p>
 
-    <h2>Senaste händelserna i Sverige</h2>
+        <hr>
 
-    @if ($eventsByDay)
-        @include('parts.events-by-day', [
-            "overview" => true,
-            'hideMapImage' => true
-        ])
-    @endif
+        <h2>Senaste händelserna i Sverige</h2>
+
+        @if ($eventsByDay)
+            @include('parts.events-by-day', [
+                "overview" => true,
+                'hideMapImage' => true
+            ])
+        @endif
+
+    </div>
 
 @endsection
+
+@section('sidebar')
+    @include('parts.lan-and-cities')
+    @include('parts.follow-us')
+@endsection
+
