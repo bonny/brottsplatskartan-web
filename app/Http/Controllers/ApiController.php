@@ -92,8 +92,8 @@ class ApiController extends Controller
     {
         // The number of events to get. Max 50. Default 10.
         $limit = (int) $request->input("limit", 10);
-        if ($limit > 50) {
-            $limit = 50;
+        if ($limit > 500) {
+            $limit = 500;
         }
         if ($limit <= 0) {
             $limit = 10;

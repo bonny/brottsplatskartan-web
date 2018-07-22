@@ -14,18 +14,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <link rel="stylesheet" href="/css/styles.css" />
     <style>
-        body {
-            padding-top: 0;
+        body,
+        h1 {
+            margin: 0;
+            padding: 0;
         }
         #mapid {
             height: 100vh;
             background: #eee;
+            z-index: 5;
+        }
+        .FullScreenMap__intro {
+            position: absolute;
+            z-index: 10;
+            background-color: rgba(255,255,255,.5);
+            top: 0;
+            right: 0;
+            width: 300px;
+            padding: 25px;
+            transition: all .15s ease-in-out;
+        }
+        .FullScreenMap__intro:hover {
+            background-color: rgba(255,255,255,.9);
         }
     </style>
 </head>
 <body>
 
-    <h1>Sverigekartan – brott och händelser i Sverige på kartan</h1>
+    <div class="FullScreenMap__intro">
+        <h1>Sverigekartan – brott och händelser i Sverige på kartan</h1>
+        <p>
+            Här på sverigekartan visas de senaste 500 händelserna som rapporterats
+            in till Brottsplatskartan av Polisen.
+        </p>
+        <p>Observera att platserna inte är exakta.</p>
+        <p>
+            <a href="/">» Brottsplatskartan</a>.
+        </p>
+    </div>
 
     <div id="mapid"></div>
 
