@@ -29,50 +29,51 @@ https://brottsplatskartan.localhost/plats/nacka
 
 @section('content')
 
-    <h1>
-        @if ($isToday)
-            <strong>{{$plats}}</strong>: brott &amp; händelser
+    <div class="widget">
+        <h1 class="widget__title">
+            @if ($isToday)
+                <strong>{{$plats}}</strong>: brott &amp; händelser
+            @else
+                Brott &amp; händelser i {{$plats}} {{$dateForTitle}}
+            @endif
+        </h1>
+
+        <div class="Introtext">
+
+            @if (empty($introtext))
+                <p>Inrapporterade händelser från Polisen.</p>
+            @else
+                {!! $introtext !!}
+            @endif
+
+            @if ($mostCommonCrimeTypes && $mostCommonCrimeTypes->count() >= 5)
+                <p>
+                    De 5 mest förekommande typerna av händelser här är
+                    @foreach ($mostCommonCrimeTypes as $oneCrimeType)
+                        @if ($loop->remaining == 0)
+                            och <strong>{{ mb_strtolower($oneCrimeType->parsed_title) }}</strong>.
+                        @elseif ($loop->remaining == 1)
+                            <strong>{{ mb_strtolower($oneCrimeType->parsed_title) }}</strong>
+                        @else
+                            <strong>{{ mb_strtolower($oneCrimeType->parsed_title) }}</strong>,
+                        @endif
+                        <!-- {{ $oneCrimeType->antal }} -->
+                    @endforeach
+                </p>
+            @endif
+
+        </div>
+
+        @includeWhen(!$isToday, 'parts.daynav')
+
+        @if ($events->count())
+            @include('parts.events-by-day')
         @else
-            Brott &amp; händelser i {{$plats}} {{$dateForTitle}}
-        @endif
-    </h1>
-
-    <div class="Introtext">
-
-        @if (empty($introtext))
-            <p>Inrapporterade händelser från Polisen.</p>
-        @else
-            {!! $introtext !!}
+            <p>Inga händelser har rapporterats från Polisen denna dag.</p>
         @endif
 
-        @if ($mostCommonCrimeTypes && $mostCommonCrimeTypes->count() >= 5)
-            <p>
-                De 5 mest förekommande typerna av händelser här är
-                @foreach ($mostCommonCrimeTypes as $oneCrimeType)
-                    @if ($loop->remaining == 0)
-                        och <strong>{{ mb_strtolower($oneCrimeType->parsed_title) }}</strong>.
-                    @elseif ($loop->remaining == 1)
-                        <strong>{{ mb_strtolower($oneCrimeType->parsed_title) }}</strong>
-                    @else
-                        <strong>{{ mb_strtolower($oneCrimeType->parsed_title) }}</strong>,
-                    @endif
-                    <!-- {{ $oneCrimeType->antal }} -->
-                @endforeach
-            </p>
-        @endif
-
+        @include('parts.daynav')
     </div>
-
-    @includeWhen(!$isToday, 'parts.daynav')
-
-    @if ($events->count())
-        @include('parts.events-by-day')
-    @else
-        <p>Inga händelser har rapporterats från Polisen denna dag.</p>
-    @endif
-
-
-    @include('parts.daynav')
 
 @endsection
 

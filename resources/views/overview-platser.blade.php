@@ -13,26 +13,29 @@ Template för ort-översikt
 
 @section('content')
 
-    <h1>Se senaste brotten på dessa platser</h1>
+    <div class="widget">
+        <h1 class="widget__title">Se senaste brotten på dessa platser</h1>
 
-    <p>
-        Välj en ort eller plats för att se de senaste brotten
-        och händelserna.
-    </p>
+        <p>
+            Välj en ort eller plats för att se de senaste brotten
+            och händelserna.
+        </p>
 
-    <p>All data kommer direkt från Polisen.</p>
+        <p>All data kommer direkt från Polisen.</p>
 
-    <div class="PlatsListing">
+        <div class="PlatsListing">
 
-    @foreach ($orter as $oneOrt)
+        @foreach ($orter as $oneOrt)
 
-        <h2 class="PlatsListing__plats">
-            <a href="{{ route("platsSingle", ["ort"=>$oneOrt->parsed_title_location]) }}">
-                {{ $oneOrt->parsed_title_location }}
-            </a>
-        </h2>
+            <h2 class="PlatsListing__plats">
+                <a href="{{ route("platsSingle", ["ort"=>$oneOrt->parsed_title_location]) }}">
+                    {{ $oneOrt->parsed_title_location }}
+                </a>
+            </h2>
 
-    @endforeach
+        @endforeach
+
+        </div>
 
     </div>
 
