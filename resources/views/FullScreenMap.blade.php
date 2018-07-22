@@ -31,7 +31,7 @@
 
     <script>
 
-        var mymap = L.map('mapid').setView([59,18], 6);
+        var mymap = L.map('mapid').setView([59,18], 5);
         var markers = [];
 
         var OpenStreetMapTileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -141,6 +141,15 @@
 
         getEvents();
 
+    </script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-181460-13"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-181460-13');
     </script>
 </body>
 </html>
