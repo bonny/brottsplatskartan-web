@@ -4,6 +4,11 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Klass för platser.
+*
+ * En plats är t.ex. "Uppsala" i "Uppsala län".
+ */
 class Place extends Model
 {
     protected $fillable = ['name'];
