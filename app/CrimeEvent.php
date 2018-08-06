@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Http\Request;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Support\Facades\Cache;
@@ -10,6 +11,7 @@ use App\Http\Controllers\FeedController;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Feed\Feedable;
 use Spatie\Feed\FeedItem;
+use App\Http\Controllers\PlatsController;
 
 class CrimeEvent extends Model implements Feedable
 {
@@ -564,7 +566,7 @@ class CrimeEvent extends Model implements Feedable
      *
      * @return array
      */
-    protected function maybeAddDebugData(\Illuminate\Http\Request $request, CrimeEvent $event)
+    protected function maybeAddDebugData(Request $request, CrimeEvent $event)
     {
         $data = [];
 
@@ -647,7 +649,7 @@ class CrimeEvent extends Model implements Feedable
      * useful when locations have been added or removed, so geocode
      * of item may change
      */
-    public function maybeClearLocationData(\Illuminate\Http\Request $request)
+    public function maybeClearLocationData(Request $request)
     {
         if (!\Auth::check()) {
             return;
@@ -881,21 +883,46 @@ SQL;
             ->updated($this->updated_at)
             ->link($this->getPermalink())
             ->author('Brottsplatskartan.se')
-            ->summary($this->getMetaDescription(300));
+            ->summary($this->getMetaDescription(100) . '…');
     }
 
     /**
-     * Undocumented function
+     * Hämta händelser till RSS-flödet.
+     *
+     * Exempelurl:
+     * https://brottsplatskartan.localhost/rss
+     *
+     * Exempel som visar bara för Stockholms län:
+     * https://brottsplatskartan.localhost/rss?lan=stockholms%20l%C3%A4n
      *
      * @return void
      */
-    public function getFeedItems()
+    public function getFeedItems(Request $request, PlatsController $platsController)
     {
-        $events = CrimeEvent::
-            orderBy("created_at", "desc")
-            ->with('locations')
-            ->limit(50)
-            ->get();
+        $limit = 50;
+        $lan = $request->input('lan');
+        $plats = $request->input('plats');
+
+        if ($lan && $plats) {
+            // "15-januari-2018"
+            $dateString = Carbon::parse('today')->formatLocalized('%d-%B-%Y');
+            $date = \App\Helper::getdateFromDateSlug($dateString);
+            $events = $platsController->getEventsInPlatsWithLanUncached($plats, $lan, $date, 14, false);
+        } else if ($lan) {
+            $events = CrimeEvent::
+                orderBy("created_at", "desc")
+                ->where("administrative_area_level_1", $lan)
+                ->with('locations')
+                ->limit($limit)
+                ->get();
+        } else {
+            // Oavsett plats eller län.
+            $events = CrimeEvent::
+                orderBy("created_at", "desc")
+                ->with('locations')
+                ->limit($limit)
+                ->get();
+        }
 
         return $events;
     }
