@@ -8,12 +8,6 @@ Template för bloggens startsida
 
 @section('title', 'Blogg: Brottsplatskartans blogg med uppdateringar om sajten med mera')
 @section('canonicalLink', route('blog'))
-{{--
-@section('metaDescription', e($event->getMetaDescription()))
-@section('metaImage', $event->getStaticImageSrc(640,640))
-@section('metaImageWidth', 640)
-@section('metaImageHeight', 640)
---}}
 
 @section('content')
 

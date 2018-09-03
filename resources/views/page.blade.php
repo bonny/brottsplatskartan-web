@@ -16,11 +16,6 @@ Template for text pages
 
 @section('canonicalLink', $canonicalLink)
 
-{{--
-@section('metaDescription', e($event->getMetaDescription()))
-@section('metaImage', $event->getStaticImageSrc(640,640))
---}}
-
 @section('content')
 
     @if ($pagename == "api")

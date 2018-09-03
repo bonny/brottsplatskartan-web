@@ -8,12 +8,6 @@ Template för ett event/händelse
 
 @section('title', $blog->title)
 @section('canonicalLink', $blog->getPermalink())
-{{--
-@section('metaDescription', e($event->getMetaDescription()))
-@section('metaImage', $event->getStaticImageSrc(640,640))
-@section('metaImageWidth', 640)
-@section('metaImageHeight', 640)
---}}
 
 @section('content')
     @include('parts.blog-item')
