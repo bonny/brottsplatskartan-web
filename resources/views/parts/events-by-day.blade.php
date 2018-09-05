@@ -17,7 +17,7 @@
                         'overview' => true,
                         // Om det är väldigt många grejjer på en sida så se till att bara de första
                         // n händelserna som får bild, annars blir det för dyrt med alla API-anrop.
-                        'hideMapImage' => ($loop->index >= 2) || (isset($hideMapImage) && $hideMapImage) || $loop->parent->index > 0
+                        'hideMapImage' => ($loop->index >= 0) || (isset($hideMapImage) && $hideMapImage) || $loop->parent->index > 0
                     ])
                 @endforeach
             </ul>
