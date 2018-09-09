@@ -68,7 +68,7 @@ if $single is set then larger image
                     class="FreddysGoogleMapsLink"
                     title="Öppna ungefärlig plats för händelsen/brottet i Google Maps (öppnas i ny flik)"
                     >
-                    @if (false)
+                    {{-- @if (false) --}}
                     <span class="Event__mapImageWrap Event__mapImageWrap--near">
                         <amp-img
                             alt="Karta som visar ungefär var händelsen inträffat"
@@ -79,7 +79,7 @@ if $single is set then larger image
                             layout="responsive"
                         ></amp-img>
                     </span>
-                    @endif
+                    {{-- @endif --}}
 
                     {{--
                     <span class="Event__mapImageWrap Event__mapImageWrap--far">
