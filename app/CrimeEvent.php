@@ -49,13 +49,13 @@ class CrimeEvent extends Model implements Feedable
     // return src for an image
     public function getStaticImageSrc($width = 320, $height = 320, $scale = 1)
     {
-        $google_api_key = env("GOOGLE_API_KEY");
+        // $google_api_key = env("GOOGLE_API_KEY");
 
-        $image_src = "https://maps.googleapis.com/maps/api/staticmap?";
-        $image_src .= "key=$google_api_key";
-        $image_src .= "&size={$width}x{$height}";
-        $image_src .= "&scale={$scale}";
-        $image_src .= "&language=sv";
+        // $image_src = "https://maps.googleapis.com/maps/api/staticmap?";
+        // $image_src .= "key=$google_api_key";
+        // $image_src .= "&size={$width}x{$height}";
+        // $image_src .= "&scale={$scale}";
+        // $image_src .= "&language=sv";
 
         $tileserverUrl = 'https://kartbilder.brottsplatskartan.se/';
         $tileServerQueryArgs = [];
@@ -107,35 +107,38 @@ class CrimeEvent extends Model implements Feedable
 
             */
 
-            $image_src .= "|{$this->viewport_northeast_lat},{$this->viewport_northeast_lng}";
-            $image_src .= "|{$this->viewport_southwest_lat},{$this->viewport_northeast_lng}";
+            // $image_src .= "|{$this->viewport_northeast_lat},{$this->viewport_northeast_lng}";
+            // $image_src .= "|{$this->viewport_southwest_lat},{$this->viewport_northeast_lng}";
 
-            $image_src .= "|{$this->viewport_southwest_lat},{$this->viewport_southwest_lng}";
-            $image_src .= "|{$this->viewport_northeast_lat},{$this->viewport_southwest_lng}";
+            // $image_src .= "|{$this->viewport_southwest_lat},{$this->viewport_southwest_lng}";
+            // $image_src .= "|{$this->viewport_northeast_lat},{$this->viewport_southwest_lng}";
         } elseif ($this->location_lat) {
 
             // no viewport but location_lat, fallback to center
-            $image_src .= "&center={$this->location_lat},{$this->location_lng}";
-            $image_src .= "&zoom=14";
+            // $image_src .= "&center={$this->location_lat},{$this->location_lng}";
+            // $image_src .= "&zoom=14";
+            return '';
         } else {
 
             // @TODO: return fallback iamge
-            return "";
+            return '';
         }
 
-        #echo "image: <img src='$image_src'>";
-        #exit;
+        // echo "image: <img src='$image_src'>";
+        // exit;
 
         // src="https://maps.googleapis.com/maps/api/staticmap?center={{ $event->location_lat }},{{ $event->location_lng }}&zoom=14&size=600x400&key=...&markers={{ $event->location_lat }},{{ $event->location_lng }}"
 
-        $image_src = Helper::signUrl($image_src);
+        // $image_src = Helper::signUrl($image_src);
 
-        return $image_src;
+        return '';
     }
 
     // get image far away, like whole sweden or something
     public function getStaticImageSrcFar($width = 320, $height = 320, $scale = 1)
     {
+        return '';
+
         $google_api_key = env("GOOGLE_API_KEY");
 
         $image_src = "https://maps.googleapis.com/maps/api/staticmap?";
@@ -939,7 +942,7 @@ SQL;
             $dateString = Carbon::parse('today')->formatLocalized('%d-%B-%Y');
             $date = \App\Helper::getdateFromDateSlug($dateString);
             $events = $platsController->getEventsInPlatsWithLanUncached($plats, $lan, $date, 14, false);
-        } else if ($lan) {
+        } elseif ($lan) {
             $events = CrimeEvent::
                 orderBy("created_at", "desc")
                 ->where("administrative_area_level_1", $lan)
