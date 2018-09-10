@@ -60,7 +60,7 @@ qdr:h
         @if ($eventsByDay)
             @include('parts.events-by-day', [
                 "overview" => true,
-                'hideMapImage' => true
+                'hideMapImage' => false
             ])
         @endif
 
