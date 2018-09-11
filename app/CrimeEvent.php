@@ -87,6 +87,7 @@ class CrimeEvent extends Model implements Feedable
             $tileServerPath = trim($tileServerPath, '|');
 
             $tileServerQueryArgs['path'] = $tileServerPath;
+            $tileServerQueryArgs['padding'] = "0.4";
 
             return $tileserverUrl . '?' . http_build_query($tileServerQueryArgs);
 
