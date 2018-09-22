@@ -43,14 +43,22 @@
             return;
         }
 
-        console.log("geolocation support found");
+        // console.log("geolocation support found");
 
         navigator.geolocation.getCurrentPosition(function(position) {
 
             //  Coordinates { latitude: 59.3162378, longitude: 18.0840469, altitude: 0, accuracy: 20, altitudeAccuracy: 0, heading: NaN, speed: NaN }
             // console.log("got geolocation position", position.coords);
 
-            var url = "/nara?lat=" + position.coords.latitude + "&lng=" + position.coords.longitude;
+            var lat = position.coords.latitude;
+            var lng = position.coords.longitude;
+
+            // Avrunda lat och lng lite för att öka cachebarhet men även för att ev. lättare
+            // se saker grupperat i GA, samt göra besöken mer anonyma.
+            lat = lat.toFixed(2);
+            lng = lng.toFixed(2);
+
+            var url = "/nara?lat=" + lat + "&lng=" + lng;
             document.location = url;
 
         }, function(err) {
