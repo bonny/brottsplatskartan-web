@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-    <title>Karta - Brottsplatskartan</title>
+    <title>Sverigekartan – karta med polisens händelser i hela Sverige</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.3/dist/leaflet.css"
     integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
     crossorigin=""/>
@@ -18,6 +18,9 @@
         h1 {
             margin: 0;
             padding: 0;
+        }
+        h1 {
+            font-size: 1.2rem;
         }
         #mapid {
             height: 100vh;
@@ -37,19 +40,24 @@
         .FullScreenMap__intro:hover {
             background-color: rgba(255,255,255,.9);
         }
+        .FullScreenMap__links {
+            border-top: 1px solid #ccc;
+            padding-top: 1rem;
+        }
     </style>
 </head>
 <body>
 
     <div class="FullScreenMap__intro">
-        <h1>Sverigekartan – brott och händelser i Sverige på kartan</h1>
+        <h1>Sverigekartan – Brottsplatskartans karta med brott och händelser från hela Sverige</h1>
         <p>
-            Här på sverigekartan visas de senaste 500 händelserna som rapporterats
-            in till Brottsplatskartan av Polisen.
+            Här på sverigekartan visas de senaste 500 <a href="/">händelserna som rapporterats
+            in till Brottsplatskartan</a> av Polisen.
         </p>
         <p>Observera att platserna inte är exakta.</p>
-        <p>
-            <a href="/">» Brottsplatskartan</a>.
+        <p class="FullScreenMap__links">
+            <a href="/">» Brottsplatskartans startsida</a>
+            <br><a href="/geo.php">» Polishändelser nära dig</a>
         </p>
     </div>
 
