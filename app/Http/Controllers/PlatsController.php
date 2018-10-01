@@ -286,10 +286,12 @@ class PlatsController extends Controller
         // https://github.com/thephpleague/geotools
         $lanPolicestations = null;
         $relatedLinks = null;
+
         if ($place) {
             $lanPolicestations = $place->getClosestPolicestations();
-            $relatedLinks = \App\Helper::getRelatedLinks($place->name);
         }
+
+        $relatedLinks = \App\Helper::getRelatedLinks($plats);
 
         $data = [
             'plats' => $plats,
