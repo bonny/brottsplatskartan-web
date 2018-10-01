@@ -71,7 +71,7 @@ if $single is set then larger image
                     {{-- @if (false) --}}
                     <span class="Event__mapImageWrap Event__mapImageWrap--near">
                         <amp-img
-                            alt="Karta som visar ungefär var händelsen inträffat"
+                            alt="Karta som visar ungefär var händelsen {{$event->parsed_title}}: {{$event->getDescriptionAsPlainText()}} inträffat"
                             class="Event__mapImage Event__mapImage--near"
                             src="{{ $event->getStaticImageSrc(617,463) }}"
                             width="426"
