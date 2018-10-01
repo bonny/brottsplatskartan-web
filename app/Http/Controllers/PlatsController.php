@@ -291,7 +291,11 @@ class PlatsController extends Controller
             $lanPolicestations = $place->getClosestPolicestations();
         }
 
-        $relatedLinks = \App\Helper::getRelatedLinks($plats);
+        if ($foundMatchingLan) {
+            $relatedLinks = \App\Helper::getRelatedLinks($platsWithoutLan, $oneLanName);
+        } else {
+            $relatedLinks = \App\Helper::getRelatedLinks($plats);
+        }
 
         $data = [
             'plats' => $plats,
