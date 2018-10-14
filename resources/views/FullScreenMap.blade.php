@@ -22,50 +22,129 @@
         h1 {
             font-size: 1.2rem;
         }
+
+        body {
+            border-top: 2px solid rgb(255, 204, 51);
+        }
+
         #mapid {
-            height: 100vh;
+            height: 90vh;
             background: #eee;
             z-index: 5;
         }
-        .FullScreenMap__intro {
-            position: absolute;
+
+        .FullScreenMap__intro,
+        .FullScreenMap__outro {
             z-index: 10;
-            background-color: rgba(255,255,255,.5);
-            top: 0;
-            right: 0;
-            width: 300px;
+            background-color: rgba(255,255,255,.9);
             padding: 25px;
             transition: all .15s ease-in-out;
+            border-top: 2px solid rgb(255, 204, 51);
+            border-bottom: 2px solid rgb(255, 204, 51);
         }
-        .FullScreenMap__intro:hover {
-            background-color: rgba(255,255,255,.9);
+
+        .FullScreenMap__intro p:last-child,
+        .FullScreenMap__outro p:last-child {
+            margin-bottom: 0;
         }
+
+        .FullScreenMap__intro p:first-child,
+        .FullScreenMap__outro p:first-child {
+            margin-top: 0;
+        }
+
         .FullScreenMap__links {
             border-top: 1px solid #ccc;
             padding-top: 1rem;
+        }
+
+        .map-loading {
+            /* display: none; */
+            /*position: absolute;
+            z-index: 10;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-50%);
+            */
+            padding: 25px;
+            border-bottom: 2px solid rgb(255, 204, 51);
+        }
+
+        .map-loading-text {
+            margin: 0;
+        }
+
+        .map-loading-text--done {
+            display: block;
+        }
+
+        .map-loading-text--loading {
+            display: none;
+        }
+
+        .is-loading-events .map-loading-text--loading {
+            display: block;
+        }
+
+        .is-loading-events .map-loading-text--done {
+            display: none;
+        }
+
+        /*.is-loading-events #mapid,
+        .is-loading-events .FullScreenMap__intro {
+            opacity: .5;
+        }*/
+
+        .is-loading-events .map-loading {
+            display: block;
+        }
+
+        @media screen and (min-width: 1000px) {
+            .FullScreenMap__intro {
+                position: absolute;
+                z-index: 10;
+                background-color: rgba(255,255,255,.9);
+                top: 0;
+                right: 0;
+                width: 300px;
+                padding: 25px;
+                transition: all .15s ease-in-out;
+            }
         }
     </style>
 </head>
 <body>
 
-    <div class="FullScreenMap__intro">
+    <header class="FullScreenMap__intro">
         <h1>Sverigekartan – Brottsplatskartans karta med brott och händelser från hela Sverige</h1>
         <p>
-            Här på sverigekartan visas de senaste 500 <a href="/">händelserna som rapporterats
+            Här på sverigekartan visas de senaste <a href="/">händelserna som rapporterats
             in till Brottsplatskartan</a> av Polisen.
         </p>
         <p>Observera att platserna inte är exakta.</p>
-        <p class="FullScreenMap__links">
-            <a href="/">» Brottsplatskartans startsida</a>
-            <br><a href="/geo.php">» Polishändelser nära dig</a>
-        </p>
+    </header>
+
+    <div class="map-loading">
+        <p class="map-loading-text map-loading-text--loading">Hämtar händelser från Polisen...</p>
+        <p class="map-loading-text map-loading-text--done">Klart! Kartan visar nu de 300 senaste händelserna från Polisen.</p>
     </div>
 
     <div id="mapid"></div>
 
-    <script>
+    <footer class="FullScreenMap__outro">
+        <p>Se fler händelser från Polisen:</p>
+        <p class="FullScreenMap__links">
+            <a href="/">» Brottsplatskartans startsida</a>
+            <br><a href="/geo.php">» Polishändelser nära dig</a>
+        </p>
+    </footer>
 
-        var mymap = L.map('mapid').setView([59,18], 5);
+    <script>
+        var mymap = L.map('mapid').setView([{{$lat}},{{$lng}}], {{$zoom}});
+
+        // Moveend is also triggered when zoom changes.
+        mymap.on('moveend', handleMapZoomMoveChanges);
+
         var markers = [];
 
         var OpenStreetMapTileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -83,19 +162,31 @@
 
         // marker2.bindPopup("<b>Hello world!</b><br>I am a popup.");
 
+        function handleMapZoomMoveChanges(e) {
+            let mapCenter = e.target.getCenter();
+            let mapZoom = e.target.getZoom();
+            let latRounded = Math.round(mapCenter.lat * 1000000) / 1000000;
+            let lngRounded = Math.round(mapCenter.lng * 1000000) / 1000000;
+
+            // Create URL similar to Google Maps.
+            let newUrl = `/sverigekartan/@${latRounded},${lngRounded},${mapZoom}z`
+            history.pushState({}, "", newUrl);
+
+
+        }
+
         function getEvents() {
-            var apiUrl = '/api/events?app=brottsplatskartan&limit=500';
+            var apiUrl = '/api/events?app=brottsplatskartan&limit=300';
             let events = fetch(apiUrl);
 
             events.then(addMarkers);
-            console.log('events', events);
         }
 
         function addMarkers(eventsResponse) {
             eventsResponse.json().then(function(events) {
 
                 events.data.forEach(function(event) {
-                    console.log('addMarkers event', event);
+                    // console.log('addMarkers event', event);
                     let popupContent = `
                         <div class="Event--v2">
                             <h1 class="Event__title">
@@ -159,7 +250,7 @@
                 }); // each marker
 
                 clusterize(markers);
-
+                setLoadingStatus(false);
             });
         }
 
@@ -173,6 +264,11 @@
             mymap.addLayer(markersCluserGroup);
         }
 
+        function setLoadingStatus(isLoading) {
+            document.body.classList.toggle('is-loading-events', isLoading);
+        }
+
+        setLoadingStatus(true);
         getEvents();
 
     </script>

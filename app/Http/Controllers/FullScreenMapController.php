@@ -17,10 +17,35 @@ class FullScreenMapController extends Controller
      *
      * @return void
      */
-    public function index(Request $request)
+    public function index(Request $request, $location = null)
     {
 
-        $data = [];
+        $data = [
+            'lat' => 59,
+            'lng' => 18,
+            'zoom' => 5
+        ];
+
+        // Cleanup location, if set.
+        // "@58.388211,18.215332,5z"
+        if ($location) {
+            // "58.388211,18.215332,5"
+            $location = trim($location, ' @z');
+
+            /*
+                array:3 [▼
+                0 => "58.388211"
+                1 => "18.215332"
+                2 => "5"
+                ]
+            */
+            $locationParts = explode(',', $location);
+            if (sizeof($locationParts) === 3) {
+                $data['lat'] = number_format(floatval($locationParts[0]), 5);
+                $data['lng'] = number_format(floatval($locationParts[1]), 5);
+                $data['zoom'] = intval($locationParts[2]);
+            }
+        }
 
         return view('FullScreenMap', $data);
 

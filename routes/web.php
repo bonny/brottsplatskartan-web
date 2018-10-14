@@ -34,7 +34,7 @@ if ($_GET['debugbar-disable'] ?? false) {
 Route::get('/debug/{what}', 'DebugController@debug')->name('debug');
 
 Route::redirect('/karta/', '/sverigekartan/', 301);
-Route::get('/sverigekartan/', 'FullScreenMapController@index')->name('FullScreenMap');
+Route::get('/sverigekartan/{location?}', 'FullScreenMapController@index')->name('FullScreenMap');
 
 // URL is like
 // https://brottsplatskartan.localhost/pixel?path=%2Fstockholms-lan%2Ftrafikolycka-taby-taby-kyrkby-37653&rand=0.1843466328440977
