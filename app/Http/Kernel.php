@@ -16,6 +16,7 @@ class Kernel extends HttpKernel
     protected $middleware = [
         \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
         \App\Http\Middleware\RedirectOldPages::class,
+        \App\Http\Middleware\RedirectHitta::class,
         \App\Http\Middleware\DebugBarMaybeEnable::class,
     ];
 
