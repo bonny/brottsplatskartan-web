@@ -15,18 +15,9 @@ class SearchController extends Controller
 {
     public function index(Request $request)
     {
-        $minSearchLength = 2;
-
         $s = $request->input('s');
-        $tbs = $request->input('tbs', 'qdr:m');
-        $events = null;
 
-        // Redirect to Google search because Laravel search no good at the moment.
-        // Allow empty search beacuse maybe user wants to get all in the last hour.
-        if ($s || array_key_exists('s', $_GET)) {
-            $url = 'https://www.google.se/search?q=site%3Abrottsplatskartan.se+' . urlencode($s) . "&tbs={$tbs}";
-            return redirect($url);
-        }
+        $events = null;
 
         $breadcrumbs = new Breadcrumbs;
         $breadcrumbs->addCrumb('Hem', '/');
@@ -44,7 +35,7 @@ class SearchController extends Controller
         });
 
         $data = [
-            "s" => $s,
+            's' => $s,
             'eventsByDay' => $eventsByDay,
             'hideMapImage' => true,
             "locations" => isset($locations) ? $locations : null,
@@ -52,5 +43,30 @@ class SearchController extends Controller
         ];
 
         return view('search', $data);
+    }
+
+    /**
+     * Sida att mellanlanda på innan man skickas till Google.
+     * Använder mellanlandningssida pga vill få in site search data
+     * till Google Analytics.
+     *
+     * Exempel på URL hit:
+     * https://brottsplatskartan.localhost/sokresultat?s=test&tbs=qdr%3Am
+     */
+    public function searchperform(Request $request) {
+        $s = $request->input('s');
+        $tbs = $request->input('tbs', 'qdr:m');
+        $redirectToUrl = 'https://www.google.se/search?q=site%3Abrottsplatskartan.se+' . urlencode($s) . "&tbs={$tbs}";
+
+        $data = [
+            "s" => $s,
+            'redirectToUrl' => $redirectToUrl
+        ];
+
+        // Redirect to Google search because Laravel search no good at the moment.
+        // Allow empty search because maybe user wants to get all in the last hour.
+        // return redirect($url);
+
+        return view('search-perform', $data);
     }
 }
