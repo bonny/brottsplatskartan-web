@@ -541,6 +541,7 @@ Route::get('/{lan}/{eventName}', function ($lan, $eventName, Request $request) {
  * sökstartsida + sökresultatsida = samma sida
  */
 Route::get('/sok/', 'SearchController@index')->name("search");
+Route::get('/sokresultat/', 'SearchController@searchperform')->name("searchperform");
 
 /**
  * coyards: sida för samarbete med coyards.se, visas i deras app och hemsida

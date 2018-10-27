@@ -37,7 +37,7 @@ qdr:h
 
         <p>Här kan du söka efter brott och andra typer av händelser som rapporterats in av Polisen.</p>
 
-        <form method="get" action="{{ route("search", null, false) }}" class="SearchForm" target="_top">
+        <form method="get" action="{{ route("searchperform", null, false) }}" class="SearchForm" target="_top">
             <input type="text" name="s" value="{{ $s }}" class="SearchForm__s" placeholder="Sök inbrott, stöld, stad eller län" autofocus>
             <input type="submit" class="SearchForm__submit" value="Sök">
             <select name="tbs" class="SearchForm__select">
