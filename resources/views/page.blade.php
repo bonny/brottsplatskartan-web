@@ -101,6 +101,12 @@ Template for text pages
             eller via e-post på <a href="mailto:kontakt@brottsplatskartan.se">kontakt@brottsplatskartan.se</a>.
         </p>
 
+        <p>
+            Kartbilderna kommer från OpenMapTiles:
+            ©&nbsp;<a href="https://openmaptiles.org/">OpenMapTiles</a>
+            ©&nbsp;<a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>.
+        </p>
+
     @endif
 
 
