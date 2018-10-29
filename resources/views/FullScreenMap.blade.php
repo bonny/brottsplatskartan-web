@@ -31,6 +31,8 @@
             height: 90vh;
             background: #eee;
             z-index: 5;
+            opacity: 1;
+            transition: opacity .25s ease-in-out;
         }
 
         .FullScreenMap__intro,
@@ -90,10 +92,9 @@
             display: none;
         }
 
-        /*.is-loading-events #mapid,
-        .is-loading-events .FullScreenMap__intro {
-            opacity: .5;
-        }*/
+        .is-loading-events #mapid {
+            opacity: .25;
+        }
 
         .is-loading-events .map-loading {
             display: block;
@@ -127,7 +128,7 @@
 
     <div class="map-loading">
         <p class="map-loading-text map-loading-text--loading">Hämtar händelser från Polisen...</p>
-        <p class="map-loading-text map-loading-text--done">Kartan visar nu de 300 senaste händelserna från Polisen.</p>
+        <p class="map-loading-text map-loading-text--done">Kartan visar de 300 senaste händelserna från Polisen.</p>
     </div>
 
     <div id="mapid"></div>
@@ -141,16 +142,18 @@
     </footer>
 
     <script>
-        var mymap = L.map('mapid').setView([{{ $lat }}, { { $lng } }], { { $zoom } });
+        var mymap = L.map('mapid').setView([{{$lat}},{{$lng}}], {{$zoom}});
 
         var brottsplatskartanIcon = L.icon({
-            iconUrl: '/img/brottsplatskartan-logotyp-symbol-only.png',
+            //iconUrl: '/img/brottsplatskartan-logotyp-symbol-only.png',
+            // iconUrl: '/img/map-marker-1.svg',
+            iconUrl: '/img/map-marker-2.svg',
             // shadowUrl: 'leaf-shadow.png',
-            iconSize: [160, 160], // size of the icon
+            iconSize: [80, 80], // size of the icon
             //shadowSize:   [50, 64], // size of the shadow
-            iconAnchor: [22, 94], // point of the icon which will correspond to marker's location
+            iconAnchor: [40, 40], // point of the icon which will correspond to marker's location
             // shadowAnchor: [4, 62],  // the same for the shadow
-            popupAnchor: [-3, -76] // point from which the popup should open relative to the iconAnchor
+            popupAnchor: [0, -20] // point from which the popup should open relative to the iconAnchor
         });
 
 
