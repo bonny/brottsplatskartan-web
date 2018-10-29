@@ -1,15 +1,14 @@
 <!doctype html>
 <html>
+
 <head>
     <title>Sverigekartan – karta med polisens händelser i hela Sverige</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.3/dist/leaflet.css"
-    integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
-    crossorigin=""/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.3/dist/leaflet.css" integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
+        crossorigin="" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.Default.css" />
-    <script src="https://unpkg.com/leaflet@1.3.3/dist/leaflet.js"
-    integrity="sha512-tAGcCfR4Sc5ZP5ZoVz0quoZDYX5aCtEm/eu1KhSLj2c9eFrylXZknQYmxUssFaVJKvvc0dJQixhGjG2yXWiV9Q=="
-    crossorigin=""></script>
+    <script src="https://unpkg.com/leaflet@1.3.3/dist/leaflet.js" integrity="sha512-tAGcCfR4Sc5ZP5ZoVz0quoZDYX5aCtEm/eu1KhSLj2c9eFrylXZknQYmxUssFaVJKvvc0dJQixhGjG2yXWiV9Q=="
+        crossorigin=""></script>
     <script src="https://unpkg.com/leaflet.markercluster@1.3.0/dist/leaflet.markercluster.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <link rel="stylesheet" href="/css/styles.css" />
@@ -19,6 +18,7 @@
             margin: 0;
             padding: 0;
         }
+
         h1 {
             font-size: 1.2rem;
         }
@@ -36,7 +36,7 @@
         .FullScreenMap__intro,
         .FullScreenMap__outro {
             z-index: 10;
-            background-color: rgba(255,255,255,.9);
+            background-color: rgba(255, 255, 255, .9);
             padding: 25px;
             transition: all .15s ease-in-out;
             border-top: 2px solid rgb(255, 204, 51);
@@ -103,7 +103,7 @@
             .FullScreenMap__intro {
                 position: absolute;
                 z-index: 10;
-                background-color: rgba(255,255,255,.9);
+                background-color: rgba(255, 255, 255, .9);
                 top: 0;
                 right: 0;
                 width: 300px;
@@ -113,20 +113,21 @@
         }
     </style>
 </head>
+
 <body>
 
     <header class="FullScreenMap__intro">
         <h1>Sverigekartan – Brottsplatskartans karta med brott och händelser från hela Sverige</h1>
         <p>
             Här på sverigekartan visas de senaste <a href="/">händelserna som rapporterats
-            in till Brottsplatskartan</a> av Polisen.
+                in till Brottsplatskartan</a> av Polisen.
         </p>
         <p>Observera att platserna inte är exakta.</p>
     </header>
 
     <div class="map-loading">
         <p class="map-loading-text map-loading-text--loading">Hämtar händelser från Polisen...</p>
-        <p class="map-loading-text map-loading-text--done">Klart! Kartan visar nu de 300 senaste händelserna från Polisen.</p>
+        <p class="map-loading-text map-loading-text--done">Kartan visar nu de 300 senaste händelserna från Polisen.</p>
     </div>
 
     <div id="mapid"></div>
@@ -140,7 +141,18 @@
     </footer>
 
     <script>
-        var mymap = L.map('mapid').setView([{{$lat}},{{$lng}}], {{$zoom}});
+        var mymap = L.map('mapid').setView([{{ $lat }}, { { $lng } }], { { $zoom } });
+
+        var brottsplatskartanIcon = L.icon({
+            iconUrl: '/img/brottsplatskartan-logotyp-symbol-only.png',
+            // shadowUrl: 'leaf-shadow.png',
+            iconSize: [160, 160], // size of the icon
+            //shadowSize:   [50, 64], // size of the shadow
+            iconAnchor: [22, 94], // point of the icon which will correspond to marker's location
+            // shadowAnchor: [4, 62],  // the same for the shadow
+            popupAnchor: [-3, -76] // point from which the popup should open relative to the iconAnchor
+        });
+
 
         // Moveend is also triggered when zoom changes.
         mymap.on('moveend', handleMapZoomMoveChanges);
@@ -171,8 +183,6 @@
             // Create URL similar to Google Maps.
             let newUrl = `/sverigekartan/@${latRounded},${lngRounded},${mapZoom}z`
             history.pushState({}, "", newUrl);
-
-
         }
 
         function getEvents() {
@@ -183,9 +193,9 @@
         }
 
         function addMarkers(eventsResponse) {
-            eventsResponse.json().then(function(events) {
+            eventsResponse.json().then(function (events) {
 
-                events.data.forEach(function(event) {
+                events.data.forEach(function (event) {
                     // console.log('addMarkers event', event);
                     let popupContent = `
                         <div class="Event--v2">
@@ -202,7 +212,9 @@
                         </div>
                     `;
 
-                    var marker = L.marker([event.lat, event.lng])
+                    var marker = L.marker([event.lat, event.lng], {
+                        icon: brottsplatskartanIcon
+                    })
                     // marker.addTo(mymap);
                     marker.bindPopup(popupContent);
                     markers.push(marker);
@@ -275,11 +287,12 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-181460-13"></script>
     <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
 
-    gtag('config', 'UA-181460-13');
+        gtag('config', 'UA-181460-13');
     </script>
 </body>
+
 </html>
