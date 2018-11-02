@@ -101,6 +101,26 @@ Template for text pages
             eller via e-post på <a href="mailto:kontakt@brottsplatskartan.se">kontakt@brottsplatskartan.se</a>.
         </p>
 
+        <h2>Om tjänstens skapare</h2>
+
+        <p>
+            Brottsplatskartans grundare är den kartintresserad webbutvecklaren <a href="https://twitter.com/eskapism">Pär Thernström</a>.
+        </p>
+        <p>
+            Utöver Brottsplatskartan så har han även grundat <a href="https://texttv.nu/">Text TV-sajten texttv.nu</a>
+            (med tillhörande appar för
+            <a href="https://itunes.apple.com/se/app/texttv-nu-svt-text-tv/id607998045?mt=8">Ios</a>
+             och <a href="https://play.google.com/store/apps/details?id=com.mufflify.TextTVnu&hl=sv">Android</a>).
+        </p>
+
+        <p>
+            Han är även skapare av pluginen <a href="http://simple-history.com/">Simple History</a> till WordPress,
+            som på en snyggt sätt visar vilka ändringar som användarna på en WordPress-webbplats gör. Använder du WordPress
+            borde du installera den bums!
+        </p>
+
+        <h2>Kartorna</h2>
+
         <p>
             Kartbilderna kommer från OpenMapTiles:
             ©&nbsp;<a href="https://openmaptiles.org/">OpenMapTiles</a>
