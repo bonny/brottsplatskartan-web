@@ -8,8 +8,8 @@
         <li><a href="{{ route("start") }}">Senaste händelserna</a></li>
         <li><a href="{{ route("FullScreenMap") }}">Sverigekartan</a></li>
         <li><a href="{{ route("polisstationer") }}">Polisstationer</a></li>
-        <li><a href="{{ route("page", ["pagename" => "om"]) }}">Om brotten och kartan</a></li>
         <li><a href="{{ route("blog") }}">Blogg</a></li>
+        <li><a href="{{ route("page", ["pagename" => "om"]) }}">Om Brottsplatskartan</a></li>
         <li><a href="{{ route("page", ["pagename" => "press"]) }}">Press</a></li>
         <li><a href="{{ route("page", ["pagename" => "appar"]) }}">Appar till Iphone, Ipad och Android</a></li>
         <li><a href="{{ route("ordlista") }}">Ordlista</a></li>
