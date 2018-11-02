@@ -29,7 +29,13 @@ Template for text pages
         <p>Använda gärna API:et för icke-kommersielltbruk och skicka med en unik <code>app</code>-parameter så vi
         kan se hur mycket olika tjänster använder API:et.</p>
 
-        <p>För kommersiellt bruk kontakta oss på <a href="mailto:kontakt@brottsplatskartan.se">kontakt@brottsplatskartan.se</a>.</p>
+        <p>För kommersiellt bruk (eller om du kommer använda API:et väldigt mycket) vänligen
+        kontakta oss på <a href="mailto:kontakt@brottsplatskartan.se">kontakt@brottsplatskartan.se</a>.
+        Och använd även här en app-parameter.
+        </p>
+
+        <p>Vi kan komma att blockera anrop utan app-parameterar eller appar/tjänster/sajter som använder
+        API:et väldigt mycket.</p>
 
         <p>Ungefär cirka såhär ser URLarna för APIet ut:</p>
 
