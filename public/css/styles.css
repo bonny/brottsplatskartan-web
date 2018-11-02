@@ -231,7 +231,8 @@ button {
             flex: 1 1 100%;
 }
 
-.SiteNav__item a {
+.SiteNav__item a,
+.SiteNav__item amp-accordion header {
     display: block;
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
@@ -239,7 +240,10 @@ button {
     border-bottom: 2px solid transparent;
     -webkit-transition: border 0.2s ease-out;
     transition: border 0.2s ease-out;
+    border: none;
     border-right: 1px solid rgb(104, 154, 200);
+    background-color: var(--color-blue-police);
+    padding-right: 0;
 }
 
 .SiteNav__item:first-of-type a {
@@ -258,6 +262,22 @@ button {
     display: inline-block;
 }
 
+body div.SiteNav__accordion__header__items_wrap {
+    position: absolute;    
+}
+
+amp-accordion section .SiteNav__accordion__header__items {
+    position: absolute;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.SiteNav__accordion__header__items .SiteNav__accordion__header__item {
+    background-color: #549cd4;
+    font-size: .75rem;
+    /* display: inline-block; */
+}
 
 .DayNav {
     list-style-type: none;
