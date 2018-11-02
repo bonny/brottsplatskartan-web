@@ -144,21 +144,27 @@
     <script>
         var mymap = L.map('mapid').setView([{{$lat}},{{$lng}}], {{$zoom}});
 
+        /*
+        https://stackoverflow.com/questions/17382012/is-there-a-way-to-resize-marker-icons-depending-on-zoom-level-in-leaflet
+        https://gis.stackexchange.com/questions/159648/leaflet-circlemarker-changes-with-zoom
+        */
         var brottsplatskartanIcon = L.icon({
             //iconUrl: '/img/brottsplatskartan-logotyp-symbol-only.png',
             // iconUrl: '/img/map-marker-1.svg',
-            iconUrl: '/img/map-marker-2.svg',
+            iconUrl: '/img/map-marker-2.svg?bust=4',
             // shadowUrl: 'leaf-shadow.png',
-            iconSize: [80, 80], // size of the icon
+            iconSize: [40, 40], // size of the icon
             //shadowSize:   [50, 64], // size of the shadow
-            iconAnchor: [40, 40], // point of the icon which will correspond to marker's location
+            iconAnchor: [20, 20], // point of the icon which will correspond to marker's location
             // shadowAnchor: [4, 62],  // the same for the shadow
-            popupAnchor: [0, -20] // point from which the popup should open relative to the iconAnchor
+            popupAnchor: [0, -10] // point from which the popup should open relative to the iconAnchor
         });
 
 
         // Moveend is also triggered when zoom changes.
         mymap.on('moveend', handleMapZoomMoveChanges);
+        mymap.on('zoomend', handleMapZoomEndChanges);
+
 
         var markers = [];
 
@@ -186,6 +192,10 @@
             // Create URL similar to Google Maps.
             let newUrl = `/sverigekartan/@${latRounded},${lngRounded},${mapZoom}z`
             history.pushState({}, "", newUrl);
+        }
+
+        function handleMapZoomEndChanges(e) {
+            console.log('handleMapZoomEndChanges', e);
         }
 
         function getEvents() {
