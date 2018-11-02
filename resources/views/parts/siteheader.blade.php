@@ -47,6 +47,11 @@
                                 <span>Län</span>
                             </header>
                             <ul class="SiteNav__accordion__header__items">
+                                <li class="SiteNav__accordion__header__item">
+                                    <a href="{{ route('lanOverview', [], false) }}">
+                                        Översikt alla län
+                                    </a>
+                                </li>
                                 @foreach ($lan_with_stats as $oneLan)
                                     <li class="SiteNav__accordion__header__item">
                                         <a href="{{ route("lanSingle", ["lan"=>$oneLan->administrative_area_level_1]) }}">

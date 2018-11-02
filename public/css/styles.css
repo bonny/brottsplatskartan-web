@@ -135,6 +135,7 @@ button {
     top: 0;
     left: 0;
     right: 0;
+    width: 100%;
     z-index: 15;
     padding: var(--default-margin);
     -webkit-box-shadow: 2px 1px 1px rgba(0, 0, 0, 0.15);
@@ -262,6 +263,12 @@ button {
     display: inline-block;
 }
 
+.SiteNav__accordion__section[expanded] {
+    overflow: hidden;
+    overflow-y: scroll;
+    height: calc(100vh - 100px);
+}
+
 body div.SiteNav__accordion__header__items_wrap {
     position: absolute;    
 }
@@ -277,6 +284,11 @@ amp-accordion section .SiteNav__accordion__header__items {
     background-color: #549cd4;
     font-size: .75rem;
     /* display: inline-block; */
+}
+
+.SiteNav__accordion__header__item a {
+    padding-top: .25rem;
+    padding-bottom: .25rem;
 }
 
 .DayNav {
