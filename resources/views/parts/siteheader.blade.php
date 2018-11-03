@@ -2,7 +2,10 @@
     <div class="SiteHeader__inner">
 
         @if (Auth::check())
-            <p class='SiteHeader__loggedin'>Inloggad. Coolt. <a href="{{ route('logout') }}">Logga ut</a></p>
+            <p class='SiteHeader__loggedin'>
+                Inloggad.
+                <a href="{{ route('logout') }}">Logga ut</a>
+            </p>
         @endif
 
         <h1 class="SiteTitle"><a href="/">
@@ -24,7 +27,8 @@
                         </svg>
                         <span>Händelser</span>
                     </a>
-                </li><li class="SiteNav__item SiteNav__item--lan">
+                </li>
+                <li class="SiteNav__item SiteNav__item--lan">
                     <a href="{{ route('lanOverview', [], false) }}">
                         <svg fill="#fff" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg">
                             <path d="M15 11V5l-3-3-3 3v2H3v14h18V11h-6zm-8 8H5v-2h2v2zm0-4H5v-2h2v2zm0-4H5V9h2v2zm6 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V9h2v2zm0-4h-2V5h2v2zm6 12h-2v-2h2v2zm0-4h-2v-2h2v2z"/>
@@ -32,7 +36,8 @@
                         </svg>
                         <span>Län</span>
                     </a>
-                </li><li class="SiteNav__item SiteNav__item--geo">
+                </li>
+                <li class="SiteNav__item SiteNav__item--geo">
                     <a href="/geo.php">
                         <svg fill="#fff" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg">
                             <path d="M0 0h24v24H0V0z" fill="none"/>
@@ -40,7 +45,8 @@
                         </svg>
                         <span>Nära mig</span>
                     </a>
-                </li><li class="SiteNav__item SiteNav__item--search">
+                </li>
+                <li class="SiteNav__item SiteNav__item--search">
                     <a href="{{ route('search', [], false) }}">
                         <svg fill="#fff" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg">
                             <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
@@ -49,7 +55,16 @@
                         <span>Sök</span>
                     </a>
                 </li>
-
+                <li class="SiteNav__item SiteNav__item--menu">
+                    <button class="SiteNav__item__menuToggle" on='tap:Sidebar.toggle' aria-label="Visa sidomeny">
+                        <svg fill="#fff" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <path d="M0 0h24v24H0z" fill="none"/>
+                            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                        </svg>
+                        {{-- Three dots .. nav icon: --}}
+                        {{-- <svg fill="#fff" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg> --}}
+                    </button>
+                </li>
             </ul>
         </nav>
 

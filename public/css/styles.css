@@ -233,10 +233,12 @@ button {
 }
 
 .SiteNav__item a,
-.SiteNav__item amp-accordion header {
+.SiteNav__item__menuToggle {
     display: block;
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
+    width: 100%;
+    height: 100%;
+    padding: 0.5rem 0;
+    margin: 0;
     color: inherit;
     border-bottom: 2px solid transparent;
     -webkit-transition: border 0.2s ease-out;
@@ -246,6 +248,21 @@ button {
     background-color: var(--color-blue-police);
     padding-right: 0;
 }
+
+.SiteNav__item--menu {
+    flex-basis: 50%;
+}
+
+/* .SiteNav__item__menuToggle {
+    appearance: none;
+    -webkit-appearance: none;
+    background: transparent;
+    margin: 0;
+    padding: 0;
+    border: none;
+    color: inherit;
+} */
+
 
 .SiteNav__item:first-of-type a {
     border-left: 1px solid rgb(104, 154, 200);
@@ -261,6 +278,36 @@ button {
 .SiteNav__item span {
     vertical-align: middle;
     display: inline-block;
+}
+
+.Sidebar {
+    background-color: var(--color-blue-police);
+    color: var(--color-white);
+}
+
+.Sidebar-close {
+    float: right;
+    background: transparent;
+    border: none;
+    appearance: none;
+    -webkit-appearance: none;
+    color: inherit;
+}
+
+.Sidebar-contents {
+    margin: var(--default-margin-double);
+}
+
+.Sidebar-nav-items {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.Sidebar-nav a {
+    display: block;
+    padding: var(--default-margin-half);
+    color: inherit;
 }
 
 .DayNav {
@@ -1162,6 +1209,10 @@ input[type="url"],
 @media only screen and (max-width: 667px) {
     .SiteNav__item svg {
         display: none;
+    }
+
+    .SiteNav__item__menuToggle svg {
+        display: inline-block;
     }
 }
 
