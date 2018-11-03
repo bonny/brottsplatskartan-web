@@ -263,34 +263,6 @@ button {
     display: inline-block;
 }
 
-.SiteNav__accordion__section[expanded] {
-    overflow: hidden;
-    overflow-y: scroll;
-    height: calc(100vh - 100px);
-}
-
-body div.SiteNav__accordion__header__items_wrap {
-    position: absolute;    
-}
-
-amp-accordion section .SiteNav__accordion__header__items {
-    position: absolute;
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-}
-
-.SiteNav__accordion__header__items .SiteNav__accordion__header__item {
-    background-color: #549cd4;
-    font-size: .75rem;
-    /* display: inline-block; */
-}
-
-.SiteNav__accordion__header__item a {
-    padding-top: .25rem;
-    padding-bottom: .25rem;
-}
-
 .DayNav {
     list-style-type: none;
     margin: 0;

@@ -24,7 +24,7 @@
                         </svg>
                         <span>Händelser</span>
                     </a>
-                </li>{{-- <li class="SiteNav__item SiteNav__item--lan">
+                </li><li class="SiteNav__item SiteNav__item--lan">
                     <a href="{{ route('lanOverview', [], false) }}">
                         <svg fill="#fff" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg">
                             <path d="M15 11V5l-3-3-3 3v2H3v14h18V11h-6zm-8 8H5v-2h2v2zm0-4H5v-2h2v2zm0-4H5V9h2v2zm6 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V9h2v2zm0-4h-2V5h2v2zm6 12h-2v-2h2v2zm0-4h-2v-2h2v2z"/>
@@ -32,42 +32,6 @@
                         </svg>
                         <span>Län</span>
                     </a>
-                </li>--}}<li class="SiteNav__item SiteNav__item--lan">
-                    <amp-accordion
-                        layout="container"
-                        disable-session-states
-                        class="SiteNav__accordion"
-                        >
-                        <section class="SiteNav__accordion__section">
-                            <header class="SiteNav__accordion__header">
-                                <svg fill="#fff" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M15 11V5l-3-3-3 3v2H3v14h18V11h-6zm-8 8H5v-2h2v2zm0-4H5v-2h2v2zm0-4H5V9h2v2zm6 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V9h2v2zm0-4h-2V5h2v2zm6 12h-2v-2h2v2zm0-4h-2v-2h2v2z"/>
-                                    <path d="M0 0h24v24H0z" fill="none"/>
-                                </svg>
-                                <span>Län</span>
-                            </header>
-                            <ul class="SiteNav__accordion__header__items">
-                                <li class="SiteNav__accordion__header__item">
-                                    <a href="{{ route('lanOverview', [], false) }}">
-                                        Översikt alla län
-                                    </a>
-                                </li>
-                                @foreach ($lan_with_stats as $oneLan)
-                                    <li class="SiteNav__accordion__header__item">
-                                        <a href="{{ route("lanSingle", ["lan"=>$oneLan->administrative_area_level_1]) }}">
-                                            {{ $oneLan->administrative_area_level_1 }}
-                                        </a>
-
-                                        {{-- <p class="">
-                                            <b>{{ $oneLan->numEvents["today"] }}</b> händelser idag
-                                            <br><b>{{ $oneLan->numEvents["last7days"] }}</b> händelser senaste 7 dagarna
-                                            <br><b>{{ $oneLan->numEvents["last30days"] }}</b> händelser senaste 30 dagarna
-                                        </p> --}}
-                                    </li>
-                                @endforeach
-                            </ul>
-                        </section>
-                    </amp-accordion>
                 </li><li class="SiteNav__item SiteNav__item--geo">
                     <a href="/geo.php">
                         <svg fill="#fff" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg">
