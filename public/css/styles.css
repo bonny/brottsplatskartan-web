@@ -310,6 +310,26 @@ button {
     color: inherit;
 }
 
+.Sidebar__lan__accordion {
+    /* background: transparent; */
+}
+
+.Sidebar__lan__accordion header {
+    background: transparent;
+    padding: var(--default-margin-half);
+    border: 0;
+}
+
+.Sidebar__lan__accordion__items {
+    list-style: none;
+    margin: 0 0 0 var(--default-margin);
+    padding: 0;
+}
+
+.Sidebar__lan__accordion__items a {
+    color: inherit;
+}
+
 .DayNav {
     list-style-type: none;
     margin: 0;
@@ -1422,4 +1442,8 @@ input[type="url"],
 
 .u-color-white {
     color: var(--color-white);
+}
+
+.u-color-red {
+    color: var(--color-red);
 }
