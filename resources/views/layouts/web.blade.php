@@ -123,7 +123,6 @@ Layout template for web
     <div class="container">
 
         @include('parts.siteheader')
-        @include('parts.sidebar')
 
         <div class="Ad">
             <div class="Ad__intro">Annons</div>
@@ -196,6 +195,8 @@ Layout template for web
     <footer class="SiteFooter">
         @include('parts.sitefooter')
     </footer>
+
+    @include('parts.sidebar')
 
     @if (env("APP_ENV") != "local")
     <amp-analytics type="googleanalytics" id="analytics-ga">

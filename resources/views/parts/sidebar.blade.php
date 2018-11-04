@@ -11,7 +11,7 @@ https://www.ampproject.org/docs/reference/components/amp-sidebar
             <ul class="Sidebar-nav-items">
                 <li class="Sidebar-nav-large">
                     <ul>
-                        <li><a href="{{ route("start") }}">Händelser (hela Sverige)</a></li>
+                        <li><a href="{{ route("start") }}">Händelser<br/>i hela Sverige</a></li>
                         <li><a href="/geo.php">Nära mig</a></li>
                         <li>
                             <amp-accordion
@@ -56,7 +56,7 @@ https://www.ampproject.org/docs/reference/components/amp-sidebar
                         <li><a href="{{ route("ordlista") }}">Ordlista</a></li>
                     </ul>
                 </li>
-                
+
                 <li class="Sidebar-nav-small">
                     <ul>
                         <li><a href="{{ route("page", ["pagename" => "om"]) }}">Om Brottsplatskartan</a></li>
