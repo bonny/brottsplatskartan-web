@@ -330,6 +330,21 @@ button {
     color: inherit;
 }
 
+.Sidebar-nav-large {
+    font-size: var(--font-size-large);
+}
+
+.Sidebar-nav-small {
+    font-size: var(--font-size-small);
+}
+
+.Sidebar-nav-large ul,
+.Sidebar-nav-small ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
 .DayNav {
     list-style-type: none;
     margin: 0;
