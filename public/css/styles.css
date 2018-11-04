@@ -316,12 +316,13 @@ button {
     background: transparent;
     padding: var(--default-margin-half);
     border: 0;
+    background-image: url(/img/baseline-expand_more-24px.svg);
+    background-position: right;
+    background-repeat: no-repeat;
 }
 
-.Sidebar__lan__accordion__items {
-    list-style: none;
-    margin: 0 0 0 var(--default-margin);
-    padding: 0;
+.Sidebar__lan__accordion header[aria-expanded="true"] {
+    background-image: url(/img/baseline-expand_less-24px.svg);
 }
 
 .Sidebar__lan__accordion__items a {
@@ -342,6 +343,14 @@ button {
     list-style: none;
     margin: 0;
     padding: 0;
+}
+
+.Sidebar-nav-large .Sidebar__lan__accordion__items {
+    /* list-style: none;
+    margin: 0 0 0 var(--default-margin);
+    padding: 0; */
+    margin-left: var(--default-margin);
+    font-size: var(--font-size-small);
 }
 
 .DayNav {
