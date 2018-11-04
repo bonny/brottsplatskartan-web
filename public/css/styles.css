@@ -283,6 +283,7 @@ button {
 .Sidebar {
     background-color: var(--color-blue-police);
     color: var(--color-white);
+    opacity: 0.95;
 }
 
 .Sidebar-close {
@@ -310,9 +311,6 @@ button {
     color: inherit;
 }
 
-.Sidebar__lan__accordion {
-    /* background: transparent; */
-}
 
 .Sidebar__lan__accordion header {
     background: transparent;
@@ -336,6 +334,7 @@ button {
 
 .Sidebar-nav-small {
     font-size: var(--font-size-small);
+    margin-top: var(--default-margin);
 }
 
 .Sidebar-nav-large ul,
