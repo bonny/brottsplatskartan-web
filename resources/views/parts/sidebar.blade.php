@@ -9,14 +9,11 @@ https://www.ampproject.org/docs/reference/components/amp-sidebar
 
         <nav class="Sidebar-nav">
             <ul class="Sidebar-nav-items">
-                {{-- <li><a href="{{ route('lanOverview', [], false) }}">Län</a></li> --}}
-
                 <li><a href="{{ route("start") }}">Senaste händelserna i hela Sverige</a></li>
                 <li><a href="{{ route("FullScreenMap") }}">Sverigekartan</a></li>
                 <li><a href="/geo.php">Nära mig</a></li>
-
-
- <amp-accordion
+                <li>
+                     <amp-accordion
                         layout="container"
                         disable-session-states
                         class="Sidebar__lan__accordion"
@@ -48,7 +45,7 @@ https://www.ampproject.org/docs/reference/components/amp-sidebar
                             </ul>
                         </section>
                     </amp-accordion>
-</li>
+                </li>
 
                 <li><a href="{{ route('search', [], false) }}">Sök</a></li>
                 <li><a href="{{ route("polisstationer") }}">Polisstationer</a></li>
@@ -59,11 +56,9 @@ https://www.ampproject.org/docs/reference/components/amp-sidebar
                 <li><a href="{{ route("ordlista") }}">Ordlista</a></li>
                 <li><a href="{{ route("page", ["pagename" => "api"]) }}">Brottsplatser API</a></li>
                 <li><a href="https://stats.uptimerobot.com/ADWQ0TZq1">Upptid/status</a></li>
-                <li><a href="http://www.sis-index.se/site-information/9951" title="Visa antal besökare, besök samt sidvisningar på en fin graf hos SIS-index (Svensk Internet-statistik)">Besöksstatistik</a></li>
+                <li><a href="http://www.sis-index.se/site-information/9951">Besöksstatistik</a></li>
             </ul>
         </nav>
-    </div>    
-
-
+    </div>
 
 </amp-sidebar>
