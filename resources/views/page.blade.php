@@ -105,6 +105,8 @@ Template for text pages
             vill komma i kontakt med oss så nås vi via Twitter på <a href="https://twitter.com/brottsplatser">https://twitter.com/brottsplatser</a>,
             via Facebook på <a href="https://www.facebook.com/Brottsplatskartan/">https://www.facebook.com/Brottsplatskartan/</a>
             eller via e-post på <a href="mailto:kontakt@brottsplatskartan.se">kontakt@brottsplatskartan.se</a>.
+            Vänligen observera att vi inte kan svara på frågor om Polisens arbete
+            eller om de händelser som presenteras här på sajten.
         </p>
 
         <h2>Om tjänstens skapare</h2>
