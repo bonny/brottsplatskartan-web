@@ -116,12 +116,13 @@ Layout template for web
     <style amp-custom>{!! HTMLMin::css(file_get_contents( public_path("css/styles.css") )) !!}</style>
 
 </head>
-<body>
+<body class="@if ($shared_notification_bar_contents) has-notification-bar @endif">
 
     <amp-auto-ads type="adsense" data-ad-client="ca-pub-1689239266452655"></amp-auto-ads>
 
     <div class="container">
 
+        @include('parts.notificationbar')
         @include('parts.siteheader')
 
         <div class="Ad">

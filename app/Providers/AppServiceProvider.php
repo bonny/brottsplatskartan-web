@@ -19,9 +19,11 @@ class AppServiceProvider extends ServiceProvider
         // Lan listing is used in header nav so share it here for easy access.
         // https://laravel.com/docs/5.5/views#passing-data-to-views
         $lan = \App\Helper::getAllLanWithStats();
-        \View::share('lan_with_stats', $lan);
-    }
+        \View::share('shared_lan_with_stats', $lan);
 
+        $notificationBarContents = 'Nyhet: <a href="/sverigekartan">Sverigekartan</a> – karta med händelser från hela Sverige';
+        \View::share('shared_notification_bar_contents', $notificationBarContents);
+    }
 
     /**
      * Register any application services.

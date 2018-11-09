@@ -130,6 +130,32 @@ button {
     clear: both;
 } */
 
+.NotificationBar {
+    background: var(--color-red);
+    color: var(--color-white);
+    padding: var(--default-margin-half);
+    width: 100%;
+    position: fixed;
+    z-index: 15;
+    top: 0;
+    left: 0;
+    line-height: 1;
+    text-align: center;
+    font-size: var(--font-size-small);
+}
+
+.NotificationBar a {
+    color: inherit;
+    text-decoration: underline;
+}
+
+.NotificationBar p {
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .SiteHeader {
     position: fixed;
     top: 0;
@@ -152,6 +178,10 @@ button {
     left: 0;
     right: 0;
     height: 42px;
+}
+
+.has-notification-bar .SiteHeader {
+    top: 1.9rem;
 }
 
 .SiteHeader__inner {

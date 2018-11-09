@@ -30,7 +30,7 @@ https://www.ampproject.org/docs/reference/components/amp-sidebar
                                                 Översikt alla län
                                             </a>
                                         </li>
-                                        @foreach ($lan_with_stats as $oneLan)
+                                        @foreach ($shared_lan_with_stats as $oneLan)
                                             <li class="">
                                                 <a href="{{ route("lanSingle", ["lan"=>$oneLan->administrative_area_level_1]) }}">
                                                     {{ $oneLan->administrative_area_level_1 }}
