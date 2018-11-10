@@ -20,6 +20,8 @@ Layout template for web
     <script async custom-element="amp-carousel" src="https://cdn.ampproject.org/v0/amp-carousel-0.1.js"></script>
     <script async custom-element="amp-accordion" src="https://cdn.ampproject.org/v0/amp-accordion-0.1.js"></script>
     <script async custom-element="amp-sidebar" src="https://cdn.ampproject.org/v0/amp-sidebar-0.1.js"></script>
+    <script async custom-element="amp-position-observer" src="https://cdn.ampproject.org/v0/amp-position-observer-0.1.js"></script>
+    <script custom-element="amp-animation" src="https://cdn.ampproject.org/v0/amp-animation-0.1.js" async></script>
 
     {{-- <script async custom-element="amp-facebook-page" src="https://cdn.ampproject.org/v0/amp-facebook-page-0.1.js"></script> --}}
 
@@ -120,10 +122,70 @@ Layout template for web
 
     <amp-auto-ads type="adsense" data-ad-client="ca-pub-1689239266452655"></amp-auto-ads>
 
+
+
+    <amp-animation id="shrinkAnim" layout="nodisplay">
+      <script type="application/json">
+        {
+          "duration": "250ms",
+          "easing": "ease-in-out",
+          "fill": "both",
+          "iterations": "1",
+          "direction": "alternate",
+          "animations": [{
+              "selector": "#SiteHeader",
+              "keyframes": [{
+                "transform": "translateY(-4rem)"
+              }]
+            },
+            {
+              "selector": ".SiteTitle",
+              "keyframes": [{
+                "transform": "translateY(16px) scale(.75)"
+              }]
+            }
+          ]
+        }
+      </script>
+    </amp-animation>
+    <amp-animation id="expandAnim" layout="nodisplay">
+      <script type="application/json">
+        {
+          "duration": "250ms",
+          "easing": "ease-out",
+          "fill": "both",
+          "iterations": "1",
+          "direction": "alternate",
+          "animations": [{
+              "selector": "#SiteHeader",
+              "keyframes": [{
+                "transform": "translateY(0)"
+              }]
+            },
+            {
+              "selector": ".SiteTitle",
+              "keyframes": [{
+                "transform": "translateY(0) scale(1)"
+              }]
+            }
+          ]
+        }
+      </script>
+    </amp-animation>
+
+
+
+
     <div class="container">
 
         @include('parts.notificationbar')
         @include('parts.siteheader')
+
+
+        <div id="HeaderAnimationMarker">
+            <amp-position-observer on="enter:expandAnim.start; exit:shrinkAnim.start;" layout="nodisplay"></amp-position-observer>
+        </div>
+
 
         <div class="Ad">
             <div class="Ad__intro">Annons</div>

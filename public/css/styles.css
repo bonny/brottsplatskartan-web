@@ -130,6 +130,13 @@ button {
     clear: both;
 } */
 
+#HeaderAnimationMarker {
+  position: absolute;
+  top: 125px;
+  width: 0px;
+  height: 0px;
+}
+
 .NotificationBar {
     background: var(--color-red);
     color: var(--color-white);

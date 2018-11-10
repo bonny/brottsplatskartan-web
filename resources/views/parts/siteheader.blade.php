@@ -1,4 +1,4 @@
-<header class="SiteHeader">
+<header class="SiteHeader" id="SiteHeader">
     <div class="SiteHeader__inner">
 
         @if (Auth::check())
