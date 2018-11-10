@@ -145,7 +145,7 @@ class StartController extends Controller
         if ($isToday) {
             $title = sprintf(
                 '
-                    Händelser från Polisen
+                    Händelser från Polisen idag
                 ',
                 $dateLocalized
             );

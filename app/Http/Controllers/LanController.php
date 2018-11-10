@@ -245,7 +245,7 @@ class LanController extends Controller
         if ($isToday) {
             $title = sprintf(
                 '
-                    Händelser i %2$s
+                    Händelser i %2$s idag
                 ',
                 $dateLocalized,
                 $lan
