@@ -141,7 +141,7 @@ Layout template for web
             {
               "selector": ".SiteTitle",
               "keyframes": [{
-                "transform": "translateY(16px) scale(.75)"
+                "transform": "translateY(16px) scale(0.75)"
               }]
             }
           ]
