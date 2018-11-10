@@ -21,8 +21,8 @@ class AppServiceProvider extends ServiceProvider
         $lan = \App\Helper::getAllLanWithStats();
         \View::share('shared_lan_with_stats', $lan);
 
-        $notificationBarContents = 'Nyhet: <a href="/sverigekartan">Sverigekartan</a> – karta med händelser från hela Sverige';
-        \View::share('shared_notification_bar_contents', $notificationBarContents);
+        $notificationBarContents = \Setting::get('notification-bar-contents');
+        \View::share('shared_notification_bar_contents', trim($notificationBarContents));
     }
 
     /**
