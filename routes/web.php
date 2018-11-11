@@ -391,7 +391,7 @@ Route::post('/{lan}/{eventName}', function ($lan, $eventName, Request $request) 
 Route::prefix('blogg')->group(function () {
     Route::get('/', function () {
         // Matchar https://brottsplatskartan.localhost/blogg
-        $blogItems = App\Blog::orderBy("created_at", "desc")->paginate(10);
+        $blogItems = App\Blog::orderBy("created_at", "desc")->get(); // ->paginate(10);
 
         $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs;
         $breadcrumbs->setDivider('›');
