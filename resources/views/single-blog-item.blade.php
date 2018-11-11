@@ -1,6 +1,8 @@
 {{--
 
-Template för ett event/händelse
+Template för ett blogginlägg
+Exempel på URL:
+https://brottsplatskartan.se/blogg/2018/sverigekartan-med-polisens-senaste-handelser-i-hela-sverige
 
 --}}
 
@@ -14,6 +16,7 @@ Template för ett event/händelse
 @endsection
 
 @section('sidebar')
+    @include('parts.widget-blog-entries')
     @include('parts.follow-us')
     @include('parts.lan-and-cities')
 @endsection

@@ -18,240 +18,250 @@ Template for text pages
 
 @section('content')
 
-    @if ($pagename == "api")
+    <div class="widget">
 
-        @section('canonicalLink', '/sida/api')
+        @if ($pagename == "api")
 
-        <h1>Brottsplats API</h1>
+            @section('canonicalLink', '/sida/api')
 
-        <p>Brottsplatskartan har ett API med stöd för både JSON och JSONP.</p>
+            <h1 class="widget__title">Brottsplats API</h1>
 
-        <p>Använda gärna API:et för icke-kommersielltbruk och skicka med en unik <code>app</code>-parameter så vi
-        kan se hur mycket olika tjänster använder API:et.</p>
+            <p>Brottsplatskartan har ett API med stöd för både JSON och JSONP.</p>
 
-        <p>För kommersiellt bruk (eller om du kommer använda API:et väldigt mycket) vänligen
-        kontakta oss på <a href="mailto:kontakt@brottsplatskartan.se">kontakt@brottsplatskartan.se</a>.
-        Och använd även här en app-parameter.
-        </p>
+            <p>Använda gärna API:et för icke-kommersielltbruk och skicka med en unik <code>app</code>-parameter så vi
+            kan se hur mycket olika tjänster använder API:et.</p>
 
-        <p>Vi kan komma att blockera anrop utan app-parameterar eller appar/tjänster/sajter som använder
-        API:et väldigt mycket.</p>
+            <p>För kommersiellt bruk (eller om du kommer använda API:et väldigt mycket) vänligen
+            kontakta oss på <a href="mailto:kontakt@brottsplatskartan.se">kontakt@brottsplatskartan.se</a>.
+            Och använd även här en app-parameter.
+            </p>
 
-        <p>Ungefär cirka såhär ser URLarna för APIet ut:</p>
+            <p>Vi kan komma att blockera anrop utan app-parameterar eller appar/tjänster/sajter som använder
+            API:et väldigt mycket.</p>
 
-        <h2>Endpoints</h2>
+            <p>Ungefär cirka såhär ser URLarna för APIet ut:</p>
 
-        <h3>Hämta alla län:</h3>
+            <h2>Endpoints</h2>
 
-        <p><code>/api/areas?app=unikAppParameter</code></p>
+            <h3>Hämta alla län:</h3>
 
-        <h3>Hämta händelser</h3>
+            <p><code>/api/areas?app=unikAppParameter</code></p>
 
+            <h3>Hämta händelser</h3>
 
-        <p><code>/api/events/?app=unikAppParameter</code></p>
 
-        <p>med stöd för parametrar:</p>
+            <p><code>/api/events/?app=unikAppParameter</code></p>
 
+            <p>med stöd för parametrar:</p>
 
-        <p><code>/api/events/?area=stockholms län</code></p>
 
-        <p><code>/api/events/?area=uppsala län</code></p>
+            <p><code>/api/events/?area=stockholms län</code></p>
 
-        <p><code>/api/events/?location=nacka</code></p>
+            <p><code>/api/events/?area=uppsala län</code></p>
 
-        <p><code>/api/events/?location=visby</code></p>
+            <p><code>/api/events/?location=nacka</code></p>
 
-        <p><code>/api/events/?type=inbrott</code></p>
+            <p><code>/api/events/?location=visby</code></p>
 
-        <h3>Hämta i närheten</h3>
+            <p><code>/api/events/?type=inbrott</code></p>
 
-        <p><code>/api/eventsNearby?lat=59.32&lng=18.06</code></p>
+            <h3>Hämta i närheten</h3>
 
-        <h3>Hämta single event</h3>
+            <p><code>/api/eventsNearby?lat=59.32&lng=18.06</code></p>
 
-        <p><code>/api/event/4095</code></p>
+            <h3>Hämta single event</h3>
 
-    @endif
+            <p><code>/api/event/4095</code></p>
 
+        @endif
 
-    @if ($pagename == "om")
 
-        @section('canonicalLink', '/sida/om')
+        @if ($pagename == "om")
 
-        <h1>Om brottsplatskartan.se</h1>
+            @section('canonicalLink', '/sida/om')
 
-        <p>Brottsplatskartan är en <a href="https://brottsplatskartan.se">sajt</a> och <a href="/sida/appar">appar</a>
-        som visar var brott i Sverige har skett. Typ som en poliskarta eller brottskarta.</p>
+            <h1 class="widget__title">Om brottsplatskartan.se</h1>
 
-        <p>Polisen själva har en sajt där dom skriver om vilka händelser som skett, men Polisens webbplats saknas en del funktioner, som vi här på Brottsplatskartan försökt fixa till. T.ex.:</p>
+            <p>Brottsplatskartan är en <a href="https://brottsplatskartan.se">sajt</a> och <a href="/sida/appar">appar</a>
+            som visar var brott i Sverige har skett. Typ som en poliskarta eller brottskarta.</p>
 
-        <ul>
-            <li>Permalänkar till brott och händelser som inte försvinner (hos Polisen så slutar en länk till en händelser att fungera efter en vecka ungefär)</li>
+            <p>Polisen själva har en sajt där dom skriver om vilka händelser som skett, men Polisens webbplats saknas en del funktioner, som vi här på Brottsplatskartan försökt fixa till. T.ex.:</p>
 
-            <li>Platsen för en händelse visas på en karta (på Polisens webbsida så står det bara en adress eller område, men ingen länk till karta eller liknande)</li>
+            <ul>
+                <li>Permalänkar till brott och händelser som inte försvinner (hos Polisen så slutar en länk till en händelser att fungera efter en vecka ungefär)</li>
 
-            <li>Möjlighet att visa saker "nära mig" genom att använda GPS:en på en mobiltelefon (Polisen har ingen liknande funktion alls)</li>
-        </ul>
+                <li>Platsen för en händelse visas på en karta (på Polisens webbsida så står det bara en adress eller område, men ingen länk till karta eller liknande)</li>
 
-        <h2>Om händelserna och deras position på kartan</h2>
+                <li>Möjlighet att visa saker "nära mig" genom att använda GPS:en på en mobiltelefon (Polisen har ingen liknande funktion alls)</li>
+            </ul>
 
-        <p>Informationen om de händelser som visas på webbplatserna hämtas från Polisens webbplats.</p>
+            <h2>Om händelserna och deras position på kartan</h2>
 
-        <p>Platsen för varje händelse är skapad automatiskt och det kan därför förekomma fel.</p>
+            <p>Informationen om de händelser som visas på webbplatserna hämtas från Polisens webbplats.</p>
 
-        <h2>Kontakta brottsplatskartan</h2>
+            <p>Platsen för varje händelse är skapad automatiskt och det kan därför förekomma fel.</p>
 
-        <p>Har du frågor om webbplatsen eller av annan anledning
-            vill komma i kontakt med oss så nås vi via Twitter på <a href="https://twitter.com/brottsplatser">https://twitter.com/brottsplatser</a>,
-            via Facebook på <a href="https://www.facebook.com/Brottsplatskartan/">https://www.facebook.com/Brottsplatskartan/</a>
-            eller via e-post på <a href="mailto:kontakt@brottsplatskartan.se">kontakt@brottsplatskartan.se</a>.
-            Vänligen observera att vi inte kan svara på frågor om Polisens arbete
-            eller om de händelser som presenteras här på sajten.
-        </p>
+            <h2>Kontakta brottsplatskartan</h2>
 
-        <h2>Om tjänstens skapare</h2>
+            <p>Har du frågor om webbplatsen eller av annan anledning
+                vill komma i kontakt med oss så nås vi via Twitter på <a href="https://twitter.com/brottsplatser">https://twitter.com/brottsplatser</a>,
+                via Facebook på <a href="https://www.facebook.com/Brottsplatskartan/">https://www.facebook.com/Brottsplatskartan/</a>
+                eller via e-post på <a href="mailto:kontakt@brottsplatskartan.se">kontakt@brottsplatskartan.se</a>.
+                Vänligen observera att vi inte kan svara på frågor om Polisens arbete
+                eller om de händelser som presenteras här på sajten.
+            </p>
 
-        <p>
-            Brottsplatskartans grundare är den kartintresserad webbutvecklaren <a href="https://twitter.com/eskapism">Pär Thernström</a>.
-        </p>
-        <p>
-            Utöver Brottsplatskartan så har han även grundat <a href="https://texttv.nu/">Text TV-sajten texttv.nu</a>
-            (med tillhörande appar för
-            <a href="https://itunes.apple.com/se/app/texttv-nu-svt-text-tv/id607998045?mt=8">Ios</a>
-             och <a href="https://play.google.com/store/apps/details?id=com.mufflify.TextTVnu&hl=sv">Android</a>).
-        </p>
+            <h2>Om tjänstens skapare</h2>
 
-        <p>
-            Han är även skapare av pluginen <a href="http://simple-history.com/">Simple History</a> till WordPress,
-            som på en snyggt sätt visar vilka ändringar som användarna på en WordPress-webbplats gör. Använder du WordPress
-            borde du installera den bums!
-        </p>
+            <p>
+                Brottsplatskartans grundare är den kartintresserad webbutvecklaren <a href="https://twitter.com/eskapism">Pär Thernström</a>.
+            </p>
+            <p>
+                Utöver Brottsplatskartan så har han även grundat <a href="https://texttv.nu/">Text TV-sajten texttv.nu</a>
+                (med tillhörande appar för
+                <a href="https://itunes.apple.com/se/app/texttv-nu-svt-text-tv/id607998045?mt=8">Ios</a>
+                 och <a href="https://play.google.com/store/apps/details?id=com.mufflify.TextTVnu&hl=sv">Android</a>).
+            </p>
 
-        <h2>Kartorna</h2>
+            <p>
+                Han är även skapare av pluginen <a href="http://simple-history.com/">Simple History</a> till WordPress,
+                som på en snyggt sätt visar vilka ändringar som användarna på en WordPress-webbplats gör. Använder du WordPress
+                borde du installera den bums!
+            </p>
 
-        <p>
-            Kartbilderna kommer från OpenMapTiles:
-            ©&nbsp;<a href="https://openmaptiles.org/">OpenMapTiles</a>
-            ©&nbsp;<a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>.
-        </p>
+            <h2>Kartorna</h2>
 
-    @endif
+            <p>
+                Kartbilderna kommer från OpenMapTiles:
+                ©&nbsp;<a href="https://openmaptiles.org/">OpenMapTiles</a>
+                ©&nbsp;<a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>.
+            </p>
 
+        @endif
 
-    @if ($pagename == "appar")
 
-        @section('canonicalLink', '/sida/appar')
+        @if ($pagename == "appar")
 
-        <h1>Polisens händelser direkt i din mobil</h1>
+            @section('canonicalLink', '/sida/appar')
 
-        <div class='PageApps__screenshots'>
+            <h1 class="widget__title">Polisens händelser direkt i din mobil</h1>
 
-            <a href="https://lh3.googleusercontent.com/nIvqRhYj2-fzB0Pv8v2evtdDGcOJQRaSvIrz_L6wcb9oxeDrdaV2SC4l-f_iRE42ZPs=h900-rw"><amp-img layout="responsive" width="506" height="900" src="https://lh3.googleusercontent.com/nIvqRhYj2-fzB0Pv8v2evtdDGcOJQRaSvIrz_L6wcb9oxeDrdaV2SC4l-f_iRE42ZPs=h900-rw" alt="Skärmdump som visar hur appen ser ut på en Android-telefon"></amp-img>
+            <div class='PageApps__screenshots'>
 
-            <a href="http://a5.mzstatic.com/eu/r30/Purple71/v4/05/c9/3d/05c93d0e-d40c-d35a-4eb7-7ca001e36e93/screen696x696.jpeg"><amp-img layout="responsive" width="392" height="596" src="http://a5.mzstatic.com/eu/r30/Purple71/v4/05/c9/3d/05c93d0e-d40c-d35a-4eb7-7ca001e36e93/screen696x696.jpeg" alt="Skärmdump som visar hur appen ser ut på en Iphone-telefon"></amp-img></a>
+                <a href="https://lh3.googleusercontent.com/nIvqRhYj2-fzB0Pv8v2evtdDGcOJQRaSvIrz_L6wcb9oxeDrdaV2SC4l-f_iRE42ZPs=h900-rw"><amp-img layout="responsive" width="506" height="900" src="https://lh3.googleusercontent.com/nIvqRhYj2-fzB0Pv8v2evtdDGcOJQRaSvIrz_L6wcb9oxeDrdaV2SC4l-f_iRE42ZPs=h900-rw" alt="Skärmdump som visar hur appen ser ut på en Android-telefon"></amp-img>
 
-        </div>
+                <a href="http://a5.mzstatic.com/eu/r30/Purple71/v4/05/c9/3d/05c93d0e-d40c-d35a-4eb7-7ca001e36e93/screen696x696.jpeg"><amp-img layout="responsive" width="392" height="596" src="http://a5.mzstatic.com/eu/r30/Purple71/v4/05/c9/3d/05c93d0e-d40c-d35a-4eb7-7ca001e36e93/screen696x696.jpeg" alt="Skärmdump som visar hur appen ser ut på en Iphone-telefon"></amp-img></a>
 
-        <p>
-            Med våra brottsappar till Iphone och Android så kan du se de senaste händelserna från polisen
-            direkt i din mobil.
-        </p>
+            </div>
 
-        <h2>Ladda hem apparna</h2>
+            <p>
+                Med våra brottsappar till Iphone och Android så kan du se de senaste händelserna från polisen
+                direkt i din mobil.
+            </p>
 
-        <p>Apparna med brottskartan hittar du här:</p>
+            <h2>Ladda hem apparna</h2>
 
-        <ul>
-            <li>
-                <a href="https://itunes.apple.com/se/app/brottsplatskartan-handelser/id1174082309?mt=8">Brottsplatskartan som app till Iphone/Ipad</a>
-            <li>
-                <a href="https://play.google.com/store/apps/details?id=com.mufflify.brottsplatskartan&hl=sv">Brottsplatskartan som app till Android</a>
-        </ul>
+            <p>Apparna med brottskartan hittar du här:</p>
 
-        <h2>Tips!</h2>
+            <ul>
+                <li>
+                    <a href="https://itunes.apple.com/se/app/brottsplatskartan-handelser/id1174082309?mt=8">Brottsplatskartan som app till Iphone/Ipad</a>
+                <li>
+                    <a href="https://play.google.com/store/apps/details?id=com.mufflify.brottsplatskartan&hl=sv">Brottsplatskartan som app till Android</a>
+            </ul>
 
-        <p>Om du gillar <a href="https://brottsplatskartan.se">hemsidan</a> mer än apparna så kan du välja att lägga ett bokmärke till <a href="https://brottsplatskartan.se">brottsplatskartan.se</a> på
-        din hemskärm i din telefon.</p>
+            <h2>Tips!</h2>
 
-    @endif
+            <p>Om du gillar <a href="https://brottsplatskartan.se">hemsidan</a> mer än apparna så kan du välja att lägga ett bokmärke till <a href="https://brottsplatskartan.se">brottsplatskartan.se</a> på
+            din hemskärm i din telefon.</p>
 
+        @endif
 
-    @if ($pagename == "stockholm")
 
-        <h1>Händelser från Polisen i Stockholm</h1>
+        @if ($pagename == "stockholm")
 
-        <p>
-            Här på Brottsplatskartan kan du se de
-            <a href="{{ route("platsSingle", ["plats" => "Stockholm"]) }}">senaste händelserna från Polisen i Stockholm</a>.
-        </p>
+            <h1 class="widget__title">Händelser från Polisen i Stockholm</h1>
 
-        <p>
-            På vår karta kan du se olika typer av brott som rapporterats till Polisen.
-        </p>
+            <p>
+                Här på Brottsplatskartan kan du se de
+                <a href="{{ route("platsSingle", ["plats" => "Stockholm"]) }}">senaste händelserna från Polisen i Stockholm</a>.
+            </p>
 
-        <h2>Alltid senaste nytt från Polisen</h2>
+            <p>
+                På vår karta kan du se olika typer av brott som rapporterats till Polisen.
+            </p>
 
-        <p>Alla händelser på den här sajten hämtas från Polisen i Stockholms hemsida.
-        Direkt när en händelser hämtats så avgör vi var händelsen troligen inträffat och så markeras det
-        på en karta.</p>
+            <h2>Alltid senaste nytt från Polisen</h2>
 
-        <h2>Följ händelser på Twitter</h2>
+            <p>Alla händelser på den här sajten hämtas från Polisen i Stockholms hemsida.
+            Direkt när en händelser hämtats så avgör vi var händelsen troligen inträffat och så markeras det
+            på en karta.</p>
 
-        <p>Vi postar alla händelser från Polisen i Stockholm till <a href="https://twitter.com/StockholmsBrott">twittterkontot @StockholmsBrott</a>.
-        Följ oss där för att få senaste brotten direkt i din twitter!</p>
+            <h2>Följ händelser på Twitter</h2>
 
-    @endif
+            <p>Vi postar alla händelser från Polisen i Stockholm till <a href="https://twitter.com/StockholmsBrott">twittterkontot @StockholmsBrott</a>.
+            Följ oss där för att få senaste brotten direkt i din twitter!</p>
 
+        @endif
 
-    @if ($pagename == "press")
 
-        <h1>Press</h1>
+        @if ($pagename == "press")
 
-        <h2>Vad är Brottsplatskartan?</h2>
+            <h1 class="widget__title">Press</h1>
 
-        <p>Brottsplatskartan är en sajt och en app som visar var brott som rapporterats av polisen har skett på en karta. Brottsplatskartan har en unik algoritm som ritar ut en ungefärlig plats, utan att peka ut enskilda platser, hus eller individer.
+            <h2>Vad är Brottsplatskartan?</h2>
 
-        <h2>Snabba fakta</h2>
+            <p>Brottsplatskartan är en sajt och en app som visar var brott som rapporterats av polisen har skett på en karta. Brottsplatskartan har en unik algoritm som ritar ut en ungefärlig plats, utan att peka ut enskilda platser, hus eller individer.
 
-        <ul>
+            <h2>Snabba fakta</h2>
 
-            <li>Första versionen av Brottsplatskartan kom 2010. Det var en vidareutveckling av sajten <em>Brottsplats Stockholm</em>, som endast visade brott i Stockholm.
+            <ul>
 
-            <li>2017 skedde en relansering av Brottsplatskartan. Sajten fick då sitt nuvarande
-            utseende och en mängd nya funktioner såsom bättre placering av brott på kartan, händelser från alla sveriges län, och mycket mer.
+                <li>Första versionen av Brottsplatskartan kom 2010. Det var en vidareutveckling av sajten <em>Brottsplats Stockholm</em>, som endast visade brott i Stockholm.
 
-            <li>Feber skrev om när sajten lanserades http://feber.se/webb/art/165994/brottsplats_stockholm/
+                <li>2017 skedde en relansering av Brottsplatskartan. Sajten fick då sitt nuvarande
+                utseende och en mängd nya funktioner såsom bättre placering av brott på kartan, händelser från alla sveriges län, och mycket mer.
 
-            <li>Webbplatsen har 22.000 användare per månad (Juni 2017)
+                <li>Feber skrev om när sajten lanserades http://feber.se/webb/art/165994/brottsplats_stockholm/
 
-            <li>67 % av användare besöker sajten via en mobiltelefon
+                <li>Webbplatsen har 22.000 användare per månad (Juni 2017)
 
-        </ul>
+                <li>67 % av användare besöker sajten via en mobiltelefon
 
-        <h2>Logotyp</h2>
+            </ul>
 
-        <p>
-            Brottsplatskartans logotyp i PNG-format:
-            <br>
-            <a href="/img/brottsplatskartan-logotyp.png">
-                <amp-img src="/img/brottsplatskartan-logotyp.png" width=282 height=36 alt="Brottsplatskartan"></amp-img>
-            </a>
-            <br>
-            <a href="/img/brottsplatskartan-logotyp.png">brottsplatskartan-logotyp.png</a> (6KB, 626✕80, PNG)
-        </p>
+            <h2>Logotyp</h2>
 
-        <!--
-        <p>
-            <a href="/img/brottsplatskartan-logotyp-symbol-only.png">
-                <amp-img alt="Brottsplatskartan" src="/img/brottsplatskartan-logotyp-symbol-only.png" width=40 height=40></amp-img>
-            </a>
-        </p>
-        -->
+            <p>
+                Brottsplatskartans logotyp i PNG-format:
+                <br>
+                <a href="/img/brottsplatskartan-logotyp.png">
+                    <amp-img src="/img/brottsplatskartan-logotyp.png" width=282 height=36 alt="Brottsplatskartan"></amp-img>
+                </a>
+                <br>
+                <a href="/img/brottsplatskartan-logotyp.png">brottsplatskartan-logotyp.png</a> (6KB, 626✕80, PNG)
+            </p>
 
-        <h2>Kontakt</h2>
+            <!--
+            <p>
+                <a href="/img/brottsplatskartan-logotyp-symbol-only.png">
+                    <amp-img alt="Brottsplatskartan" src="/img/brottsplatskartan-logotyp-symbol-only.png" width=40 height=40></amp-img>
+                </a>
+            </p>
+            -->
 
-        <p>För frågor kontakta Brottsplatskartan via e-post <a href="mailto:kontakt@brottsplatskartan.se">kontakt@brottsplatskartan.se</a>.</p>
+            <h2>Kontakt</h2>
 
-    @endif
+            <p>För frågor kontakta Brottsplatskartan via e-post <a href="mailto:kontakt@brottsplatskartan.se">kontakt@brottsplatskartan.se</a>.</p>
 
+        @endif
+
+    </div>
+
+@endsection
+
+@section('sidebar')
+    @include('parts.widget-blog-entries')
+    @include('parts.lan-and-cities')
+    @include('parts.follow-us')
 @endsection
