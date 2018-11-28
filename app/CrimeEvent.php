@@ -140,31 +140,92 @@ class CrimeEvent extends Model implements Feedable
      */
     public function getStaticImageSrcFar($width = 320, $height = 320, $scale = 1)
     {
-        return '';
-
-        $google_api_key = env("GOOGLE_API_KEY");
-
-        $image_src = "https://maps.googleapis.com/maps/api/staticmap?";
-        $image_src .= "key=$google_api_key";
-        $image_src .= "&size={$width}x{$height}";
-        $image_src .= "&scale={$scale}";
-        $image_src .= "&language=sv";
+        $tileserverUrl = 'https://kartbilder.brottsplatskartan.se/';
+        $tileServerQueryArgs = [];
 
         // if viewport info exists use that and skip manual zoom level
-        if ($this->location_lat) {
+        if ($this->viewport_northeast_lat) {
+            // $image_src .= "&path=";
+            // $image_src .= "color:0x00000000|weight:2|fillcolor:0xFF660044";
+
+            // /styles/klokantech-basic/static/auto/640x340.jpg?path=59.3137,18.0780|59.32,18.0790|59.33,18.0791|59.34,18.0800|59.30,18.0001&latlng=1&fill=rgba(255,0,0,.2)&width=2&stroke=rgba(255,0,0,.2)
+            $zoomLevel = 5;
+            $expandNumber = .25;
+
+            $tileserverUrl .= 'styles/klokantech-basic/static/';
+            $tileserverUrl .= "{$this->location_lng},{$this->location_lat},{$zoomLevel}";
+            $tileserverUrl .= "/{$width}x{$height}.jpg";
+            $tileServerQueryArgs = array_merge($tileServerQueryArgs, [
+                "latlng" => 1,
+                "fill" => "rgba(255,0,0,.2)",
+                "width" => 2,
+                "stroke" => "rgba(255,0,0,.2)"
+            ]);
+
+            // Expand marked region.
+
+            $viewport_northeast_lat_first = number_format($this->viewport_northeast_lat + $expandNumber, 5, '.', '');
+            $viewport_northeast_lng = number_format($this->viewport_northeast_lng + $expandNumber, 5, '.', '');
+
+            $viewport_southwest_lat = number_format($this->viewport_southwest_lat - $expandNumber, 5, '.', '');
+            $viewport_southwest_lng = number_format($this->viewport_southwest_lng - $expandNumber, 5, '.', '');
+
+            $tileServerPath = "";
+            $tileServerPath .= "|" . $viewport_northeast_lat_first . "," . $viewport_northeast_lng;
+            $tileServerPath .= "|" . $viewport_southwest_lat . "," . $viewport_northeast_lng;
+
+            $tileServerPath .= "|" . $viewport_southwest_lat . "," . $viewport_southwest_lng;
+            $tileServerPath .= "|" . $viewport_northeast_lat_first . "," . $viewport_southwest_lng;
+
+            $tileServerPath = trim($tileServerPath, '|');
+
+            $tileServerQueryArgs['path'] = $tileServerPath;
+            // $tileServerQueryArgs['padding'] = "0.4";
+
+            return $tileserverUrl . '?' . http_build_query($tileServerQueryArgs);
+
+            // path=59.3137,18.0780
+            // 59.32,18.0790|59.33,18.0791|59.34,18.0800|59.30,18.0001
+
+            /*
+
+            color:
+            (optional) specifies a color either as a
+            24-bit (example: color=0xFFFFCC) or
+            32-bit hexadecimal value (example: color=0xFFFFCCFF), or from the set {black, brown, green, purple, yellow, blue, gray, orange, red, white}.
+
+            example from google api:
+            path=color:0xFFFFCC|weight:5|fillcolor:0xFFFF0033|8th+Avenue+%26+34th+St,New+York,NY|\
+            8th+Avenue+%26+42nd+St,New+York,NY|Park+Ave+%26+42nd+St,New+York,NY,NY|\
+            Park+Ave+%26+34th+St,New+York,NY,NY
+
+            */
+
+            // $image_src .= "|{$this->viewport_northeast_lat},{$this->viewport_northeast_lng}";
+            // $image_src .= "|{$this->viewport_southwest_lat},{$this->viewport_northeast_lng}";
+
+            // $image_src .= "|{$this->viewport_southwest_lat},{$this->viewport_southwest_lng}";
+            // $image_src .= "|{$this->viewport_northeast_lat},{$this->viewport_southwest_lng}";
+        } elseif ($this->location_lat) {
 
             // no viewport but location_lat, fallback to center
-            $image_src .= "&center={$this->location_lat},{$this->location_lng}";
-            $image_src .= "&zoom=5";
-
-            $image_src .= "&markers=color:red|{$this->location_lat},{$this->location_lng}";
+            // $image_src .= "&center={$this->location_lat},{$this->location_lng}";
+            // $image_src .= "&zoom=14";
+            return '';
         } else {
-            return "";
+
+            // @TODO: return fallback iamge
+            return '';
         }
 
-        $image_src = Helper::signUrl($image_src);
+        // echo "image: <img src='$image_src'>";
+        // exit;
 
-        return $image_src;
+        // src="https://maps.googleapis.com/maps/api/staticmap?center={{ $event->location_lat }},{{ $event->location_lng }}&zoom=14&size=600x400&key=...&markers={{ $event->location_lat }},{{ $event->location_lng }}"
+
+        // $image_src = Helper::signUrl($image_src);
+
+        return '';
     }
 
     /**

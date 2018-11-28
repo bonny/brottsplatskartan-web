@@ -690,8 +690,8 @@ amp-social-share {
     float: left;
 }
 .Event__mapImageWrap--near {
-    /* width: 66.666%; */
-    width: 100%;
+    /* width: 100%; */
+    width: 66.666%;
 }
 .Event__mapImageWrap--far {
     width: 33.333%;
