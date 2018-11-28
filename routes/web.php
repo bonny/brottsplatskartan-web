@@ -184,7 +184,10 @@ Route::get('/orter/{ort}', function ($ort = "") {
 });
 
 /**
- * Översikt brottstyp/händelsetyp
+ * Översikt brottstyp/händelsetyp.
+ *
+ * Exempel på URL:
+ * https://brottsplatskartan.se/typ
  */
 Route::get('/typ/', function () {
     $data = [];
@@ -208,7 +211,10 @@ Route::get('/typ/', function () {
 
 
 /**
- * En typ
+ * En typ av brott/händelse.
+ *
+ * Exempel på URL:
+ * https://brottsplatskartan.se/typ/Inbrott
  */
 Route::get('/typ/{typ}', function ($typ) {
     $data = [
