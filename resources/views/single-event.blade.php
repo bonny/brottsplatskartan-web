@@ -64,7 +64,7 @@ Template för ett event/händelse
     @endif
 
     @include('parts.follow-us')
-
     @include('parts.lan-and-cities')
+    @include('parts.widget-blog-entries')
 
 @endsection

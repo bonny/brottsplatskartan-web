@@ -110,7 +110,7 @@ samt för äldre dagar när man bläddrar i arkivet.
     @endif
 
     @include('parts.follow-us')
-
     @include('parts.lan-and-cities')
+    @include('parts.widget-blog-entries')
 
 @endsection
