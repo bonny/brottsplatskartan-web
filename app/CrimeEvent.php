@@ -249,8 +249,8 @@ class CrimeEvent extends Model implements Feedable
     }
 
     /**
-     * Parsed date = the date that is written as text in each crime
-     * Is often much earlier than the date in the RSS data
+     * Parsed date = the date that is written as text in each crime.
+     * Is often much earlier than the date in the RSS data.
      */
     public function getParsedDateFormattedForHumans()
     {
@@ -284,9 +284,35 @@ class CrimeEvent extends Model implements Feedable
         return Carbon::createFromTimestamp(strtotime($date))->toIso8601String();
     }
 
+    /**
+     * Returns the date of the crime/event in YMD format.
+     *
+     * @return string Date in format "Lördag 15 December 2018 13:20"
+     */
     public function getParsedDateYMD()
     {
-        return Carbon::createFromTimestamp(strtotime($this->parsed_date))->formatLocalized('%A %d %B %Y %H:%M');
+        $date = Carbon::createFromTimestamp(strtotime($this->parsed_date));
+        $formattedDate = '';
+        if ($this->isParsedDateThisYear()) {
+            // Pågående år, ta inte med år.
+            $formattedDate = $date->formatLocalized('%A %d %B %H:%M');
+        } else {
+            // Inte pågående år, inkludera år.
+            $formattedDate = $date->formatLocalized('%A %d %B %Y %H:%M');
+        }
+
+        return $formattedDate;
+    }
+
+    /**
+     * Kolla om året för denna händelse är samma år som just nu pågår.
+     * @return boolean True om det är året som pågår, false om inte.
+     */
+    public function isParsedDateThisYear() {
+        $eventDateYear = Carbon::createFromTimestamp(strtotime($this->parsed_date))->format('Y');
+        $currentYear = date('Y');
+
+        return $currentYear === $eventDateYear;
     }
 
 
