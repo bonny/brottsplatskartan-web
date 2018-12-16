@@ -22,6 +22,12 @@ class Newsarticle extends Model
 
         // Försök reda ut källa via URL
         $url = $this->url;
+
+        // Bail om ingen url.
+        if (empty($url)) {
+            return '';
+        }
+
         $urlParsed = parse_url($url);
         $urlHost = $urlParsed['host'];
 
