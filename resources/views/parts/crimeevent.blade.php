@@ -244,9 +244,13 @@ if $single is set then larger image
                 </fieldset>
             </form>
 
-            <form method='post' class="AdminForm AdminForm--addMediaRef"
+            <form
+                id="AdminFormAddMediaRef"
+                method='post'
+                class="AdminForm AdminForm--addMediaRef"
                 action-xhr='{{ url()->current() }}'
                 target="_top"
+                on="submit-success: AdminFormAddMediaRef.clear,AdminFormAddMediaRef__successMessage.show"
             >
                 <fieldset>
                     <legend>Händelsen i media</legend>
@@ -272,15 +276,21 @@ if $single is set then larger image
                         <button type="submit">Spara media</button>
                     </p>
 
+                    <div
+                        id="AdminFormAddMediaRef__successMessage"
+                        hidden
+                        >
+                        <p>Ok! Tillagd!</p>
+                    </div>
+
+                    <div
+                        id="AdminFormAddMediaRef__errorMessage"
+                        hidden
+                        >
+                        <p>Dang, något gick fel när media skulle sparas.</p>
+                    </div>
+
                 </fieldset>
-
-                <div submit-success>
-                    <p>Ok! Tillagd!</p>
-                </div>
-
-                <div submit-error>
-                    <p>Dang, något gick fel när media skulle sparas.</p>
-                </div>
 
             </form>
 
