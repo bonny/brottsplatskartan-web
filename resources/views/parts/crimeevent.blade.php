@@ -161,7 +161,7 @@ if $single is set then larger image
         --}}
     @else
 
-        @if ($newsarticles->count())
+        @if (isset($newsarticles) && $newsarticles->count())
             <div class="Event__media widget">
                 <h2 class="Event__mediaTitle widget__title">Händelsen i media</h2>
                 <ul class="Event__mediaLinks widget__listItems">

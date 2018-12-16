@@ -30,8 +30,6 @@ Template för ordlista/dictionary
     <h2>Mellanrubrik av storlek h2 kommer här igen</h2>
     <p>Sin eam, quam Hieronymus, ne fecisset idem, ut voluptatem illam Aristippi in prima commendatione poneret. Et hunc idem dico, inquieta sed ad virtutes et ad vitia nihil interesse. Qui est in parvis malis. Bonum incolumis acies: misera caecitas. Non est enim vitium in oratione solum, sed etiam in moribus. Ut proverbia non nulla veriora sint quam vestra dogmata. </p>
 
-    <p>Et quod est munus, quod opus sapientiae? Hoc mihi cum tuo fratre convenit. Huic mori optimum esse propter desperationem sapientiae, illi propter spem vivere. Sint modo partes vitae beatae. Virtutis, magnitudinis animi, patientiae, fortitudinis fomentis dolor mitigari solet. Gloriosa ostentatio in constituendo summo bono. Hoc sic expositum dissimile est superiori. Ex quo illud efficitur, qui bene cenent omnis libenter cenare, qui libenter, non continuo bene. Atqui eorum nihil est eius generis, ut sit in fine atque extrerno bonorum. Rationis enim perfectio est virtus;</p>
-
     <h3>En h3 kommer här. Som är lite längre dessutom. Videamus animi partes, quarum est conspectus illustrior</h3>
 
     <p>At ille non pertimuit saneque fidenter: Istis quidem ipsis verbis, inquit; Videamus animi partes, quarum est   conspectus illustrior; Haec para/doca illi, nos admirabilia dicamus. Cupit enim dícere nihil posse ad beatam vitam deesse sapienti. Morbo gravissimo affectus, exul, orbus, egens, torqueatur eculeo: quem hunc appellas, Zeno? Nobis aliter videtur, recte secusne, postea; </p>
@@ -74,6 +72,13 @@ Template för ordlista/dictionary
         </dd>
 
     </dl>
+
+    <hr>
+
+    <h2>En `parts.crimeevent`</h2>
+    @include('parts.crimeevent', ["single" => true])
+
+    <hr>
 
 @endsection
 
