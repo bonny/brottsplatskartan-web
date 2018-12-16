@@ -621,6 +621,29 @@ Route::get('/design', function (Request $request) {
 });
 
 /**
+ * Huvudsida + undersidor för inbrott, grannsamverkan och liknande.
+ */
+Route::get('/inbrott/{inbrottUndersida?}', function (Request $request, $inbrottUndersida = null) {
+
+    // Hämta se senaste händelserna som innehåller "inbrott", "larm", "intrång", osv.
+    $latestInbrottEvents = CrimeEvent::orderBy("created_at", "desc")
+                                ->where("parsed_title", 'like', 'inbrott')
+                                ->orWhere("parsed_title", 'like', 'larm')
+                                ->orWhere("parsed_title", 'like', 'intrång')
+                                ->paginate(10);
+
+    #dd($latestInbrottEvents);
+
+    $data = [
+        'pageTitle' => 'Inbrott',
+        'canonicalLink' => route('inbrott'),
+        'latestInbrottEvents' => $latestInbrottEvents
+    ];
+
+    return view('inbrott', $data);
+})->name('inbrott');
+
+/**
  * Skicka med data till 404-sidan
  */
 \View::composer('errors/404', function ($view) {
