@@ -608,7 +608,16 @@ Route::get('/coyards', function (Request $request) {
  * osv samspelar.
  */
 Route::get('/design', function (Request $request) {
-    return view('design');
+
+    // Hämta in senaste brottet/händelsen.
+    $event = CrimeEvent::orderBy('created_at', 'desc')->first();
+
+    $data = [
+        'event' => $event,
+        'eventID' => $event->id
+    ];
+
+    return view('design', $data);
 });
 
 /**
