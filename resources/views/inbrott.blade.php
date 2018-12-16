@@ -33,6 +33,34 @@ Template för /inbrott
         <p>https://www.bra.se/forebygga-brott/forebyggande-metoder/grannsamverkan.html</p>
         <p>https://polisen.se/om-polisen/polisens-arbete/grannsamverkan/</p>
 
+        <h3>Grannsamverkan-appar</h3>
+
+        <amp-accordion animate>
+            <section>
+                <h4>Coyards</h4>
+                <div>
+                    <p>coyards.se</p>
+                    <p>Grannsamverkan - app för mobil och läsplatta, webbversion för datorer‎</p>
+                    <p>Grannsamverkan med appen Coyards! Gratis - ingen reklam. Framtagen i samråd med säkerhetsexperter, försäkringsbolag, anti-brottsorganisationer och kommuner.</p>
+                </div>
+            </section>
+            <section>
+                <h4>Carehood</h4>
+                <div>
+                    <p>Förbättra er grannsamverkan | Enklare & snabbare med vår app‎</p>
+                    <p>carehood.se</p>
+                    <p>Ingen central adm., larmfunktioner, diskussionsforum. Hämta Carehood gratis nu!</p>
+                </div>
+            </section>
+            <section>
+                <h4>Safeland (tidigare Trygve)</h4>
+                <div>
+                    <p>https://www.safe.land</p>
+                    <p>Sveriges ledande trygghetsapp. Safeland är Sveriges mest använda app för grannsamverkan. Och smartaste hemlarm. Safeland är Sveriges mest använda app för grannsamverkan.</p>
+                </div>
+            </section>
+        </amp-accordion>
+
         <h2>Fakta</h2>
         <ul>
             <li>22 600 bostadsinbrott polisanmäldes (2017)</li>
@@ -61,7 +89,7 @@ Template för /inbrott
         <p>https://www.verisure.se/artikel/2016-11-21-nagon-ar-hemma-vid-var-fjarde-inbrott---sa-avskracker-du-tjuven.html</p>
         <p>https://polisen.se/utsatt-for-brott/skydda-dig-mot-brott/stold-och-inbrott/bilstold/</p>
         <p>https://polisen.se/om-polisen/polisens-arbete/stold-motorfordon/</p>
-
+        <p>https://www.stoldskyddsforeningen.se/privat/</p>
 
         <h2>Senaste inbrotten</h2>
 
