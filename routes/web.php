@@ -466,7 +466,7 @@ Route::prefix('blogg')->group(function () {
 /**
  * Huvudsida + undersidor för inbrott, grannsamverkan och liknande.
  */
-Route::get('/inbrott/{inbrottUndersida?}', function (Request $request, $inbrottUndersida = null) {
+Route::get('/inbrott/{undersida?}', function (Request $request, $undersida = 'start') {
 
     // Hämta se senaste händelserna som innehåller "inbrott", "larm", "intrång", osv.
     $latestInbrottEvents = CrimeEvent::orderBy("created_at", "desc")
@@ -475,10 +475,47 @@ Route::get('/inbrott/{inbrottUndersida?}', function (Request $request, $inbrottU
                                 ->orWhere("parsed_title", 'like', 'intrång')
                                 ->paginate(10);
 
+    // Undersidor och deras titlar.
+    $undersidor = [
+        'start' => [
+            'title' => 'Inbrott - fakta och praktisk information om inbrott i hus och lägenheter',
+            'url' => route('inbrott')
+        ],
+        'fakta' => [
+            'title' => "Fakta om inbrott",
+        ],
+        'drabbad' => [
+            'title' => 'Drabbad av inbrott',
+        ],
+        'skydda-dig' => [
+            'title' => 'Skydda dig mot inbrott',
+        ],
+        'grannsamverkan' => [
+            'title' => 'Grannsamverkan mot inbrott',
+        ],
+        'senaste-inbrotten' => [
+            'title' => 'Senaste inbrotten',
+        ],
+    ];
+
+    array_walk($undersidor, function(&$val, $key) {
+        if (empty($val['url'])) {
+            $val['url'] = route('inbrott', ['undersida' => $key]);
+        }
+    });
+
+    // Bail om undersida inte finns.
+    $valdUndersida = $undersidor[$undersida] ?? null;
+    if (!$valdUndersida) {
+        abort(404);
+    }
+
     $data = [
-        'pageTitle' => 'Inbrott',
-        'canonicalLink' => route('inbrott'),
-        'latestInbrottEvents' => $latestInbrottEvents
+        'pageTitle' => $valdUndersida['title'],
+        'canonicalLink' => $valdUndersida['url'],
+        'latestInbrottEvents' => $latestInbrottEvents,
+        'undersidor' => $undersidor,
+        'undersida' => $undersida
     ];
 
     return view('inbrott', $data);
