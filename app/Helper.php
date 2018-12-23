@@ -896,12 +896,12 @@ class Helper
             'skydda-dig' => [
                 'title' => 'Skydda dig mot inbrott - skydda dig & ditt hem från inbrott med hjälp av tips & larm',
                 'pageTitle' => 'Skydda dig mot inbrott',
-                'pageSubtitle' => 'skydda dig & ditt hem från inbrott med hjälp av tips & larm'
+                'pageSubtitle' => 'Skydda ditt hem från inbrott med hjälp av tips & larm.'
             ],
             'grannsamverkan' => [
                 'title' => 'Grannsamverkan mot inbrott',
                 'pageTitle' => 'Grannsamverkan mot inbrott',
-                'pageSubtitle' => 'Förebygger kriminalitet genom att gå samman med grannarrna i ditt närområde',
+                'pageSubtitle' => 'Förebygg kriminalitet genom att gå samman med grannarrna i ditt närområde.',
             ],
             'senaste-inbrotten' => [
                 'title' => 'Senaste inbrotten',
