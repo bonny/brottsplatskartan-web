@@ -21,8 +21,12 @@ class AppServiceProvider extends ServiceProvider
         $lan = \App\Helper::getAllLanWithStats();
         \View::share('shared_lan_with_stats', $lan);
 
+        // Contents in notification bar = red banner on top of all pages.
         $notificationBarContents = \Setting::get('notification-bar-contents');
         \View::share('shared_notification_bar_contents', trim($notificationBarContents));
+
+        $inbrottUndersidor = \App\Helper::getInbrottNavItems();
+        \View::share('inbrott_undersidor', $inbrottUndersidor);
     }
 
     /**

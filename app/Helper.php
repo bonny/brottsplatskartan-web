@@ -867,4 +867,56 @@ class Helper
 
         return $mostViewed;
     }
+
+    /**
+     * Hämta navigationsalternativ för inbrott-sidorna.
+     *
+     * @return array Array med navigationalternativ för inbrott-sidorna.
+     */
+    public static function getInbrottNavItems() {
+
+        // Undersidor och deras titlar.
+        $undersidor = [
+            'start' => [
+                'title' => 'Inbrott - fakta & praktisk information om inbrott i hus och lägenheter',
+                'pageTitle' => 'Inbrott',
+                'pageSubtitle' => 'Fakta & praktisk information om inbrott i hus och lägenheter',
+                'url' => '/inbrott/'
+            ],
+            'fakta' => [
+                'title' => "Fakta om inbrott",
+                'pageTitle' => "Fakta om inbrott",
+                'pageSubtitle' => "Över 60 bostadsinbrott sker varje dag. (Men hur många klaras upp?)",
+            ],
+            'drabbad' => [
+                'title' => 'Drabbad av inbrott - det här ska du göra om du haft inbrott',
+                'pageTitle' => 'Drabbad av inbrott',
+                'pageSubtitle' => 'Det här ska du göra om du haft inbrott i din villa eller lägenhet.'
+            ],
+            'skydda-dig' => [
+                'title' => 'Skydda dig mot inbrott - skydda dig & ditt hem från inbrott med hjälp av tips & larm',
+                'pageTitle' => 'Skydda dig mot inbrott',
+                'pageSubtitle' => 'skydda dig & ditt hem från inbrott med hjälp av tips & larm'
+            ],
+            'grannsamverkan' => [
+                'title' => 'Grannsamverkan mot inbrott',
+                'pageTitle' => 'Grannsamverkan mot inbrott',
+                'pageSubtitle' => 'Förebygger kriminalitet genom att gå samman med grannarrna i ditt närområde',
+            ],
+            'senaste-inbrotten' => [
+                'title' => 'Senaste inbrotten',
+                'pageTitle' => 'Inbrott som hänt nyligen',
+                'pageSubtitle' => 'Lista med de senaste inbrotten från Polisen',
+            ],
+        ];
+
+        array_walk($undersidor, function(&$val, $key) {
+            if (empty($val['url'])) {
+                #$val['url'] = route('inbrott', ['undersida' => $key]);
+                $val['url'] = "/inbrott/{$key}";
+            }
+        });
+
+        return $undersidor;
+    }
 }

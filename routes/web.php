@@ -475,34 +475,7 @@ Route::get('/inbrott/{undersida?}', function (Request $request, $undersida = 'st
                                 ->orWhere("parsed_title", 'like', 'intrång')
                                 ->paginate(10);
 
-    // Undersidor och deras titlar.
-    $undersidor = [
-        'start' => [
-            'title' => 'Inbrott - fakta och praktisk information om inbrott i hus och lägenheter',
-            'url' => route('inbrott')
-        ],
-        'fakta' => [
-            'title' => "Fakta om inbrott",
-        ],
-        'drabbad' => [
-            'title' => 'Drabbad av inbrott',
-        ],
-        'skydda-dig' => [
-            'title' => 'Skydda dig mot inbrott',
-        ],
-        'grannsamverkan' => [
-            'title' => 'Grannsamverkan mot inbrott',
-        ],
-        'senaste-inbrotten' => [
-            'title' => 'Senaste inbrotten',
-        ],
-    ];
-
-    array_walk($undersidor, function(&$val, $key) {
-        if (empty($val['url'])) {
-            $val['url'] = route('inbrott', ['undersida' => $key]);
-        }
-    });
+    $undersidor = \App\Helper::getInbrottNavItems();
 
     // Bail om undersida inte finns.
     $valdUndersida = $undersidor[$undersida] ?? null;
@@ -511,7 +484,9 @@ Route::get('/inbrott/{undersida?}', function (Request $request, $undersida = 'st
     }
 
     $data = [
-        'pageTitle' => $valdUndersida['title'],
+        'title' => $valdUndersida['title'],
+        'pageTitle' => $valdUndersida['pageTitle'],
+        'pageSubtitle' => $valdUndersida['pageSubtitle'] ?? null,
         'canonicalLink' => $valdUndersida['url'],
         'latestInbrottEvents' => $latestInbrottEvents,
         'undersidor' => $undersidor,

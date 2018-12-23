@@ -1448,6 +1448,11 @@ input[type="url"],
     padding-top: 0;
 }
 
+.teaser {
+    font-size: var(--font-size-medium);
+    color: var(--color-gray-1);
+}
+
 .widget__listItem__preTitle,
 .RelatedEvents__item__titleType,
 .Event__type,
@@ -1512,4 +1517,8 @@ input[type="url"],
 
 .u-color-red {
     color: var(--color-red);
+}
+
+.u-color-gray-1 {
+    color: var(--color-gray-1);
 }

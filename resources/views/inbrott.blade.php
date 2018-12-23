@@ -7,7 +7,7 @@ Template för /inbrott
 
 @extends('layouts.web')
 
-@section('title', $pageTitle)
+@section('title', $title)
 
 @section('canonicalLink', $canonicalLink)
 
@@ -16,20 +16,23 @@ Template för /inbrott
     <div class="widget">
 
         <ul class="SubNav">
-            <li>
-                <a href="{{route("inbrott")}}">Inbrott</a>
-                <ul>
-                    @foreach ($undersidor as $navundersida)
-                        <li><a href="{{$navundersida['url']}}">{{$navundersida['title']}}</a></li>
-                    @endforeach
-                </ul>
-            </li>
+            @foreach ($inbrott_undersidor as $navundersida)
+                <li>
+                    <a href="{{$navundersida['url']}}">{{$navundersida['pageTitle']}}</a>
+                    @isset($navundersida['pageSubtitle'])
+                        <br><span class="u-color-gray-1">{{$navundersida['pageSubtitle']}}</span>
+                    @endisset
+                </li>
+            @endforeach
         </ul>
 
         <h1>{{$pageTitle}}</h1>
+        @isset($pageSubtitle)
+            <div class="teaser"><p>{{$pageSubtitle}}</p></div>
+        @endisset
 
         @if ($undersida === 'start')
-            <h2>Snabbfakta om inbrott år 2017</h2>
+            <h2>Snabbfakta om inbrott</h2>
             <ul>
                 <li>22 600 bostadsinbrott polisanmäldes</li>
                 <li>13 800 av bostadsinbrotten skedde i villor</li>
@@ -39,13 +42,13 @@ Template för /inbrott
                 <li>3 procent = personuppklaringsprocenten för bostadsinbrott</li>
             </ul>
 
-            <p>Källa: <a href="https://www.bra.se/statistik/statistik-utifran-brottstyper/bostadsinbrott.html">Brås statistik om bostadsinbrott</a></p>
+            <p>
+                Källa: <a href="https://www.bra.se/statistik/statistik-utifran-brottstyper/bostadsinbrott.html">Brås statistik om bostadsinbrott</a>.
+                Siffrorna gäller för år 2017.
+            </p>
         @endif
 
         @if ($undersida === 'grannsamverkan')
-            <p>Sida om inbrott, grannsamverkan</p>
-
-            <h2>Grannsamverkan</h2>
 
             <blockquote>
                 <p>Grannsamverkan är ett samlingsnamn för åtgärder som innebär att de boende i ett område bildar ett brottsförebyggande nätverk. Grannsamverkan innebär att grannar och närområde går samman och förebygger kriminalitet. Man vidtar åtgärder som bevakning, märkning av ägodelar, och rapportering brott till polisen och är vittnen.</p>
