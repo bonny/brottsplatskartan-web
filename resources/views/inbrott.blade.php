@@ -108,6 +108,42 @@ Template för /inbrott
             <p>https://polisen.se/utsatt-for-brott/skydda-dig-mot-brott/stold-och-inbrott/bilstold/</p>
             <p>https://polisen.se/om-polisen/polisens-arbete/stold-motorfordon/</p>
             <p>https://www.stoldskyddsforeningen.se/privat/</p>
+
+            <h2>Larm</h2>
+
+
+            <h3>Tester av hemlarm</h3>
+            <p>
+                Vilket larm är smartast och passar dig bäst hemma?
+                <a href="https://pcforalla.idg.se/2.1054/1.637625/test-hemlarm/">
+                PC för alla har testat fem larmsystem och jämfört dem mot varandra.
+                </a>
+            </p>
+
+            <ul>
+                <li>
+                    <a href="https://www.svenskaalarm.se">Svenska Alarm</a>
+                    Svenska Alarm är ett certifierat bolag som erbjuder smarta larm för hem och företag
+                </li>
+                <li>
+                    <a href="https://www.verisure.se/">Verisure</a>
+                    Verisure är Sveriges populäraste larmföretag. Vi erbjuder larm med inbrotts- och brandskydd. Larmsystemet är uppkopplat till vår larmcentral dygnet runt.
+                </li>
+                <li>
+                    <a href="https://gardio.se/">Gardio</a>
+                    Hemlarm med kamerabevakning och HD-bilder i mobilen. Larmcentral och väktare till marknadens troligen lägsta kostnad.
+                </li>
+                <li>
+                    <a href="https://www.alertalarm.se/">Alert Alarm</a>
+                    Hemlarm kopplade till Sveriges största larmcentral med fria väktarutryckningar. Håll full koll och styr larmet i Alert Alarm app. Alltid en bra deal!
+                </li>
+                <li>
+                    <a href="https://www.sectoralarm.se/">Sector Alarm</a>
+                    Med ett larm från Sector Alarm får också ett effektivt skydd mot inbrott.
+                    Men också vid brand. Erbjudande på larm till hem och företag.
+                </li>
+                <li>Verisure</li>
+            </ul>
         @endif
 
 
