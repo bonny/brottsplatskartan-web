@@ -29,19 +29,17 @@ Template för /inbrott
         <h1>{{$pageTitle}}</h1>
 
         @if ($undersida === 'start')
-            <h2>Fakta</h2>
+            <h2>Snabbfakta om inbrott år 2017</h2>
             <ul>
-                <li>22 600 bostadsinbrott polisanmäldes (2017)</li>
-                <li>13 800 av bostadsinbrotten skedde i villor (2017)</li>
-                <li>8 800 av bostadsinbrotten skedde i lägenheter (2017)</li>
-                <li>14 800 inbrott i källare och på vind anmäldes (2017)</li>
-                <li>5 900 inbrott i fritidshus anmäldes (2017)</li>
-                <li>3 procent = personuppklaringsprocenten² för bostadsinbrott (2017)</li>
+                <li>22 600 bostadsinbrott polisanmäldes</li>
+                <li>13 800 av bostadsinbrotten skedde i villor</li>
+                <li>8 800 av bostadsinbrotten skedde i lägenheter</li>
+                <li>14 800 inbrott i källare och på vind anmäldes</li>
+                <li>5 900 inbrott i fritidshus anmäldes</li>
+                <li>3 procent = personuppklaringsprocenten för bostadsinbrott</li>
             </ul>
 
-            <h2>Om inbrott</h2>
-            <p>Inbrott är</p>
-            <p>https://www.bra.se/statistik/statistik-utifran-brottstyper/bostadsinbrott.html</p>
+            <p>Källa: <a href="https://www.bra.se/statistik/statistik-utifran-brottstyper/bostadsinbrott.html">Brås statistik om bostadsinbrott</a></p>
         @endif
 
         @if ($undersida === 'grannsamverkan')
