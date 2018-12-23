@@ -103,14 +103,19 @@ Template för /inbrott
 
         @if ($undersida === 'skydda-dig')
             <h2>Så här skyddar du dig</h2>
-            <p>https://polisen.se/utsatt-for-brott/skydda-dig-mot-brott/stold-och-inbrott/</p>
-            <p>https://www.verisure.se/artikel/2016-11-21-nagon-ar-hemma-vid-var-fjarde-inbrott---sa-avskracker-du-tjuven.html</p>
-            <p>https://polisen.se/utsatt-for-brott/skydda-dig-mot-brott/stold-och-inbrott/bilstold/</p>
-            <p>https://polisen.se/om-polisen/polisens-arbete/stold-motorfordon/</p>
-            <p>https://www.stoldskyddsforeningen.se/privat/</p>
+
+            <ul>
+                <li><a href="https://polisen.se/utsatt-for-brott/skydda-dig-mot-brott/stold-och-inbrott">
+                    Stöld och inbrott - skydda dig
+                    Polisen tips och råd om hur du kan skydda dig mot stöld och inbrott.
+                </a></li>
+                <li><a href="https://www.stoldskyddsforeningen.se/privat/sakerhetsradgivning-for-privatpersoner/">
+                    SSF Stöldkyddsföreningen Säkerhetsrådgivning för privatpersoner
+                    Säkerhetsrådgivning - Tips till bättre säkerhet hemma och i vardagen
+                </a></li>
+            </ul>
 
             <h2>Larm</h2>
-
 
             <h3>Tester av hemlarm</h3>
             <p>
@@ -119,6 +124,8 @@ Template för /inbrott
                 PC för alla har testat fem larmsystem och jämfört dem mot varandra.
                 </a>
             </p>
+
+            <h3>Företag som säljer hemlarm</h3>
 
             <ul>
                 <li>
@@ -149,7 +156,7 @@ Template för /inbrott
 
         <hr />
 
-        <h2>Senaste inbrotten</h2>
+        <h2>Senaste inbrotten från Polisen</h2>
 
         <ul class="widget__listItems">
             @foreach ($latestInbrottEvents as $event)
@@ -158,28 +165,6 @@ Template för /inbrott
                 ])
             @endforeach
         </ul>
-
-@if (Auth::check())
-<pre>
-Funktioner på sidan:
-
-- händelser av typ inbrott och liknande
-- statistik
-- senaste nytt från polisen, brå, osv
-- fakta om inbrott
-- fakta om grannsamverkan
-  - text från wikipedia
-- lista grannsamverkansgrupper
-  - per län/stad/område/kommun/stadsdel
-- text om larm
-- länka till sidan från single-sidor av typ inbrott och liknande
-- url:
-  /inbrott/
-  /inbrott-och-grannsamverkan/
-  /inbrott-grannsamverkan/
-</pre>
-@endif
-
     </div>
 
 @endsection
