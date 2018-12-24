@@ -483,11 +483,22 @@ Route::get('/inbrott/{undersida?}', function (Request $request, $undersida = 'st
         abort(404);
     }
 
+    // Lägg till breadcrumb.
+    $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs;
+    $breadcrumbs->setDivider('›');
+    $breadcrumbs->addCrumb('Hem', '/');
+    $breadcrumbs->addCrumb('Inbrott', route("inbrott"));
+
+    if (!empty($valdUndersida) && $undersida !== 'start') {
+        $breadcrumbs->addCrumb($valdUndersida['title'], route("inbrott", ['undersida' => $undersida]));
+    }
+
     $data = [
         'title' => $valdUndersida['title'],
         'pageTitle' => $valdUndersida['pageTitle'],
         'pageSubtitle' => $valdUndersida['pageSubtitle'] ?? null,
         'canonicalLink' => $valdUndersida['url'],
+        'breadcrumbs' => $breadcrumbs,
         'latestInbrottEvents' => $latestInbrottEvents,
         'undersidor' => $undersidor,
         'undersida' => $undersida
