@@ -349,7 +349,6 @@ button {
     color: inherit;
 }
 
-
 .Sidebar__lan__accordion header {
     background: transparent;
     padding: var(--default-margin-half);
@@ -389,6 +388,15 @@ button {
     padding: 0; */
     margin-left: var(--default-margin);
     font-size: var(--font-size-small);
+}
+
+.Sidebar-social {
+    list-style: none;
+    margin: var(--default-margin-double) 0 0 0;
+    padding: 0;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
 }
 
 .DayNav {
