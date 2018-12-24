@@ -878,7 +878,7 @@ class Helper
         // Undersidor och deras titlar.
         $undersidor = [
             'start' => [
-                'title' => 'Inbrott - fakta & praktisk information om inbrott i hus och lägenheter',
+                'title' => 'Inbrott - Fakta & praktisk information om inbrott i hus och lägenheter',
                 'pageTitle' => 'Inbrott',
                 'pageSubtitle' => 'Fakta & praktisk information om inbrott i hus och lägenheter',
                 'url' => '/inbrott/'
@@ -899,9 +899,9 @@ class Helper
                 'pageSubtitle' => 'Skydda ditt hem från inbrott med hjälp av tips & larm.'
             ],
             'grannsamverkan' => [
-                'title' => 'Grannsamverkan mot inbrott',
-                'pageTitle' => 'Grannsamverkan mot inbrott',
-                'pageSubtitle' => 'Förebygg kriminalitet genom att gå samman med grannarrna i ditt närområde.',
+                'title' => 'Grannsamverkan mot brott',
+                'pageTitle' => 'Grannsamverkan mot brott',
+                'pageSubtitle' => 'Förebygg kriminalitet såsom inbrott genom att gå samman med grannarna i ditt närområde. Ett effektivt sätt att minska brottrisken i ditt område!',
             ],
             'senaste-inbrotten' => [
                 'title' => 'Senaste inbrotten',
