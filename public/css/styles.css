@@ -106,6 +106,13 @@ button {
     margin: var(--default-margin-half);
 }
 
+blockquote {
+    padding-left: var(--default-margin);
+    margin-left: var(--default-margin);
+    border-left: var(--default-margin-third) solid var(--color-gray-2);
+    font-style: italic;
+}
+
 .container {
     margin: 0 auto;
     max-width: 1000px;
