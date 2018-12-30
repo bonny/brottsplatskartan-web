@@ -182,6 +182,15 @@ if $single is set then larger image
             </div>
         @endif
 
+        @if ($event->isInbrott())
+            <div class="Event__drabbad" id="drabbad">
+                <h2 class="Event__drabbad__title">Drabbat av inbrott eller är rädd för att bli?</h2>
+                <p>På vår särskilda sida <a href="{{route('inbrott')}}">om inbrott</a> kan du läsa mer om
+                    hur du gör för att bäst <a href="{{route('inbrott', ['underida' => 'skydda-dig'])}}">skydda dig mot inbrott</a>
+                    och vad du ska göra om du har <a href="{{route('inbrott', ['underida' => 'drabbad'])}}">fått ett inbrott</a>.
+            </div>
+        @endif
+
         <div class="Event__share">
             <p class="Event__shareTitle">Dela händelsen:</p>
             <amp-social-share type="twitter" aria-label="Dela till Twitter"></amp-social-share>
@@ -191,8 +200,8 @@ if $single is set then larger image
     @endif
 
     @if (!empty($dictionaryWordsInText) && $dictionaryWordsInText->count())
-        <aside class="Event__dictionaryWords widget widget--dictionaryWords">
-            <h2 class="Event__dictionaryWordsTitle widget__title">Ordlista – ord som förekommer i händelsen</h2>
+        <aside class="Event__dictionaryWords">
+            <h2 class="Event__dictionaryWordsTitle">Ord som förekommer i händelsen</h2>
 
             @foreach ($dictionaryWordsInText as $dictionaryWord)
                 <div class="Event__dictionaryWord">
