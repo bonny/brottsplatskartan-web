@@ -995,6 +995,16 @@ SQL;
     }
 
     /**
+     * Returnerar sant om en händelse är av typen inbrott.
+     *
+     * @return boolean
+     */
+    public function isInbrott() {
+        $inbrottOrd = ['inbrott', 'larm', 'intrång'];
+        return str_contains(\mb_strtolower($this->parsed_title), $inbrottOrd) || str_contains(\mb_strtolower($this->getDescriptionAsPlainText()), $inbrottOrd);
+    }
+
+    /**
      * Undocumented function
      *
      * @return void
