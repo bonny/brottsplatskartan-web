@@ -847,23 +847,43 @@ class Helper
         return $relatedLinks;
     }
 
+    /**
+     * Hämta de mest visade händelserna för en specifik period.
+     *
+     * @param  [type]  $date  [description]
+     * @param  integer $limit [description]
+     * @return Collection         [description]
+     */
     public static function getMostViewedEvents($date = null, $limit = 10) {
         if (!$date) {
             $date = Carbon::now();
         }
 
+        $now = $date->copy()->format('Y-m-d');
         $tomorrow = $date->copy()->modify('+1 day')->format('Y-m-d');
         $yesterday = $date->copy()->subDays(1)->format('Y-m-d');
 
-        $mostViewed = CrimeView::
-                        select(DB::raw('count(*) as views'), 'crime_event_id', DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d") AS createdYMD'))
-                        ->where('created_at', '<', $tomorrow)
-                        ->where('created_at', '>', $yesterday)
-                        ->groupBy('createdYMD', 'crime_event_id')
-                        ->orderBy('views', 'desc')
-                        ->limit($limit)
-                        ->with('CrimeEvent')
-                        ->get();
+        $cacheKey = "getMostViewedEvents:D{$now}:L{$limit}";
+        $cacheTTL = 27;
+
+        $mostViewed = Cache::remember(
+            $cacheKey,
+            $cacheTTL,
+            function() use ($tomorrow, $yesterday, $limit) {
+                $mostViewed = CrimeView::
+                                select(DB::raw('count(*) as views'), 'crime_event_id', DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d") AS createdYMD'))
+                                ->where('created_at', '<', $tomorrow)
+                                ->where('created_at', '>', $yesterday)
+                                ->groupBy('createdYMD', 'crime_event_id')
+                                ->orderBy('views', 'desc')
+                                ->limit($limit)
+                                ->with('CrimeEvent')
+                                ->get();
+
+                return $mostViewed;
+            }
+        );
+
 
         return $mostViewed;
     }
