@@ -227,7 +227,8 @@ Route::get('/typ/{typ}', function ($typ) {
         'Inbrott, försök',
         'Inbrott,  försök',
         'Larm Inbrott',
-        'Stöld/inbrott'
+        'Stöld/inbrott',
+        'Hemfridsbrott'
     ];
 
     if (in_array($typ, $inbrottSlugs)) {
