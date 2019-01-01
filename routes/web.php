@@ -221,6 +221,19 @@ Route::get('/typ/{typ}', function ($typ) {
         "type" => $typ
     ];
 
+    // Skicka vidare anrop till inbrotts-relaterade saker till sidan om inbrott.
+    $inbrottSlugs = [
+        'Inbrott',
+        'Inbrott, försök',
+        'Inbrott,  försök',
+        'Larm Inbrott',
+        'Stöld/inbrott'
+    ];
+
+    if (in_array($typ, $inbrottSlugs)) {
+        return redirect()->route('inbrott');
+    }
+
     $data["events"] = CrimeEvent::orderBy("created_at", "desc")
                                 ->where("parsed_title", $typ)
                                 ->paginate(10);
