@@ -223,15 +223,15 @@ Route::get('/typ/{typ}', function ($typ) {
 
     // Skicka vidare anrop till inbrotts-relaterade saker till sidan om inbrott.
     $inbrottSlugs = [
-        'Inbrott',
-        'Inbrott, försök',
-        'Inbrott,  försök',
-        'Larm Inbrott',
-        'Stöld/inbrott',
-        'Hemfridsbrott'
+        'inbrott',
+        'inbrott, försök',
+        'inbrott,  försök',
+        'larm inbrott',
+        'stöld/inbrott',
+        'hemfridsbrott'
     ];
 
-    if (in_array($typ, $inbrottSlugs)) {
+    if (in_array(mb_strtolower($typ), $inbrottSlugs)) {
         return redirect()->route('inbrott');
     }
 
