@@ -10,7 +10,7 @@
         <amp-img
             alt="Karta som visar ungefär var händelsen inträffat"
             class="ListEvent__image"
-            src="{{ $event->getStaticImageSrc(160,160) }}"
+            src="{{ $event->getStaticImageSrcFar(160,160) }}"
             width="80"
             height="80"
             layout="fixed"
