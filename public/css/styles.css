@@ -826,6 +826,21 @@ input[type="url"],
     font-weight: 500;
 }
 
+.ListEvent {
+    overflow: auto;
+}
+
+.ListEvent__imageLink {
+    float: right;
+    width: 80px;
+    height: 80px;
+    margin-left: var(--default-margin-half);
+}
+
+.ListEvent__image {
+    display: block;
+}
+
 .PlatsListing__plats {
     width: 50%;
     float: left;

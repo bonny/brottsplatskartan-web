@@ -926,7 +926,7 @@ class Helper
             'senaste-inbrotten' => [
                 'title' => 'Senaste inbrotten',
                 'pageTitle' => 'Inbrott som hänt nyligen',
-                'pageSubtitle' => 'Lista med de senaste inbrotten från Polisen',
+                'pageSubtitle' => 'Lista med de senaste inbrotten från Polisen.',
             ],
         ];
 
