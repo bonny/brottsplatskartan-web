@@ -26,6 +26,30 @@ Template för /inbrott
             @endforeach
         </ul>
 
+        <form id="inbrottSubnavForm" target="_top" action="/">
+            <label>
+                Välj undersida
+                <select
+                    name="byt-sida"
+                    class="SubNav"
+                    on="change:inbrottSubnavForm.submit"
+                >
+                    <optgroup label="Undersidor för inbrott...">
+                        @foreach ($inbrott_undersidor as $navKey => $navundersida)
+                            <option
+                                value="{{$navundersida['url']}}"
+                                @if($navKey == $undersida)
+                                    selected
+                                @endif
+                                >
+                                {{$navundersida['pageTitle']}}
+                            </option>
+                        @endforeach
+                    </optgroup>
+                </select>
+            </label>
+        </form>
+
         <h1>{{$pageTitle}}</h1>
 
         @isset($pageSubtitle)
