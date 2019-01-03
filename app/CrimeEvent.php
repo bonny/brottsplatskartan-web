@@ -1001,7 +1001,12 @@ SQL;
      */
     public function isInbrott() {
         $inbrottOrd = ['inbrott', 'larm', 'intrång'];
-        return str_contains(\mb_strtolower($this->parsed_title), $inbrottOrd) || str_contains(\mb_strtolower($this->getDescriptionAsPlainText()), $inbrottOrd);
+
+        $isInbrott = str_contains(\mb_strtolower($this->parsed_title), $inbrottOrd)
+                        || str_contains(\mb_strtolower($this->getDescriptionAsPlainText()), $inbrottOrd)
+                        || str_contains(\mb_strtolower($this->getParsedContent()), $inbrottOrd);
+
+        return $isInbrott;
     }
 
     /**
