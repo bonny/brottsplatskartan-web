@@ -58,6 +58,10 @@ Template för ett event/händelse
                 @foreach ($eventsNearby as $eventNear)
                     @include('parts.event-near')
                 @endforeach
+
+                @foreach ($eventsNearby as $event)
+                    @include('parts.crimeevent-small', ['mapDistance' => 'near'])
+                @endforeach
             </ul>
         </aside>
 
