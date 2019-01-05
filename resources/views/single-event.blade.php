@@ -55,10 +55,6 @@ Template för ett event/händelse
         <aside class="RelatedEvents widget">
             <h2 class="widget__title RelatedEvents__title">Fler händelser i närheten</h2>
             <ul class="widget__listItems RelatedEvents__items">
-                @foreach ($eventsNearby as $eventNear)
-                    @include('parts.event-near')
-                @endforeach
-
                 @foreach ($eventsNearby as $event)
                     @include('parts.crimeevent-small', ['mapDistance' => 'near'])
                 @endforeach
