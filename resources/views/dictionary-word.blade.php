@@ -18,6 +18,12 @@ Template för ordlista/dictionary och ett enskild ord
 
         {!! Markdown::parse($word->description) !!}
 
+        {{-- Om inbrott så visa lista med typ 3 inbrott och sen länka till sidan om inbrott --}}
+        {{-- @if (str_contains(mb_strtolower($word->word), ['inbrott']) || str_contains(mb_strtolower($word->description), ['inbrott']))
+            <h3>Inbrott</h3>
+            <p><a href="{{route('inbrott')}}">Inbrott</a></p>
+        @endif --}}
+
         <h2 class="u-margin-top-double">Fler ord och förklaringar</h2>
 
         <ul class="DictionaryAllWordsListing__items">
