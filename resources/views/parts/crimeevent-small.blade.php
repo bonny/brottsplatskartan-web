@@ -6,16 +6,29 @@
     "
 >
 
-    <a class="ListEvent__imageLink " href="{{ $event->getPermalink() }}">
-        <amp-img
-            alt="Karta som visar ungefär var händelsen inträffat"
-            class="ListEvent__image"
-            src="{{ $event->getStaticImageSrcFar(160,160) }}"
-            width="80"
-            height="80"
-            layout="fixed"
-        ></amp-img>
-    </a>
+    @if (isset($mapDistance) && $mapDistance === 'near')
+        <a class="ListEvent__imageLink " href="{{ $event->getPermalink() }}">
+            <amp-img
+                alt="Karta som visar ungefär var händelsen inträffat"
+                class="ListEvent__image"
+                src="{{ $event->getStaticImageSrc(160,160) }}"
+                width="80"
+                height="80"
+                layout="fixed"
+            ></amp-img>
+        </a>
+    @else
+        <a class="ListEvent__imageLink " href="{{ $event->getPermalink() }}">
+            <amp-img
+                alt="Karta som visar ungefär var händelsen inträffat"
+                class="ListEvent__image"
+                src="{{ $event->getStaticImageSrcFar(160,160) }}"
+                width="80"
+                height="80"
+                layout="fixed"
+            ></amp-img>
+        </a>
+    @endif
 
     <div class="ListEvent__meta widget__listItem__text">
         <p>
