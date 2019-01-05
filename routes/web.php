@@ -484,9 +484,9 @@ Route::get('/inbrott/{undersida?}', function (Request $request, $undersida = 'st
 
     // Hämta se senaste händelserna som innehåller "inbrott", "larm", "intrång", osv.
     $latestInbrottEvents = CrimeEvent::orderBy("created_at", "desc")
-                                ->where("parsed_title", 'like', 'inbrott')
-                                ->orWhere("parsed_title", 'like', 'larm')
-                                ->orWhere("parsed_title", 'like', 'intrång')
+                                ->where("parsed_title", 'like', '%inbrott%')
+                                ->orWhere("parsed_title", 'like', '%larm%')
+                                ->orWhere("parsed_title", 'like', '%intrång%')
                                 ->paginate(10);
 
     $undersidor = \App\Helper::getInbrottNavItems();
