@@ -234,10 +234,9 @@ Template för /inbrott
             </ul>
         @endif
 
+        {{-- <hr /> --}}
 
-        <hr />
-
-        <h2>Senaste inbrotten från Polisen</h2>
+        {{-- <h2>Senaste inbrotten från Polisen</h2> --}}
 
         <ul class="widget__listItems">
             @foreach ($latestInbrottEvents as $event)
