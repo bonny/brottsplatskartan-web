@@ -15,7 +15,7 @@ Template för /inbrott
 
     <div class="widget">
 
-        <ul class="SubNav">
+        {{-- <ul class="SubNav">
             @foreach ($inbrott_undersidor as $navundersida)
                 <li>
                     <a href="{{$navundersida['url']}}">{{$navundersida['pageTitle']}}</a>
@@ -24,7 +24,7 @@ Template för /inbrott
                     @endisset
                 </li>
             @endforeach
-        </ul>
+        </ul> --}}
 
         <form id="inbrottSubnavForm" target="_top" action="/">
             <label>
@@ -168,13 +168,18 @@ Template för /inbrott
 
         @if ($undersida === 'drabbad')
             <h2>Drabbad av inbrott?</h2>
-            <p>Är du drabbat av ett inbrott i din villa eller lägenhet...</p>
-            <p>https://polisen.se/utsatt-for-brott/olika-typer-av-brott/inbrott/</p>
-            <p>https://etjanster.polisen.se/eanmalan/stold</p>
-            <p>https://polisen.se/lagar-och-regler/lagar-och-fakta-om-brott/bostadsinbrott/</p>
-            <p>https://polisen.se/om-polisen/polisens-arbete/bostadsinbrott/</p>
-            <p>https://www.larmkollen.se/a/vad-gor-polisen-efter-inbrottet/</p>
-            <p>https://polisen.se/utsatt-for-brott/olika-typer-av-brott/motorfordon/</p>
+            <p>Är du drabbat av ett inbrott i din villa eller lägenhet?</p>
+            <p>
+                <a href="https://polisen.se/utsatt-for-brott/olika-typer-av-brott/inbrott/">
+                    Läs hos polisen vad du ska göra om du utsatts för ett inbrott.
+                </a>
+            </p>
+
+            <p>
+                <a href="https://www.larmkollen.se/a/vad-gor-polisen-efter-inbrottet/">
+                    Läs om vad polisen gör efter ett inbrott
+                </a>
+            </p>
         @endif
 
         @if ($undersida === 'skydda-dig')
