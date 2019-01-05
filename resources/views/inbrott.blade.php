@@ -15,23 +15,12 @@ Template för /inbrott
 
     <div class="widget">
 
-        {{-- <ul class="SubNav">
-            @foreach ($inbrott_undersidor as $navundersida)
-                <li>
-                    <a href="{{$navundersida['url']}}">{{$navundersida['pageTitle']}}</a>
-                    @isset($navundersida['pageSubtitle'])
-                        <br><span class="u-color-gray-1">{{$navundersida['pageSubtitle']}}</span>
-                    @endisset
-                </li>
-            @endforeach
-        </ul> --}}
-
-        <form id="inbrottSubnavForm" target="_top" action="/">
-            <label>
+        <form id="inbrottSubnavForm" class="SubNav__form" target="_top" action="/">
+            <label class="SubNav__label">
                 Välj undersida
                 <select
                     name="byt-sida"
-                    class="SubNav"
+                    class="SubNav__select"
                     on="change:inbrottSubnavForm.submit"
                 >
                     <optgroup label="Undersidor för inbrott...">

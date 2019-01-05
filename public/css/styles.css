@@ -1556,6 +1556,10 @@ input[type="url"],
     margin-left: var(--default-margin);
 }
 
+.SubNav__select {
+    font-size: 1rem;
+}
+
 .u-color-bg-red {
     background-color: var(--color-red);
 }
