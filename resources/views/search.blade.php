@@ -57,12 +57,18 @@ qdr:h
 
         <h2>Senaste händelserna i Sverige</h2>
 
-        @if ($eventsByDay)
+        {{-- @if ($eventsByDay)
             @include('parts.events-by-day', [
                 "overview" => true,
                 'hideMapImage' => false
             ])
-        @endif
+        @endif --}}
+
+        <ul class="widget__listItems">
+            @foreach($events as $event)
+                @include('parts.crimeevent-small', ['event' => $event])
+            @endforeach
+        </ul>
 
     </div>
 
@@ -72,4 +78,3 @@ qdr:h
     @include('parts.lan-and-cities')
     @include('parts.follow-us')
 @endsection
-

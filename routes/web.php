@@ -487,7 +487,7 @@ Route::get('/inbrott/{undersida?}', function (Request $request, $undersida = 'st
                                 ->where("parsed_title", 'like', '%inbrott%')
                                 ->orWhere("parsed_title", 'like', '%larm%')
                                 ->orWhere("parsed_title", 'like', '%intrång%')
-                                ->paginate(10);
+                                ->paginate(40);
 
     $undersidor = \App\Helper::getInbrottNavItems();
 

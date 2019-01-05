@@ -36,6 +36,7 @@ class SearchController extends Controller
 
         $data = [
             's' => $s,
+            'events' => $events,
             'eventsByDay' => $eventsByDay,
             'hideMapImage' => true,
             "locations" => isset($locations) ? $locations : null,
