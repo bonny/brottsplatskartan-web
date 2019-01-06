@@ -217,16 +217,16 @@ Template for text pages
 
             <ul>
 
-                <li>Första versionen av Brottsplatskartan kom 2010. Det var en vidareutveckling av sajten <em>Brottsplats Stockholm</em>, som endast visade brott i Stockholm.
+                <li>Första versionen av Brottsplatskartan kom 2010. Det var en vidareutveckling av sajten <em>Brottsplats Stockholm</em>, som endast visade brott i Stockholm.</li>
 
                 <li>2017 skedde en relansering av Brottsplatskartan. Sajten fick då sitt nuvarande
-                utseende och en mängd nya funktioner såsom bättre placering av brott på kartan, händelser från alla sveriges län, och mycket mer.
+                utseende och en mängd nya funktioner såsom bättre placering av brott på kartan, händelser från alla sveriges län, och mycket mer.</li>
 
-                <li>Feber skrev om när sajten lanserades http://feber.se/webb/art/165994/brottsplats_stockholm/
+                <li>Feber skrev om när sajten lanserades http://feber.se/webb/art/165994/brottsplats_stockholm/</li>
 
-                <li>Webbplatsen har 140 000 användare per månad (December 2018)
+                <li>Webbplatsen har 140 000 användare per månad (December 2018)</li>
 
-                <li>67 % av användare besöker sajten via en mobiltelefon
+                <li>75 % av användare besöker sajten via en mobiltelefon (December 2018)</li>
 
             </ul>
 
