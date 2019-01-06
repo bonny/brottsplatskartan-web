@@ -224,7 +224,7 @@ Template for text pages
 
                 <li>Feber skrev om när sajten lanserades http://feber.se/webb/art/165994/brottsplats_stockholm/
 
-                <li>Webbplatsen har 22.000 användare per månad (Juni 2017)
+                <li>Webbplatsen har 140 000 användare per månad (December 2018)
 
                 <li>67 % av användare besöker sajten via en mobiltelefon
 
