@@ -225,7 +225,9 @@ Template för /inbrott
 
         {{-- <hr /> --}}
 
-        {{-- <h2>Senaste inbrotten från Polisen</h2> --}}
+        {{-- Gemensamt block längst ner för alla sidor under /inbrott --}}
+
+        <h2>Senaste inbrotten från Polisen</h2>
 
         <ul class="widget__listItems">
             @foreach ($latestInbrottEvents as $event)
