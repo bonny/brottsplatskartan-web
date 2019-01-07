@@ -68,7 +68,7 @@ https://www.ampproject.org/docs/reference/components/amp-sidebar
                         <li><a href="https://stats.uptimerobot.com/ADWQ0TZq1">Upptid/status</a></li>
                         <li><a href="http://www.sis-index.se/site-information/9951">Besöksstatistik</a></li>
                         <li>
-                            <a href="{{ route("inbrott") }}">Inbrott</span></a>
+                            <a href="{{ route("inbrott") }}">Inbrott – fakta och händelser</a>
                             <ul class="SubNav">
                                 @foreach ($inbrott_undersidor as $navundersida)
                                     <li>

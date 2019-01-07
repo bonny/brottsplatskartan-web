@@ -397,6 +397,10 @@ blockquote {
     font-size: var(--font-size-small);
 }
 
+.Sidebar .SubNav {
+    margin-left: 1rem;
+}
+
 .Sidebar-social {
     list-style: none;
     margin: var(--default-margin-double) 0 0 0;
