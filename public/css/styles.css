@@ -964,7 +964,8 @@ input[type="url"],
     margin-left: 0;
 }
 
-.Breadcrumbs__switchLan {
+.Breadcrumbs__switchLan,
+.Button {
     background: var(--color-link);
     color: #fff;
     padding: 0.4rem 0.8rem;

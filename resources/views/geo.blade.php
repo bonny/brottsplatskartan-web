@@ -29,6 +29,7 @@ Template for geo results
                 Nyaste brotten visas först.
             </p>
 
+            <p><a class="Button" href="/geo.php">Uppdatera position</a></p>
             <!-- Antal försök: {{ $numTries }} -->
 
             @includeWhen($eventsByDay->count(), 'parts.events-by-day', ["overview" => true])
