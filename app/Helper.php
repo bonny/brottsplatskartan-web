@@ -898,9 +898,9 @@ class Helper
         // Undersidor och deras titlar.
         $undersidor = [
             'start' => [
-                'title' => 'Inbrott - Fakta & praktisk information om inbrott i hus och lägenheter',
+                'title' => 'Inbrott - Fakta & information om inbrott i hus & lägenhet',
                 'pageTitle' => 'Inbrott',
-                'pageSubtitle' => 'Fakta & praktisk information om inbrott i hus och lägenheter',
+                'pageSubtitle' => 'Fakta & praktisk information om inbrott i hus och lägenhet',
                 'url' => '/inbrott/'
             ],
             'fakta' => [
