@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\CrimeEvent;
+use App\Newsarticle;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -92,9 +93,11 @@ class ApiController extends Controller
     {
         // The number of events to get. Max 50. Default 10.
         $limit = (int) $request->input("limit", 10);
+
         if ($limit > 500) {
             $limit = 500;
         }
+
         if ($limit <= 0) {
             $limit = 10;
         }
@@ -271,4 +274,112 @@ class ApiController extends Controller
 
         return response()->json($data)->withCallback($request->input('callback'));
     }
+
+    /**
+     * Hämta händelser som förekommer i media.
+     *
+     * @param  Request  $request  [description]
+     * @param  Response $response [description]
+     * @return [type]             [description]
+     */
+    public function eventsInMedia(Request $request, Response $response)
+    {
+
+        $limit = (int) $request->input("limit", 10);
+
+        if ($limit > 500 || $limit <= 0) {
+            $limit = 10;
+        }
+
+        // texttv
+        $media = $request->input('media');
+
+        $callback = $request->input('callback');
+
+        $events = CrimeEvent::whereHas('newsarticles', function($query) use ($media) {
+            $query->where('url', 'like', "%{$media}%");
+        })->with('newsarticles')->orderBy("created_at", "desc")->paginate($limit);
+
+        $events->appends([
+            "limit" => $limit,
+        ]);
+
+        $json = [
+            "links" => [],
+            "data" => [],
+        ];
+
+        // convert to array so we can modify data before returning to client
+        $eventsAsArray = $events->toArray();
+
+        $json["links"] = $eventsAsArray;
+        unset($json["links"]["data"]);
+
+        // create array with data is a format more suited for app and web
+        foreach ($events->items() as $item) {
+            /*
+            {
+            id: 2056,
+            created_at: "2016-10-12 21:39:14",
+            updated_at: "2016-10-12 21:39:21",
+            title: "2016-10-12 21:33, Trafikolycka, Lund",
+            description: "Personbil och cyklist kolliderar, Dalbyvägen / Tornavägen.",
+            permalink: "http://polisen.se/Stockholms_lan/Aktuellt/Handelser/Skane/2016-10-12-2133-Trafikolycka-Lund/",
+            pubdate: "1476301051",
+            pubdate_iso8601: "2016-10-12T21:37:31+0200",
+            md5: "aa77027ca1f82eb675a6425fd41b23b7",
+            parsed_date: "2016-10-12 21:33:00",
+            parsed_title_location: "Lund",
+            parsed_content: "Larm kommer om en cyklist och personbil som kolliderat på Dalbyvägen / Tornavägen. Polis, räddningstjänst och ambulans åker till platsen. Polisen Skåne",
+            location_lng: "13.2087799",
+            location_lat: "55.7068088",
+            parsed_title: "Trafikolycka",
+            parsed_teaser: "Personbil och cyklist kolliderar, Dalbyvägen / Tornavägen.",
+            scanned_for_locations: 1,
+            geocoded: 1,
+            location_geometry_type: "GEOMETRIC_CENTER",
+            }
+             */
+
+            // Keep only some keys from the articles array.
+            $newsArticles = $item->newsarticles->toArray();
+            $keysToKeep = array_flip(['title', 'shortdesc', 'url']);
+            $newsArticles = array_map(function($itemArticle) use ($keysToKeep) {
+                return array_intersect_key($itemArticle, $keysToKeep);
+            }, $newsArticles);
+
+            $event = [
+                "id" => $item->id,
+                "pubdate_iso8601" => $item->pubdate_iso8601,
+                "pubdate_unix" => $item->pubdate,
+                "title_type" => $item->parsed_title,
+                "title_location" => $item->parsed_title_location,
+                "description" => $item->description,
+                "content" => $item->parsed_content,
+                "content_formatted" => $item->getParsedContent(),
+                "content_teaser" => $item->getParsedContentTeaser(),
+                //"locations" => $item->locations,
+                "location_string" => $item->getLocationString(),
+                "date_human" => $item->getParsedDateFormattedForHumans(),
+                "lat" => (float) $item->location_lat,
+                "lng" => (float) $item->location_lng,
+                "viewport_northeast_lat" => $item->viewport_northeast_lat,
+                "viewport_northeast_lng" => $item->viewport_northeast_lng,
+                "viewport_southwest_lat" => $item->viewport_southwest_lat,
+                "viewport_southwest_lng" => $item->viewport_southwest_lng,
+                "administrative_area_level_1" => $item->administrative_area_level_1,
+                "administrative_area_level_2" => $item->administrative_area_level_2,
+                "image" => $item->getStaticImageSrc(640, 320, 1),
+                "external_source_link" => $item->permalink,
+                "permalink" => $item->getPermalink(true),
+                "newsArticles" => $newsArticles
+            ];
+
+            $json["data"][] = $event;
+        }
+
+        // return json or jsonp if ?callback is set
+        return response()->json($json)->withCallback($callback);
+    }
+
 }

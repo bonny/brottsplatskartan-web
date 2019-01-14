@@ -24,3 +24,5 @@ Route::get('/event/{eventID}', 'ApiController@event');
 Route::get('/eventsNearby', 'ApiController@eventsNearby');
 
 Route::get('/events', 'ApiController@events');
+
+Route::get('/eventsInMedia', 'ApiController@eventsInMedia');
