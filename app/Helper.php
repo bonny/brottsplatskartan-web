@@ -900,7 +900,7 @@ class Helper
             'start' => [
                 'title' => 'Inbrott - Fakta & information om inbrott i hus & lägenhet',
                 'pageTitle' => 'Inbrott',
-                'pageSubtitle' => 'Fakta & praktisk information om inbrott i hus och lägenhet',
+                'pageSubtitle' => 'Fakta & information om inbrott i hus & lägenhet',
                 'url' => '/inbrott/'
             ],
             'fakta' => [
