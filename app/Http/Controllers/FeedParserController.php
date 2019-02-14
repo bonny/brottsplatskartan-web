@@ -75,7 +75,18 @@ class FeedParserController extends Controller
         $date = \App\Helper::convertSwedishYearsToEnglish($date);
 
         // Add comma ',' before time
-        $date = preg_replace('/ \d{2}\.\d{2}/', ', ${0}', $date);
+        // @TODO: detta fungerar inte med datum/titlar som är uppdaterade, t.ex.:
+        // "Uppdaterad 13 februari 09:11: 13 februari 08.07, Trafikolycka, Örebro, id 50155"
+
+        #echo "\n-----";
+        #echo "\ntitle: $title";
+        #echo "\ndate: $date";
+        // Detta gör så att "13 february 10.32" -> "13 february, 10.32"
+        // Runt 14 Feb 2019 så verkar formatet på titlarna ha ändrats så de är
+        // "13 february 10:32", dvs kolon istället för punk. Så ta hänsyn till det också.
+        $date = preg_replace('/ \d{2}[\.:]\d{2}/', ', ${0}', $date);
+        #echo "\ndate after: $date"; // 13 february 10:32
+        // die(__METHOD__);
         $date = Carbon::parse($date);
         # echo $date->format('Y-m-d H:i:s');
         $returnParts["parsed_date"] = $date;
