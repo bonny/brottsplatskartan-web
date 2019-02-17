@@ -125,11 +125,14 @@ Template för /inbrott
 
             <h2 id="grannsamverkan-appar">Grannsamverkan-appar</h2>
 
-            <p>Det finns i Sverige tre ledande digitala grannsamverkanstjänster:
+            <p>
+                Det finns i Sverige fyra ledande digitala grannsamverkanstjänster:
                 <a href="#coyards">Coyards</a>,
                 <a href="#safeland">Safeland</a> (f.d. Trygve)
+                <a href="#carehood">Carehood</a>
                 och
-                <a href="#carehood">Carehood</a>.</p>
+                <a href="#ssfgrannsamverkan">SSF Grannsamverkan</a>.
+            </p>
             <p>Tjänsterna har oftast både en hemsida och en app där man kan gå med i grupper för grannsamverkan i sitt område.
                 Har man både en lägenhet i stan och ett sommarhus så kan man gå med i flera grupper för att följa vad som händer i
                 respektive område.</p>
@@ -152,6 +155,17 @@ Template för /inbrott
             <div>
                 <p>Sveriges ledande trygghetsapp. Safeland är Sveriges mest använda app för grannsamverkan. Och smartaste hemlarm. Safeland är Sveriges mest använda app för grannsamverkan.</p>
                 <p><a href="https://www.safe.land">Besök coyards.se för mer info.</a></p>
+            </div>
+
+            <h3 id="ssfgrannsamverkan">SSF Grannsamverkan</h3>
+            <div>
+                <p>SSF Stöldskyddsföreningen har en egen app för grannsamverkan.</p>
+                <p>Såhär beskriver de själva appen:</p>
+                <blockquote>
+                    <p>Den sprider kunskap om Grannsamverkan och förenklar kommunikation. Appen förenklar för redan etablerade grupper och ger information till intresserade om hur man startar Grannsamverkan i nya område. I Appen ges aktuella råd om hur man bäst skyddar sig, sitt hem och värdesaker. Poliser kan enkelt beställa material, komma åt filmer och broschyrer, få in tips samt kommunicera ut information till sina Grannsamverkansområden. </p>
+                    <p>Appen är framtagen med stöd av intressenterna i Samverkan mot brott (SAMBO) som är en organisation bestående av Polisen, försäkringsbolagen Folksam, Länsförsäkringar, If, Trygg Hansa, Moderna Försäkringar, ICA Försäkring, SSF Stöldskyddsföreningen, Brottsförebyggande rådet (Brå), Sveriges Kommuner och Landsting (SKL), Hyresgästföreningen, Riksbyggen och Villaägarna, som alla verkar för att skapa ett tryggare boende.</p>
+                </blockquote>
+                <p><a href="https://www.stoldskyddsforeningen.se/privat/sakerhetsradgivning-for-privatpersoner/grannsamverkan2/app-for-grannsamverkan/">Besök stoldskyddsforeningen.se för mer info.</a></p>
             </div>
         @endif
 
