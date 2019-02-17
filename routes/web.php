@@ -610,55 +610,17 @@ Route::get('/sokresultat/', 'SearchController@searchperform')->name("searchperfo
 /**
  * coyards: sida för samarbete med coyards.se, visas i deras app och hemsida
  * Exempel för Danderyd: 59.407905 | Longitud: 18.019075
- * https://brottsplatskartan.dev/coyards?lat=59.407905&lng=18.019075&distance=5&count=25
+ * https://brottsplatskartan.localhost/coyards?lat=59.407905&lng=18.019075&distance=5&count=25
+ * To view as (simple) HTML.
+ * https://brottsplatskartan.localhost/coyards?lat=59.407905&lng=18.019075&distance=5&count=25&format=html
  *
  * @param lat$ och lng$ som get-params. anger plats där händelser ska visas nära
  * @param $distance anger inom hur långt avstånd händelser ska hämtas, i km
  * @param $count max number of events to get
  */
-Route::get('/coyards', function (Request $request) {
-    $data = [];
-    $events = null;
-
-    $lat = (float) $request->input("lat");
-    $lng = (float) $request->input("lng");
-    $nearbyInKm = (float) $request->input("distance", 5);
-    $nearbyCount = (int) $request->input("count", 25);
-    $error = (bool) $request->input("error");
-
-    $lat = round($lat, 5);
-    $lng = round($lng, 5);
-
-    $data["lat"] = $lat;
-    $data["lng"] = $lng;
-
-    if ($lat && $lng && ! $error) {
-        $numTries = 0;
-
-        // Start by showing $nearbyInKm
-        // If no hits then move out until we have hits
-        $events = CrimeEvent::getEventsNearLocation($lat, $lng, $nearbyCount, $nearbyInKm);
-        $numTries++;
-
-        // we want to show at least 5 events
-        // if less than 5 events is found then increase the range by nn km, until a hit is found
-        while ($events->count() < 5) {
-            $nearbyInKm = $nearbyInKm + 5;
-            $events = CrimeEvent::getEventsNearLocation($lat, $lng, $nearbyCount, $nearbyInKm);
-            $numTries++;
-        }
-
-        $data["nearbyInKm"] = $nearbyInKm;
-        $data["nearbyCount"] = $nearbyCount;
-        $data["numTries"] = $numTries;
-    } else {
-        $data["error"] = true;
-    }
-
-    $data["events"] = $events;
-
-    return view('coyards', $data);
-})->name("coyards");
+Route::resource('coyards', 'CoyardsController')->names([
+    'index' => 'coyards'
+]);
 
 /**
  * Testsida för design, så vi lätt kan se hur rubriker
