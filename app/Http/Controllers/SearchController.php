@@ -7,6 +7,7 @@ use App\CrimeEvent;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Cache;
 
 /**
  * Söksidan
@@ -24,11 +25,16 @@ class SearchController extends Controller
         $breadcrumbs->addCrumb('Sök', route("search"));
 
         // Get latest events
-        $events = CrimeEvent::
-            orderBy("created_at", "desc")
-            ->with('locations')
-            ->limit(20)
-            ->get();
+        $cacheKey = __METHOD__ . ":latestEvents";
+        $events = Cache::remember($cacheKey, 2, function() {
+            $events = CrimeEvent::
+                orderBy("created_at", "desc")
+                ->with('locations')
+                ->limit(20)
+                ->get();
+
+            return $events;
+        });
 
         $eventsByDay = $events->groupBy(function ($item, $key) {
             return date('Y-m-d', strtotime($item->created_at));
