@@ -772,6 +772,10 @@ class CrimeEvent extends Model implements Feedable
      * and then re-parses it
      * useful when locations have been added or removed, so geocode
      * of item may change
+     *
+     * @param Request $request The request.
+     *
+     * @return mixed Array with debug data on success. Null if not authed.
      */
     public function maybeClearLocationData(Request $request)
     {
