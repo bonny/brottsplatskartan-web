@@ -20,15 +20,14 @@ class SearchController extends Controller
 
         $events = null;
 
-        $breadcrumbs = new Breadcrumbs;
+        $breadcrumbs = new Breadcrumbs();
         $breadcrumbs->addCrumb('Hem', '/');
         $breadcrumbs->addCrumb('Sök', route("search"));
 
         // Get latest events
         $cacheKey = __METHOD__ . ":latestEvents";
-        $events = Cache::remember($cacheKey, 2, function() {
-            $events = CrimeEvent::
-                orderBy("created_at", "desc")
+        $events = Cache::remember($cacheKey, 2, function () {
+            $events = CrimeEvent::orderBy("created_at", "desc")
                 ->with('locations')
                 ->limit(20)
                 ->get();
@@ -60,10 +59,14 @@ class SearchController extends Controller
      * Exempel på URL hit:
      * https://brottsplatskartan.localhost/sokresultat?s=test&tbs=qdr%3Am
      */
-    public function searchperform(Request $request) {
+    public function searchperform(Request $request)
+    {
         $s = $request->input('s');
         $tbs = $request->input('tbs', 'qdr:m');
-        $redirectToUrl = 'https://www.google.se/search?q=site%3Abrottsplatskartan.se+' . urlencode($s) . "&tbs={$tbs}";
+        $redirectToUrl =
+            'https://www.google.se/search?q=site%3Abrottsplatskartan.se+' .
+            urlencode($s) .
+            "&tbs={$tbs}";
 
         $data = [
             "s" => $s,
