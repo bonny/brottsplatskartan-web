@@ -8,13 +8,11 @@ use Illuminate\Support\Facades\Cache;
 
 class Helper
 {
-
     /**
      * Get chart image src for lan stats
      */
     public static function getStatsImageChartUrl($lan)
     {
-
         if ($lan == "home") {
             $stats = self::getHomeStats($lan);
         } else {
@@ -79,7 +77,10 @@ class Helper
         $stats = [];
 
         $stats["numEventsPerDay"] = DB::table('crime_events')
-            ->select(DB::raw('date_format(created_at, "%Y-%m-%d") as YMD'), DB::raw('count(*) AS count'))
+            ->select(
+                DB::raw('date_format(created_at, "%Y-%m-%d") as YMD'),
+                DB::raw('count(*) AS count')
+            )
             ->where('administrative_area_level_1', $lan)
             ->groupBy('YMD')
             ->orderBy('YMD', 'desc')
@@ -97,26 +98,32 @@ class Helper
     public static function getHomeStats($lan)
     {
         $stats = [
-            "numEventsPerDay" => null,
+            "numEventsPerDay" => null
         ];
 
         $cacheKey = "lan-homestats-" . $lan;
         $cacheTTL = 120;
-        $dateDaysBack = Carbon::now()->subDays(13)->format('Y-m-d');
+        $dateDaysBack = Carbon::now()
+            ->subDays(13)
+            ->format('Y-m-d');
 
         $stats["numEventsPerDay"] = Cache::remember(
             $cacheKey,
             $cacheTTL,
             function () use ($lan, $dateDaysBack) {
                 $numEventsPerDay = DB::table('crime_events')
-                    ->select(DB::raw('date_format(created_at, "%Y-%m-%d") as YMD'), DB::raw('count(*) AS count'))
+                    ->select(
+                        DB::raw('date_format(created_at, "%Y-%m-%d") as YMD'),
+                        DB::raw('count(*) AS count')
+                    )
                     ->where('created_at', '>', $dateDaysBack)
                     ->groupBy('YMD')
                     ->orderBy('YMD', 'desc')
                     ->get();
 
                 return $numEventsPerDay;
-        });
+            }
+        );
 
         return $stats;
     }
@@ -143,68 +150,72 @@ class Helper
         $lan = self::getAllLan();
 
         // Räkna alla händelser i det här länet för en viss period
-        $lan = $lan->map(
-            function ($item, $key) {
-                // DB::enableQueryLog();
+        $lan = $lan->map(function ($item, $key) {
+            // DB::enableQueryLog();
 
-                $cacheKey = "lan-stats-today-" . $item->administrative_area_level_1;
-                $numEventsToday = Cache::remember(
-                    $cacheKey,
-                    10,
-                    function () use ($item) {
-                        $numEventsToday = DB::table('crime_events')
-                            ->where('administrative_area_level_1', "=", $item->administrative_area_level_1)
-                            ->where('created_at', '>', Carbon::now()->subDays(1))
-                            ->count();
+            $cacheKey = "lan-stats-today-" . $item->administrative_area_level_1;
+            $numEventsToday = Cache::remember($cacheKey, 10, function () use (
+                $item
+            ) {
+                $numEventsToday = DB::table('crime_events')
+                    ->where(
+                        'administrative_area_level_1',
+                        "=",
+                        $item->administrative_area_level_1
+                    )
+                    ->where('created_at', '>', Carbon::now()->subDays(1))
+                    ->count();
 
-                        return $numEventsToday;
-                    }
-                );
+                return $numEventsToday;
+            });
 
-                $cacheKey = "lan-stats-7days-" . $item->administrative_area_level_1;
-                $numEvents7Days = Cache::remember(
-                    $cacheKey,
-                    30,
-                    function () use ($item) {
-                        $numEvents7Days = DB::table('crime_events')
-                            ->where('administrative_area_level_1', "=", $item->administrative_area_level_1)
-                            ->where('created_at', '>', Carbon::now()->subDays(7))
-                            ->count();
+            $cacheKey = "lan-stats-7days-" . $item->administrative_area_level_1;
+            $numEvents7Days = Cache::remember($cacheKey, 30, function () use (
+                $item
+            ) {
+                $numEvents7Days = DB::table('crime_events')
+                    ->where(
+                        'administrative_area_level_1',
+                        "=",
+                        $item->administrative_area_level_1
+                    )
+                    ->where('created_at', '>', Carbon::now()->subDays(7))
+                    ->count();
 
-                        return $numEvents7Days;
-                    }
-                );
+                return $numEvents7Days;
+            });
 
-                $cacheKey = "lan-stats-30days-" . $item->administrative_area_level_1;
-                $numEvents30Days = Cache::remember(
-                    $cacheKey,
-                    70,
-                    function () use ($item) {
-                        $numEvents30Days = DB::table('crime_events')
-                            ->where('administrative_area_level_1', "=", $item->administrative_area_level_1)
-                            ->where('created_at', '>', Carbon::now()->subDays(30))
-                            ->count();
+            $cacheKey =
+                "lan-stats-30days-" . $item->administrative_area_level_1;
+            $numEvents30Days = Cache::remember($cacheKey, 70, function () use (
+                $item
+            ) {
+                $numEvents30Days = DB::table('crime_events')
+                    ->where(
+                        'administrative_area_level_1',
+                        "=",
+                        $item->administrative_area_level_1
+                    )
+                    ->where('created_at', '>', Carbon::now()->subDays(30))
+                    ->count();
 
-                        return $numEvents30Days;
-                    }
-                );
+                return $numEvents30Days;
+            });
 
-                $item->numEvents = [
-                    "today" => $numEventsToday,
-                    "last7days" => $numEvents7Days,
-                    "last30days" => $numEvents30Days,
-                ];
+            $item->numEvents = [
+                "today" => $numEventsToday,
+                "last7days" => $numEvents7Days,
+                "last30days" => $numEvents30Days
+            ];
 
-                return $item;
-            }
-        );
+            return $item;
+        });
 
         return $lan;
     }
 
     public static function getAllLan()
     {
-
         $minutes = 10;
 
         $lan = Cache::remember('getAllLan', $minutes, function () {
@@ -226,8 +237,10 @@ class Helper
      * @param string|null $allowable_tags
      * @return string
      */
-    public static function stripTagsWithWhitespace($string, $allowable_tags = null)
-    {
+    public static function stripTagsWithWhitespace(
+        $string,
+        $allowable_tags = null
+    ) {
         $string = str_replace('<', ' <', $string);
         $string = strip_tags($string, $allowable_tags);
         $string = str_replace('  ', ' ', $string);
@@ -279,15 +292,19 @@ class Helper
     // Encode a string to URL-safe base64
     public static function encodeBase64UrlSafe($value)
     {
-        return str_replace(array('+', '/'), array('-', '_'),
-            base64_encode($value));
+        return str_replace(
+            array('+', '/'),
+            array('-', '_'),
+            base64_encode($value)
+        );
     }
 
     // Decode a string from URL-safe base64
     public static function decodeBase64UrlSafe($value)
     {
-        return base64_decode(str_replace(array('-', '_'), array('+', '/'),
-            $value));
+        return base64_decode(
+            str_replace(array('-', '_'), array('+', '/'), $value)
+        );
     }
 
     // Sign a URL with a given crypto key
@@ -317,8 +334,34 @@ class Helper
 
     public static function convertSwedishYearsToEnglish($str)
     {
-        $search = ['januari', 'februari', 'mars', 'april', 'maj', 'juni', 'juli', 'augusti', 'september', 'oktober', 'november', 'december'];
-        $replace = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
+        $search = [
+            'januari',
+            'februari',
+            'mars',
+            'april',
+            'maj',
+            'juni',
+            'juli',
+            'augusti',
+            'september',
+            'oktober',
+            'november',
+            'december'
+        ];
+        $replace = [
+            'january',
+            'february',
+            'march',
+            'april',
+            'may',
+            'june',
+            'july',
+            'august',
+            'september',
+            'october',
+            'november',
+            'december'
+        ];
 
         $str = str_replace($search, $replace, $str);
 
@@ -337,11 +380,39 @@ class Helper
         $monthAndYear = strtolower($monthAndYear);
         $monthAndYear = str_replace('-', ' ', $monthAndYear);
 
-        $search = ['januari', 'februari', 'mars', 'april', 'maj', 'juni', 'juli', 'augusti', 'september', 'oktober', 'november', 'december'];
-        $replace = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
+        $search = [
+            'januari',
+            'februari',
+            'mars',
+            'april',
+            'maj',
+            'juni',
+            'juli',
+            'augusti',
+            'september',
+            'oktober',
+            'november',
+            'december'
+        ];
+        $replace = [
+            'january',
+            'february',
+            'march',
+            'april',
+            'may',
+            'june',
+            'july',
+            'august',
+            'september',
+            'october',
+            'november',
+            'december'
+        ];
 
         // Translate swedish months to english months, so we can parse
-        $monthAndYearInEnglish = self::convertSwedishYearsToEnglish($monthAndYear);
+        $monthAndYearInEnglish = self::convertSwedishYearsToEnglish(
+            $monthAndYear
+        );
 
         try {
             $date = Carbon::parse($monthAndYearInEnglish);
@@ -357,7 +428,7 @@ class Helper
             'monthAndYear' => $monthAndYear,
             'year' => $year,
             'month' => $month,
-            'day' => $day,
+            'day' => $day
         ];
     }
 
@@ -375,21 +446,21 @@ class Helper
         $cacheKey = "getPrevDaysNavInfo:date:{$dateYmd}:numDays:$numDays";
         $cacheTTL = 15;
 
-        $prevDayEvents = Cache::remember(
-            $cacheKey,
-            $cacheTTL,
-            function () use ($dateYmd, $numDays) {
-                $prevDayEvents = CrimeEvent::
-                    selectRaw('date(created_at) as dateYMD, count(*) as dateCount')
-                    ->where('created_at', '<', $dateYmd)
-                    ->groupBy(\DB::raw('dateYMD'))
-                    ->orderBy('created_at', 'desc')
-                    ->limit($numDays)
-                    ->get();
+        $prevDayEvents = Cache::remember($cacheKey, $cacheTTL, function () use (
+            $dateYmd,
+            $numDays
+        ) {
+            $prevDayEvents = CrimeEvent::selectRaw(
+                'date(created_at) as dateYMD, count(*) as dateCount'
+            )
+                ->where('created_at', '<', $dateYmd)
+                ->groupBy(\DB::raw('dateYMD'))
+                ->orderBy('created_at', 'desc')
+                ->limit($numDays)
+                ->get();
 
-                    return $prevDayEvents;
-            }
-        );
+            return $prevDayEvents;
+        });
 
         return $prevDayEvents;
     }
@@ -405,52 +476,62 @@ class Helper
 
     public static function getNextDaysNavInfo($date = null, $numDays = 5)
     {
-
         $dateYmd = $date->format('Y-m-d');
-        $dateYmdPlusOneDay = $date->copy()->addDays(1)->format('Y-m-d');
+        $dateYmdPlusOneDay = $date
+            ->copy()
+            ->addDays(1)
+            ->format('Y-m-d');
         $cacheKey = "getNextDaysNavInfo:date:{$dateYmd}:numDays:$numDays";
         $cacheTTL = 16;
 
-        $nextDayEvents = Cache::remember(
-            $cacheKey,
-            $cacheTTL,
-            function () use ($dateYmd, $dateYmdPlusOneDay, $numDays) {
-                $nextDayEvents = CrimeEvent::
-                    selectRaw('date(created_at) as dateYMD, count(*) as dateCount')
-                    ->where('created_at', '>', $dateYmdPlusOneDay)
-                    ->groupBy(\DB::raw('dateYMD'))
-                    ->orderBy('created_at', 'asc')
-                    ->limit($numDays)
-                    ->get();
+        $nextDayEvents = Cache::remember($cacheKey, $cacheTTL, function () use (
+            $dateYmd,
+            $dateYmdPlusOneDay,
+            $numDays
+        ) {
+            $nextDayEvents = CrimeEvent::selectRaw(
+                'date(created_at) as dateYMD, count(*) as dateCount'
+            )
+                ->where('created_at', '>', $dateYmdPlusOneDay)
+                ->groupBy(\DB::raw('dateYMD'))
+                ->orderBy('created_at', 'asc')
+                ->limit($numDays)
+                ->get();
 
-                return $nextDayEvents;
-            }
-        );
+            return $nextDayEvents;
+        });
 
         return $nextDayEvents;
     }
 
-    public static function getLanPrevDaysNavInfo($date = null, $lan, $numDays = 5)
-    {
+    public static function getLanPrevDaysNavInfo(
+        $date = null,
+        $lan,
+        $numDays = 5
+    ) {
         $dateYmd = $date->format('Y-m-d');
         $cacheKey = "getLanPrevDaysNavInfo:date{$dateYmd}:lan:{$lan}:numDays:{$numDays}";
         $cacheTTL = 14;
 
-        $prevDayEvents = Cache::remember(
-            $cacheKey,
-            $cacheTTL,
-            function () use ($date, $lan, $numDays) {
-                return self::getLanPrevDaysNavInfoUncached($date, $lan, $numDays);
-            }
-        );
+        $prevDayEvents = Cache::remember($cacheKey, $cacheTTL, function () use (
+            $date,
+            $lan,
+            $numDays
+        ) {
+            return self::getLanPrevDaysNavInfoUncached($date, $lan, $numDays);
+        });
 
         return $prevDayEvents;
     }
 
-    public static function getLanPrevDaysNavInfoUncached($date = null, $lan, $numDays = 5)
-    {
-        $prevDayEvents = CrimeEvent::
-            selectRaw('date(created_at) as dateYMD, count(*) as dateCount')
+    public static function getLanPrevDaysNavInfoUncached(
+        $date = null,
+        $lan,
+        $numDays = 5
+    ) {
+        $prevDayEvents = CrimeEvent::selectRaw(
+            'date(created_at) as dateYMD, count(*) as dateCount'
+        )
             ->where('created_at', '<', $date->format('Y-m-d'))
             ->where("administrative_area_level_1", $lan)
             ->groupBy(\DB::raw('dateYMD'))
@@ -461,32 +542,44 @@ class Helper
         return $prevDayEvents;
     }
 
-
-    public static function getLanNextDaysNavInfo($date = null, $lan = null, $numDays = 5)
-    {
-        $dateYmdPlusOneDay = $date->copy()->addDays(1)->format('Y-m-d');
+    public static function getLanNextDaysNavInfo(
+        $date = null,
+        $lan = null,
+        $numDays = 5
+    ) {
+        $dateYmdPlusOneDay = $date
+            ->copy()
+            ->addDays(1)
+            ->format('Y-m-d');
 
         $dateYmd = $date->format('Y-m-d');
         $cacheKey = "getLanNextDaysNavInfo:date{$dateYmd}:lan:{$lan}:numDays:{$numDays}";
         $cacheTTL = 15;
 
-        $nextDayEvents = Cache::remember(
-            $cacheKey,
-            $cacheTTL,
-            function () use ($date, $lan, $numDays) {
-                return self::getLanNextDaysNavInfoUncached($date, $lan, $numDays);
-            }
-        );
+        $nextDayEvents = Cache::remember($cacheKey, $cacheTTL, function () use (
+            $date,
+            $lan,
+            $numDays
+        ) {
+            return self::getLanNextDaysNavInfoUncached($date, $lan, $numDays);
+        });
 
         return $nextDayEvents;
     }
 
-    public static function getLanNextDaysNavInfoUncached($date = null, $lan = null, $numDays = 5)
-    {
-        $dateYmdPlusOneDay = $date->copy()->addDays(1)->format('Y-m-d');
+    public static function getLanNextDaysNavInfoUncached(
+        $date = null,
+        $lan = null,
+        $numDays = 5
+    ) {
+        $dateYmdPlusOneDay = $date
+            ->copy()
+            ->addDays(1)
+            ->format('Y-m-d');
 
-        $nextDayEvents = CrimeEvent::
-            selectRaw('date(created_at) as dateYMD, count(*) as dateCount, 1 as ppp')
+        $nextDayEvents = CrimeEvent::selectRaw(
+            'date(created_at) as dateYMD, count(*) as dateCount, 1 as ppp'
+        )
             ->where('created_at', '>', $dateYmdPlusOneDay)
             ->where("administrative_area_level_1", $lan)
             ->groupBy(\DB::raw('dateYMD'))
@@ -518,11 +611,11 @@ class Helper
         $lans = [
             [
                 "name" => "Blekinge län",
-                "shortName" => "Blekinge",
+                "shortName" => "Blekinge"
             ],
             [
                 "name" => "Dalarnas län",
-                "shortName" => "Dalarna",
+                "shortName" => "Dalarna"
             ],
             [
                 "name" => "Gävleborgs län",
@@ -646,7 +739,7 @@ class Helper
             'vastra-gotaland' => 'Västra Götalands län',
             'orebro-lan' => 'Örebro län',
             'ostergotlands-lan' => 'Östergötlands län',
-            'ostergotland' => 'Östergötlands län',
+            'ostergotland' => 'Östergötlands län'
         ];
 
         return $arr;
@@ -686,7 +779,7 @@ class Helper
             'Västerbottens län' => 'Västerbotten',
             'Västernorrlands län' => 'Västernorrland',
             'Västmanlands län' => 'Västmanland',
-            'Västra Götalands län' => 'Västra Götaland',
+            'Västra Götalands län' => 'Västra Götaland'
         ];
 
         if (isset($arr[$lan])) {
@@ -725,8 +818,8 @@ class Helper
         $Z = 0.0;
 
         foreach ($data as $coord) {
-            $lat = $coord[0] * pi() / 180;
-            $lon = $coord[1] * pi() / 180;
+            $lat = ($coord[0] * pi()) / 180;
+            $lon = ($coord[1] * pi()) / 180;
 
             $a = cos($lat) * cos($lon);
             $b = cos($lat) * sin($lon);
@@ -745,7 +838,7 @@ class Helper
         $hyp = sqrt($X * $X + $Y * $Y);
         $lat = atan2($Z, $hyp);
 
-        return array($lat * 180 / pi(), $lon * 180 / pi());
+        return array(($lat * 180) / pi(), ($lon * 180) / pi());
     }
 
     /**
@@ -790,9 +883,16 @@ class Helper
         */
 
         // Skapa ny collection där polisstationerna är grupperade på län.
-        $locationsByPlace = $locationsCollection->groupBy(function ($item, $key) use ($slugsToNames) {
+        $locationsByPlace = $locationsCollection->groupBy(function (
+            $item,
+            $key
+        ) use ($slugsToNames) {
             $place = $item->Url;
-            $place = str_replace('https://polisen.se/kontakt/polisstationer/', '', $place);
+            $place = str_replace(
+                'https://polisen.se/kontakt/polisstationer/',
+                '',
+                $place
+            );
             $place = trim($place, '/');
             $placeParts = explode('/', $place);
             $placeLan = $placeParts[0];
@@ -842,7 +942,9 @@ class Helper
         $place = is_string($place) ? mb_strtolower($place) : $place;
         $lan = is_string($lan) ? mb_strtolower($lan) : $lan;
 
-        $relatedLinks = RelatedLinks::where(['place' => $place, 'lan' => $lan])->orderBy('prio', 'desc')->get();
+        $relatedLinks = RelatedLinks::where(['place' => $place, 'lan' => $lan])
+            ->orderBy('prio', 'desc')
+            ->get();
 
         return $relatedLinks;
     }
@@ -854,36 +956,45 @@ class Helper
      * @param  integer $limit [description]
      * @return Collection         [description]
      */
-    public static function getMostViewedEvents($date = null, $limit = 10) {
+    public static function getMostViewedEvents($date = null, $limit = 10)
+    {
         if (!$date) {
             $date = Carbon::now();
         }
 
         $now = $date->copy()->format('Y-m-d');
-        $tomorrow = $date->copy()->modify('+1 day')->format('Y-m-d');
-        $yesterday = $date->copy()->subDays(1)->format('Y-m-d');
+        $tomorrow = $date
+            ->copy()
+            ->modify('+1 day')
+            ->format('Y-m-d');
+        $yesterday = $date
+            ->copy()
+            ->subDays(1)
+            ->format('Y-m-d');
 
         $cacheKey = "getMostViewedEvents:D{$now}:L{$limit}";
         $cacheTTL = 27;
 
-        $mostViewed = Cache::remember(
-            $cacheKey,
-            $cacheTTL,
-            function() use ($tomorrow, $yesterday, $limit) {
-                $mostViewed = CrimeView::
-                                select(DB::raw('count(*) as views'), 'crime_event_id', DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d") AS createdYMD'))
-                                ->where('created_at', '<', $tomorrow)
-                                ->where('created_at', '>', $yesterday)
-                                ->groupBy('createdYMD', 'crime_event_id')
-                                ->orderBy('views', 'desc')
-                                ->limit($limit)
-                                ->with('CrimeEvent')
-                                ->get();
+        $mostViewed = Cache::remember($cacheKey, $cacheTTL, function () use (
+            $tomorrow,
+            $yesterday,
+            $limit
+        ) {
+            $mostViewed = CrimeView::select(
+                DB::raw('count(*) as views'),
+                'crime_event_id',
+                DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d") AS createdYMD')
+            )
+                ->where('created_at', '<', $tomorrow)
+                ->where('created_at', '>', $yesterday)
+                ->groupBy('createdYMD', 'crime_event_id')
+                ->orderBy('views', 'desc')
+                ->limit($limit)
+                ->with('CrimeEvent')
+                ->get();
 
-                return $mostViewed;
-            }
-        );
-
+            return $mostViewed;
+        });
 
         return $mostViewed;
     }
@@ -893,44 +1004,52 @@ class Helper
      *
      * @return array Array med navigationalternativ för inbrott-sidorna.
      */
-    public static function getInbrottNavItems() {
-
+    public static function getInbrottNavItems()
+    {
         // Undersidor och deras titlar.
         $undersidor = [
             'start' => [
-                'title' => 'Inbrott - Fakta & information om inbrott i hus & lägenhet',
+                'title' =>
+                    'Inbrott - Fakta & information om inbrott i hus & lägenhet',
                 'pageTitle' => 'Inbrott',
-                'pageSubtitle' => 'Fakta & information om inbrott i hus & lägenhet',
+                'pageSubtitle' =>
+                    'Fakta & information om inbrott i hus & lägenhet',
                 'url' => '/inbrott/'
             ],
             'fakta' => [
                 'title' => "Fakta om inbrott",
                 'pageTitle' => "Fakta om inbrott",
-                'pageSubtitle' => "Över 60 bostadsinbrott sker varje dag. (Men hur många klaras upp?)",
+                'pageSubtitle' =>
+                    "Över 60 bostadsinbrott sker varje dag. (Men hur många klaras upp?)"
             ],
             'drabbad' => [
-                'title' => 'Drabbad av inbrott - det här ska du göra om du haft inbrott',
+                'title' =>
+                    'Drabbad av inbrott - det här ska du göra om du haft inbrott',
                 'pageTitle' => 'Drabbad av inbrott',
-                'pageSubtitle' => 'Det här ska du göra om du haft inbrott i din villa eller lägenhet.'
+                'pageSubtitle' =>
+                    'Det här ska du göra om du haft inbrott i din villa eller lägenhet.'
             ],
             'skydda-dig' => [
-                'title' => 'Skydda dig mot inbrott - skydda dig & ditt hem från inbrott med hjälp av tips & larm',
+                'title' =>
+                    'Skydda dig mot inbrott - skydda dig & ditt hem från inbrott med hjälp av tips & larm',
                 'pageTitle' => 'Skydda dig mot inbrott',
-                'pageSubtitle' => 'Skydda ditt hem från inbrott med hjälp av tips & larm.'
+                'pageSubtitle' =>
+                    'Skydda ditt hem från inbrott med hjälp av tips & larm.'
             ],
             'grannsamverkan' => [
                 'title' => 'Grannsamverkan mot brott',
                 'pageTitle' => 'Grannsamverkan mot brott',
-                'pageSubtitle' => 'Förebygg kriminalitet såsom inbrott genom att gå samman med grannarna i ditt närområde. Ett effektivt sätt att minska brottrisken i ditt område!',
+                'pageSubtitle' =>
+                    'Förebygg kriminalitet såsom inbrott genom att gå samman med grannarna i ditt närområde. Ett effektivt sätt att minska brottrisken i ditt område!'
             ],
             'senaste-inbrotten' => [
                 'title' => 'Senaste inbrotten',
                 'pageTitle' => 'Inbrott som hänt nyligen',
-                'pageSubtitle' => 'Lista med de senaste inbrotten från Polisen.',
-            ],
+                'pageSubtitle' => 'Lista med de senaste inbrotten från Polisen.'
+            ]
         ];
 
-        array_walk($undersidor, function(&$val, $key) {
+        array_walk($undersidor, function (&$val, $key) {
             if (empty($val['url'])) {
                 #$val['url'] = route('inbrott', ['undersida' => $key]);
                 $val['url'] = "/inbrott/{$key}";
