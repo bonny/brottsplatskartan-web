@@ -15,7 +15,6 @@ use App\Http\Controllers\PlatsController;
 
 class CrimeEvent extends Model implements Feedable
 {
-
     // use Searchable;
     // use Eloquence;
 
@@ -89,7 +88,9 @@ class CrimeEvent extends Model implements Feedable
             $tileServerQueryArgs['path'] = $tileServerPath;
             $tileServerQueryArgs['padding'] = "0.4";
 
-            return $tileserverUrl . '?' . http_build_query($tileServerQueryArgs);
+            return $tileserverUrl .
+                '?' .
+                http_build_query($tileServerQueryArgs);
 
             // path=59.3137,18.0780
             // 59.32,18.0790|59.33,18.0791|59.34,18.0800|59.30,18.0001
@@ -114,13 +115,11 @@ class CrimeEvent extends Model implements Feedable
             // $image_src .= "|{$this->viewport_southwest_lat},{$this->viewport_southwest_lng}";
             // $image_src .= "|{$this->viewport_northeast_lat},{$this->viewport_southwest_lng}";
         } elseif ($this->location_lat) {
-
             // no viewport but location_lat, fallback to center
             // $image_src .= "&center={$this->location_lat},{$this->location_lng}";
             // $image_src .= "&zoom=14";
             return '';
         } else {
-
             // @TODO: return fallback iamge
             return '';
         }
@@ -138,8 +137,11 @@ class CrimeEvent extends Model implements Feedable
     /**
      * get image far away, like whole sweden or something
      */
-    public function getStaticImageSrcFar($width = 320, $height = 320, $scale = 1)
-    {
+    public function getStaticImageSrcFar(
+        $width = 320,
+        $height = 320,
+        $scale = 1
+    ) {
         $tileserverUrl = 'https://kartbilder.brottsplatskartan.se/';
         $tileServerQueryArgs = [];
 
@@ -150,7 +152,7 @@ class CrimeEvent extends Model implements Feedable
 
             // /styles/klokantech-basic/static/auto/640x340.jpg?path=59.3137,18.0780|59.32,18.0790|59.33,18.0791|59.34,18.0800|59.30,18.0001&latlng=1&fill=rgba(255,0,0,.2)&width=2&stroke=rgba(255,0,0,.2)
             $zoomLevel = 5;
-            $expandNumber = .25;
+            $expandNumber = 0.25;
 
             $tileserverUrl .= 'styles/klokantech-basic/static/';
             $tileserverUrl .= "{$this->location_lng},{$this->location_lat},{$zoomLevel}";
@@ -164,25 +166,57 @@ class CrimeEvent extends Model implements Feedable
 
             // Expand marked region.
 
-            $viewport_northeast_lat_first = number_format($this->viewport_northeast_lat + $expandNumber, 5, '.', '');
-            $viewport_northeast_lng = number_format($this->viewport_northeast_lng + $expandNumber, 5, '.', '');
+            $viewport_northeast_lat_first = number_format(
+                $this->viewport_northeast_lat + $expandNumber,
+                5,
+                '.',
+                ''
+            );
+            $viewport_northeast_lng = number_format(
+                $this->viewport_northeast_lng + $expandNumber,
+                5,
+                '.',
+                ''
+            );
 
-            $viewport_southwest_lat = number_format($this->viewport_southwest_lat - $expandNumber, 5, '.', '');
-            $viewport_southwest_lng = number_format($this->viewport_southwest_lng - $expandNumber, 5, '.', '');
+            $viewport_southwest_lat = number_format(
+                $this->viewport_southwest_lat - $expandNumber,
+                5,
+                '.',
+                ''
+            );
+            $viewport_southwest_lng = number_format(
+                $this->viewport_southwest_lng - $expandNumber,
+                5,
+                '.',
+                ''
+            );
 
             $tileServerPath = "";
-            $tileServerPath .= "|" . $viewport_northeast_lat_first . "," . $viewport_northeast_lng;
-            $tileServerPath .= "|" . $viewport_southwest_lat . "," . $viewport_northeast_lng;
+            $tileServerPath .=
+                "|" .
+                $viewport_northeast_lat_first .
+                "," .
+                $viewport_northeast_lng;
+            $tileServerPath .=
+                "|" . $viewport_southwest_lat . "," . $viewport_northeast_lng;
 
-            $tileServerPath .= "|" . $viewport_southwest_lat . "," . $viewport_southwest_lng;
-            $tileServerPath .= "|" . $viewport_northeast_lat_first . "," . $viewport_southwest_lng;
+            $tileServerPath .=
+                "|" . $viewport_southwest_lat . "," . $viewport_southwest_lng;
+            $tileServerPath .=
+                "|" .
+                $viewport_northeast_lat_first .
+                "," .
+                $viewport_southwest_lng;
 
             $tileServerPath = trim($tileServerPath, '|');
 
             $tileServerQueryArgs['path'] = $tileServerPath;
             // $tileServerQueryArgs['padding'] = "0.4";
 
-            return $tileserverUrl . '?' . http_build_query($tileServerQueryArgs);
+            return $tileserverUrl .
+                '?' .
+                http_build_query($tileServerQueryArgs);
 
             // path=59.3137,18.0780
             // 59.32,18.0790|59.33,18.0791|59.34,18.0800|59.30,18.0001
@@ -207,13 +241,11 @@ class CrimeEvent extends Model implements Feedable
             // $image_src .= "|{$this->viewport_southwest_lat},{$this->viewport_southwest_lng}";
             // $image_src .= "|{$this->viewport_northeast_lat},{$this->viewport_southwest_lng}";
         } elseif ($this->location_lat) {
-
             // no viewport but location_lat, fallback to center
             // $image_src .= "&center={$this->location_lat},{$this->location_lng}";
             // $image_src .= "&zoom=14";
             return '';
         } else {
-
             // @TODO: return fallback iamge
             return '';
         }
@@ -240,7 +272,9 @@ class CrimeEvent extends Model implements Feedable
 
     public function getPubDateFormatted($format = '%A %d %B %Y')
     {
-        return Carbon::createFromTimestamp($this->pubdate)->formatLocalized($format);
+        return Carbon::createFromTimestamp($this->pubdate)->formatLocalized(
+            $format
+        );
     }
 
     public function getPubDateFormattedForHumans()
@@ -271,7 +305,6 @@ class CrimeEvent extends Model implements Feedable
 
         return Carbon::createFromTimestamp(strtotime($date))->diffInSeconds();
     }
-
 
     // ...but fallbacks to pubdate if parsed_date is null
     public function getParsedDateISO8601()
@@ -308,13 +341,15 @@ class CrimeEvent extends Model implements Feedable
      * Kolla om året för denna händelse är samma år som just nu pågår.
      * @return boolean True om det är året som pågår, false om inte.
      */
-    public function isParsedDateThisYear() {
-        $eventDateYear = Carbon::createFromTimestamp(strtotime($this->parsed_date))->format('Y');
+    public function isParsedDateThisYear()
+    {
+        $eventDateYear = Carbon::createFromTimestamp(
+            strtotime($this->parsed_date)
+        )->format('Y');
         $currentYear = date('Y');
 
         return $currentYear === $eventDateYear;
     }
-
 
     /**
      * Returns a nice permalink to the page
@@ -326,7 +361,7 @@ class CrimeEvent extends Model implements Feedable
     {
         $slugParts = [];
 
-        if (! empty($this->administrative_area_level_1)) {
+        if (!empty($this->administrative_area_level_1)) {
             $lan = $this->toAscii($this->administrative_area_level_1);
         } else {
             $lan = "sverige";
@@ -335,7 +370,7 @@ class CrimeEvent extends Model implements Feedable
         // "Stöld/inbrott" and so on
         $slugParts[] = $this->parsed_title;
 
-        if (! empty($this->parsed_title_location)) {
+        if (!empty($this->parsed_title_location)) {
             $slugParts[] = $this->parsed_title_location;
         } else {
             #$eventName = "";
@@ -354,10 +389,14 @@ class CrimeEvent extends Model implements Feedable
         $eventName = implode("-", $slugParts);
         $eventName = $this->toAscii($eventName);
 
-        $permalink = route("singleEvent", [
-            "lan" => $lan,
-            "eventName" => $eventName
-        ], $absolute);
+        $permalink = route(
+            "singleEvent",
+            [
+                "lan" => $lan,
+                "eventName" => $eventName
+            ],
+            $absolute
+        );
 
         return $permalink;
     }
@@ -366,8 +405,11 @@ class CrimeEvent extends Model implements Feedable
      * Hämta eventets platser i en rimligt fint formaterad sträng
      * typ såhär: Borås, nnn län
      */
-    public function getLocationString($includePrioLocations = true, $includeParsedTitleLocation = true, $inclueAdministrativeAreaLevel1Locations = true)
-    {
+    public function getLocationString(
+        $includePrioLocations = true,
+        $includeParsedTitleLocation = true,
+        $inclueAdministrativeAreaLevel1Locations = true
+    ) {
         $locations = [];
 
         if ($includePrioLocations) {
@@ -387,7 +429,11 @@ class CrimeEvent extends Model implements Feedable
         }
 
         if ($inclueAdministrativeAreaLevel1Locations) {
-            if ($this->administrative_area_level_1 && $this->administrative_area_level_1 !== $this->parsed_title_location) {
+            if (
+                $this->administrative_area_level_1 &&
+                $this->administrative_area_level_1 !==
+                    $this->parsed_title_location
+            ) {
                 $locations[] = $this->administrative_area_level_1;
             }
         }
@@ -415,7 +461,11 @@ class CrimeEvent extends Model implements Feedable
                 $lanNoSpace = preg_replace("![/_|+ -]+!", "-", $lan);
 
                 // $oneLocation->name = "västra kattarpsvägenVästra"
-                $locationNameNoSpace = preg_replace("![/_|+ -]+!", "-", $oneLocation->name);
+                $locationNameNoSpace = preg_replace(
+                    "![/_|+ -]+!",
+                    "-",
+                    $oneLocation->name
+                );
 
                 // kungsgatan-stockholms-län
                 $platsUrlSlug = sprintf(
@@ -439,7 +489,9 @@ class CrimeEvent extends Model implements Feedable
             $locations[] = sprintf(
                 '<a href="%2$s">%1$s</a>',
                 $this->parsed_title_location,
-                route("platsSingle", ["plats" => mb_strtolower($this->parsed_title_location)])
+                route("platsSingle", [
+                    "plats" => mb_strtolower($this->parsed_title_location)
+                ])
             );
         }
 
@@ -582,7 +634,6 @@ class CrimeEvent extends Model implements Feedable
      */
     public function autop($text)
     {
-
         // replace <br> with new line
         $text = str_replace("<br>", "\n", $text);
 
@@ -595,44 +646,63 @@ class CrimeEvent extends Model implements Feedable
         return $text;
     }
 
-    public static function getEventsNearLocation($lat, $lng, $nearbyCount = 10, $nearbyInKm = 25)
-    {
+    public static function getEventsNearLocation(
+        $lat,
+        $lng,
+        $nearbyCount = 10,
+        $nearbyInKm = 25
+    ) {
         $cacheKey = "getEventsNearLocation:lat{$lat}:lng{$lng}:nearby{$nearbyCount}:nearbyKm{$nearbyInKm}";
         $cacheTTL = 9;
 
-        $events = Cache::remember(
-            $cacheKey,
-            $cacheTTL,
-            function () use ($lat, $lng, $nearbyCount, $nearbyInKm) {
-                return self::getEventsNearLocationUncached($lat, $lng, $nearbyCount, $nearbyInKm);
-            }
-        );
+        $events = Cache::remember($cacheKey, $cacheTTL, function () use (
+            $lat,
+            $lng,
+            $nearbyCount,
+            $nearbyInKm
+        ) {
+            return self::getEventsNearLocationUncached(
+                $lat,
+                $lng,
+                $nearbyCount,
+                $nearbyInKm
+            );
+        });
 
         return $events;
     }
 
-    public static function getEventsNearLocationUncached($lat, $lng, $nearbyCount = 10, $nearbyInKm = 25)
-    {
-        $someDaysAgoYMD = Carbon::now()->subDays(15)->format('Y-m-d');
+    public static function getEventsNearLocationUncached(
+        $lat,
+        $lng,
+        $nearbyCount = 10,
+        $nearbyInKm = 25
+    ) {
+        $someDaysAgoYMD = Carbon::now()
+            ->subDays(15)
+            ->format('Y-m-d');
 
-        $events = CrimeEvent::selectRaw(
+        $events = CrimeEvent::selectRaw( // välj de som är rimligt nära, värdet är i km
             '*, ( 6371 * acos( cos( radians(?) ) * cos( radians( location_lat ) ) * cos( radians( location_lng ) - radians(?) ) + sin( radians(?) ) * sin( radians( location_lat ) ) ) ) AS distance',
             [$lat, $lng, $lat]
         )
-        ->where('created_at', '>', $someDaysAgoYMD)
-        ->having("distance", "<=", $nearbyInKm) // välj de som är rimligt nära, värdet är i km
-        ->orderBy("parsed_date", "DESC")
-        ->orderBy("distance", "ASC")
-        ->limit($nearbyCount)
-        ->with('locations')
-        ->get();
+            ->where('created_at', '>', $someDaysAgoYMD)
+            ->having("distance", "<=", $nearbyInKm)
+            ->orderBy("parsed_date", "DESC")
+            ->orderBy("distance", "ASC")
+            ->limit($nearbyCount)
+            ->with('locations')
+            ->get();
 
         return $events;
     }
 
     public function getViewportSize()
     {
-        $viewportSize = ($this->viewport_northeast_lat - $this->viewport_southwest_lat) + ($this->viewport_northeast_lng - $this->viewport_southwest_lng);
+        $viewportSize =
+            $this->viewport_northeast_lat -
+            $this->viewport_southwest_lat +
+            ($this->viewport_northeast_lng - $this->viewport_southwest_lng);
 
         return $viewportSize;
     }
@@ -702,14 +772,16 @@ class CrimeEvent extends Model implements Feedable
 
         if (in_array("getLocations", $debugActions)) {
             // re-get location data from event, i.e find street names again and retun some debug
-            $FeedParserController = new FeedParserController;
+            $FeedParserController = new FeedParserController();
             $FeedController = new FeedController($FeedParserController);
 
             $itemFoundLocations = $FeedParserController->findLocations($event);
             $data["itemFoundLocations"] = $itemFoundLocations;
 
             // get the url that is sent to google to geocode this item
-            $data["itemGeocodeURL"] = $FeedController->getGeocodeURL($event->getKey());
+            $data["itemGeocodeURL"] = $FeedController->getGeocodeURL(
+                $event->getKey()
+            );
         }
 
         return $data;
@@ -786,7 +858,7 @@ class CrimeEvent extends Model implements Feedable
         $debugActions = (array) $request->input("debugActions");
 
         if (in_array("clearLocation", $debugActions)) {
-            $FeedParserController = new FeedParserController;
+            $FeedParserController = new FeedParserController();
             $FeedController = new FeedController($FeedParserController);
 
             $this->locations()->delete();
@@ -805,10 +877,14 @@ class CrimeEvent extends Model implements Feedable
                 \App\highways_added::firstOrCreate(['name' => $locationAdd]);
             }
 
-            $locationIgnore = mb_strtolower(trim($request->input('locationIgnore', '')));
+            $locationIgnore = mb_strtolower(
+                trim($request->input('locationIgnore', ''))
+            );
             if ($locationIgnore) {
                 // echo "<br>locationIgnore: $locationIgnore";
-                \App\highways_ignored::firstOrCreate(['name' => $locationIgnore]);
+                \App\highways_ignored::firstOrCreate([
+                    'name' => $locationIgnore
+                ]);
             }
 
             $FeedController->parseItem($this->getKey());
@@ -819,7 +895,9 @@ class CrimeEvent extends Model implements Feedable
             $data["itemFoundLocations"] = $itemFoundLocations;
 
             // get the url that is sent to google to geocode this item
-            $data["itemGeocodeURL"] = $FeedController->getGeocodeURL($this->getKey());
+            $data["itemGeocodeURL"] = $FeedController->getGeocodeURL(
+                $this->getKey()
+            );
 
             return $data;
         }
@@ -837,7 +915,7 @@ class CrimeEvent extends Model implements Feedable
         $pubDatePlusSomeTime = $pubDate->addWeek();
 
         // if pubdate + 1 week is more than today then ok to show
-        return  $pubDatePlusSomeTime->timestamp > time();
+        return $pubDatePlusSomeTime->timestamp > time();
     }
 
     /**
@@ -896,9 +974,13 @@ class CrimeEvent extends Model implements Feedable
             "viewport_southwest_lng"
         ];
 
-        $array = array_filter($array, function ($val, $key) use ($arrKeysToRemove) {
-            return !in_array($key, $arrKeysToRemove);
-        }, ARRAY_FILTER_USE_BOTH);
+        $array = array_filter(
+            $array,
+            function ($val, $key) use ($arrKeysToRemove) {
+                return !in_array($key, $arrKeysToRemove);
+            },
+            ARRAY_FILTER_USE_BOTH
+        );
 
         #if (!empty($array["administrative_area_level_1"])) {
         #}
@@ -1003,12 +1085,20 @@ SQL;
      *
      * @return boolean
      */
-    public function isInbrott() {
+    public function isInbrott()
+    {
         $inbrottOrd = ['inbrott', 'larm', 'intrång'];
 
-        $isInbrott = str_contains(\mb_strtolower($this->parsed_title), $inbrottOrd)
-                        || str_contains(\mb_strtolower($this->getDescriptionAsPlainText()), $inbrottOrd)
-                        || str_contains(\mb_strtolower($this->getParsedContent()), $inbrottOrd);
+        $isInbrott =
+            str_contains(\mb_strtolower($this->parsed_title), $inbrottOrd) ||
+            str_contains(
+                \mb_strtolower($this->getDescriptionAsPlainText()),
+                $inbrottOrd
+            ) ||
+            str_contains(
+                \mb_strtolower($this->getParsedContent()),
+                $inbrottOrd
+            );
 
         return $isInbrott;
     }
@@ -1040,8 +1130,10 @@ SQL;
      *
      * @return void
      */
-    public function getFeedItems(Request $request, PlatsController $platsController)
-    {
+    public function getFeedItems(
+        Request $request,
+        PlatsController $platsController
+    ) {
         $limit = 50;
         $lan = $request->input('lan');
         $plats = $request->input('plats');
@@ -1050,18 +1142,22 @@ SQL;
             // "15-januari-2018"
             $dateString = Carbon::parse('today')->formatLocalized('%d-%B-%Y');
             $date = \App\Helper::getdateFromDateSlug($dateString);
-            $events = $platsController->getEventsInPlatsWithLanUncached($plats, $lan, $date, 14, false);
+            $events = $platsController->getEventsInPlatsWithLanUncached(
+                $plats,
+                $lan,
+                $date,
+                14,
+                false
+            );
         } elseif ($lan) {
-            $events = CrimeEvent::
-                orderBy("created_at", "desc")
+            $events = CrimeEvent::orderBy("created_at", "desc")
                 ->where("administrative_area_level_1", $lan)
                 ->with('locations')
                 ->limit($limit)
                 ->get();
         } else {
             // Oavsett plats eller län.
-            $events = CrimeEvent::
-                orderBy("created_at", "desc")
+            $events = CrimeEvent::orderBy("created_at", "desc")
                 ->with('locations')
                 ->limit($limit)
                 ->get();
