@@ -544,7 +544,12 @@ Route::get('/{lan}/{eventName}', function ($lan, $eventName, Request $request) {
     }
 
     $eventID = $matches[0];
-    $event = CrimeEvent::findOrFail($eventID);
+
+    $cacheKey = "route-lan-event:{$lan}:{$eventName}";
+    $event = Cache::remember($cacheKey, 2, function() use ($eventID) {
+        $event = CrimeEvent::with(['locations', 'newsarticles'])->findOrFail($eventID);
+        return $event;
+    });
 
     $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs;
     $breadcrumbs->setDivider('›');
@@ -570,7 +575,6 @@ Route::get('/{lan}/{eventName}', function ($lan, $eventName, Request $request) {
     $eventsNearby = CrimeEvent::getEventsNearLocation($event->location_lat, $event->location_lng, $nearbyCount = 10, $nearbyInKm = 25);
 
     // Hämta alla ord i ordlistan, oavsett om de ligger i word eller synonyms
-    #dd($eventText);
     $text = $event->getSingleEventTitle() . ' ' . $event->getParsedContentAsPlainText();
     $dictionaryWordsInText = Dictionary::getWordsInTextCached($text);
 
