@@ -798,21 +798,29 @@ class CrimeEvent extends Model implements Feedable
      */
     public function getSingleEventTitle()
     {
-        $titleParts = [];
+        $cacheKey = __METHOD__ . ':' . $this->getKey();
+        $seconds = 5;
+        $title = Cache::remember($cacheKey, $seconds, function () {
+            $titleParts = [];
 
-        $titleParts[] = $this->parsed_title;
-        $titleParts[] = $this->getDescriptionAsPlainText();
+            $titleParts[] = $this->parsed_title;
+            $titleParts[] = $this->getDescriptionAsPlainText();
 
-        $prioOneLocations = $this->locations->where("prio", 1);
+            $prioOneLocations = $this->locations->where("prio", 1);
 
-        foreach ($prioOneLocations as $oneLocation) {
-            $titleParts[] = title_case($oneLocation->name);
-        }
+            foreach ($prioOneLocations as $oneLocation) {
+                $titleParts[] = title_case($oneLocation->name);
+            }
 
-        $titleParts[] = $this->parsed_title_location;
-        $titleParts[] = $this->getPubDateFormatted('%d %b %Y');
+            $titleParts[] = $this->parsed_title_location;
+            $titleParts[] = $this->getPubDateFormatted('%d %b %Y');
 
-        return implode(", ", $titleParts);
+            $title = implode(", ", $titleParts);
+
+            return $title;
+        });
+
+        return $title;
     }
 
     /**
