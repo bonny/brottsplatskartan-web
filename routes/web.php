@@ -34,14 +34,18 @@ if ($_GET['debugbar-disable'] ?? false) {
 Route::get('/debug/{what}', 'DebugController@debug')->name('debug');
 
 Route::redirect('/karta/', '/sverigekartan/', 301);
-Route::get('/sverigekartan/{location?}', 'FullScreenMapController@index')->name('FullScreenMap');
+Route::get('/sverigekartan/{location?}', 'FullScreenMapController@index')->name(
+    'FullScreenMap'
+);
 
 // URL is like
 // https://brottsplatskartan.localhost/pixel?path=%2Fstockholms-lan%2Ftrafikolycka-taby-taby-kyrkby-37653&rand=0.1843466328440977
 //
 Route::get('/pixel', 'PixelController@pixel');
 
-Route::get('/polisstationer', 'PolisstationerController@index')->name('polisstationer');
+Route::get('/polisstationer', 'PolisstationerController@index')->name(
+    'polisstationer'
+);
 
 /**
  * startpage: visa senaste händelserna, datum/dag-versionen
@@ -80,7 +84,7 @@ Route::get('/nara', function (Request $request) {
     $lat = round($lat, 5);
     $lng = round($lng, 5);
 
-    if ($lat && $lng && ! $error) {
+    if ($lat && $lng && !$error) {
         // works, but cant use "having"
         #$events = CrimeEvent::selectRaw('*, ( 6371 * acos( cos( radians(?) ) * cos( radians( location_lat ) ) * cos( radians( location_lng ) - radians(?) ) + sin( radians(?) ) * sin( radians( location_lat ) ) ) ) AS distance', [ $lat, $lng, $lat ])
         #->orderBy("distance", "ASC")
@@ -94,14 +98,24 @@ Route::get('/nara', function (Request $request) {
         // If no hits then move out until we have more
         $nearbyInKm = 5;
 
-        $events = CrimeEvent::getEventsNearLocation($lat, $lng, $nearbyCount, $nearbyInKm);
+        $events = CrimeEvent::getEventsNearLocation(
+            $lat,
+            $lng,
+            $nearbyCount,
+            $nearbyInKm
+        );
         $numTries++;
 
         // we want to show at least 5 events
         // if less than 5 events is found then increase the range by nn km, until a hit is found
         while ($events->count() < 5) {
             $nearbyInKm = $nearbyInKm + 10;
-            $events = CrimeEvent::getEventsNearLocation($lat, $lng, $nearbyCount, $nearbyInKm);
+            $events = CrimeEvent::getEventsNearLocation(
+                $lat,
+                $lng,
+                $nearbyCount,
+                $nearbyInKm
+            );
             $numTries++;
         }
 
@@ -125,18 +139,16 @@ Route::get('/nara', function (Request $request) {
     $data["events"] = $events;
 
     if ($events) {
-        $eventsByDay = $events->groupBy(
-            function ($item, $key) {
-                return date('Y-m-d', strtotime($item->created_at));
-            }
-        );
+        $eventsByDay = $events->groupBy(function ($item, $key) {
+            return date('Y-m-d', strtotime($item->created_at));
+        });
     } else {
         $eventsByDay = null;
     }
 
     $data['eventsByDay'] = $eventsByDay;
 
-    $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs;
+    $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs();
     $breadcrumbs->setDivider('›');
     $breadcrumbs->addCrumb('Hem', '/');
     $breadcrumbs->addCrumb('Nära dig', route("geo"));
@@ -180,7 +192,7 @@ Route::get('/plats/', 'PlatsController@overview')->name("platserOverview");
  * https://brottsplatskartan.se/plats/<ortnamn>
  */
 Route::get('/orter/{ort}', function ($ort = "") {
-    return redirect()->route("platsSingle", [ "ort" => $ort ]);
+    return redirect()->route("platsSingle", ["ort" => $ort]);
 });
 
 /**
@@ -193,13 +205,13 @@ Route::get('/typ/', function () {
     $data = [];
 
     $data["types"] = DB::table('crime_events')
-                ->select("parsed_title")
-                ->where('parsed_title', "!=", "")
-                ->orderBy('parsed_title', 'asc')
-                ->distinct()
-                ->get();
+        ->select("parsed_title")
+        ->where('parsed_title', "!=", "")
+        ->orderBy('parsed_title', 'asc')
+        ->distinct()
+        ->get();
 
-    $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs;
+    $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs();
     $breadcrumbs->setDivider('›');
     $breadcrumbs->addCrumb('Hem', '/');
     $breadcrumbs->addCrumb('Brottstyper', route("typeOverview"));
@@ -208,7 +220,6 @@ Route::get('/typ/', function () {
 
     return view('overview-typer', $data);
 })->name("typeOverview");
-
 
 /**
  * En typ av brott/händelse.
@@ -236,14 +247,14 @@ Route::get('/typ/{typ}', function ($typ) {
     }
 
     $data["events"] = CrimeEvent::orderBy("created_at", "desc")
-                                ->where("parsed_title", $typ)
-                                ->paginate(10);
+        ->where("parsed_title", $typ)
+        ->paginate(10);
 
     if (!$data["events"]->count()) {
         abort(404);
     }
 
-    $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs;
+    $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs();
     $breadcrumbs->setDivider('›');
     $breadcrumbs->addCrumb('Hem', '/');
     $breadcrumbs->addCrumb('Brottstyper', route("typeOverview"));
@@ -253,9 +264,8 @@ Route::get('/typ/{typ}', function ($typ) {
 
     return view('single-typ', $data);
 })
-->name("typeSingle")
-->where('typ', '(.*)');
-
+    ->name("typeSingle")
+    ->where('typ', '(.*)');
 
 /**
  * En specifik ort
@@ -275,11 +285,13 @@ Route::get('/plats/{plats}', 'PlatsController@day')->name("platsSingle");
 Route::get('/plats/{plats}/handelser', function ($plats) {
     return redirect()->route('platsSingle', ['plats' => $plats]);
 });
-Route::get('/plats/{plats}/handelser/{date}', 'PlatsController@day')->name('platsDatum');
+Route::get('/plats/{plats}/handelser/{date}', 'PlatsController@day')->name(
+    'platsDatum'
+);
 
 /**
  * Sida, med text typ, t.ex. "om brottsplatskartan" eller "api"
-*/
+ */
 Route::get('/sida/{pagename}', function ($pagename = null) {
     $pagetitle = "Sidan $pagename";
 
@@ -288,7 +300,8 @@ Route::get('/sida/{pagename}', function ($pagename = null) {
             $pagetitle = "Om Brottsplatskartan";
             break;
         case "api":
-            $pagetitle = "Brottsplatskartans API för att hämta brott från Polisen";
+            $pagetitle =
+                "Brottsplatskartans API för att hämta brott från Polisen";
             break;
         case "appar":
             $pagetitle = "Brottsplatskartans app för Iphone och Android";
@@ -301,7 +314,9 @@ Route::get('/sida/{pagename}', function ($pagename = null) {
     $data = [
         "pagename" => $pagename,
         "pageTitle" => $pagetitle,
-        "canonicalLink" => route('page', ['pagename' => mb_strtolower($pagename)])
+        "canonicalLink" => route('page', [
+            'pagename' => mb_strtolower($pagename)
+        ])
     ];
 
     return view('page', $data);
@@ -311,17 +326,22 @@ Route::get('/sida/{pagename}', function ($pagename = null) {
  * Route för översiktssidan för ordlistan
  */
 Route::get('/ordlista/{word}', function ($word, Request $request) {
-
     // Word kan vara "fylleri-lob" så vi ersätter minustecken med /
     $word = str_replace('-', '/', $word);
     // Meeen ord kan också vara "brott i nära relation" och då ska ju - egentligen vara " "
     $wordSpaces = str_replace('/', ' ', $word);
 
-    $wordForQuery = DB::connection()->getPdo()->quote($word);
-    $wordSpacesForQuery = DB::connection()->getPdo()->quote($wordSpaces);
+    $wordForQuery = DB::connection()
+        ->getPdo()
+        ->quote($word);
+    $wordSpacesForQuery = DB::connection()
+        ->getPdo()
+        ->quote($wordSpaces);
 
     // We use COLLATE so a query for "raddningstjanst" also matches "räddningstjänst"
-    $word = Dictionary::whereRaw("word IN($wordForQuery, $wordSpacesForQuery COLLATE utf8mb4_general_ci)")->first();
+    $word = Dictionary::whereRaw(
+        "word IN($wordForQuery, $wordSpacesForQuery COLLATE utf8mb4_general_ci)"
+    )->first();
 
     // This gives collate error, not sure why
     // $word = DB::select('select * from dictionaries where word = ? COLLATE utf8_general_ci', [$wordForQuery]);
@@ -330,18 +350,21 @@ Route::get('/ordlista/{word}', function ($word, Request $request) {
         abort(404);
     }
 
-    $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs;
+    $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs();
     $breadcrumbs->setDivider('›');
     $breadcrumbs->addCrumb('Hem', '/');
     $breadcrumbs->addCrumb('Ordlista', route('ordlista'));
-    $breadcrumbs->addCrumb($word->word, route('ordlistaOrd', ['word' => $word->word]));
+    $breadcrumbs->addCrumb(
+        $word->word,
+        route('ordlistaOrd', ['word' => $word->word])
+    );
 
     $allWords = Dictionary::pluck('word');
 
     $data = [
         'word' => $word,
         'allWords' => $allWords,
-        'breadcrumbs' => $breadcrumbs,
+        'breadcrumbs' => $breadcrumbs
     ];
 
     return view('dictionary-word', $data);
@@ -353,7 +376,7 @@ Route::get('/ordlista/{word}', function ($word, Request $request) {
 Route::get('/ordlista/', function (Request $request) {
     $words = Dictionary::orderBy('word', 'asc')->get();
 
-    $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs;
+    $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs();
     $breadcrumbs->setDivider('›');
     $breadcrumbs->addCrumb('Hem', '/');
     $breadcrumbs->addCrumb('Ordlista', route("ordlista"));
@@ -369,7 +392,11 @@ Route::get('/ordlista/', function (Request $request) {
 /**
  * Uppdatera saker kring ett single event
  */
-Route::post('/{lan}/{eventName}', function ($lan, $eventName, Request $request) {
+Route::post('/{lan}/{eventName}', function (
+    $lan,
+    $eventName,
+    Request $request
+) {
     preg_match('!\d+$!', $eventName, $matches);
     $eventID = $matches[0];
 
@@ -388,12 +415,12 @@ Route::post('/{lan}/{eventName}', function ($lan, $eventName, Request $request) 
     ]);
 
     return response()
-            ->json([
-                'saved' => true
-            ])
-            ->withHeaders([
-                'AMP-Access-Control-Allow-Source-Origin' => $origin
-            ]);
+        ->json([
+            'saved' => true
+        ])
+        ->withHeaders([
+            'AMP-Access-Control-Allow-Source-Origin' => $origin
+        ]);
 });
 
 /**
@@ -413,7 +440,7 @@ Route::prefix('blogg')->group(function () {
         // Matchar https://brottsplatskartan.localhost/blogg
         $blogItems = App\Blog::orderBy("created_at", "desc")->get(); // ->paginate(10);
 
-        $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs;
+        $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs();
         $breadcrumbs->setDivider('›');
         $breadcrumbs->addCrumb('Hem', '/');
         $breadcrumbs->addCrumb('Blogg');
@@ -434,12 +461,11 @@ Route::prefix('blogg')->group(function () {
             abort(404);
         }
 
-        $blogItems = App\Blog::
-            whereYear('created_at', $year)
+        $blogItems = App\Blog::whereYear('created_at', $year)
             ->orderBy("created_at", "desc")
             ->paginate(10);
 
-        $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs;
+        $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs();
         $breadcrumbs->setDivider('›');
         $breadcrumbs->addCrumb('Hem', '/');
         $breadcrumbs->addCrumb('Blogg');
@@ -462,7 +488,7 @@ Route::prefix('blogg')->group(function () {
             return view('blog-start', []);
         }
 
-        $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs;
+        $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs();
         $breadcrumbs->setDivider('›');
         $breadcrumbs->addCrumb('Hem', '/');
         $breadcrumbs->addCrumb('Blogg', route("blog"));
@@ -480,14 +506,16 @@ Route::prefix('blogg')->group(function () {
 /**
  * Huvudsida + undersidor för inbrott, grannsamverkan och liknande.
  */
-Route::get('/inbrott/{undersida?}', function (Request $request, $undersida = 'start') {
-
+Route::get('/inbrott/{undersida?}', function (
+    Request $request,
+    $undersida = 'start'
+) {
     // Hämta se senaste händelserna som innehåller "inbrott", "larm", "intrång", osv.
     $latestInbrottEvents = CrimeEvent::orderBy("created_at", "desc")
-                                ->where("parsed_title", 'like', '%inbrott%')
-                                ->orWhere("parsed_title", 'like', '%larm%')
-                                ->orWhere("parsed_title", 'like', '%intrång%')
-                                ->paginate(40);
+        ->where("parsed_title", 'like', '%inbrott%')
+        ->orWhere("parsed_title", 'like', '%larm%')
+        ->orWhere("parsed_title", 'like', '%intrång%')
+        ->paginate(40);
 
     $undersidor = \App\Helper::getInbrottNavItems();
 
@@ -498,13 +526,16 @@ Route::get('/inbrott/{undersida?}', function (Request $request, $undersida = 'st
     }
 
     // Lägg till breadcrumb.
-    $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs;
+    $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs();
     $breadcrumbs->setDivider('›');
     $breadcrumbs->addCrumb('Hem', '/');
     $breadcrumbs->addCrumb('Inbrott', route("inbrott"));
 
     if (!empty($valdUndersida) && $undersida !== 'start') {
-        $breadcrumbs->addCrumb($valdUndersida['title'], route("inbrott", ['undersida' => $undersida]));
+        $breadcrumbs->addCrumb(
+            $valdUndersida['title'],
+            route("inbrott", ['undersida' => $undersida])
+        );
     }
 
     $data = [
@@ -529,7 +560,6 @@ Route::get('/inbrott/{undersida?}', function (Request $request, $undersida = 'st
  *
  */
 Route::get('/{lan}/{eventName}', function ($lan, $eventName, Request $request) {
-
     // event måste innehålla siffra sist = crime event id
     preg_match('!\d+$!', $eventName, $matches);
     if (!isset($matches[0])) {
@@ -546,12 +576,14 @@ Route::get('/{lan}/{eventName}', function ($lan, $eventName, Request $request) {
     $eventID = $matches[0];
 
     $cacheKey = "route-lan-event:{$lan}:{$eventName}";
-    $event = Cache::remember($cacheKey, 2, function() use ($eventID) {
-        $event = CrimeEvent::with(['locations', 'newsarticles'])->findOrFail($eventID);
+    $event = Cache::remember($cacheKey, 2, function () use ($eventID) {
+        $event = CrimeEvent::with(['locations', 'newsarticles'])->findOrFail(
+            $eventID
+        );
         return $event;
     });
 
-    $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs;
+    $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs();
     $breadcrumbs->setDivider('›');
     $breadcrumbs->addCrumb('Hem', '/');
     $breadcrumbs->addCrumb('Län', route("lanOverview"));
@@ -559,7 +591,11 @@ Route::get('/{lan}/{eventName}', function ($lan, $eventName, Request $request) {
     if ($event->administrative_area_level_1) {
         $breadcrumbs->addCrumb(
             e($event->administrative_area_level_1),
-            route("lanSingle", ["lan" => $event->administrative_area_level_1], true)
+            route(
+                "lanSingle",
+                ["lan" => $event->administrative_area_level_1],
+                true
+            )
         );
     }
 
@@ -572,10 +608,18 @@ Route::get('/{lan}/{eventName}', function ($lan, $eventName, Request $request) {
     $debugData = $debugData + (array) $event->maybeClearLocationData($request);
 
     // Add nearby events
-    $eventsNearby = CrimeEvent::getEventsNearLocation($event->location_lat, $event->location_lng, $nearbyCount = 10, $nearbyInKm = 25);
+    $eventsNearby = CrimeEvent::getEventsNearLocation(
+        $event->location_lat,
+        $event->location_lng,
+        $nearbyCount = 10,
+        $nearbyInKm = 25
+    );
 
     // Hämta alla ord i ordlistan, oavsett om de ligger i word eller synonyms
-    $text = $event->getSingleEventTitle() . ' ' . $event->getParsedContentAsPlainText();
+    $text =
+        $event->getSingleEventTitle() .
+        ' ' .
+        $event->getParsedContentAsPlainText();
     $dictionaryWordsInText = Dictionary::getWordsInTextCached($text);
 
     if (isset($_GET["debug1"])) {
@@ -609,7 +653,9 @@ Route::get('/{lan}/{eventName}', function ($lan, $eventName, Request $request) {
  * sökstartsida + sökresultatsida = samma sida
  */
 Route::get('/sok/', 'SearchController@index')->name("search");
-Route::get('/sokresultat/', 'SearchController@searchperform')->name("searchperform");
+Route::get('/sokresultat/', 'SearchController@searchperform')->name(
+    "searchperform"
+);
 
 /**
  * coyards: sida för samarbete med coyards.se, visas i deras app och hemsida
@@ -632,7 +678,6 @@ Route::resource('coyards', 'CoyardsController')->names([
  * osv samspelar.
  */
 Route::get('/design', function (Request $request) {
-
     // Hämta in senaste brottet/händelsen.
     $event = CrimeEvent::orderBy('created_at', 'desc')->first();
 
@@ -654,16 +699,14 @@ Route::get('/design', function (Request $request) {
 
     // Hämta alla län, grupperat på län och antal
     $data["lan"] = DB::table('crime_events')
-                ->select("administrative_area_level_1")
-                ->groupBy('administrative_area_level_1')
-                ->orderBy('administrative_area_level_1', 'asc')
-                ->where('administrative_area_level_1', "!=", "")
-                ->get();
-
+        ->select("administrative_area_level_1")
+        ->groupBy('administrative_area_level_1')
+        ->orderBy('administrative_area_level_1', 'asc')
+        ->where('administrative_area_level_1', "!=", "")
+        ->get();
 
     $view->with($data);
 });
-
 
 /*
 Route::get('loggain', function () {
@@ -683,7 +726,10 @@ Route::get('logout', function () {
 
 // Add route for log viewer
 // https://github.com/rap2hpoutre/laravel-log-viewer
-Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
+Route::get(
+    'logs',
+    '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index'
+)->middleware('auth');
 
 // Add routes for RSS feeds.
 // https://github.com/spatie/laravel-feed
