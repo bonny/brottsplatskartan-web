@@ -12,12 +12,19 @@
             </h3>
 
             <ul class="Events__dayEvents">
-                @foreach ($events as $event)
+                {{-- @foreach ($events as $event)
                     @include('parts.crimeevent_v2', [
                         'overview' => true,
                         // Om det är väldigt många grejjer på en sida så se till att bara de första
                         // n händelserna som får bild, annars blir det för dyrt med alla API-anrop.
                         'hideMapImage' => ($loop->index >= 10) || (isset($hideMapImage) && $hideMapImage) || $loop->parent->index > 2
+                    ])
+                @endforeach --}}
+
+                @foreach($events as $event)
+                    @include('parts.crimeevent-small', [
+                        'event' => $event,
+                        'detailed' => true
                     ])
                 @endforeach
             </ul>

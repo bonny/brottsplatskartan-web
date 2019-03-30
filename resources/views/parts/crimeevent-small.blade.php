@@ -12,8 +12,8 @@
                 alt="Karta som visar ungefär var händelsen inträffat"
                 class="ListEvent__image"
                 src="{{ $event->getStaticImageSrc(160,160) }}"
-                width="80"
-                height="80"
+                width="90"
+                height="90"
                 layout="fixed"
             ></amp-img>
         </a>
@@ -23,12 +23,21 @@
                 alt="Karta som visar ungefär var händelsen inträffat"
                 class="ListEvent__image"
                 src="{{ $event->getStaticImageSrcFar(160,160) }}"
-                width="80"
-                height="80"
+                width="90"
+                height="90"
                 layout="fixed"
             ></amp-img>
         </a>
     @endif
+
+    <div class="ListEvent__title">
+        <a class="ListEvent__titleLink " href="{{ $event->getPermalink() }}">
+            @if (isset($detailed) && $detailed)
+                <span class="Event__parsedTitle Event__type">{{ $event->parsed_title }}</span>
+            @endif
+            <span class="ListEvent__teaser widget__listItem__title">{!! $event->getDescriptionAsPlainText() !!}</span>
+        </a>
+    </div>
 
     <div class="ListEvent__meta widget__listItem__text">
         <p>
@@ -43,11 +52,4 @@
             </span>
           </p>
     </div>
-
-    <div class="ListEvent__title">
-        <a class="ListEvent__titleLink " href="{{ $event->getPermalink() }}">
-            <span class="ListEvent__teaser widget__listItem__title">{!! $event->getDescriptionAsPlainText() !!}</span>
-        </a>
-    </div>
-
 </li>
