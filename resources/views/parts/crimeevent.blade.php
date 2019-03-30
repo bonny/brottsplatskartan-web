@@ -85,9 +85,9 @@ if $single is set then larger image
                         <amp-img
                             alt="Översiktskarta som visar hela Sverige med en markör som visar ungefär var händelsen inträffat"
                             class="Event__mapImage Event__mapImage--far"
-                            src="{{ $event->getStaticImageSrcFar(213,320) }}"
+                            src="{{ $event->getStaticImageSrcFar(213,332) }}"
                             width="213"
-                            height="320"
+                            height="332"
                             layout="responsive"
                         ></amp-img>
                     </span>

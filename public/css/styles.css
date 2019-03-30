@@ -611,7 +611,7 @@ blockquote {
 }
 
 .Event--single .Event__title {
-    font-size: 2rem;
+    font-size: 1.75rem;
 }
 
 .Event__teaser p {
@@ -697,12 +697,14 @@ amp-social-share {
 */
 
 .Event__map {
+    display: block;
+    overflow: hidden;
+    max-height: 309px;
     margin-top: -1rem;
     margin-left: -1rem;
     margin-right: -1rem;
     line-height: 1;
-    display: block;
-    overflow: auto;
+    border-radius: 0 0 var(--border-radius-normal) var(--border-radius-normal);
 }
 
 .Event__mapImageWrap {
@@ -715,7 +717,7 @@ amp-social-share {
 }
 .Event__mapImageWrap--far {
     width: 33.333%;
-    border: 5px solid white;
+    border-left: 5px solid white;
 }
 
 /* typ län, göm sverigekarta pga ser redan var det är */
