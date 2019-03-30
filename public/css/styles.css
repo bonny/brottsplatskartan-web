@@ -5,6 +5,7 @@
     --color-gray-1: #666;
     --color-gray-2: #ddd;
     --color-red: #cb4739;
+    --color-red-light: rgb(148, 53, 44);
     --color-blue-police: #1862a8;
     --color-blue-police-active: #0c3256;
     --color-white: #eee;
@@ -1006,7 +1007,7 @@ input[type="url"],
     z-index: 10;
     line-height: 1;
     font-size: 0.6rem;
-    text-transform: uppercase;
+    /* text-transform: uppercase; */
     color: #555;
 }
 
@@ -1507,9 +1508,9 @@ input[type="url"],
 .widget__listItem {
     /* margin-bottom: var(--default-margin); */
     /* border-top: 1px solid var(--color-gray-2); */
+    /* margin-top: var(--default-margin); */
     padding-top: var(--default-margin);
     padding-bottom: var(--default-margin);
-    margin-top: var(--default-margin);
 }
 
 .widget__listItem:first-of-type {
@@ -1531,8 +1532,16 @@ input[type="url"],
     line-height: 1.2;
     margin-top: 0;
     margin-bottom: var(--default-margin-third);
-    text-transform: uppercase;
+    /* text-transform: uppercase; */
     display: block;
+}
+
+.Event__type {
+    color: var(--color-red-light);
+}
+
+.Event--single .Event__type {
+    text-transform: uppercase;
 }
 
 .widget__listItem__title {
