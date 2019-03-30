@@ -6,7 +6,9 @@
     "
 >
 
-    @if (isset($mapDistance) && $mapDistance === 'near')
+    @if (!$event->hasMapImage())
+        {{-- Ingen karta finns. --}}
+    @elseif (isset($mapDistance) && $mapDistance === 'near')
         <a class="ListEvent__imageLink " href="{{ $event->getPermalink() }}">
             <amp-img
                 alt="Karta som visar ungefär var händelsen inträffat"

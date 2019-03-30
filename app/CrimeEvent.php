@@ -45,6 +45,15 @@ class CrimeEvent extends Model implements Feedable
         return $this->hasMany('App\Locations');
     }
 
+    /**
+     * Har händelsen en tillgänglig karta?
+     *
+     * @return boolean
+     */
+    public function hasMapImage() {
+        return $this->geocoded;
+    }
+
     // return src for an image
     public function getStaticImageSrc($width = 320, $height = 320, $scale = 1)
     {
