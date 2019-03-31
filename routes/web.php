@@ -154,6 +154,8 @@ Route::get('/nara', function (Request $request) {
     $breadcrumbs->addCrumb('Nära dig', route("geo"));
 
     $data["breadcrumbs"] = $breadcrumbs;
+    $data['mostViewedEvents'] = \App\Helper::getMostViewedEvents(Carbon::now(), 5);
+    $data['latestEvents'] = \App\Helper::getLatestEvents(5);
 
     return view('geo', $data);
 })->name("geo");

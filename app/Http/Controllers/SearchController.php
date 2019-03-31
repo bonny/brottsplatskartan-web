@@ -24,17 +24,7 @@ class SearchController extends Controller
         $breadcrumbs->addCrumb('Hem', '/');
         $breadcrumbs->addCrumb('Sök', route("search"));
 
-        // Get latest events
-        $cacheKey = __METHOD__ . ":latestEvents";
-        $events = Cache::remember($cacheKey, 2, function () {
-            $events = CrimeEvent::orderBy("created_at", "desc")
-                ->with('locations')
-                ->limit(20)
-                ->get();
-
-            return $events;
-        });
-
+        $events = \App\Helper::getLatestEvents(Carbon::now(), 5);
         $eventsByDay = $events->groupBy(function ($item, $key) {
             return date('Y-m-d', strtotime($item->created_at));
         });

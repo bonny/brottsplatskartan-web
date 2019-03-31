@@ -45,9 +45,15 @@ Template for geo results
                 <i>Nära mig</i> fungerar bäst i din mobiltelefon.
                 Använder du en dator kan du <a href="/lan/">välja län manuellt</a> för att se senaste händelserna i ditt län eller <a href="/">se senaste händelserna i hela Sverige</a>.
             </p>
+
         @endif
 
     </div>
+
+    @if (isset($error) && $error)
+        @includeWhen(isset($error) && $error && !empty($mostViewedEvents), 'parts.mostViewed', ['mostViewed' => $mostViewedEvents])
+        @includeWhen(isset($error) && $error && !empty($latestEvents), 'parts.latestEvents', ['latestEvents' => $latestEvents])
+    @endif
 
 @endsection
 

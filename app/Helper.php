@@ -1000,6 +1000,27 @@ class Helper
     }
 
     /**
+     * Hämta de senaste händelserna.
+     *
+     * @param  [type]  $date  [description]
+     * @param  integer $limit [description]
+     * @return Collection         [description]
+     */
+    public static function getLatestEvents(int $count = 5) {
+        $cacheKey = __METHOD__ . ":latestEvents";
+        $events = Cache::remember($cacheKey, 2, function () {
+            $events = CrimeEvent::orderBy("created_at", "desc")
+                ->with('locations')
+                ->limit(20)
+                ->get();
+
+            return $events;
+        });
+
+        return $events;
+    }
+
+    /**
      * Hämta navigationsalternativ för inbrott-sidorna.
      *
      * @return array Array med navigationalternativ för inbrott-sidorna.
