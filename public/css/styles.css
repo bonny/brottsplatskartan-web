@@ -848,6 +848,10 @@ input[type="url"],
     border-radius: var(--border-radius-normal);
 }
 
+.ListEvent__titleLink {
+    display: block;
+}
+
 .ListEvent__image {
     display: block;
 }
@@ -1184,6 +1188,7 @@ input[type="url"],
 }
 
 .Event__admin {
+    padding-top: var(--default-margin);
     margin-top: var(--default-margin);
     margin-bottom: var(--default-margin);
     border-top: 1px solid var(--color-grey-light);
@@ -1191,6 +1196,10 @@ input[type="url"],
     margin-right: -1rem;
     padding-left: 1rem;
     padding-right: 1rem;
+}
+
+.Event__admin form {
+    margin-top: var(--default-margin);
 }
 
 .Event__admin input[type="text"] {
