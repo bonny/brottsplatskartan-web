@@ -7,6 +7,6 @@
         <li>Följ <a href="https://twitter.com/StockholmsBrott">@StockholmsBrott</a>
     för att bara få brott i Stockholms län.</li>
 
-        <li>Gilla <a href="https://facebook.com/Brottsplatskartan/">facebook.com/Brottsplatskartan</a> på Facebook för att få nyheter och knasiga brott i ditt flöde.</li>
+        <li><a href="https://facebook.com/Brottsplatskartan/">Gilla Brottsplatskartan på Facebook</a> för att få nyheter, händelser, och knasiga brott i ditt flöde.</li>
     </ul>
 </section>
