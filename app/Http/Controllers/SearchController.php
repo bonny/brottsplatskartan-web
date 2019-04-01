@@ -24,7 +24,7 @@ class SearchController extends Controller
         $breadcrumbs->addCrumb('Hem', '/');
         $breadcrumbs->addCrumb('Sök', route("search"));
 
-        $events = \App\Helper::getLatestEvents(Carbon::now(), 5);
+        $events = \App\Helper::getLatestEvents(5);
         $eventsByDay = $events->groupBy(function ($item, $key) {
             return date('Y-m-d', strtotime($item->created_at));
         });
