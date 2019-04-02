@@ -118,7 +118,9 @@ if $single is set then larger image
     http://stackoverflow.com/questions/23336261/laravel-carbon-display-date-difference-only-in-days
     --}}
     <p class="Event__meta">
-        <span class="Event__location">{!! $event->getLocationStringWithLinks() !!}</span>
+        @if($event->locations->count())
+            <span class="Event__location">{!! $event->getLocationStringWithLinks() !!}</span>
+        @endif
         {{-- <span class="Event__metaDivider"> | </span> --}}
         <span class="Event__dateHuman"><time class="Event__dateHuman__time"
                   title="Tidpunkt då Polisen anger att händelsen inträffat"
