@@ -46,20 +46,32 @@ class FeedParserController extends Controller
     Sedan 22 Feb 2018 är formatet:
     - 22 februari 21.15, Rattfylleri, Sundsvall
 
+    Ibland uppdateras händelserna och då är formatet:
+    - Uppdaterad 02 april 16:24: 02 april 14:22, Polisinsats/kommendering, Varberg, id 51174
+
     Undantag:
     Uppsala hade en gång en artikel med följande titel, som gjorde att parsed date blev null
     - Uppdatering: Misshandel på Uppsalaskola
     */
     public function parseTitle($title)
     {
+        /*
+        array:3 [
+            0 => "Uppdaterad 23 januari 15.12: 23 januari 13.17"
+            1 => " Brand"
+            2 => " Linköping"
+        ]
+        */
         $arrTitleParts = explode(",", $title);
 
         $returnParts = [
             "parsed_date" => null,
+            "parsed_updated_date" => null, // Finns inte alltid.
             "parsed_title" => null,
             "parsed_title_location" => null
         ];
 
+        // Bail om för få delar.
         if (count($arrTitleParts) < 3) {
             return $returnParts;
         }
@@ -67,6 +79,22 @@ class FeedParserController extends Controller
         $returnParts["parsed_date"] = array_shift($arrTitleParts);
         $returnParts["parsed_title_location"] = array_pop($arrTitleParts);
         $returnParts["parsed_title"] = implode(", ", $arrTitleParts);
+
+        // Kolla om datum innehåller uppdaterad-del också.
+        if (preg_match('/^Uppdaterad /', $returnParts["parsed_date"])) {
+            $parsedDateParts = explode(': ', $returnParts["parsed_date"]);
+            /*
+            array:2 [
+                0 => "Uppdaterad 23 januari 15.12"
+                1 => "23 januari 13.17"
+            ]
+            */
+            if (sizeof($parsedDateParts) === 2) {
+                $parsedDateParts[0] = str_replace('Uppdaterad ', '', $parsedDateParts[0]);
+                $returnParts["parsed_date"] = $parsedDateParts[1];
+                $returnParts["parsed_updated_date"] = $parsedDateParts[0];
+            }
+        }
 
         $returnParts = array_map("trim", $returnParts);
 
