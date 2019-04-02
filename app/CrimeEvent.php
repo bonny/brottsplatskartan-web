@@ -333,7 +333,13 @@ class CrimeEvent extends Model implements Feedable
      */
     public function getParsedDateYMD()
     {
-        $date = Carbon::createFromTimestamp(strtotime($this->parsed_date));
+        $date = $this->parsed_date;
+        if (empty($date)) {
+            $date = $this->pubdate_iso8601;
+        }
+
+        $date = Carbon::createFromTimestamp(strtotime($date));
+
         $formattedDate = '';
         if ($this->isParsedDateThisYear()) {
             // Pågående år, ta inte med år.
