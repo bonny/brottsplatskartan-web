@@ -122,8 +122,6 @@ Layout template for web
 
     <amp-auto-ads type="adsense" data-ad-client="ca-pub-1689239266452655"></amp-auto-ads>
 
-
-
     <amp-animation id="shrinkAnim" layout="nodisplay">
       <script type="application/json">
         {
@@ -173,21 +171,16 @@ Layout template for web
       </script>
     </amp-animation>
 
-
-
-
     <div class="container">
 
         @include('parts.notificationbar')
         @include('parts.siteheader')
 
-
         <div id="HeaderAnimationMarker">
             <amp-position-observer on="enter:expandAnim.start; exit:shrinkAnim.start;" layout="nodisplay"></amp-position-observer>
         </div>
 
-
-        <div class="Ad">
+        {{-- <div class="Ad">
             <div class="Ad__intro">Annons</div>
             <amp-ad width=320 height=50
                 type="adsense"
@@ -196,7 +189,7 @@ Layout template for web
                 layout="responsive"
                 >
             </amp-ad>
-        </div>
+        </div> --}}
 
         @include('parts.breadcrumb', ["single" => true])
 
@@ -215,7 +208,7 @@ Layout template for web
 
             @yield('content')
 
-            <div class="Ad">
+            {{-- <div class="Ad">
                 <div class="Ad__intro">Annons</div>
                 <amp-ad width=320 height=50
                     type="adsense"
@@ -224,7 +217,7 @@ Layout template for web
                     layout="responsive"
                     >
                 </amp-ad>
-            </div>
+            </div> --}}
 
         </main>
 
@@ -291,14 +284,14 @@ Layout template for web
 
     <amp-pixel src="<?php echo env('APP_URL')?>/pixel?path=CANONICAL_PATH&rand=RANDOM" layout="nodisplay"></amp-pixel>
 
-    <amp-sticky-ad layout="nodisplay">
+    {{-- <amp-sticky-ad layout="nodisplay">
         <amp-ad width=320 height=50
             type="adsense"
             data-ad-client="ca-pub-1689239266452655"
             data-ad-slot="5942966405"
             >
         </amp-ad>
-    </amp-sticky-ad>
+    </amp-sticky-ad> --}}
 
     @if (env('APP_ENV')=='production')
         <amp-install-serviceworker
