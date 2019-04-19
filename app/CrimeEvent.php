@@ -1127,6 +1127,29 @@ SQL;
     }
 
     /**
+     * Returnerar sant om en händelse är av typen brand.
+     *
+     * @return boolean
+     */
+    public function isBrand()
+    {
+        $ord = ['brand', 'rökutveckling', 'röklukt', 'brinner', 'brinna'];
+
+        $isInbrott =
+            str_contains(\mb_strtolower($this->parsed_title), $ord) ||
+            str_contains(
+                \mb_strtolower($this->getDescriptionAsPlainText()),
+                $ord
+            ) ||
+            str_contains(
+                \mb_strtolower($this->getParsedContent()),
+                $ord
+            );
+
+        return $isInbrott;
+    }
+
+    /**
      * Undocumented function
      *
      * @return void
