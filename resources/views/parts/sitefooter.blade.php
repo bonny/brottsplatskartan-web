@@ -16,7 +16,8 @@
         <li><a href="{{ route("page", ["pagename" => "api"]) }}">Brottsplatser API</a></li>
         <li><a href="https://stats.uptimerobot.com/ADWQ0TZq1">Upptid/status</a></li>
         <li><a href="http://www.sis-index.se/site-information/9951" title="Visa antal besökare, besök samt sidvisningar på en fin graf hos SIS-index (Svensk Internet-statistik)">Besöksstatistik</a></li>
-        <li><a href="{{ route("inbrott") }}">Inbrott</span></a></li>
+        <li><a href="{{ route("inbrott") }}">Inbrott & hur du skyddar dig</span></a></li>
+        <li><a href="{{ route("brand") }}">Brand, mordbrand, bilbrand, rökutveckling, ...</span></a></li>
     </ul>
 </div>
 
