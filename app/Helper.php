@@ -950,7 +950,12 @@ class Helper
     }
 
     /**
-     * Hämta de mest visade händelserna för en specifik period.
+     * Hämta de mest visade händelserna för ett datum och en dag bakåt,
+     * dvs typ för en viss dag.
+     *
+     * Denna funktion visar inte så bra saker som hänt nyligen/är poppis
+     * "just nu" för en grej som pågått en hel dag kan ha fått fler totala
+     * visningar än en grej som fått 1000 visningar senaste minuten.
      *
      * @param  [type]  $date  [description]
      * @param  integer $limit [description]
@@ -987,6 +992,41 @@ class Helper
             )
                 ->where('created_at', '<', $tomorrow)
                 ->where('created_at', '>', $yesterday)
+                ->groupBy('createdYMD', 'crime_event_id')
+                ->orderBy('views', 'desc')
+                ->limit($limit)
+                ->with('CrimeEvent')
+                ->get();
+
+            return $mostViewed;
+        });
+
+        return $mostViewed;
+    }
+
+    /**
+     * Hämta de mest visade händelserna för n minuter bakåt.
+     * Används för att visa händelser som är populära "just nu".
+     *
+     * @param  int $minutes Antal minuter bakåt att hämta visningar för.
+     * @param  int $limit Max antal händelser att hämta.
+     * @return Collection         [description]
+     */
+    public static function getMostViewedEventsRecently($minutes = 10, $limit = 10)
+    {
+        $cacheKey = "getMostViewedEventsRecently:M{$minutes}:L{$limit}";
+        $cacheTTL = 4;
+
+        $mostViewed = Cache::remember($cacheKey, $cacheTTL, function () use (
+            $minutes,
+            $limit
+        ) {
+            $mostViewed = CrimeView::select(
+                DB::raw('count(*) as views'),
+                'crime_event_id',
+                DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d") AS createdYMD')
+            )
+                ->whereRaw('created_at >= DATE_ADD(NOW(), INTERVAL -? MINUTE)', [$minutes])
                 ->groupBy('createdYMD', 'crime_event_id')
                 ->orderBy('views', 'desc')
                 ->limit($limit)
