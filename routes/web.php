@@ -554,6 +554,59 @@ Route::get('/inbrott/{undersida?}', function (
 })->name('inbrott');
 
 /**
+ * Huvudsida + undersidor för inbrott, grannsamverkan och liknande.
+ */
+Route::get('/brand/{undersida?}', function (
+    Request $request,
+    $undersida = 'start'
+) {
+    // Hämta se senaste händelserna som innehåller "brand" osv.
+    $latestBrandEvents = CrimeEvent::orderBy("created_at", "desc")
+        ->where("parsed_title", 'like', '%brand%')
+        ->orWhere("parsed_title", 'like', '%brand%')
+        ->orWhere("parsed_title", 'like', '%mordbrand%')
+        ->orWhere("parsed_title", 'like', '%brinner%')
+        ->orWhere("parsed_title", 'like', '%brinna%')
+        ->orWhere("parsed_title", 'like', '%rökutveckling%')
+        ->orWhere("parsed_title", 'like', '%röklukt%')
+        ->paginate(40);
+
+    $undersidor = \App\Helper::getBrandNavItems();
+
+    // Bail om undersida inte finns.
+    $valdUndersida = $undersidor[$undersida] ?? null;
+    if (!$valdUndersida) {
+        abort(404);
+    }
+
+    // Lägg till breadcrumb.
+    $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs();
+    $breadcrumbs->setDivider('›');
+    $breadcrumbs->addCrumb('Hem', '/');
+    $breadcrumbs->addCrumb('Brand', route("brand"));
+
+    if (!empty($valdUndersida) && $undersida !== 'start') {
+        $breadcrumbs->addCrumb(
+            $valdUndersida['title'],
+            route("brand", ['undersida' => $undersida])
+        );
+    }
+
+    $data = [
+        'title' => $valdUndersida['title'],
+        'pageTitle' => $valdUndersida['pageTitle'],
+        'pageSubtitle' => $valdUndersida['pageSubtitle'] ?? null,
+        'canonicalLink' => $valdUndersida['url'],
+        'breadcrumbs' => $breadcrumbs,
+        'latestBrandEvents' => $latestBrandEvents,
+        'undersidor' => $undersidor,
+        'undersida' => $undersida
+    ];
+
+    return view('brand', $data);
+})->name('brand');
+
+/**
  * single event page/en händelse/ett crimeevent
  * ca. såhär:
  *
