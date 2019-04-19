@@ -78,7 +78,9 @@ https://www.ampproject.org/docs/reference/components/amp-sidebar
                             </ul>
 
                         </li>
-
+                        <li>
+                        <a href="{{ route("brand") }}">Brand, mordbrand, bilbrand, rökutveckling, ...</a>
+                        </li>     
                     </ul>
                 </li>
             </ul>

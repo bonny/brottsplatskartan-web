@@ -1079,4 +1079,33 @@ class Helper
 
         return $undersidor;
     }
+
+    /**
+     * Hämta navigationsalternativ för inbrott-sidorna.
+     *
+     * @return array Array med navigationalternativ för inbrott-sidorna.
+     */
+    public static function getBrandNavItems()
+    {
+        // Undersidor och deras titlar.
+        $undersidor = [
+            'start' => [
+                'title' =>
+                    'Senaste nytt om bränder och brandrealterade händelser från Polisen',
+                'pageTitle' => 'Brand',
+                'pageSubtitle' =>
+                    'Senaste nytt om bränder och brandrealterade händelser från Polisen',
+                'url' => '/brand/'
+            ],
+
+        ];
+
+        array_walk($undersidor, function (&$val, $key) {
+            if (empty($val['url'])) {
+                $val['url'] = "/brand/{$key}";
+            }
+        });
+
+        return $undersidor;
+    }
 }
