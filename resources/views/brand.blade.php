@@ -1,6 +1,6 @@
 {{--
 
-Template för /inbrott
+Template för /brand
 
 --}}
 
@@ -27,7 +27,7 @@ Template för /inbrott
 
         {{-- <hr /> --}}
 
-        {{-- Gemensamt block längst ner för alla sidor under /inbrott --}}
+        {{-- Gemensamt block längst ner för alla sidor under /brand --}}
 
         <h2>Brandrelaterade händelser från Polisen</h2>
 
