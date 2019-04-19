@@ -1586,6 +1586,10 @@ input[type="url"],
     margin-left: var(--default-margin);
 }
 
+.MostViewed__item__link {
+    display: block;
+}
+
 .SubNav__select {
     font-size: 1rem;
 }
