@@ -247,6 +247,16 @@ Route::get('/typ/{typ}', function ($typ) {
         return redirect()->route('inbrott');
     }
 
+    // Skicka vidare anrop till brand-relaterade saker till sidan om brand.
+    $inbrottSlugs = [
+        'brand',
+        'brand automatlarm',
+    ];
+
+    if (in_array(mb_strtolower($typ), $inbrottSlugs)) {
+        return redirect()->route('brand');
+    }
+
     $data["events"] = CrimeEvent::orderBy("created_at", "desc")
         ->where("parsed_title", $typ)
         ->paginate(10);
