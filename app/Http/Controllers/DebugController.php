@@ -30,10 +30,10 @@ class DebugController extends Controller
         if ($what == 'phpinfo') {
             phpinfo();
         } elseif ($what == 'MestVisade') {
-            $mostViewed = \App\Helper::getMostViewedEvents(Carbon::now(), 5);
+            $mostViewed = \App\Helper::getMostViewedEvents(Carbon::now(), 10);
             return $mostViewed->all();
         } elseif ($what == 'MestVisadeNyligen') {
-            $mostViewed = \App\Helper::getMostViewedEventsRecently(25, 50);
+            $mostViewed = \App\Helper::getMostViewedEventsRecently(25, 10);
             return $mostViewed->all();
         } elseif ($what == 'date') {
 
