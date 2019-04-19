@@ -28,8 +28,7 @@ if ($_GET['debugbar-disable'] ?? false) {
     \Debugbar::disable();
 } elseif ($_GET['debugbar-enable'] ?? false) {
     \Debugbar::enable();
-} else {
-}
+} else { }
 
 Route::get('/debug/{what}', 'DebugController@debug')->name('debug');
 
@@ -77,9 +76,9 @@ Route::get('/nara', function (Request $request) {
     $data = [];
     $events = null;
 
-    $lat = (float) $request->input("lat");
-    $lng = (float) $request->input("lng");
-    $error = (bool) $request->input("error");
+    $lat = (float)$request->input("lat");
+    $lng = (float)$request->input("lng");
+    $error = (bool)$request->input("error");
 
     $lat = round($lat, 5);
     $lng = round($lng, 5);
@@ -604,10 +603,10 @@ Route::get('/{lan}/{eventName}', function ($lan, $eventName, Request $request) {
     $breadcrumbs->addCrumb(e($event->parsed_title));
 
     // optional debug
-    $debugData = (array) CrimeEvent::maybeAddDebugData($request, $event);
+    $debugData = (array)CrimeEvent::maybeAddDebugData($request, $event);
 
     // maybe clear locations and re-encode
-    $debugData = $debugData + (array) $event->maybeClearLocationData($request);
+    $debugData = $debugData + (array)$event->maybeClearLocationData($request);
 
     // Add nearby events
     $eventsNearby = CrimeEvent::getEventsNearLocation(
