@@ -1048,6 +1048,36 @@ input[type="url"],
     -webkit-font-smoothing: antialiased;
 }
 
+.widget--mostViewedRecently {
+    /* background: #aaa;
+    border: 1px solid red; */
+}
+
+.MostViewedRecently__items {
+    /* background: lightyellow; */
+    height: 2em;
+}
+
+.MostViewedRecently__item {
+    /* background: #fab;
+    border: 1px solid #aaa;
+    max-width: 40%;
+     */
+    display: inline-block;
+    height: 1.5em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 65%;
+    max-width: 90%;
+    /* white-space: initial; */
+    margin-bottom: var(--default-margin);
+    vertical-align: top;
+    border-right: 1px solid #ddd;
+    padding-right: var(--default-margin);
+    margin-left: var(--default-margin);
+}
+
 /* new overview style, more overview-ish */
 
 .Event--v2,

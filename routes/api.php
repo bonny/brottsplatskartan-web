@@ -18,11 +18,9 @@ return $request->user();
  */
 
 Route::get('/areas', 'ApiController@areas');
-
 Route::get('/event/{eventID}', 'ApiController@event');
-
 Route::get('/eventsNearby', 'ApiController@eventsNearby');
-
 Route::get('/events', 'ApiController@events');
-
 Route::get('/eventsInMedia', 'ApiController@eventsInMedia');
+Route::get('/mostViewedRecently', 'ApiController@mostViewedRecently');
+

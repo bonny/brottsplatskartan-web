@@ -326,6 +326,22 @@ class CrimeEvent extends Model implements Feedable
         return Carbon::createFromTimestamp(strtotime($date))->toIso8601String();
     }
 
+    public function getParsedDateAsCarbon()
+    {
+        $date = $this->parsed_date;
+        if (empty($date)) {
+            $date = $this->pubdate_iso8601;
+        }
+
+        return Carbon::createFromTimestamp(strtotime($date));
+    }
+
+    public function getParsedDateInFormat($dateFormat = '%A %d %B %H:%M') {
+        $carbonDate = $this->getParsedDateAsCarbon();
+        $formattedDate = $carbonDate->formatLocalized($dateFormat);
+        return $formattedDate;
+    }
+
     /**
      * Returns the date of the crime/event in YMD format.
      *

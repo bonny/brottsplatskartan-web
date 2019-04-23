@@ -15,3 +15,50 @@
         @endforeach
     </amp-carousel>
 </section>
+
+{{-- <section class="widget widget--mostViewedRecently">
+    <h2 class="widget__title">Trendar just nu</h2>
+
+    <amp-list
+    layout="responsive"
+    width="50"
+    height="10"
+    src="/api/mostViewedRecently"
+    items="events"
+    class="MostViewedRecently__items"
+    >
+        <template type="amp-mustache">
+            <div data-recent-views="@{{views}}" class="MostViewedRecently__item">
+                <a href="@{{permalink}}">
+                    @{{parsed_date_hm}}:
+                    @{{description}}
+                </a>
+            </div>
+        </template>
+    </amp-list>
+</section> --}}
+
+<section class="widget widget--mostViewedRecently">
+    <h2 class="widget__title">Trendar just nu</h2>
+
+    <amp-list
+    layout="responsive"
+    width="50"
+    height="10"
+    src="/api/mostViewedRecently"
+    class="MostViewedRecently__items"
+    single-item
+    >
+        <template type="amp-mustache">
+            <amp-carousel width="auto" height="20" layout="fixed-height" type="carousel">
+              @{{#values}}
+                 <div data-recent-views="@{{views}}" class="MostViewedRecently__item">
+                    <a href="@{{permalink}}">
+                      @{{parsed_date_hm}}: @{{ description }}
+                   </a>
+                </div>
+              @{{/values}}
+            </amp-carousel>
+        </template>
+    </amp-list>
+</section>

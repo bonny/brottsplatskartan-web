@@ -7,6 +7,7 @@ use App\Newsarticle;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use App\Helper;
 
 /**
  * Controller för plats, översikt och detalj
@@ -380,6 +381,48 @@ class ApiController extends Controller
 
         // return json or jsonp if ?callback is set
         return response()->json($json)->withCallback($callback);
+    }
+
+    /**
+     * Ger de mest nyligen besökta händelsena.
+     * /api/mostViewedRecently
+     */
+    public function mostViewedRecently(Request $request, Response $response) {
+        $events = Helper::getMostViewedEventsRecently($request->input('minutes', 10), $request->input('limit', 10));
+
+        $events = $events->map(function($data) {
+            $item = $data->crimeEvent;
+
+            return [
+                "id" => $item->id,
+                "views" => $data->views,
+                "pubdate_iso8601" => $item->pubdate_iso8601,
+                "pubdate_unix" => $item->pubdate,
+                "parsed_date_hm" => $item->getParsedDateInFormat('%H:%M'),
+                "title_type" => $item->parsed_title,
+                "title_location" => $item->parsed_title_location,
+                "description" => $item->description,
+                "content" => $item->parsed_content,
+                "content_formatted" => $item->getParsedContent(),
+                "content_teaser" => $item->getParsedContentTeaser(),
+                "location_string" => $item->getLocationString(),
+                "date_human" => $item->getParsedDateFormattedForHumans(),
+                "lat" => (float) $item->location_lat,
+                "lng" => (float) $item->location_lng,
+                "administrative_area_level_1" => $item->administrative_area_level_1,
+                "administrative_area_level_2" => $item->administrative_area_level_2,
+                "image" => $item->getStaticImageSrc(640, 320, 1),
+                "permalink" => $item->getPermalink(true),
+            ];
+        });
+
+        $json = [
+            'items' => [
+                'values' => $events
+            ]
+        ];
+
+        return response()->json($json)->withCallback($request->input('callback'));
     }
 
 }

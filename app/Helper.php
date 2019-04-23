@@ -1014,8 +1014,8 @@ class Helper
      */
     public static function getMostViewedEventsRecently($minutes = 10, $limit = 10)
     {
-        $cacheKey = "getMostViewedEventsRecently:M{$minutes}:L{$limit}";
-        $cacheTTL = 4;
+        $cacheKey = "getMostViewedEventsRecently:v3:M{$minutes}:L{$limit}";
+        $cacheTTL = 1;
 
         $mostViewed = Cache::remember($cacheKey, $cacheTTL, function () use (
             $minutes,
