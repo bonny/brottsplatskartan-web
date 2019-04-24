@@ -422,6 +422,10 @@ class ApiController extends Controller
             ]
         ];
 
+        $json = [
+            'items' => $events
+        ];
+
         return response()->json($json)->withCallback($request->input('callback'));
     }
 

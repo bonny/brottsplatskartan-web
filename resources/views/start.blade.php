@@ -36,6 +36,8 @@ samt för äldre dagar när man bläddrar i arkivet.
 
 @section('content')
 
+    @include('parts.mostViewedRecently')
+
     <div class="widget">
         <h1 class="widget__title">
             @if (!empty($title))
