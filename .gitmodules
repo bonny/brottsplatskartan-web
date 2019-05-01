@@ -1,0 +1,3 @@
+[submodule "laradock-brottsplatskartan"]
+	path = laradock-brottsplatskartan
+	url = https://github.com/Laradock/laradock.git
