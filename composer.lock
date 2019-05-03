@@ -1,7 +1,7 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
     "content-hash": "79f595d480e679a4e4cc0254beb4f828",
@@ -6029,6 +6029,7 @@
                 "mock",
                 "xunit"
             ],
+            "abandoned": true,
             "time": "2018-08-09T05:50:03+00:00"
         },
         {
@@ -6589,6 +6590,46 @@
             "description": "Library that helps with managing the version number of Git-hosted PHP projects",
             "homepage": "https://github.com/sebastianbergmann/version",
             "time": "2016-10-03T07:35:21+00:00"
+        },
+        {
+            "name": "shipping-docker/vessel",
+            "version": "4.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/shipping-docker/vessel.git",
+                "reference": "65cf285a5647f7593d49f8da665ac1399b904c80"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/shipping-docker/vessel/zipball/65cf285a5647f7593d49f8da665ac1399b904c80",
+                "reference": "65cf285a5647f7593d49f8da665ac1399b904c80",
+                "shasum": ""
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Vessel\\VesselServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Vessel\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Chris Fidao",
+                    "email": "fideloper@gmail.com"
+                }
+            ],
+            "description": "Simple Docker dev environments",
+            "time": "2019-01-24T14:17:03+00:00"
         },
         {
             "name": "theseer/tokenizer",
