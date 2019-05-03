@@ -16,6 +16,9 @@ class AppServiceProvider extends ServiceProvider
         // https://stackoverflow.com/questions/24426423/laravel-generate-secure-https-url-from-route
         \URL::forceScheme('https');
 
+        // @TODO: Don't run the code below when we don't have any db connction
+        // because we can install things using composer and so on.
+        
         // Lan listing is used in header nav so share it here for easy access.
         // https://laravel.com/docs/5.5/views#passing-data-to-views
         $lan = \App\Helper::getAllLanWithStats();
