@@ -1,6 +1,4 @@
 
-{{-- <div><amp-img alt="Brottsplatskartan" src="/img/brottsplatskartan-logotyp-symbol-only.png" width=40 height=40></amp-img> --}}
-
 <div class="SiteFooter__col">
     <h2>Brottsplatskartan</h2>
 
