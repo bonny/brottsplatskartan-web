@@ -137,7 +137,7 @@
         <p>Se fler händelser från Polisen:</p>
         <p class="FullScreenMap__links">
             <a href="/">» Brottsplatskartans startsida</a>
-            <br><a href="/geo.php">» Polishändelser nära dig</a>
+            <br><a href="/nara-hitta-plats">» Polishändelser nära dig</a>
         </p>
     </footer>
 

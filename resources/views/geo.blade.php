@@ -29,7 +29,7 @@ Template for geo results
                 Nyaste brotten visas först.
             </p>
 
-            <p><a class="Button" href="/geo.php">Uppdatera position</a></p>
+            <p><a class="Button" href="/nara-hitta-plats">Uppdatera position</a></p>
             <!-- Antal försök: {{ $numTries }} -->
 
             @includeWhen($eventsByDay->count(), 'parts.events-by-day', ["overview" => true])
@@ -39,7 +39,7 @@ Template for geo results
         @if (isset($error) && $error)
             <p>
                 Kunde inte avgöra din position.
-                <a href="/geo.php">Försök igen</a>
+                <a href="/nara-hitta-plats">Försök igen</a>
             </p>
             <p>
                 <i>Nära mig</i> fungerar bäst i din mobiltelefon.

@@ -52,7 +52,7 @@ samt för äldre dagar när man bläddrar i arkivet.
         @if (isset($showLanSwitcher))
             <p class="Breadcrumbs__switchLan__belowTitle">
                 <a class="Breadcrumbs__switchLan" href="{{ route("lanOverview") }}">Välj län</a>
-                <a class="Breadcrumbs__switchLan Breadcrumbs__switchLan--geo" href="/geo.php">Visa händelser nära min plats</a>
+                <a class="Breadcrumbs__switchLan Breadcrumbs__switchLan--geo" href="/nara-hitta-plats">Visa händelser nära min plats</a>
             </p>
         @endif
 
