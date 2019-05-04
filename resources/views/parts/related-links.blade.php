@@ -12,7 +12,7 @@
                             href="{{$relatedLink->url}}"
                             data-vars-outbound-link="{{$relatedLink->url}}"
                             >
-                            {{$relatedLink->title or $relatedLink->url}}
+                            {{$relatedLink->title ?? $relatedLink->url}}
                         </a>
                     </h3>
                     <div class="widget__listItem__text">
