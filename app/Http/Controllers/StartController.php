@@ -231,7 +231,7 @@ class StartController extends Controller
 
         $events = Cache::remember(
             $cacheKey,
-            2,
+            2 * 60,
             function () use ($date, $daysBack) {
 
                 $beforeDate = $date['date']->copy()->addDays(1)->format('Y-m-d');
@@ -267,7 +267,7 @@ class StartController extends Controller
 
         $mostCommonCrimeTypes = Cache::remember(
             $cacheKey,
-            10,
+            10 * 60,
             function () use ($date, $daysBack) {
                 $mostCommonCrimeTypes = CrimeEvent::
                     selectRaw('parsed_title, count(id) as antal')

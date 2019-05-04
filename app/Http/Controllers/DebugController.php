@@ -119,7 +119,7 @@ class DebugController extends Controller
         if ($useCache) {
             $events = Cache::remember(
                 $cacheKey,
-                5,
+                5 * 60,
                 function () use ($date, $daysBack) {
                     echo "<br>get cached";
                     $events = $this->getEventsForToday($date, $daysBack);

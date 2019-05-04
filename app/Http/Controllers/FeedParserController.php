@@ -191,7 +191,7 @@ class FeedParserController extends Controller
             }
 
             // Store page in cache for nn minutes
-            Cache::put($cacheKey, $html, 5);
+            Cache::put($cacheKey, $html, 5 * 60);
         } else {
             // echo "<br>got cached html";
         }

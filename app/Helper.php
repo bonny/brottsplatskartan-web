@@ -102,7 +102,7 @@ class Helper
         ];
 
         $cacheKey = "lan-homestats-" . $lan;
-        $cacheTTL = 120;
+        $cacheTTL = 120 * 60;
         $dateDaysBack = Carbon::now()
             ->subDays(13)
             ->format('Y-m-d');
@@ -154,7 +154,7 @@ class Helper
             // DB::enableQueryLog();
 
             $cacheKey = "lan-stats-today-" . $item->administrative_area_level_1;
-            $numEventsToday = Cache::remember($cacheKey, 10, function () use (
+            $numEventsToday = Cache::remember($cacheKey, 10 * 60, function () use (
                 $item
             ) {
                 $numEventsToday = DB::table('crime_events')
@@ -170,7 +170,7 @@ class Helper
             });
 
             $cacheKey = "lan-stats-7days-" . $item->administrative_area_level_1;
-            $numEvents7Days = Cache::remember($cacheKey, 30, function () use (
+            $numEvents7Days = Cache::remember($cacheKey, 30 * 60, function () use (
                 $item
             ) {
                 $numEvents7Days = DB::table('crime_events')
@@ -187,7 +187,7 @@ class Helper
 
             $cacheKey =
                 "lan-stats-30days-" . $item->administrative_area_level_1;
-            $numEvents30Days = Cache::remember($cacheKey, 70, function () use (
+            $numEvents30Days = Cache::remember($cacheKey, 70 * 60, function () use (
                 $item
             ) {
                 $numEvents30Days = DB::table('crime_events')
@@ -216,7 +216,7 @@ class Helper
 
     public static function getAllLan()
     {
-        $minutes = 10;
+        $minutes = 10 * 60;
 
         $lan = Cache::remember('getAllLan', $minutes, function () {
             $lan = DB::table('crime_events')
@@ -444,7 +444,7 @@ class Helper
     {
         $dateYmd = $date->format('Y-m-d');
         $cacheKey = "getPrevDaysNavInfo:date:{$dateYmd}:numDays:$numDays";
-        $cacheTTL = 15;
+        $cacheTTL = 15 * 60;
 
         $prevDayEvents = Cache::remember($cacheKey, $cacheTTL, function () use (
             $dateYmd,
@@ -482,7 +482,7 @@ class Helper
             ->addDays(1)
             ->format('Y-m-d');
         $cacheKey = "getNextDaysNavInfo:date:{$dateYmd}:numDays:$numDays";
-        $cacheTTL = 16;
+        $cacheTTL = 16 * 60;
 
         $nextDayEvents = Cache::remember($cacheKey, $cacheTTL, function () use (
             $dateYmd,
@@ -511,7 +511,7 @@ class Helper
     ) {
         $dateYmd = $date->format('Y-m-d');
         $cacheKey = "getLanPrevDaysNavInfo:date{$dateYmd}:lan:{$lan}:numDays:{$numDays}";
-        $cacheTTL = 14;
+        $cacheTTL = 14 * 60;
 
         $prevDayEvents = Cache::remember($cacheKey, $cacheTTL, function () use (
             $date,
@@ -554,7 +554,7 @@ class Helper
 
         $dateYmd = $date->format('Y-m-d');
         $cacheKey = "getLanNextDaysNavInfo:date{$dateYmd}:lan:{$lan}:numDays:{$numDays}";
-        $cacheTTL = 15;
+        $cacheTTL = 15 * 60;
 
         $nextDayEvents = Cache::remember($cacheKey, $cacheTTL, function () use (
             $date,
@@ -928,7 +928,7 @@ class Helper
         // return \App\Helper::getPoliceStations();
         $locations = Cache::remember(
             'PoliceStationsLocations2',
-            60 * 2,
+            60 * 2 * 60,
             function () {
                 return \App\Helper::getPoliceStations();
             }
@@ -978,7 +978,7 @@ class Helper
             ->format('Y-m-d');
 
         $cacheKey = "getMostViewedEvents:D{$now}:L{$limit}";
-        $cacheTTL = 27;
+        $cacheTTL = 27 * 60;
 
         $mostViewed = Cache::remember($cacheKey, $cacheTTL, function () use (
             $tomorrow,
@@ -1015,7 +1015,7 @@ class Helper
     public static function getMostViewedEventsRecently($minutes = 10, $limit = 10)
     {
         $cacheKey = "getMostViewedEventsRecently:v3:M{$minutes}:L{$limit}";
-        $cacheTTL = 1;
+        $cacheTTL = 1 * 60;
 
         $mostViewed = Cache::remember($cacheKey, $cacheTTL, function () use (
             $minutes,
@@ -1048,7 +1048,7 @@ class Helper
      */
     public static function getLatestEvents(int $count = 5) {
         $cacheKey = __METHOD__ . ":latestEvents";
-        $events = Cache::remember($cacheKey, 2, function () {
+        $events = Cache::remember($cacheKey, 2 * 60, function () {
             $events = CrimeEvent::orderBy("created_at", "desc")
                 ->with('locations')
                 ->limit(20)

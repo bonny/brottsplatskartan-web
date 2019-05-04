@@ -3,7 +3,7 @@ modul i sidebar med länkar till alla län
 --}}
 
 <?php
-$latestBlogItems = Cache::remember('widgetLatestBlogItems', 1, function() {
+$latestBlogItems = Cache::remember('widgetLatestBlogItems', 1 * 60, function() {
     return \App\Blog::orderBy("created_at", "desc")->paginate(3);
 });
 ?>

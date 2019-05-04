@@ -339,7 +339,7 @@ class PlatsController extends Controller
     {
         $dateYmd = $date['date']->format('Y-m-d');
         $cacheKey = 'getEventsInPlatsWithLan:' . md5("{$platsWithoutLan}:{$oneLanName}:{$dateYmd}:{$numDaysBack}:{$isToday}");
-        $cacheTTL = 1;
+        $cacheTTL = 1 * 60;
 
         $events = Cache::Remember(
             $cacheKey,
@@ -401,7 +401,7 @@ class PlatsController extends Controller
         $date = new Carbon($dateYMD);
         $dateYmdPlusOneDay = $date->copy()->addDays(1)->format('Y-m-d');
         $cacheKey = "getMostCommonCrimeTypesInPlatsWithLan:$platsWithoutLan:$oneLanName:$dateYMD";
-        $cacheTTL = 20;
+        $cacheTTL = 20 * 60;
 
         $mostCommonCrimeTypes = Cache::Remember(
             $cacheKey,
@@ -456,7 +456,7 @@ class PlatsController extends Controller
         $dateYmdMinusNumDaysBack = $date['date']->copy()->subDays($numDaysBack)->format('Y-m-d');
 
         $cacheKey = "getEventsInPlats:$plats:$dateYmd:$numDaysBack:$isToday";
-        $cacheTTL = 1;
+        $cacheTTL = 1 * 60;
 
         $events = Cache::Remember(
             $cacheKey,
@@ -506,7 +506,7 @@ class PlatsController extends Controller
         $dateYmdPlusOneDay = $date->copy()->addDays(1)->format('Y-m-d');
 
         $cacheKey = "getMostCommonCrimeTypesInPlats:$plats:$dateYMD";
-        $cacheTTL = 45;
+        $cacheTTL = 45 * 60;
 
         $mostCommonCrimeTypes = Cache::Remember(
             $cacheKey,
@@ -554,7 +554,7 @@ class PlatsController extends Controller
         $dateYmd = $date->format('Y-m-d');
 
         $cacheKey = "getPlatsPrevDaysNavInfo4:$dateYmd:$numDays:$platsWithoutLan:$oneLanName";
-        $cacheTTL = 22;
+        $cacheTTL = 22 * 60;
 
         $prevDayEvents = Cache::Remember(
             $cacheKey,
@@ -631,7 +631,7 @@ class PlatsController extends Controller
         $dateYmd = $date->format('Y-m-d');
 
         $cacheKey = "getPlatsNextDaysNavInfo:$dateYmd:$numDays:$platsWithoutLan:$oneLanName";
-        $cacheTTL = 23;
+        $cacheTTL = 23 * 60;
 
         $prevDayEvents = Cache::Remember(
             $cacheKey,

@@ -557,7 +557,7 @@ Route::get('/{lan}/{eventName}', function ($lan, $eventName, Request $request) {
     $eventID = $matches[0];
 
     $cacheKey = "route-lan-event:{$lan}:{$eventName}";
-    $event = Cache::remember($cacheKey, 2, function () use ($eventID) {
+    $event = Cache::remember($cacheKey, 2 * 60, function () use ($eventID) {
         $event = CrimeEvent::with(['locations', 'newsarticles'])->findOrFail(
             $eventID
         );

@@ -684,7 +684,7 @@ class CrimeEvent extends Model implements Feedable
         $nearbyInKm = 25
     ) {
         $cacheKey = "getEventsNearLocation:lat{$lat}:lng{$lng}:nearby{$nearbyCount}:nearbyKm{$nearbyInKm}";
-        $cacheTTL = 9;
+        $cacheTTL = 9 * 60;
 
         $events = Cache::remember($cacheKey, $cacheTTL, function () use (
             $lat,
@@ -830,7 +830,7 @@ class CrimeEvent extends Model implements Feedable
     public function getSingleEventTitle()
     {
         $cacheKey = __METHOD__ . ':' . $this->getKey();
-        $seconds = 5;
+        $seconds = 5 * 60;
         $title = Cache::remember($cacheKey, $seconds, function () {
             $titleParts = [];
 
