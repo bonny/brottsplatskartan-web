@@ -21,9 +21,9 @@ class DebugBarMaybeEnable
     {
         // This works both for regular pages/routes
         // but also for debug bar urls like https://brottsplatskartan.localhost/_debugbar/assets/stylesheets?v=1520325331
-        if (\Cookie::has('show-debugbar')) {
-            \Debugbar::enable();
-        }
+        // if (\Cookie::has('show-debugbar')) {
+        //     \Debugbar::enable();
+        // }
 
         return $next($request);
     }
