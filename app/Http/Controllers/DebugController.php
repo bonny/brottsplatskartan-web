@@ -109,6 +109,82 @@ class DebugController extends Controller
 
             // \Debugbar::info($events);
 
+        } elseif ($what == 'verisure') {
+            // Lista alla annonser.
+            $ads = \App\Helper::getVerisureAds();
+            $imagesBasePath = '/img/annonser/verisure/';
+            /*
+            <amp-img
+                media="(min-width: 650px)"
+                src="wide.jpg"
+                width="527"
+                height="355"
+                layout="responsive">
+            </amp-img>
+            */
+
+            $ad = $ads->firstWhere('name', 'brand-uppkopplat');
+            if ($ad) {
+                echo '<h2>En bild, amp-img-format</h2>';
+
+                // Skriv ut alla bilder, men med olika media-attribut
+                // som gör att endast en i taget visas.
+
+                $ampImagesMarkup = collect($ad['images'])->reduce(function ($carry, $imageData) use ($imagesBasePath) {
+                    ['image' => $image, 'width' => $width, 'height' => $height] = $imageData;
+                    $imageSrc = $imagesBasePath . $image;
+                    $carry .= sprintf(
+                        '
+                        <amp-img
+                            media="(min-width: 650px)"
+                            src="%1$s"
+                            width="%2$s"
+                            height="%3$s"
+                            layout="responsive">
+                            </amp-img>',
+                        $imageSrc,
+                        $width,
+                        $height
+                    );
+                    return $carry;
+                });
+                echo '<pre>' . htmlspecialchars($ampImagesMarkup) . '</pre>';
+            }
+
+            echo '
+                <h2>Alla bilder</h2>
+                <ul>
+            ';
+            $ads->each(function ($adtype) use ($imagesBasePath) {
+                printf(
+                    '
+                        <li>
+                            <h3>%1$s</h3>
+                            <p>Link to: <a href="%2$s">%2$s</a></p>
+                            <h4>Images</h4>
+                            <ul>%3$s</ul>
+                        </li>
+                    ',
+                    $adtype['name'],
+                    $adtype['link'],
+                    collect($adtype['images'])->reduce(function ($carry, $image) use ($imagesBasePath, $adtype) {
+                        return $carry . sprintf(
+                            '<li>
+                                    <p><a href="%4$s"><img src="%1$s" alt=""></a></li>
+                                    <p>
+                                        Bredd %2$s
+                                        <br>Höjd %3$s
+                                    </p>
+                                </li>',
+                            $imagesBasePath . $image['image'],
+                            $image['width'],
+                            $image['height'],
+                            $adtype['link'] // 4
+                        );
+                    })
+                );
+            });
+            echo '</ul>';
         }
     }
 
@@ -142,9 +218,9 @@ class DebugController extends Controller
      *
      * @return Collection       Grejjer.
      */
-    private function getEventsForToday($date, $daysBack = 3) {
-        $events = CrimeEvent::
-            whereDate('created_at', '<=', $date['date']->format('Y-m-d'))
+    private function getEventsForToday($date, $daysBack = 3)
+    {
+        $events = CrimeEvent::whereDate('created_at', '<=', $date['date']->format('Y-m-d'))
             ->whereDate('created_at', '>=', $date['date']->copy()->subDays($daysBack)->format('Y-m-d'))
             ->orderBy("created_at", "desc")
             ->with('locations')
