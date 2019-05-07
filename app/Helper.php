@@ -1152,10 +1152,12 @@ class Helper
 
     /**
      * Hämta en array med alla annonser för Verisure.
+     * Alla bilder och länkar går att se här:
+     * https://brottsplatskartan-web.test/debug/verisure
      * 
      * @return \Illuminate\Support\Collection
      */
-    function getVerisureAds()
+    static function getVerisureAds()
     {
         return collect([
             [
