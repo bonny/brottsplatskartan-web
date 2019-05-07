@@ -253,7 +253,7 @@ class Helper
     public static function toAscii($str, $replace = array(), $delimiter = '-')
     {
         if (!empty($replace)) {
-            $str = str_replace((array) $replace, ' ', $str);
+            $str = str_replace((array)$replace, ' ', $str);
         }
 
         // Switch locale or iconv will convert "ä" to "ae".
@@ -1046,7 +1046,8 @@ class Helper
      * @param  integer $limit [description]
      * @return Collection         [description]
      */
-    public static function getLatestEvents(int $count = 5) {
+    public static function getLatestEvents(int $count = 5)
+    {
         $cacheKey = __METHOD__ . ":latestEvents";
         $events = Cache::remember($cacheKey, 2 * 60, function () {
             $events = CrimeEvent::orderBy("created_at", "desc")
@@ -1071,37 +1072,37 @@ class Helper
         $undersidor = [
             'start' => [
                 'title' =>
-                    'Inbrott - Fakta & information om inbrott i hus & lägenhet',
+                'Inbrott - Fakta & information om inbrott i hus & lägenhet',
                 'pageTitle' => 'Inbrott',
                 'pageSubtitle' =>
-                    'Fakta & information om inbrott i hus & lägenhet',
+                'Fakta & information om inbrott i hus & lägenhet',
                 'url' => '/inbrott/'
             ],
             'fakta' => [
                 'title' => "Fakta om inbrott",
                 'pageTitle' => "Fakta om inbrott",
                 'pageSubtitle' =>
-                    "Över 60 bostadsinbrott sker varje dag. (Men hur många klaras upp?)"
+                "Över 60 bostadsinbrott sker varje dag. (Men hur många klaras upp?)"
             ],
             'drabbad' => [
                 'title' =>
-                    'Drabbad av inbrott - det här ska du göra om du haft inbrott',
+                'Drabbad av inbrott - det här ska du göra om du haft inbrott',
                 'pageTitle' => 'Drabbad av inbrott',
                 'pageSubtitle' =>
-                    'Det här ska du göra om du haft inbrott i din villa eller lägenhet.'
+                'Det här ska du göra om du haft inbrott i din villa eller lägenhet.'
             ],
             'skydda-dig' => [
                 'title' =>
-                    'Skydda dig mot inbrott - skydda dig & ditt hem från inbrott med hjälp av tips & larm',
+                'Skydda dig mot inbrott - skydda dig & ditt hem från inbrott med hjälp av tips & larm',
                 'pageTitle' => 'Skydda dig mot inbrott',
                 'pageSubtitle' =>
-                    'Skydda ditt hem från inbrott med hjälp av tips & larm.'
+                'Skydda ditt hem från inbrott med hjälp av tips & larm.'
             ],
             'grannsamverkan' => [
                 'title' => 'Grannsamverkan mot brott',
                 'pageTitle' => 'Grannsamverkan mot brott',
                 'pageSubtitle' =>
-                    'Förebygg kriminalitet såsom inbrott genom att gå samman med grannarna i ditt närområde. Ett effektivt sätt att minska brottrisken i ditt område!'
+                'Förebygg kriminalitet såsom inbrott genom att gå samman med grannarna i ditt närområde. Ett effektivt sätt att minska brottrisken i ditt område!'
             ],
             'senaste-inbrotten' => [
                 'title' => 'Senaste inbrotten',
@@ -1131,10 +1132,10 @@ class Helper
         $undersidor = [
             'start' => [
                 'title' =>
-                    'Senaste nytt om bränder och brandrealterade händelser från Polisen',
+                'Senaste nytt om bränder och brandrealterade händelser från Polisen',
                 'pageTitle' => 'Brand',
                 'pageSubtitle' =>
-                    'Senaste nytt om bränder och brandrealterade händelser från Polisen',
+                'Senaste nytt om bränder och brandrealterade händelser från Polisen',
                 'url' => '/brand/'
             ],
 
@@ -1147,5 +1148,116 @@ class Helper
         });
 
         return $undersidor;
+    }
+
+    /**
+     * Hämta en array med alla annonser för Verisure.
+     * 
+     * @return \Illuminate\Support\Collection
+     */
+    function getVerisureAds()
+    {
+        return collect([
+            [
+                'name' => 'brand-larmcentral',
+                'link' => 'https://www.verisure.se/f/brottsplatskartan/brand-larmcentral.html?utm_source=brottsplatskartan&utm_medium=banner&utm_campaign=brottsplatskartan-brand-larmcentral',
+                'images' => [
+                    [
+                        'image' => 'brand-larmcentral-336x280.png',
+                        'width' => 336,
+                        'height' => 280,
+                    ],
+                    [
+                        'image' => 'brand-larmcentral-970x250.png',
+                        'width' => 970,
+                        'height' => 250,
+                    ],
+                ]
+            ],
+            [
+                'name' => 'brand-uppkopplat',
+                'link' => 'https://www.verisure.se/landingpages-blocks/brottsplatskartan-brandskydd.html?utm_source=brottsplatskartan&utm_medium=banner&utm_campaign=brottsplatskartan-brandskydd',
+                'images' => [
+                    [
+                        'image' => 'brand-uppkopplat-336x280.png',
+                        'width' => 336,
+                        'height' => 280,
+                    ],
+                    [
+                        'image' => 'brand-uppkopplat-477x250.png',
+                        'width' => 477,
+                        'height' => 250,
+                    ],
+                    [
+                        'image' => 'brand-uppkopplat-970x250.png',
+                        'width' => 970,
+                        'height' => 250,
+                    ],
+                ]
+            ],
+            [
+                'name' => 'inbrott-larmpaket',
+                'link' => 'https://www.verisure.se/f/brottsplatskartan/inbrott-larmpaket.html?utm_source=brottsplatskartan&utm_medium=banner&utm_campaign=brottsplatskartan-inbrott-larmpaket',
+                'images' => [
+                    [
+                        'image' => 'inbrott-larmpaket-336x280.png',
+                        'width' => 336,
+                        'height' => 280,
+                    ],
+                    [
+                        'image' => 'inbrott-larmpaket-477x250.png',
+                        'width' => 477,
+                        'height' => 250,
+                    ],
+                    [
+                        'image' => 'inbrott-larmpaket-970x250.png',
+                        'width' => 970,
+                        'height' => 250,
+                    ],
+                ]
+            ],
+            [
+                'name' => 'inbrott-tjuv',
+                'link' => 'https://www.verisure.se/f/brottsplatskartan/inbrott-tjuv.html?utm_source=brottsplatskartan&utm_medium=banner&utm_campaign=brottsplatskartan-inbrott-tjuv',
+                'images' => [
+                    [
+                        'image' => 'inbrott-tjuv-336x280.png',
+                        'width' => 336,
+                        'height' => 280,
+                    ],
+                    [
+                        'image' => 'inbrott-tjuv-477x250.png',
+                        'width' => 477,
+                        'height' => 250,
+                    ],
+                    [
+                        'image' => 'inbrott-tjuv-970x250.png',
+                        'width' => 970,
+                        'height' => 250,
+                    ],
+                ]
+            ],
+            [
+                'name' => 'inbrott-vibrationsdetektor',
+                'link' => 'https://www.verisure.se/landingpages-blocks/brottsplatskartan-inbrott.html?utm_source=brottsplatskartan&utm_medium=banner&utm_campaign=brottsplatskartan-inbrott',
+                'images' => [
+                    [
+                        'image' => 'inbrott-vibrationsdetektor-336x280.png',
+                        'width' => 336,
+                        'height' => 280,
+                    ],
+                    [
+                        'image' => 'inbrott-vibrationsdetektor-477x250.png',
+                        'width' => 477,
+                        'height' => 250,
+                    ],
+                    [
+                        'image' => 'inbrott-vibrationsdetektor-970x250.png',
+                        'width' => 970,
+                        'height' => 250,
+                    ],
+                ]
+            ]
+        ]);
     }
 }
