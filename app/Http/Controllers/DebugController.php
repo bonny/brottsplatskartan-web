@@ -113,43 +113,17 @@ class DebugController extends Controller
             // Lista alla annonser.
             $ads = \App\Helper::getVerisureAds();
             $imagesBasePath = '/img/annonser/verisure/';
-            /*
-            <amp-img
-                media="(min-width: 650px)"
-                src="wide.jpg"
-                width="527"
-                height="355"
-                layout="responsive">
-            </amp-img>
-            */
 
-            $ad = $ads->firstWhere('name', 'brand-uppkopplat');
-            if ($ad) {
-                echo '<h2>En bild, amp-img-format</h2>';
-
-                // Skriv ut alla bilder, men med olika media-attribut
-                // som gör att endast en i taget visas.
-
-                $ampImagesMarkup = collect($ad['images'])->reduce(function ($carry, $imageData) use ($imagesBasePath) {
-                    ['image' => $image, 'width' => $width, 'height' => $height] = $imageData;
-                    $imageSrc = $imagesBasePath . $image;
-                    $carry .= sprintf(
-                        '
-                        <amp-img
-                            media="(min-width: 650px)"
-                            src="%1$s"
-                            width="%2$s"
-                            height="%3$s"
-                            layout="responsive">
-                            </amp-img>',
-                        $imageSrc,
-                        $width,
-                        $height
-                    );
-                    return $carry;
-                });
-                echo '<pre>' . htmlspecialchars($ampImagesMarkup) . '</pre>';
-            }
+            echo '<h2>Alla annonser i amp-img-markup</h2>';
+            echo '<pre>';
+            echo htmlspecialchars(
+                \App\helper::getVerisureAdMarkup('brand-uppkopplat')
+                    . \App\helper::getVerisureAdMarkup('brand-larmcentral')
+                    . \App\helper::getVerisureAdMarkup('inbrott-larmpaket')
+                    . \App\helper::getVerisureAdMarkup('inbrott-tjuv')
+                    . \App\helper::getVerisureAdMarkup('inbrott-vibrationsdetektor')
+            );
+            echo '</pre>';
 
             echo '
                 <h2>Alla bilder</h2>
