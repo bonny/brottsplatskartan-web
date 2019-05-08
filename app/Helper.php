@@ -1290,11 +1290,12 @@ class Helper
 
             $media = '';
             switch ($width) {
+                // Iphone large
                 case '336':
-                    $media = "(max-width: 336px)";
+                    $media = "(max-width: 414px)";
                     break;
                 case '477':
-                    $media = "(min-width: 337px) and (max-width: 970px)";
+                    $media = "(min-width: 414px) and (max-width: 970px)";
                     break;
                 case '970':
                     $media = "(min-width: 970px)";
