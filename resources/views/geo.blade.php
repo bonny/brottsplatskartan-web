@@ -32,7 +32,7 @@ Template for geo results
             <p><a class="Button" href="/nara-hitta-plats">Uppdatera position</a></p>
             <!-- Antal försök: {{ $numTries }} -->
 
-            @includeWhen($eventsByDay->count(), 'parts.events-by-day', ["overview" => true])
+            @includeWhen($eventsByDay->count(), 'parts.events-by-day', ["overview" => true, 'mapDistance' => 'near'])
 
         @endif
 
