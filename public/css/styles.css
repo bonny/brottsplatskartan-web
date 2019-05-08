@@ -1663,3 +1663,7 @@ input[type="url"],
 .u-color-gray-1 {
     color: var(--color-gray-1);
 }
+
+.u-w100 {
+    width: 100%;
+}
