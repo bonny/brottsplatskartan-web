@@ -194,6 +194,7 @@ Layout template for web
             </amp-ad>
         </div> --}}
 
+        @yield('beforeBreadcrumb')
         @include('parts.breadcrumb', ["single" => true])
 
         {{-- Output debug data, if set --}}
@@ -206,6 +207,8 @@ Layout template for web
             itemGeocodeURL:<br>
             <a href="{{ $debugData["itemGeocodeURL"] }}">{{ $debugData["itemGeocodeURL"] }}</a>
         @endif
+
+        @yield('beforeMainContent')
 
         <main class="MainContent">
 
