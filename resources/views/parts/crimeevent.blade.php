@@ -198,6 +198,9 @@ if $single is set then larger image
                 <h2 class="Event__drabbad__title">Mer om bränder</h2>
                 <p>På vår särskilda sida <a href="{{route('brand')}}">om bränder</a> kan du läsa mer.</p>
             </div>
+            @php
+            echo \App\helper::getVerisureAdMarkup('brand-larmcentral');
+            @endphp
         @endif
 
         <div class="Event__share">
