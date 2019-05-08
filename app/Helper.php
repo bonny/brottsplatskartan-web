@@ -1154,7 +1154,7 @@ class Helper
      * Hämta en array med alla annonser för Verisure.
      * Alla bilder och länkar går att se här:
      * https://brottsplatskartan-web.test/debug/verisure
-     * 
+     *
      * @return \Illuminate\Support\Collection
      */
     static function getVerisureAds()
@@ -1261,5 +1261,68 @@ class Helper
                 ]
             ]
         ]);
+    }
+
+    /**
+     * Hämta markup för en annons.
+     * Returnerar alla bilder som `<amp-img>` med olika media-attrib
+     * så de endast visas en och en vid rätt width osv.
+     *
+     * @param string $adName
+     * @return string AMP markup
+     */
+    static function getVerisureAdMarkup($adName = '')
+    {
+        if (empty($adName)) {
+            return false;
+        }
+
+        $imagesBasePath = '/img/annonser/verisure/';
+        $ad = \App\Helper::getVerisureAds()->firstWhere('name', $adName);
+
+        if (empty($ad)) {
+            return false;
+        }
+
+        $ampImagesMarkup = collect($ad['images'])->reduce(function ($carry, $imageData) use ($ad, $imagesBasePath) {
+            ['image' => $image, 'width' => $width, 'height' => $height] = $imageData;
+            $imageSrc = $imagesBasePath . $image;
+
+            $media = '';
+            switch ($width) {
+                case '336':
+                    $media = "(max-width: 336px)";
+                    break;
+                case '477':
+                    $media = "(min-width: 337px) and (max-width: 970px)";
+                    break;
+                case '970':
+                    $media = "(min-width: 970px)";
+                    break;
+            }
+
+
+            $carry .= sprintf(
+                '
+                <a href="%5$s" target="_blank">
+                    <amp-img
+                        media="%4$s"
+                        src="%1$s"
+                        width="%2$s"
+                        height="%3$s"
+                        layout="responsive">
+                    </amp-img>
+                </a>'
+                ,
+                $imageSrc,
+                $width,
+                $height,
+                $media, // 4
+                $ad['link'] // 5
+            );
+            return $carry;
+        });
+
+        return $ampImagesMarkup;
     }
 }
