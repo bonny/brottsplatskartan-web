@@ -281,7 +281,18 @@ Layout template for web
               "eventAction": "click",
               "eventLabel": "${outboundLink}"
             }
+          },
+          "outboundVerisure": {
+            "on": "click",
+            "selector": "a.VersiureAd__link",
+            "request": "event",
+            "vars": {
+              "eventCategory": "verisure",
+              "eventAction": "click",
+              "eventLabel": "${outboundLink}"
+            }
           }
+
         }
       }
       </script>

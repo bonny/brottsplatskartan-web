@@ -1302,17 +1302,22 @@ class Helper
                     break;
             }
 
-
             $carry .= sprintf(
                 '
-                <a href="%5$s" target="_blank">
-                    <amp-img
-                        media="%4$s"
-                        src="%1$s"
-                        width="%2$s"
-                        height="%3$s"
-                        layout="responsive">
-                    </amp-img>
+                <a 
+                    href="%5$s" 
+                    target="_blank" 
+                    class="VersiureAd__link"
+                    data-vars-outbound-link="%5$s"
+                    >
+                        <amp-img
+                            class="VersiureAd__image"
+                            media="%4$s"
+                            src="%1$s"
+                            width="%2$s"
+                            height="%3$s"
+                            layout="responsive">
+                        </amp-img>
                 </a>'
                 ,
                 $imageSrc,
