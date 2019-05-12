@@ -12,7 +12,8 @@ https://www.ampproject.org/docs/reference/components/amp-sidebar
                 <li class="Sidebar-nav-large">
                     <ul>
                         <li><a href="{{ route("start") }}">Händelser<br/>i hela Sverige</a></li>
-                        <li><a href="/nara-hitta-plats">Nära mig</a></li>
+                        <li><a href="/nara-hitta-plats">Händelser nära mig</a></li>
+                        <li><a href="{{ route('mostRead') }}">Mest läst</a></li>
                         <li>
                             <amp-accordion
                                 layout="container"
