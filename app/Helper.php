@@ -961,7 +961,7 @@ class Helper
      * @param  integer $limit [description]
      * @return Collection         [description]
      */
-    public static function getMostViewedEvents($date = null, $limit = 10)
+    public static function getMostViewedEvents(Carbon $date = null, int $limit = 10)
     {
         if (!$date) {
             $date = Carbon::now();

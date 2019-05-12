@@ -431,6 +431,16 @@ Route::prefix('blogg')->group(function () {
     })->name('blogItem');
 });
 
+
+/**
+ * Mest lästa händelserna.
+ * https://brottsplatskartan.se/mest-last
+ */
+Route::redirect('/mestlast/', '/mest-last', 301);
+Route::redirect('/mestlasta/', '/mest-last', 301);
+Route::redirect('/mest-lasta/', '/mest-last', 301);
+Route::get('/mest-last/', 'MestLastController@index')->name('mostRead');
+
 /**
  * Huvudsida + undersidor för inbrott, grannsamverkan och liknande.
  */
