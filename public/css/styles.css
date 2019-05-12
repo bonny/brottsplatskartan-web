@@ -1572,6 +1572,10 @@ input[type="url"],
     padding-bottom: var(--default-margin);
 }
 
+.widget__listItems--mostViewed .widget__listItem__title {
+    font-size: var(--font-size-medium);
+}
+
 .widget__listItem:first-of-type {
     border-top: none;
     padding-top: 0;
