@@ -43,10 +43,11 @@ Sidmall för sidan med de mest lästa händelserna
             @endif
         </h1>
 
-        <p>De mest lästa Polishändelserna just nu och senaste dagarna - de mest aktuella saker hittar du här.</p>
+        <p>De mest lästa Polishändelserna just nu och senaste dagarna - de mest aktuella sakerna hittar du här.</p>
 
         <h2>Händelser som trendar nu</h2>
         <p>Dessa händelser har inom kort tid fått många visningar.</p>
+        
         @if($mestLastaNyligen['events'])
             <ul class="widget__listItems widget__listItems--mostViewed">
                 @foreach($mestLastaNyligen['events'] as $oneMostViewed)
@@ -72,7 +73,6 @@ Sidmall för sidan med de mest lästa händelserna
             </ul>
 
         @endforeach 
-
 
     </div>
 
