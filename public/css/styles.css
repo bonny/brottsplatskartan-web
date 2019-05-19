@@ -444,6 +444,7 @@ blockquote {
 }
 
 .Event {
+    overflow: hidden;
     margin-top: 2rem;
     margin-bottom: 2rem;
     background: white;
