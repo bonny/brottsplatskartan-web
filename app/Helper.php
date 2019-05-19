@@ -977,7 +977,7 @@ class Helper
             ->subDays(1)
             ->format('Y-m-d');
 
-        $cacheKey = "getMostViewedEvents:D{$now}:L{$limit}";
+        $cacheKey = "getMostViewedEvents:V2:D{$now}:L{$limit}";
         $cacheTTL = 27 * 60;
 
         $mostViewed = Cache::remember($cacheKey, $cacheTTL, function () use (
@@ -995,7 +995,7 @@ class Helper
                 ->groupBy('createdYMD', 'crime_event_id')
                 ->orderBy('views', 'desc')
                 ->limit($limit)
-                ->with('CrimeEvent')
+                ->with('CrimeEvent', 'CrimeEvent.Locations')
                 ->get();
 
             return $mostViewed;
@@ -1014,8 +1014,8 @@ class Helper
      */
     public static function getMostViewedEventsRecently($minutes = 10, $limit = 10)
     {
-        $cacheKey = "getMostViewedEventsRecently:v3:M{$minutes}:L{$limit}";
-        $cacheTTL = 1 * 60;
+        $cacheKey = "getMostViewedEventsRecently:v10:M{$minutes}:L{$limit}";
+        $cacheTTL = 2 * 60;
 
         $mostViewed = Cache::remember($cacheKey, $cacheTTL, function () use (
             $minutes,
@@ -1030,8 +1030,13 @@ class Helper
                 ->groupBy('createdYMD', 'crime_event_id')
                 ->orderBy('views', 'desc')
                 ->limit($limit)
-                ->with('CrimeEvent')
+                ->with('crimeevent', 'crimeevent.locations')
                 ->get();
+
+            // Can't get eager loading to work all way...
+            $mostViewed->load('crimeEvent.locations');
+            // dd('$mostViewed', $mostViewed);
+            // $mostViewed->get(0)->crimeEvent
 
             return $mostViewed;
         });
