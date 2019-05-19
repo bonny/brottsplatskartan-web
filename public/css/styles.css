@@ -1612,6 +1612,7 @@ input[type="url"],
     font-weight: normal;
     margin-top: 0;
     margin-bottom: 0;
+    hyphens: auto;
 }
 
 .widget__listItem__text {
