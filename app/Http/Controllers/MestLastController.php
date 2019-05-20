@@ -26,10 +26,10 @@ class MestLastController extends Controller
         // Kort cachetid, typ en minut så alltid fräsch lista med senaste händelserna.
         $cacheTTL = 1 * 60;
 
-        $renderedView = Cache::remember($cacheKey, $cacheTTL, function () use (
-            $datesBack,
-            $numEventsToGet
-        ) {
+        // $renderedView = Cache::remember($cacheKey, $cacheTTL, function () use (
+        //     $datesBack,
+        //     $numEventsToGet
+        // ) {
             $days = [];
             for ($i = 0; $i < $datesBack; $i++) {
                 $date = Carbon::now()->subDays($i);
@@ -65,8 +65,10 @@ class MestLastController extends Controller
                 'mestLasta' => $days
             ]);
 
-            return $view->render();
-        });
+        //     return $view->render();
+        // });
+
+        $renderedView = $view->render();
 
         return $renderedView;
     }
