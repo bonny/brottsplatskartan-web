@@ -175,6 +175,7 @@ if $single is set then larger image
                                 <a
                                     class="Event__mediaLinkTitle external"
                                     href="{{ $newsarticle->url }}"
+                                    target="_blank"
                                     data-vars-outbound-link="{{ $newsarticle->url }}"
                                     >{{ $newsarticle->title }}</a>
                             </h3>
