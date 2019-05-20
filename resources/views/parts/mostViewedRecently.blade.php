@@ -1,5 +1,5 @@
 <section class="MostViewedRecently">
-        <h2 class="MostViewedRecently__title">Just nu:</h2>
+        <h2 class="MostViewedRecently__title">Mest läst:</h2>
 
         <amp-list
             layout="responsive"
