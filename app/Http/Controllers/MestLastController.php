@@ -55,6 +55,7 @@ class MestLastController extends Controller
             });
 
             $view = view('mestLasta', [
+                'canonicalLink' => route('mostRead'),
                 'mestLastaNyligen' => [
                     'title' => 'Mest lästa nyligen',
                     'events' => Helper::getMostViewedEventsRecently(
