@@ -1,5 +1,7 @@
 <section class="widget widget--mostViewed">
-    <h2 class="widget__title">Mest läst av andra</h2>
+    <h2 class="widget__title">
+        <a title="Visa de mest lästa polishändelserna" href="{{route('mostRead')}}">Mest läst av andra</a>
+    </h2>
     <amp-carousel width="auto" height="175" layout="fixed-height" type="carousel">
         @foreach ($mostViewed as $view)
             <article data-views="{{$view->views}}" class="MostViewed__item">
