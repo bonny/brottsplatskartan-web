@@ -1303,6 +1303,10 @@ class Helper
             return false;
         }
 
+        if (request()->get('utm_source') === 'coyards') {
+            return false;
+        }
+
         $imagesBasePath = '/img/annonser/verisure/';
         $ad = \App\Helper::getVerisureAds()->firstWhere('name', $adName);
 
@@ -1337,9 +1341,9 @@ class Helper
 
             $carry .= sprintf(
                 '
-                <a 
-                    href="%5$s" 
-                    target="_blank" 
+                <a
+                    href="%5$s"
+                    target="_blank"
                     class="VersiureAd__link"
                     data-vars-outbound-link="%5$s"
                     >
