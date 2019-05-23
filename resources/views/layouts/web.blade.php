@@ -123,7 +123,20 @@ Layout template for web
 </head>
 <body class="@if ($shared_notification_bar_contents) has-notification-bar @endif">
 
-    <amp-auto-ads type="adsense" data-ad-client="ca-pub-1689239266452655"></amp-auto-ads>
+    <?php
+    // Visa inte annonser för besökare som kommer via Coyards.
+    // utm_source=coyards
+    $showAds = true;
+    if (request()->get('utm_source') === 'coyards') {
+        $showAds = false;
+    }
+
+    if ($showAds) {
+        ?>
+        <amp-auto-ads type="adsense" data-ad-client="ca-pub-1689239266452655"></amp-auto-ads>
+        <?php
+    }
+    ?>
 
     <amp-animation id="shrinkAnim" layout="nodisplay">
       <script type="application/json">
