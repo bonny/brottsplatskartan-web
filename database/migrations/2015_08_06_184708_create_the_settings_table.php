@@ -12,11 +12,12 @@ class CreateTheSettingsTable extends Migration
      */
     public function up()
     {
-        Schema::create('settings', function (Blueprint $table) {
-            $table->string('key');
-            $table->string('value')->nullable();
-            $table->string('locale')->nullable();
-        });
+        // This schema may already be called due to composer package installaed
+        // Schema::create('settings', function (Blueprint $table) {
+        //     $table->string('key');
+        //     $table->string('value')->nullable();
+        //     $table->string('locale')->nullable();
+        // });
     }
 
     /**
@@ -26,6 +27,6 @@ class CreateTheSettingsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('settings');
+        // Schema::drop('settings');
     }
 }

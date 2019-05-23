@@ -444,6 +444,7 @@ blockquote {
 }
 
 .Event {
+    overflow: hidden;
     margin-top: 2rem;
     margin-bottom: 2rem;
     background: white;
@@ -1543,6 +1544,10 @@ input[type="url"],
     margin-bottom: var(--default-margin);
     box-shadow: 0 1px 2px rgba(0,0,0,0.2);
     border-top: 2px solid var(--color-yellow);
+    /* Google ads overflow whole page from widget placements sometimes...
+       Prevent this using hidden.
+     */
+    overflow-x: hidden;
 }
 
 .widget__title {
@@ -1566,6 +1571,10 @@ input[type="url"],
     /* margin-top: var(--default-margin); */
     padding-top: var(--default-margin);
     padding-bottom: var(--default-margin);
+}
+
+.widget__listItems--mostViewed .widget__listItem__title {
+    font-size: var(--font-size-medium);
 }
 
 .widget__listItem:first-of-type {
@@ -1603,6 +1612,7 @@ input[type="url"],
     font-weight: normal;
     margin-top: 0;
     margin-bottom: 0;
+    hyphens: auto;
 }
 
 .widget__listItem__text {

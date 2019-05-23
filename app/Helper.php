@@ -154,53 +154,59 @@ class Helper
             // DB::enableQueryLog();
 
             $cacheKey = "lan-stats-today-" . $item->administrative_area_level_1;
-            $numEventsToday = Cache::remember($cacheKey, 10 * 60, function () use (
-                $item
-            ) {
-                $numEventsToday = DB::table('crime_events')
-                    ->where(
-                        'administrative_area_level_1',
-                        "=",
-                        $item->administrative_area_level_1
-                    )
-                    ->where('created_at', '>', Carbon::now()->subDays(1))
-                    ->count();
+            $numEventsToday = Cache::remember(
+                $cacheKey,
+                10 * 60,
+                function () use ($item) {
+                    $numEventsToday = DB::table('crime_events')
+                        ->where(
+                            'administrative_area_level_1',
+                            "=",
+                            $item->administrative_area_level_1
+                        )
+                        ->where('created_at', '>', Carbon::now()->subDays(1))
+                        ->count();
 
-                return $numEventsToday;
-            });
+                    return $numEventsToday;
+                }
+            );
 
             $cacheKey = "lan-stats-7days-" . $item->administrative_area_level_1;
-            $numEvents7Days = Cache::remember($cacheKey, 30 * 60, function () use (
-                $item
-            ) {
-                $numEvents7Days = DB::table('crime_events')
-                    ->where(
-                        'administrative_area_level_1',
-                        "=",
-                        $item->administrative_area_level_1
-                    )
-                    ->where('created_at', '>', Carbon::now()->subDays(7))
-                    ->count();
+            $numEvents7Days = Cache::remember(
+                $cacheKey,
+                30 * 60,
+                function () use ($item) {
+                    $numEvents7Days = DB::table('crime_events')
+                        ->where(
+                            'administrative_area_level_1',
+                            "=",
+                            $item->administrative_area_level_1
+                        )
+                        ->where('created_at', '>', Carbon::now()->subDays(7))
+                        ->count();
 
-                return $numEvents7Days;
-            });
+                    return $numEvents7Days;
+                }
+            );
 
             $cacheKey =
                 "lan-stats-30days-" . $item->administrative_area_level_1;
-            $numEvents30Days = Cache::remember($cacheKey, 70 * 60, function () use (
-                $item
-            ) {
-                $numEvents30Days = DB::table('crime_events')
-                    ->where(
-                        'administrative_area_level_1',
-                        "=",
-                        $item->administrative_area_level_1
-                    )
-                    ->where('created_at', '>', Carbon::now()->subDays(30))
-                    ->count();
+            $numEvents30Days = Cache::remember(
+                $cacheKey,
+                70 * 60,
+                function () use ($item) {
+                    $numEvents30Days = DB::table('crime_events')
+                        ->where(
+                            'administrative_area_level_1',
+                            "=",
+                            $item->administrative_area_level_1
+                        )
+                        ->where('created_at', '>', Carbon::now()->subDays(30))
+                        ->count();
 
-                return $numEvents30Days;
-            });
+                    return $numEvents30Days;
+                }
+            );
 
             $item->numEvents = [
                 "today" => $numEventsToday,
@@ -253,7 +259,7 @@ class Helper
     public static function toAscii($str, $replace = array(), $delimiter = '-')
     {
         if (!empty($replace)) {
-            $str = str_replace((array)$replace, ' ', $str);
+            $str = str_replace((array) $replace, ' ', $str);
         }
 
         // Switch locale or iconv will convert "ä" to "ae".
@@ -961,8 +967,10 @@ class Helper
      * @param  integer $limit [description]
      * @return Collection         [description]
      */
-    public static function getMostViewedEvents($date = null, $limit = 10)
-    {
+    public static function getMostViewedEvents(
+        Carbon $date = null,
+        int $limit = 10
+    ) {
         if (!$date) {
             $date = Carbon::now();
         }
@@ -977,7 +985,7 @@ class Helper
             ->subDays(1)
             ->format('Y-m-d');
 
-        $cacheKey = "getMostViewedEvents:D{$now}:L{$limit}";
+        $cacheKey = "getMostViewedEvents:V1:D{$now}:L{$limit}";
         $cacheTTL = 27 * 60;
 
         $mostViewed = Cache::remember($cacheKey, $cacheTTL, function () use (
@@ -985,6 +993,10 @@ class Helper
             $yesterday,
             $limit
         ) {
+            /**
+             * explain before fix: no key, 100000 rows
+             * explain after adding index to table
+             */
             $mostViewed = CrimeView::select(
                 DB::raw('count(*) as views'),
                 'crime_event_id',
@@ -995,7 +1007,7 @@ class Helper
                 ->groupBy('createdYMD', 'crime_event_id')
                 ->orderBy('views', 'desc')
                 ->limit($limit)
-                ->with('CrimeEvent')
+                ->with('CrimeEvent', 'CrimeEvent.Locations')
                 ->get();
 
             return $mostViewed;
@@ -1012,10 +1024,12 @@ class Helper
      * @param  int $limit Max antal händelser att hämta.
      * @return Collection         [description]
      */
-    public static function getMostViewedEventsRecently($minutes = 10, $limit = 10)
-    {
-        $cacheKey = "getMostViewedEventsRecently:v3:M{$minutes}:L{$limit}";
-        $cacheTTL = 1 * 60;
+    public static function getMostViewedEventsRecently(
+        $minutes = 10,
+        $limit = 10
+    ) {
+        $cacheKey = "getMostViewedEventsRecently:v1:M{$minutes}:L{$limit}";
+        $cacheTTL = 2 * 60;
 
         $mostViewed = Cache::remember($cacheKey, $cacheTTL, function () use (
             $minutes,
@@ -1026,12 +1040,20 @@ class Helper
                 'crime_event_id',
                 DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d") AS createdYMD')
             )
-                ->whereRaw('created_at >= DATE_ADD(NOW(), INTERVAL -? MINUTE)', [$minutes])
+                ->whereRaw(
+                    'created_at >= DATE_ADD(NOW(), INTERVAL -? MINUTE)',
+                    [$minutes]
+                )
                 ->groupBy('createdYMD', 'crime_event_id')
                 ->orderBy('views', 'desc')
                 ->limit($limit)
-                ->with('CrimeEvent')
+                ->with('crimeevent', 'crimeevent.locations')
                 ->get();
+
+            // Can't get eager loading to work all way...
+            $mostViewed->load('crimeEvent.locations');
+            // dd('$mostViewed', $mostViewed);
+            // $mostViewed->get(0)->crimeEvent
 
             return $mostViewed;
         });
@@ -1072,37 +1094,37 @@ class Helper
         $undersidor = [
             'start' => [
                 'title' =>
-                'Inbrott - Fakta & information om inbrott i hus & lägenhet',
+                    'Inbrott - Fakta & information om inbrott i hus & lägenhet',
                 'pageTitle' => 'Inbrott',
                 'pageSubtitle' =>
-                'Fakta & information om inbrott i hus & lägenhet',
+                    'Fakta & information om inbrott i hus & lägenhet',
                 'url' => '/inbrott/'
             ],
             'fakta' => [
                 'title' => "Fakta om inbrott",
                 'pageTitle' => "Fakta om inbrott",
                 'pageSubtitle' =>
-                "Över 60 bostadsinbrott sker varje dag. (Men hur många klaras upp?)"
+                    "Över 60 bostadsinbrott sker varje dag. (Men hur många klaras upp?)"
             ],
             'drabbad' => [
                 'title' =>
-                'Drabbad av inbrott - det här ska du göra om du haft inbrott',
+                    'Drabbad av inbrott - det här ska du göra om du haft inbrott',
                 'pageTitle' => 'Drabbad av inbrott',
                 'pageSubtitle' =>
-                'Det här ska du göra om du haft inbrott i din villa eller lägenhet.'
+                    'Det här ska du göra om du haft inbrott i din villa eller lägenhet.'
             ],
             'skydda-dig' => [
                 'title' =>
-                'Skydda dig mot inbrott - skydda dig & ditt hem från inbrott med hjälp av tips & larm',
+                    'Skydda dig mot inbrott - skydda dig & ditt hem från inbrott med hjälp av tips & larm',
                 'pageTitle' => 'Skydda dig mot inbrott',
                 'pageSubtitle' =>
-                'Skydda ditt hem från inbrott med hjälp av tips & larm.'
+                    'Skydda ditt hem från inbrott med hjälp av tips & larm.'
             ],
             'grannsamverkan' => [
                 'title' => 'Grannsamverkan mot brott',
                 'pageTitle' => 'Grannsamverkan mot brott',
                 'pageSubtitle' =>
-                'Förebygg kriminalitet såsom inbrott genom att gå samman med grannarna i ditt närområde. Ett effektivt sätt att minska brottrisken i ditt område!'
+                    'Förebygg kriminalitet såsom inbrott genom att gå samman med grannarna i ditt närområde. Ett effektivt sätt att minska brottrisken i ditt område!'
             ],
             'senaste-inbrotten' => [
                 'title' => 'Senaste inbrotten',
@@ -1132,13 +1154,12 @@ class Helper
         $undersidor = [
             'start' => [
                 'title' =>
-                'Senaste nytt om bränder och brandrealterade händelser från Polisen',
+                    'Senaste nytt om bränder och brandrealterade händelser från Polisen',
                 'pageTitle' => 'Brand',
                 'pageSubtitle' =>
-                'Senaste nytt om bränder och brandrealterade händelser från Polisen',
+                    'Senaste nytt om bränder och brandrealterade händelser från Polisen',
                 'url' => '/brand/'
-            ],
-
+            ]
         ];
 
         array_walk($undersidor, function (&$val, $key) {
@@ -1162,102 +1183,107 @@ class Helper
         return collect([
             [
                 'name' => 'brand-larmcentral',
-                'link' => 'https://www.verisure.se/f/brottsplatskartan/brand-larmcentral.html?utm_source=brottsplatskartan&utm_medium=banner&utm_campaign=brottsplatskartan-brand-larmcentral',
+                'link' =>
+                    'https://www.verisure.se/f/brottsplatskartan/brand-larmcentral.html?utm_source=brottsplatskartan&utm_medium=banner&utm_campaign=brottsplatskartan-brand-larmcentral',
                 'images' => [
                     [
                         'image' => 'brand-larmcentral-336x280.png',
                         'width' => 336,
-                        'height' => 280,
+                        'height' => 280
                     ],
                     [
                         'image' => 'brand-larmcentral-970x250.png',
                         'width' => 970,
-                        'height' => 250,
-                    ],
+                        'height' => 250
+                    ]
                 ]
             ],
             [
                 'name' => 'brand-uppkopplat',
-                'link' => 'https://www.verisure.se/landingpages-blocks/brottsplatskartan-brandskydd.html?utm_source=brottsplatskartan&utm_medium=banner&utm_campaign=brottsplatskartan-brandskydd',
+                'link' =>
+                    'https://www.verisure.se/landingpages-blocks/brottsplatskartan-brandskydd.html?utm_source=brottsplatskartan&utm_medium=banner&utm_campaign=brottsplatskartan-brandskydd',
                 'images' => [
                     [
                         'image' => 'brand-uppkopplat-336x280.png',
                         'width' => 336,
-                        'height' => 280,
+                        'height' => 280
                     ],
                     [
                         'image' => 'brand-uppkopplat-477x250.png',
                         'width' => 477,
-                        'height' => 250,
+                        'height' => 250
                     ],
                     [
                         'image' => 'brand-uppkopplat-970x250.png',
                         'width' => 970,
-                        'height' => 250,
-                    ],
+                        'height' => 250
+                    ]
                 ]
             ],
             [
                 'name' => 'inbrott-larmpaket',
-                'link' => 'https://www.verisure.se/f/brottsplatskartan/inbrott-larmpaket.html?utm_source=brottsplatskartan&utm_medium=banner&utm_campaign=brottsplatskartan-inbrott-larmpaket',
+                'link' =>
+                    'https://www.verisure.se/f/brottsplatskartan/inbrott-larmpaket.html?utm_source=brottsplatskartan&utm_medium=banner&utm_campaign=brottsplatskartan-inbrott-larmpaket',
                 'images' => [
                     [
                         'image' => 'inbrott-larmpaket-336x280.png',
                         'width' => 336,
-                        'height' => 280,
+                        'height' => 280
                     ],
                     [
                         'image' => 'inbrott-larmpaket-477x250.png',
                         'width' => 477,
-                        'height' => 250,
+                        'height' => 250
                     ],
                     [
                         'image' => 'inbrott-larmpaket-970x250.png',
                         'width' => 970,
-                        'height' => 250,
-                    ],
+                        'height' => 250
+                    ]
                 ]
             ],
             [
                 'name' => 'inbrott-tjuv',
-                'link' => 'https://www.verisure.se/f/brottsplatskartan/inbrott-tjuv.html?utm_source=brottsplatskartan&utm_medium=banner&utm_campaign=brottsplatskartan-inbrott-tjuv',
+                'link' =>
+                    'https://www.verisure.se/f/brottsplatskartan/inbrott-tjuv.html?utm_source=brottsplatskartan&utm_medium=banner&utm_campaign=brottsplatskartan-inbrott-tjuv',
                 'images' => [
                     [
                         'image' => 'inbrott-tjuv-336x280.png',
                         'width' => 336,
-                        'height' => 280,
+                        'height' => 280
                     ],
                     [
                         'image' => 'inbrott-tjuv-477x250.png',
                         'width' => 477,
-                        'height' => 250,
+                        'height' => 250
                     ],
                     [
                         'image' => 'inbrott-tjuv-970x250.png',
                         'width' => 970,
-                        'height' => 250,
-                    ],
+                        'height' => 250
+                    ]
                 ]
             ],
             [
                 'name' => 'inbrott-vibrationsdetektor',
-                'link' => 'https://www.verisure.se/landingpages-blocks/brottsplatskartan-inbrott.html?utm_source=brottsplatskartan&utm_medium=banner&utm_campaign=brottsplatskartan-inbrott',
+                'link' =>
+                    'https://www.verisure.se/landingpages-blocks/brottsplatskartan-inbrott.html?utm_source=brottsplatskartan&utm_medium=banner&utm_campaign=brottsplatskartan-inbrott',
                 'images' => [
                     [
                         'image' => 'inbrott-vibrationsdetektor-336x280.png',
                         'width' => 336,
-                        'height' => 280,
+                        'height' => 280
                     ],
                     [
                         'image' => 'inbrott-vibrationsdetektor-477x250.png',
                         'width' => 477,
-                        'height' => 250,
+                        'height' => 250
                     ],
                     [
                         'image' => 'inbrott-vibrationsdetektor-970x250.png',
                         'width' => 970,
-                        'height' => 250,
-                    ],
+                        'height' => 250
+                    ]
                 ]
             ]
         ]);
@@ -1284,8 +1310,15 @@ class Helper
             return false;
         }
 
-        $ampImagesMarkup = collect($ad['images'])->reduce(function ($carry, $imageData) use ($ad, $imagesBasePath) {
-            ['image' => $image, 'width' => $width, 'height' => $height] = $imageData;
+        $ampImagesMarkup = collect($ad['images'])->reduce(function (
+            $carry,
+            $imageData
+        ) use ($ad, $imagesBasePath) {
+            [
+                'image' => $image,
+                'width' => $width,
+                'height' => $height
+            ] = $imageData;
             $imageSrc = $imagesBasePath . $image;
 
             $media = '';
@@ -1302,19 +1335,23 @@ class Helper
                     break;
             }
 
-
             $carry .= sprintf(
                 '
-                <a href="%5$s" target="_blank">
-                    <amp-img
-                        media="%4$s"
-                        src="%1$s"
-                        width="%2$s"
-                        height="%3$s"
-                        layout="responsive">
-                    </amp-img>
-                </a>'
-                ,
+                <a 
+                    href="%5$s" 
+                    target="_blank" 
+                    class="VersiureAd__link"
+                    data-vars-outbound-link="%5$s"
+                    >
+                        <amp-img
+                            class="VersiureAd__image"
+                            media="%4$s"
+                            src="%1$s"
+                            width="%2$s"
+                            height="%3$s"
+                            layout="responsive">
+                        </amp-img>
+                </a>',
                 $imageSrc,
                 $width,
                 $height,
