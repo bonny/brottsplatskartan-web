@@ -67,6 +67,7 @@ Template för ett event/händelse
     @endif
 
     @include('parts.follow-us')
+    @include('parts.widget-facebook-page')
     @include('parts.lan-and-cities')
     @include('parts.widget-blog-entries')
 
