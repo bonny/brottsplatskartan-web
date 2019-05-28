@@ -1063,6 +1063,9 @@ class CrimeEvent extends Model implements Feedable
         $locationLat = $this->location_lat;
         $locationLng = $this->location_lng;
 
+        $title = json_encode($title);
+        $description = json_encode($description);
+
         $str = <<<SQL
             <script type="application/ld+json">
                 {
@@ -1072,7 +1075,7 @@ class CrimeEvent extends Model implements Feedable
                     "@type": "WebPage",
                     "@id": "{$permalink}"
                   },
-                  "headline": "{$title}",
+                  "headline": {$title},
                   "image": [
                     "$image"
                    ],
@@ -1090,7 +1093,7 @@ class CrimeEvent extends Model implements Feedable
                       "url": "https://brottsplatskartan.se/img/brottsplatskartan-logotyp.png"
                     }
                   },
-                  "description": "$description"
+                  "description": $description
                 }
             </script>
 SQL;
