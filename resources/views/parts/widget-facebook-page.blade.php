@@ -3,6 +3,10 @@ $title = "Följ oss på Facebook";
 $url = 'https://www.facebook.com/Brottsplatskartan/';
 ?>
 
+@push('scripts')
+    <script async custom-element="amp-facebook-page" src="https://cdn.ampproject.org/v0/amp-facebook-page-0.1.js"></script>
+@endpush
+
 <section class="widget widget--blogentries">
 
     <h2 class="widget__title">{{$title}}</h2>
