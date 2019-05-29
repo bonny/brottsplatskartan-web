@@ -130,7 +130,8 @@ blockquote {
             justify-content: space-between;
 }
 
-.MainContent {
+.MainContent,
+.MainSidebar {
     width: 100%;
 }
 
