@@ -1547,8 +1547,10 @@ input[type="url"],
     border-top: 2px solid var(--color-yellow);
     /* Google ads overflow whole page from widget placements sometimes...
        Prevent this using hidden.
+       Removed again, because ads disappeared
      */
-    overflow-x: hidden;
+    /* overflow-x: hidden; */
+    width: 100%;
 }
 
 .widget__title {
