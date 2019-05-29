@@ -25,7 +25,7 @@ Template för ett event/händelse
     @if ($event->isBrand() && !$event->isInbrott())
         <div class="u-w100">
             @php
-            echo \App\helper::getVerisureAdMarkup('brand-uppkopplat');
+            echo \App\helper::getVerisureAdMarkup('brand');
             @endphp
         </div>
     @endif
@@ -34,7 +34,7 @@ Template för ett event/händelse
     @if ($event->isInbrott())
         <div class="u-w100">
             @php
-            echo \App\helper::getVerisureAdMarkup('inbrott-tjuv');
+            echo \App\helper::getVerisureAdMarkup('inbrott');
             @endphp
         </div>
     @endif

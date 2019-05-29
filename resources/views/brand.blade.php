@@ -35,7 +35,7 @@ Template för /brand
             rökutveckling.</p>
 
         @php
-        echo \App\helper::getVerisureAdMarkup('brand-uppkopplat');
+        echo \App\helper::getVerisureAdMarkup('brand');
         @endphp
 
         <ul class="widget__listItems">

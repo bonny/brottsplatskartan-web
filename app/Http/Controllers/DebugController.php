@@ -111,17 +111,20 @@ class DebugController extends Controller
 
         } elseif ($what == 'verisure') {
             // Lista alla annonser.
+            // https://brottsplatskartan-web.test/debug/verisure
             $ads = \App\Helper::getVerisureAds();
             $imagesBasePath = '/img/annonser/verisure/';
 
             echo '<h2>Alla annonser i amp-img-markup</h2>';
             echo '<pre>';
             echo htmlspecialchars(
-                \App\helper::getVerisureAdMarkup('brand-uppkopplat')
-                    . \App\helper::getVerisureAdMarkup('brand-larmcentral')
-                    . \App\helper::getVerisureAdMarkup('inbrott-larmpaket')
-                    . \App\helper::getVerisureAdMarkup('inbrott-tjuv')
-                    . \App\helper::getVerisureAdMarkup('inbrott-vibrationsdetektor')
+                \App\helper::getVerisureAdMarkup('brand')
+                . \App\helper::getVerisureAdMarkup('inbrott')
+                #\App\helper::getVerisureAdMarkup('brand-uppkopplat')
+                #    . \App\helper::getVerisureAdMarkup('brand-larmcentral')
+                #    . \App\helper::getVerisureAdMarkup('inbrott-larmpaket')
+                #    . \App\helper::getVerisureAdMarkup('inbrott-tjuv')
+                #    . \App\helper::getVerisureAdMarkup('inbrott-vibrationsdetektor')
             );
             echo '</pre>';
 

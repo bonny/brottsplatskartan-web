@@ -1182,110 +1182,154 @@ class Helper
     {
         return collect([
             [
-                'name' => 'brand-larmcentral',
+                'name' => 'brand',
                 'link' =>
-                    'https://www.verisure.se/f/brottsplatskartan/brand-larmcentral.html?utm_source=brottsplatskartan&utm_medium=banner&utm_campaign=brottsplatskartan-brand-larmcentral',
+                    'https://www.verisure.se/f/brottsplatskartan/brand-2000.html?utm_source=brottsplatskartan&utm_medium=banner&utm_campaign=brottsplatskartan-brand-2000',
                 'images' => [
                     [
-                        'image' => 'brand-larmcentral-336x280.png',
+                        'image' => '2019-05-29-BRAND-336x280.png',
                         'width' => 336,
                         'height' => 280
                     ],
                     [
-                        'image' => 'brand-larmcentral-970x250.png',
+                        'image' => '2019-05-29-BRAND-477x250.png',
+                        'width' => 477,
+                        'height' => 250
+                    ],
+                    [
+                        'image' => '2019-05-29-BRAND-970x250.png',
                         'width' => 970,
                         'height' => 250
                     ]
                 ]
             ],
             [
-                'name' => 'brand-uppkopplat',
+                'name' => 'inbrott',
                 'link' =>
-                    'https://www.verisure.se/landingpages-blocks/brottsplatskartan-brandskydd.html?utm_source=brottsplatskartan&utm_medium=banner&utm_campaign=brottsplatskartan-brandskydd',
+                    'https://www.verisure.se/f/brottsplatskartan/inbrott-2000.html?utm_source=brottsplatskartan&utm_medium=banner&utm_campaign=brottsplatskartan-inbrott-2000',
                 'images' => [
                     [
-                        'image' => 'brand-uppkopplat-336x280.png',
+                        'image' => '2019-05-29-INBROTT-336x280.png',                        
                         'width' => 336,
                         'height' => 280
                     ],
                     [
-                        'image' => 'brand-uppkopplat-477x250.png',
+                        'image' => '2019-05-29-INBROTT_477x250.png',
                         'width' => 477,
                         'height' => 250
                     ],
                     [
-                        'image' => 'brand-uppkopplat-970x250.png',
+                        'image' => '2019-05-29-INBROTT_970x250.png',
                         'width' => 970,
                         'height' => 250
                     ]
                 ]
             ],
-            [
-                'name' => 'inbrott-larmpaket',
-                'link' =>
-                    'https://www.verisure.se/f/brottsplatskartan/inbrott-larmpaket.html?utm_source=brottsplatskartan&utm_medium=banner&utm_campaign=brottsplatskartan-inbrott-larmpaket',
-                'images' => [
-                    [
-                        'image' => 'inbrott-larmpaket-336x280.png',
-                        'width' => 336,
-                        'height' => 280
-                    ],
-                    [
-                        'image' => 'inbrott-larmpaket-477x250.png',
-                        'width' => 477,
-                        'height' => 250
-                    ],
-                    [
-                        'image' => 'inbrott-larmpaket-970x250.png',
-                        'width' => 970,
-                        'height' => 250
-                    ]
-                ]
-            ],
-            [
-                'name' => 'inbrott-tjuv',
-                'link' =>
-                    'https://www.verisure.se/f/brottsplatskartan/inbrott-tjuv.html?utm_source=brottsplatskartan&utm_medium=banner&utm_campaign=brottsplatskartan-inbrott-tjuv',
-                'images' => [
-                    [
-                        'image' => 'inbrott-tjuv-336x280.png',
-                        'width' => 336,
-                        'height' => 280
-                    ],
-                    [
-                        'image' => 'inbrott-tjuv-477x250.png',
-                        'width' => 477,
-                        'height' => 250
-                    ],
-                    [
-                        'image' => 'inbrott-tjuv-970x250.png',
-                        'width' => 970,
-                        'height' => 250
-                    ]
-                ]
-            ],
-            [
-                'name' => 'inbrott-vibrationsdetektor',
-                'link' =>
-                    'https://www.verisure.se/landingpages-blocks/brottsplatskartan-inbrott.html?utm_source=brottsplatskartan&utm_medium=banner&utm_campaign=brottsplatskartan-inbrott',
-                'images' => [
-                    [
-                        'image' => 'inbrott-vibrationsdetektor-336x280.png',
-                        'width' => 336,
-                        'height' => 280
-                    ],
-                    [
-                        'image' => 'inbrott-vibrationsdetektor-477x250.png',
-                        'width' => 477,
-                        'height' => 250
-                    ],
-                    [
-                        'image' => 'inbrott-vibrationsdetektor-970x250.png',
-                        'width' => 970,
-                        'height' => 250
-                    ]
-                ]
-            ]
+            // [
+            //     'name' => 'brand-larmcentral',
+            //     'link' =>
+            //         'https://www.verisure.se/f/brottsplatskartan/brand-larmcentral.html?utm_source=brottsplatskartan&utm_medium=banner&utm_campaign=brottsplatskartan-brand-larmcentral',
+            //     'images' => [
+            //         [
+            //             'image' => 'brand-larmcentral-336x280.png',
+            //             'width' => 336,
+            //             'height' => 280
+            //         ],
+            //         [
+            //             'image' => 'brand-larmcentral-970x250.png',
+            //             'width' => 970,
+            //             'height' => 250
+            //         ]
+            //     ]
+            // ],
+            // [
+            //     'name' => 'brand-uppkopplat',
+            //     'link' =>
+            //         'https://www.verisure.se/landingpages-blocks/brottsplatskartan-brandskydd.html?utm_source=brottsplatskartan&utm_medium=banner&utm_campaign=brottsplatskartan-brandskydd',
+            //     'images' => [
+            //         [
+            //             'image' => 'brand-uppkopplat-336x280.png',
+            //             'width' => 336,
+            //             'height' => 280
+            //         ],
+            //         [
+            //             'image' => 'brand-uppkopplat-477x250.png',
+            //             'width' => 477,
+            //             'height' => 250
+            //         ],
+            //         [
+            //             'image' => 'brand-uppkopplat-970x250.png',
+            //             'width' => 970,
+            //             'height' => 250
+            //         ]
+            //     ]
+            // ],
+            // [
+            //     'name' => 'inbrott-larmpaket',
+            //     'link' =>
+            //         'https://www.verisure.se/f/brottsplatskartan/inbrott-larmpaket.html?utm_source=brottsplatskartan&utm_medium=banner&utm_campaign=brottsplatskartan-inbrott-larmpaket',
+            //     'images' => [
+            //         [
+            //             'image' => 'inbrott-larmpaket-336x280.png',
+            //             'width' => 336,
+            //             'height' => 280
+            //         ],
+            //         [
+            //             'image' => 'inbrott-larmpaket-477x250.png',
+            //             'width' => 477,
+            //             'height' => 250
+            //         ],
+            //         [
+            //             'image' => 'inbrott-larmpaket-970x250.png',
+            //             'width' => 970,
+            //             'height' => 250
+            //         ]
+            //     ]
+            // ],
+            // [
+            //     'name' => 'inbrott-tjuv',
+            //     'link' =>
+            //         'https://www.verisure.se/f/brottsplatskartan/inbrott-tjuv.html?utm_source=brottsplatskartan&utm_medium=banner&utm_campaign=brottsplatskartan-inbrott-tjuv',
+            //     'images' => [
+            //         [
+            //             'image' => 'inbrott-tjuv-336x280.png',
+            //             'width' => 336,
+            //             'height' => 280
+            //         ],
+            //         [
+            //             'image' => 'inbrott-tjuv-477x250.png',
+            //             'width' => 477,
+            //             'height' => 250
+            //         ],
+            //         [
+            //             'image' => 'inbrott-tjuv-970x250.png',
+            //             'width' => 970,
+            //             'height' => 250
+            //         ]
+            //     ]
+            // ],
+            // [
+            //     'name' => 'inbrott-vibrationsdetektor',
+            //     'link' =>
+            //         'https://www.verisure.se/landingpages-blocks/brottsplatskartan-inbrott.html?utm_source=brottsplatskartan&utm_medium=banner&utm_campaign=brottsplatskartan-inbrott',
+            //     'images' => [
+            //         [
+            //             'image' => 'inbrott-vibrationsdetektor-336x280.png',
+            //             'width' => 336,
+            //             'height' => 280
+            //         ],
+            //         [
+            //             'image' => 'inbrott-vibrationsdetektor-477x250.png',
+            //             'width' => 477,
+            //             'height' => 250
+            //         ],
+            //         [
+            //             'image' => 'inbrott-vibrationsdetektor-970x250.png',
+            //             'width' => 970,
+            //             'height' => 250
+            //         ]
+            //     ]
+            // ]
         ]);
     }
 

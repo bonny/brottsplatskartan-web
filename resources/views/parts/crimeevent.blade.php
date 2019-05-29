@@ -195,7 +195,7 @@ if $single is set then larger image
             </div>
 
             @php
-            echo \App\helper::getVerisureAdMarkup('inbrott-larmpaket');
+            echo \App\helper::getVerisureAdMarkup('inbrott');
             @endphp
 
         @endif
@@ -209,7 +209,7 @@ if $single is set then larger image
             {{-- Visa annons för brand om denna händelse bara är brand --}}
             @if (!$event->isInbrott())
                 @php
-                echo \App\helper::getVerisureAdMarkup('brand-larmcentral');
+                echo \App\helper::getVerisureAdMarkup('brand');
                 @endphp
             @endif
         @endif

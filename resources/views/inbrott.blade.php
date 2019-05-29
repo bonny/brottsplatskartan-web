@@ -46,7 +46,7 @@ Template för /inbrott
         @endisset
 
         @php
-        echo \App\helper::getVerisureAdMarkup('inbrott-vibrationsdetektor');
+        echo \App\helper::getVerisureAdMarkup('inbrott');
         @endphp
 
         @if ($undersida === 'start')
