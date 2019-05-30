@@ -195,16 +195,18 @@ Layout template for web
             <amp-position-observer on="enter:expandAnim.start; exit:shrinkAnim.start;" layout="nodisplay"></amp-position-observer>
         </div>
 
-        {{-- <div class="Ad">
-            <div class="Ad__intro">Annons</div>
-            <amp-ad width=320 height=50
-                type="adsense"
-                data-ad-client="ca-pub-1689239266452655"
-                data-ad-slot="9307455607"
-                layout="responsive"
-                >
-            </amp-ad>
-        </div> --}}
+        @if ($showAds)
+          <div class="Ad">
+              <div class="Ad__intro">Annons</div>
+              <amp-ad width=320 height=50
+                  type="adsense"
+                  data-ad-client="ca-pub-1689239266452655"
+                  data-ad-slot="9307455607"
+                  layout="responsive"
+                  >
+              </amp-ad>
+          </div>
+        @endif
 
         @yield('beforeBreadcrumb')
         @include('parts.breadcrumb', ["single" => true])
