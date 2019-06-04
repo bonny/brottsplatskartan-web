@@ -114,6 +114,6 @@ samt för äldre dagar när man bläddrar i arkivet.
     @include('parts.follow-us')
     @include('parts.lan-and-cities')
     @include('parts.widget-blog-entries')
-    @include('parts.widget-facebook-page')
+    {{-- @include('parts.widget-facebook-page') --}}
 
 @endsection
