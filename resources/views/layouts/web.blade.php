@@ -7,18 +7,22 @@ Layout template for web
 // Visa inte annonser för besökare som kommer via Coyards.
 // utm_source=coyards
 $showAds = true;
+$noAdsReason = '';
 if (request()->get('utm_source') === 'coyards') {
     $showAds = false;
+    $noAdsReason .= ' sourceCoyards ';
 }
 
 // Visa inte adsense-annonser om vi vet att en Verisure-annons visas
 if (\Request::is('brand') || \Request::is('inbrott')) {
   $showAds = false;
+  $noAdsReason .= ' requestIsBrandOrInbrott ';
 }
 
 // Visa inte om händelsen är av typ inbrott eller brand för då visas också Verisure-annons
 if (isset($event) && ($event->isBrand() || $event->isInbrott())) {
   $showAds = false;
+  $noAdsReason .= ' eventIsBrandOrInbrott ';
 }
 
 ?>
@@ -145,7 +149,7 @@ if (isset($event) && ($event->isBrand() || $event->isInbrott())) {
     <style amp-custom>{!! HTMLMin::css(file_get_contents( public_path("css/styles.css") )) !!}</style>
 
 </head>
-<body class="@if ($shared_notification_bar_contents) has-notification-bar @endif">
+<body class="@if ($shared_notification_bar_contents) has-notification-bar @endif {{$noAdsReason}}">
     <?php
     if ($showAds) {
       ?>
