@@ -20,10 +20,10 @@ if (\Request::is('brand') || \Request::is('inbrott')) {
 }
 
 // Visa inte om händelsen är av typ inbrott eller brand för då visas också Verisure-annons
-if (isset($event) && ($event->isBrand() || $event->isInbrott())) {
-  $showAds = false;
-  $noAdsReason .= ' eventIsBrandOrInbrott ';
-}
+// if (isset($event) && ($event->isBrand() || $event->isInbrott())) {
+//   $showAds = false;
+//   $noAdsReason .= ' eventIsBrandOrInbrott ';
+// }
 
 ?>
 <!DOCTYPE html>
