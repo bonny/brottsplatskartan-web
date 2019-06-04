@@ -1,5 +1,7 @@
 <section class="MostViewedRecently">
-        <h2 class="MostViewedRecently__title">Mest läst:</h2>
+        <h2 class="MostViewedRecently__title">
+            <a href="{{route('mostRead')}}">Mest läst:</a>
+        </h2>
 
         <amp-list
             layout="responsive"
