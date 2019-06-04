@@ -130,6 +130,11 @@ Layout template for web
         $showAds = false;
     }
 
+    // Visa inte adsense-annonser om vi vet att en Verisure-annons visas
+    if (\Request::is('brand') || \Request::is('inbrott')) {
+      $showAds = false;
+    }
+
     if ($showAds) {
         ?>
         <amp-auto-ads type="adsense" data-ad-client="ca-pub-1689239266452655"></amp-auto-ads>
@@ -198,12 +203,10 @@ Layout template for web
         @if ($showAds)
           <div class="Ad">
               <div class="Ad__intro">Annons</div>
-              <amp-ad width="100vw" height=320
+              <amp-ad width=980 height=120
                   type="adsense"
                   data-ad-client="ca-pub-1689239266452655"
                   data-ad-slot="9307455607"
-                  data-auto-format="rspv"
-                  data-full-width
                   layout="responsive"
                   >
                   <div overflow></div>
