@@ -218,7 +218,7 @@ if (\Request::is('brand') || \Request::is('inbrott')) {
 
         @if ($showAds)
           <div class="Ad">
-              <div class="Ad__intro">Annons</div>
+              {{-- <div class="Ad__intro">Annons</div>
               <amp-ad width=320 height=100
                   type="adsense"
                   data-ad-client="ca-pub-1689239266452655"
@@ -226,8 +226,16 @@ if (\Request::is('brand') || \Request::is('inbrott')) {
                   layout="responsive"
                   >
                   <div overflow></div>
+              </amp-ad> --}}
+              <amp-ad width="100vw" height=320
+                  type="adsense"
+                  data-ad-client="ca-pub-1689239266452655"
+                  data-ad-slot="9307455607"
+                  data-auto-format="rspv"
+                  data-full-width>
+                <div overflow></div>
               </amp-ad>
-          </div>
+         </div>
         @endif
 
         @yield('beforeBreadcrumb')
