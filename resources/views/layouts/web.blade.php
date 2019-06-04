@@ -3,18 +3,35 @@
 Layout template for web
 
 --}}
+<?php
+// Visa inte annonser för besökare som kommer via Coyards.
+// utm_source=coyards
+$showAds = true;
+if (request()->get('utm_source') === 'coyards') {
+    $showAds = false;
+}
+
+// Visa inte adsense-annonser om vi vet att en Verisure-annons visas
+if (\Request::is('brand') || \Request::is('inbrott')) {
+  $showAds = false;
+}
+
+// Visa inte om händelsen är av typ inbrott eller brand för då visas också Verisure-annons
+if (isset($event) && ($event->isBrand() || $event->isInbrott())) {
+  $showAds = false;
+}
+
+?>
 <!DOCTYPE html>
 <html ⚡ lang="sv" class="amp-border-box">
 <head>
     <script async src="https://cdn.ampproject.org/v0.js"></script>
     <script async custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"></script>
-    <script async custom-element="amp-ad" src="https://cdn.ampproject.org/v0/amp-ad-0.1.js"></script>
     <script async custom-element="amp-sticky-ad" src="https://cdn.ampproject.org/v0/amp-sticky-ad-1.0.js"></script>
     <script async custom-element="amp-social-share" src="https://cdn.ampproject.org/v0/amp-social-share-0.1.js"></script>
     <script async custom-element="amp-form" src="https://cdn.ampproject.org/v0/amp-form-0.1.js"></script>
     <script async custom-element="amp-iframe" src="https://cdn.ampproject.org/v0/amp-iframe-0.1.js"></script>
     <script async custom-element="amp-install-serviceworker" src="https://cdn.ampproject.org/v0/amp-install-serviceworker-0.1.js"></script>
-    <script async custom-element="amp-auto-ads" src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js"></script>
     <script async custom-element="amp-twitter" src="https://cdn.ampproject.org/v0/amp-twitter-0.1.js"></script>
     <script async custom-element="amp-facebook" src="https://cdn.ampproject.org/v0/amp-facebook-0.1.js"></script>
     <script async custom-element="amp-carousel" src="https://cdn.ampproject.org/v0/amp-carousel-0.1.js"></script>
@@ -24,6 +41,14 @@ Layout template for web
     <script async custom-template="amp-mustache" src="https://cdn.ampproject.org/v0/amp-mustache-0.2.js"></script>
     <script async custom-element="amp-list" src="https://cdn.ampproject.org/v0/amp-list-0.1.js"></script>
     <script async custom-element="amp-animation" src="https://cdn.ampproject.org/v0/amp-animation-0.1.js"></script>
+    <?php
+    if ($showAds) {
+      ?>
+      <script async custom-element="amp-ad" src="https://cdn.ampproject.org/v0/amp-ad-0.1.js"></script>
+      <script async custom-element="amp-auto-ads" src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js"></script>
+      <?php
+    }
+    ?>
     
     @stack('scripts')
 
@@ -121,32 +146,14 @@ Layout template for web
 
 </head>
 <body class="@if ($shared_notification_bar_contents) has-notification-bar @endif">
-
     <?php
-    // Visa inte annonser för besökare som kommer via Coyards.
-    // utm_source=coyards
-    $showAds = true;
-    if (request()->get('utm_source') === 'coyards') {
-        $showAds = false;
-    }
-
-    // Visa inte adsense-annonser om vi vet att en Verisure-annons visas
-    if (\Request::is('brand') || \Request::is('inbrott')) {
-      $showAds = false;
-    }
-
-    // Visa inte om händelsen är av typ inbrott eller brand för då visas också Verisure-annons
-    if (isset($event) && ($event->isBrand() || $event->isInbrott())) {
-      $showAds = false;
-    }
-
     if ($showAds) {
-        ?>
-        <amp-auto-ads type="adsense" data-ad-client="ca-pub-1689239266452655"></amp-auto-ads>
-        <?php
+      ?>
+      <amp-auto-ads type="adsense" data-ad-client="ca-pub-1689239266452655"></amp-auto-ads>
+      <?php
     }
     ?>
-
+  
     <amp-animation id="shrinkAnim" layout="nodisplay">
       <script type="application/json">
         {
