@@ -135,6 +135,11 @@ Layout template for web
       $showAds = false;
     }
 
+    // Visa inte om händelsen är av typ inbrott eller brand för då visas också Verisure-annons
+    if (isset($event) && ($event->isBrand() || $event->isInbrott())) {
+      $showAds = false;
+    }
+
     if ($showAds) {
         ?>
         <amp-auto-ads type="adsense" data-ad-client="ca-pub-1689239266452655"></amp-auto-ads>
@@ -203,7 +208,7 @@ Layout template for web
         @if ($showAds)
           <div class="Ad">
               <div class="Ad__intro">Annons</div>
-              <amp-ad width=980 height=120
+              <amp-ad width=320 height=100
                   type="adsense"
                   data-ad-client="ca-pub-1689239266452655"
                   data-ad-slot="9307455607"
