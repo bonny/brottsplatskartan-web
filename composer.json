@@ -11,7 +11,7 @@
         "kozz/laravel-guzzle-provider": "~6.0",
         "weidner/goutte": "@dev",
         "doctrine/dbal": "^2.5",
-        "creitive/laravel5-breadcrumbs": "^2.0",
+        "creitive/laravel5-breadcrumbs": "^2.1.0",
         "thujohn/twitter": "~2.0",
         "unisharp/laravel-settings": "^2.0",
         "laravel/scout": "^4.0",
