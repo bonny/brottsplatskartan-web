@@ -1091,7 +1091,16 @@ class CrimeEvent extends Model implements Feedable
                 "url" => "https://brottsplatskartan.se/img/brottsplatskartan-logotyp.png"
                 ]
             ],
-            "description" => $description
+            "description" => $description,
+            "geo" => [
+                "@type" => "GeoCircle",
+                "geoMidpoint" => [
+                    "@type" => "GeoCoordinates",
+                    "latitude" => $locationLat,
+                    "longitude" => $locationLng
+                ],
+                "geoRadius" => '500'
+            ]
         ];
 
         $str = '<script type="application/ld+json">' . json_encode($jsonData, JSON_PRETTY_PRINT) . '</script>';
