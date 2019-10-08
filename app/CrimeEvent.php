@@ -1063,40 +1063,38 @@ class CrimeEvent extends Model implements Feedable
         $locationLat = $this->location_lat;
         $locationLng = $this->location_lng;
 
-        $title = json_encode($title);
-        $description = json_encode($description);
+        // $title = json_encode($title . '"hej<h1></h1>' . '"hopp</>');
+        // $description = json_encode($description);
 
-        $str = <<<SQL
-            <script type="application/ld+json">
-                {
-                  "@context": "http://schema.org",
-                  "@type": "NewsArticle",
-                  "mainEntityOfPage": {
-                    "@type": "WebPage",
-                    "@id": "{$permalink}"
-                  },
-                  "headline": {$title},
-                  "image": [
-                    "$image"
-                   ],
-                  "datePublished": "$datePublished",
-                  "dateModified": "$dateModified",
-                  "author": {
-                    "@type": "Organization",
-                    "name": "Brottsplatskartan"
-                  },
-                   "publisher": {
-                    "@type": "Organization",
-                    "name": "Brottsplatskartan",
-                    "logo": {
-                      "@type": "ImageObject",
-                      "url": "https://brottsplatskartan.se/img/brottsplatskartan-logotyp.png"
-                    }
-                  },
-                  "description": $description
-                }
-            </script>
-SQL;
+        $jsonData = [
+            "@context" => "http://schema.org",
+            "@type" => "NewsArticle",
+            "mainEntityOfPage" => [
+              "@type" => "WebPage",
+              "@id" => "{$permalink}"
+            ],
+            "headline" => $title,
+            "image" => [
+              "$image"
+             ],
+            "datePublished" => $datePublished,
+            "dateModified" => $dateModified,
+            "author" => [
+              "@type" => "Organization",
+              "name" => "Brottsplatskartan"
+            ],
+             "publisher" => [
+              "@type" => "Organization",
+              "name" => "Brottsplatskartan",
+              "logo" => [
+                "@type" => "ImageObject",
+                "url" => "https://brottsplatskartan.se/img/brottsplatskartan-logotyp.png"
+                ]
+            ],
+            "description" => $description
+        ];
+
+        $str = '<script type="application/ld+json">' . json_encode($jsonData, JSON_PRETTY_PRINT) . '</script>';
 
         /*
               "geo": {
