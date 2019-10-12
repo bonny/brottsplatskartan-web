@@ -1105,15 +1105,6 @@ class CrimeEvent extends Model implements Feedable
 
         $str = '<script type="application/ld+json">' . json_encode($jsonData, JSON_PRETTY_PRINT) . '</script>';
 
-        /*
-              "geo": {
-                "@type": "GeoCoordinates",
-                "latitude": "$locationLat",
-                "longitude": "$locationLng"
-              }
-
-        */
-
         return $str;
     }
 
