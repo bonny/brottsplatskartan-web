@@ -1226,7 +1226,7 @@ class Helper
             ],
             [
                 'name' => 'inbrott-inomhus',
-                'link' => 'todo- brottsplatskartan nya verisure-annonser',
+                'link' => 'https://www.verisure.se/landingpages-blocks/brottsplatskartan/guardvision-larmpaket.html?utm_source=brottsplatskartan&utm_medium=banner&utm_campaign=brottsplatskartan-display-guardvision-larmpaket',
                 'images' => [
                     [
                         'image' => '2019-10-12-ip-kamera-larm-336x280_3.png',
@@ -1280,7 +1280,7 @@ class Helper
             $image = $imageData['image'] ?? null;
             // $images = $imageData['image'] ?? null;
             $width = $imageData['width'] ?? null;
-            $height = $imageData['heigh'] ?? null;
+            $height = $imageData['height'] ?? null;
 
             $imageSrc = $imagesBasePath . $image;
 
