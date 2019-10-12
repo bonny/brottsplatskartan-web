@@ -285,6 +285,8 @@ class LanController extends Controller
                 ]
             );
         }
+        
+        $fintFormateratDatum = trim($date['date']->formatLocalized('%A %e %B %Y'));
 
         if ($isToday) {
             $pageTitle = "Brott och händelser från Polisen i $lan";
@@ -292,10 +294,11 @@ class LanController extends Controller
             $pageTitle = sprintf(
                 '%2$s: %1$d händelser från Polisen i %3$s',
                 $events->count(),
-                trim($date['date']->formatLocalized('%A %e %B %Y')),
+                $fintFormateratDatum,
                 $lan
             );
         }
+
 
         $data = [
             'title' => $title,
@@ -310,7 +313,7 @@ class LanController extends Controller
             'prevDayLink' => $prevDayLink,
             'canonicalLink' => $canonicalLink,
             'mostCommonCrimeTypes' => $mostCommonCrimeTypes,
-            'dateFormattedForMostCommonCrimeTypes' => trim($date['date']->formatLocalized('%e %B')),
+            'dateFormattedForMostCommonCrimeTypes' => $fintFormateratDatum,
             'isToday' => $isToday,
             'isYesterday' => $isYesterday,
             'isCurrentYear' => $isCurrentYear,
@@ -326,6 +329,11 @@ class LanController extends Controller
         $breadcrumbs->addCrumb('Hem', '/');
         $breadcrumbs->addCrumb('Län', route("lanOverview"));
         $breadcrumbs->addCrumb(e($lan), e($lan));
+
+        if (!$isToday) {
+            $breadcrumbs->addCrumb($fintFormateratDatum);
+        }
+
 
         $data["breadcrumbs"] = $breadcrumbs;
         $data["showLanSwitcher"] = true;
