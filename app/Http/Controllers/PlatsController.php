@@ -213,8 +213,9 @@ class PlatsController extends Controller
         if ($prevDaysNavInfo->count()) {
             $firstDay = $prevDaysNavInfo->first();
             $firstDayDate = Carbon::parse($firstDay['dateYMD']);
+            $fintFormateratDatum = $firstDayDate->formatLocalized('%A %e %B %Y');
             $formattedDate = trim(str::lower($firstDayDate->formatLocalized('%e-%B-%Y')));
-            $formattedDateFortitle = trim($firstDayDate->formatLocalized('%A %e %B %Y'));
+            $formattedDateFortitle = trim($fintFormateratDatum);
             $prevDayLink = [
                 'title' => sprintf('‹ %1$s', $formattedDateFortitle),
                 'link' => route("platsDatum", ['plats' => $platsOriginalFromSlug, 'date' => $formattedDate]),
@@ -225,8 +226,9 @@ class PlatsController extends Controller
         if ($nextDaysNavInfo->count()) {
             $firstDay = $nextDaysNavInfo->first();
             $firstDayDate = Carbon::parse($firstDay['dateYMD']);
+            $fintFormateratDatum = $firstDayDate->formatLocalized('%A %e %B %Y');
             $formattedDate = trim(str::lower($firstDayDate->formatLocalized('%e-%B-%Y')));
-            $formattedDateFortitle = trim($firstDayDate->formatLocalized('%A %e %B %Y'));
+            $formattedDateFortitle = trim($fintFormateratDatum);
             $nextDayLink = [
                 'title' => sprintf('%1$s ›', $formattedDateFortitle),
                 'link' => route("platsDatum", ['plats' => $platsOriginalFromSlug, 'date' => $formattedDate]),
@@ -280,7 +282,18 @@ class PlatsController extends Controller
             $breadcrumbs->addCrumb($place->lan, route("lanSingle", ['lan' => $place->lan]));
         }
 
-        $breadcrumbs->addCrumb(e($plats));
+        #dd($platsOriginalFromSlug);
+        $breadcrumbs->addCrumb(
+            e($plats), 
+            route(
+                'platsSingle',
+                ['plats' => mb_strtolower($platsOriginalFromSlug)]
+            )
+        );
+
+        if (!$isToday) {
+            $breadcrumbs->addCrumb($fintFormateratDatum);
+        }
 
         // Hämta närmaste polisstation.
         // https://github.com/thephpleague/geotools

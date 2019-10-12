@@ -334,7 +334,6 @@ class LanController extends Controller
             $breadcrumbs->addCrumb($fintFormateratDatum);
         }
 
-
         $data["breadcrumbs"] = $breadcrumbs;
         $data["showLanSwitcher"] = true;
 
