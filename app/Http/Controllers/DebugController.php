@@ -119,7 +119,7 @@ class DebugController extends Controller
             echo '<pre>';
             echo htmlspecialchars(
                 \App\helper::getVerisureAdMarkup('brand')
-                . \App\helper::getVerisureAdMarkup('inbrott')
+                . \App\helper::getVerisureAdMarkup('inbrott-inomhus')
                 #\App\helper::getVerisureAdMarkup('brand-uppkopplat')
                 #    . \App\helper::getVerisureAdMarkup('brand-larmcentral')
                 #    . \App\helper::getVerisureAdMarkup('inbrott-larmpaket')

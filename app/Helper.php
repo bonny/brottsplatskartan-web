@@ -1204,132 +1204,47 @@ class Helper
                 ]
             ],
             [
-                'name' => 'inbrott',
-                'link' =>
-                    'https://www.verisure.se/f/brottsplatskartan/inbrott-2000.html?utm_source=brottsplatskartan&utm_medium=banner&utm_campaign=brottsplatskartan-inbrott-2000',
+                'name' => 'inbrott-utomhus',
+                'link' => 'https://www.verisure.se/landingpages-blocks/brottsplatskartan/guardvision-nyhet.html?utm_source=brottsplatskartan&utm_medium=banner&utm_campaign=brottsplatskartan-display-guardvision-nyhet',
                 'images' => [
                     [
-                        'image' => '2019-05-29-INBROTT-336x280.png',                        
+                        'image' => '2019-10-12-ip-kamera-larm-utomhus-336x280.png',
                         'width' => 336,
                         'height' => 280
                     ],
                     [
-                        'image' => '2019-05-29-INBROTT_477x250.png',
+                        'image' => '2019-10-12-ip-kamera-larm-utomhus-477x250.png',
                         'width' => 477,
                         'height' => 250
                     ],
                     [
-                        'image' => '2019-05-29-INBROTT_970x250.png',
+                        'image' => '2019-10-12-ip-kamera-larm-utomhus-970x250.png',
                         'width' => 970,
                         'height' => 250
                     ]
                 ]
             ],
-            // [
-            //     'name' => 'brand-larmcentral',
-            //     'link' =>
-            //         'https://www.verisure.se/f/brottsplatskartan/brand-larmcentral.html?utm_source=brottsplatskartan&utm_medium=banner&utm_campaign=brottsplatskartan-brand-larmcentral',
-            //     'images' => [
-            //         [
-            //             'image' => 'brand-larmcentral-336x280.png',
-            //             'width' => 336,
-            //             'height' => 280
-            //         ],
-            //         [
-            //             'image' => 'brand-larmcentral-970x250.png',
-            //             'width' => 970,
-            //             'height' => 250
-            //         ]
-            //     ]
-            // ],
-            // [
-            //     'name' => 'brand-uppkopplat',
-            //     'link' =>
-            //         'https://www.verisure.se/landingpages-blocks/brottsplatskartan-brandskydd.html?utm_source=brottsplatskartan&utm_medium=banner&utm_campaign=brottsplatskartan-brandskydd',
-            //     'images' => [
-            //         [
-            //             'image' => 'brand-uppkopplat-336x280.png',
-            //             'width' => 336,
-            //             'height' => 280
-            //         ],
-            //         [
-            //             'image' => 'brand-uppkopplat-477x250.png',
-            //             'width' => 477,
-            //             'height' => 250
-            //         ],
-            //         [
-            //             'image' => 'brand-uppkopplat-970x250.png',
-            //             'width' => 970,
-            //             'height' => 250
-            //         ]
-            //     ]
-            // ],
-            // [
-            //     'name' => 'inbrott-larmpaket',
-            //     'link' =>
-            //         'https://www.verisure.se/f/brottsplatskartan/inbrott-larmpaket.html?utm_source=brottsplatskartan&utm_medium=banner&utm_campaign=brottsplatskartan-inbrott-larmpaket',
-            //     'images' => [
-            //         [
-            //             'image' => 'inbrott-larmpaket-336x280.png',
-            //             'width' => 336,
-            //             'height' => 280
-            //         ],
-            //         [
-            //             'image' => 'inbrott-larmpaket-477x250.png',
-            //             'width' => 477,
-            //             'height' => 250
-            //         ],
-            //         [
-            //             'image' => 'inbrott-larmpaket-970x250.png',
-            //             'width' => 970,
-            //             'height' => 250
-            //         ]
-            //     ]
-            // ],
-            // [
-            //     'name' => 'inbrott-tjuv',
-            //     'link' =>
-            //         'https://www.verisure.se/f/brottsplatskartan/inbrott-tjuv.html?utm_source=brottsplatskartan&utm_medium=banner&utm_campaign=brottsplatskartan-inbrott-tjuv',
-            //     'images' => [
-            //         [
-            //             'image' => 'inbrott-tjuv-336x280.png',
-            //             'width' => 336,
-            //             'height' => 280
-            //         ],
-            //         [
-            //             'image' => 'inbrott-tjuv-477x250.png',
-            //             'width' => 477,
-            //             'height' => 250
-            //         ],
-            //         [
-            //             'image' => 'inbrott-tjuv-970x250.png',
-            //             'width' => 970,
-            //             'height' => 250
-            //         ]
-            //     ]
-            // ],
-            // [
-            //     'name' => 'inbrott-vibrationsdetektor',
-            //     'link' =>
-            //         'https://www.verisure.se/landingpages-blocks/brottsplatskartan-inbrott.html?utm_source=brottsplatskartan&utm_medium=banner&utm_campaign=brottsplatskartan-inbrott',
-            //     'images' => [
-            //         [
-            //             'image' => 'inbrott-vibrationsdetektor-336x280.png',
-            //             'width' => 336,
-            //             'height' => 280
-            //         ],
-            //         [
-            //             'image' => 'inbrott-vibrationsdetektor-477x250.png',
-            //             'width' => 477,
-            //             'height' => 250
-            //         ],
-            //         [
-            //             'image' => 'inbrott-vibrationsdetektor-970x250.png',
-            //             'width' => 970,
-            //             'height' => 250
-            //         ]
-            //     ]
-            // ]
+            [
+                'name' => 'inbrott-inomhus',
+                'link' => 'todo- brottsplatskartan nya verisure-annonser',
+                'images' => [
+                    [
+                        'image' => '2019-10-12-ip-kamera-larm-336x280_3.png',
+                        'width' => 336,
+                        'height' => 280
+                    ],
+                    [
+                        'image' => '2019-10-12-ip-kamera-larm-477x250_3.png',
+                        'width' => 477,
+                        'height' => 250
+                    ],
+                    [
+                        'image' => '2019-10-12-ip-kamera-larm-970x250_3.png',
+                        'width' => 970,
+                        'height' => 250
+                    ]
+                ]
+            ],
         ]);
     }
 
@@ -1362,11 +1277,11 @@ class Helper
             $carry,
             $imageData
         ) use ($ad, $imagesBasePath) {
-            [
-                'image' => $image,
-                'width' => $width,
-                'height' => $height
-            ] = $imageData;
+            $image = $imageData['image'] ?? null;
+            // $images = $imageData['image'] ?? null;
+            $width = $imageData['width'] ?? null;
+            $height = $imageData['heigh'] ?? null;
+
             $imageSrc = $imagesBasePath . $image;
 
             $media = '';

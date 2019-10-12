@@ -34,7 +34,7 @@ Template för ett event/händelse
     @if ($event->isInbrott())
         <div class="u-w100">
             @php
-            echo \App\helper::getVerisureAdMarkup('inbrott');
+            echo \App\helper::getVerisureAdMarkup('inbrott-inomhus');
             @endphp
         </div>
     @endif

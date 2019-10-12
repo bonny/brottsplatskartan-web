@@ -195,7 +195,7 @@ if $single is set then larger image
             </div>
 
             @php
-            echo \App\helper::getVerisureAdMarkup('inbrott');
+            echo \App\helper::getVerisureAdMarkup('inbrott-utomhus');
             @endphp
 
         @endif
