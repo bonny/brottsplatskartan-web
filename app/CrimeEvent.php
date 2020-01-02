@@ -15,9 +15,6 @@ use App\Http\Controllers\PlatsController;
 
 class CrimeEvent extends Model implements Feedable
 {
-    // use Searchable;
-    // use Eloquence;
-
     protected $fillable = [
         'title',
         'description',

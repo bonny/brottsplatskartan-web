@@ -161,7 +161,7 @@ class FeedParserController extends Controller
             // Redirect from http to https with code 200
             // Redirect from old url to overview page using HTTP/1.1 301 Moved Permanently
             $response = $client->getResponse();
-            $responseStatusCode = $response->getStatus();
+            $responseStatusCode = $response->getStatusCode();
 
             if ($responseStatusCode !== 200) {
                 return false;
