@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f2fa48c589ca57e3cc1f8847b749ca5a",
+    "content-hash": "667d627cabf8d87245a8cb75850f5341",
     "packages": [
         {
             "name": "alfredo-ramos/parsedown-extra-laravel",
@@ -7692,7 +7692,8 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "^7.3"
+        "php": "^7.3",
+        "ext-redis": "*"
     },
     "platform-dev": []
 }
