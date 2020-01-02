@@ -9,6 +9,7 @@
     "type": "project",
     "require": {
         "php": "^7.3",
+        "ext-redis": "*",
         "laravel/framework": "^6.0",
         "willvincent/feeds": "^2.0",
         "kozz/laravel-guzzle-provider": "~6.0",
