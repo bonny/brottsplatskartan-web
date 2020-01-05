@@ -1229,17 +1229,17 @@ class Helper
                 'link' => 'https://www.verisure.se/landingpages-blocks/brottsplatskartan/guardvision-larmpaket.html?utm_source=brottsplatskartan&utm_medium=banner&utm_campaign=brottsplatskartan-display-guardvision-larmpaket',
                 'images' => [
                     [
-                        'image' => '2019-10-12-ip-kamera-larm-336x280_3.png',
+                        'image' => 'INBROTT-336x280_3.png',
                         'width' => 336,
                         'height' => 280
                     ],
                     [
-                        'image' => '2019-10-12-ip-kamera-larm-477x250_3.png',
+                        'image' => 'INBROTT_477x250_3.png',
                         'width' => 477,
                         'height' => 250
                     ],
                     [
-                        'image' => '2019-10-12-ip-kamera-larm-970x250_3.png',
+                        'image' => 'INBROTT_970x250_3.png',
                         'width' => 970,
                         'height' => 250
                     ]
