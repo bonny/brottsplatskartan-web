@@ -58,7 +58,7 @@ class PlatsController extends Controller
         }
 
         $data["breadcrumbs"] = $breadcrumbs;
-
+        
         return view('overview-platser', $data);
     }
 

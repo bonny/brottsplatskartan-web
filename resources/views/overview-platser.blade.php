@@ -26,13 +26,11 @@ Template för ort-översikt
         <div class="PlatsListing">
 
         @foreach ($orter as $oneOrt)
-
             <h2 class="PlatsListing__plats">
-                <a href="{{ route("platsSingle", ["ort"=>$oneOrt->parsed_title_location]) }}">
+                <a href="{{ route("platsSingle", ["plats"=>$oneOrt->parsed_title_location, 'date' => null]) }}">
                     {{ $oneOrt->parsed_title_location }}
                 </a>
             </h2>
-
         @endforeach
 
         </div>
