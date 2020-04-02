@@ -72,8 +72,8 @@ class CrimeEvent extends Model implements Feedable
             // $image_src .= "&path=";
             // $image_src .= "color:0x00000000|weight:2|fillcolor:0xFF660044";
 
-            // /styles/klokantech-basic/static/auto/640x340.jpg?path=59.3137,18.0780|59.32,18.0790|59.33,18.0791|59.34,18.0800|59.30,18.0001&latlng=1&fill=rgba(255,0,0,.2)&width=2&stroke=rgba(255,0,0,.2)
-            $tileserverUrl .= 'styles/klokantech-basic/static/auto/';
+            // /styles/basic-preview/static/auto/640x340.jpg?path=59.3137,18.0780|59.32,18.0790|59.33,18.0791|59.34,18.0800|59.30,18.0001&latlng=1&fill=rgba(255,0,0,.2)&width=2&stroke=rgba(255,0,0,.2)
+            $tileserverUrl .= 'styles/basic-preview/static/auto/';
             $tileserverUrl .= "{$width}x{$height}.jpg";
             $tileServerQueryArgs = array_merge($tileServerQueryArgs, [
                 "latlng" => 1,
@@ -156,11 +156,11 @@ class CrimeEvent extends Model implements Feedable
             // $image_src .= "&path=";
             // $image_src .= "color:0x00000000|weight:2|fillcolor:0xFF660044";
 
-            // /styles/klokantech-basic/static/auto/640x340.jpg?path=59.3137,18.0780|59.32,18.0790|59.33,18.0791|59.34,18.0800|59.30,18.0001&latlng=1&fill=rgba(255,0,0,.2)&width=2&stroke=rgba(255,0,0,.2)
+            // /styles/basic-preview/static/auto/640x340.jpg?path=59.3137,18.0780|59.32,18.0790|59.33,18.0791|59.34,18.0800|59.30,18.0001&latlng=1&fill=rgba(255,0,0,.2)&width=2&stroke=rgba(255,0,0,.2)
             $zoomLevel = 5;
             $expandNumber = 0.25;
 
-            $tileserverUrl .= 'styles/klokantech-basic/static/';
+            $tileserverUrl .= 'styles/basic-preview/static/';
             $tileserverUrl .= "{$this->location_lng},{$this->location_lat},{$zoomLevel}";
             $tileserverUrl .= "/{$width}x{$height}.jpg";
             $tileServerQueryArgs = array_merge($tileServerQueryArgs, [
