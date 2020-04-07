@@ -854,6 +854,7 @@ class Helper
     public static function getPoliceStations()
     {
         $APIURL = 'https://polisen.se/api/policestations';
+        $APIURL = \App\Helper::makeUrlUsePolisenDomain($APIURL);
 
         // If polisen.se down then exception is thrown.
         try {
