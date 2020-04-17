@@ -19,6 +19,7 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\RedirectBytSida::class,
         \App\Http\Middleware\RedirectHitta::class,
         \App\Http\Middleware\DebugBarMaybeEnable::class,
+        \Fruitcake\Cors\HandleCors::class,
     ];
 
     /**
