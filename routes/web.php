@@ -663,6 +663,8 @@ Route::resource('coyards', 'CoyardsController')->names([
     'index' => 'coyards'
 ]);
 
+Route::get('/helikopter', 'PlatsController@helikopter')->name('helikopter');
+
 /**
  * Testsida för design, så vi lätt kan se hur rubriker
  * av olika storlekar och listor och stycken och bilder

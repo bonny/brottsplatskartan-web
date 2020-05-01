@@ -707,4 +707,37 @@ class PlatsController extends Controller
         return $prevDayEvents;
     }
 
+    /**
+     * Landingssida för sidan 🚁
+     * https://brottsplatskartan-web.test/helikopter
+     */
+    public function helikopter(Request $request) {
+        $events = CrimeEvent::orderBy("created_at", "desc")
+            // ->where(function ($query) {
+            //     if ($isToday) {
+            //         $query->where('created_at', '<', $dateYmdPlusOneDay);
+            //         $query->where('created_at', '>', $dateYmdMinusNumDaysBack);
+            //     } else {
+            //         $query->where('created_at', '<', $dateYmdPlusOneDay);
+            //         $query->where('created_at', '>', $dateYmd);
+            //     }
+            // })
+            #->where(function ($query) {
+                // $query->where("parsed_title_location", $plats);
+                // $query->orWhere("administrative_area_level_2", $plats);
+                // $query->orWhereHas('locations', function ($query) use ($plats) {
+                //     $query->where('name', '=', $plats);
+                // });
+            #})
+            ->where('parsed_title', 'LIKE', "%helikopter%")
+            ->orWhere('parsed_content', 'LIKE', "%helikopter%")
+            ->limit(25)
+            ->with('locations')
+            ->get();
+        
+        $data = [
+            'events' => $events,
+        ];
+        return view('overview-helicopter', $data);
+    }
 }

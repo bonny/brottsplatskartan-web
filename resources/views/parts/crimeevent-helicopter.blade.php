@@ -1,0 +1,50 @@
+@php
+$eventLink = $event->getPermalink();
+
+// https://stackoverflow.com/questions/23533654/highlighting-all-matched-keyword-in-strings-in-case-insensitive-manner-and-prese
+if (!function_exists("highlightStr")) {
+    function highlightStr($haystack, $needle, $highlightColorValue)
+    {
+        // return $haystack if there is no highlight color or strings given, nothing to do.
+        if (strlen($highlightColorValue) < 1 || strlen($haystack) < 1 || strlen($needle) < 1) {
+            return $haystack;
+        }
+        $haystack = preg_replace("/($needle+)/i", 'yyy<span style="color:'.$highlightColorValue.';">'.'$1'.'</span>', $haystack);
+        return $haystack;
+    }
+}
+
+// echo highlightStr($strMain, $strFind, '#FF0000');
+
+@endphp
+
+<article class="u-margin-top u-padding-top u-border-top">
+
+    @if ($event->geocoded)
+        <p class="">
+            <a href="{{ $eventLink }}">
+                <img
+                    alt="Karta som visar ungefär var händelsen inträffat"
+                    class=""
+                    src="{{ $event->getStaticImageSrc(640,320) }}"
+                    width="640"
+                    height="320">
+            </a>
+        </p>
+    @endif
+
+    <h2 class="">
+        <a href="{{ $eventLink }}">
+            {{ $event->parsed_title }}
+            <span class=""> 
+                – {{ $event->getDescriptionAsPlainText() }}
+            </span>
+        </a>
+    </h2>
+
+    
+    <div class="">
+        {!! $event->getParsedContent() !!}
+    </div>
+
+</article>
