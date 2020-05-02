@@ -14,6 +14,7 @@ https://www.ampproject.org/docs/reference/components/amp-sidebar
                         <li><a href="{{ route("start") }}">Händelser<br/>i hela Sverige</a></li>
                         <li><a href="/nara-hitta-plats">Händelser nära mig</a></li>
                         <li><a href="{{ route('mostRead') }}">Mest lästa</a></li>
+                        <li><a href="{{ route('helicopter') }}">Helikopter</a></li>
                         <li>
                             <amp-accordion
                                 layout="container"
@@ -63,7 +64,6 @@ https://www.ampproject.org/docs/reference/components/amp-sidebar
                         <li><a href="{{ route("page", ["pagename" => "om"]) }}">Om Brottsplatskartan</a></li>
                         <li><a href="{{ route("blog") }}">Blogg/Nyheter</a></li>
                         <li><a href="{{ route("page", ["pagename" => "press"]) }}">Press</a></li>
-
                         <li><a href="{{ route("page", ["pagename" => "appar"]) }}">Appar till Iphone, Ipad och Android</a></li>
                         <li><a href="{{ route("page", ["pagename" => "api"]) }}">Brottsplatser API</a></li>
                         <li><a href="https://stats.uptimerobot.com/ADWQ0TZq1">Upptid/status</a></li>

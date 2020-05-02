@@ -9,7 +9,7 @@ Template för helikopter-översikt
 
 @section('title', '🚁 Helikopter - polishelikopter eller ambulanshelikopter nära dig?')
 @section('metaDescription', e("Se senaste händelserna från Polisen som nämner helikopter"))
-@section('canonicalLink', '/helicopter')
+@section('canonicalLink', '/helikopter')
 
 @section('content')
 

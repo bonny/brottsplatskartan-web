@@ -711,7 +711,7 @@ class PlatsController extends Controller
      * Landingssida för sidan 🚁
      * https://brottsplatskartan-web.test/helikopter
      */
-    public function helikopter(Request $request) {
+    public function helicopter(Request $request) {
         $events = CrimeEvent::orderBy("created_at", "desc")
             // ->where(function ($query) {
             //     if ($isToday) {
