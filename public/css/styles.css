@@ -269,7 +269,7 @@ blockquote {
     padding: 0;
     list-style-type: none;
     text-align: center;
-    overflow-x: scroll;
+    overflow-x: auto;
 }
 
 .SiteNav::after {
