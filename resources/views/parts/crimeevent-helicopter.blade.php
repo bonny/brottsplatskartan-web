@@ -32,7 +32,7 @@ if (!function_exists("highlightStr")) {
     
     <div class="">
         @if ($event->geocoded)
-            <p class="u-float-right">
+            <p class="">
                 <a href="{{ $eventLink }}" class="u-block">
                     <amp-img
                         layout="responsive"

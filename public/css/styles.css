@@ -1672,7 +1672,7 @@ h2.widget__title {
 }
 
 .u-block {
-    display: inline-block;
+    display: block;
 }
 
 .u-float-left {
