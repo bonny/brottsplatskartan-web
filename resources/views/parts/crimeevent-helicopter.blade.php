@@ -41,6 +41,7 @@ if (!function_exists("highlightStr")) {
                         src="{{ $event->getStaticImageSrc(640,320) }}"
                         width="640"
                         height="320">
+                    </amp-img>
                 </a>
             </p>
         @endif
