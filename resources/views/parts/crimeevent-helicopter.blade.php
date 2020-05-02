@@ -20,19 +20,6 @@ if (!function_exists("highlightStr")) {
 
 <article class="u-margin-top u-padding-top u-border-top">
 
-    @if ($event->geocoded)
-        <p class="">
-            <a href="{{ $eventLink }}">
-                <img
-                    alt="Karta som visar ungefär var händelsen inträffat"
-                    class=""
-                    src="{{ $event->getStaticImageSrc(640,320) }}"
-                    width="640"
-                    height="320">
-            </a>
-        </p>
-    @endif
-
     <h2 class="">
         <a href="{{ $eventLink }}">
             {{ $event->parsed_title }}
@@ -44,6 +31,18 @@ if (!function_exists("highlightStr")) {
 
     
     <div class="">
+        @if ($event->geocoded)
+            <p class="u-float-right">
+                <a href="{{ $eventLink }}" class="u-block">
+                    <img
+                        alt="Karta som visar ungefär var händelsen inträffat"
+                        class="u-h-auto u-w-100"
+                        src="{{ $event->getStaticImageSrc(640,320) }}"
+                        width="640"
+                        height="320">
+                </a>
+            </p>
+        @endif
         {!! $event->getParsedContent() !!}
     </div>
 

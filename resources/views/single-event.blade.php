@@ -23,7 +23,7 @@ Template för ett event/händelse
 @section('beforeMainContent')
     {{-- Visa annons för brand om endast brand --}}
     @if ($event->isBrand() && !$event->isInbrott())
-        <div class="u-w100">
+        <div class="u-w-100">
             @php
             echo \App\helper::getVerisureAdMarkup('brand');
             @endphp
@@ -32,7 +32,7 @@ Template för ett event/händelse
 
     {{-- Visa annons för inbrott om inbrott --}}
     @if ($event->isInbrott())
-        <div class="u-w100">
+        <div class="u-w-100">
             @php
             echo \App\helper::getVerisureAdMarkup('inbrott-inomhus');
             @endphp

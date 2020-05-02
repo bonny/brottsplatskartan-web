@@ -1624,6 +1624,9 @@ h2.widget__title {
 }
 
 /* Utilities */
+.u-margin-0 {
+    margin: 0;
+}
 .u-margin-bottom {
     margin-bottom: var(--default-margin);
 }
@@ -1668,6 +1671,18 @@ h2.widget__title {
     display: inline-block;
 }
 
+.u-block {
+    display: inline-block;
+}
+
+.u-float-left {
+    float: left;
+}
+
+.u-float-right {
+    float: right;
+}
+
 .u-hidden {
     display: none;
 }
@@ -1696,6 +1711,10 @@ h2.widget__title {
     color: var(--color-gray-1);
 }
 
-.u-w100 {
+.u-w-100 {
     width: 100%;
+}
+
+.u-h-auto {
+    height: auto;
 }
