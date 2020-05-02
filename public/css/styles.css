@@ -281,6 +281,7 @@ blockquote {
     bottom: 0;
     width: 20px;
     background: linear-gradient(to right, rgba(24, 98, 168, 0), #1862a8);
+    pointer-events: none;
 }
 
 .SiteNav__item {
