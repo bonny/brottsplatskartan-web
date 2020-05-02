@@ -34,7 +34,8 @@ if (!function_exists("highlightStr")) {
         @if ($event->geocoded)
             <p class="u-float-right">
                 <a href="{{ $eventLink }}" class="u-block">
-                    <img
+                    <amp-img
+                        layout="responsive"
                         alt="Karta som visar ungefär var händelsen inträffat"
                         class="u-h-auto u-w-100"
                         src="{{ $event->getStaticImageSrc(640,320) }}"
