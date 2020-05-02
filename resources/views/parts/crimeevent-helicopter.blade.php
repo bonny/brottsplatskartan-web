@@ -37,7 +37,6 @@ if (!function_exists("highlightStr")) {
                     <amp-img
                         layout="responsive"
                         alt="Karta som visar ungefär var händelsen inträffat"
-                        class="u-h-auto u-w-100"
                         src="{{ $event->getStaticImageSrc(640,320) }}"
                         width="640"
                         height="320">
