@@ -20,6 +20,15 @@ Template för helikopter-översikt
             Senaste händelserna som nämner ordet <em>helikopter</em>.
         </p>
 
+        <p>
+            Hittar du inte rätt händelse här så testa 
+            <a href="https://twitter.com/search?q=helikopter">sök på Twitter efter helikopter</a>,
+            eller se om aktuellt helikopter finns med på som t.ex. 
+            <a href="https://www.flightradar24.com/">flightradar24.com</a>
+            eller 
+            <a href="https://planefinder.net/">planefinder.net</a>.
+        </p>
+
         <div class="PlatsListing">
 
             <ul class="widget__listItems">
@@ -27,7 +36,6 @@ Template för helikopter-översikt
                     @include('parts.crimeevent-helicopter', ['event' => $event])
                 @endforeach
             </ul>
-   
 
         </div>
 
