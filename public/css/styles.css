@@ -124,10 +124,10 @@ blockquote {
     display: -ms-flexbox;
     display: flex;
     -ms-flex-wrap: wrap;
-        flex-wrap: wrap;
+    flex-wrap: wrap;
     -webkit-box-pack: justify;
-        -ms-flex-pack: justify;
-            justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
 }
 
 .MainContent,
@@ -142,10 +142,10 @@ blockquote {
 } */
 
 #HeaderAnimationMarker {
-  position: absolute;
-  top: 125px;
-  width: 0px;
-  height: 0px;
+    position: absolute;
+    top: 125px;
+    width: 0px;
+    height: 0px;
 }
 
 .NotificationBar {
@@ -183,7 +183,7 @@ blockquote {
     z-index: 15;
     padding: var(--default-margin);
     -webkit-box-shadow: 2px 1px 1px rgba(0, 0, 0, 0.15);
-            box-shadow: 2px 1px 1px rgba(0, 0, 0, 0.15);
+    box-shadow: 2px 1px 1px rgba(0, 0, 0, 0.15);
     font-size: 0.75rem;
     background: var(--color-yellow);
 }
@@ -263,8 +263,8 @@ blockquote {
     display: -ms-flexbox;
     display: flex;
     -webkit-box-pack: justify;
-        -ms-flex-pack: justify;
-            justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
     margin: 0;
     padding: 0;
     list-style-type: none;
@@ -273,7 +273,7 @@ blockquote {
 }
 
 .SiteNav::after {
-    content: '';
+    content: "";
     display: block;
     position: absolute;
     top: 0;
@@ -290,8 +290,8 @@ blockquote {
     /* width: 25%; */
     white-space: nowrap;
     -webkit-box-flex: 1;
-        -ms-flex: 1 1 100%;
-            flex: 1 1 100%;
+    -ms-flex: 1 1 100%;
+    flex: 1 1 100%;
 }
 
 .SiteNav__item a,
@@ -324,7 +324,6 @@ blockquote {
     border: none;
     color: inherit;
 } */
-
 
 .SiteNav__item:first-of-type a {
     border-left: 1px solid rgb(104, 154, 200);
@@ -465,7 +464,7 @@ blockquote {
     background: white;
     padding: var(--default-margin);
     -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     -webkit-transition: -webkit-box-shadow 0.1s ease-out;
     transition: -webkit-box-shadow 0.1s ease-out;
     transition: box-shadow 0.1s ease-out;
@@ -484,10 +483,10 @@ blockquote {
     display: -ms-flexbox;
     display: flex;
     -ms-flex-wrap: wrap;
-        flex-wrap: wrap;
+    flex-wrap: wrap;
     -webkit-box-pack: justify;
-        -ms-flex-pack: justify;
-            justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
 }
 
 .Events__dayEvents .Event.Event {
@@ -495,8 +494,8 @@ blockquote {
     width: auto;
     float: none;
     -webkit-box-flex: 0;
-        -ms-flex: 0 1 48%;
-            flex: 0 1 48%;
+    -ms-flex: 0 1 48%;
+    flex: 0 1 48%;
 }
 
 .Events__dayTitle {
@@ -521,7 +520,7 @@ blockquote {
 
 .Events--overview .Event:hover {
     -webkit-box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.2);
-            box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.2);
+    box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.2);
 }
 
 .Event:nth-of-type(1) {
@@ -886,10 +885,10 @@ input[type="url"],
     display: -ms-flexbox;
     display: flex;
     -ms-flex-wrap: wrap;
-        flex-wrap: wrap;
+    flex-wrap: wrap;
     -webkit-box-pack: start;
-        -ms-flex-pack: start;
-            justify-content: flex-start;
+    -ms-flex-pack: start;
+    justify-content: flex-start;
     padding: var(--default-margin-double);
     margin-top: var(--default-margin-double);
     padding-top: var(--default-margin-double);
@@ -901,8 +900,8 @@ input[type="url"],
     margin-right: var(--default-margin);
     /* background: #fab; */
     -webkit-box-flex: 1;
-        -ms-flex: 1 1 33%;
-            flex: 1 1 33%;
+    -ms-flex: 1 1 33%;
+    flex: 1 1 33%;
 }
 
 .SiteFooter h2 {
@@ -912,14 +911,14 @@ input[type="url"],
 @media only screen and (min-width: 667px) {
     .SiteFooter {
         -ms-flex-pack: distribute;
-            justify-content: space-around;
+        justify-content: space-around;
     }
 }
 
 @media only screen and (min-width: 1024px) {
     .SiteFooter__col {
         -ms-flex-preferred-size: 30%;
-            flex-basis: 30%;
+        flex-basis: 30%;
     }
 }
 
@@ -944,8 +943,8 @@ input[type="url"],
     line-height: 1.2;
     font-size: var(--font-size-small);
     -webkit-box-flex: 1;
-        -ms-flex: 1 1 100%;
-            flex: 1 1 100%;
+    -ms-flex: 1 1 100%;
+    flex: 1 1 100%;
 }
 
 .breadcrumbs {
@@ -1017,8 +1016,8 @@ input[type="url"],
     margin-bottom: var(--default-margin);
     clear: both;
     -webkit-box-flex: 1;
-        -ms-flex: 1 1 100%;
-            flex: 1 1 100%;
+    -ms-flex: 1 1 100%;
+    flex: 1 1 100%;
 }
 
 .Ad__intro {
@@ -1079,12 +1078,11 @@ input[type="url"],
     height: 1.3em;
 }
 
-
 .MostViewedRecently__title {
     font-size: 1rem;
     line-height: 1;
     flex: 1 0 auto;
-    margin: 0 .25rem 0 0;
+    margin: 0 0.25rem 0 0;
 }
 
 .MostViewedRecently .amp-carousel-button {
@@ -1217,7 +1215,6 @@ input[type="url"],
 }
 
 .Event__dictionaryWordDescription {
-
 }
 
 .Event__dictionaryWordDescription > p {
@@ -1439,7 +1436,6 @@ input[type="url"],
 
 /* ~ipad~ iphone 6 liggande and other medium to large screens */
 @media only screen and (min-width: 667px) {
-
     .SiteTitle {
         transform-origin: left;
     }
@@ -1459,15 +1455,15 @@ input[type="url"],
     .MainContent {
         width: 63%;
         -webkit-box-flex: 0;
-            -ms-flex: 0 1 63%;
-                flex: 0 1 63%;
+        -ms-flex: 0 1 63%;
+        flex: 0 1 63%;
     }
 
     .MainSidebar {
         width: 33%;
         -webkit-box-flex: 0;
-            -ms-flex: 0 1 33%;
-                flex: 0 1 33%;
+        -ms-flex: 0 1 33%;
+        flex: 0 1 33%;
     }
 
     .Events--overview .Event {
@@ -1508,7 +1504,7 @@ input[type="url"],
     padding: var(--default-margin);
     margin-top: var(--default-margin);
     margin-bottom: var(--default-margin);
-    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     border-top: 2px solid var(--color-yellow);
     /* Google ads overflow whole page from widget placements sometimes...
        Prevent this using hidden.
@@ -1721,4 +1717,54 @@ h2.widget__title {
 
 .u-h-auto {
     height: auto;
+}
+
+.text-xs {
+    font-size: 0.75rem;
+}
+.text-sm {
+    font-size: 0.875rem;
+}
+.text-base {
+    font-size: 1rem;
+}
+.text-lg {
+    font-size: 1.125rem;
+}
+.text-xl {
+    font-size: 1.25rem;
+}
+.text-2xl {
+    font-size: 1.5rem;
+}
+.text-3xl {
+    font-size: 1.875rem;
+}
+.text-4xl {
+    font-size: 2.25rem;
+}
+.text-5xl {
+    font-size: 3rem;
+}
+.text-6xl {
+    font-size: 4rem;
+}
+
+.rounded-none {
+    border-radius: 0;
+}
+.rounded-sm {
+    border-radius: 0.125rem;
+}
+.rounded {
+    border-radius: 0.25rem;
+}
+.rounded-md {
+    border-radius: 0.375rem;
+}
+.rounded-lg {
+    border-radius: 0.5rem;
+}
+.rounded-full {
+    border-radius: 9999px;
 }
