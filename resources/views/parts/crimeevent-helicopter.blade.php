@@ -44,7 +44,10 @@ if (!function_exists("highlightStr")) {
                 </a>
             </p>
         @endif
-        {!! $event->getParsedContent() !!}
+        {{-- {!! $event->getParsedContent() !!} --}}
+        @php
+            echo preg_replace('/(polishelikopter|ambulanshelikopter|helikopter)/i','<em class="highlightedWord">$1</em>', $event->getParsedContent());
+        @endphp
     </div>
 
 </article>

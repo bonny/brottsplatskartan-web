@@ -1623,6 +1623,10 @@ h2.widget__title {
     font-size: 1rem;
 }
 
+.highlightedWord {
+    font-weight: bold;
+}
+
 /* Utilities */
 .u-margin-0 {
     margin: 0;
