@@ -83,7 +83,9 @@ class CoyardsController extends Controller
                     array_flip($keepKeys)
                 );
 
-                $data['events'] = $data['events']->map([$this, 'cleanupEventsData']);
+                if (isset($data['events'])) {
+                    $data['events'] = $data['events']->map([$this, 'cleanupEventsData']);
+                }
 
                 return $data;
         }

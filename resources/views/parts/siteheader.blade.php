@@ -25,7 +25,16 @@
                             <path d="M0 0h24v24H0z" fill="none"/>
                             <path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
                         </svg>
-                        <span>Händelser</span>
+                        <span>Senaste</span>
+                    </a>
+                </li>
+                <li class="SiteNav__item SiteNav__item--mostRead">
+                    <a href="{{ route('mostRead', [], false) }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff" width="18px" height="18px">
+                            <path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/>
+                            <path d="M0 0h24v24H0z" fill="none"/>
+                        </svg>
+                        <span>Mest lästa</span>
                     </a>
                 </li>
                 <li class="SiteNav__item SiteNav__item--lan">
@@ -43,7 +52,16 @@
                             <path d="M0 0h24v24H0V0z" fill="none"/>
                             <path d="M21 3L3 10.53v.98l6.84 2.65L12.48 21h.98L21 3z"/>
                         </svg>
-                        <span>Nära mig</span>
+                        <span>Nära</span>
+                    </a>
+                </li>
+                <li class="SiteNav__item SiteNav__item--sverigekartan">
+                    <a href="{{ route('FullScreenMap', [], false) }}">                        
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="18px" height="18px">
+                            <path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/>
+                            <path d="M0 0h24v24H0z" fill="none"/>
+                        </svg>
+                        <span>Sverigekartan</span>
                     </a>
                 </li>
                 <li class="SiteNav__item SiteNav__item--search">
