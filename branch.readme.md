@@ -1,8 +1,7 @@
 Branch to upgrade to laravel 7.
 
 Currently waiting for 
-https://github.com/HTMLMin/Laravel-HTMLMin/pull/148
-to be merged.
+https://github.com/creitive/laravel6-breadcrumbs/issues/2
 
 Then composer update maybe works.
 
