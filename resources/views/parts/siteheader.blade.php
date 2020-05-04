@@ -19,7 +19,16 @@
         <nav class="SiteNav">
             <ul class="SiteNav__items">
                 <li class="SiteNav__item SiteNav__item--latest">
-                    <a href="{{ route('start', [], false) }}">
+                    <a href="{{ route('start') }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="18px" height="18px">
+                            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                            <path d="M0 0h24v24H0z" fill="none"/>
+                        </svg>
+                        <span>Start</span>
+                    </a>
+                </li>
+                <li class="SiteNav__item SiteNav__item--latest">
+                    <a href="{{ route('handelser', [], false) }}">
                         <svg fill="#fff" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg">
                             <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/>
                             <path d="M0 0h24v24H0z" fill="none"/>

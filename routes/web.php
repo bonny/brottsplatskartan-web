@@ -59,7 +59,8 @@ Route::get('/polisstationer', 'PolisstationerController@index')->name(
 Route::match(['get', 'post'], '/', 'StartController@day')->name('start');
 
 Route::get('/handelser/{date}', 'StartController@day')->name('startDatum');
-Route::redirect('/handelser/', '/');
+Route::get('/handelser/', 'StartController@day')->name('handelser');
+// Route::redirect('/handelser/', '/');
 
 /**
  * Skicka vidare gamla /datum-urlar till /handelser

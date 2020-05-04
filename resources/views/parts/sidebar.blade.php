@@ -11,7 +11,8 @@ https://www.ampproject.org/docs/reference/components/amp-sidebar
             <ul class="Sidebar-nav-items">
                 <li class="Sidebar-nav-large">
                     <ul>
-                        <li><a href="{{ route("start") }}">Händelser<br/>i hela Sverige</a></li>
+                        <li><a href="{{ route("start") }}">Start</a></li>
+                        <li><a href="{{ route("handelser") }}">Senaste händelserna</a></li>
                         <li><a href="/nara-hitta-plats">Händelser nära mig</a></li>
                         <li><a href="{{ route('mostRead') }}">Mest lästa</a></li>
                         <li><a href="{{ route('helicopter') }}">Helikopter</a></li>

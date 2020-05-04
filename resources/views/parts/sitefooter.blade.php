@@ -3,7 +3,8 @@
     <h2>Brottsplatskartan</h2>
 
     <ul class="SiteFooter__navlinks">
-        <li><a href="{{ route("start") }}">Senaste händelserna</a></li>
+        <li><a href="{{ route("start") }}">Start</a></li>
+        <li><a href="{{ route("handelser") }}">Senaste händelserna</a></li>
         <li><a href="/nara-hitta-plats">Händelser nära mig</a></li>
         <li><a href="{{ route('mostRead') }}">Mest lästa händelserna</a></li>
         <li><a href="{{ route("helicopter") }}">Helikopter</a></li>
