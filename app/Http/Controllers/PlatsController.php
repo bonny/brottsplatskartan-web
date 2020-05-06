@@ -730,6 +730,7 @@ class PlatsController extends Controller
                 // });
             #})
             ->where('parsed_title', 'LIKE', "%helikopter%")
+            ->orWhere('parsed_teaser', 'LIKE', "%helikopter%")
             ->orWhere('parsed_content', 'LIKE', "%helikopter%")
             ->limit(25)
             ->with('locations')
