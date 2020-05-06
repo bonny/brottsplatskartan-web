@@ -1621,6 +1621,7 @@ h2.widget__title {
 
 .highlightedWord {
     font-weight: bold;
+    font-style: normal;
 }
 
 /* Utilities */
