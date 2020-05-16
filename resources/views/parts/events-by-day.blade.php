@@ -4,11 +4,11 @@
 
             <h3 class="Events__dayTitle">
                 <time>{{ $events->get(0)->getCreatedAtLocalized() }}</time>
-                @if ($events->count() == 1)
+                {{-- @if ($events->count() == 1)
                     <span>– En händelse</span>
                 @else
                     <span>– {{ $events->count() }} händelser</span>
-                @endif
+                @endif --}}
             </h3>
 
             <ul class="Events__dayEvents">
