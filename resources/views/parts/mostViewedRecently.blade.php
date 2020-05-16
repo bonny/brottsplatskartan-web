@@ -25,7 +25,7 @@
                             @{{#items}}
                                 <div data-recent-views="@{{views}}" class="MostViewedRecently__item">
                                     <a href="@{{permalink}}">
-                                    @{{parsed_date_hm}}: @{{ description }}
+                                        @{{ description }}
                                     </a>
                                 </div>
                             @{{/items}}
