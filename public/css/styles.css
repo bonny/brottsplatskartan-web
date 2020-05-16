@@ -599,9 +599,6 @@ blockquote {
 .Event__source {
     font-size: var(--font-size-small);
     color: #666;
-    white-space: pre;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 .Event__metaDivider {
