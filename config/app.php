@@ -186,7 +186,7 @@ return [
         willvincent\Feeds\FeedsServiceProvider::class,
         'Kozz\Laravel\Providers\Guzzle',
         Weidner\Goutte\GoutteServiceProvider::class,
-        'Creitive\Breadcrumbs\BreadcrumbsServiceProvider',
+        // 'Creitive\Breadcrumbs\BreadcrumbsServiceProvider',
         'Thujohn\Twitter\TwitterServiceProvider',
         Unisharp\Setting\SettingServiceProvider::class,
         Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class
