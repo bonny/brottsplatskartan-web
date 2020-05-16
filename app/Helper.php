@@ -1053,8 +1053,6 @@ class Helper
 
             // Can't get eager loading to work all way...
             $mostViewed->load('crimeEvent.locations');
-            // dd('$mostViewed', $mostViewed);
-            // $mostViewed->get(0)->crimeEvent
 
             return $mostViewed;
         });

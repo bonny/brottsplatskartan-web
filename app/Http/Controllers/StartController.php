@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use DB;
+use App\Helper;
 use App\CrimeEvent;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -37,6 +38,9 @@ class StartController extends Controller
         $isYesterday = $date['date']->isYesterday();
         $isCurrentYear = $date['date']->isCurrentYear();
 
+        $eventsMostViewedRecently = null;
+        $eventsMostViewedToday = null;
+
         // Hämta events från vald dag
         if ($isToday) {
             // Om startsida så hämta för flera dagar,
@@ -48,6 +52,12 @@ class StartController extends Controller
                 $date,
                 $daysBack
             );
+            
+            // Mest lästa senaste nn minuterna.
+            $eventsMostViewedRecently = Helper::getMostViewedEventsRecently(20, 10);
+
+            // Mest lästa idag.
+            $eventsMostViewedToday = Helper::getMostViewedEvents(Carbon::now(), 10);
         } else {
             // Om inte idag.
             $beforeDate = $date['date']
@@ -231,6 +241,8 @@ class StartController extends Controller
             'dateFormattedForMostCommonCrimeTypes' => trim(
                 $date['date']->formatLocalized('%e %B')
             ),
+            'eventsMostViewedRecently' => $eventsMostViewedRecently,
+            'eventsMostViewedToday' => $eventsMostViewedToday
         ];
 
         return view('start', $data);
