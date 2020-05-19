@@ -47,7 +47,7 @@ Route::get('/polisstationer', 'PolisstationerController@index')->name(
 );
 
 /**
- * startpage: visa senaste händelserna, datum/dag-versionen
+ * Startpage: visa senaste händelserna, datum/dag-versionen
  *
  * URL är t.ex:
  * https://brottsplatskartan.se/
@@ -56,7 +56,7 @@ Route::get('/polisstationer', 'PolisstationerController@index')->name(
  *
  * @param string $year Year in format "december-2017"
  */
-Route::match(['get', 'post'], '/', 'StartController@day')->name('start');
+Route::match(['get', 'post'], '/', 'StartController@start')->name('start');
 
 Route::get('/handelser/{date}', 'StartController@day')->name('startDatum');
 Route::get('/handelser/', 'StartController@day')->name('handelser');

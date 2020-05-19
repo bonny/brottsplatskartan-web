@@ -25,78 +25,139 @@ samt för äldre dagar när man bläddrar i arkivet.
 @section('metaImageWidth', 600)
 @section('metaImageHeight', 315)
 
-@section('metaContent')
-    @if (isset($linkRelPrev))
-        <link rel="prev" href="{{ $linkRelPrev }}" />
-    @endif
-    @if (isset($linkRelNext))
-        <link rel="next" href="{{ $linkRelNext }}" />
-    @endif
-@endsection
-
 @section('content')
-
-    @include('parts.mostViewedRecently')
 
     <div class="widget">
         <h1 class="widget__title">
-            @if (!empty($title))
-                {!!$title!!}
-            @else
-                Senaste polishändelserna i Sverige
-            @endif
+            {!!$title!!}
         </h1>
-
-        @includeWhen(!$isToday, 'parts.daynav')
-
-        @if (isset($showLanSwitcher))
-            <p class="Breadcrumbs__switchLan__belowTitle">
-                <a class="Breadcrumbs__switchLan" href="{{ route("lanOverview") }}">Välj län</a>
-                <a class="Breadcrumbs__switchLan Breadcrumbs__switchLan--geo" href="/nara-hitta-plats">Visa händelser nära min plats</a>
-            </p>
-        @endif
 
         @if (empty($introtext))
         @else
             <div class="Introtext">{!! $introtext !!}</div>
         @endif
 
-        @if ($events && $numEvents)
-
-            @if ($mostCommonCrimeTypes && $mostCommonCrimeTypes->count() >= 5)
-                <p>
-                    @if ($isToday)
-                        De vanligaste händelserna idag är
+        @if ($mostCommonCrimeTypes && $mostCommonCrimeTypes->count() >= 5)
+            <p>
+                De vanligaste händelserna idag är
+                @foreach ($mostCommonCrimeTypes as $oneCrimeType)
+                    @if ($loop->remaining == 0)
+                        och <strong>{{ mb_strtolower($oneCrimeType->parsed_title) }}</strong>.
+                    @elseif ($loop->remaining == 1)
+                        <strong>{{ mb_strtolower($oneCrimeType->parsed_title) }}</strong>
                     @else
-                        De vanligaste händelserna {{$dateFormattedForMostCommonCrimeTypes}} var
+                        <strong>{{ mb_strtolower($oneCrimeType->parsed_title) }}</strong>,
                     @endif
-                    @foreach ($mostCommonCrimeTypes as $oneCrimeType)
-                        @if ($loop->remaining == 0)
-                            och <strong>{{ mb_strtolower($oneCrimeType->parsed_title) }}</strong>.
-                        @elseif ($loop->remaining == 1)
-                            <strong>{{ mb_strtolower($oneCrimeType->parsed_title) }}</strong>
-                        @else
-                            <strong>{{ mb_strtolower($oneCrimeType->parsed_title) }}</strong>,
-                        @endif
-                        <!-- {{ $oneCrimeType->antal }} -->
-                    @endforeach
-                </p>
-            @endif
-
-            @if ($isToday)
-                {{-- <p><b>{{$numEvents}} händelser har rapporterats in från Polisen de senaste dagarna.</b><p> --}}
-            @else
-                <p><b>{{$numEvents}} händelser från Polisen för detta datum.</b><p>
-            @endif
-
-            @include('parts.events-by-day')
-
-            @include('parts.daynav')
-        @else
-            <p>Inga händelser inrapporterade denna dag.</p>
+                    <!-- {{ $oneCrimeType->antal }} -->
+                @endforeach
+            </p>
         @endif
     </div>
 
+
+    @if ($eventsMostViewedRecentlyFirst)
+        <div class="widget">
+            <h2 class="widget__title">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#333" width="18px" height="18px">
+                    <path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/>
+                    <path d="M0 0h24v24H0z" fill="none"/>
+                </svg>
+                <a href="{{ route('mostRead') }}">Mest läst just nu</a>
+            </h2>
+            
+            @if ($eventsMostViewedRecentlyFirst)
+                @include('parts.crimeevent-hero', [
+                    'event' => $eventsMostViewedRecentlyFirst['crimeEvent'],
+                ])
+            @endif
+
+            @if ($eventsMostViewedRecentlySecond)
+                <div class="u-margin-top-double">
+                    @include('parts.crimeevent-hero', [
+                        'event' => $eventsMostViewedRecentlySecond['crimeEvent'],
+                    ])
+                </div>
+            @endif
+
+            @if ($eventsMostViewedRecentlyThird && $eventsMostViewedRecentlyFourth)
+                <div class="flex justify-between u-margin-top">
+                    <div class="w-47">
+                        @include('parts.crimeevent-hero-second', [
+                            'event' => $eventsMostViewedRecentlyThird['crimeEvent'],
+                        ])
+                    </div>
+                    <div class="w-47">
+                        @include('parts.crimeevent-hero-second', [
+                            'event' => $eventsMostViewedRecentlyFourth['crimeEvent'],
+                        ])
+                    </div>
+                </div>
+            @endif
+
+            @if ($eventsMostViewedRecentlyFifth && $eventsMostViewedRecentlySixth)
+                <div class="flex justify-between u-margin-top">
+                    <div class="w-47">
+                        @include('parts.crimeevent-hero-second', [
+                            'event' => $eventsMostViewedRecentlyFifth['crimeEvent'],
+                        ])
+                    </div>
+                    <div class="w-47">
+                        @include('parts.crimeevent-hero-second', [
+                            'event' => $eventsMostViewedRecentlySixth['crimeEvent'],
+                        ])
+                    </div>
+                </div>
+            @endif
+            
+            {{-- Visa resten som mindre --}}
+            @foreach($eventsMostViewedRecently as $recentEvent)
+                @include('parts.crimeevent-hero-small', [
+                    'event' => $recentEvent['crimeEvent'],
+                ])
+            @endforeach
+        
+            <div class="widget__footer">
+                <a href="{{ route('mostRead') }}">&raquo; Fler händelser som många läst</a>
+            </div> 
+        </div>
+    @endif
+
+    @if ($eventsRecent)
+        <div class="widget">
+            <h2 class="widget__title">
+                <svg fill="#333" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/>
+                    <path d="M0 0h24v24H0z" fill="none"/>
+                    <path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
+                </svg>
+                <a href="{{ route('handelser') }}">Senaste händelserna</a>
+            </h2>
+
+            <ul class="Events">
+                @foreach($eventsRecent as $event)
+                    @include('parts.crimeevent-small', [
+                        'event' => $event,
+                        'detailed' => true
+                    ])
+                @endforeach
+            </ul>
+
+            <div class="widget__footer">
+                <a href="{{ route('handelser') }}">&raquo; Visa alla händelser idag</a>
+            </div> 
+        </div>
+    @endif
+
+    {{-- <h2>Mest läst idag</h2>
+    <ul class="Events">
+        @foreach($eventsMostViewedToday as $recentEvent)
+            @include('parts.crimeevent-small', [
+                'event' => $recentEvent['crimeEvent'],
+                'detailed' => true
+            ])
+        @endforeach
+    </ul>
+    --}}
 @endsection
 
 @section('sidebar')

@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Cache;
  */
 class StartController extends Controller
 {
+
     /**
      * Startpage: visa senaste händelserna, datum/dag-versionen.
      *
@@ -22,6 +23,86 @@ class StartController extends Controller
      * https://brottsplatskartan.se/handelser/15-januari-2018
      * eller som startsida, då blir datum dagens datum
      * https://brottsplatskartan.se/
+     *
+     * @param Request $request Request-object.
+     * @param Carbon  $date    Year in format "december-2017".
+     */
+    public function start(Request $request)
+    {
+        // Om startsida så hämta för flera dagar,
+        // så vi inte står där utan händelser.
+        $daysBack = 3;
+
+        // Dagens datum.
+        $date = ['date' =>Carbon::now()];
+
+        $mostCommonCrimeTypes = $this->getMostCommonCrimeTypesForToday(
+            $date,
+            $daysBack
+        );
+        
+        // Senaste händelserna
+        $eventsRecent = $this->getEventsForToday($date, $daysBack);
+        
+        // Behåll bara de n senaste
+        $eventsRecent = $eventsRecent->take(10);
+
+        // Mest lästa senaste nn minuterna.
+        $eventsMostViewedRecently = Helper::getMostViewedEventsRecently(20, 10);
+        // dd($eventsMostViewedRecently);
+
+        // Mest lästa idag.
+        $eventsMostViewedToday = Helper::getMostViewedEvents(Carbon::now(), 10);
+
+        $introtext = null;
+        $introtext_key = "introtext-start";
+        $introtext = \Markdown::parse(\Setting::get($introtext_key));
+
+        $title = 'Händelser från Polisen';
+
+        $canonicalLink = route('start');
+
+        $pageTitle =
+            'Händelser och brott från Polisen – senaste nytt från hela Sverige';
+        $pageMetaDescription =
+            'Läs de senaste händelserna & brotten som Polisen rapporterat. Se polishändelser ✔ nära dig ✔ i din ort ✔ i ditt län. Händelserna hämtas direkt från Polisens webbplats.';
+
+        $data = [
+            'eventsMostViewedRecentlyFirst' => $eventsMostViewedRecently->slice(0,1)->first(),
+            'eventsMostViewedRecentlySecond' => $eventsMostViewedRecently->slice(1,1)->first(),
+            'eventsMostViewedRecentlyThird' => $eventsMostViewedRecently->slice(2,1)->first(),
+            'eventsMostViewedRecentlyFourth' => $eventsMostViewedRecently->slice(3,1)->first(),
+            'eventsMostViewedRecentlyFifth' => $eventsMostViewedRecently->slice(4,1)->first(),
+            'eventsMostViewedRecentlySixth' => $eventsMostViewedRecently->slice(5,1)->first(),
+            'eventsMostViewedRecently' => $eventsMostViewedRecently->slice(5),
+            'eventsRecentFirst' => $eventsRecent->first(),
+            'eventsRecent' => $eventsRecent->slice(1),
+            'eventsMostViewedTodayFirst' => $eventsMostViewedToday->first(),
+            'eventsMostViewedToday' => $eventsMostViewedToday->slice(1),
+            'numEvents' => $eventsRecent->count(),
+            'chartImgUrl' => \App\Helper::getStatsImageChartUrl("home"),
+            'title' => $title,
+            'introtext' => $introtext,
+            'canonicalLink' => $canonicalLink,
+            'ogUrl' => $canonicalLink,
+            'pageTitle' => $pageTitle,
+            'pageMetaDescription' => $pageMetaDescription,
+            'mostCommonCrimeTypes' => $mostCommonCrimeTypes,
+            'dateFormattedForMostCommonCrimeTypes' => trim(
+                $date['date']->formatLocalized('%e %B')
+            ),
+        ];
+
+        return view('start', $data);
+    }
+
+
+    /**
+     * Händelser: visa senaste händelserna för en viss dag/datum.
+     *
+     * URL är som
+     * https://brottsplatskartan.se/handelser/
+     * https://brottsplatskartan.se/handelser/15-januari-2018
      *
      * @param Request $request Request-object.
      * @param Carbon  $date    Year in format "december-2017".
@@ -38,9 +119,6 @@ class StartController extends Controller
         $isYesterday = $date['date']->isYesterday();
         $isCurrentYear = $date['date']->isCurrentYear();
 
-        $eventsMostViewedRecently = null;
-        $eventsMostViewedToday = null;
-
         // Hämta events från vald dag
         if ($isToday) {
             // Om startsida så hämta för flera dagar,
@@ -51,13 +129,7 @@ class StartController extends Controller
             $mostCommonCrimeTypes = $this->getMostCommonCrimeTypesForToday(
                 $date,
                 $daysBack
-            );
-            
-            // Mest lästa senaste nn minuterna.
-            $eventsMostViewedRecently = Helper::getMostViewedEventsRecently(20, 10);
-
-            // Mest lästa idag.
-            $eventsMostViewedToday = Helper::getMostViewedEvents(Carbon::now(), 10);
+            );            
         } else {
             // Om inte idag.
             $beforeDate = $date['date']
@@ -153,7 +225,7 @@ class StartController extends Controller
         }
 
         $introtext = null;
-        $introtext_key = "introtext-start";
+        $introtext_key = "introtext-handelser";
         if ($isToday) {
             $introtext = \Markdown::parse(\Setting::get($introtext_key));
         }
@@ -240,12 +312,10 @@ class StartController extends Controller
             'mostCommonCrimeTypes' => $mostCommonCrimeTypes,
             'dateFormattedForMostCommonCrimeTypes' => trim(
                 $date['date']->formatLocalized('%e %B')
-            ),
-            'eventsMostViewedRecently' => $eventsMostViewedRecently,
-            'eventsMostViewedToday' => $eventsMostViewedToday
+            )
         ];
 
-        return view('start', $data);
+        return view('handelser', $data);
     }
 
     /**
