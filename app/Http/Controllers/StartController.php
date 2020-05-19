@@ -45,7 +45,7 @@ class StartController extends Controller
         $eventsRecent = $this->getEventsForToday($date, $daysBack);
         
         // Behåll bara de n senaste
-        $eventsRecent = $eventsRecent->take(10);
+        $eventsRecent = $eventsRecent->take(20);
 
         // Mest lästa senaste nn minuterna.
         $eventsMostViewedRecently = Helper::getMostViewedEventsRecently(20, 10);
