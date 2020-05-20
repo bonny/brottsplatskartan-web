@@ -1465,7 +1465,7 @@ input[type="url"],
        Removed again, because ads disappeared
      */
     /* overflow-x: hidden; */
-    width: 100%;
+    /* width: 100%; */
 }
 
 .widget__title {
