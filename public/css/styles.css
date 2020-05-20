@@ -1412,6 +1412,7 @@ input[type="url"],
 
     .MainContent {
         width: 63%;
+        max-width: 63%;
         flex: 0 1 63%;
     }
 
