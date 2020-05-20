@@ -1466,6 +1466,7 @@ input[type="url"],
      */
     /* overflow-x: hidden; */
     /* width: 100%; */
+    overflow: hidden;
 }
 
 .widget__title {
