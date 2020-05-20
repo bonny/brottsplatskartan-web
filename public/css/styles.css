@@ -339,7 +339,7 @@ blockquote {
     background: transparent;
     border: none;
     -moz-appearance: none;
-         appearance: none;
+    appearance: none;
     -webkit-appearance: none;
     color: inherit;
 }
@@ -1417,6 +1417,7 @@ input[type="url"],
 
     .MainSidebar {
         width: 33%;
+        max-width: 33%;
         flex: 0 1 33%;
     }
 
@@ -1547,8 +1548,8 @@ h2.widget__title {
     margin-top: 0;
     margin-bottom: 0;
     -webkit-hyphens: auto;
-        -ms-hyphens: auto;
-            hyphens: auto;
+    -ms-hyphens: auto;
+    hyphens: auto;
 }
 
 .widget__listItem__text {
@@ -1980,8 +1981,8 @@ h2.widget__title {
 
 .break-hyphens {
     -webkit-hyphens: auto;
-        -ms-hyphens: auto;
-            hyphens: auto;
+    -ms-hyphens: auto;
+    hyphens: auto;
     word-break: break-word;
     word-wrap: break-word;
 }
