@@ -54,7 +54,6 @@ samt för äldre dagar när man bläddrar i arkivet.
         @endif
     </div>
 
-
     @if ($eventsMostViewedRecentlyFirst)
         <div class="widget">
             <h2 class="widget__title">
