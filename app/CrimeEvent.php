@@ -299,7 +299,12 @@ class CrimeEvent extends Model implements Feedable
             $date = $this->pubdate_iso8601;
         }
 
-        return Carbon::createFromTimestamp(strtotime($date))->diffForHumans();
+        // "för 1 dag sedan"
+        $diffHuman = Carbon::createFromTimestamp(strtotime($date))->diffForHumans();
+
+        $diffHuman = str_replace('för ', '', $diffHuman);
+
+        return $diffHuman;
     }
 
     public function getParsedDateDiffInSeconds()
