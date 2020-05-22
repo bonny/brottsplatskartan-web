@@ -109,7 +109,7 @@ samt för äldre dagar när man bläddrar i arkivet.
             @endif
             
             {{-- Visa resten som mindre --}}
-            <ul class="widget__listItems">
+            <ul class="widget__listItems u-margin-top-double">
                 @foreach($eventsMostViewedRecently as $recentEvent)
                     @include('parts.crimeevent-small', [
                         'event' => $recentEvent['crimeEvent'],
