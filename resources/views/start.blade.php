@@ -79,7 +79,7 @@ samt för äldre dagar när man bläddrar i arkivet.
             @endif
 
             @if ($eventsMostViewedRecentlyThird && $eventsMostViewedRecentlyFourth)
-                <div class="flex justify-between u-margin-top">
+                <div class="flex justify-between u-margin-top-double">
                     <div class="w-47">
                         @include('parts.crimeevent-hero-second', [
                             'event' => $eventsMostViewedRecentlyThird['crimeEvent'],
@@ -94,7 +94,7 @@ samt för äldre dagar när man bläddrar i arkivet.
             @endif
 
             @if ($eventsMostViewedRecentlyFifth && $eventsMostViewedRecentlySixth)
-                <div class="flex justify-between u-margin-top">
+                <div class="flex justify-between u-margin-top-double">
                     <div class="w-47">
                         @include('parts.crimeevent-hero-second', [
                             'event' => $eventsMostViewedRecentlyFifth['crimeEvent'],
