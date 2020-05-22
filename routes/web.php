@@ -591,7 +591,7 @@ Route::get('/{lan}/{eventName}', function ($lan, $eventName, Request $request) {
         );
     }
 
-    $breadcrumbs->addCrumb(e($event->getSingleEventTitleShort()));
+    $breadcrumbs->addCrumb(e($event->parsed_title) . ', ' . $event->getParsedDateDayMonth());
 
     // optional debug
     $debugData = (array)CrimeEvent::maybeAddDebugData($request, $event);

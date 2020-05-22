@@ -366,6 +366,32 @@ class CrimeEvent extends Model implements Feedable
     }
 
     /**
+     * Returns the date of the crime/event in MD format.
+     *
+     * @return string Date in format "21 Maj" or "21 Maj 2019" if not current year.
+     */
+    public function getParsedDateDayMonth()
+    {
+        $date = $this->parsed_date;
+        if (empty($date)) {
+            $date = $this->pubdate_iso8601;
+        }
+
+        $date = Carbon::createFromTimestamp(strtotime($date));
+
+        $formattedDate = '';
+        if ($this->isParsedDateThisYear()) {
+            // Pågående år, ta inte med år.
+            $formattedDate = $date->formatLocalized('%d %B');
+        } else {
+            // Inte pågående år, inkludera år.
+            $formattedDate = $date->formatLocalized('%d %B %Y');
+        }
+
+        return $formattedDate;
+    }
+
+    /**
      * Kolla om året för denna händelse är samma år som just nu pågår.
      * @return boolean True om det är året som pågår, false om inte.
      */
