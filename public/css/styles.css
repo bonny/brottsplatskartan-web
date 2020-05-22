@@ -10,6 +10,7 @@
     --color-blue-police: #1862a8;
     --color-blue-police-active: #0c3256;
     --color-white: #eee;
+    --color-black: #000;
     --color-yellow: #ffcc33;
     --default-margin: 1rem;
     --default-margin-half: calc(var(--default-margin) / 2);
@@ -1605,6 +1606,14 @@ h2.widget__title {
     margin-bottom: var(--default-margin-double);
 }
 
+.u-margin-bottom-third {
+    margin-bottom: var(--default-margin-third);
+}
+
+.u-margin-top-third {
+    margin-top: var(--default-margin-third);
+}
+
 .u-margin-top {
     margin-top: var(--default-margin);
 }
@@ -1667,6 +1676,12 @@ h2.widget__title {
 
 .u-color-bg-yellow {
     background-color: var(--color-yellow);
+}
+
+
+
+.u-color-black {
+    color: var(--color-black);
 }
 
 .u-color-white {
