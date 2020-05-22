@@ -109,11 +109,14 @@ samt för äldre dagar när man bläddrar i arkivet.
             @endif
             
             {{-- Visa resten som mindre --}}
-            @foreach($eventsMostViewedRecently as $recentEvent)
-                @include('parts.crimeevent-hero-small', [
-                    'event' => $recentEvent['crimeEvent'],
-                ])
-            @endforeach
+            <ul class="widget__listItems">
+                @foreach($eventsMostViewedRecently as $recentEvent)
+                    @include('parts.crimeevent-small', [
+                        'event' => $recentEvent['crimeEvent'],
+                        'detailed' => true
+                    ])
+                @endforeach
+            </ul>
         
             <div class="widget__footer">
                 <a href="{{ route('mostRead') }}">&raquo; Fler händelser som många läst</a>
