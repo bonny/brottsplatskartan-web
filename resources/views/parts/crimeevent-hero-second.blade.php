@@ -2,7 +2,7 @@
     @if ($event->geocoded)
         <p>
             <a href="{{ $event->getPermalink() }}">
-                <amp-img alt="Karta som visar ungefär var händelsen inträffat" class="" src="{{ $event->getStaticImageSrc(640,340) }}" width="640" height="340" layout="responsive"></amp-img>
+                <amp-img alt="Karta som visar ungefär var händelsen inträffat" class="" src="{{ $event->getStaticImageSrcFar(640,340) }}" width="640" height="340" layout="responsive"></amp-img>
             </a>
         </p>
     @endif
