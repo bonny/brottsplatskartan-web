@@ -1678,10 +1678,12 @@ h2.widget__title {
     background-color: var(--color-yellow);
 }
 
-
-
 .u-color-black {
     color: var(--color-black);
+}
+
+.u-color-link {
+    color: var(--color-link);
 }
 
 .u-color-white {
@@ -2001,4 +2003,23 @@ h2.widget__title {
     hyphens: auto;
     word-break: break-word;
     word-wrap: break-word;
+}
+
+.tracking-tighter {
+    letter-spacing: -0.05em;
+}
+.tracking-tight {
+    letter-spacing: -0.025em;
+}
+.tracking-normal {
+    letter-spacing: 0;
+}
+.tracking-wide {
+    letter-spacing: 0.025em;
+}
+.tracking-wider {
+    letter-spacing: 0.05em;
+}
+.tracking-widest {
+    letter-spacing: 0.1em;
 }
