@@ -1,5 +1,7 @@
 # Brottsplatskartan
 
+![Deploy till live](https://github.com/bonny/brottsplatskartan-web/workflows/Deploy%20to%20live/badge.svg)
+
 En sajt som visar [Polisens händelser](https://brottsplatskartan.se) lite finare och bättre. Fokus på karta.
 
 ## Exempel
