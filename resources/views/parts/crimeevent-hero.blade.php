@@ -1,4 +1,4 @@
-<article>
+<article class="u-margin-top-double">
     <a href="{{ $event->getPermalink() }}" class="u-color-black">
         @include('parts.atoms.event-map-far')
 

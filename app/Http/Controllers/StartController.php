@@ -67,6 +67,11 @@ class StartController extends Controller
         $pageMetaDescription =
             'Läs de senaste händelserna & brotten som Polisen rapporterat. Se polishändelser ✔ nära dig ✔ i din ort ✔ i ditt län. Händelserna hämtas direkt från Polisens webbplats.';
 
+        // Mest lästa är crimeViews, ändra så vi behåller crimeEvents.
+        $eventsMostViewedRecentlyCrimeEvents = $eventsMostViewedRecently->map(function ($item) {
+            return $item['crimeEvent'];
+        });
+
         $data = [
             'eventsMostViewedRecentlyFirst' => $eventsMostViewedRecently->slice(0,1)->first(),
             'eventsMostViewedRecentlySecond' => $eventsMostViewedRecently->slice(1,1)->first(),
@@ -75,6 +80,7 @@ class StartController extends Controller
             'eventsMostViewedRecentlyFifth' => $eventsMostViewedRecently->slice(4,1)->first(),
             'eventsMostViewedRecentlySixth' => $eventsMostViewedRecently->slice(5,1)->first(),
             'eventsMostViewedRecently' => $eventsMostViewedRecently->slice(6),
+            'eventsMostViewedRecentlyCrimeEvents' => $eventsMostViewedRecentlyCrimeEvents,
             'eventsRecentFirst' => $eventsRecent->first(),
             'eventsRecent' => $eventsRecent->slice(1),
             'eventsMostViewedTodayFirst' => $eventsMostViewedToday->first(),

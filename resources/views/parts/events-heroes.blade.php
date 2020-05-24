@@ -1,53 +1,58 @@
-@if ($eventsMostViewedRecentlyFirst)
-    @include('parts.crimeevent-hero', [
-        'event' => $eventsMostViewedRecentlyFirst['crimeEvent'],
-    ])
-@endif
+{{-- 
+- n stora event heroes
+- n medium stora event heroes i 2 kolumner
+- resten normala en och en
 
-@if ($eventsMostViewedRecentlySecond)
-    <div class="u-margin-top-double">
-        @include('parts.crimeevent-hero', [
-            'event' => $eventsMostViewedRecentlySecond['crimeEvent'],
-        ])
-    </div>
-@endif
+# Todo
+- 
+--}}
 
-@if ($eventsMostViewedRecentlyThird && $eventsMostViewedRecentlyFourth)
+@php
+
+// $eventsMostViewedRecentlyCrimeEvents
+
+// Antal stora händelser att visa.
+$numHeroEventsToShow = 2;
+
+// Antal rad med händelser två-i-bredd att visa.
+$numSmallHeroEventsToShow = 4;
+
+// Antal händelser av de som blir över att visa i vanlig listning.
+$numEventsToShowSmall = 6;
+
+// Avsluta direkt om inga händelser finns att visa.
+if (empty($eventsMostViewedRecentlyCrimeEvents)) {
+    return;
+}
+
+$heroEventsToShow = $eventsMostViewedRecentlyCrimeEvents->slice(0, $numHeroEventsToShow);
+$smallHeroEventsToShow = $eventsMostViewedRecentlyCrimeEvents->slice($numHeroEventsToShow, $numSmallHeroEventsToShow);
+$normalEventsToShow = $eventsMostViewedRecentlyCrimeEvents->slice($numHeroEventsToShow + $numSmallHeroEventsToShow, $numEventsToShowSmall);
+
+@endphp
+
+@each('parts.crimeevent-hero', $heroEventsToShow, 'event')
+
+@foreach ($smallHeroEventsToShow->chunk(2) as $chunk)
     <div class="flex justify-between u-margin-top-double">
-        <div class="w-47">
-            @include('parts.crimeevent-hero-second', [
-                'event' => $eventsMostViewedRecentlyThird['crimeEvent'],
-            ])
-        </div>
-        <div class="w-47">
-            @include('parts.crimeevent-hero-second', [
-                'event' => $eventsMostViewedRecentlyFourth['crimeEvent'],
-            ])
-        </div>
+        @foreach ($chunk as $event)
+            <div class="w-47">
+                @include('parts.crimeevent-hero-second', [
+                    'event' => $event
+                ])    
+            </div>
+        @endforeach
     </div>
-@endif
-
-@if ($eventsMostViewedRecentlyFifth && $eventsMostViewedRecentlySixth)
-    <div class="flex justify-between u-margin-top-double">
-        <div class="w-47">
-            @include('parts.crimeevent-hero-second', [
-                'event' => $eventsMostViewedRecentlyFifth['crimeEvent'],
-            ])
-        </div>
-        <div class="w-47">
-            @include('parts.crimeevent-hero-second', [
-                'event' => $eventsMostViewedRecentlySixth['crimeEvent'],
-            ])
-        </div>
-    </div>
-@endif
+@endforeach
 
 {{-- Visa resten som mindre --}}
-<ul class="widget__listItems u-margin-top-double">
-    @foreach($eventsMostViewedRecently as $recentEvent)
-        @include('parts.crimeevent-small', [
-            'event' => $recentEvent['crimeEvent'],
-            'detailed' => true
-        ])
-    @endforeach
-</ul>
+@if ($normalEventsToShow->count())
+    <ul class="widget__listItems u-margin-top-double">
+        @foreach($normalEventsToShow as $event)
+            @include('parts.crimeevent-small', [
+                'event' => $event,
+                'detailed' => true
+            ])
+        @endforeach
+    </ul>
+@endif
