@@ -73,19 +73,8 @@ class StartController extends Controller
         });
 
         $data = [
-            'eventsMostViewedRecentlyFirst' => $eventsMostViewedRecently->slice(0,1)->first(),
-            'eventsMostViewedRecentlySecond' => $eventsMostViewedRecently->slice(1,1)->first(),
-            'eventsMostViewedRecentlyThird' => $eventsMostViewedRecently->slice(2,1)->first(),
-            'eventsMostViewedRecentlyFourth' => $eventsMostViewedRecently->slice(3,1)->first(),
-            'eventsMostViewedRecentlyFifth' => $eventsMostViewedRecently->slice(4,1)->first(),
-            'eventsMostViewedRecentlySixth' => $eventsMostViewedRecently->slice(5,1)->first(),
-            'eventsMostViewedRecently' => $eventsMostViewedRecently->slice(6),
             'eventsMostViewedRecentlyCrimeEvents' => $eventsMostViewedRecentlyCrimeEvents,
-            'eventsRecentFirst' => $eventsRecent->first(),
-            'eventsRecent' => $eventsRecent->slice(1),
-            'eventsMostViewedTodayFirst' => $eventsMostViewedToday->first(),
-            'eventsMostViewedToday' => $eventsMostViewedToday->slice(1),
-            'numEvents' => $eventsRecent->count(),
+            'eventsRecent' => $eventsRecent,
             'chartImgUrl' => \App\Helper::getStatsImageChartUrl("home"),
             'title' => $title,
             'introtext' => $introtext,

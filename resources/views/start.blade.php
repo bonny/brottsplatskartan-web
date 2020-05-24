@@ -54,23 +54,21 @@ samt för äldre dagar när man bläddrar i arkivet.
         @endif
     </div>
 
-    @if ($eventsMostViewedRecentlyFirst)
-        <div class="widget">
-            <h2 class="widget__title">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#333" width="18px" height="18px">
-                    <path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/>
-                    <path d="M0 0h24v24H0z" fill="none"/>
-                </svg>
-                <a href="{{ route('mostRead') }}">Mest lästa händelserna</a>
-            </h2>
-            
-            @include('parts.events-heroes')
+    <div class="widget">
+        <h2 class="widget__title">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#333" width="18px" height="18px">
+                <path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/>
+                <path d="M0 0h24v24H0z" fill="none"/>
+            </svg>
+            <a href="{{ route('mostRead') }}">Mest lästa händelserna</a>
+        </h2>
+        
+        @include('parts.events-heroes')
 
-            <div class="widget__footer">
-                <a href="{{ route('mostRead') }}">&raquo; Fler händelser som många läst</a>
-            </div> 
-        </div>
-    @endif
+        <div class="widget__footer">
+            <a href="{{ route('mostRead') }}">&raquo; Fler händelser som många läst</a>
+        </div> 
+    </div>
 
     @if ($eventsRecent)
         <div class="widget">
@@ -98,16 +96,6 @@ samt för äldre dagar när man bläddrar i arkivet.
         </div>
     @endif
 
-    {{-- <h2>Mest läst idag</h2>
-    <ul class="Events">
-        @foreach($eventsMostViewedToday as $recentEvent)
-            @include('parts.crimeevent-small', [
-                'event' => $recentEvent['crimeEvent'],
-                'detailed' => true
-            ])
-        @endforeach
-    </ul>
-    --}}
 @endsection
 
 @section('sidebar')
