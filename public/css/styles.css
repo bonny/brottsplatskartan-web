@@ -1598,8 +1598,13 @@ h2.widget__title {
 .u-margin-0 {
     margin: 0;
 }
+
 .u-margin-bottom {
     margin-bottom: var(--default-margin);
+}
+
+.u-margin-bottom-half {
+    margin-bottom: var(--default-margin-half);
 }
 
 .u-margin-bottom-double {
