@@ -74,7 +74,7 @@ class StartController extends Controller
             'eventsMostViewedRecentlyFourth' => $eventsMostViewedRecently->slice(3,1)->first(),
             'eventsMostViewedRecentlyFifth' => $eventsMostViewedRecently->slice(4,1)->first(),
             'eventsMostViewedRecentlySixth' => $eventsMostViewedRecently->slice(5,1)->first(),
-            'eventsMostViewedRecently' => $eventsMostViewedRecently->slice(5),
+            'eventsMostViewedRecently' => $eventsMostViewedRecently->slice(6),
             'eventsRecentFirst' => $eventsRecent->first(),
             'eventsRecent' => $eventsRecent->slice(1),
             'eventsMostViewedTodayFirst' => $eventsMostViewedToday->first(),
