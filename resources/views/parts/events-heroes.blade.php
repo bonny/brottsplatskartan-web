@@ -12,13 +12,13 @@
 // $eventsMostViewedRecentlyCrimeEvents
 
 // Antal stora händelser att visa.
-$numHeroEventsToShow = 2;
+$numHeroEventsToShow = 3;
 
 // Antal rad med händelser två-i-bredd att visa.
-$numSmallHeroEventsToShow = 4;
+$numSmallHeroEventsToShow = 6;
 
 // Antal händelser av de som blir över att visa i vanlig listning.
-$numEventsToShowSmall = 6;
+$numEventsToShowSmall = 8;
 
 // Avsluta direkt om inga händelser finns att visa.
 if (empty($eventsMostViewedRecentlyCrimeEvents)) {

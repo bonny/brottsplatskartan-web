@@ -56,7 +56,7 @@ samt för äldre dagar när man bläddrar i arkivet.
 
     <div class="widget">
         <h2 class="widget__title">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#333" width="18px" height="18px">
+            <svg class="align-text-bottom" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#0c3256" width="18px" height="18px">
                 <path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/>
                 <path d="M0 0h24v24H0z" fill="none"/>
             </svg>
@@ -70,10 +70,31 @@ samt för äldre dagar när man bläddrar i arkivet.
         </div> 
     </div>
 
+    <div class="widget">
+        <h2 class="widget__title">
+            <a href="{{ route('FullScreenMap') }}">
+                <svg class="align-text-bottom" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#0c3256" width="18px" height="18px">
+                    <path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/>
+                    <path d="M0 0h24v24H0z" fill="none"/>
+                </svg>
+                Sverigekartan
+            </a>
+        </h2>
+        <p><a href="{{ route('FullScreenMap') }}">Se händelser och brott i hela Sverige</a></p>
+        <a href="{{ route('FullScreenMap') }}">
+            <amp-img 
+                src="https://s3.eu-central-1.amazonaws.com/brottsplatskartan.se/images/sverigekartan-mitten-av-sverige.png"
+                layout="responsive"
+                width="250"
+                height="240"
+            ></amp-img>
+        </a>
+    </div>
+
     @if ($eventsRecent)
         <div class="widget">
             <h2 class="widget__title">
-                <svg fill="#333" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg">
+                <svg class="align-text-bottom" fill="#0c3256" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg">
                     <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/>
                     <path d="M0 0h24v24H0z" fill="none"/>
                     <path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>

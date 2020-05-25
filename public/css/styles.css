@@ -1,7 +1,8 @@
 :root {
     --color-grey-light: #ddd;
-    --color-link: #0379c4;
-    --color-link: #15c; /* same colors as lighthouse */
+    /* --color-link: #0379c4;
+    --color-link: #15c; same colors as lighthouse */
+    --color-link: #0c3256; /* same colors as lighthouse */
     --color-gray-1: #666;
     --color-gray-2: #ddd;
     --color-gray-3: #333;
@@ -2028,3 +2029,10 @@ h2.widget__title {
 .tracking-widest {
     letter-spacing: 0.1em;
 }
+
+.align-baseline	{ vertical-align: baseline;}
+.align-top	{ vertical-align: top;}
+.align-middle	{ vertical-align: middle;}
+.align-bottom	{ vertical-align: bottom;}
+.align-text-top	{ vertical-align: text-top;}
+.align-text-bottom	{ vertical-align: text-bottom;}
