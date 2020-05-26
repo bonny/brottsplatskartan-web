@@ -62,8 +62,7 @@ class StartController extends Controller
 
         $canonicalLink = route('start');
 
-        $pageTitle =
-            'Händelser och brott från Polisen – senaste nytt från hela Sverige';
+        $pageTitle = 'Händelser & brott rapporterade av Polisen';
         $pageMetaDescription =
             'Läs de senaste händelserna & brotten som Polisen rapporterat. Se polishändelser ✔ nära dig ✔ i din ort ✔ i ditt län. Händelserna hämtas direkt från Polisens webbplats.';
 
@@ -275,7 +274,7 @@ class StartController extends Controller
 
         if ($isToday) {
             $pageTitle =
-                'Händelser och brott från Polisen – senaste nytt från hela Sverige';
+                'Senaste händelserna från Polisen';
             $pageMetaDescription =
                 'Läs de senaste händelserna & brotten som Polisen rapporterat. Se polishändelser ✔ nära dig ✔ i din ort ✔ i ditt län. Händelserna hämtas direkt från Polisens webbplats.';
         } else {

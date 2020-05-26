@@ -64,7 +64,7 @@ class MestLastController extends Controller
                     )
                 ],
                 'mestLasta' => $days,
-                'pageTitle' => 'Mest lästa händelserna'
+                'pageTitle' => 'Mest lästa händelserna från Polisen'
             ]);
 
         //     return $view->render();
