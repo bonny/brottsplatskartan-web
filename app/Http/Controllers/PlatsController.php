@@ -291,7 +291,7 @@ class PlatsController extends Controller
             )
         );
 
-        if (!$isToday) {
+        if (!$isToday && !empty($fintFormateratDatum)) {
             $breadcrumbs->addCrumb($fintFormateratDatum);
         }
 
