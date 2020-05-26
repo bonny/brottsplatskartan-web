@@ -63,7 +63,8 @@ class MestLastController extends Controller
                         $numEventsToGet
                     )
                 ],
-                'mestLasta' => $days
+                'mestLasta' => $days,
+                'pageTitle' => 'Mest lästa händelserna'
             ]);
 
         //     return $view->render();
