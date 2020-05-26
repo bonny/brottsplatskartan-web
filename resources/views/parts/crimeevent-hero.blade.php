@@ -1,12 +1,12 @@
 <article class="u-margin-top-double">
-    <a href="{{ $event->getPermalink() }}" class="u-color-black">
+    <a href="{{ $event->getPermalink() }}" class="u-color-black block hover:no-underline group">
         @include('parts.atoms.event-map-far')
 
         <p class="u-margin-0 u-margin-bottom-third">
             <span class="Event__parsedTitle Event__type">{{ $event->parsed_title }}</span>
         </p>
 
-        <h1 class="text-2xl font-bold break-hyphens u-margin-0 tracking-tight u-color-link">
+        <h1 class="text-2xl font-bold break-hyphens u-margin-0 tracking-tight u-color-link group-hover:underline">
             {{ $event->getDescriptionAsPlainText() }}
         </h1>
 

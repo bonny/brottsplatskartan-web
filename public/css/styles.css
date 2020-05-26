@@ -1810,6 +1810,18 @@ h2.widget__title {
     display: inline-flex;
 }
 
+.block {
+    display: block;
+}
+
+.inline-block {
+    display: inline-block;
+}
+
+.inline {
+    display: inline;
+}
+
 .w-0 {
     width: 0;
 }
@@ -2030,9 +2042,61 @@ h2.widget__title {
     letter-spacing: 0.1em;
 }
 
-.align-baseline	{ vertical-align: baseline;}
-.align-top	{ vertical-align: top;}
-.align-middle	{ vertical-align: middle;}
-.align-bottom	{ vertical-align: bottom;}
-.align-text-top	{ vertical-align: text-top;}
-.align-text-bottom	{ vertical-align: text-bottom;}
+.align-baseline {
+    vertical-align: baseline;
+}
+.align-top {
+    vertical-align: top;
+}
+.align-middle {
+    vertical-align: middle;
+}
+.align-bottom {
+    vertical-align: bottom;
+}
+.align-text-top {
+    vertical-align: text-top;
+}
+.align-text-bottom {
+    vertical-align: text-bottom;
+}
+
+.underline {
+    text-decoration: underline;
+}
+
+.line-through {
+    text-decoration: line-through;
+}
+
+.no-underline {
+    text-decoration: none;
+}
+
+.hover\:underline:hover {
+    text-decoration: underline;
+}
+
+.hover\:line-through:hover {
+    text-decoration: line-through;
+}
+
+.hover\:no-underline:hover {
+    text-decoration: none;
+}
+
+.focus\:underline:focus {
+    text-decoration: underline;
+}
+
+.focus\:line-through:focus {
+    text-decoration: line-through;
+}
+
+.focus\:no-underline:focus {
+    text-decoration: none;
+}
+
+.group:hover .group-hover\:underline {
+    text-decoration: underline;
+}
