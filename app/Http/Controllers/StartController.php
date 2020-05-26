@@ -48,7 +48,7 @@ class StartController extends Controller
         $eventsRecent = $eventsRecent->take(20);
 
         // Mest lästa senaste nn minuterna.
-        $eventsMostViewedRecently = Helper::getMostViewedEventsRecently(20, 10);
+        $eventsMostViewedRecently = Helper::getMostViewedEventsRecently(20, 20);
         // dd($eventsMostViewedRecently);
 
         // Mest lästa idag.
