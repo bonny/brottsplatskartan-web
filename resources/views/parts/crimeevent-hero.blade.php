@@ -1,5 +1,11 @@
-<article class="u-margin-top-double">
+<article 
+    class="
+        @if (!$loop->first)
+            u-margin-top-double
+        @endif
+    ">
     <a href="{{ $event->getPermalink() }}" class="u-color-black block hover:no-underline group">
+        
         @include('parts.atoms.event-map-far')
 
         <p class="u-margin-0 u-margin-bottom-third">

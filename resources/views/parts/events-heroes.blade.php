@@ -31,7 +31,9 @@ $normalEventsToShow = $eventsMostViewedRecentlyCrimeEvents->slice($numHeroEvents
 
 @endphp
 
-@each('parts.crimeevent-hero', $heroEventsToShow, 'event')
+@foreach ($heroEventsToShow as $event)
+    @include('parts.crimeevent-hero', ['event' => $event])
+@endforeach
 
 @foreach ($smallHeroEventsToShow->chunk(2) as $chunk)
     <div class="flex justify-between u-margin-top-double">
