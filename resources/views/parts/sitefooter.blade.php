@@ -8,7 +8,7 @@
         <li><a href="/nara-hitta-plats">Händelser nära mig</a></li>
         <li><a href="{{ route('mostRead') }}">Mest lästa händelserna</a></li>
         <li><a href="{{ route("helicopter") }}">Helikopter</a></li>
-        <li><a href="{{ route("FullScreenMap") }}">Sverigekartan</a></li>
+        <li><a href="{{ route("sverigekartan") }}">Sverigekartan</a></li>
         <li><a href="{{ route("polisstationer") }}">Polisstationer</a></li>
         <li><a href="{{ route("blog") }}">Blogg</a></li>
         <li><a href="{{ route("page", ["pagename" => "om"]) }}">Om Brottsplatskartan</a></li>

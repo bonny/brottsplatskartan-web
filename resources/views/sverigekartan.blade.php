@@ -1,0 +1,27 @@
+{{--
+
+Template för sverigekartan
+
+--}}
+
+@extends('layouts.web')
+
+@section('title', 'Sverigekartan – Brottsplatskartans karta med brott och händelser från hela Sverige utmarkerade på karta')
+@section('canonicalLink', route('sverigekartan'))
+
+@section('beforeMainContent')
+
+    <div class="block relative h-screen Sverigekartan__wrapper">
+        <amp-iframe
+            width="auto"
+            height="300"
+            sandbox="allow-scripts"
+            layout="fill"
+            frameborder="0"
+            src="/sverigekartan-iframe/"
+        >
+            <amp-img layout="fill" src="/img/share-img-blur.jpg" placeholder></amp-img>
+        </amp-iframe>
+    </div>
+
+@endsection
