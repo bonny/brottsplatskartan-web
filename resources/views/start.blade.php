@@ -72,7 +72,7 @@ samt för äldre dagar när man bläddrar i arkivet.
 
     <div class="widget">
         <h2 class="widget__title">
-            <a href="{{ route('FullScreenMap') }}">
+            <a href="{{ route('sverigekartan') }}">
                 <svg class="align-text-bottom" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#0c3256" width="18px" height="18px">
                     <path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/>
                     <path d="M0 0h24v24H0z" fill="none"/>
@@ -80,8 +80,8 @@ samt för äldre dagar när man bläddrar i arkivet.
                 Sverigekartan
             </a>
         </h2>
-        <p><a href="{{ route('FullScreenMap') }}">Se händelser och brott i hela Sverige</a></p>
-        <a href="{{ route('FullScreenMap') }}">
+        <p><a href="{{ route('sverigekartan') }}">Se händelser och brott i hela Sverige</a></p>
+        <a href="{{ route('sverigekartan') }}">
             <amp-img 
                 src="https://s3.eu-central-1.amazonaws.com/brottsplatskartan.se/images/sverigekartan-mitten-av-sverige.png"
                 layout="responsive"

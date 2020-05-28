@@ -51,7 +51,7 @@ https://www.ampproject.org/docs/reference/components/amp-sidebar
                             </amp-accordion>
                         </li>
 
-                        <li><a href="{{ route("FullScreenMap") }}">Sverigekartan</a></li>
+                        <li><a href="{{ route("sverigekartan") }}">Sverigekartan</a></li>
 
                         <li><a href="{{ route('search', [], false) }}">Sök</a></li>
 

@@ -34,7 +34,10 @@ Route::get('/debug/{what}', 'DebugController@debug')->name('debug');
 
 Route::redirect('/karta/', '/sverigekartan/', 301);
 Route::get('/sverigekartan/{location?}', 'FullScreenMapController@index')->name(
-    'FullScreenMap'
+    'sverigekartan'
+);
+Route::get('/sverigekartan-iframe/{location?}', 'FullScreenMapController@iframe')->name(
+    'sverigekartanIframe'
 );
 
 // URL is like

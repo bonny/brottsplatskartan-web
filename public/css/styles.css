@@ -121,7 +121,7 @@ blockquote {
 .container {
     margin: 0 auto;
     max-width: 1400px;
-    padding: 0 10px;
+    padding: 0 var(--default-margin);
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
@@ -1595,6 +1595,12 @@ h2.widget__title {
     font-style: normal;
 }
 
+.Sverigekartan__wrapper {
+    width: calc(100% + (3 * var(--default-margin)));
+    margin-left: calc(-1 * var(--default-margin));
+    margin-right: calc(-1 * var(--default-margin));
+}
+
 /* Utilities */
 .u-margin-0 {
     margin: 0;
@@ -1983,6 +1989,73 @@ h2.widget__title {
     width: 45%;
 }
 
+.h-0 {
+    height: 0;
+}
+.h-1 {
+    height: 0.25rem;
+}
+.h-2 {
+    height: 0.5rem;
+}
+.h-3 {
+    height: 0.75rem;
+}
+.h-4 {
+    height: 1rem;
+}
+.h-5 {
+    height: 1.25rem;
+}
+.h-6 {
+    height: 1.5rem;
+}
+.h-8 {
+    height: 2rem;
+}
+.h-10 {
+    height: 2.5rem;
+}
+.h-12 {
+    height: 3rem;
+}
+.h-16 {
+    height: 4rem;
+}
+.h-20 {
+    height: 5rem;
+}
+.h-24 {
+    height: 6rem;
+}
+.h-32 {
+    height: 8rem;
+}
+.h-40 {
+    height: 10rem;
+}
+.h-48 {
+    height: 12rem;
+}
+.h-56 {
+    height: 14rem;
+}
+.h-64 {
+    height: 16rem;
+}
+.h-auto {
+    height: auto;
+}
+.h-px {
+    height: 1px;
+}
+.h-full {
+    height: 100%;
+}
+.h-screen {
+    height: 100vh;
+}
+
 .break-normal {
     word-break: normal;
     overflow-wrap: normal;
@@ -2099,4 +2172,20 @@ h2.widget__title {
 
 .group:hover .group-hover\:underline {
     text-decoration: underline;
+}
+
+.static {
+    position: static;
+}
+.fixed {
+    position: fixed;
+}
+.absolute {
+    position: absolute;
+}
+.relative {
+    position: relative;
+}
+.sticky {
+    position: sticky;
 }
