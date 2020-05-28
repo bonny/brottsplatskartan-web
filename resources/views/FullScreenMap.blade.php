@@ -1,6 +1,5 @@
 <!doctype html>
 <html>
-
 <head>
     <title>Sverigekartan – karta med polisens händelser i hela Sverige</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.3/dist/leaflet.css" integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
@@ -9,6 +8,8 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.Default.css" />
     <script src="https://unpkg.com/leaflet@1.3.3/dist/leaflet.js" integrity="sha512-tAGcCfR4Sc5ZP5ZoVz0quoZDYX5aCtEm/eu1KhSLj2c9eFrylXZknQYmxUssFaVJKvvc0dJQixhGjG2yXWiV9Q=="
         crossorigin=""></script>
+    <link rel="stylesheet" href="//unpkg.com/leaflet-gesture-handling/dist/leaflet-gesture-handling.min.css" type="text/css">
+    <script src="//unpkg.com/leaflet-gesture-handling"></script>
     <script src="https://unpkg.com/leaflet.markercluster@1.3.0/dist/leaflet.markercluster.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <link rel="stylesheet" href="/css/styles.css" />
@@ -142,7 +143,13 @@
     </footer>
 
     <script>
-        var mymap = L.map('mapid').setView([{{$lat}},{{$lng}}], {{$zoom}});
+        var mymap = L.map(
+            'mapid', 
+            { 
+                gestureHandling: true
+            }
+        );
+        mymap.setView([{{$lat}},{{$lng}}], {{$zoom}});
 
         /*
         https://stackoverflow.com/questions/17382012/is-there-a-way-to-resize-marker-icons-depending-on-zoom-level-in-leaflet
@@ -307,5 +314,4 @@
         gtag('config', 'UA-181460-13');
     </script>
 </body>
-
 </html>
