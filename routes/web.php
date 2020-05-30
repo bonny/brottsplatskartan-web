@@ -721,6 +721,8 @@ Route::get('logout', function () {
     return redirect('/');
 });
 
+Route::get('/sociala-medier', 'DebugController@socialaMedier')->name('socialaMedier');
+
 // Add route for log viewer
 // https://github.com/rap2hpoutre/laravel-log-viewer
 Route::get(

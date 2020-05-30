@@ -206,4 +206,12 @@ class DebugController extends Controller
 
         return $events;
     }
+
+    public function socialaMedier(Request $request) {
+        $data = [
+            'title' => 'Sociala medier',
+            'canonicalLink' => route('socialaMedier')
+        ];
+        return view('sociala-medier', $data);
+    }
 }
