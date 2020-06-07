@@ -20,26 +20,6 @@ Template för ett event/händelse
     {!! $event->getLdJson() !!}
 @endsection
 
-@section('beforeMainContent')
-    {{-- Visa annons för brand om endast brand --}}
-    @if ($event->isBrand() && !$event->isInbrott())
-        <div class="u-w-100">
-            @php
-            echo \App\helper::getVerisureAdMarkup('brand');
-            @endphp
-        </div>
-    @endif
-
-    {{-- Visa annons för inbrott om inbrott --}}
-    @if ($event->isInbrott())
-        <div class="u-w-100">
-            @php
-            echo \App\helper::getVerisureAdMarkup('inbrott-inomhus');
-            @endphp
-        </div>
-    @endif
-@endsection
-
 @section('content')
     @include('parts.crimeevent', ["single" => true])
 

@@ -109,59 +109,6 @@ class DebugController extends Controller
 
             // \Debugbar::info($events);
 
-        } elseif ($what == 'verisure') {
-            // Lista alla annonser.
-            // https://brottsplatskartan-web.test/debug/verisure
-            $ads = \App\Helper::getVerisureAds();
-            $imagesBasePath = '/img/annonser/verisure/';
-
-            echo '<h2>Alla annonser i amp-img-markup</h2>';
-            echo '<pre>';
-            echo htmlspecialchars(
-                \App\helper::getVerisureAdMarkup('brand')
-                . \App\helper::getVerisureAdMarkup('inbrott-inomhus')
-                #\App\helper::getVerisureAdMarkup('brand-uppkopplat')
-                #    . \App\helper::getVerisureAdMarkup('brand-larmcentral')
-                #    . \App\helper::getVerisureAdMarkup('inbrott-larmpaket')
-                #    . \App\helper::getVerisureAdMarkup('inbrott-tjuv')
-                #    . \App\helper::getVerisureAdMarkup('inbrott-vibrationsdetektor')
-            );
-            echo '</pre>';
-
-            echo '
-                <h2>Alla bilder</h2>
-                <ul>
-            ';
-            $ads->each(function ($adtype) use ($imagesBasePath) {
-                printf(
-                    '
-                        <li>
-                            <h3>%1$s</h3>
-                            <p>Link to: <a href="%2$s">%2$s</a></p>
-                            <h4>Images</h4>
-                            <ul>%3$s</ul>
-                        </li>
-                    ',
-                    $adtype['name'],
-                    $adtype['link'],
-                    collect($adtype['images'])->reduce(function ($carry, $image) use ($imagesBasePath, $adtype) {
-                        return $carry . sprintf(
-                            '<li>
-                                    <p><a href="%4$s"><img src="%1$s" alt=""></a></li>
-                                    <p>
-                                        Bredd %2$s
-                                        <br>Höjd %3$s
-                                    </p>
-                                </li>',
-                            $imagesBasePath . $image['image'],
-                            $image['width'],
-                            $image['height'],
-                            $adtype['link'] // 4
-                        );
-                    })
-                );
-            });
-            echo '</ul>';
         }
     }
 

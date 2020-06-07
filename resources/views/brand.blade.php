@@ -34,10 +34,6 @@ Template för /brand
         <p>De senaste händelserna som handlar om t.ex. brand, röklukt, mordbrand, bilbrand
             rökutveckling.</p>
 
-        @php
-        echo \App\helper::getVerisureAdMarkup('brand');
-        @endphp
-
         <ul class="widget__listItems">
             @foreach ($latestBrandEvents as $event)
                 @include('parts.crimeevent-small', [

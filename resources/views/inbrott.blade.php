@@ -45,10 +45,6 @@ Template för /inbrott
             <div class="teaser"><p>{{$pageSubtitle}}</p></div>
         @endisset
 
-        @php
-        echo \App\helper::getVerisureAdMarkup('inbrott-inomhus');
-        @endphp
-
         @if ($undersida === 'start')
             <h2>Snabbfakta om inbrott</h2>
             <ul>

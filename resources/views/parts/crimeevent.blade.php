@@ -193,11 +193,6 @@ if $single is set then larger image
                     hur du gör för att bäst <a href="{{route('inbrott', ['underida' => 'skydda-dig'])}}">skydda dig mot inbrott</a>
                     och vad du ska göra om du har <a href="{{route('inbrott', ['underida' => 'drabbad'])}}">fått ett inbrott</a>.
             </div>
-
-            @php
-            echo \App\helper::getVerisureAdMarkup('inbrott-utomhus');
-            @endphp
-
         @endif
 
         @if ($event->isBrand())
@@ -205,13 +200,6 @@ if $single is set then larger image
                 <h2 class="Event__drabbad__title">Mer om bränder</h2>
                 <p>På vår särskilda sida <a href="{{route('brand')}}">om bränder</a> kan du läsa mer.</p>
             </div>
-
-            {{-- Visa annons för brand om denna händelse bara är brand --}}
-            @if (!$event->isInbrott())
-                @php
-                echo \App\helper::getVerisureAdMarkup('brand');
-                @endphp
-            @endif
         @endif
 
         <div class="Event__share">

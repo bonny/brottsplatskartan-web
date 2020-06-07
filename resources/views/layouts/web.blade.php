@@ -13,18 +13,6 @@ if (request()->get('utm_source') === 'coyards') {
     $noAdsReason .= ' sourceCoyards ';
 }
 
-// Visa inte adsense-annonser om vi vet att en Verisure-annons visas
-if (\Request::is('brand') || \Request::is('inbrott')) {
-  $showAds = false;
-  $noAdsReason .= ' requestIsBrandOrInbrott ';
-}
-
-// Visa inte om händelsen är av typ inbrott eller brand för då visas också Verisure-annons
-// if (isset($event) && ($event->isBrand() || $event->isInbrott())) {
-//   $showAds = false;
-//   $noAdsReason .= ' eventIsBrandOrInbrott ';
-// }
-
 ?>
 <!DOCTYPE html>
 <html ⚡ lang="sv" class="amp-border-box">
@@ -326,18 +314,7 @@ if (\Request::is('brand') || \Request::is('inbrott')) {
               "eventAction": "click",
               "eventLabel": "${outboundLink}"
             }
-          },
-          "outboundVerisure": {
-            "on": "click",
-            "selector": "a.VersiureAd__link",
-            "request": "event",
-            "vars": {
-              "eventCategory": "verisure",
-              "eventAction": "click",
-              "eventLabel": "${outboundLink}"
-            }
           }
-
         }
       }
       </script>
