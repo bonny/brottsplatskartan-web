@@ -14,6 +14,64 @@ class Newsarticle extends Model
         return $this->belongsTo('App\CrimeEvent');
     }
 
+    /**
+     * Avgör om en nyhetskälla är inbäddningbar, t.ex. om det är möjligt att
+     * visa hela innehållet via en iframe eller liknande.
+     * 
+     * @return bool True om det går att bädda in denna källa.
+     */
+    public function isEmbeddable() : bool {
+        //  "url" => "https://twitter.com/goranlr/status/1265265411743940610"
+        //  "url" => "https://www.facebook.com/mittivasastan/posts/2919400118108612"
+        if (empty($this->url)) {
+            return false;
+        }
+
+        $isTwitter = starts_with($this->url, 'https://twitter.com/');
+        $isFb = starts_with($this->url, 'https://www.facebook.com/') || starts_with($this->url, 'https://facebook.com/');
+        
+        return $isTwitter || $isFb;
+    }
+
+    public function getEmbedMarkup() {
+        $isTwitter = starts_with($this->url, 'https://twitter.com/');
+        $isFb = starts_with($this->url, 'https://www.facebook.com/') || starts_with($this->url, 'https://facebook.com/');
+        $embedCode = '';
+
+        //  "url" => "https://twitter.com/goranlr/status/1265265411743940610"
+        // Hämta id från tweet.
+        if ($isTwitter) {
+            $tweetId = preg_match('/\/status\/([\d]*)$/', $this->url, $matches);
+            if (isset($matches[1])) {
+                $embedCode = sprintf(
+                    '
+                        <amp-twitter 
+                            width="375"
+                            height="472"
+                            layout="responsive"
+                            data-tweetid="%1$d">
+                        </amp-twitter>
+                    ',
+                    $matches[1]
+                );
+            }
+        } elseif ($isFb) {
+            $embedCode = sprintf(
+                '
+                    <amp-facebook 
+                        width="552" 
+                        height="310"
+                        layout="responsive"
+                        data-href="%1$s">
+                    </amp-facebook>
+                ',
+                htmlspecialchars($this->url)
+            );
+        }
+
+        return $embedCode;
+    }
+
     public function getSourceName() {
         // Använd source om finns
         if (!empty($this->source)) {
