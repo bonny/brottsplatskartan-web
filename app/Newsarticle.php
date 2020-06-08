@@ -38,9 +38,8 @@ class Newsarticle extends Model
         $isFb = starts_with($this->url, 'https://www.facebook.com/') || starts_with($this->url, 'https://facebook.com/');
         $embedCode = '';
 
-        //  "url" => "https://twitter.com/goranlr/status/1265265411743940610"
-        // Hämta id från tweet.
         if ($isTwitter) {
+            // Hämta id från tweet.
             $tweetId = preg_match('/\/status\/([\d]*)$/', $this->url, $matches);
             if (isset($matches[1])) {
                 $embedCode = sprintf(
