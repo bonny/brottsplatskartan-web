@@ -15,7 +15,7 @@ Template för sverigekartan
         <amp-iframe
             width="auto"
             height="300"
-            sandbox="allow-scripts"
+            sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox allow-top-navigation"
             layout="fill"
             frameborder="0"
             src="/sverigekartan-iframe/"
