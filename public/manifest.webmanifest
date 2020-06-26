@@ -2,11 +2,42 @@
     "name": "Brottsplatskartan",
     "short_name": "Brottskartan",
     "start_url": "/?utm_source=web_app_manifest",
-    "display": "browser",
     "background_color": "#fff",
     "theme_color": "#ffcc33",
     "description": "Händelser från Polisen",
     "display": "minimal-ui",
+    "shortcuts": [
+        {
+            "name": "Visa senaste händelserna",
+            "short_name": "Senaste händelserna",
+            "description": "Öppna sidan med de senast inrapporterade händelserna",
+            "url": "//handelser?utm_source=homescreen"
+        },
+        {
+            "name": "Visa mest lästa händelserna",
+            "short_name": "Mest lästa händelserna",
+            "description": "Öppna sidan med mest lästa händelserna",
+            "url": "/mest-last?utm_source=homescreen"
+        },
+        {
+            "name": "Visa händelserna nära mig",
+            "short_name": "Händelser nära mig",
+            "description": "Öppna sidan med händelser nära mig",
+            "url": "/nara-hitta-plats?utm_source=homescreen"
+        },
+        {
+            "name": "Visa Sverigekartan",
+            "short_name": "Sverigekartan",
+            "description": "Öppna sidan med Sverigekartan",
+            "url": "/sverigekartan?utm_source=homescreen"
+        },
+        {
+            "name": "Sök händelser",
+            "short_name": "Sök",
+            "description": "Öppna sidan med sökfunktion",
+            "url": "/sok?utm_source=homescreen"
+        }
+    ],
     "icons": [
         {
             "src": "/apple-touch-icon-72x72.png",
