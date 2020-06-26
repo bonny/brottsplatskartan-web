@@ -219,7 +219,7 @@
                     let popupContent = `
                         <div class="Event--v2">
                             <h1 class="Event__title">
-                                <a class="Event__titleLink" href="${event.permalink}">
+                                <a class="Event__titleLink" href="${event.permalink}" target="_blank">
                                     <span class="Event__type">${event.title_type}</span>
                                     <span class="Event__teaser">${event.description}</span>
                                 </a>
