@@ -8,10 +8,10 @@ Layout template for web
 // utm_source=coyards
 $showAds = true;
 $noAdsReason = '';
-if (request()->get('utm_source') === 'coyards') {
-    $showAds = false;
-    $noAdsReason .= ' sourceCoyards ';
-}
+// if (request()->get('utm_source') === 'coyards') {
+//     $showAds = false;
+//     $noAdsReason .= ' sourceCoyards ';
+// }
 
 ?>
 <!DOCTYPE html>
