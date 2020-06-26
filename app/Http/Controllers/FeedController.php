@@ -402,8 +402,6 @@ class FeedController extends Controller
                 ->orWhere("md5", $item_md5_permalink)
                 ->get();
 
-            #dd($existingItem);exit;
-
             // Continue to next item if event already is in db
             if ($existingItem->count()) {
                 $data["numItemsAlreadyAdded"]++;
