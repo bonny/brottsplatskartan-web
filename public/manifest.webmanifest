@@ -11,7 +11,7 @@
             "name": "Visa senaste händelserna",
             "short_name": "Senaste händelserna",
             "description": "Öppna sidan med de senast inrapporterade händelserna",
-            "url": "//handelser?utm_source=homescreen"
+            "url": "/handelser?utm_source=homescreen"
         },
         {
             "name": "Visa mest lästa händelserna",
