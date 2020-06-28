@@ -63,6 +63,12 @@
             "src": "/favicon-512x512.png",
             "sizes": "512x512",
             "type": "image/png"
+        },
+        {
+            "src": "/favicon-682x682-maskable.png",
+            "sizes": "682x682",
+            "type": "image/png",
+            "purpose": "any maskable"
         }
     ]
 }
