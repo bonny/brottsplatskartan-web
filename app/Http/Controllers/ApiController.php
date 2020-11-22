@@ -58,7 +58,7 @@ class ApiController extends Controller
         ];
 
         // convert to array so we can modify data before returning to client
-        $eventsAsArray = $events->toArray();
+        // $eventsAsArray = $events->toArray();
 
         //$json["links"] = $eventsAsArray;
         //unset($json["links"]["data"]);
