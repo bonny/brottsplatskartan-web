@@ -60,6 +60,8 @@ $noAdsReason = '';
         <meta name="twitter:description" content="@yield('metaDescription')">
     @endif
 
+    <meta name="robots" content="max-image-preview:large" />
+
     @hasSection('ldJson')
         @yield('ldJson')
     @endif
