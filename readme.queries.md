@@ -1,3 +1,4 @@
+## Användbara SQL-frågor för statistik osv.
 
 ```sql
 
@@ -13,8 +14,21 @@ order by crimeEventIdCount DESC
 limit 10
 
 ```
+# Totalt antal händelser 2020
 
+```sql
 
+select 
+	count(id) from crime_events
+where 
+	created_at < '2021-01-01'
+	and created_at >= '2020-01-01'
+
+```
+
+## Antal händelser 2020
+
+Under 2020 så har vi rapporterat om 38583 händelser som vi hämtat in från Polisen.
 
 ## De tio mest lästa polishändelserna 2020
 
