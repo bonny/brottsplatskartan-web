@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\Feed\Feedable;
 use Spatie\Feed\FeedItem;
 use App\Http\Controllers\PlatsController;
+use Illuminate\Support\Str;
 
 class CrimeEvent extends Model implements Feedable
 {
@@ -1158,12 +1159,12 @@ class CrimeEvent extends Model implements Feedable
         $inbrottOrd = ['inbrott', 'larm', 'intrång'];
 
         $isInbrott =
-            str_contains(\mb_strtolower($this->parsed_title), $inbrottOrd) ||
-            str_contains(
+            Str::contains(\mb_strtolower($this->parsed_title), $inbrottOrd) ||
+            Str::contains(
                 \mb_strtolower($this->getDescriptionAsPlainText()),
                 $inbrottOrd
             ) ||
-            str_contains(
+            Str::contains(
                 \mb_strtolower($this->getParsedContent()),
                 $inbrottOrd
             );
@@ -1181,12 +1182,12 @@ class CrimeEvent extends Model implements Feedable
         $ord = ['brand', 'rökutveckling', 'röklukt', 'brinner', 'brinna'];
 
         $isInbrott =
-            str_contains(\mb_strtolower($this->parsed_title), $ord) ||
-            str_contains(
+            Str::contains(\mb_strtolower($this->parsed_title), $ord) ||
+            Str::contains(
                 \mb_strtolower($this->getDescriptionAsPlainText()),
                 $ord
             ) ||
-            str_contains(
+            Str::contains(
                 \mb_strtolower($this->getParsedContent()),
                 $ord
             );
