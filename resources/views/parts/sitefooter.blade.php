@@ -69,4 +69,13 @@
         <li><a href="https://twitter.com/brottsplatser">Följ @Stockholmsbrott på Twitter</a> </a></li>
         <li><a href="https://www.facebook.com/brottsplatskartan">Gilla Brottsplatskartan på Facebook</a></li>
     </ul>
+
+    <h2>Tysk version av Brottsplatskartan</h2>
+    <p>
+        Vi jobbar på en tysk version av webbplatsen med namn <em><a href="https://wasistpassiert.com/">Was Ist Passiert</a></em>. 
+        Till att börja med visas händelser från polisen i Berlin.
+    </p>
+    <p>
+        Besök <a href="https://wasistpassiert.com/">WasIstPassiert.com för att se polishändelser i Berlin</a>.
+    </p>
 </div>
