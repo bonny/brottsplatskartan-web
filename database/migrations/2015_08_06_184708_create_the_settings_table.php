@@ -13,11 +13,11 @@ class CreateTheSettingsTable extends Migration
     public function up()
     {
         // This schema may already be called due to composer package installaed
-        // Schema::create('settings', function (Blueprint $table) {
-        //     $table->string('key');
-        //     $table->string('value')->nullable();
-        //     $table->string('locale')->nullable();
-        // });
+        Schema::create('settings', function (Blueprint $table) {
+            $table->string('key');
+            $table->string('value')->nullable();
+            $table->string('locale')->nullable();
+        });
     }
 
     /**
