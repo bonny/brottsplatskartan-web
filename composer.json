@@ -37,7 +37,8 @@
         "fzaninotto/faker": "~1.4",
         "mockery/mockery": "0.9.*",
         "phpunit/phpunit": "~8.5",
-        "filp/whoops": "~2.0"
+        "filp/whoops": "~2.0",
+        "barryvdh/laravel-ide-helper": "2.8.2"
     },
     "autoload": {
         "classmap": [
