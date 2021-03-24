@@ -189,10 +189,11 @@ return [
         // 'Creitive\Breadcrumbs\BreadcrumbsServiceProvider',
         'Thujohn\Twitter\TwitterServiceProvider',
         Unisharp\Setting\SettingServiceProvider::class,
-        Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class
+        Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class,
         // TeamTNT\Scout\TNTSearchScoutServiceProvider::class,
         #AlfredoRamos\ParsedownExtra\ParsedownExtraServiceProvider::class,
         #Laravel\Tinker\TinkerServiceProvider::class, // after upgrade not available by default
+        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
     ],
 
     /*
