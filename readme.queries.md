@@ -3,7 +3,7 @@
 ```sql
 
 # n mest lästa händelserna
-select 
+select
 year(created_at) as createdYear, created_at, crime_event_id,
 count(crime_event_id) as crimeEventIdCount
 from crime_views
@@ -14,13 +14,14 @@ order by crimeEventIdCount DESC
 limit 10
 
 ```
+
 # Totalt antal händelser 2020
 
 ```sql
 
-select 
+select
 	count(id) from crime_events
-where 
+where
 	created_at < '2021-01-01'
 	and created_at >= '2020-01-01'
 

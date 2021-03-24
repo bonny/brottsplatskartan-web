@@ -11,12 +11,9 @@
 |
 */
 
-use App\Http\Controllers\FeedController;
 use App\CrimeEvent;
-use App\Locations;
 use App\Dictionary;
 use Illuminate\Http\Request;
-use App\Http\Requests;
 use Carbon\Carbon;
 
 Carbon::setLocale('sv');
