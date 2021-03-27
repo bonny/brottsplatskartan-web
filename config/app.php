@@ -193,7 +193,6 @@ return [
         // TeamTNT\Scout\TNTSearchScoutServiceProvider::class,
         #AlfredoRamos\ParsedownExtra\ParsedownExtraServiceProvider::class,
         #Laravel\Tinker\TinkerServiceProvider::class, // after upgrade not available by default
-        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
     ],
 
     /*
