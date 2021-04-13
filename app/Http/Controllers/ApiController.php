@@ -24,17 +24,21 @@ class ApiController extends Controller
             abort(404);
         }
 
-        $lat = (float) $request->input("lat");
-        $lng = (float) $request->input("lng");
-        $error = (bool) $request->input("error");
-
         $lat = round($lat, 5);
         $lng = round($lng, 5);
 
         $numTries = 0;
         $maxNumTries = 20;
         $nearbyCount = 25;
-        $nearbyInKm = 5;
+        
+        $nearbyInKm = $request->input('distance');
+        $allowNearbyExpand = false;
+        if (!is_numeric($nearbyInKm)) {
+            $nearbyInKm = 5;
+            $allowNearbyExpand = true;
+        }
+
+        $nearbyInKm = (int) $nearbyInKm;
 
         $events = CrimeEvent::getEventsNearLocation($lat, $lng, $nearbyCount, $nearbyInKm);
         $numTries++;
@@ -42,10 +46,12 @@ class ApiController extends Controller
         // we want to show at least 5 events
         // if less than 5 events is found then increase the range by nn km, until a hit is found
         // but limit to $maxNumTries because we don't want to get ddosed
-        while ($events->count() < 5 && $numTries < $maxNumTries) {
-            $nearbyInKm = $nearbyInKm + 10;
-            $events = CrimeEvent::getEventsNearLocation($lat, $lng, $nearbyCount, $nearbyInKm);
-            $numTries++;
+        if ($allowNearbyExpand) {
+            while ($events->count() < 5 && $numTries < $maxNumTries) {
+                $nearbyInKm = $nearbyInKm + 10;
+                $events = CrimeEvent::getEventsNearLocation($lat, $lng, $nearbyCount, $nearbyInKm);
+                $numTries++;
+            }
         }
 
         $json = [
