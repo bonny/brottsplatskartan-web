@@ -57,7 +57,7 @@ class FetchEvents extends Command
 
         $this->line("Added " . $updatedFeedsInfo["numItemsAdded"] . " items");
         $this->line("Skipped " . $updatedFeedsInfo["numItemsAlreadyAdded"] . " already added items");
-
+        
         // Find items missing locations and add
         $itemsNotScannedForLocations = CrimeEvent::where('scanned_for_locations', 0)->get();
 

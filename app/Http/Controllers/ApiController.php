@@ -81,6 +81,7 @@ class ApiController extends Controller
                 "viewport_southwest_lat" => $item->viewport_southwest_lat,
                 "viewport_southwest_lng" => $item->viewport_southwest_lng,
                 "image" => $item->getStaticImageSrc(320, 320, 2),
+                "permalink" => $item->getPermalink(true),
             ];
 
             $json["data"][] = $event;
