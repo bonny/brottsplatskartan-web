@@ -83,7 +83,7 @@ samt för äldre dagar när man bläddrar i arkivet.
         <p><a href="{{ route('sverigekartan') }}">Se händelser och brott i hela Sverige</a></p>
         <a href="{{ route('sverigekartan') }}">
             <amp-img 
-                src="https://s3.eu-central-1.amazonaws.com/brottsplatskartan.se/images/sverigekartan-mitten-av-sverige.png"
+                src="https://brottsplatskartan.ams3.digitaloceanspaces.com/images/sverigekartan-mitten-av-sverige.png"
                 layout="responsive"
                 width="250"
                 height="240"
