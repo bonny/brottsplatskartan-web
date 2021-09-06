@@ -61,13 +61,9 @@ class FeedController extends Controller
             $strLocationURLPart .= ", " . $item->parsed_title_location;
         }
         
-        echo "<br>\nstrLocationURLPart before: $strLocationURLPart :";
+        // Erätt "snapparp, , Halmstad " så det inte blir dubbla komman i anrop till Google = blir zero results.
         $strLocationURLPart = str_replace(', ,', ',', $strLocationURLPart);
         $strLocationURLPart = trim($strLocationURLPart, ", ");
-        echo "<br>\nstrLocationURLPart after: $strLocationURLPart :";
-        // snapparp, , Halmstad 
-
-        // $strLocationURLPartBeforeUrlEncode = $strLocationURLPart;
 
         $apiUrl = sprintf(
             $apiUrlTemplate,
