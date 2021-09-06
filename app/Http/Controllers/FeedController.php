@@ -64,6 +64,8 @@ class FeedController extends Controller
         $strLocationURLPart = trim($strLocationURLPart, ", ");
         $strLocationURLPart = str_replace(',,', ',', $strLocationURLPart);
 
+        echo "strLocationURLPart: $strLocationURLPart :";
+
         // $strLocationURLPartBeforeUrlEncode = $strLocationURLPart;
 
         $apiUrl = sprintf(
