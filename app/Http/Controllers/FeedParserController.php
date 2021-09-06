@@ -48,6 +48,9 @@ class FeedParserController extends Controller
 
     Ibland uppdateras händelserna och då är formatet:
     - Uppdaterad 02 april 16:24: 02 april 14:22, Polisinsats/kommendering, Varberg, id 51174
+    
+    2021-09-06 hittade jag ett nytt format, så ibland kan en uppdaterad händelse ha titel med formatet:    
+    - Uppdaterad 2021-09-06 07:01:28 05 september 18:41, Rån, försök, Västerås
 
     Undantag:
     Uppsala hade en gång en artikel med följande titel, som gjorde att parsed date blev null
