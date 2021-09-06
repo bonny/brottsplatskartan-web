@@ -61,10 +61,10 @@ class FeedController extends Controller
             $strLocationURLPart .= ", " . $item->parsed_title_location;
         }
         
+        echo "<br>\nstrLocationURLPart before: $strLocationURLPart :";
         $strLocationURLPart = str_replace(', ,', ',', $strLocationURLPart);
         $strLocationURLPart = trim($strLocationURLPart, ", ");
-        
-        echo "strLocationURLPart: $strLocationURLPart :";
+        echo "<br>\nstrLocationURLPart after: $strLocationURLPart :";
         // snapparp, , Halmstad 
 
         // $strLocationURLPartBeforeUrlEncode = $strLocationURLPart;
