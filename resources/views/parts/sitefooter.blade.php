@@ -79,3 +79,5 @@
         Besök <a href="https://wasistpassiert.com/">WasIstPassiert.com för att se polishändelser i Berlin</a>.
     </p>
 </div>
+
+@include('parts/cookie-consent')
