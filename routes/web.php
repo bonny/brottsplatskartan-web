@@ -238,6 +238,9 @@ Route::get('/sida/{pagename}', function ($pagename = null) {
         case "stockholm":
             $pagetitle = "Senaste händelserna från Polisen i Stockholm";
             break;
+        case "cookies":
+            $pagetitle = "Om cookis på webbplatsen";
+            break;
     }
 
     $data = [
