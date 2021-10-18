@@ -26,4 +26,3 @@
     </div>
 </amp-consent>
 
-<p>this is cookie-consent!</p>

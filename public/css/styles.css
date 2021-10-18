@@ -1579,10 +1579,6 @@ h2.widget__title {
     border-top: 2px solid darkgrey;
 }
 
-.consent-ui__btnOk {
-
-}
-
 .consent-ui__btnNo {
     background: none;
     border: 0;
