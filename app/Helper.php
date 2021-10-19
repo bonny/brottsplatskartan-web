@@ -512,7 +512,7 @@ class Helper
 
     public static function getLanPrevDaysNavInfo(
         $date = null,
-        $lan,
+        $lan = '',
         $numDays = 5
     ) {
         $dateYmd = $date->format('Y-m-d');
@@ -532,7 +532,7 @@ class Helper
 
     public static function getLanPrevDaysNavInfoUncached(
         $date = null,
-        $lan,
+        $lan = '',
         $numDays = 5
     ) {
         $prevDayEvents = CrimeEvent::selectRaw(
