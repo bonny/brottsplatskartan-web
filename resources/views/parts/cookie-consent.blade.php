@@ -5,12 +5,18 @@
             "consentRequired": true,
             "xcheckConsentHref": "https://example.com/api/check-consent",
             "promptUI": "consent-ui",
-            "xonUpdateHref": "https://example.com/update-consent"
+            "xonUpdateHref": "https://example.com/update-consent",
+            "uiConfig": {
+                "overlay": true
+            }
         }
     </script>
     <div id="consent-ui" class="consent-ui">
-        <h2 class="consent-ui__headline px-3">Får vi använda din data till att skräddarsy annonser åt dig?</h2>
+        <h2 class="consent-ui__headline px-3">Vi behöver ditt samtycke</h2>
         <div class="consent-ui__text px-3">
+            <p class="m-0 mb-2">
+                Får vi använda din data till att skräddarsy annonser åt dig?
+            </p>
             <p class="m-0">
                 Vi och våra partners samlar in och använder cookies till annonsanpassning,
                 mätning och för att möjliggöra viktig webbplatsfunktionalitet.
@@ -20,9 +26,8 @@
         </div>
         <p class="m-0 flex justify-between">
             <button on="tap:consent-element.accept" class="consent-ui__btnOk">Jag godkänner</button>
-            <button on="tap:consent-element.reject" class="consent-ui__btnNo">Neka</button>
+            {{-- <button on="tap:consent-element.reject" class="consent-ui__btnNo">Neka</button> --}}
             {{-- <button on="tap:consent-element.dismiss">Dismiss</button> --}}
         </p>
     </div>
 </amp-consent>
-
