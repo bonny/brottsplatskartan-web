@@ -20,10 +20,15 @@ return [
 
             'title' => 'Senaste nytt och händelser från Polisen via Brottsplatskartan.se',
 
+            'image' => '',
+            'format' => 'atom',
+            'contentType' => '',
+            'type' => '',
+
             /*
              * The view that will render the feed.
              */
-            'view' => 'feed::feed',
+            'view' => 'feed::atom',
         ],
     ],
 ];
