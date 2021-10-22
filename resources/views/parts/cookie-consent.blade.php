@@ -1,4 +1,4 @@
-<amp-consent layout="nodisplay" id="consent-element">
+<amp-consent layout="nodisplay" id="consent-element" class="consent-element">
     <script type="application/json">
         {
             "consentInstanceId": "my-consent",
@@ -12,9 +12,9 @@
         }
     </script>
     <div id="consent-ui" class="consent-ui">
-        <h2 class="consent-ui__headline px-3">Vi behöver ditt samtycke</h2>
-        <div class="consent-ui__text px-3">
-            <p class="m-0 mb-2">
+        <h2 class="consent-ui__headline">Vi behöver ditt samtycke</h2>
+        <div class="consent-ui__text">
+            <p class="m-0">
                 Får vi använda din data till att skräddarsy annonser åt dig?
             </p>
             <p class="m-0">
@@ -24,8 +24,8 @@
                     samlar in och använder data.</a>
             </p>
         </div>
-        <p class="m-0 flex justify-between">
-            <button on="tap:consent-element.accept" class="consent-ui__btnOk">Jag godkänner</button>
+        <p class="m-0 flex justify-center">
+            <button on="tap:consent-element.accept" class="consent-ui__btnOk">Godkänn alla cookies</button>
             {{-- <button on="tap:consent-element.reject" class="consent-ui__btnNo">Neka</button> --}}
             {{-- <button on="tap:consent-element.dismiss">Dismiss</button> --}}
         </p>
