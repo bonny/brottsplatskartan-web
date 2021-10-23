@@ -297,6 +297,8 @@ $noAdsReason = '';
 
     @include('parts.sidebar')
 
+    @include('parts.cookie-consent')
+
     @if (env("APP_ENV") != "local")
     <amp-analytics type="googleanalytics" id="analytics-ga">
       <script type="application/json">

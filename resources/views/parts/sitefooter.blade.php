@@ -80,4 +80,3 @@
     </p>
 </div>
 
-@include('parts/cookie-consent')
