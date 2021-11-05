@@ -19,6 +19,8 @@
         <li><a href="{{ route("inbrott") }}">Inbrott & hur du skyddar dig</span></a></li>
         <li><a href="{{ route("brand") }}">Brand, mordbrand, bilbrand, rökutveckling, ...</span></a></li>
         <li><a href="https://stats.uptimerobot.com/ADWQ0TZq1">Upptid/status</a></li>
+        <li><a href="{{ route("page", ["pagename" => "cookies"]) }}">Cookies</a></li>
+        <li><a href="{{ route("page", ["pagename" => "sekretesspolicy"]) }}">Sekretesspolicy</a></li>
     </ul>
 </div>
 
