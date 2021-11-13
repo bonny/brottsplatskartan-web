@@ -1,9 +1,23 @@
-<h1 class="widget__title">Sekretesspolicy</h1>
+<h1 class="widget__title">Integritetspolicy/Sekretesspolicy</h1>
+
+<p>Denna personuppgiftspolicy förklarar hur vi samlar in och använder information om våra användare.</p>
+
+<p>Tredjepartsleverantörer, inräknat Google, använder cookies för att visa annonser baserat på dina tidigare besök på Brottsplatskartan och andra webbplatser.</p>
+
+<p>Med hjälp av annonscookies kan Google och dess partner visa annonser baserat på dina besök på Brottsplatskartan och/eller andras webbplatser.</p>
+
+<p>Du kan inaktivera visning av anpassade annonser från Google och dess partners genom att använda deras sida för <a href="https://www.google.se/settings/ads" target="_blank" rel="noopener">annonsinställningar</a>.</p>
+
+<p>
+	Vi samlar in statistik om våra besökare genom Google Analytics (GA).
+	GA är inställt på att anonymisera IP-adresser.
+	GA placerar kakor på din dator för att "komma ihåg" vilka sidor du besökt 
+	och för att kunna unikt identifiera enskilda användare.
+</p>
 
 <p>
     Brottsplatskartan och dess annonspartners
     samlar in information 
-
 </p>
 
 <h2>Cookies</h2>
@@ -22,16 +36,6 @@
     När du besöker vår webbplats placerar Google eller dess annonspartners en cookie i din webbläsare.
 </p>
 
-<p>Tredjepartsleverantörer, inräknat Google, använder cookies för att visa annonser baserat på användarnas tidigare besök på din webbplats eller andra webbplatser.</p>
-<p>Med hjälp av annonscookies kan Google och dess partner visa annonser baserat på användares besök på dina och/eller andras webbplatser.</p>
-<p>Användarna kan välja bort visning av anpassade annonser under Annonsinställningar. (Alternativt kan du ge användarna möjlighet att välja bort tredjepartsleverantörers cookies för anpassade annonser genom att besöka www.aboutads.info.)</p>
-<p>Om du inte har valt bort visning av tredjepartsannonser kan cookies från andra tredjepartsleverantörer eller annonsnätverk också användas för att visa annonser på din webbplats och bör nämnas i din sekretesspolicy på följande sätt:</p>
-<p></p>
-<p>Uppmärksamma webbplatsbesökarna på de tredjepartsleverantörer och annonsnätverk som visar annonser på din webbplats.</p>
-<p>Lägg till länkar till leverantörernas och annonsnätverkens webbplatser.</p>
-<p>Informera användarna om att de kan besöka webbplatserna för att välja bort cookies för anpassade annonser (om leverantören eller annonsnätverket erbjuder den möjligheten). Alternativt kan du ge användarna möjlighet att välja bort vissa tredjepartsleverantörers cookies för anpassade annonser genom att besöka www.aboutads.info.</p>
-<p>På grund av skillnaderna mellan olika webbplatser för utgivare och lagarna i olika länder kan vi inte ge förslag på en ordagrann sekretesspolicy. Det kan vara en god idé att läsa igenom informationen hos exempelvis Network Advertising Initiative, där du hittar tips på hur du kan utforma en sekretesspolicy. Mer information om cookietillstånd finns på cookiechoices.org.</p>
-
 <h2>Geografisk plats</h2>
 
 <p>
@@ -45,8 +49,3 @@
     gång fråga din webbläsare om denna information. 
     Beroende på webbläsare så får du en fråga igen eller så minns ditt tidigare val.
 </p>
-
----
-
-https://support.google.com/adsense/answer/1348695?hl=sv
-
