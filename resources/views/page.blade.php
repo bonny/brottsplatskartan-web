@@ -123,7 +123,7 @@
                 Utöver Brottsplatskartan så har han även grundat <a href="https://texttv.nu/">Text TV-sajten texttv.nu</a>
                 (med tillhörande appar för
                 <a href="https://itunes.apple.com/se/app/texttv-nu-svt-text-tv/id607998045?mt=8">Ios</a>
-                och <a href="https://play.google.com/store/apps/details?id=com.mufflify.TextTVnu&hl=sv">Android</a>).
+                och <a href="https://play.google.com/store/apps/details?id=com.mufflify.TextTVnu2&hl=sv">Android</a>).
             </p>
 
             <p>
