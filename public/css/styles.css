@@ -1581,18 +1581,16 @@ h2.widget__title {
     border-bottom: 1px solid rgb(0 0 0 / 50%);
     border-radius: 10px;
     background-color: white;
-    transform: translateY(-50%);
-    left: 2rem;
-    right: 2rem;
+    inset: 2rem;
     width: auto;
 }
 
 .consent-ui {
-    /* border-top: 2px solid darkgrey; */
     padding: 1rem 1.5rem;
     text-align: center;
     max-width: 640px;
     margin: 0 auto;
+    max-height: 100vh;
 }
 
 h2.consent-ui__headline {
@@ -1603,6 +1601,8 @@ h2.consent-ui__headline {
 
 .consent-ui__text {
     color: #333;
+    overflow: scroll;
+    max-height: calc(100vh - 309px);
 }
 
 .consent-ui__text > p {
