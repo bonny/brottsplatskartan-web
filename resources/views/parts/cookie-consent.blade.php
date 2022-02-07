@@ -12,9 +12,9 @@
         }
     </script>
     <div id="consent-ui" class="consent-ui">
-        <h2 class="consent-ui__headline">brottsplatskartan.se behöver samtycke till att använda dina personuppgifter för
-            att:</h2>
         <div class="consent-ui__text">
+            <h2 class="consent-ui__headline">brottsplatskartan.se behöver samtycke till att använda dina personuppgifter
+                för att:</h2>
             <p class="m-0">
                 Anpassade annonser och anpassat innehåll, annons- och innehållsmätning, målgruppsstatistik och
                 produktutveckling
@@ -39,7 +39,7 @@
                     samlar in och använder data.</a>
             </p> --}}
         </div>
-        <p class="m-0 flex justify-center">
+        <p class="consent-ui__actions">
             <button on="tap:consent-element.accept" class="consent-ui__btnOk">Jag samtycker</button>
             {{-- <button on="tap:consent-element.reject" class="consent-ui__btnNo">Neka</button> --}}
             {{-- <button on="tap:consent-element.dismiss">Dismiss</button> --}}
