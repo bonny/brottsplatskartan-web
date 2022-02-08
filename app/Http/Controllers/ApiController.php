@@ -63,14 +63,17 @@ class ApiController extends Controller
             ],
         ];
 
-        // convert to array so we can modify data before returning to client
-        // $eventsAsArray = $events->toArray();
-
-        //$json["links"] = $eventsAsArray;
-        //unset($json["links"]["data"]);
+        $api_app = $request->get('app');
 
         // create array with data is a format more suited for app and web
         foreach ($events as $item) {
+            $permalink = $item->getPermalink(true);
+
+            // Lägg till GA-parametrar för vissa appar.
+            if ($api_app === 'hitta.se') {
+                $permalink = "{$permalink}?utm_source=hitta_se&utm_medium=website&utm_campaign=footer";
+            }
+
             $event = [
                 "id" => $item->id,
                 "pubdate_iso8601" => $item->pubdate_iso8601,
@@ -87,7 +90,7 @@ class ApiController extends Controller
                 "viewport_southwest_lat" => $item->viewport_southwest_lat,
                 "viewport_southwest_lng" => $item->viewport_southwest_lng,
                 "image" => $item->getStaticImageSrc(320, 320, 2),
-                "permalink" => $item->getPermalink(true),
+                "permalink" => $permalink,
             ];
 
             $json["data"][] = $event;
