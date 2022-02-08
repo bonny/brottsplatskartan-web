@@ -301,7 +301,10 @@ class PlatsController extends Controller
         $relatedLinks = null;
 
         if ($place) {
-            $lanPolicestations = $place->getClosestPolicestations();
+            // Detta fungerar ej på PHP 8.0 pga får varning typ
+            // "deg2rad(): Argument #1 ($num) must be of type float, string given php 8.0".
+            // Aktivera igen när https://github.com/thephpleague/geotools uppdateras
+            // $lanPolicestations = $place->getClosestPolicestations();
         }
 
         if ($foundMatchingLan) {
@@ -709,7 +712,7 @@ class PlatsController extends Controller
 
     /**
      * Landingssida för sidan 🚁
-     * https://brottsplatskartan-web.test/helikopter
+     * https://brottsplatskartan.test/helikopter
      */
     public function helicopter(Request $request) {
         $events = CrimeEvent::orderBy("created_at", "desc")
