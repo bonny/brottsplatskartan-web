@@ -19,7 +19,7 @@
         "creitive/breadcrumbs": "^3.0",
         "thujohn/twitter": "~2.0",
         "unisharp/laravel-settings": "^2.0",
-        "alfredo-ramos/parsedown-extra-laravel": "^3.0.0",
+        "alfredo-ramos/parsedown-extra-laravel": "^4.0.0",
         "laravel/tinker": "^2.0",
         "htmlmin/htmlmin": "^8.0",
         "predis/predis": "^1.1",
