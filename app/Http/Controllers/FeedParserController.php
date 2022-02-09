@@ -45,12 +45,22 @@ class FeedParserController extends Controller
 
     Sedan 22 Feb 2018 är formatet:
     - 22 februari 21.15, Rattfylleri, Sundsvall
+    
+    Och sedan typ 2021 är format tydligen (med kolon i tiden):
+    - 30 januari 09:54, Trafikkontroll, Åsele
+    - 07 februari 21:08, Rån, Stockholm
 
     Ibland uppdateras händelserna och då är formatet:
-    - Uppdaterad 02 april 16:24: 02 april 14:22, Polisinsats/kommendering, Varberg, id 51174
-    
-    2021-09-06 hittade jag ett nytt format, så ibland kan en uppdaterad händelse ha titel med formatet:    
-    - Uppdaterad 2021-09-06 07:01:28 05 september 18:41, Rån, försök, Västerås
+    - Uppdaterad 2022-02-07 17:12:12 07 februari 16:27, Brand, Nacka
+    - Tidigare format var detta, men är inte längre sedan typ hösten 2021: Uppdaterad 02 april 16:24: 02 april 14:22, Polisinsats/kommendering, Varberg, id 51174)
+
+    Ibland är title såhär (eller alltid vid uppdatering?)
+    - Uppdaterad 2021-11-05 20:04:57 05 november 19:17, Trafikolycka, Osby
+    - Uppdaterad 2022-02-06 13:21:37 05 februari 07:43, Sammanfattning natt, Västerbottens län
+    - Alltså de är verkligen såhär i XML också:  
+      <title>Uppdaterad 2022-02-09 19:55:35 09 februari 16:26, Trafikolycka, Robertsfors</title>
+      <title>Uppdaterad 2022-02-09 18:00:39 09 februari 16:33, Trafikolycka, singel, Umeå</title>
+    - Dvs. uppdaterad i format YYYY-MM-DD HH:MM:SS läggs till i börja av titeln utan att bry sig om att det är knasigt.
 
     Undantag:
     Uppsala hade en gång en artikel med följande titel, som gjorde att parsed date blev null
@@ -66,6 +76,7 @@ class FeedParserController extends Controller
         ]
         */
         $arrTitleParts = explode(",", $title);
+        dd($arrTitleParts);
 
         $returnParts = [
             "parsed_date" => null,
