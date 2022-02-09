@@ -9,11 +9,12 @@ use App\Http\Requests;
 use Carbon\Carbon;
 use Feeds;
 use Goutte\Client;
-use HTMLPurifier;
 use HTMLPurifier_Config;
+use HTMLPurifier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 /**
  * Klass för att parsa polisens RSS-flöden.
@@ -70,13 +71,12 @@ class FeedParserController extends Controller
     {
         /*
         array:3 [
-            0 => "Uppdaterad 23 januari 15.12: 23 januari 13.17"
+            0 => "Uppdaterad 2021-11-05 20:04:57 05 november 19:17" (eller bara "20:04:57 05 november 19:17" om inte uppdatering)
             1 => " Brand"
             2 => " Linköping"
         ]
         */
         $arrTitleParts = explode(",", $title);
-        dd($arrTitleParts);
 
         $returnParts = [
             "parsed_date" => null,
@@ -96,13 +96,23 @@ class FeedParserController extends Controller
 
         // Kolla om datum innehåller uppdaterad-del också.
         if (preg_match('/^Uppdaterad /', $returnParts["parsed_date"])) {
-            $parsedDateParts = explode(': ', $returnParts["parsed_date"]);
+            // $parsedDateParts = explode(': ', $returnParts["parsed_date"]);
+            // "Uppdaterad 2021-11-05 20:04:57 05 november 19:17"
+            $parsedDateParts = [];
+            // Hämta första delen, dvs. "Uppdaterad 2021-11-05 20:04:57".
+            $parsedDateParts[0] = Str::substr($returnParts["parsed_date"], 0, 30);
+
+            // Hämta resten, dvs. 05 november 19:17
+            $parsedDateParts[1] = Str::substr($returnParts["parsed_date"], 31);
+            
             /*
+            $parsedDateParts:
             array:2 [
-                0 => "Uppdaterad 23 januari 15.12"
-                1 => "23 januari 13.17"
+                0 => "Uppdaterad 2021-11-05 20:04:57"
+                1 => "05 november 19:17"
             ]
             */
+
             if (sizeof($parsedDateParts) === 2) {
                 $parsedDateParts[0] = str_replace('Uppdaterad ', '', $parsedDateParts[0]);
                 $returnParts["parsed_date"] = $parsedDateParts[1];
@@ -116,26 +126,14 @@ class FeedParserController extends Controller
         $date = $returnParts["parsed_date"];
         $date = \App\Helper::convertSwedishYearsToEnglish($date);
 
-        // Add comma ',' before time
-        // @TODO: detta fungerar inte med datum/titlar som är uppdaterade, t.ex.:
-        // "Uppdaterad 13 februari 09:11: 13 februari 08.07, Trafikolycka, Örebro, id 50155"
-
-        #echo "\n-----";
-        #echo "\ntitle: $title";
-        #echo "\ndate: $date";
         // Detta gör så att "13 february 10.32" -> "13 february, 10.32"
         // Runt 14 Feb 2019 så verkar formatet på titlarna ha ändrats så de är
         // "13 february 10:32", dvs kolon istället för punk. Så ta hänsyn till det också.
         $date = preg_replace('/ \d{2}[\.:]\d{2}/', ', ${0}', $date);
-        #echo "\ndate after: $date"; // 13 february 10:32
-        // die(__METHOD__);
-        $date = Carbon::parse($date);
-        # echo $date->format('Y-m-d H:i:s');
-        $returnParts["parsed_date"] = $date;
-        #>format('Y-m-d H:i:s');
-        #var_dump($returnParts["parsed_date"]);exit;
 
-        #$returnParts["parsed_date"] = date("Y-m-d H:i:s", strtotime($returnParts["parsed_date"]));
+        $date = Carbon::parse($date);
+
+        $returnParts["parsed_date"] = $date;
 
         return $returnParts;
     }
