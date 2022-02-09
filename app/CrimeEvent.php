@@ -1200,14 +1200,14 @@ class CrimeEvent extends Model implements Feedable
      *
      * @return void
      */
-    public function toFeedItem()
+    public function toFeedItem(): FeedItem
     {
         return FeedItem::create()
             ->id($this->id)
             ->title($this->getSingleEventTitle())
             ->updated($this->updated_at)
             ->link($this->getPermalink())
-            ->author('Brottsplatskartan.se')
+            ->authorName('Brottsplatskartan.se')
             ->summary($this->getMetaDescription(100) . '…');
     }
 

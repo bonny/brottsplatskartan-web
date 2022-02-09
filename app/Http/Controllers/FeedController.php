@@ -44,17 +44,26 @@ class FeedController extends Controller
         $apiUrlTemplate .= '&components=country:SE';
         $apiUrlTemplate .= '&address=%1$s';
 
+        // &address=snapparp,+,+Halmstad
+
         $strLocationURLPart = "";
 
         foreach ( $itemLocations as $location ) {
+            if (!$location) {
+                continue;
+            }
+
             $strLocationURLPart .= ", " . $location->name;
         }
 
         // append main location, from title
-        $strLocationURLPart .= ", " . $item->parsed_title_location;
+        if ($item->parsed_title_location) {
+            $strLocationURLPart .= ", " . $item->parsed_title_location;
+        }
+        
+        // Erätt "snapparp, , Halmstad " så det inte blir dubbla komman i anrop till Google = blir zero results.
+        $strLocationURLPart = str_replace(', ,', ',', $strLocationURLPart);
         $strLocationURLPart = trim($strLocationURLPart, ", ");
-
-        $strLocationURLPartBeforeUrlEncode = $strLocationURLPart;
 
         $apiUrl = sprintf(
             $apiUrlTemplate,
