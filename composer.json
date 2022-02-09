@@ -8,8 +8,9 @@
     "license": "MIT",
     "type": "project",
     "require": {
+        "php": "~8.1",
         "ext-redis": "*",
-        "laravel/framework": "^8.0",
+        "laravel/framework": "^9.0",
         "laravel/ui": "^3.0",
         "willvincent/feeds": "^2.0",
         "kozz/laravel-guzzle-provider": "~6.0",
