@@ -733,3 +733,5 @@ Route::get(
 // Add routes for RSS feeds.
 // https://github.com/spatie/laravel-feed
 Route::feeds();
+
+Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index']);
