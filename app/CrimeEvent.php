@@ -444,6 +444,13 @@ class CrimeEvent extends Model implements Feedable
             $slugParts[] = $location->name;
         }
 
+        // Lägg till description till URL också.
+        // Description är ca "Polisen kontaktas om avvikande beteende vid en skola.".
+        // Endast för länkar skapade efter 2022-02-11 så inte gamla länkar påverkas.
+        if ($this->getParsedDateInFormat('%Y-%m-%d') > "2022-02-10") {
+            $slugParts[] = $this->getDescriptionAsPlainText();
+        }
+
         $slugParts[] = $this->getKey();
 
         $eventName = implode("-", $slugParts);
