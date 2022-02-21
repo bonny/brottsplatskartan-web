@@ -235,16 +235,8 @@ class ApiController extends Controller
 
         $eventArray = array_only($eventArray, [
             "id",
-            #"created_at",
-            #"updated_at",
-            #"title",
-            #"geocoded",
-            #"scanned_for_locations",
             "description",
             "permalink",
-            #"pubdate",
-            #"pubdate_iso8601",
-            #"md5",
             "parsed_date",
             "parsed_title_location",
             "parsed_content",
@@ -259,7 +251,6 @@ class ApiController extends Controller
             "viewport_northeast_lng",
             "viewport_southwest_lat",
             "viewport_southwest_lng",
-            #"tweeted",
         ]);
 
         $json = [

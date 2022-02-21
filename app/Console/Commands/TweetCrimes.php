@@ -29,10 +29,6 @@ class TweetCrimes extends Command
     public function __construct()
     {
         parent::__construct();
-
-        // Default command line time limit i 0 = forever.
-        // We limit this because something on the server is hanging, perhaps this..
-        // set_time_limit(47);
     }
 
     /**
