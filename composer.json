@@ -29,7 +29,6 @@
         "spatie/laravel-feed": "^4.0",
         "jcf/geocode": "^1.3",
         "league/geotools": "@stable",
-        "lullabot/amp": "^2.0",
         "laravel/helpers": "^1.1",
         "fruitcake/laravel-cors": "^2.0"
     },
