@@ -20,7 +20,7 @@ Template för sverigekartan
             frameborder="0"
             src="/sverigekartan-iframe/"
         >
-            <amp-img layout="fill" src="/img/share-img-blur.jpg" placeholder></amp-img>
+            <img layout="fill" src="/img/share-img-blur.jpg" placeholder></img>
         </amp-iframe>
     </div>
 

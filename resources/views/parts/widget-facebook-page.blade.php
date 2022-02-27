@@ -4,7 +4,7 @@ $url = 'https://www.facebook.com/Brottsplatskartan/';
 ?>
 
 @push('scripts')
-    <script async custom-element="amp-facebook-page" src="https://cdn.ampproject.org/v0/amp-facebook-page-0.1.js"></script>
+    {{-- <script async custom-element="amp-facebook-page" src="https://cdn.ampproject.org/v0/amp-facebook-page-0.1.js"></script> --}}
 @endpush
 
 <section class="widget widget--blogentries">

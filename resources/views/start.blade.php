@@ -82,12 +82,12 @@ samt för äldre dagar när man bläddrar i arkivet.
         </h2>
         <p><a href="{{ route('sverigekartan') }}">Se händelser och brott i hela Sverige</a></p>
         <a href="{{ route('sverigekartan') }}">
-            <amp-img 
+            <img 
                 src="https://brottsplatskartan.ams3.digitaloceanspaces.com/images/sverigekartan-mitten-av-sverige.png"
                 layout="responsive"
                 width="250"
                 height="240"
-            ></amp-img>
+            ></img>
         </a>
     </div>
 
@@ -127,7 +127,7 @@ samt för äldre dagar när man bläddrar i arkivet.
             <div class="widget__listItem__text">
                 <p>Antal rapporterade händelser från Polisen per dag i Sverige, 14 dagar tillbaka.</p>
             </div>
-            <p><amp-img layout="responsive" class="Stats__image" src='{{$chartImgUrl}}' alt='Linjediagram som visar antal Polisiära händelser per dag för Sverige' width=400 height=150></amp-img></p>
+            <p><img layout="responsive" class="Stats__image" src='{{$chartImgUrl}}' alt='Linjediagram som visar antal Polisiära händelser per dag för Sverige' width=400 height=150></img></p>
         </div>
     @endif
 
