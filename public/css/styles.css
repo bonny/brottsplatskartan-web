@@ -829,11 +829,11 @@ input[type="url"],
 }
 
 .ListEvent__imageLink {
-    float: right;
+    float: left;
     overflow: hidden;
     width: 90px;
     height: 90px;
-    margin-left: var(--default-margin-half);
+    margin-right: var(--default-margin-half);
     border-radius: var(--border-radius-normal);
 }
 
