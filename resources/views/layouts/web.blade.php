@@ -307,16 +307,25 @@ $noAdsReason = '';
     </amp-analytics>
     @endif
 
-    <amp-pixel src="<?php echo env('APP_URL')?>/pixel?path=CANONICAL_PATH&rand=RANDOM" layout="nodisplay"></amp-pixel>
-
-    {{-- <amp-sticky-ad layout="nodisplay">
-        <amp-ad width=320 height=50
-            type="adsense"
-            data-ad-client="ca-pub-1689239266452655"
-            data-ad-slot="5942966405"
-            >
-        </amp-ad>
-    </amp-sticky-ad> --}}
+    {{--
+      Pixel,
+      ladda via JS för att minimera laddning via bots.
+    --}}
+    @php
+      $pixelUrl = sprintf(
+        '%1$s/pixel?path=%2$s&rand=%3$s', 
+        env('APP_URL'), // 1
+        Request::path(), // 2
+        rand() // 3
+      );
+    @endphp
+    
+    <script>
+      (function() {
+        let i = new Image();
+        i.src='{{ $pixelUrl }}';
+      })();
+    </script>
 
     @if (env('APP_ENV')=='production')
         <amp-install-serviceworker
