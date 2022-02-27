@@ -11,6 +11,7 @@
     @elseif (isset($mapDistance) && $mapDistance === 'near')
         <a class="ListEvent__imageLink " href="{{ $event->getPermalink() }}">
             <img
+                loading="lazy"
                 alt="Karta som visar ungefär var händelsen inträffat"
                 class="ListEvent__image"
                 src="{{ $event->getStaticImageSrc(160,160) }}"
@@ -22,6 +23,7 @@
     @else
         <a class="ListEvent__imageLink " href="{{ $event->getPermalink() }}">
             <img
+                loading="lazy"
                 alt="Karta som visar ungefär var händelsen inträffat"
                 class="ListEvent__image"
                 src="{{ $event->getStaticImageSrcFar(160,160) }}"

@@ -49,11 +49,12 @@ if $single is set then larger image
                     @if (isset($overview))
                         @if (isset($hideMapImage) && $hideMapImage)
                         @else
-                        <img alt="Karta som visar ungefär var händelsen inträffat" class="Event__mapImage" src="{{ $event->getStaticImageSrc(640,320) }}" width="640" height="320" layout="responsive"></img>
+                        <img loading="lazy" alt="Karta som visar ungefär var händelsen inträffat" class="Event__mapImage" src="{{ $event->getStaticImageSrc(640,320) }}" width="640" height="320" layout="responsive"></img>
                         @endif
                     @else
                         <span class="Event__mapImageWrap Event__mapImageWrap--near">
                             <img
+                                loading="lazy"
                                 alt="Karta som visar ungefär var händelsen inträffat"
                                 class="Event__mapImage Event__mapImage--near"
                                 src="{{ $event->getStaticImageSrc(426,320) }}"

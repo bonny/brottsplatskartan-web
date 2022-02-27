@@ -15,6 +15,7 @@ $eventLink = $eventLink . "?utm_source=coyards";
         <p class="Event__map">
             <a href="{{ $eventLink }}">
                 <img
+                    loading="lazy"
                     alt="Karta som visar ungefär var händelsen inträffat"
                     class="Event__mapImage"
                     src="{{ $event->getStaticImageSrc(640,320) }}"

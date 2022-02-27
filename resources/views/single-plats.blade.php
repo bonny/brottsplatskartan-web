@@ -83,7 +83,7 @@ https://brottsplatskartan.localhost/plats/nacka
     <div class="Stats Stats--lan">
         <h2 class="Stats__title">Brottsstatistik</h2>
         <p>Antal Polisiära händelser per dag för {{$plats}}, 14 dagar tillbaka.</p>
-        <p><img layout="responsive" class="Stats__image" src='{{$chartImgUrl}}' alt='Linjediagram som visar antal Polisiära händelser per dag för {{$plats}}' width=400 height=150></img></p>
+        <p><img loading="lazy" layout="responsive" class="Stats__image" src='{{$chartImgUrl}}' alt='Linjediagram som visar antal Polisiära händelser per dag för {{$plats}}' width=400 height=150></img></p>
     </div>
     --}}
 

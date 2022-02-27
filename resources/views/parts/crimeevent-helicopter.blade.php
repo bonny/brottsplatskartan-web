@@ -25,6 +25,7 @@ $eventLink = $event->getPermalink();
         <p class="">
             <a href="{{ $eventLink }}" class="u-block rounded">
                 <img
+                    loading="lazy"
                     class="rounded-md"
                     layout="responsive"
                     alt="Karta som visar ungefär var händelsen inträffat"

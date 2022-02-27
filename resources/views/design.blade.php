@@ -151,7 +151,7 @@ Template för ordlista/dictionary
             <p>Antal rapporterade händelser från Polisen per dag i Sverige, 14 dagar tillbaka.</p>
         </div>
         <p>
-            <img layout="fixed" class="Stats__image" src="https://chart.googleapis.com/chart?chxt=x,y&amp;cht=bvg&amp;chco=76A4FB&amp;chs=300x125&amp;chd=t:27,162,87,51,54,70,92,210&amp;chxl=0:|05|04|03|02|01|30|29|28&amp;chds=0,210&amp;chxr=1,0,210&amp;chbh=a&amp;chf=bg,s,FFFFFF00"
+            <img loading="lazy" layout="fixed" class="Stats__image" src="https://chart.googleapis.com/chart?chxt=x,y&amp;cht=bvg&amp;chco=76A4FB&amp;chs=300x125&amp;chd=t:27,162,87,51,54,70,92,210&amp;chxl=0:|05|04|03|02|01|30|29|28&amp;chds=0,210&amp;chxr=1,0,210&amp;chbh=a&amp;chf=bg,s,FFFFFF00"
               alt="Linjediagram som visar antal Polisiära händelser per dag för Sverige" width="300" height="125"></img>
         </p>
     </div>

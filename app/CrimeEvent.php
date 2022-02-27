@@ -131,7 +131,7 @@ class CrimeEvent extends Model implements Feedable
             return '';
         }
 
-        // echo "image: <img src='$image_src'>";
+        // echo "image: <img loading="lazy" src='$image_src'>";
         // exit;
 
         // src="https://maps.googleapis.com/maps/api/staticmap?center={{ $event->location_lat }},{{ $event->location_lng }}&zoom=14&size=600x400&key=...&markers={{ $event->location_lat }},{{ $event->location_lng }}"
@@ -257,7 +257,7 @@ class CrimeEvent extends Model implements Feedable
             return '';
         }
 
-        // echo "image: <img src='$image_src'>";
+        // echo "image: <img loading="lazy" src='$image_src'>";
         // exit;
 
         // src="https://maps.googleapis.com/maps/api/staticmap?center={{ $event->location_lat }},{{ $event->location_lng }}&zoom=14&size=600x400&key=...&markers={{ $event->location_lat }},{{ $event->location_lng }}"

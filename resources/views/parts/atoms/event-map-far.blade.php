@@ -1,6 +1,6 @@
 @if ($event->geocoded)
     <p class="u-margin-0 u-margin-bottom-half">
-        <img 
+        <img loading="lazy" 
             src="{{ $event->getStaticImageSrcFar(640,340) }}" 
             class="rounded" 
             alt="Karta som visar ungefär var händelsen inträffat" 

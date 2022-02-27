@@ -154,13 +154,13 @@
 
                 <a
                     href="https://lh3.googleusercontent.com/nIvqRhYj2-fzB0Pv8v2evtdDGcOJQRaSvIrz_L6wcb9oxeDrdaV2SC4l-f_iRE42ZPs=h900-rw">
-                    <img layout="responsive" width="506" height="900"
+                    <img loading="lazy" layout="responsive" width="506" height="900"
                         src="https://lh3.googleusercontent.com/nIvqRhYj2-fzB0Pv8v2evtdDGcOJQRaSvIrz_L6wcb9oxeDrdaV2SC4l-f_iRE42ZPs=h900-rw"
                         alt="Skärmdump som visar hur appen ser ut på en Android-telefon"></img>
 
                     <a
                         href="http://a5.mzstatic.com/eu/r30/Purple71/v4/05/c9/3d/05c93d0e-d40c-d35a-4eb7-7ca001e36e93/screen696x696.jpeg">
-                        <img layout="responsive" width="392" height="596"
+                        <img loading="lazy" layout="responsive" width="392" height="596"
                             src="http://a5.mzstatic.com/eu/r30/Purple71/v4/05/c9/3d/05c93d0e-d40c-d35a-4eb7-7ca001e36e93/screen696x696.jpeg"
                             alt="Skärmdump som visar hur appen ser ut på en Iphone-telefon"></img>
                     </a>
@@ -236,7 +236,7 @@
                 Brottsplatskartans logotyp i PNG-format:
                 <br>
                 <a href="/img/brottsplatskartan-logotyp.png">
-                    <img src="/img/brottsplatskartan-logotyp.png" width=282 height=36 alt="Brottsplatskartan"></img>
+                    <img loading="lazy" src="/img/brottsplatskartan-logotyp.png" width=282 height=36 alt="Brottsplatskartan"></img>
                 </a>
                 <br>
                 <a href="/img/brottsplatskartan-logotyp.png">brottsplatskartan-logotyp.png</a> (6KB, 626✕80, PNG)
@@ -245,7 +245,7 @@
             <!--
                 <p>
                     <a href="/img/brottsplatskartan-logotyp-symbol-only.png">
-                        <img alt="Brottsplatskartan" src="/img/brottsplatskartan-logotyp-symbol-only.png" width=40 height=40></img>
+                        <img loading="lazy" alt="Brottsplatskartan" src="/img/brottsplatskartan-logotyp-symbol-only.png" width=40 height=40></img>
                     </a>
                 </p>
                 -->
