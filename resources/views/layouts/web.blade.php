@@ -131,6 +131,7 @@ $noAdsReason = '';
 
         gtag('config', 'G-L1WVBJ39GH');
       </script>
+      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1689239266452655" crossorigin="anonymous"></script>
     @endif
 
 </head>
