@@ -183,7 +183,7 @@ $noAdsReason = '';
         @include('parts.sitefooter')
     </footer>
 
-    @include('parts.sidebar')
+    {{-- @include('parts.sidebar') --}}
 
     @include('parts.cookie-consent')
 
