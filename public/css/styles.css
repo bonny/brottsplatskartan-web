@@ -665,41 +665,6 @@ blockquote {
     padding-top: 1rem;
 }
 
-.Event__share {
-    line-height: 1;
-    margin-top: var(--default-margin);
-    border-top: 1px solid var(--color-grey-light);
-    margin-left: -1rem;
-    margin-right: -1rem;
-    padding-left: 1rem;
-    padding-top: 1rem;
-}
-
-.Event__shareTitle {
-    color: #666;
-    margin-top: 0;
-    font-size: var(--font-size-small);
-}
-
-amp-social-share {
-    margin-right: 0.25rem;
-}
-
-/*
-.Event__content {
-    max-height: 5rem;
-}
-.Event__content:after {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 2rem;
-    background: linear-gradient( rgba(255, 255, 255, 0), white)
-}
-*/
-
 .Sverigekartan__wrapper iframe {
     position: absolute;
     top: 0;

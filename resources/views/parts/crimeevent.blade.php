@@ -183,12 +183,6 @@ if $single is set then larger image
             </div>
         @endif
 
-        <div class="Event__share">
-            <p class="Event__shareTitle">Dela händelsen:</p>
-            <amp-social-share type="twitter" aria-label="Dela till Twitter"></amp-social-share>
-            <amp-social-share type="facebook" data-param-app_id="105986239475133" aria-label="Dela till Facebook"></amp-social-share>
-            <amp-social-share type="email" aria-label="Dela via E-post"></amp-social-share>
-        </div>
     @endif
 
     @if (!empty($dictionaryWordsInText) && $dictionaryWordsInText->count())

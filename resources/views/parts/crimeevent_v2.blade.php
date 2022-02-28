@@ -107,46 +107,9 @@ if $single is set then larger image
                             @endif
                 </time></span>
             </p>
-    {{--         @if ( isset($overview) )
-            <a class="Event__contentLink" href="{{ $event->getPermalink() }}">
-            @endif
-
-            <div class="Event__content">
-                @if ( isset($overview) )
-                    {!! $event->getParsedContentTeaser() !!}
-                @else
-                    {!! $event->getParsedContent() !!}
-                @endif
-            </div>
-
-            @if ( isset($overview) )
-            </a>
-            @endif
-     --}}
-
-
-            {{--
-            <div class="Event__related">
-                Visa fler brott av typ <a href="{{ route("typeSingle", $event->parsed_title ) }}">{{ $event->parsed_title }}</a>
-            </div>
-            --}}
-
+    
             @if(isset($single) && $event->shouldShowSourceLink())
                 <p class="Event__source">Källa: <a rel="nofollow" href="{{ $event->permalink }}">{{ $event->permalink }}</a></p>
-            @endif
-
-            @if ( isset($overview) )
-                {{--
-                <amp-social-share type="twitter" width=40 height=32 data-param-url="{{ $event->getPermalink(true) }}"></amp-social-share>
-                <amp-social-share type="facebook" width=40 height=32 data-param-url="{{ $event->getPermalink(true) }}" data-param-app_id="105986239475133"></amp-social-share>
-                <amp-social-share type="email" width=40 height=32 data-param-url="{{ $event->getPermalink(true) }}"></amp-social-share>
-                --}}
-            @else
-                <div class="Event__share">
-                    <amp-social-share type="twitter"></amp-social-share>
-                    <amp-social-share type="facebook" data-param-app_id="105986239475133"></amp-social-share>
-                    <amp-social-share type="email"></amp-social-share>
-                </div>
             @endif
 
         </div><!-- Event__col2 -->
