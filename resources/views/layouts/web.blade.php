@@ -184,8 +184,7 @@ $noAdsReason = '';
     </footer>
 
     {{-- @include('parts.sidebar') --}}
-
-    @include('parts.cookie-consent')
+    {{-- @include('parts.cookie-consent') --}}
 
     {{--
       Pixel,
