@@ -121,94 +121,34 @@ $noAdsReason = '';
     {{-- <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript> --}}
     <style amp-custom>{!! HTMLMin::css(file_get_contents( public_path("css/styles.css") )) !!}</style>
 
+    @if (env("APP_ENV") != "local")
+      <!-- Global site tag (gtag.js) - Google Analytics -->
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-L1WVBJ39GH"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-L1WVBJ39GH');
+      </script>
+    @endif
+
 </head>
 <body class="@if ($shared_notification_bar_contents) has-notification-bar @endif {{$noAdsReason}}">
     <?php
     if ($showAds) {
       ?>
-      <amp-auto-ads type="adsense" data-ad-client="ca-pub-1689239266452655"></amp-auto-ads>
+      
       <?php
     }
     ?>
-  
-    <amp-animation id="shrinkAnim" layout="nodisplay">
-      <script type="application/json">
-        {
-          "duration": "250ms",
-          "easing": "ease-in-out",
-          "fill": "both",
-          "iterations": "1",
-          "direction": "alternate",
-          "animations": [{
-              "selector": "#SiteHeader",
-              "keyframes": [{
-                "transform": "translateY(-4rem)"
-              }]
-            },
-            {
-              "selector": ".SiteTitle",
-              "keyframes": [{
-                "transform": "translateY(16px) scale(0.75)"
-              }]
-            }
-          ]
-        }
-      </script>
-    </amp-animation>
-    <amp-animation id="expandAnim" layout="nodisplay">
-      <script type="application/json">
-        {
-          "duration": "250ms",
-          "easing": "ease-out",
-          "fill": "both",
-          "iterations": "1",
-          "direction": "alternate",
-          "animations": [{
-              "selector": "#SiteHeader",
-              "keyframes": [{
-                "transform": "translateY(0)"
-              }]
-            },
-            {
-              "selector": ".SiteTitle",
-              "keyframes": [{
-                "transform": "translateY(0) scale(1)"
-              }]
-            }
-          ]
-        }
-      </script>
-    </amp-animation>
 
     <div class="container">
 
         @include('parts.notificationbar')
         @include('parts.siteheader')
 
-        <div id="HeaderAnimationMarker">
-            <amp-position-observer on="enter:expandAnim.start; exit:shrinkAnim.start;" layout="nodisplay"></amp-position-observer>
-        </div>
-
         @if ($showAds)
-          <div class="Ad">
-              {{-- <div class="Ad__intro">Annons</div>
-              <amp-ad width=320 height=100
-                  type="adsense"
-                  data-ad-client="ca-pub-1689239266452655"
-                  data-ad-slot="9307455607"
-                  layout="responsive"
-                  >
-                  <div overflow></div>
-              </amp-ad> --}}
-              <amp-ad width="100vw" height=320
-                  type="adsense"
-                  data-ad-client="ca-pub-1689239266452655"
-                  data-ad-slot="9307455607"
-                  data-auto-format="rspv"
-                  data-full-width>
-                <div overflow></div>
-              </amp-ad>
-         </div>
         @endif
 
         @yield('beforeBreadcrumb')
@@ -231,17 +171,6 @@ $noAdsReason = '';
 
             @yield('content')
 
-            {{-- <div class="Ad">
-                <div class="Ad__intro">Annons</div>
-                <amp-ad width=320 height=50
-                    type="adsense"
-                    data-ad-client="ca-pub-1689239266452655"
-                    data-ad-slot="7743150002"
-                    layout="responsive"
-                    >
-                </amp-ad>
-            </div> --}}
-
         </main>
 
         <aside class="MainSidebar">
@@ -250,27 +179,6 @@ $noAdsReason = '';
 
     </div>
 
-    <!-- matchat innehåll - since 16 Dec 2017 -->
-    {{-- <amp-ad width=300 height=520
-        type="adsense"
-        data-ad-client="ca-pub-1689239266452655"
-        data-ad-slot="9696533065"
-        layout="responsive"
-        >
-    </amp-ad>--}}
-
-{{--
-320x520 hade nån annan
-     <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-    <ins class="adsbygoogle"
-         style="display:block"
-         data-ad-format="autorelaxed"
-         data-ad-client="ca-pub-1689239266452655"
-         data-ad-slot="9696533065"></ins>
-    <script>
-         (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
- --}}
     <footer class="SiteFooter">
         @include('parts.sitefooter')
     </footer>
@@ -278,34 +186,6 @@ $noAdsReason = '';
     @include('parts.sidebar')
 
     @include('parts.cookie-consent')
-
-    @if (env("APP_ENV") != "local")
-    <amp-analytics type="googleanalytics" id="analytics-ga">
-      <script type="application/json">
-      {
-        "vars": {
-          "account": "UA-181460-13"
-        },
-        "triggers": {
-          "trackPageview": {
-            "on": "visible",
-            "request": "pageview"
-            },
-          "outboundLinks": {
-            "on": "click",
-            "selector": "a.external",
-            "request": "event",
-            "vars": {
-              "eventCategory": "outbound",
-              "eventAction": "click",
-              "eventLabel": "${outboundLink}"
-            }
-          }
-        }
-      }
-      </script>
-    </amp-analytics>
-    @endif
 
     {{--
       Pixel,
