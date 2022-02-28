@@ -10,7 +10,7 @@
 
         <h1 class="SiteTitle"><a href="/">
             <div class="SiteHeader__icon">
-                <img loading="lazy" src="/img/brottsplatskartan-logotyp.png" width=282 height=36 alt="Brottsplatskartan"></img>
+                <img loading="lazy" src="/img/brottsplatskartan-logotyp.png" width="269" height="31" alt="Brottsplatskartan"></img>
             </div>
         </a></h1>
 
