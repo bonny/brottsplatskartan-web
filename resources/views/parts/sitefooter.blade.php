@@ -73,7 +73,7 @@
 
     <h2>Tysk version av Brottsplatskartan</h2>
     <p>
-        Vi jobbar på en tysk version av webbplatsen med namn <em><a href="https://wasistpassiert.com/">Was Ist Passiert</a></em>. 
+        Det finns nu även en tysk version av webbplatsen med namn <em><a href="https://wasistpassiert.com/">Was Ist Passiert</a></em>. 
         Till att börja med visas händelser från polisen i Berlin.
     </p>
     <p>
