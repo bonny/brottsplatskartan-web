@@ -20,5 +20,7 @@ jobs:
           HOST: brottsplatskartan.se
           PROJECT: brottsplatskartan
           BRANCH: main
+          FORCE_DEPLOY: true
+          
           
 
