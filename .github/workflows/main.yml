@@ -8,16 +8,14 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v1
-      - name: Dokku deploy
-        uses: vitalyliber/dokku-github-action@v6.2
-        env:
-          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
-          HOST: brottsplatskartan.se
-          PROJECT: brottsplatskartan
-          FORCE_DEPLOY: true
-          
-          
+      - name: Cloning repo
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
+      - name: Push to dokku
+        uses: dokku/github-action@master
+        with:
+          git_remote_url: 'ssh://dokku@brottsplatskartan.se:22/brottsplatskartan'
+          ssh_private_key: ${{ secrets.PRIVATE_KEY }}
