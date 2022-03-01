@@ -19,3 +19,4 @@ jobs:
         with:
           git_remote_url: 'ssh://dokku@brottsplatskartan.se:22/brottsplatskartan'
           ssh_private_key: ${{ secrets.PRIVATE_KEY }}
+          branch: 'main'
