@@ -10,13 +10,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
+        with:
+          ref: main
       - name: Dokku deploy
         uses: vitalyliber/dokku-github-action@v6.2
         env:
           PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
           HOST: brottsplatskartan.se
           PROJECT: brottsplatskartan
-          BRANCH: master
+          BRANCH: main
           
 
