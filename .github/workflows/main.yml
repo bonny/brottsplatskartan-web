@@ -17,6 +17,6 @@ jobs:
           PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
           HOST: brottsplatskartan.se
           PROJECT: brottsplatskartan
-          BRANCH: main
+          BRANCH: master
           
 
