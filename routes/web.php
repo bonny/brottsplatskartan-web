@@ -653,6 +653,11 @@ Route::get('/sokresultat/', 'SearchController@searchperform')->name(
 );
 
 /**
+ * Sök med hjälp av AdSense search ("hemligt" test än så länge).
+ */
+Route::get('/sok2/', 'SearchController@adsenseSearch')->name("adsenseSearch");
+
+/**
  * coyards: sida för samarbete med coyards.se, visas i deras app och hemsida
  * Exempel för Danderyd: 59.407905 | Longitud: 18.019075
  * https://brottsplatskartan.localhost/coyards?lat=59.407905&lng=18.019075&distance=5&count=25
