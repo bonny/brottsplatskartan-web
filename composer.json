@@ -13,7 +13,7 @@
         "ext-redis": "*",
         "laravel/framework": "^9.0",
         "laravel/ui": "^3.0",
-        "willvincent/feeds": "dev-l9-compatibility",
+        "willvincent/feeds": "^2.3.0",
         "weidner/goutte": "dev-l9-compatibility",
         "doctrine/dbal": "^2.5",
         "creitive/breadcrumbs": "^3.0",
@@ -33,10 +33,6 @@
         "fruitcake/laravel-cors": "^2.0"
     },
     "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/laravel-shift/feeds/"
-        },
         {
             "type": "vcs",
             "url": "https://github.com/laravel-shift/laravel-goutte.git"
