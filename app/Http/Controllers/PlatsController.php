@@ -304,7 +304,7 @@ class PlatsController extends Controller
             // Detta fungerar ej på PHP 8.0 pga får varning typ
             // "deg2rad(): Argument #1 ($num) must be of type float, string given php 8.0".
             // Aktivera igen när https://github.com/thephpleague/geotools uppdateras
-            // $lanPolicestations = $place->getClosestPolicestations();
+            $lanPolicestations = $place->getClosestPolicestations();
         }
 
         if ($foundMatchingLan) {
