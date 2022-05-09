@@ -14,7 +14,9 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         // https://stackoverflow.com/questions/24426423/laravel-generate-secure-https-url-from-route
-        \URL::forceScheme('https');
+        if (\App::environment() === 'production') {
+            \URL::forceScheme('https');
+        }
 
         // @TODO: Don't run the code below when we don't have any db connction
         // because we can install things using composer and so on.
