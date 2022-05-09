@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 /**
  * Klass för platser.
@@ -48,6 +49,11 @@ class Place extends Model
         } // if response
     }
 
+    /**
+     * Hämta polisstationer som är nära aktuell plats.
+     * 
+     * @return array|Collection<TKey, TValue> 
+     */
     public function getClosestPolicestations()
     {
         $geotools = new \League\Geotools\Geotools();
@@ -55,8 +61,13 @@ class Place extends Model
 
         $policeStations = \App\Helper::getPoliceStationsCached();
 
-        // Hämta polisstationer i länet
+        // Hämta polisstationer i länet.
         $lanPolicestations = $policeStations->firstWhere('lanName', $this->lan);
+        
+        if (!$lanPolicestations) {
+            return collect();
+        }
+
         $lanPolicestations = collect($lanPolicestations['policeStations']);
         if ($lanPolicestations) {
             $lanPolicestations->each(function ($policeStation) use ($geotools, $coordPlace) {

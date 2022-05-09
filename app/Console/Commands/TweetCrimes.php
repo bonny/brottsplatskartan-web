@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\CrimeEvent;
+use Atymic\Twitter\Facade\Twitter;
 
 class TweetCrimes extends Command
 {
@@ -12,7 +13,7 @@ class TweetCrimes extends Command
      *
      * @var string
      */
-    protected $signature = 'tweets:post';
+    protected $signature = 'tweets:post {userSettings? : Display the userSettings to test and then quit (to check that API credentials work).}';
 
     /**
      * The console command description.
@@ -29,10 +30,6 @@ class TweetCrimes extends Command
     public function __construct()
     {
         parent::__construct();
-
-        // Default command line time limit i 0 = forever.
-        // We limit this because something on the server is hanging, perhaps this..
-        // set_time_limit(47);
     }
 
     /**
@@ -42,10 +39,39 @@ class TweetCrimes extends Command
      */
     public function handle()
     {
-
         $this->info('Ok, let\'s go');
 
-        //print_r( \Twitter::getHomeTimeline(['count' => 20, 'format' => 'json']) );
+        if ($this->argument('userSettings')) {
+            dump('Reconfig for @Brottsplatser');
+
+            \Twitter::usingCredentials(
+                accessToken: getenv('TWITTER_ACCESS_TOKEN'),
+                accessTokenSecret: getenv('TWITTER_ACCESS_TOKEN_SECRET'),
+                consumerKey: getenv('TWITTER_CONSUMER_KEY'),
+                consumerSecret: getenv('TWITTER_CONSUMER_SECRET')
+            );
+
+            dump( 
+                '\Twitter::userSettings()',
+                \Twitter::getSettings(),
+            );
+
+            dump('Reconfig for @Stockholmsbrott');
+
+            \Twitter::usingCredentials(
+                accessToken: getenv('STOCKHOLMBROTT_TWITTER_ACCESS_TOKEN'),
+                accessTokenSecret: getenv('STOCKHOLMBROTT_TWITTER_ACCESS_TOKEN_SECRET'),
+                consumerKey: getenv('STOCKHOLMBROTT_TWITTER_CONSUMER_KEY'),
+                consumerSecret: getenv('STOCKHOLMBROTT_TWITTER_CONSUMER_SECRET')
+            );
+
+            dump( 
+                '\Twitter::userSettings()',
+                \Twitter::getSettings(),
+            );
+
+            exit;
+        }
 
         // hämta händelser från den senaste nn timmarna eller dagarna typ
         // så vi får med ev missade om något skulle vara nere, typ polisen ligga efter

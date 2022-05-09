@@ -5,8 +5,6 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
-use Lullabot\AMP\AMP;
-use Lullabot\AMP\Validate\Scope;
 
 class Blog extends Model
 {
@@ -59,8 +57,6 @@ class Blog extends Model
      * dvs. Markdown har parse'ats och Twitter och Facebook-strängar har
      * konverterats till embeds.
      * 
-     * lullabot/amp används också på HTML för att göra så att HTML blir giltig AMP-HTML.
-     *
      * @return string HTML.
      */
     public function getContentFormatted()
@@ -68,16 +64,10 @@ class Blog extends Model
         $str = $this->content;
         $str = \Markdown::parse($str);
 
-        // Convert <img> » <amp img> using package
-        // https://packagist.org/packages/lullabot/amp
-        $amp = new AMP();
-        $amp->loadHtml($str);
-        $ampHtml = $amp->convertToAmpHtml();
+        $str = $this->embedTweets($str);
+        $str = $this->embedFacebook($str);
         
-        $ampHtml = $this->embedTweets($ampHtml);
-        $ampHtml = $this->embedFacebook($ampHtml);
-        
-        return $ampHtml;
+        return $str;
     }
 
     /**

@@ -10,25 +10,27 @@
         {{-- Ingen karta finns. --}}
     @elseif (isset($mapDistance) && $mapDistance === 'near')
         <a class="ListEvent__imageLink " href="{{ $event->getPermalink() }}">
-            <amp-img
+            <img
+                loading="lazy"
                 alt="Karta som visar ungefär var händelsen inträffat"
                 class="ListEvent__image"
                 src="{{ $event->getStaticImageSrc(160,160) }}"
                 width="90"
                 height="90"
                 layout="fixed"
-            ></amp-img>
+            ></img>
         </a>
     @else
         <a class="ListEvent__imageLink " href="{{ $event->getPermalink() }}">
-            <amp-img
+            <img
+                loading="lazy"
                 alt="Karta som visar ungefär var händelsen inträffat"
                 class="ListEvent__image"
                 src="{{ $event->getStaticImageSrcFar(160,160) }}"
                 width="90"
                 height="90"
                 layout="fixed"
-            ></amp-img>
+            ></img>
         </a>
     @endif
 

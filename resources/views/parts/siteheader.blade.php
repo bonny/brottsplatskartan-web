@@ -10,7 +10,7 @@
 
         <h1 class="SiteTitle"><a href="/">
             <div class="SiteHeader__icon">
-                <amp-img src="/img/brottsplatskartan-logotyp.png" width=282 height=36 alt="Brottsplatskartan"></amp-img>
+                <img loading="lazy" src="/img/brottsplatskartan-logotyp.png" width="269" height="31" alt="Brottsplatskartan"></img>
             </div>
         </a></h1>
 
@@ -82,17 +82,15 @@
                         <span>Sök</span>
                     </a>
                 </li>
-                <li class="SiteNav__item SiteNav__item--menu">
+{{--                 <li class="SiteNav__item SiteNav__item--menu">
                     <button class="SiteNav__item__menuToggle" on='tap:Sidebar.toggle' aria-label="Visa sidomeny">
                         <svg fill="#fff" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                             <path d="M0 0h24v24H0z" fill="none"/>
                             <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
                         </svg>
-                        {{-- Three dots .. nav icon: --}}
-                        {{-- <svg fill="#fff" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg> --}}
                     </button>
                 </li>
-            </ul>
+ --}}            </ul>
         </nav>
 
     </div>

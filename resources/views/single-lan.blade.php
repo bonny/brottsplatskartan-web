@@ -101,7 +101,9 @@ https://brottsplatskartan.localhost/lan/Stockholms%20l%C3%A4n
         <div class="widget__listItem__text">
             <p>Antal Polisiära händelser per dag för {{$lan}}, 14 dagar tillbaka.</p>
         </div>
-        <p><amp-img layout="responsive" class="Stats__image" src='{{$lanChartImgUrl}}' alt='Linjediagram som visar antal Polisiära händelser per dag för {{$lan}}' width=400 height=150></amp-img></p>
+        <p>
+            <img loading="lazy" layout="responsive" class="Stats__image" src='{{$lanChartImgUrl}}' alt='Linjediagram som visar antal Polisiära händelser per dag för {{$lan}}' width=400 height=150></img>
+        </p>
     </div>
 
     @include('parts.related-links')

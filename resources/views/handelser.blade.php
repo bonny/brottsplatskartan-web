@@ -35,9 +35,6 @@ samt för äldre dagar när man bläddrar i arkivet.
 @endsection
 
 @section('content')
-
-    @include('parts.mostViewedRecently')
-
     <div class="widget">
         <h1 class="widget__title">
             @if (!empty($title))
@@ -107,7 +104,7 @@ samt för äldre dagar när man bläddrar i arkivet.
             <div class="widget__listItem__text">
                 <p>Antal rapporterade händelser från Polisen per dag i Sverige, 14 dagar tillbaka.</p>
             </div>
-            <p><amp-img layout="responsive" class="Stats__image" src='{{$chartImgUrl}}' alt='Linjediagram som visar antal Polisiära händelser per dag för Sverige' width=400 height=150></amp-img></p>
+            <p><img loading="lazy" layout="responsive" class="Stats__image" src='{{$chartImgUrl}}' alt='Linjediagram som visar antal Polisiära händelser per dag för Sverige' width=400 height=150></img></p>
         </div>
     @endif
 

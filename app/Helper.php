@@ -3,6 +3,7 @@
 namespace App;
 
 use Carbon\Carbon;
+use DateTime;
 use DB;
 use Illuminate\Support\Facades\Cache;
 
@@ -53,7 +54,10 @@ class Helper
 
         foreach ($stats["numEventsPerDay"] as $statRow) {
             $date = strtotime($statRow->YMD);
-            $date = strftime("%d", $date);
+            
+            // Endast dag.
+            $dateObj = new \DateTime($statRow->YMD);
+            $date = $dateObj->format('d');
 
             $chd .= $statRow->count . ",";
             $chxl .= $date . "|";

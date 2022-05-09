@@ -24,14 +24,15 @@ $eventLink = $event->getPermalink();
     @if ($event->geocoded)
         <p class="">
             <a href="{{ $eventLink }}" class="u-block rounded">
-                <amp-img
+                <img
+                    loading="lazy"
                     class="rounded-md"
                     layout="responsive"
                     alt="Karta som visar ungefär var händelsen inträffat"
                     src="{{ $event->getStaticImageSrc(640,320) }}"
                     width="640"
                     height="320">
-                </amp-img>
+                </img>
             </a>
         </p>
     @endif

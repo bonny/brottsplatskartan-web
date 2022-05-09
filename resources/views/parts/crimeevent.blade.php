@@ -59,7 +59,7 @@ if $single is set then larger image
 
             @if (isset($overview))
 
-                <amp-img alt="Karta som visar ungefär var händelsen inträffat" class="Event__mapImage" src="{{ $event->getStaticImageSrc(640,320) }}" width="640" height="320" layout="responsive"></amp-img>
+                <img loading="lazy" alt="Karta som visar ungefär var händelsen inträffat" class="Event__mapImage" src="{{ $event->getStaticImageSrc(640,320) }}" width="640" height="320" layout="responsive"></img>
 
             @else
 
@@ -71,26 +71,28 @@ if $single is set then larger image
                     >
                     {{-- @if (false) --}}
                     <span class="Event__mapImageWrap Event__mapImageWrap--near">
-                        <amp-img
+                        <img
+                            loading="lazy"
                             alt="Karta som visar ungefär var händelsen {{$event->parsed_title}}: {{$event->getDescriptionAsPlainText()}} inträffat"
                             class="Event__mapImage Event__mapImage--near"
                             src="{{ $event->getStaticImageSrc(617,463) }}"
                             width="426"
                             height="320"
                             layout="responsive"
-                        ></amp-img>
+                        ></img>
                     </span>
                     {{-- @endif --}}
 
                     <span class="Event__mapImageWrap Event__mapImageWrap--far">
-                        <amp-img
+                        <img
+                            loading="lazy"
                             alt="Översiktskarta som visar hela Sverige med en markör som visar ungefär var händelsen inträffat"
                             class="Event__mapImage Event__mapImage--far"
                             src="{{ $event->getStaticImageSrcFar(213,332) }}"
                             width="213"
                             height="332"
                             layout="responsive"
-                        ></amp-img>
+                        ></img>
                     </span>
 
                 </a>
@@ -181,12 +183,6 @@ if $single is set then larger image
             </div>
         @endif
 
-        <div class="Event__share">
-            <p class="Event__shareTitle">Dela händelsen:</p>
-            <amp-social-share type="twitter" aria-label="Dela till Twitter"></amp-social-share>
-            <amp-social-share type="facebook" data-param-app_id="105986239475133" aria-label="Dela till Facebook"></amp-social-share>
-            <amp-social-share type="email" aria-label="Dela via E-post"></amp-social-share>
-        </div>
     @endif
 
     @if (!empty($dictionaryWordsInText) && $dictionaryWordsInText->count())

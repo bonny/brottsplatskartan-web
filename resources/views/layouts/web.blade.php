@@ -15,32 +15,12 @@ $noAdsReason = '';
 
 ?>
 <!DOCTYPE html>
-<html ⚡ lang="sv" class="amp-border-box">
+<html lang="sv" class="amp-border-box">
 <head>
-    <script async src="https://cdn.ampproject.org/v0.js"></script>
-    <script async custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"></script>
-    <script async custom-element="amp-sticky-ad" src="https://cdn.ampproject.org/v0/amp-sticky-ad-1.0.js"></script>
-    <script async custom-element="amp-social-share" src="https://cdn.ampproject.org/v0/amp-social-share-0.1.js"></script>
-    <script async custom-element="amp-form" src="https://cdn.ampproject.org/v0/amp-form-0.1.js"></script>
-    <script async custom-element="amp-iframe" src="https://cdn.ampproject.org/v0/amp-iframe-0.1.js"></script>
-    <script async custom-element="amp-install-serviceworker" src="https://cdn.ampproject.org/v0/amp-install-serviceworker-0.1.js"></script>
-    <script async custom-element="amp-twitter" src="https://cdn.ampproject.org/v0/amp-twitter-0.1.js"></script>
-    <script async custom-element="amp-facebook" src="https://cdn.ampproject.org/v0/amp-facebook-0.1.js"></script>
-    <script async custom-element="amp-facebook-page" src="https://cdn.ampproject.org/v0/amp-facebook-page-0.1.js"></script>
-    <script async custom-element="amp-carousel" src="https://cdn.ampproject.org/v0/amp-carousel-0.2.js"></script>
-    <script async custom-element="amp-accordion" src="https://cdn.ampproject.org/v0/amp-accordion-0.1.js"></script>
-    <script async custom-element="amp-sidebar" src="https://cdn.ampproject.org/v0/amp-sidebar-0.1.js"></script>
-    <script async custom-element="amp-position-observer" src="https://cdn.ampproject.org/v0/amp-position-observer-0.1.js"></script>
-    <script async custom-template="amp-mustache" src="https://cdn.ampproject.org/v0/amp-mustache-0.2.js"></script>
-    <script async custom-element="amp-list" src="https://cdn.ampproject.org/v0/amp-list-0.1.js"></script>
-    <script async custom-element="amp-animation" src="https://cdn.ampproject.org/v0/amp-animation-0.1.js"></script>
-    <script async custom-element="amp-consent" src="https://cdn.ampproject.org/v0/amp-consent-0.1.js"></script>
-    <meta name="amp-consent-blocking" content="amp-analytics,amp-ad,amp-auto-ads" />
+
     <?php
     if ($showAds) {
       ?>
-      <script async custom-element="amp-ad" src="https://cdn.ampproject.org/v0/amp-ad-0.1.js"></script>
-      <script async custom-element="amp-auto-ads" src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js"></script>
       <?php
     }
     ?>
@@ -138,97 +118,38 @@ $noAdsReason = '';
 
     <link rel="manifest" href="/manifest.webmanifest">
 
-    <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+    {{-- <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript> --}}
     <style amp-custom>{!! HTMLMin::css(file_get_contents( public_path("css/styles.css") )) !!}</style>
+
+    @if (env("APP_ENV") != "local")
+      <!-- Global site tag (gtag.js) - Google Analytics -->
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-L1WVBJ39GH"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-L1WVBJ39GH');
+      </script>
+      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1689239266452655" crossorigin="anonymous"></script>
+    @endif
 
 </head>
 <body class="@if ($shared_notification_bar_contents) has-notification-bar @endif {{$noAdsReason}}">
     <?php
     if ($showAds) {
       ?>
-      <amp-auto-ads type="adsense" data-ad-client="ca-pub-1689239266452655"></amp-auto-ads>
+      
       <?php
     }
     ?>
-  
-    <amp-animation id="shrinkAnim" layout="nodisplay">
-      <script type="application/json">
-        {
-          "duration": "250ms",
-          "easing": "ease-in-out",
-          "fill": "both",
-          "iterations": "1",
-          "direction": "alternate",
-          "animations": [{
-              "selector": "#SiteHeader",
-              "keyframes": [{
-                "transform": "translateY(-4rem)"
-              }]
-            },
-            {
-              "selector": ".SiteTitle",
-              "keyframes": [{
-                "transform": "translateY(16px) scale(0.75)"
-              }]
-            }
-          ]
-        }
-      </script>
-    </amp-animation>
-    <amp-animation id="expandAnim" layout="nodisplay">
-      <script type="application/json">
-        {
-          "duration": "250ms",
-          "easing": "ease-out",
-          "fill": "both",
-          "iterations": "1",
-          "direction": "alternate",
-          "animations": [{
-              "selector": "#SiteHeader",
-              "keyframes": [{
-                "transform": "translateY(0)"
-              }]
-            },
-            {
-              "selector": ".SiteTitle",
-              "keyframes": [{
-                "transform": "translateY(0) scale(1)"
-              }]
-            }
-          ]
-        }
-      </script>
-    </amp-animation>
 
     <div class="container">
 
         @include('parts.notificationbar')
         @include('parts.siteheader')
 
-        <div id="HeaderAnimationMarker">
-            <amp-position-observer on="enter:expandAnim.start; exit:shrinkAnim.start;" layout="nodisplay"></amp-position-observer>
-        </div>
-
         @if ($showAds)
-          <div class="Ad">
-              {{-- <div class="Ad__intro">Annons</div>
-              <amp-ad width=320 height=100
-                  type="adsense"
-                  data-ad-client="ca-pub-1689239266452655"
-                  data-ad-slot="9307455607"
-                  layout="responsive"
-                  >
-                  <div overflow></div>
-              </amp-ad> --}}
-              <amp-ad width="100vw" height=320
-                  type="adsense"
-                  data-ad-client="ca-pub-1689239266452655"
-                  data-ad-slot="9307455607"
-                  data-auto-format="rspv"
-                  data-full-width>
-                <div overflow></div>
-              </amp-ad>
-         </div>
         @endif
 
         @yield('beforeBreadcrumb')
@@ -251,17 +172,6 @@ $noAdsReason = '';
 
             @yield('content')
 
-            {{-- <div class="Ad">
-                <div class="Ad__intro">Annons</div>
-                <amp-ad width=320 height=50
-                    type="adsense"
-                    data-ad-client="ca-pub-1689239266452655"
-                    data-ad-slot="7743150002"
-                    layout="responsive"
-                    >
-                </amp-ad>
-            </div> --}}
-
         </main>
 
         <aside class="MainSidebar">
@@ -270,73 +180,32 @@ $noAdsReason = '';
 
     </div>
 
-    <!-- matchat innehåll - since 16 Dec 2017 -->
-    {{-- <amp-ad width=300 height=520
-        type="adsense"
-        data-ad-client="ca-pub-1689239266452655"
-        data-ad-slot="9696533065"
-        layout="responsive"
-        >
-    </amp-ad>--}}
-
-{{--
-320x520 hade nån annan
-     <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-    <ins class="adsbygoogle"
-         style="display:block"
-         data-ad-format="autorelaxed"
-         data-ad-client="ca-pub-1689239266452655"
-         data-ad-slot="9696533065"></ins>
-    <script>
-         (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
- --}}
     <footer class="SiteFooter">
         @include('parts.sitefooter')
     </footer>
 
-    @include('parts.sidebar')
+    {{-- @include('parts.sidebar') --}}
+    {{-- @include('parts.cookie-consent') --}}
 
-    @include('parts.cookie-consent')
-
-    @if (env("APP_ENV") != "local")
-    <amp-analytics type="googleanalytics" id="analytics-ga">
-      <script type="application/json">
-      {
-        "vars": {
-          "account": "UA-181460-13"
-        },
-        "triggers": {
-          "trackPageview": {
-            "on": "visible",
-            "request": "pageview"
-            },
-          "outboundLinks": {
-            "on": "click",
-            "selector": "a.external",
-            "request": "event",
-            "vars": {
-              "eventCategory": "outbound",
-              "eventAction": "click",
-              "eventLabel": "${outboundLink}"
-            }
-          }
-        }
-      }
-      </script>
-    </amp-analytics>
-    @endif
-
-    <amp-pixel src="<?php echo env('APP_URL')?>/pixel?path=CANONICAL_PATH&rand=RANDOM" layout="nodisplay"></amp-pixel>
-
-    {{-- <amp-sticky-ad layout="nodisplay">
-        <amp-ad width=320 height=50
-            type="adsense"
-            data-ad-client="ca-pub-1689239266452655"
-            data-ad-slot="5942966405"
-            >
-        </amp-ad>
-    </amp-sticky-ad> --}}
+    {{--
+      Pixel,
+      ladda via JS för att minimera laddning via bots.
+    --}}
+    @php
+      $pixelUrl = sprintf(
+        '%1$s/pixel?path=%2$s&rand=%3$s', 
+        env('APP_URL'), // 1
+        Request::path(), // 2
+        rand() // 3
+      );
+    @endphp
+    
+    <script>
+      (function() {
+        let i = new Image();
+        i.src='{{ $pixelUrl }}';
+      })();
+    </script>
 
     @if (env('APP_ENV')=='production')
         <amp-install-serviceworker

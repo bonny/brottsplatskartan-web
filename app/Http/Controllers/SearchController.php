@@ -69,4 +69,14 @@ class SearchController extends Controller
 
         return view('search-perform', $data);
     }
+
+    public function adsenseSearch(Request $request) {
+        return view(
+            'adsenseSearch',
+            [
+                'pageTitle' => 'Sök blåljushändelser',
+                'canonicalLink' => route('adsenseSearch')
+            ]
+        );
+    }
 }

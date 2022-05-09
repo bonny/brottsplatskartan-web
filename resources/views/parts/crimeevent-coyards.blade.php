@@ -15,6 +15,7 @@ $eventLink = $eventLink . "?utm_source=coyards";
         <p class="Event__map">
             <a href="{{ $eventLink }}">
                 <img
+                    loading="lazy"
                     alt="Karta som visar ungefär var händelsen inträffat"
                     class="Event__mapImage"
                     src="{{ $event->getStaticImageSrc(640,320) }}"
@@ -71,29 +72,8 @@ $eventLink = $eventLink . "?utm_source=coyards";
     </a>
     @endif
 
-    {{--
-    <div class="Event__related">
-        Visa fler brott av typ <a href="{{ route("typeSingle", $event->parsed_title ) }}">{{ $event->parsed_title }}</a>
-    </div>
-    --}}
-
     @if(isset($single) && $event->shouldShowSourceLink())
         <p class="Event__source">Källa: <a rel="nofollow" href="{{ $event->permalink }}">{{ $event->permalink }}</a></p>
-    @endif
-
-    @if ( isset($overview) )
-        {{--
-        <amp-social-share type="twitter" width=40 height=32 data-param-url="{{ $event->getPermalink(true) }}"></amp-social-share>
-        <amp-social-share type="facebook" width=40 height=32 data-param-url="{{ $event->getPermalink(true) }}" data-param-app_id="105986239475133"></amp-social-share>
-        <amp-social-share type="email" width=40 height=32 data-param-url="{{ $event->getPermalink(true) }}"></amp-social-share>
-        --}}
-    @else
-        <div class="Event__share">
-            <p class="Event__shareTitle">Dela händelsen:</p>
-            <amp-social-share type="twitter"></amp-social-share>
-            <amp-social-share type="facebook" data-param-app_id="105986239475133"></amp-social-share>
-            <amp-social-share type="email"></amp-social-share>
-        </div>
     @endif
 
 </article>
