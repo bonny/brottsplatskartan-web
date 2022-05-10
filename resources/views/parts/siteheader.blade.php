@@ -4,7 +4,7 @@
         @if (Auth::check())
             <p class='SiteHeader__loggedin'>
                 Inloggad.
-                <a href="{{ route('logout') }}">Logga ut</a>
+                {{-- <a href="{{ route('logout') }}">Logga ut</a> --}}
             </p>
         @endif
 
