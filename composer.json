@@ -25,7 +25,7 @@
         "predis/predis": "^1.1",
         "atymic/twitter": "^3.1",
         "rap2hpoutre/laravel-log-viewer": "^2.1",
-        "duzun/hquery": "^1.7",
+        "duzun/hquery": "^3.0.3",
         "barryvdh/laravel-debugbar": "^3.2",
         "spatie/laravel-feed": "^4.0",
         "league/geotools": "@stable",
