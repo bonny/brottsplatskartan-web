@@ -39,24 +39,6 @@ class PlatsController extends Controller
         $breadcrumbs->addCrumb('Hem', '/');
         $breadcrumbs->addCrumb('Platser', route("platserOverview"));
 
-        // Skapa rader i tabellen om inte finns.
-        // Kör on demand pga lite overhead.
-        // @TODO: Denna borta finnas i import?
-        if ($request->get('skapaPlatser')) {
-            $orter->each(function ($ort) {
-                $ortName = $ort->parsed_title_location;
-                $ortName = trim($ortName);
-                $place = Place::firstOrCreate([
-                    'name' => $ortName
-                ]);
-
-                if ($place->wasRecentlyCreated) {
-                    \Debugbar::info('$place skapades nyligen, så geocodar och grejjar', $place);
-                    $place->geocode();
-                } // if recently created
-            });
-        }
-
         $data["breadcrumbs"] = $breadcrumbs;
         
         return view('overview-platser', $data);
