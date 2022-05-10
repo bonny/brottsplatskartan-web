@@ -718,7 +718,7 @@ Route::get('loggain', function () {
 */
 
 // Added by php artisan make:auth
-// Auth::routes(['register' => false]);
+Auth::routes(['register' => false]);
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('logout', function () {
