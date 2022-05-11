@@ -16,7 +16,7 @@
         "laravel/ui": "^3.0",
         "willvincent/feeds": "^2.3.0",
         "weidner/goutte": "dev-l9-compatibility",
-        "doctrine/dbal": "^2.5",
+        "doctrine/dbal": "^3.3.6",
         "creitive/breadcrumbs": "^3.0",
         "unisharp/laravel-settings": "^2.0",
         "alfredo-ramos/parsedown-extra-laravel": "^4.0",
@@ -40,7 +40,7 @@
         }
     ],
     "require-dev": {
-        "fzaninotto/faker": "^1.9",
+        "fzaninotto/faker": "^1.9.2",
         "mockery/mockery": "^0.9",
         "phpunit/phpunit": "^9.5",
         "filp/whoops": "^2.0",
