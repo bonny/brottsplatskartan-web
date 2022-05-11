@@ -28,7 +28,6 @@
         "duzun/hquery": "^3.0.3",
         "barryvdh/laravel-debugbar": "^3.2",
         "spatie/laravel-feed": "^4.0",
-        "jcf/geocode": "^1.3",
         "league/geotools": "@stable",
         "laravel/helpers": "^1.1",
         "fruitcake/laravel-cors": "^3.0.0"

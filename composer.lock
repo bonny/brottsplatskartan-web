@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c1f7aa0a9def6dbe0873701e55914402",
+    "content-hash": "91b2a2683d8426f8b0be772336c77657",
     "packages": [
         {
             "name": "alfredo-ramos/parsedown-extra-laravel",
@@ -2421,67 +2421,6 @@
                 "source": "https://github.com/Intervention/httpauth/tree/3.0.3"
             },
             "time": "2021-01-22T15:08:35+00:00"
-        },
-        {
-            "name": "jcf/geocode",
-            "version": "1.4.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/jotafurtado/geocode.git",
-                "reference": "d598f618ea485333e972a04c0ccd263f0884c933"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/jotafurtado/geocode/zipball/d598f618ea485333e972a04c0ccd263f0884c933",
-                "reference": "d598f618ea485333e972a04c0ccd263f0884c933",
-                "shasum": ""
-            },
-            "require": {
-                "guzzlehttp/guzzle": "~5.3|~6.0",
-                "php": ">=5.4.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Jcf\\Geocode\\GeocodeServiceProvider"
-                    ],
-                    "aliases": {
-                        "Geocode": "Jcf\\Geocode\\Facades\\Geocode"
-                    }
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Jcf\\Geocode": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "João Carlos",
-                    "email": "jotacfurtado@gmail.com"
-                }
-            ],
-            "description": "Google Geocoding API for Laravel",
-            "keywords": [
-                "address",
-                "api",
-                "geocode",
-                "geocoding",
-                "google",
-                "laravel",
-                "latitude",
-                "longitude"
-            ],
-            "support": {
-                "issues": "https://github.com/jotafurtado/geocode/issues",
-                "source": "https://github.com/jotafurtado/geocode/tree/master"
-            },
-            "time": "2018-01-15T03:43:45+00:00"
         },
         {
             "name": "kamermans/guzzle-oauth2-subscriber",
