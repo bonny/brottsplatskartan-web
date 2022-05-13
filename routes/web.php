@@ -718,8 +718,8 @@ Route::get('loggain', function () {
 */
 
 // Added by php artisan make:auth
-Auth::routes(['register' => false]);
-Route::get('/home', 'HomeController@index')->name('home');
+// Auth::routes(['register' => false]);
+// Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('logout', function () {
     Auth::logout();
@@ -730,13 +730,17 @@ Route::get('/sociala-medier', 'DebugController@socialaMedier')->name('socialaMed
 
 // Add route for log viewer
 // https://github.com/rap2hpoutre/laravel-log-viewer
-Route::get(
-    'logs',
-    '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index'
-)->middleware('auth');
+// Route::get(
+//     'logs',
+//     '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index'
+// )->middleware('auth');
 
 // Add routes for RSS feeds.
 // https://github.com/spatie/laravel-feed
 Route::feeds();
 
-Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index']);
+// Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index']);
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
