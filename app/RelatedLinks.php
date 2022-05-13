@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * Modell för relaterade länkar.
  */
-class relatedLinks extends Model
+class RelatedLinks extends Model
 {
     use SoftDeletes;
 }
