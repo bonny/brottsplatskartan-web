@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9dc3706f72fd6871b06cab377a914b3c",
+    "content-hash": "075846b6ce29b3631772e4d68b86b687",
     "packages": [
         {
             "name": "alfredo-ramos/parsedown-extra-laravel",
