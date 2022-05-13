@@ -15,6 +15,18 @@ use App\CrimeEvent;
 use App\Dictionary;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use App\Http\Controllers\PlatsController;
+use App\Http\Controllers\CoyardsController;
+use App\Http\Controllers\DebugController;
+use App\Http\Controllers\FullScreenMapController;
+use App\Http\Controllers\PixelController;
+use App\Http\Controllers\PolisstationerController;
+use App\Http\Controllers\StartController;
+use App\Http\Controllers\GeoController;
+use App\Http\Controllers\LanController;
+use App\Http\Controllers\MestLastController;
+use App\Http\Controllers\SearchController;
+use App\Http\Controllers\HomeController;
 
 Carbon::setLocale('sv');
 setlocale(LC_ALL, 'sv_SE', 'sv_SE.utf8');
@@ -27,22 +39,22 @@ if ($_GET['debugbar-disable'] ?? false) {
     \Debugbar::enable();
 } else { }
 
-Route::get('/debug/{what}', 'DebugController@debug')->name('debug');
+Route::get('/debug/{what}', [DebugController::class, 'debug'])->name('debug');
 
 Route::redirect('/karta/', '/sverigekartan/', 301);
-Route::get('/sverigekartan/{location?}', 'FullScreenMapController@index')->name(
+Route::get('/sverigekartan/{location?}', [FullScreenMapController::class, 'index'])->name(
     'sverigekartan'
 );
-Route::get('/sverigekartan-iframe/{location?}', 'FullScreenMapController@iframe')->name(
+Route::get('/sverigekartan-iframe/{location?}', [FullScreenMapController::class, 'iframe'])->name(
     'sverigekartanIframe'
 );
 
 // URL is like
 // https://brottsplatskartan.localhost/pixel?path=%2Fstockholms-lan%2Ftrafikolycka-taby-taby-kyrkby-37653&rand=0.1843466328440977
 //
-Route::get('/pixel', 'PixelController@pixel');
+Route::get('/pixel', [PixelController::class, 'pixel']);
 
-Route::get('/polisstationer', 'PolisstationerController@index')->name(
+Route::get('/polisstationer', [PolisstationerController::class, 'index'])->name(
     'polisstationer'
 );
 
@@ -56,10 +68,10 @@ Route::get('/polisstationer', 'PolisstationerController@index')->name(
  *
  * @param string $year Year in format "december-2017"
  */
-Route::match(['get', 'post'], '/', 'StartController@start')->name('start');
+Route::match(['get', 'post'], '/', [StartController::class, 'start'])->name('start');
 
-Route::get('/handelser/{date}', 'StartController@day')->name('startDatum');
-Route::get('/handelser/', 'StartController@day')->name('handelser');
+Route::get('/handelser/{date}', [StartController::class, 'day'])->name('startDatum');
+Route::get('/handelser/', [StartController::class, 'day'])->name('handelser');
 // Route::redirect('/handelser/', '/');
 
 /**
@@ -73,9 +85,9 @@ Route::get('/datum/{date}', function ($date) {
 /**
  * nära: show latest events close to position
  */
-Route::get('/nara', 'GeoController@nara')->name("geo");
+Route::get('/nara', [GeoController::class, 'nara'])->name("geo");
 Route::redirect('/geo.php', '/nara-hitta-plats');
-Route::get('/nara-hitta-plats', 'GeoController@geoDetect')->name("geoDetect");
+Route::get('/nara-hitta-plats', [GeoController::class, 'geoDetect'])->name("geoDetect");
 
 /**
  * Län
@@ -88,9 +100,9 @@ Route::get('/nara-hitta-plats', 'GeoController@geoDetect')->name("geoDetect");
  * https://brottsplatskartan.se/lan/Stockholms%20l%C3%A4n/handelser/9-februari-2018
  * https://brottsplatskartan.se/lan/Stockholms%20l%C3%A4n/handelser/ › länets url
  */
-Route::get('/lan/', 'LanController@listLan')->name("lanOverview");
-Route::get('/lan/{lan}', 'LanController@day')->name("lanSingle");
-Route::get('/lan/{lan}/handelser/{date}', 'LanController@day')->name('lanDate');
+Route::get('/lan/', [LanController::class, 'listLan'])->name("lanOverview");
+Route::get('/lan/{lan}', [LanController::class, 'day'])->name("lanSingle");
+Route::get('/lan/{lan}/handelser/{date}', [LanController::class, 'day'])->name('lanDate');
 Route::get('/lan/{lan}/handelser', function ($lan) {
     return redirect()->route('lanSingle', ['lan' => $lan]);
 });
@@ -98,7 +110,7 @@ Route::get('/lan/{lan}/handelser', function ($lan) {
 /**
  * Alla orter översikt
  */
-Route::get('/plats/', 'PlatsController@overview')->name("platserOverview");
+Route::get('/plats/', [PlatsController::class, 'overview'])->name("platserOverview");
 
 /**
  * Url för ort så som den såg ut i Brottsplatskartan 2.
@@ -210,11 +222,11 @@ Route::get('/typ/{typ}', function ($typ) {
  *  /plats/storgatan/
 
  */
-Route::get('/plats/{plats}', 'PlatsController@day')->name("platsSingle");
+Route::get('/plats/{plats}', [PlatsController::class. 'day'])->name("platsSingle");
 Route::get('/plats/{plats}/handelser', function ($plats) {
     return redirect()->route('platsSingle', ['plats' => $plats]);
 });
-Route::get('/plats/{plats}/handelser/{date}', 'PlatsController@day')->name(
+Route::get('/plats/{plats}/handelser/{date}', [PlatsController::class, 'day'])->name(
     'platsDatum'
 );
 
@@ -443,7 +455,7 @@ Route::prefix('blogg')->group(function () {
 Route::redirect('/mestlast/', '/mest-last', 301);
 Route::redirect('/mestlasta/', '/mest-last', 301);
 Route::redirect('/mest-lasta/', '/mest-last', 301);
-Route::get('/mest-last/', 'MestLastController@index')->name('mostRead');
+Route::get('/mest-last/', [MestLastController::class, 'index'])->name('mostRead');
 
 /**
  * Huvudsida + undersidor för inbrott, grannsamverkan och liknande.
@@ -647,15 +659,15 @@ Route::get('/{lan}/{eventName}', function ($lan, $eventName, Request $request) {
  * sök
  * sökstartsida + sökresultatsida = samma sida
  */
-Route::get('/sok/', 'SearchController@index')->name("search");
-Route::get('/sokresultat/', 'SearchController@searchperform')->name(
+Route::get('/sok/', [SearchController::class, 'index'])->name("search");
+Route::get('/sokresultat/', [SearchController::class, 'searchperform'])->name(
     "searchperform"
 );
 
 /**
  * Sök med hjälp av AdSense search ("hemligt" test än så länge).
  */
-Route::get('/sok2/', 'SearchController@adsenseSearch')->name("adsenseSearch");
+Route::get('/sok2/', [SearchController::class, 'adsenseSearch'])->name("adsenseSearch");
 
 /**
  * coyards: sida för samarbete med coyards.se, visas i deras app och hemsida
@@ -668,11 +680,11 @@ Route::get('/sok2/', 'SearchController@adsenseSearch')->name("adsenseSearch");
  * @param $distance anger inom hur långt avstånd händelser ska hämtas, i km
  * @param $count max number of events to get
  */
-Route::resource('coyards', 'CoyardsController')->names([
+Route::resource('coyards', CoyardsController::class)->names([
     'index' => 'coyards'
 ]);
 
-Route::get('/helikopter', 'PlatsController@helicopter')->name('helicopter');
+Route::get('/helikopter', [PlatsController::class, 'helicopter'])->name('helicopter');
 
 /**
  * Testsida för design, så vi lätt kan se hur rubriker
@@ -726,7 +738,7 @@ Route::get('logout', function () {
     return redirect('/');
 });
 
-Route::get('/sociala-medier', 'DebugController@socialaMedier')->name('socialaMedier');
+Route::get('/sociala-medier', [DebugController::class, 'socialaMedier'])->name('socialaMedier');
 
 // Add route for log viewer
 // https://github.com/rap2hpoutre/laravel-log-viewer
@@ -743,4 +755,4 @@ Route::feeds();
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [HomeController::class, 'index'])->name('home');

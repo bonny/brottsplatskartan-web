@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\ApiController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -17,10 +19,9 @@ return $request->user();
 })->middleware('auth:api');
  */
 
-Route::get('/areas', 'ApiController@areas');
-Route::get('/event/{eventID}', 'ApiController@event');
-Route::get('/eventsNearby', 'ApiController@eventsNearby');
-Route::get('/events', 'ApiController@events');
-Route::get('/eventsInMedia', 'ApiController@eventsInMedia');
-Route::get('/mostViewedRecently', 'ApiController@mostViewedRecently');
-
+Route::get('/areas', [ApiController::class, 'areas']);
+Route::get('/event/{eventID}', [ApiController::class, 'event']);
+Route::get('/eventsNearby', [ApiController::class, 'eventsNearby']);
+Route::get('/events', [ApiController::class, 'events']);
+Route::get('/eventsInMedia', [ApiController::class, 'eventsInMedia']);
+Route::get('/mostViewedRecently', [ApiController::class, 'mostViewedRecently']);
