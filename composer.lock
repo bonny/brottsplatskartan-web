@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e24371c2c9a59857863ef80264f32138",
+    "content-hash": "97e5b4bad593de41ab740c2873cc5dc9",
     "packages": [
         {
             "name": "alfredo-ramos/parsedown-extra-laravel",
@@ -2522,16 +2522,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v9.5.0",
+            "version": "v9.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "2748457f90570c85c7ac17a6646aabc352f5be26"
+                "reference": "6a4f2e0d8ae789df2fbe836902d26f6aa1285cd9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/2748457f90570c85c7ac17a6646aabc352f5be26",
-                "reference": "2748457f90570c85c7ac17a6646aabc352f5be26",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/6a4f2e0d8ae789df2fbe836902d26f6aa1285cd9",
+                "reference": "6a4f2e0d8ae789df2fbe836902d26f6aa1285cd9",
                 "shasum": ""
             },
             "require": {
@@ -2697,7 +2697,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2022-03-15T13:39:41+00:00"
+            "time": "2022-03-08T16:13:29+00:00"
         },
         {
             "name": "laravel/helpers",
