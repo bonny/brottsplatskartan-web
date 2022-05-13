@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4e1b2c9fb1cd88c27bda70f186cb5188",
+    "content-hash": "f2f6855f790b28edd8832a2b7c3fed05",
     "packages": [
         {
             "name": "alfredo-ramos/parsedown-extra-laravel",
@@ -6177,6 +6177,51 @@
                 }
             ],
             "time": "2022-03-15T20:01:36+00:00"
+        },
+        {
+            "name": "stevegrunwell/time-constants",
+            "version": "v1.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/stevegrunwell/time-constants.git",
+                "reference": "a83fbc466ae4443c1969a1258d44e092093cb460"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/stevegrunwell/time-constants/zipball/a83fbc466ae4443c1969a1258d44e092093cb460",
+                "reference": "a83fbc466ae4443c1969a1258d44e092093cb460",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.0 | ^8.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.5",
+                "phpunit/phpunit": "^9.5"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "constants.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Steve Grunwell",
+                    "email": "steve@stevegrunwell.com",
+                    "homepage": "https://stevegrunwell.com"
+                }
+            ],
+            "description": "A series of constants designed to make it easier to express time in PHP applications",
+            "support": {
+                "issues": "https://github.com/stevegrunwell/time-constants/issues",
+                "source": "https://github.com/stevegrunwell/time-constants"
+            },
+            "time": "2022-01-19T03:01:28+00:00"
         },
         {
             "name": "symfony/browser-kit",
