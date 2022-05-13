@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "56bd60ef1e6b879271e68b138b5724f3",
+    "content-hash": "8b0728f778dbeeb7793d5ba49c63fb53",
     "packages": [
         {
             "name": "alfredo-ramos/parsedown-extra-laravel",
@@ -2267,16 +2267,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v9.4.1",
+            "version": "v9.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "29f0aaade82eadd20ef881b4efb88b0dad4e9a5b"
+                "reference": "2748457f90570c85c7ac17a6646aabc352f5be26"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/29f0aaade82eadd20ef881b4efb88b0dad4e9a5b",
-                "reference": "29f0aaade82eadd20ef881b4efb88b0dad4e9a5b",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/2748457f90570c85c7ac17a6646aabc352f5be26",
+                "reference": "2748457f90570c85c7ac17a6646aabc352f5be26",
                 "shasum": ""
             },
             "require": {
@@ -2442,7 +2442,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2022-03-08T16:17:00+00:00"
+            "time": "2022-03-15T13:39:41+00:00"
         },
         {
             "name": "laravel/helpers",
@@ -11409,8 +11409,8 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "weidner/goutte": 20,
-        "league/geotools": 0
+        "league/geotools": 0,
+        "weidner/goutte": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
