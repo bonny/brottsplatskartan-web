@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "06f57a5546b14c04ffb38dd5190669a1",
+    "content-hash": "6fc42eb4d9b4b7b1d6ede9a7038f0612",
     "packages": [
         {
             "name": "alfredo-ramos/parsedown-extra-laravel",
@@ -2522,16 +2522,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v9.9.0",
+            "version": "v9.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "4d5a07640891b772188d7737348886a0222737d8"
+                "reference": "13372872bed31ae75df8709b9de5cde01d50646e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/4d5a07640891b772188d7737348886a0222737d8",
-                "reference": "4d5a07640891b772188d7737348886a0222737d8",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/13372872bed31ae75df8709b9de5cde01d50646e",
+                "reference": "13372872bed31ae75df8709b9de5cde01d50646e",
                 "shasum": ""
             },
             "require": {
@@ -2617,7 +2617,7 @@
                 "mockery/mockery": "^1.4.4",
                 "orchestra/testbench-core": "^7.1",
                 "pda/pheanstalk": "^4.0",
-                "phpstan/phpstan": "^1.4.7",
+                "phpstan/phpstan": "^1.0",
                 "phpunit/phpunit": "^9.5.8",
                 "predis/predis": "^1.1.9",
                 "symfony/cache": "^6.0"
@@ -2697,7 +2697,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2022-04-19T15:01:23+00:00"
+            "time": "2022-02-22T15:30:23+00:00"
         },
         {
             "name": "laravel/helpers",
