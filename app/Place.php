@@ -17,7 +17,7 @@ class Place extends Model
     /**
      * Hämta polisstationer som är nära aktuell plats.
      * 
-     * @return array|Collection<TKey, TValue> 
+     * @return \Illuminate\Support\Collection
      */
     public function getClosestPolicestations()
     {
@@ -34,7 +34,7 @@ class Place extends Model
         }
 
         $lanPolicestations = collect($lanPolicestations['policeStations']);
-        if ($lanPolicestations) {
+        if ($lanPolicestations->count() > 0) {
             $lanPolicestations->each(function ($policeStation) use ($geotools, $coordPlace) {
                 $locationGps = $policeStation->location->gps;
                 $locationLatlng = explode(',', $locationGps);

@@ -6,6 +6,7 @@ use App\CrimeEvent;
 use App\CrimeView;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cache;
 
@@ -19,7 +20,7 @@ class PixelController extends Controller
      *
      * @param Request $req Request.
      *
-     * @return $response Response.
+     * @return array
      */
     public function pixel(Request $req)
     {
@@ -37,7 +38,7 @@ class PixelController extends Controller
             // "/lan/Västmanlands län/handelser/18-juli-2018"
             // så vi fortsätter bara om siffran inte är 4 siffror, pga
             // alla händelser har numera högre värden än så. Fult. Men borde funka.
-            if (strlen($eventId) === 4) {
+            if (strlen((string) $eventId) === 4) {
                 // Verkar vara år.
             } else {
                 // Inte år, förhoppningsvis event. Spara.

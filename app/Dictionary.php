@@ -54,7 +54,7 @@ class Dictionary extends Model
         $cacheKey = "getWordsInText:" . md5($text);
         $cacheTTL = 720 * 60;
 
-        $arrWords = Cache::Remember(
+        $arrWords = Cache::remember(
             $cacheKey,
             $cacheTTL,
             function () use ($text) {
@@ -70,7 +70,7 @@ class Dictionary extends Model
      *
      * @param  string $text Block of text, like the full text for an event
      *                      (with stripped tags and so on)
-     * @return words collection
+     * @return \Illuminate\Support\Collection  $words
      */
     public static function getWordsInText($text)
     {

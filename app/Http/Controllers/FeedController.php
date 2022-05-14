@@ -95,6 +95,10 @@ class FeedController extends Controller
             ];
         }
 
+        $geometry_type = null;
+        $geometry_viewport = null;
+        $administrative_area_level_1 = null;
+        $administrative_area_level_2 = null;
         $geometry_location_lat = null;
         $geometry_location_lng = null;
         $types = null;
@@ -112,9 +116,6 @@ class FeedController extends Controller
             $geometry_viewport = $one_result->geometry->viewport;
 
             $geometry_address_components = $one_result->address_components;
-
-            $administrative_area_level_1 = null;
-            $administrative_area_level_2 = null;
 
             foreach ($geometry_address_components as $key => $val) {
                 if ( in_array("administrative_area_level_1", $val->types) ) {
@@ -206,7 +207,10 @@ class FeedController extends Controller
 
         $geometry_location_lat = null;
         $geometry_location_lng = null;
-        $types = null;
+        $geometry_type = null;
+        $geometry_viewport = null;
+        $administrative_area_level_1 = null;
+        $administrative_area_level_2 = null;
 
         foreach ( $result_results as $one_result ) {
 
@@ -222,9 +226,6 @@ class FeedController extends Controller
 
             $geometry_address_components = $one_result->address_components;
 
-            $administrative_area_level_1 = null;
-            $administrative_area_level_2 = null;
-
             foreach ($geometry_address_components as $key => $val) {
                 if ( in_array("administrative_area_level_1", $val->types) ) {
                     $administrative_area_level_1 = $val->long_name;
@@ -238,8 +239,6 @@ class FeedController extends Controller
                     break;
                 }
             }
-
-            $types = $one_result->types;
 
             // only return first matching place
             break;
@@ -361,7 +360,7 @@ class FeedController extends Controller
         // dd('itemContentsWasUpdated', $itemContentsWasUpdated);
 
         // If contents was not changed bail
-        if ($itemContentsWasUpdated == 'NOT_CHANGED' && $itemContentsWasUpdated == 'ERROR') {
+        if ($itemContentsWasUpdated == 'NOT_CHANGED' || $itemContentsWasUpdated == 'ERROR') {
             return false;
         }
 

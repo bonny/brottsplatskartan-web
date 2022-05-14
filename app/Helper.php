@@ -5,6 +5,7 @@ namespace App;
 use Carbon\Carbon;
 use DateTime;
 use DB;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 
 class Helper
@@ -114,7 +115,7 @@ class Helper
         $stats["numEventsPerDay"] = Cache::remember(
             $cacheKey,
             $cacheTTL,
-            function () use ($lan, $dateDaysBack) {
+            function () use ($dateDaysBack) {
                 $numEventsPerDay = DB::table('crime_events')
                     ->select(
                         DB::raw('date_format(created_at, "%Y-%m-%d") as YMD'),
@@ -381,7 +382,7 @@ class Helper
     /**
      * Return some date info from a string.
      *
-     * @param string $monthAndYear Like "15-januari-2018"
+     * @param string|null $monthAndYear Like "15-januari-2018"
      *
      * @return mixed array on success, false on error
      */
@@ -448,7 +449,7 @@ class Helper
      * @param object $date Carbon Date Object.
      * @param int    $numDays Antal dagar att hämta info för.
      *
-     * @return array Array med lite info.
+     * @return Collection Array med lite info.
      */
     public static function getPrevDaysNavInfo($date = null, $numDays = 5)
     {
@@ -481,7 +482,7 @@ class Helper
      * @param object $date Carbon Date Object.
      * @param int    $numDays Antal dagar att hämta info för.
      *
-     * @return array Array med lite info.
+     * @return Collection Array med lite info.
      */
 
     public static function getNextDaysNavInfo($date = null, $numDays = 5)
@@ -495,7 +496,6 @@ class Helper
         $cacheTTL = 16 * 60;
 
         $nextDayEvents = Cache::remember($cacheKey, $cacheTTL, function () use (
-            $dateYmd,
             $dateYmdPlusOneDay,
             $numDays
         ) {
@@ -801,8 +801,6 @@ class Helper
 
     /**
      * Get a center latitude,longitude from an array of like geopoints
-     *
-     * @param array data 2 dimensional array of latitudes and longitudes
      * For Example:
      * $data = array
      * (
@@ -814,46 +812,49 @@ class Helper
      *
      * From
      * https://stackoverflow.com/questions/6671183/calculate-the-center-point-of-multiple-latitude-longitude-coordinate-pairs
+     *
+     * @param array $data 2 dimensional array of latitudes and longitudes.
+     * @return array
      */
-    public static function getCenterFromDegrees($data)
-    {
-        if (!is_array($data)) {
-            return false;
-        }
+    // public static function getCenterFromDegrees($data)
+    // {
+    //     if (!is_array($data)) {
+    //         return false;
+    //     }
 
-        $num_coords = count($data);
+    //     $num_coords = count($data);
 
-        $X = 0.0;
-        $Y = 0.0;
-        $Z = 0.0;
+    //     $X = 0.0;
+    //     $Y = 0.0;
+    //     $Z = 0.0;
 
-        foreach ($data as $coord) {
-            $lat = ($coord[0] * pi()) / 180;
-            $lon = ($coord[1] * pi()) / 180;
+    //     foreach ($data as $coord) {
+    //         $lat = ($coord[0] * pi()) / 180;
+    //         $lon = ($coord[1] * pi()) / 180;
 
-            $a = cos($lat) * cos($lon);
-            $b = cos($lat) * sin($lon);
-            $c = sin($lat);
+    //         $a = cos($lat) * cos($lon);
+    //         $b = cos($lat) * sin($lon);
+    //         $c = sin($lat);
 
-            $X += $a;
-            $Y += $b;
-            $Z += $c;
-        }
+    //         $X += $a;
+    //         $Y += $b;
+    //         $Z += $c;
+    //     }
 
-        $X /= $num_coords;
-        $Y /= $num_coords;
-        $Z /= $num_coords;
+    //     $X /= $num_coords;
+    //     $Y /= $num_coords;
+    //     $Z /= $num_coords;
 
-        $lon = atan2($Y, $X);
-        $hyp = sqrt($X * $X + $Y * $Y);
-        $lat = atan2($Z, $hyp);
+    //     $lon = atan2($Y, $X);
+    //     $hyp = sqrt($X * $X + $Y * $Y);
+    //     $lat = atan2($Z, $hyp);
 
-        return array(($lat * 180) / pi(), ($lon * 180) / pi());
-    }
+    //     return array(($lat * 180) / pi(), ($lon * 180) / pi());
+    // }
 
     /**
      * [getPoliceStations description]
-     * @return [type] [description]
+     * @return Collection
      */
     public static function getPoliceStations()
     {
@@ -932,7 +933,7 @@ class Helper
 
     /**
      * [getPoliceStationsCached description]
-     * @return [type] [description]
+     * @return Collection
      */
     public static function getPoliceStationsCached()
     {
@@ -968,9 +969,9 @@ class Helper
      * "just nu" för en grej som pågått en hel dag kan ha fått fler totala
      * visningar än en grej som fått 1000 visningar senaste minuten.
      *
-     * @param  [type]  $date  [description]
+     * @param  Carbon  $date  [description]
      * @param  integer $limit [description]
-     * @return Collection         [description]
+     * @return Collection          [description]
      */
     public static function getMostViewedEvents(
         Carbon $date = null,
@@ -1012,7 +1013,7 @@ class Helper
                 ->groupBy('createdYMD', 'crime_event_id')
                 ->orderBy('views', 'desc')
                 ->limit($limit)
-                ->with('CrimeEvent', 'CrimeEvent.Locations')
+                ->with('CrimeEvent', 'CrimeEvent.locations')
                 ->get();
 
             return $mostViewed;
@@ -1052,11 +1053,11 @@ class Helper
                 ->groupBy('createdYMD', 'crime_event_id')
                 ->orderBy('views', 'desc')
                 ->limit($limit)
-                ->with('crimeevent', 'crimeevent.locations')
+                ->with('CrimeEvent', 'CrimeEvent.locations')
                 ->get();
 
             // Can't get eager loading to work all way...
-            $mostViewed->load('crimeEvent.locations');
+            $mostViewed->load('CrimeEvent.locations');
 
             return $mostViewed;
         });
@@ -1067,8 +1068,7 @@ class Helper
     /**
      * Hämta de senaste händelserna.
      *
-     * @param  [type]  $date  [description]
-     * @param  integer $limit [description]
+     * @param  integer $count [description]
      * @return Collection         [description]
      */
     public static function getLatestEvents(int $count = 5)

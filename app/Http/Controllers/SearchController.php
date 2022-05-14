@@ -34,7 +34,7 @@ class SearchController extends Controller
             'events' => $events,
             'eventsByDay' => $eventsByDay,
             'hideMapImage' => true,
-            "locations" => isset($locations) ? $locations : null,
+            "locations" => null,
             "breadcrumbs" => $breadcrumbs
         ];
 

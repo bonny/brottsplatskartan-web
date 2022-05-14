@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * En visning av ett brott. Används för att t.ex. skapa
@@ -21,7 +22,7 @@ class CrimeView extends Model
     /**
      * Get the crime event that this is a view for.
      */
-    public function crimeEvent()
+    public function crimeEvent(): BelongsTo
     {
         return $this->belongsTo('App\CrimeEvent');
     }

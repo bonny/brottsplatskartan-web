@@ -8,6 +8,7 @@ use DB;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Helper;
+use Illuminate\Http\JsonResponse;
 
 /**
  * Controller för plats, översikt och detalj
@@ -282,7 +283,7 @@ class ApiController extends Controller
      *
      * @param  Request  $request  [description]
      * @param  Response $response [description]
-     * @return [type]             [description]
+     * @return JsonResponse
      */
     public function eventsInMedia(Request $request, Response $response)
     {

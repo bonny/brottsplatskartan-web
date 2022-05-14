@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cache;
 use DB;
+use Illuminate\Support\Collection;
 
 /**
  * Debug
@@ -23,7 +24,7 @@ class DebugController extends Controller
      * @param Request $request Request.
      * @param string  $what    Vad som ska debugas/testas.
      *
-     * @return void
+     * @return null|array
      */
     public function debug(Request $request, $what = null)
     {
@@ -48,7 +49,8 @@ class DebugController extends Controller
             $strftimestr = strftime($format);
             echo "<br><br>strftime($format):<br>$strftimestr";
 
-            $currentLocal = setlocale(LC_ALL, 0);
+            $currentLocal = setlocale(LC_ALL, "0");
+            
             echo "<br><br>setlocale(LC_ALL, 0):<br>";
             var_dump($currentLocal);
 

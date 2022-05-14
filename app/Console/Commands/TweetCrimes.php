@@ -44,7 +44,7 @@ class TweetCrimes extends Command
         if ($this->argument('userSettings')) {
             dump('Reconfig for @Brottsplatser');
 
-            \Twitter::usingCredentials(
+            Twitter::usingCredentials(
                 accessToken: getenv('TWITTER_ACCESS_TOKEN'),
                 accessTokenSecret: getenv('TWITTER_ACCESS_TOKEN_SECRET'),
                 consumerKey: getenv('TWITTER_CONSUMER_KEY'),
@@ -52,13 +52,13 @@ class TweetCrimes extends Command
             );
 
             dump( 
-                '\Twitter::userSettings()',
-                \Twitter::getSettings(),
+                'Twitter::userSettings()',
+                Twitter::getSettings(),
             );
 
             dump('Reconfig for @Stockholmsbrott');
 
-            \Twitter::usingCredentials(
+            Twitter::usingCredentials(
                 accessToken: getenv('STOCKHOLMBROTT_TWITTER_ACCESS_TOKEN'),
                 accessTokenSecret: getenv('STOCKHOLMBROTT_TWITTER_ACCESS_TOKEN_SECRET'),
                 consumerKey: getenv('STOCKHOLMBROTT_TWITTER_CONSUMER_KEY'),
@@ -66,8 +66,8 @@ class TweetCrimes extends Command
             );
 
             dump( 
-                '\Twitter::userSettings()',
-                \Twitter::getSettings(),
+                'Twitter::userSettings()',
+                Twitter::getSettings(),
             );
 
             exit;
@@ -189,7 +189,7 @@ class TweetCrimes extends Command
                 $this->line("No actual tweet because on local");
             } else {
                 // use config for global account first
-                \Twitter::reconfig([
+                Twitter::reconfig([
                     'consumer_key' => getenv('TWITTER_CONSUMER_KEY'),
                     'consumer_secret' => getenv('TWITTER_CONSUMER_SECRET'),
                     'token' => getenv('TWITTER_ACCESS_TOKEN'),
@@ -197,7 +197,7 @@ class TweetCrimes extends Command
                 ]);
 
                 // Do the tweet!
-                $tweetResult = \Twitter::postTweet([
+                Twitter::postTweet([
                     'status' => $tweetMessage,
                     'format' => 'json',
                     "lat" => $lat,

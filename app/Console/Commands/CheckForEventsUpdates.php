@@ -22,7 +22,6 @@ class CheckForEventsUpdates extends Command
     protected $signature = 'crimeevents:checkForUpdates';
 
     private $feedController;
-    private $feedParser;
 
     /**
      * The console command description.
@@ -36,12 +35,11 @@ class CheckForEventsUpdates extends Command
      *
      * @return void
      */
-    public function __construct(FeedController $FeedController, FeedParserController $FeedParser)
+    public function __construct(FeedController $FeedController)
     {
         parent::__construct();
 
         $this->feedController = $FeedController;
-        $this->feedParser = $FeedParser;
     }
 
     /**

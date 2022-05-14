@@ -7,6 +7,7 @@ use App\Place;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
@@ -110,16 +111,16 @@ class PlatsController extends Controller
         if ($foundMatchingLan) {
             // Hämta events där vi vet både plats och län
             // t.ex. "Stockholm" i "Stockholms län"
-            $events = $this->getEventsInPlatsWithLan($platsWithoutLan, $oneLanName, $date, 7, $isToday);
+            $events = $this->getEventsInPlatsWithLan($platsWithoutLan, $matchingLanName, $date, 7, $isToday);
 
             // Hämta mest vanligt förekommande händelsetyperna
-            $mostCommonCrimeTypes = $this->getMostCommonCrimeTypesInPlatsWithLan($platsWithoutLan, $oneLanName, $dateYMD);
+            $mostCommonCrimeTypes = $this->getMostCommonCrimeTypesInPlatsWithLan($platsWithoutLan, $matchingLanName, $dateYMD);
 
             // Skapa fint namn av platsen och länet, blir t.ex. "Orminge i Stockholms Län"
             $plats = sprintf(
                 '%1$s i %2$s',
                 title_case($platsWithoutLan),
-                title_case($oneLanName)
+                title_case($matchingLanName)
             );
         } else {
             // Hämta events där plats är från huvudtabellen
@@ -178,14 +179,10 @@ class PlatsController extends Controller
         $introtext_key = "introtext-plats-$plats";
         $introtext = null;
 
-        if ($page == 1) {
-            $introtext = \Markdown::parse(\Setting::get($introtext_key));
-        }
-
         // Start daynav
         if ($foundMatchingLan) {
-            $prevDaysNavInfo = $this->getPlatsPrevDaysNavInfo($date['date'], 5, $platsWithoutLan, $oneLanName);
-            $nextDaysNavInfo = $this->getPlatsNextDaysNavInfo($date['date'], 5, $platsWithoutLan, $oneLanName);
+            $prevDaysNavInfo = $this->getPlatsPrevDaysNavInfo($date['date'], 5, $platsWithoutLan, $matchingLanName);
+            $nextDaysNavInfo = $this->getPlatsNextDaysNavInfo($date['date'], 5, $platsWithoutLan, $matchingLanName);
         } else {
             $prevDaysNavInfo = $this->getPlatsPrevDaysNavInfo($date['date'], 5, $plats);
             $nextDaysNavInfo = $this->getPlatsNextDaysNavInfo($date['date'], 5, $plats);
@@ -290,7 +287,7 @@ class PlatsController extends Controller
         }
 
         if ($foundMatchingLan) {
-            $relatedLinks = \App\Helper::getRelatedLinks($platsWithoutLan, $oneLanName);
+            $relatedLinks = \App\Helper::getRelatedLinks($platsWithoutLan, $matchingLanName);
         } else {
             $relatedLinks = \App\Helper::getRelatedLinks($plats);
         }
@@ -326,12 +323,12 @@ class PlatsController extends Controller
      * URL är t.ex.
      * https://brottsplatskartan.localhost/plats/fru%C3%A4ngen-stockholms-l%C3%A4n
      *
-     * @param [type] $platsWithoutLan
-     * @param [type] $oneLanName
-     * @param [type] $date
+     * @param string $platsWithoutLan
+     * @param string $oneLanName
+     * @param array<string, Carbon> $date
      * @param integer $numDaysBack
      * @param boolean $isToday
-     * @return void
+     * @return Collection
      */
     public function getEventsInPlatsWithLan($platsWithoutLan, $oneLanName, $date, $numDaysBack = 7, $isToday = false)
     {
@@ -339,7 +336,7 @@ class PlatsController extends Controller
         $cacheKey = 'getEventsInPlatsWithLan:' . md5("{$platsWithoutLan}:{$oneLanName}:{$dateYmd}:{$numDaysBack}:{$isToday}");
         $cacheTTL = 1 * 60;
 
-        $events = Cache::Remember(
+        $events = Cache::remember(
             $cacheKey,
             $cacheTTL,
             function () use ($platsWithoutLan, $oneLanName, $date, $numDaysBack, $isToday) {
@@ -351,6 +348,16 @@ class PlatsController extends Controller
         return $events;
     }
 
+
+    /**
+     * @param mixed $platsWithoutLan 
+     * @param mixed $oneLanName 
+     * @param array<string, Carbon> $date
+     * @param int $numDaysBack 
+     * @param bool $isToday 
+     *
+     * @return Collection
+     */
     public function getEventsInPlatsWithLanUncached($platsWithoutLan, $oneLanName, $date, $numDaysBack = 7, $isToday = false)
     {
         $dateYmd = $date['date']->format('Y-m-d');
@@ -358,7 +365,7 @@ class PlatsController extends Controller
         $dateYmdMinusNumDaysBack = $date['date']->copy()->subDays($numDaysBack)->format('Y-m-d');
 
         $events = CrimeEvent::orderBy("created_at", "desc")
-            ->where(function ($query) use ($date, $dateYmd, $dateYmdPlusOneDay, $dateYmdMinusNumDaysBack, $numDaysBack, $isToday) {
+            ->where(function ($query) use ($dateYmd, $dateYmdPlusOneDay, $dateYmdMinusNumDaysBack, $isToday) {
                 if ($isToday) {
                     $query->where('created_at', '<', $dateYmdPlusOneDay);
                     $query->where('created_at', '>', $dateYmdMinusNumDaysBack);
@@ -368,7 +375,7 @@ class PlatsController extends Controller
                 }
             })
             ->where("administrative_area_level_1", $oneLanName)
-            ->where(function ($query) use ($oneLanName, $platsWithoutLan) {
+            ->where(function ($query) use ($platsWithoutLan) {
                 $query->where("parsed_title_location", $platsWithoutLan);
                 $query->orWhereExists(function ($query) use ($platsWithoutLan) {
                     $query->select(\DB::raw(1))
@@ -389,9 +396,9 @@ class PlatsController extends Controller
     /**
      * Hämta de mest vanliga brotten för en plats, som inkluderar län i urlen.
      *
-     * @param [type] $platsWithoutLan
-     * @param [type] $oneLanName
-     * @param [type] $dateYMD
+     * @param string $platsWithoutLan
+     * @param string $oneLanName
+     * @param string $dateYMD
      * @return collection Array händelsetyp => antal
      */
     public function getMostCommonCrimeTypesInPlatsWithLan($platsWithoutLan, $oneLanName, $dateYMD)
@@ -401,7 +408,7 @@ class PlatsController extends Controller
         $cacheKey = "getMostCommonCrimeTypesInPlatsWithLan:$platsWithoutLan:$oneLanName:$dateYMD";
         $cacheTTL = 20 * 60;
 
-        $mostCommonCrimeTypes = Cache::Remember(
+        $mostCommonCrimeTypes = Cache::remember(
             $cacheKey,
             $cacheTTL,
             function () use ($platsWithoutLan, $oneLanName, $dateYMD, $dateYmdPlusOneDay) {
@@ -419,7 +426,7 @@ class PlatsController extends Controller
             ->where('created_at', '>', $dateYMD)
             ->where('created_at', '<', $dateYmdPlusOneDay)
             ->where("administrative_area_level_1", $oneLanName)
-            ->where(function ($query) use ($oneLanName, $platsWithoutLan) {
+            ->where(function ($query) use ($platsWithoutLan) {
                 $query->where("parsed_title_location", $platsWithoutLan);
                 $query->orWhereExists(function ($query) use ($platsWithoutLan) {
                     $query->select(\DB::raw(1))
@@ -445,7 +452,9 @@ class PlatsController extends Controller
      * https://brottsplatskartan.se/plats/tierp
      *
      * @param string $plats For example "tierp"
-     * @param string $dateYMD Date in YMD format
+     * @param array<string, Carbon> $date
+     * @param int $numDaysBack
+     * @param bool $isToday
      */
     public function getEventsInPlats($plats, $date, $numDaysBack = 7, $isToday = false)
     {
@@ -456,7 +465,7 @@ class PlatsController extends Controller
         $cacheKey = "getEventsInPlats:$plats:$dateYmd:$numDaysBack:$isToday";
         $cacheTTL = 1 * 60;
 
-        $events = Cache::Remember(
+        $events = Cache::remember(
             $cacheKey,
             $cacheTTL,
             function () use ($dateYmd, $dateYmdPlusOneDay, $dateYmdMinusNumDaysBack, $numDaysBack, $isToday, $plats) {
@@ -470,7 +479,7 @@ class PlatsController extends Controller
     public function getEventsInPlatsUncached($dateYmd, $dateYmdPlusOneDay, $dateYmdMinusNumDaysBack, $numDaysBack, $isToday, $plats)
     {
         $events = CrimeEvent::orderBy("created_at", "desc")
-            ->where(function ($query) use ($numDaysBack, $isToday, $dateYmd, $dateYmdPlusOneDay, $dateYmdMinusNumDaysBack, $plats) {
+            ->where(function ($query) use ($isToday, $dateYmd, $dateYmdPlusOneDay, $dateYmdMinusNumDaysBack) {
                 if ($isToday) {
                     $query->where('created_at', '<', $dateYmdPlusOneDay);
                     $query->where('created_at', '>', $dateYmdMinusNumDaysBack);
@@ -494,9 +503,9 @@ class PlatsController extends Controller
     /**
      * Hämta mest vanligt förekommande brottstyperna för en plats utan län.
      *
-     * @param [type] $plats
-     * @param [type] $dateYMD
-     * @return array
+     * @param string $plats
+     * @param string $dateYMD
+     * @return Collection
      */
     public function getMostCommonCrimeTypesInPlats($plats, $dateYMD)
     {
@@ -506,7 +515,7 @@ class PlatsController extends Controller
         $cacheKey = "getMostCommonCrimeTypesInPlats:$plats:$dateYMD";
         $cacheTTL = 45 * 60;
 
-        $mostCommonCrimeTypes = Cache::Remember(
+        $mostCommonCrimeTypes = Cache::remember(
             $cacheKey,
             $cacheTTL,
             function () use ($plats, $dateYMD, $dateYmdPlusOneDay) {
@@ -517,6 +526,13 @@ class PlatsController extends Controller
         return $mostCommonCrimeTypes;
     }
 
+
+    /**
+     * @param string $plats 
+     * @param string $dateYMD 
+     * @param string $dateYmdPlusOneDay 
+     * @return Collection 
+     */
     public function getMostCommonCrimeTypesInPlatsUncached($plats, $dateYMD, $dateYmdPlusOneDay)
     {
         $mostCommonCrimeTypes = CrimeEvent::selectRaw('parsed_title, count(id) as antal')
@@ -541,11 +557,11 @@ class PlatsController extends Controller
      * Om plats med län, skicka med plats + län-namnet ($platsWithoutLan, $oneLanName)
      * Om inte plats med län: skicka bara plats ($plats)
      *
-     * @param [type] $date
+     * @param Carbon $date
      * @param integer $numDays
-     * @param [type] $platsWithoutLan
-     * @param [type] $oneLanName
-     * @return void
+     * @param string $platsWithoutLan
+     * @param string $oneLanName
+     * @return Collection 
      */
     public static function getPlatsPrevDaysNavInfo($date = null, $numDays = 5, $platsWithoutLan = null, $oneLanName = null)
     {
@@ -554,7 +570,7 @@ class PlatsController extends Controller
         $cacheKey = "getPlatsPrevDaysNavInfo4:$dateYmd:$numDays:$platsWithoutLan:$oneLanName";
         $cacheTTL = 22 * 60;
 
-        $prevDayEvents = Cache::Remember(
+        $prevDayEvents = Cache::remember(
             $cacheKey,
             $cacheTTL,
             function () use ($date, $numDays, $platsWithoutLan, $oneLanName) {
@@ -565,11 +581,16 @@ class PlatsController extends Controller
         return $prevDayEvents;
     }
 
+    /**
+     * @param Carbon $date 
+     * @param int $numDays 
+     * @param mixed $platsWithoutLan 
+     * @param mixed $oneLanName 
+     * @return Collection 
+     */
     public static function getPlatsPrevDaysNavInfoUncached($date = null, $numDays = 5, $platsWithoutLan = null, $oneLanName = null)
     {
         $dateYmd = $date->format('Y-m-d');
-        $dateYmdPlusOneDay = $date->copy()->addDays(1)->format('Y-m-d');
-        $dateYmdMinusNumDaysBack = $date->copy()->subDays($numDays)->format('Y-m-d');
 
         // Vi vill ha $numDays dagar tillbaka, men har inget hänt på väldigt långt tid kan
         // det bli många rader som gås igenom, så vi begränsar till typ ett halvt år max.
@@ -582,7 +603,7 @@ class PlatsController extends Controller
                 ->where('created_at', '<', $dateYmd)
                 ->where('created_at', '>', $dateYmdMinusManyDaysBack)
                 ->where("administrative_area_level_1", $oneLanName)
-                ->where(function ($query) use ($oneLanName, $platsWithoutLan) {
+                ->where(function ($query) use ($platsWithoutLan) {
                     $query->where("parsed_title_location", $platsWithoutLan);
                     $query->orWhereExists(function ($query) use ($platsWithoutLan) {
                         $query->select(\DB::raw(1))
@@ -600,8 +621,6 @@ class PlatsController extends Controller
                 ->get();
         } else {
             // Plats utan län
-            #DB::enableQueryLog();
-
             $prevDayEvents = CrimeEvent::
                 selectRaw('date(created_at) as dateYMD, count(*) as dateCount')
                 ->where('created_at', '<', $dateYmd)
@@ -617,8 +636,6 @@ class PlatsController extends Controller
                 ->orderBy("created_at", "desc")
                 ->limit($numDays)
                 ->get();
-
-            #dd(DB::getQueryLog());
         }
 
         return $prevDayEvents;
@@ -631,7 +648,7 @@ class PlatsController extends Controller
         $cacheKey = "getPlatsNextDaysNavInfo:$dateYmd:$numDays:$platsWithoutLan:$oneLanName";
         $cacheTTL = 23 * 60;
 
-        $prevDayEvents = Cache::Remember(
+        $prevDayEvents = Cache::remember(
             $cacheKey,
             $cacheTTL,
             function () use ($date, $numDays, $platsWithoutLan, $oneLanName) {
@@ -644,9 +661,7 @@ class PlatsController extends Controller
 
     public static function getPlatsNextDaysNavInfoUncached($date = null, $numDays = 5, $platsWithoutLan = null, $oneLanName = null)
     {
-        $dateYmd = $date->format('Y-m-d');
         $dateYmdPlusOneDay = $date->copy()->addDays(1)->format('Y-m-d');
-        $dateYmdMinusNumDaysBack = $date->copy()->subDays($numDays)->format('Y-m-d');
         $dateYmdPlusManyDaysForward = $date->copy()->addDays(90)->format('Y-m-d');
 
         if ($platsWithoutLan && $oneLanName) {
@@ -655,7 +670,7 @@ class PlatsController extends Controller
                 ->where('created_at', '>', $dateYmdPlusOneDay)
                 ->where('created_at', '<', $dateYmdPlusManyDaysForward)
                 ->where("administrative_area_level_1", $oneLanName)
-                ->where(function ($query) use ($oneLanName, $platsWithoutLan) {
+                ->where(function ($query) use ($platsWithoutLan) {
                     $query->where("parsed_title_location", $platsWithoutLan);
                     $query->orWhereExists(function ($query) use ($platsWithoutLan) {
                         $query->select(\DB::raw(1))

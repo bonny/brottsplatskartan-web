@@ -21,7 +21,7 @@ Template för /inbrott
                 <select
                     name="byt-sida"
                     class="SubNav__select"
-                    on="change:inbrottSubnavForm.submit"
+                    onchange="this.closest('form').submit();"
                 >
                     <optgroup label="Undersidor för inbrott...">
                         @foreach ($inbrott_undersidor as $navKey => $navundersida)

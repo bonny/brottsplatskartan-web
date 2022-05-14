@@ -7,6 +7,7 @@ use App\Helper;
 use App\CrimeEvent;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cache;
 
@@ -25,7 +26,6 @@ class StartController extends Controller
      * https://brottsplatskartan.se/
      *
      * @param Request $request Request-object.
-     * @param Carbon  $date    Year in format "december-2017".
      */
     public function start(Request $request)
     {
@@ -208,16 +208,6 @@ class StartController extends Controller
             ];
         }
 
-        // Add breadcrumbs for dates before today
-        if (!$isToday) {
-            // $breadcrumbs = new \Creitive\Breadcrumbs\Breadcrumbs;
-            // $breadcrumbs->setDivider('›');
-            // $breadcrumbs->addCrumb('Hem', '/');
-            // $breadcrumbs->addCrumb('Datum', route("start"));
-            // $breadcrumbs->addCrumb('Län', route("lanOverview"));
-            // $breadcrumbs->addCrumb('Alla län', route("lanOverview"));
-        }
-
         $introtext = null;
         $introtext_key = "introtext-handelser";
         if ($isToday) {
@@ -238,8 +228,7 @@ class StartController extends Controller
             $title = sprintf(
                 '
                     Händelser från Polisen idag
-                ',
-                $dateLocalized
+                '
             );
         } elseif ($isYesterday) {
             $title = sprintf(
@@ -289,7 +278,7 @@ class StartController extends Controller
             'events' => $events,
             'eventsByDay' => $eventsByDay,
             'showLanSwitcher' => true,
-            'breadcrumbs' => isset($breadcrumbs) ? $breadcrumbs : null,
+            'breadcrumbs' => null,
             'chartImgUrl' => \App\Helper::getStatsImageChartUrl("home"),
             'title' => $title,
             'nextDayLink' => $nextDayLink,
@@ -315,7 +304,7 @@ class StartController extends Controller
     /**
      * Hämta händelser till startsidan för idag.
      *
-     * @param Carbon  $date Dagens datum.
+     * @param array<string, Carbon>  $date Dagens datum.
      * @param integer $daysBack Antal dagar tillbaka att hämta för
      *
      * @return Collection Händelser.
@@ -357,8 +346,8 @@ class StartController extends Controller
     /**
      * Hämta händelsetyper till startsidan för idag.
      *
-     * @param Carbon  $date Dagens datum.
-     * @param integer $daysBack Antal dagar tillbaka att hämta för
+     * @param array<string, Carbon>  $date Dagens datum.
+     * @param int $daysBack Antal dagar tillbaka att hämta för
      *
      * @return Collection Händelser.
      */

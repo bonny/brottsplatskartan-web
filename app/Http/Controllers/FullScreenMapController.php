@@ -15,11 +15,10 @@ class FullScreenMapController extends Controller
     /**
      * @param Request $request Request.
      *
-     * @return void
+     * @return \Illuminate\View\View
      */
     public function index(Request $request, $location = null)
     {
-
         $data = [
             'lat' => 59,
             'lng' => 18,
@@ -48,7 +47,6 @@ class FullScreenMapController extends Controller
         }
 
         return view('sverigekartan', $data);
-
     }
 
     public function iframe(Request $request, $location = null) {

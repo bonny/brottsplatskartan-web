@@ -13,6 +13,11 @@ use Spatie\Feed\Feedable;
 use Spatie\Feed\FeedItem;
 use App\Http\Controllers\PlatsController;
 use Illuminate\Support\Str;
+use App\Locations;
+use App\Newsarticle;
+use App\CrimeView;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Collection;
 
 class CrimeEvent extends Model implements Feedable
 {
@@ -36,11 +41,11 @@ class CrimeEvent extends Model implements Feedable
     ];
 
     /**
-     * Get the comments for the blog post.
+     * Get the locations for the event post.
      */
-    public function locations()
+    public function locations(): HasMany
     {
-        return $this->hasMany('App\Locations');
+        return $this->hasMany(Locations::class);
     }
 
     /**
@@ -130,15 +135,6 @@ class CrimeEvent extends Model implements Feedable
             // @TODO: return fallback iamge
             return '';
         }
-
-        // echo "image: <img loading="lazy" src='$image_src'>";
-        // exit;
-
-        // src="https://maps.googleapis.com/maps/api/staticmap?center={{ $event->location_lat }},{{ $event->location_lng }}&zoom=14&size=600x400&key=...&markers={{ $event->location_lat }},{{ $event->location_lng }}"
-
-        // $image_src = Helper::signUrl($image_src);
-
-        return '';
     }
 
     /**
@@ -257,14 +253,6 @@ class CrimeEvent extends Model implements Feedable
             return '';
         }
 
-        // echo "image: <img loading="lazy" src='$image_src'>";
-        // exit;
-
-        // src="https://maps.googleapis.com/maps/api/staticmap?center={{ $event->location_lat }},{{ $event->location_lng }}&zoom=14&size=600x400&key=...&markers={{ $event->location_lat }},{{ $event->location_lng }}"
-
-        // $image_src = Helper::signUrl($image_src);
-
-        return '';
     }
 
     /**
@@ -1080,9 +1068,9 @@ class CrimeEvent extends Model implements Feedable
         return $array;
     }
 
-    public function newsarticles()
+    public function newsarticles(): HasMany
     {
-        return $this->hasMany('App\Newsarticle');
+        return $this->hasMany(Newsarticle::class);
     }
 
     /**
@@ -1205,12 +1193,12 @@ class CrimeEvent extends Model implements Feedable
     /**
      * Undocumented function
      *
-     * @return void
+     * @return FeedItem
      */
     public function toFeedItem(): FeedItem
     {
         return FeedItem::create()
-            ->id($this->id)
+            ->id((string) $this->id)
             ->title($this->getSingleEventTitle())
             ->updated($this->updated_at)
             ->link($this->getPermalink())
@@ -1227,7 +1215,7 @@ class CrimeEvent extends Model implements Feedable
      * Exempel som visar bara för Stockholms län:
      * https://brottsplatskartan.localhost/rss?lan=stockholms%20l%C3%A4n
      *
-     * @return void
+     * @return Collection
      */
     public function getFeedItems(
         Request $request,
@@ -1265,8 +1253,8 @@ class CrimeEvent extends Model implements Feedable
         return $events;
     }
 
-    public function crimeViews()
+    public function crimeViews(): HasMany
     {
-        return $this->hasMany('App\CrimeView');
+        return $this->hasMany(CrimeView::class);
     }
 }
