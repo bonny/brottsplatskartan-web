@@ -31,7 +31,6 @@
         "creitive/breadcrumbs": "^3.0",
         "doctrine/dbal": "^3.3.6",
         "duzun/hquery": "^3.0.3",
-        "fruitcake/laravel-cors": "^3.0.0",
         "guzzlehttp/guzzle": "^7.4.2",
         "htmlmin/htmlmin": "^9.0",
         "laravel/framework": "9.5.1",

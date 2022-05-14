@@ -14,12 +14,16 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $middleware = [
-        \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
+        \App\Http\Middleware\TrustProxies::class,
+        \Illuminate\Http\Middleware\HandleCors::class,
+        \App\Http\Middleware\PreventRequestsDuringMaintenance::class,
+        \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
+        \App\Http\Middleware\TrimStrings::class,
+        \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         \App\Http\Middleware\RedirectOldPages::class,
         \App\Http\Middleware\RedirectBytSida::class,
-        // \App\Http\Middleware\RedirectHitta::class,
+        \App\Http\Middleware\RedirectHitta::class,
         \App\Http\Middleware\DebugBarMaybeEnable::class,
-        \Fruitcake\Cors\HandleCors::class,
     ];
 
     /**
