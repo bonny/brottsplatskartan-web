@@ -115,12 +115,12 @@ return [
         'session'         => true,  // Display session data
         'symfony_request' => true,  // Only one can be enabled..
         'mail'            => true,  // Catch mail messages
-        'laravel'         => false, // Laravel version and environment
+        'laravel'         => true, // Laravel version and environment
         'events'          => false, // All events fired
         'default_request' => false, // Regular or special Symfony request logger
-        'logs'            => false, // Add the latest log messages
-        'files'           => false, // Show the included files
-        'config'          => false, // Display config settings
+        'logs'            => true, // Add the latest log messages
+        'files'           => true, // Show the included files
+        'config'          => true, // Display config settings
         'cache'           => true, // Display cache events
     ],
 
