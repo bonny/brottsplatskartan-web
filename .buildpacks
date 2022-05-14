@@ -2,3 +2,4 @@ https://github.com/heroku/heroku-buildpack-php
 https://github.com/heroku/heroku-buildpack-locale
 https://github.com/heroku/heroku-buildpack-apt
 https://github.com/carloluis/heroku-buildpack-vim
+https://github.com/velizarn/heroku-buildpack-nano
