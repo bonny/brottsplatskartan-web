@@ -31,14 +31,6 @@ use App\Http\Controllers\HomeController;
 Carbon::setLocale('sv');
 setlocale(LC_ALL, 'sv_SE', 'sv_SE.utf8');
 
-// To disable debugbar temporarily on local development, uncomment the line below.
-// \Debugbar::disable();
-if ($_GET['debugbar-disable'] ?? false) {
-    \Debugbar::disable();
-} elseif ($_GET['debugbar-enable'] ?? false) {
-    \Debugbar::enable();
-} else { }
-
 Route::get('/debug/{what}', [DebugController::class, 'debug'])->name('debug');
 
 Route::redirect('/karta/', '/sverigekartan/', 301);
