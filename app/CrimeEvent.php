@@ -936,7 +936,6 @@ class CrimeEvent extends Model implements Feedable
             // Add and remove locatons
             $locationAdd = trim($request->input('locationAdd', ''));
             if ($locationAdd) {
-                // echo "<br>locationAdd: $locationAdd";
                 \App\highways_added::firstOrCreate(['name' => $locationAdd]);
             }
 
@@ -944,7 +943,6 @@ class CrimeEvent extends Model implements Feedable
                 trim($request->input('locationIgnore', ''))
             );
             if ($locationIgnore) {
-                // echo "<br>locationIgnore: $locationIgnore";
                 \App\highways_ignored::firstOrCreate([
                     'name' => $locationIgnore
                 ]);
@@ -954,6 +952,7 @@ class CrimeEvent extends Model implements Feedable
             $FeedController->geocodeItem($this->getKey());
 
             $itemFoundLocations = $FeedParserController->findLocations($this);
+
             unset($itemFoundLocations[0]["debug"]);
             $data["itemFoundLocations"] = $itemFoundLocations;
 
