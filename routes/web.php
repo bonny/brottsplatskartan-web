@@ -601,10 +601,10 @@ Route::get('/{lan}/{eventName}', function ($lan, $eventName, Request $request) {
     $breadcrumbs->addCrumb(e($event->parsed_title) . ', ' . $event->getParsedDateDayMonth());
 
     // optional debug
-    $debugData = (array)CrimeEvent::maybeAddDebugData($request, $event);
+    $debugData = (array) CrimeEvent::maybeAddDebugData($request, $event);
 
     // maybe clear locations and re-encode
-    $debugData = $debugData + (array)$event->maybeClearLocationData($request);
+    $debugData = $debugData + (array) $event->maybeClearLocationData($request);
 
     // Add nearby events
     $eventsNearby = CrimeEvent::getEventsNearLocation(
