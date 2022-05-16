@@ -349,6 +349,7 @@ class FeedController extends Controller
     public function parseItem($itemID)
     {
         $item = CrimeEvent::findOrFail($itemID);
+
         // Parse title
         $parsed_title_items = $this->feedParser->parseTitle($item->title);
         $item->fill($parsed_title_items);
@@ -356,13 +357,7 @@ class FeedController extends Controller
 
         // Parse permalink, i.e. get info from remote and store
         // This can be called a bit later to check if item has remote updates
-        $itemContentsWasUpdated = $this->parseItemContentAndUpdateIfChanges($itemID);
-        // dd('itemContentsWasUpdated', $itemContentsWasUpdated);
-
-        // If contents was not changed bail
-        if ($itemContentsWasUpdated == 'NOT_CHANGED' || $itemContentsWasUpdated == 'ERROR') {
-            return false;
-        }
+        $this->parseItemContentAndUpdateIfChanges($itemID);
 
         // Find and save locations in teaser and content
         $this->parseItemForLocations($itemID);
