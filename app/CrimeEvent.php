@@ -614,10 +614,14 @@ class CrimeEvent extends Model implements Feedable
     /**
      * Get the description (kinda the teaser)
      * replacing new lines with <p>
+     * 
+     * Sedan 2022-05-18 använder vi parsed_teaser
+     * pga det är samma som description fast längre,
+     * då description blir klippt i Polisens RSS/API.
      */
     public function getDescription()
     {
-        $text = $this->description;
+        $text = $this->parsed_teaser;
         $text = $this->autop($text);
 
         return $text;
