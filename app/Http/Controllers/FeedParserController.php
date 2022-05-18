@@ -151,11 +151,6 @@ class FeedParserController extends Controller
      */
     public function parseContent($contentURL)
     {
-        $returnParts = [
-            'parsed_teaser' => '',
-            'parsed_content' => ''
-        ];
-
         $cacheKey = md5($contentURL . "_cachebust3");
         $html = Cache::get($cacheKey, false);
 
