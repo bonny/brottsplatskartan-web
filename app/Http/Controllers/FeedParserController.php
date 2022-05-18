@@ -142,7 +142,7 @@ class FeedParserController extends Controller
      * Get info from remote, i.e. from the details page at polisen.se
      * Info exists in div with id #column2-3
      *
-     * We find "parsed_teaser" and "parsed_content" here
+     * We find "parsed_teaser" and "parsed_content" here.
      *
      * @param string $contentURL URL to fetch, is like "https://polisen.se/aktuellt/handelser/2018/februari/22/22-februari-11.45-stold-ringa-karlstad/"
      *
@@ -174,20 +174,6 @@ class FeedParserController extends Controller
                 return false;
             }
 
-            // get content inside #column2-3
-            #echo '<pre>';
-            #echo sizeof($client->getHistory());
-            #print_r($client->getHistory());
-
-            // https://polisen.se/aktuellt/polisens-nyheter/
-           # print_r($client->getHistory()->current()->getUri());
-            // $url = $client->getHistory()->current()->getUri();
-            #echo "\n$contentURL\n";
-            #print_r($response);
-            #print_r($responseStatusCode);
-            #exit;
-
-            #$crawler = $crawler->filter('#column2-3');
             $crawler = $crawler->filter('.event-page.editorial-content');
             if ($crawler->count()) {
                 $html = $crawler->html();
@@ -236,13 +222,12 @@ class FeedParserController extends Controller
             }
         }
 
-        // If we got nothing the fail, so we don't remove the existing html
+        // If we got nothing then fail, so we don't remove the existing html
         if (empty($returnParts['parsed_teaser']) && empty($returnParts['parsed_content'])) {
             return false;
         }
 
         // Remove tags, but keep for example links and lists.
-        $tagsToKeep = "<a><br><strong><ol><ul><li><p>";
         $tagsToKeep = "<a><br><strong><ol><ul><li><p><img>";
         $returnParts["parsed_teaser"] = strip_tags($returnParts["parsed_teaser"], $tagsToKeep);
         $returnParts["parsed_content"] = strip_tags($returnParts["parsed_content"], $tagsToKeep);
@@ -261,10 +246,6 @@ class FeedParserController extends Controller
         // <p> </p>
         $returnParts["parsed_content"] = str_replace('<p> </p>', '', $returnParts["parsed_content"]);
         $returnParts["parsed_content"] = str_replace('<br /></p>', '</p>', $returnParts["parsed_content"]);
-
-        #echo "\n----------\n$contentURL\n";
-        #print_r($returnParts);
-        #exit;
 
         return $returnParts;
     } // function
