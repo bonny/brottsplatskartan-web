@@ -243,6 +243,7 @@ class FeedParserController extends Controller
 
         // Remove tags, but keep for example links and lists.
         $tagsToKeep = "<a><br><strong><ol><ul><li><p>";
+        $tagsToKeep = "<a><br><strong><ol><ul><li><p><img>";
         $returnParts["parsed_teaser"] = strip_tags($returnParts["parsed_teaser"], $tagsToKeep);
         $returnParts["parsed_content"] = strip_tags($returnParts["parsed_content"], $tagsToKeep);
 
