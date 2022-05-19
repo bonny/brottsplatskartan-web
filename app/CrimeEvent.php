@@ -4,7 +4,6 @@ namespace App;
 
 use Illuminate\Http\Request;
 use Carbon\Carbon;
-use DB;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Controllers\FeedParserController;
 use App\Http\Controllers\FeedController;
@@ -15,7 +14,7 @@ use App\Http\Controllers\PlatsController;
 use Illuminate\Support\Str;
 use App\Locations;
 use App\Newsarticle;
-use App\CrimeView;
+use App\Models\CrimeView;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 

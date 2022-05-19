@@ -2,8 +2,8 @@
 
 namespace App;
 
+use App\Models\CrimeView;
 use Carbon\Carbon;
-use DateTime;
 use DB;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;

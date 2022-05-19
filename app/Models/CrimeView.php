@@ -1,9 +1,10 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Prunable;
 
 /**
  * En visning av ett brott. Används för att t.ex. skapa
@@ -11,13 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class CrimeView extends Model
 {
-    /**
-     * Get the crime record associated with this view.
-     */
-    // public function crimeEvent()
-    // {
-    //     return $this->hasOne('App\CrimeEvent');
-    // }
+    use Prunable;
 
     /**
      * Get the crime event that this is a view for.
@@ -25,5 +20,15 @@ class CrimeView extends Model
     public function crimeEvent(): BelongsTo
     {
         return $this->belongsTo('App\CrimeEvent');
+    }
+
+    /**
+     * Get the prunable model query.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function prunable()
+    {
+        return static::where('created_at', '<=', now()->subMonths(12));
     }
 }
