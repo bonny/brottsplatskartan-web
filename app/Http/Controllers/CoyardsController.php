@@ -93,21 +93,20 @@ class CoyardsController extends Controller
     }
 
     public function cleanupEventsData($event) {
-        $eventAsArray = $event->toArray();
 
         $link = $event->getPermalink();
-        $link = $link . "?utm_source=coyards";
+        $link = $link . "?utm_source=coyards&amp;</div>";
 
         // Gör länk absolut.
         $link = url($link);
 
         $returnArray = [
-            'title' => $event->parsed_title,
-            'location' => $event->getLocationString(),
-            'description' => $event->getDescriptionAsPlainText(),
-            'date' => $event->getPubDateISO8601(),
-            'date_human' => $event->getParsedDateYMD(),
-            'image' => $event->getStaticImageSrc(640,320),
+            'title' => $event->parsed_title . '<em>-</em></div>',
+            'location' => $event->getLocationString() . '<em>-</em></div>',
+            'description' => $event->getDescriptionAsPlainText() . '<em>-</em></div>',
+            'date' => $event->getPubDateISO8601() . '</div>',
+            'date_human' => $event->getParsedDateYMD() . '</div>',
+            'image' => $event->getStaticImageSrc(640,320) . '&amp;em</div>',
             'link' => $link,
         ];
 
