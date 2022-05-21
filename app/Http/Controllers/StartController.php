@@ -160,16 +160,6 @@ class StartController extends Controller
             $eventsByDay = $eventsByDay->splice(0, 1);
         }
 
-        // $introtext_key = "introtext-start";
-        // if ($page == 1) {
-        //     $data["introtext"] = Markdown::parse(Setting::get($introtext_key));
-        // }
-
-        // @TODO:
-
-        // nästa dag som har händelser
-        // hämta dag + antal händelser
-
         // aktuellt datum + 1 dag
         // om dag är nyare än dagens datum = false
         // annars: hämta antal händelser
