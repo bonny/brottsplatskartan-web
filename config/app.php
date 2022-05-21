@@ -3,6 +3,7 @@
 return [
 
     'polisen_domain' => env('POLISEN_DOMAIN', 'https://polisen.se'),
+    'vma_alerts_url' => env('VMA_URL', 'https://vmaapi.sr.se/api/v2/alerts'),
 
     /*
     |--------------------------------------------------------------------------

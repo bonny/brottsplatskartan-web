@@ -27,6 +27,7 @@ use App\Http\Controllers\LanController;
 use App\Http\Controllers\MestLastController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\VMAAlerts;
 
 Carbon::setLocale('sv');
 setlocale(LC_ALL, 'sv_SE', 'sv_SE.utf8');
@@ -744,3 +745,5 @@ Route::get(
 Route::feeds();
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
+
+Route::get('vma-alerts', [VMAAlerts::class, 'alerts']);

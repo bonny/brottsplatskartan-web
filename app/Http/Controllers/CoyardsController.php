@@ -103,7 +103,7 @@ class CoyardsController extends Controller
         $returnArray = [
             'title' => $event->parsed_title,
             'location' => $event->getLocationString(),
-            'description' => $event->getDescriptionAsPlainText() . 'a',
+            'description' => $event->getDescriptionAsPlainText() . 'a<em>b</em>',
             'date' => $event->getPubDateISO8601(),
             'date_human' => $event->getParsedDateYMD(),
             'image' => $event->getStaticImageSrc(640,320) . '&a=b',
