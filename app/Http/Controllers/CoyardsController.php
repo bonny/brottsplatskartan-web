@@ -101,7 +101,7 @@ class CoyardsController extends Controller
         $link = url($link);
 
         $returnArray = [
-            'title' => $event->parsed_title . 'a',
+            'title' => $event->parsed_title,
             'location' => $event->getLocationString(),
             'description' => $event->getDescriptionAsPlainText() . 'a',
             'date' => $event->getPubDateISO8601(),
