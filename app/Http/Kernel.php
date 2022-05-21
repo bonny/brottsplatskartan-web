@@ -22,7 +22,6 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         \App\Http\Middleware\RedirectOldPages::class,
         \App\Http\Middleware\RedirectBytSida::class,
-        \App\Http\Middleware\RedirectHitta::class,
         \App\Http\Middleware\DebugBarMaybeEnable::class,
     ];
 
