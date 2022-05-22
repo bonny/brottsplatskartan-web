@@ -148,13 +148,13 @@ Template för /inbrott
             <div>
                 <p>Förbättra er grannsamverkan | Enklare & snabbare med vår app‎.</p>
                 <p>Ingen central adm., larmfunktioner, diskussionsforum. Hämta Carehood gratis nu!</p>
-                <p><a href="https://carehood.se">Besök coyards.se för mer info.</a></p>
+                <p><a href="https://carehood.se">Besök carehood.se för mer info.</a></p>
             </div>
 
             <h3 id="safeland">Safeland (tidigare Trygve)</h3>
             <div>
                 <p>Sveriges ledande trygghetsapp. Safeland är Sveriges mest använda app för grannsamverkan. Och smartaste hemlarm. Safeland är Sveriges mest använda app för grannsamverkan.</p>
-                <p><a href="https://www.safe.land">Besök coyards.se för mer info.</a></p>
+                <p><a href="https://www.safe.land">Besök safe.land för mer info.</a></p>
             </div>
 
             <h3 id="ssfgrannsamverkan">SSF Grannsamverkan</h3>
