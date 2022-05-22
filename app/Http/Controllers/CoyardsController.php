@@ -93,15 +93,30 @@ class CoyardsController extends Controller
     }
 
     public function cleanupEventsData($event) {
-        $link = 'https://brottsplatskartan.se/inbrott/grannsamverkan';
-        $link = $link . "?utm_source=coyards&a=b";
 
-        $image = 'https://brottsplatskartan.se/favicon-196x196.png';
+        $randompost = collect([
+            [
+                'image' => 'https://brottsplatskartan.ams3.digitaloceanspaces.com/blog/2022-textbild-fyra-nakna-man.png',
+                'link' => 'https://brottsplatskartan.se/blogg/2021/fyra-nakna-man-pa-museeum-och-andra-knasiga-handelser-fran-polisen-2021',
+                'description' => "Fyra nakna män!?"
+            ],
+            [
+                'image' => 'https://brottsplatskartan.ams3.digitaloceanspaces.com/blog/2022-textbild-grannsamverkan.png',
+                'link' => 'https://brottsplatskartan.se/inbrott/grannsamverkan',
+                'description' => 'Carehood, Safeland, eller SSF Grannsamverkan. Vilken app väljer du?'
+            ]
+        ])->random();       
+
+        $link = $randompost['link'];
+        $link = $link . "?utm_source=api-text";
+
+        $image = $randompost['image'];
+        $description = $randompost['description'];
 
         $returnArray = [
             'title' => $event->parsed_title,
             'location' => $event->getLocationString(),
-            'description' => $event->getDescriptionAsPlainText() . 'a<em>b</em><a href="https://texttv.nu/">l</a><br/>Do ea adipisicing <p>Lorem elit proident.</p><a href="https://texttv.nu" style="color:blue; text-decoration: underline;">Esse non non ullamco</a> fugiat eu cillum duis excepteur nulla laborum eiusmod.<br /><br />Sit duis quis eiusmod amet pariatur laboris commodo velit pariatur ea et incididunt nostrud. Quis enim et proident esse dolor nisi aliqua sunt cillum dolor aliquip sunt sit do. In voluptate eu adipisicing ad in culpa quis laborum mollit elit.',
+            'description' => $description,
             'date' => $event->getPubDateISO8601(),
             'date_human' => $event->getParsedDateYMD(),
             'image' => $image,
