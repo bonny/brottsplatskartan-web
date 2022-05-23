@@ -112,9 +112,10 @@ class CoyardsController extends Controller
 
         $image = $randompost['image'];
         $description = $randompost['description'];
+        $title = "Sponsrat inlägg ({$event->parsed_title})";
 
         $returnArray = [
-            'title' => $event->parsed_title,
+            'title' => $title,
             'location' => $event->getLocationString(),
             'description' => $description,
             'date' => $event->getPubDateISO8601(),
