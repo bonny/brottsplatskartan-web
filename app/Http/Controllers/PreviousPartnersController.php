@@ -7,7 +7,7 @@ use Illuminate\Http\Response;
 use Illuminate\View\View;
 use App\CrimeEvent;
 
-class CoyardsController extends Controller
+class PreviousPartnersController extends Controller
 {
     /**
      * Display a listing of the resource.

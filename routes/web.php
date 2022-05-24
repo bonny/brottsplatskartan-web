@@ -16,7 +16,7 @@ use App\Dictionary;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Http\Controllers\PlatsController;
-use App\Http\Controllers\CoyardsController;
+use App\Http\Controllers\PreviousPartnersController;
 use App\Http\Controllers\DebugController;
 use App\Http\Controllers\FullScreenMapController;
 use App\Http\Controllers\PixelController;
@@ -663,19 +663,21 @@ Route::get('/sokresultat/', [SearchController::class, 'searchperform'])->name(
 Route::get('/sok2/', [SearchController::class, 'adsenseSearch'])->name("adsenseSearch");
 
 /**
- * coyards: sida för samarbete med coyards.se, visas i deras app och hemsida
+ * Route för previousPartners = företag och webbplatser vi tidigare samarbetet med men där
+ * samarbetet upphört.
+ * 
+ * Coyards: sida för samarbete med coyards.se, visas i deras app och hemsida
  * Exempel för Danderyd: 59.407905 | Longitud: 18.019075
- * https://brottsplatskartan.localhost/coyards?lat=59.407905&lng=18.019075&distance=5&count=25
+ * https://brottsplatskartan.localhost/previousPartners?lat=59.407905&lng=18.019075&distance=5&count=25
  * To view as (simple) HTML.
- * https://brottsplatskartan.localhost/coyards?lat=59.407905&lng=18.019075&distance=5&count=25&format=html
+ * https://brottsplatskartan.localhost/previousPartners?lat=59.407905&lng=18.019075&distance=5&count=25&format=html
  *
  * @param lat$ och lng$ som get-params. anger plats där händelser ska visas nära
  * @param $distance anger inom hur långt avstånd händelser ska hämtas, i km
  * @param $count max number of events to get
  */
-Route::resource('coyards', CoyardsController::class)->names([
-    'index' => 'coyards'
-]);
+Route::resource('previousPartners', PreviousPartnersController::class);
+Route::resource('coyards', PreviousPartnersController::class); // TODO: redirect till ovan URL.
 
 Route::get('/helikopter', [PlatsController::class, 'helicopter'])->name('helicopter');
 
