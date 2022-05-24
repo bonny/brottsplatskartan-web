@@ -104,7 +104,12 @@ class PreviousPartnersController extends Controller
                 'image' => 'https://brottsplatskartan.ams3.digitaloceanspaces.com/blog/2022-textbild-grannsamverkan.png',
                 'link' => 'https://brottsplatskartan.se/inbrott/grannsamverkan',
                 'description' => 'Carehood, Safeland, eller SSF Grannsamverkan. Vilken app väljer du?'
-            ]
+            ],
+            [
+                'image' => 'https://brottsplatskartan.ams3.digitaloceanspaces.com/blog/2022-textbild-text-tv.png',
+                'link' => 'https://texttv.nu/',
+                'description' => 'Korta, snabba nyheter med Text TV-appen från TextTV.nu'
+            ],
         ])->random();       
 
         $link = $randompost['link'];
