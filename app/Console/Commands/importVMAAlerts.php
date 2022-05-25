@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use App\Http\Controllers\VMAAlerts;
 use Illuminate\Console\Command;
 
-class importVMAAlerts extends Command
+class ImportVMAAlerts extends Command
 {
     /**
      * The name and signature of the console command.
@@ -28,6 +28,9 @@ class importVMAAlerts extends Command
      */
     public function handle()
     {
-        VMAAlerts::import();
+        $this->info(sprintf('Startar import av VMA-meddelanden från %s.', config('app.vma_alerts_url')));
+        ['importedAlerts' => $importedAlerts] = VMAAlerts::import();
+        $this->line(sprintf('%d meddelanden importerades eller uppdaterades.', count($importedAlerts)));
+        $this->line('Import klar.');
     }
 }

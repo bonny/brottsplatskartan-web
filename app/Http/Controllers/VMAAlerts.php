@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\VMAAlert;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
 
 class VMAAlerts extends Controller
 {
-    function alerts (Request $request) {
+    function alerts(Request $request)
+    {
 
         $json_data = '
         {
@@ -139,13 +142,39 @@ class VMAAlerts extends Controller
      * 
      * @return void 
      */
-    public static function import() {
-        $url = config('app.vma_alerts_url');
-        $response = Http::get($url);
+    public static function import()
+    {
+        $response = Http::get(config('app.vma_alerts_url'));
         $json = $response->json();
         $alerts = collect($json['alerts']);
-        $alerts->each(function($alert) {
-            dd($alert);
+        $importedAlerts = collect();
+
+        $alerts->each(function ($alert) use ($importedAlerts) {
+            $alertCollection = collect($alert);
+
+            $alertCollection = $alertCollection->only([
+                'identifier',
+                'sent',
+                'status',
+                'msgType',
+                'references',
+                'incidents',
+            ]);
+
+            $alertCollection['sent'] = new Carbon($alertCollection['sent']);
+
+            $alertCollection->put('original_message', json_encode($alert));
+
+            $alert = VMAAlert::updateOrCreate(
+                [
+                    'identifier' => $alertCollection->get('identifier')
+                ],
+                $alertCollection->toArray()
+            );
+
+            $importedAlerts->push($alert);
         });
+
+        return ['importedAlerts' => $importedAlerts];
     }
 }

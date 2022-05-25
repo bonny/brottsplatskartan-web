@@ -17,12 +17,12 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->string('identifier');
-            $table->dateTime('sent');
-            $table->string('status');
-            $table->string('msgType');
-            $table->string('references');
-            $table->string('incidents');
-            $table->json('original_message');
+            $table->dateTime('sent')->nullable();
+            $table->string('status')->nullable();
+            $table->string('msgType')->nullable();
+            $table->string('references')->nullable();
+            $table->string('incidents')->nullable();
+            $table->json('original_message')->nullable();
         });
     }
 
