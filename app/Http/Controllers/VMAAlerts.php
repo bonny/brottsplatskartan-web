@@ -163,7 +163,8 @@ class VMAAlerts extends Controller
 
             $alertCollection['sent'] = new Carbon($alertCollection['sent']);
 
-            $alertCollection->put('original_message', json_encode($alert));
+            // $alertCollection->put('original_message', json_encode($alert));
+            $alertCollection->put('original_message', $alert);
 
             $alert = VMAAlert::updateOrCreate(
                 [
@@ -180,12 +181,11 @@ class VMAAlerts extends Controller
 
     public function index(Request $request)
     {
-        $alerts = VMAAlert::
-            where('status', 'Actual')
+        $alerts = VMAAlert::where('status', 'Actual')
             ->where('msgType', 'Alert')
             ->orderByDesc('sent')
             ->get();
-        # dd($alerts[0]->original_message);
+
         return view('vma-overview', ['alerts' => $alerts]);
     }
 }
