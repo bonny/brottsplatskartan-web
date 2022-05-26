@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Http;
 
 class VMAAlerts extends Controller
 {
-    function alerts(Request $request)
+    function exampleAlerts(Request $request)
     {
 
         $json_data = '
@@ -176,5 +176,16 @@ class VMAAlerts extends Controller
         });
 
         return ['importedAlerts' => $importedAlerts];
+    }
+
+    public function index(Request $request)
+    {
+        $alerts = VMAAlert::
+            where('status', 'Actual')
+            ->where('msgType', 'Alert')
+            ->orderByDesc('sent')
+            ->get();
+        # dd($alerts[0]->original_message);
+        return view('vma-overview', ['alerts' => $alerts]);
     }
 }

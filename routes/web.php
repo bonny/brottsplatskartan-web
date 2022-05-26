@@ -748,4 +748,5 @@ Route::feeds();
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-Route::get('vma-alerts', [VMAAlerts::class, 'alerts']);
+Route::get('vma-alerts', [VMAAlerts::class, 'exampleAlerts']);
+Route::get('vma', [VMAAlerts::class, 'index'])->name('vma-overview');

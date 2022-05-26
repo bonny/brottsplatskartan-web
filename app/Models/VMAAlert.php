@@ -22,4 +22,13 @@ class VMAAlert extends Model
      * @var array
      */
     protected $guarded = [];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'original_message' => 'array',
+    ];
 }
