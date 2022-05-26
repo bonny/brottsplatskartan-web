@@ -13,16 +13,22 @@
         <div class="">
 
             @foreach ($alerts as $alert)
-                
                 <h2 class="">
-                    {{ $alert->sent }}
+                    @if (isset($alert->sent))
+                        {{ $alert->sent }}
+                    @endif
                 </h2>
 
-                @foreach ($alert->original_message['info'] as $message)
-                    {!! nl2br($message['description']) !!}
-                    {{$message['web']}}
-                @endforeach
-
+                @isset($alert->original_message['info'])
+                    @foreach ($alert->original_message['info'] as $message)
+                        @if (isset($message['description']))
+                            {!! nl2br($message['description']) !!}
+                        @endif
+                        @if (isset($message['web']))
+                            {{ $message['web'] }}
+                        @endif
+                    @endforeach
+                @endisset
             @endforeach
 
         </div>
