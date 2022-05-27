@@ -10,6 +10,7 @@
         <li><a href="{{ route("helicopter") }}">Helikopter</a></li>
         <li><a href="{{ route("sverigekartan") }}">Sverigekartan</a></li>
         <li><a href="{{ route("polisstationer") }}">Polisstationer</a></li>
+        <li><a href="{{ route("vma-overview") }}">VMA</a></li>
         <li><a href="{{ route("blog") }}">Blogg</a></li>
         <li><a href="{{ route("page", ["pagename" => "om"]) }}">Om Brottsplatskartan</a></li>
         <li><a href="{{ route("page", ["pagename" => "press"]) }}">Press</a></li>
