@@ -1,7 +1,7 @@
 {{--
 
 Template för polisstationer
-/polissationer
+/polisstationer
 
 --}}
 
