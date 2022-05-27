@@ -13,6 +13,7 @@
         <div class="">
 
             @foreach ($alerts as $alert)
+                <a href="{{ route('vma-single', ['identifier' => $alert->identifier]) }}">{{ $alert->identifier }}</a>
                 <h2 class="">
                     @if (isset($alert->sent))
                         {{ $alert->sent }}

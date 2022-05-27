@@ -82,6 +82,11 @@ Route::get('/nara', [GeoController::class, 'nara'])->name("geo");
 Route::redirect('/geo.php', '/nara-hitta-plats');
 Route::get('/nara-hitta-plats', [GeoController::class, 'geoDetect'])->name("geoDetect");
 
+// VMA
+Route::get('vma-alerts', [VMAAlerts::class, 'exampleAlerts']);
+Route::get('vma', [VMAAlerts::class, 'index'])->name('vma-overview');
+Route::get('vma/{identifier}', [VMAAlerts::class, 'single'])->name('vma-single');
+
 /**
  * Län
  * - översikt över alla län
@@ -748,5 +753,3 @@ Route::feeds();
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-Route::get('vma-alerts', [VMAAlerts::class, 'exampleAlerts']);
-Route::get('vma', [VMAAlerts::class, 'index'])->name('vma-overview');

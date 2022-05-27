@@ -188,4 +188,15 @@ class VMAAlerts extends Controller
 
         return view('vma-overview', ['alerts' => $alerts]);
     }
+
+    public function single(Request $request, string $identifier)
+    {
+        dd('single', $identifier);
+        // $alerts = VMAAlert::where('status', 'Actual')
+        //     ->where('msgType', 'Alert')
+        //     ->orderByDesc('sent')
+        //     ->get();
+
+        // return view('vma-overview', ['alerts' => $alerts]);
+    }
 }
