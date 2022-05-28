@@ -68,14 +68,24 @@ class VMAAlert extends Model
     public function getHumanSentDate(): string
     {
         $date = new Carbon($this->sent);
-        $date = $date->format('j F Y');
+        $date = $date->isoFormat('D MMM YYYY');
         return $date;
     }
 
     public function getHumanSentDateTime(): string
     {
         $date = new Carbon($this->sent);
-        $date = $date->format('j F Y H:i');
+        $date = $date->isoFormat('D MMM YYYY LT');
         return $date;
+    }
+
+    public function getText(): string {
+        $text = $this->getDescription();
+        $text = nl2br($text);
+        return $text;
+    }
+
+    public function getTeaser(): string {
+        return $this->getText();
     }
 }

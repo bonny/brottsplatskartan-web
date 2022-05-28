@@ -14,14 +14,15 @@
 
             @foreach ($alerts as $alert)
                 <a href="{{ $alert->getPermalink() }}">
+                    <p>{{ $alert->getHumanSentDateTime() }}</p>
                     <h2 class="">
-                        {{ $alert->getHumanSentDateTime() }}
-                        <br />
                         {{ $alert->getShortDescription() }}
                     </h2>
                 </a>
 
-                @isset($alert->original_message['info'])
+                {!! $alert->getTeaser() !!}
+
+                {{-- @isset($alert->original_message['info'])
                     @foreach ($alert->original_message['info'] as $message)
                         @if (isset($message['description']))
                             {!! nl2br($message['description']) !!}
@@ -30,7 +31,7 @@
                             {{ $message['web'] }}
                         @endif
                     @endforeach
-                @endisset
+                @endisset --}}
             @endforeach
 
         </div>

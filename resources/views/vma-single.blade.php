@@ -14,7 +14,9 @@
             {{ $alert->getShortDescription() }}
         </h1>
 
-        <div class="">
+        {!! $alert->getText() !!}
+
+        {{-- <div class="">
 
             @isset($alert->original_message['info'])
                 @foreach ($alert->original_message['info'] as $message)
@@ -26,7 +28,7 @@
                     @endif
                 @endforeach
             @endisset
-
+ --}}
 
         </div>
 

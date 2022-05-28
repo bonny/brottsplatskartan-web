@@ -29,8 +29,8 @@ use App\Http\Controllers\SearchController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\VMAAlerts;
 
-Carbon::setLocale('sv');
 setlocale(LC_ALL, 'sv_SE', 'sv_SE.utf8');
+// var_dump( Carbon::now()->formatLocalized('%d %B %Y') );exit;
 
 Route::get('/debug/{what}', [DebugController::class, 'debug'])->name('debug');
 
