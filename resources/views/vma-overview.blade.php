@@ -13,12 +13,13 @@
         <div class="">
 
             @foreach ($alerts as $alert)
-                <a href="{{ route('vma-single', ['identifier' => $alert->identifier]) }}">{{ $alert->identifier }}</a>
-                <h2 class="">
-                    @if (isset($alert->sent))
-                        {{ $alert->sent }}
-                    @endif
-                </h2>
+                <a href="{{ $alert->getPermalink() }}">
+                    <h2 class="">
+                        {{ $alert->getHumanSentDateTime() }}
+                        <br />
+                        {{ $alert->getShortDescription() }}
+                    </h2>
+                </a>
 
                 @isset($alert->original_message['info'])
                     @foreach ($alert->original_message['info'] as $message)

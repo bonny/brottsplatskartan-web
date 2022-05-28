@@ -6,13 +6,14 @@ use App\Models\VMAAlert;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 
 class VMAAlerts extends Controller
 {
-    function exampleAlerts(Request $request)
-    {
+  function exampleAlerts(Request $request)
+  {
 
-        $json_data = '
+    $json_data = '
         {
             "timestamp": "2022-05-09T12:34:43+02:00",
             "alerts": [
@@ -133,70 +134,70 @@ class VMAAlerts extends Controller
           }
         ';
 
-        $alerts = json_decode($json_data, JSON_PRETTY_PRINT);
-        return response()->json($alerts);
-    }
+    $alerts = json_decode($json_data, JSON_PRETTY_PRINT);
+    return response()->json($alerts);
+  }
 
-    /**
-     * Importera VMA från SR:s API.
-     * 
-     * @return void 
-     */
-    public static function import()
-    {
-        $response = Http::get(config('app.vma_alerts_url'));
-        $json = $response->json();
-        $alerts = collect($json['alerts']);
-        $importedAlerts = collect();
+  /**
+   * Importera VMA från SR:s API.
+   * 
+   * @return void 
+   */
+  public static function import()
+  {
+    $response = Http::get(config('app.vma_alerts_url'));
+    $json = $response->json();
+    $alerts = collect($json['alerts']);
+    $importedAlerts = collect();
 
-        $alerts->each(function ($alert) use ($importedAlerts) {
-            $alertCollection = collect($alert);
+    $alerts->each(function ($alert) use ($importedAlerts) {
+      $alertCollection = collect($alert);
 
-            $alertCollection = $alertCollection->only([
-                'identifier',
-                'sent',
-                'status',
-                'msgType',
-                'references',
-                'incidents',
-            ]);
+      $alertCollection = $alertCollection->only([
+        'identifier',
+        'sent',
+        'status',
+        'msgType',
+        'references',
+        'incidents',
+      ]);
 
-            $alertCollection['sent'] = new Carbon($alertCollection['sent']);
+      $alertCollection['sent'] = new Carbon($alertCollection['sent']);
 
-            // $alertCollection->put('original_message', json_encode($alert));
-            $alertCollection->put('original_message', $alert);
+      // $alertCollection->put('original_message', json_encode($alert));
+      $alertCollection->put('original_message', $alert);
 
-            $alert = VMAAlert::updateOrCreate(
-                [
-                    'identifier' => $alertCollection->get('identifier')
-                ],
-                $alertCollection->toArray()
-            );
+      $alert = VMAAlert::updateOrCreate(
+        [
+          'identifier' => $alertCollection->get('identifier')
+        ],
+        $alertCollection->toArray()
+      );
 
-            $importedAlerts->push($alert);
-        });
+      $importedAlerts->push($alert);
+    });
 
-        return ['importedAlerts' => $importedAlerts];
-    }
+    return ['importedAlerts' => $importedAlerts];
+  }
 
-    public function index(Request $request)
-    {
-        $alerts = VMAAlert::where('status', 'Actual')
-            ->where('msgType', 'Alert')
-            ->orderByDesc('sent')
-            ->get();
+  public function index(Request $request)
+  {
+    $alerts = VMAAlert::where('status', 'Actual')
+      ->where('msgType', 'Alert')
+      ->orderByDesc('sent')
+      ->get();
 
-        return view('vma-overview', ['alerts' => $alerts]);
-    }
+    return view('vma-overview', ['alerts' => $alerts]);
+  }
 
-    public function single(Request $request, string $identifier)
-    {
-        dd('single', $identifier);
-        // $alerts = VMAAlert::where('status', 'Actual')
-        //     ->where('msgType', 'Alert')
-        //     ->orderByDesc('sent')
-        //     ->get();
+  public function single(Request $request, string $slug)
+  {
+    $id = Str::of($slug)->explode('-')->last();
+    $alert = VMAAlert::findOrFail($id);
 
-        // return view('vma-overview', ['alerts' => $alerts]);
-    }
+    return view(
+      'vma-single', [
+        'alert' => $alert
+      ]);
+  }
 }

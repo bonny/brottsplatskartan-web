@@ -85,7 +85,7 @@ Route::get('/nara-hitta-plats', [GeoController::class, 'geoDetect'])->name("geoD
 // VMA
 Route::get('vma-alerts', [VMAAlerts::class, 'exampleAlerts']);
 Route::get('vma', [VMAAlerts::class, 'index'])->name('vma-overview');
-Route::get('vma/{identifier}', [VMAAlerts::class, 'single'])->name('vma-single');
+Route::get('vma/{slug}', [VMAAlerts::class, 'single'])->name('vma-single');
 
 /**
  * Län
