@@ -30,7 +30,6 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\VMAAlerts;
 
 setlocale(LC_ALL, 'sv_SE', 'sv_SE.utf8');
-// var_dump( Carbon::now()->formatLocalized('%d %B %Y') );exit;
 
 Route::get('/debug/{what}', [DebugController::class, 'debug'])->name('debug');
 
@@ -86,6 +85,7 @@ Route::get('/nara-hitta-plats', [GeoController::class, 'geoDetect'])->name("geoD
 Route::get('vma-alerts', [VMAAlerts::class, 'exampleAlerts']);
 Route::get('vma', [VMAAlerts::class, 'index'])->name('vma-overview');
 Route::get('vma/{slug}', [VMAAlerts::class, 'single'])->name('vma-single');
+Route::get('vma/sida/{slug}', [VMAAlerts::class, 'text'])->name('vma-textpage');
 
 /**
  * Län

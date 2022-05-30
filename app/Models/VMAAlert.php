@@ -86,6 +86,11 @@ class VMAAlert extends Model
         return $date;
     }
 
+    public function getIsoSentDateTime(): string {
+        $date = new Carbon($this->sent);
+        return $date->toISOString();
+    }
+
     /**
      * Hämtar description-texten som collection, där varje item är en rad.
      * 
@@ -109,7 +114,7 @@ class VMAAlert extends Model
      */
     public function getText(): string {
         $lines = $this->getDescriptionLines()->slice(1);
-        $text = $lines->join("\n");
+        $text = $lines->join(" \n");
         $text = $this->nl2p($text);
         return $text;
     }
@@ -119,7 +124,7 @@ class VMAAlert extends Model
      * Klipper getText()-texten efter n antal ord.
      * @return string 
      */
-    public function getTeaser($numWords = 20): string {
+    public function getTeaser($numWords = 30): string {
         $text = $this->getText();
         $text = strip_tags($text);
         $text = Str::words($text, $numWords);

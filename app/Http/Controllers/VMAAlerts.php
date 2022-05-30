@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
+use Illuminate\Contracts\View;
+use \Illuminate\Contracts\View\Factory as ViewFactory;
 
 class VMAAlerts extends Controller
 {
@@ -196,8 +198,65 @@ class VMAAlerts extends Controller
     $alert = VMAAlert::findOrFail($id);
 
     return view(
-      'vma-single', [
+      'vma-single',
+      [
         'alert' => $alert
-      ]);
+      ]
+    );
+  }
+
+  public function text(Request $request, string $slug)
+  {
+
+    switch ($slug) {
+      case 'om-vma':
+        $title = 'Vad är VMA?';
+        $text = '
+
+VMA är en förkortning av **Viktigt meddelande till allmänheten**, 
+och det är ett varningssystem som används vid olyckor, allvarliga händelser och störningar i viktiga samhällsfunktioner.
+
+VMA handlar om att göra människor uppmärksamma på en omedelbar risk
+eller hot och informera om hur berörda människor omedelbart ska agera 
+för att skydda sig. 
+
+Vid VMA avbryter t.ex. Sveriges Radio sändningarna för att snabbt få ut informationen och
+skickar även vidare informationen till bland andra SVT och TV4.
+
+**Meddelandet VMA skickas ut i flera olika kanaler:**
+
+- via radio och tv
+- från Krisinformation.se via webb, app och i sociala medier
+- som notis i Sveriges Radios app SR Play.
+- via utomhusvarning i form av ljudsändare, i folkmun kallat "Hesa Fredrik"
+
+**Det är inte vem som helst som kan skicka ut ett VMA.** Behöriga att begära VMA är bland andra
+
+- räddningsledare för kommunal och statlig räddningstjänst
+- Polisen
+- smittskyddsläkare
+- SOS Alarm
+- ledningen vid anläggning med farlig verksamhet (enligt lagen om skydd mot olyckor).
+
+Läs mer om [hur ett VMA begärs hos Myndigheten för samhällsskydd och beredskap](https://www.msb.se/sv/amnesomraden/krisberedskap--civilt-forsvar/befolkningsskydd/varningssystem/hur-ett-vma-begars-ny/).
+
+---
+
+Källor och mer information:
+- https://www.msb.se/VMA
+- https://www.krisinformation.se/detta-gor-samhallet/vma-sa-varnas-allmanheten
+- https://www.msb.se/sv/amnesomraden/krisberedskap--civilt-forsvar/befolkningsskydd/varningssystem/hur-ett-vma-begars-ny/
+- https://sverigesradio.se/artikel/vma-viktigt-meddelande-till-allmanheten
+- https://sverigesradio.se/artikel/vma-vad-ar-det
+        ';
+        break;
+      default:
+        $title = '';
+        $text = '';
+    }
+
+    $text = \Markdown::parse($text);
+
+    return view('vma-text', ['slug' => $slug, 'title' => $title, 'text' => $text]);
   }
 }

@@ -16,22 +16,9 @@
 
         {!! $alert->getText() !!}
 
-        {{-- <div class="">
-
-            @isset($alert->original_message['info'])
-                @foreach ($alert->original_message['info'] as $message)
-                    @if (isset($message['description']))
-                        {!! nl2br($message['description']) !!}
-                    @endif
-                    @if (isset($message['web']))
-                        {{ $message['web'] }}
-                    @endif
-                @endforeach
-            @endisset
- --}}
-
-        </div>
-
     </div>
+@endsection
 
+@section('sidebar')
+    @include('parts.vma.sidebar')
 @endsection
