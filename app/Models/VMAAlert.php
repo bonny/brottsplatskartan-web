@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
 class VMAAlert extends Model
@@ -34,7 +35,13 @@ class VMAAlert extends Model
         'original_message' => 'array',
     ];
 
-    public function getDescription()
+
+    /**
+     * Hämta hela textbeskrivningen av en händelse.
+     * 
+     * @return string 
+     */
+    public function getDescription(): string
     {
         return $this->original_message['info'][0]['description'];
     }
@@ -79,13 +86,43 @@ class VMAAlert extends Model
         return $date;
     }
 
+    /**
+     * Hämtar description-texten som collection, där varje item är en rad.
+     * 
+     * @return Collection
+     */
+    public function getDescriptionLines(): Collection {
+        $lines = Str::of($this->getDescription())
+                    ->explode("\n")
+                    ->reject(fn($line) => empty($line) || $line === "\r");
+        return $lines;
+    }
+    
+    public function nl2p($txt){
+        return str_replace(["\r\n", "\n\r", "\n", "\r"], '</p><p>', '<p>' . $txt . '</p>');
+    }
+
+    /**
+     * Hämtar texten till en händelse, minus första raden (som man får med getShortDescription())
+     * 
+     * @return string 
+     */
     public function getText(): string {
-        $text = $this->getDescription();
-        $text = nl2br($text);
+        $lines = $this->getDescriptionLines()->slice(1);
+        $text = $lines->join("\n");
+        $text = $this->nl2p($text);
         return $text;
     }
 
-    public function getTeaser(): string {
-        return $this->getText();
+    /**
+     * Ger en kort text av händelsen, för att användas i listor osv.
+     * Klipper getText()-texten efter n antal ord.
+     * @return string 
+     */
+    public function getTeaser($numWords = 20): string {
+        $text = $this->getText();
+        $text = strip_tags($text);
+        $text = Str::words($text, $numWords);
+        return $text;
     }
 }
