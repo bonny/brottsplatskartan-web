@@ -54,7 +54,7 @@ class SearchController extends Controller
         $s = $request->input('s');
         $tbs = $request->input('tbs', 'qdr:m');
         $redirectToUrl =
-            'https://www.google.se/search?q=site%3Abrottsplatskartan.se+' .
+            'https://www.google.se/search?q=site%3Abrottsplatskartan.se+-proxy+' .
             urlencode($s) .
             "&tbs={$tbs}";
 
