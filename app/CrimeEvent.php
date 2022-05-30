@@ -1112,6 +1112,7 @@ class CrimeEvent extends Model implements Feedable
              "publisher" => [
               "@type" => "Organization",
               "name" => "Brottsplatskartan",
+              "url" => "https://brottsplatskartan.se/",
               "logo" => [
                 "@type" => "ImageObject",
                 "url" => "https://brottsplatskartan.se/img/brottsplatskartan-logotyp.png"
