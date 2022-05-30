@@ -248,6 +248,38 @@ Källor och mer information:
 - https://www.msb.se/sv/amnesomraden/krisberedskap--civilt-forsvar/befolkningsskydd/varningssystem/hur-ett-vma-begars-ny/
 - https://sverigesradio.se/artikel/vma-viktigt-meddelande-till-allmanheten
 - https://sverigesradio.se/artikel/vma-vad-ar-det
+- https://sv.wikipedia.org/wiki/Viktigt_meddelande_till_allm%C3%A4nheten
+        ';
+        break;
+      case 'vanliga-fragor-och-svar-om-vma':
+        $title = "Vanliga frågor och svar om VMA";
+        $text = '
+
+## Vad betyder VMA?
+
+VMA är en förtkorning av _Viktigt meddelande till allmänheten_.
+
+## Vem får begära VMA?
+
+[Enligt MSB](https://www.msb.se/sv/amnesomraden/krisberedskap--civilt-forsvar/befolkningsskydd/varningssystem/hur-ett-vma-begars-ny/) får följande begära VMA:
+
+- Räddningschef/räddningsledare för statlig eller kommunal räddningstjänst
+- Polismyndighet
+- Räddningsledare för statlig räddningstjänst, Strålsäkerhetsmyndigheten
+- Smittskyddsläkare
+- Anläggningar med farlig verksamhet, (enligt 2 kap, 4 §, Lagen om skydd mot olyckor).
+- SOS Alarm
+- Svenska kraftnät och de största el- distributörerna
+- Teleoperatörer med egna nät
+- Alla som får begära sändning av varningsmeddelande
+- Regeringen med regeringskansliet. Alla bevakningsansvariga myndigheter. Kommuner och landsting.
+- Försvarsmakten  
+
+--- 
+
+Hos Krisinformation och MSB kan du läsa fler vanliga frågor och svar:
+- https://www.msb.se/sv/amnesomraden/krisberedskap--civilt-forsvar/befolkningsskydd/varningssystem/fragor-och-svar-om-utomhusvarning-och-vma-ny/
+- https://www.krisinformation.se/detta-gor-samhallet/vma-sa-varnas-allmanheten/faq
         ';
         break;
       default:

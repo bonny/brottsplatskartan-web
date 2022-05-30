@@ -9,15 +9,15 @@
     <div class="widget">
         <h1 class="widget__title">VMA – Viktigt Meddelande till Allmänheten</h1>
 
-        <p>Vi hämtar listan med VMA genom att använda <a href="https://vmaapi.sr.se/api/v2/">"Sveriges Radio's API for
-                Important Public Announcements"</a>.</p>
+        <h2>Aktuellt meddelanden</h2>
 
-        <h2>Arkiv</h2>
-        <ul class="list-none m-0 p-0">
+        <h2>Tidigare meddelanden</h2>
+
+        <ul class="list-none p-0">
             @foreach ($alerts as $alert)
                 <li class="mb-6 pb-6 u-border-bottom">
                     <a href="{{ $alert->getPermalink() }}">
-                        <h2 class="m-0">
+                        <h2 class="m-0 font-normal">
                             {{ $alert->getShortDescription() }}
                         </h2>
                     </a>
@@ -26,10 +26,15 @@
                             datetime="{{ $alert->getIsoSentDateTime() }}">{{ $alert->getHumanSentDateTime() }}</time>
                     </p>
 
-                    <p class="m-0 mt-2 text-sm excerpt">{!! $alert->getTeaser() !!}</p>
+                    <p class="m-0 mt-2 excerpt">{!! $alert->getTeaser() !!}</p>
                 </li>
             @endforeach
         </ul>
+
+        <p>
+            Vi hämtar listan med VMA genom att använda
+            <a href="https://vmaapi.sr.se/api/v2/">"Sveriges Radio's API for Important Public Announcements"</a>.
+        </p>
 
     </div>
 
