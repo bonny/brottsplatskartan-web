@@ -1107,7 +1107,8 @@ class CrimeEvent extends Model implements Feedable
             "dateModified" => $dateModified,
             "author" => [
               "@type" => "Organization",
-              "name" => "Brottsplatskartan"
+              "name" => "Brottsplatskartan",
+              "url" => "https://brottsplatskartan.se/",
             ],
              "publisher" => [
               "@type" => "Organization",
