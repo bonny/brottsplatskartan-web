@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use App\Models\VMAAlert;
+use Illuminate\Support\Facades\Cache;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -33,11 +35,7 @@ class AppServiceProvider extends ServiceProvider
         $inbrottUndersidor = \App\Helper::getInbrottNavItems();
         \View::share('inbrott_undersidor', $inbrottUndersidor);
 
-        $alerts = VMAAlert::where('status', 'Actual')
-        ->where('msgType', 'Alert')
-        ->orderByDesc('sent')
-        ->get();
-        \View::share('shared_vma_alerts', $alerts);
+        \View::share('shared_vma_alerts', \App\Helper::getVMAAlerts());
         
     }
 

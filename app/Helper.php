@@ -7,7 +7,7 @@ use Carbon\Carbon;
 use DB;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
-
+use App\Models\VMAAlert;
 class Helper
 {
     /**
@@ -1138,7 +1138,6 @@ class Helper
 
         array_walk($undersidor, function (&$val, $key) {
             if (empty($val['url'])) {
-                #$val['url'] = route('inbrott', ['undersida' => $key]);
                 $val['url'] = "/inbrott/{$key}";
             }
         });
@@ -1173,4 +1172,15 @@ class Helper
 
         return $undersidor;
     }
+
+    public static function getVMAAlerts() {
+        return Cache::remember('shared_vma_alerts', MINUTE_IN_SECONDS, function() {
+            $alerts = VMAAlert::where('status', 'Actual')
+                    ->where('msgType', 'Alert')
+                    ->orderByDesc('sent')
+                    ->get();
+            return $alerts;
+        });
+    }
+
 }

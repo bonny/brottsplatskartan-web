@@ -184,11 +184,7 @@ class VMAAlertsController extends Controller
 
   public function index(Request $request)
   {
-    $alerts = VMAAlert::where('status', 'Actual')
-      ->where('msgType', 'Alert')
-      ->orderByDesc('sent')
-      ->get();
-
+    $alerts = \App\Helper::getVMAAlerts();
     return view('vma-overview', ['alerts' => $alerts]);
   }
 
