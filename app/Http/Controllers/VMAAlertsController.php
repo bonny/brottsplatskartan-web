@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 use Illuminate\Contracts\View;
 use \Illuminate\Contracts\View\Factory as ViewFactory;
 
-class VMAAlerts extends Controller
+class VMAAlertsController extends Controller
 {
   function exampleAlerts(Request $request)
   {

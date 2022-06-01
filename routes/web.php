@@ -27,7 +27,7 @@ use App\Http\Controllers\LanController;
 use App\Http\Controllers\MestLastController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\VMAAlerts;
+use App\Http\Controllers\VMAAlertsController;
 
 setlocale(LC_ALL, 'sv_SE', 'sv_SE.utf8');
 
@@ -82,10 +82,10 @@ Route::redirect('/geo.php', '/nara-hitta-plats');
 Route::get('/nara-hitta-plats', [GeoController::class, 'geoDetect'])->name("geoDetect");
 
 // VMA
-Route::get('vma-alerts', [VMAAlerts::class, 'exampleAlerts']);
-Route::get('vma', [VMAAlerts::class, 'index'])->name('vma-overview');
-Route::get('vma/{slug}', [VMAAlerts::class, 'single'])->name('vma-single');
-Route::get('vma/sida/{slug}', [VMAAlerts::class, 'text'])->name('vma-textpage');
+Route::get('vma-alerts', [VMAAlertsController::class, 'exampleAlerts']);
+Route::get('vma', [VMAAlertsController::class, 'index'])->name('vma-overview');
+Route::get('vma/{slug}', [VMAAlertsController::class, 'single'])->name('vma-single');
+Route::get('vma/sida/{slug}', [VMAAlertsController::class, 'text'])->name('vma-textpage');
 
 /**
  * Län
