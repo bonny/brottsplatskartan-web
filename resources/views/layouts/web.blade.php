@@ -4,13 +4,13 @@ Layout template for web
 
 --}}
 <?php
-// Visa inte annonser för besökare som kommer via Coyards.
-// utm_source=coyards
+// Visa inte annonser för besökare som kommer via previousPartners.
+// utm_source=previousPartners
 $showAds = true;
 $noAdsReason = '';
-// if (request()->get('utm_source') === 'coyards') {
+// if (request()->get('utm_source') === 'previousPartners') {
 //     $showAds = false;
-//     $noAdsReason .= ' sourceCoyards ';
+//     $noAdsReason .= ' sourcepreviousPartners ';
 // }
 
 ?>

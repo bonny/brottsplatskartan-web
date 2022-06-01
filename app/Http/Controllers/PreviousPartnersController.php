@@ -60,7 +60,7 @@ class PreviousPartnersController extends Controller
 
         switch ($format) {
             case 'html':
-                return view('coyards', $data);
+                return view('previousPartners', $data);
             case 'json':
             default:
                 // Rensa i svaret lite.
@@ -111,9 +111,9 @@ class PreviousPartnersController extends Controller
                 'description' => 'Korta, snabba nyheter med Text TV-appen från TextTV.nu',
             ],
             [
-                'image' => 'https://brottsplatskartan.ams3.digitaloceanspaces.com/blog/2022-textbild-business-referral-1.jpg',
-                'link' => str_rot13("uggcf://cbeauho.pbz/?erspbqr=uwX-de-12"),
-                'description' => str_rot13('Cbeauho: Serr Cbea Ivqrbf & Frk Zbivrf'),
+                'image' => 'https://brottsplatskartan.ams3.digitaloceanspaces.com/blog/2022-textbild-business-referral-2.jpg',
+                'link' => 'https://adtraction.com/se?ref=bkwT-gk-34',
+                'description' => 'Click for more info',
             ],
         ])->random();       
 

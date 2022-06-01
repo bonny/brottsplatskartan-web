@@ -1,12 +1,12 @@
 {{--
 
-Template for Coyards in app view
+Template for previousPartners in app view
 
 --}}
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Coyards | Händelser och brott rapporterade till Polisen</title>
+    <title>previousPartners | Händelser och brott rapporterade till Polisen</title>
     <meta charset="utf-8">
     <script>
     window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
@@ -81,7 +81,7 @@ Template for Coyards in app view
 
     <h1>Händelser nära lat {{$lat}}, long {{$lng}}.</h1>
 
-    {{-- <p>Detta är vyn för Coyards. Alla texter här går att styra.</p> --}}
+    {{-- <p>Detta är vyn för previousPartners. Alla texter här går att styra.</p> --}}
 
     @if ($events)
         <!-- Antal brott hämtade: {{ $events->count() }} -->
@@ -94,7 +94,7 @@ Template for Coyards in app view
 
             @foreach ($events as $event)
 
-                @include('parts.crimeevent-coyards', ["overview" => true])
+                @include('parts.crimeevent-previousPartners', ["overview" => true])
 
             @endforeach
 

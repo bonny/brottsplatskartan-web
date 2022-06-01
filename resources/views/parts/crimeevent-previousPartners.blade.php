@@ -1,6 +1,6 @@
 @php
 $eventLink = $event->getPermalink();
-$eventLink = $eventLink . "?utm_source=coyards";
+$eventLink = $eventLink . "?utm_source=previousPartners";
 @endphp
 
 <article
