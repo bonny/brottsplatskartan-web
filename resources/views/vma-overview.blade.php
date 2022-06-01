@@ -41,5 +41,5 @@
 @endsection
 
 @section('sidebar')
-    @include('parts.vma.sidebar')
+    @include('parts.vma.sidebar', ['hideVMAAlerts' => true])
 @endsection
