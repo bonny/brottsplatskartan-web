@@ -126,8 +126,7 @@ Template för /inbrott
             <h2 id="grannsamverkan-appar">Grannsamverkan-appar</h2>
 
             <p>
-                Det finns i Sverige fyra ledande digitala grannsamverkanstjänster:
-                <a href="#coyards">Coyards</a>,
+                Det finns i Sverige tre ledande digitala grannsamverkanstjänster:
                 <a href="#safeland">Safeland</a> (f.d. Trygve)
                 <a href="#carehood">Carehood</a>
                 och
@@ -137,16 +136,9 @@ Template för /inbrott
                 Har man både en lägenhet i stan och ett sommarhus så kan man gå med i flera grupper för att följa vad som händer i
                 respektive område.</p>
 
-            <h3 id="coyards">Coyards</h3>
-            <div>
-                <p>Grannsamverkan - app för mobil och läsplatta, webbversion för datorer‎</p>
-                <p>Grannsamverkan med appen Coyards! Gratis - ingen reklam. Framtagen i samråd med säkerhetsexperter, försäkringsbolag, anti-brottsorganisationer och kommuner.</p>
-                <p><a href="https://coyards.se">Besök coyards.se för mer info.</a></p>
-            </div>
-
             <h3 id="carehood">Carehood</h3>
             <div>
-                <p>Förbättra er grannsamverkan | Enklare & snabbare med vår app‎.</p>
+                <p>Förbättra er grannsamverkan | Enklare & snabbare med vår app.</p>
                 <p>Ingen central adm., larmfunktioner, diskussionsforum. Hämta Carehood gratis nu!</p>
                 <p><a href="https://carehood.se">Besök carehood.se för mer info.</a></p>
             </div>
