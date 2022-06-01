@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-
+use App\Models\VMAAlert;
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -22,7 +22,7 @@ class AppServiceProvider extends ServiceProvider
         // because we can install things using composer and so on.
         
         // Lan listing is used in header nav so share it here for easy access.
-        // https://laravel.com/docs/5.5/views#passing-data-to-views
+        // https://laravel.com/docs/9.x/views#sharing-data-with-all-views
         $lan = \App\Helper::getAllLanWithStats();
         \View::share('shared_lan_with_stats', $lan);
 
@@ -32,6 +32,13 @@ class AppServiceProvider extends ServiceProvider
 
         $inbrottUndersidor = \App\Helper::getInbrottNavItems();
         \View::share('inbrott_undersidor', $inbrottUndersidor);
+
+        $alerts = VMAAlert::where('status', 'Actual')
+        ->where('msgType', 'Alert')
+        ->orderByDesc('sent')
+        ->get();
+        \View::share('shared_vma_alerts', $alerts);
+        
     }
 
     /**
