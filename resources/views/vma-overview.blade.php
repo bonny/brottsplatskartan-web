@@ -9,7 +9,7 @@
     <div class="widget">
         <h1 class="widget__title">VMA – Viktigt Meddelande till Allmänheten</h1>
 
-        <h2>Aktuellt meddelanden</h2>
+        {{-- <h2>Aktuella meddelanden</h2> --}}
 
         <h2>Tidigare meddelanden</h2>
 

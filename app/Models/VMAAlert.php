@@ -130,4 +130,8 @@ class VMAAlert extends Model
         $text = Str::words($text, $numWords);
         return $text;
     }
+
+    public function getOriginalMessageAsPrettyJson(): string {
+        return json_encode($this->original_message, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    }
 }

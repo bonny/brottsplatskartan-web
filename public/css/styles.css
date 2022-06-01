@@ -3169,3 +3169,7 @@ h2.widget__title {
     list-style-type: disc;
 }
 
+.vma-single--text > p:first-of-type {
+    /* font-weight: bold; */
+    font-size: var(--font-size-medium);
+}

@@ -14,7 +14,14 @@
             {{ $alert->getShortDescription() }}
         </h1>
 
-        {!! $alert->getText() !!}
+        <div class="vma-single--text">
+            {!! $alert->getText() !!}
+        </div>
+
+        <details>
+            <summary>Visa orginalmeddelande som JSON</summary>
+            <pre>{{ $alert->getOriginalMessageAsPrettyJson() }}</pre>
+        </details>
 
     </div>
 @endsection
