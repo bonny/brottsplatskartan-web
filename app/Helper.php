@@ -79,7 +79,7 @@ class Helper
      */
     public static function getLanStats($lan)
     {
-        $stats = Cache::remember('getLanStats', MINUTE_IN_SECONDS, function() use ($lan) {
+        $stats = Cache::remember('getLanStats', MINUTE_IN_SECONDS * 10, function() use ($lan) {
             $stats = [];
             
             $stats["numEventsPerDay"] = DB::table('crime_events')
