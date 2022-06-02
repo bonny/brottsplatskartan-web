@@ -214,7 +214,7 @@ class PlatsController extends Controller
             ];
         }
 
-        // Inkludera inte datum i canonical url om det är idag vi tittar på
+        // Inkludera inte datum i canonical url om det är idag vi tittar på.
         if ($dateOriginalFromArg) {
             // There was a date included
             $canonicalLink = route(
@@ -232,22 +232,6 @@ class PlatsController extends Controller
                 ]
             );
         }
-
-        /*
-        $latLngs = [];
-        $events->each(function ($elm, $idx) use (& $latLngs) {
-            $latLngs[] = [
-                $elm->location_lat,
-                $elm->location_lng
-            ];
-        });
-
-        \Debugbar::info('events', $events->toArray());
-        \Debugbar::info('$latLngs', $latLngs);
-        $latLngsCenter = \App\Helper::getCenterFromDegrees($latLngs);
-        \Debugbar::info('$latLngsCenter', $latLngsCenter);
-        \Debugbar::info('$latLngsCenter lat,nlng', "{$latLngsCenter[0]},{$latLngsCenter[1]}");
-        */
 
         $place = Place::where('name', $plats)->first();
 
