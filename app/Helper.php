@@ -79,18 +79,23 @@ class Helper
      */
     public static function getLanStats($lan)
     {
-        $stats = [];
+        $stats = Cache::remember('getLanStats', MINUTE_IN_SECONDS, function() use ($lan) {
+            $stats = [];
+            
+            $stats["numEventsPerDay"] = DB::table('crime_events')
+                ->select(
+                    DB::raw('date_format(created_at, "%Y-%m-%d") as YMD'),
+                    DB::raw('count(*) AS count')
+                )
+                ->where('administrative_area_level_1', $lan)
+                ->groupBy('YMD')
+                ->orderBy('YMD', 'desc')
+                ->limit(14)
+                ->get();
 
-        $stats["numEventsPerDay"] = DB::table('crime_events')
-            ->select(
-                DB::raw('date_format(created_at, "%Y-%m-%d") as YMD'),
-                DB::raw('count(*) AS count')
-            )
-            ->where('administrative_area_level_1', $lan)
-            ->groupBy('YMD')
-            ->orderBy('YMD', 'desc')
-            ->limit(14)
-            ->get();
+            return $stats;
+        });
+
         return $stats;
     }
 
