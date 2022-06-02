@@ -44,15 +44,10 @@
         "spatie/laravel-feed": "^4.0",
         "stevegrunwell/time-constants": "^1.1",
         "unisharp/laravel-settings": "^2.0",
-        "weidner/goutte": "dev-l9-compatibility",
+        "weidner/goutte": "^2.2.0",
         "willvincent/feeds": "^2.3.0"
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/laravel-shift/laravel-goutte.git"
-        }
-    ],
+    "repositories": [],
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.12",
         "nunomaduro/larastan": "^2.0",
