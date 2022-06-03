@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Http\Controllers\VMAAlerts;
+use App\Http\Controllers\VMAAlertsController;
 use Illuminate\Console\Command;
 
 class ImportVMAAlerts extends Command
@@ -29,7 +29,7 @@ class ImportVMAAlerts extends Command
     public function handle()
     {
         $this->info(sprintf('Startar import av VMA-meddelanden från %s.', config('app.vma_alerts_url')));
-        ['importedAlerts' => $importedAlerts] = VMAAlerts::import();
+        ['importedAlerts' => $importedAlerts] = VMAAlertsController::import();
         $this->line(sprintf('%d meddelanden importerades eller uppdaterades.', count($importedAlerts)));
         $this->line('Import klar.');
     }
