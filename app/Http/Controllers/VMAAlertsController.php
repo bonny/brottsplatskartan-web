@@ -271,6 +271,16 @@ VMA är en förtkorning av _Viktigt meddelande till allmänheten_.
 - Regeringen med regeringskansliet. Alla bevakningsansvariga myndigheter. Kommuner och landsting.
 - Försvarsmakten  
 
+## När testas VMA?
+
+Signalerna **Viktigt Meddelande** och **Faran över** 
+testas 15.00 första helgfria måndag i mars, juni, september och december.
+
+## Vad är det för lång signal jag hörde?
+
+Det var nog **Faran Över** som signaleras med en 30-40 sekunder lång signal.
+
+
 --- 
 
 Hos Krisinformation och MSB kan du läsa fler vanliga frågor och svar:
