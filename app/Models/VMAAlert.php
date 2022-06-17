@@ -47,7 +47,7 @@ class VMAAlert extends Model
     }
 
     /**
-     * Get första raden av beskrivningen,
+     * Ger första raden av beskrivningen,
      * oftast en text i stil med:
      * "Viktigt meddelande till allmänheten i Uppsala i Uppsala kommun, Uppsala län."
      * 
@@ -55,8 +55,21 @@ class VMAAlert extends Model
      */
     public function getShortDescription()
     {
-        $firstDescriptionLine = Str::of($this->getDescription())->explode("\n")->first();
-        return $firstDescriptionLine;
+        $line = $this->getDescriptionLines()->slice(0, 1)->first();
+        return $line;
+    }
+
+    /**
+     * Ger första raden av beskrivningen,
+     * oftast en text i stil med:
+     * "Viktigt meddelande till allmänheten i Uppsala i Uppsala kommun, Uppsala län."
+     * 
+     * @return string 
+     */
+    public function getDescriptionSecondLine()
+    {
+        $line = $this->getDescriptionLines()->slice(1, 1)->first();
+        return $line;
     }
 
     public function getPermalink()
@@ -99,7 +112,8 @@ class VMAAlert extends Model
     public function getDescriptionLines(): Collection {
         $lines = Str::of($this->getDescription())
                     ->explode("\n")
-                    ->reject(fn($line) => empty($line) || $line === "\r");
+                    ->reject(fn($line) => empty($line) || $line === "\r")
+                    ->values();
         return $lines;
     }
     

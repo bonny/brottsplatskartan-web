@@ -1,6 +1,6 @@
 @extends('layouts.web')
 
-@section('title', $alert->identifier)
+@section('title', $title)
 @section('metaDescription', e('Se aktuella och tidigare VMA'))
 @section('canonicalLink', route('vma-overview'))
 

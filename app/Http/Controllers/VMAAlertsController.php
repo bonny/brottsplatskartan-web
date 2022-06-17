@@ -192,11 +192,13 @@ class VMAAlertsController extends Controller
   {
     $id = Str::of($slug)->explode('-')->last();
     $alert = VMAAlert::findOrFail($id);
+    $title = $alert->getShortDescription() . " " . $alert->getDescriptionSecondLine();
 
     return view(
       'vma-single',
       [
-        'alert' => $alert
+        'alert' => $alert,
+        'title' => $title,
       ]
     );
   }
