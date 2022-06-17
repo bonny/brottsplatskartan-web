@@ -185,7 +185,19 @@ class VMAAlertsController extends Controller
   public function index(Request $request)
   {
     $alerts = \App\Helper::getVMAAlerts();
-    return view('vma-overview', ['alerts' => $alerts]);
+
+    $breadcrumbs = new \Creitive\Breadcrumbs\Breadcrumbs();
+    $breadcrumbs->setDivider('›');
+    $breadcrumbs->addCrumb('Hem', '/');
+    $breadcrumbs->addCrumb('VMA', route("vma-overview"));
+
+    return view(
+      'vma-overview', 
+      [
+        'alerts' => $alerts, 
+        'breadcrumbs' => $breadcrumbs
+      ]
+    );
   }
 
   public function single(Request $request, string $slug)
@@ -194,11 +206,21 @@ class VMAAlertsController extends Controller
     $alert = VMAAlert::findOrFail($id);
     $title = $alert->getShortDescription() . " " . $alert->getDescriptionSecondLine();
 
+    $breadcrumbs = new \Creitive\Breadcrumbs\Breadcrumbs();
+    $breadcrumbs->setDivider('›');
+    $breadcrumbs->addCrumb('Hem', '/');
+    $breadcrumbs->addCrumb('VMA', route("vma-overview"));
+    $breadcrumbs->addCrumb(
+      $alert->getHumanSentDateTime() . ': ' . $alert->getShortDescription(), 
+      route("vma-single", ['slug' => $alert->getSlug()])
+    );
+
     return view(
       'vma-single',
       [
         'alert' => $alert,
         'title' => $title,
+        'breadcrumbs' => $breadcrumbs,
       ]
     );
   }
@@ -206,9 +228,15 @@ class VMAAlertsController extends Controller
   public function text(Request $request, string $slug)
   {
 
+    $breadcrumbs = new \Creitive\Breadcrumbs\Breadcrumbs();
+    $breadcrumbs->setDivider('›');
+    $breadcrumbs->addCrumb('Hem', '/');
+    $breadcrumbs->addCrumb('VMA', route("vma-overview"));
+
     switch ($slug) {
       case 'om-vma':
         $title = 'Vad är VMA?';
+        $breadcrumbs->addCrumb($title, route("vma-textpage", $slug));
         $text = '
 
 VMA är en förkortning av **Viktigt meddelande till allmänheten**, 
@@ -251,6 +279,7 @@ Källor och mer information:
         break;
       case 'vanliga-fragor-och-svar-om-vma':
         $title = "Vanliga frågor och svar om VMA";
+        $breadcrumbs->addCrumb($title, route("vma-textpage", $slug));
         $text = '
 
 ## Vad betyder VMA?
@@ -297,6 +326,14 @@ Hos Krisinformation och MSB kan du läsa fler vanliga frågor och svar:
 
     $text = \Markdown::parse($text);
 
-    return view('vma-text', ['slug' => $slug, 'title' => $title, 'text' => $text]);
+    return view(
+      'vma-text', 
+      [
+        'slug' => $slug, 
+        'title' => $title, 
+        'text' => $text,
+        'breadcrumbs' => $breadcrumbs,
+      ]
+    );
   }
 }

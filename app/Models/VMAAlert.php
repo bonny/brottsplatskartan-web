@@ -72,14 +72,16 @@ class VMAAlert extends Model
         return $line;
     }
 
+    public function getSlug() {
+        return "{$this->getHumanSentDate()}-" . Str::slug($this->getShortDescription()) . "-{$this->id}";
+    }
+
     public function getPermalink()
     {
-        $slug = "{$this->getHumanSentDate()}-" . Str::slug($this->getShortDescription()) . "-{$this->id}";
-
         $permalink = route(
             'vma-single',
             [
-                'slug' => Str::slug($slug)
+                'slug' => $this->getSlug()
             ]
         );
         return $permalink;
