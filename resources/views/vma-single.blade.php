@@ -20,7 +20,7 @@
 
         <details>
             <summary>Visa orginalmeddelande som JSON</summary>
-            <pre>{{ $alert->getOriginalMessageAsPrettyJson() }}</pre>
+            <pre><code>{{ $alert->getOriginalMessageAsPrettyJson() }}</code></pre>
         </details>
 
     </div>
