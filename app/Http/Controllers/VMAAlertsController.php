@@ -308,6 +308,10 @@ VMA är en förtkorning av _Viktigt meddelande till allmänheten_.
 Signalerna **Viktigt Meddelande** och **Faran över** 
 testas 15.00 första helgfria måndag i mars, juni, september och december.
 
+## Hur låter VMA-signalen?
+
+VMA ljuder med en sju sekunders signal omväxlande med 14 sekunders tystnad under minst två minuter.
+
 ## Vad är det för lång signal jag hörde?
 
 Det var nog **Faran Över** som signaleras med en 30-40 sekunder lång signal.
