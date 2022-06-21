@@ -2,7 +2,7 @@
 
 @section('title', $title)
 @section('metaDescription', e('Se aktuella och tidigare VMA'))
-@section('canonicalLink', route('vma-overview'))
+@section('canonicalLink', $canonicalLink)
 
 @section('content')
 

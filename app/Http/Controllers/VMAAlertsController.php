@@ -182,7 +182,7 @@ class VMAAlertsController extends Controller
     return ['importedAlerts' => $importedAlerts];
   }
 
-  public function index(Request $request)
+  public function index()
   {
     $alerts = \App\Helper::getVMAAlerts();
 
@@ -195,7 +195,7 @@ class VMAAlertsController extends Controller
       'vma-overview', 
       [
         'alerts' => $alerts, 
-        'breadcrumbs' => $breadcrumbs
+        'breadcrumbs' => $breadcrumbs,
       ]
     );
   }
@@ -221,6 +221,7 @@ class VMAAlertsController extends Controller
         'alert' => $alert,
         'title' => $title,
         'breadcrumbs' => $breadcrumbs,
+        'canonicalLink' => route('vma-single', ['slug' => $alert->getSlug()]),
       ]
     );
   }
