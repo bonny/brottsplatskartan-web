@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\RedirectIndexPhp;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -23,6 +24,7 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\RedirectOldPages::class,
         \App\Http\Middleware\RedirectBytSida::class,
         \App\Http\Middleware\DebugBarMaybeEnable::class,
+        RedirectIndexPhp::class
     ];
 
     /**
