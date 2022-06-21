@@ -1,7 +1,7 @@
 @extends('layouts.web')
 
-@section('title', 'VMA – Viktigt Meddelande till Allmänheten')
-@section('metaDescription', e('Se aktuella och tidigare VMA'))
+@section('title', 'VMA – Alarmet Viktigt Meddelande till Allmänheten')
+@section('metaDescription', e('Se aktuella och tidigare VMA-alarm i vårt VMA-arkiv'))
 @section('canonicalLink', route('vma-overview'))
 
 @section('content')

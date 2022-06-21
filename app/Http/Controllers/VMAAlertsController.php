@@ -316,7 +316,6 @@ VMA ljuder med en sju sekunders signal omväxlande med 14 sekunders tystnad unde
 
 Det var nog **Faran Över** som signaleras med en 30-40 sekunder lång signal.
 
-
 --- 
 
 Hos Krisinformation och MSB kan du läsa fler vanliga frågor och svar:
