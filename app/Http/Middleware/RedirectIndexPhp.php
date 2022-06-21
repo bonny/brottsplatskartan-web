@@ -22,7 +22,7 @@ class RedirectIndexPhp
         $strRequestUri = Str::of($request->getRequestUri());
         $isIndexRequestUri = $strRequestUri->is('/index.php/*');
         if ($isIndexRequestUri) {
-            $redirectToUri = $strRequestUri->replace('/index.php/', '/');
+            $redirectToUri = 'https://brottsplatskartan.se' . $strRequestUri->replace('/index.php/', '/');
             return redirect(
                 $redirectToUri, 
                 301, 
