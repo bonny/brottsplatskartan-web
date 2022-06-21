@@ -23,7 +23,14 @@ class RedirectIndexPhp
         $isIndexRequestUri = $strRequestUri->is('/index.php/*');
         if ($isIndexRequestUri) {
             $redirectToUri = $strRequestUri->replace('/index.php/', '/');
-            return redirect($redirectToUri, 301);
+            return redirect(
+                $redirectToUri, 
+                301, 
+                [
+                    'x-org-request-uri' => $request->getRequestUri(),
+                    'x-replaced-uri' => $redirectToUri
+                ]
+            );
         }
         return $next($request);
     }
