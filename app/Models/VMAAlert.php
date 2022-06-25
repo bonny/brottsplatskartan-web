@@ -73,7 +73,7 @@ class VMAAlert extends Model
     }
 
     public function getSlug() {
-        return "{$this->getHumanSentDate()}-" . Str::slug($this->getShortDescription()) . "-{$this->id}";
+        return Str::slug($this->getHumanSentDate()) . "-" . Str::slug($this->getShortDescription()) . "-{$this->id}";
     }
 
     public function getPermalink()
