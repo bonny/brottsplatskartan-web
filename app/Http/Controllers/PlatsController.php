@@ -583,7 +583,7 @@ class PlatsController extends Controller
         if ($platsWithoutLan && $oneLanName) {
             // Både plats och län
             $prevDayEvents = CrimeEvent::
-                selectRaw('date(created_at) as dateYMD, count(*) as dateCount, 1 as vvv')
+                selectRaw('date_created_at as dateYMD, count(*) as dateCount, 1 as vvv')
                 ->where('created_at', '<', $dateYmd)
                 ->where('created_at', '>', $dateYmdMinusManyDaysBack)
                 ->where("administrative_area_level_1", $oneLanName)
@@ -600,13 +600,13 @@ class PlatsController extends Controller
                     });
                 })
                 ->groupBy(\DB::raw('dateYMD'))
-                ->orderBy("created_at", "desc")
+                ->orderBy("dateYMD", "desc")
                 ->limit($numDays)
                 ->get();
         } else {
             // Plats utan län
             $prevDayEvents = CrimeEvent::
-                selectRaw('date(created_at) as dateYMD, count(*) as dateCount')
+                selectRaw('date_created_at as dateYMD, count(*) as dateCount')
                 ->where('created_at', '<', $dateYmd)
                 ->where('created_at', '>', $dateYmdMinusManyDaysBack)
                 ->where(function ($query) use ($platsWithoutLan) {
@@ -617,7 +617,7 @@ class PlatsController extends Controller
                     });
                 })
                 ->groupBy(\DB::raw('dateYMD'))
-                ->orderBy("created_at", "desc")
+                ->orderBy("dateYMD", "desc")
                 ->limit($numDays)
                 ->get();
         }
@@ -650,7 +650,7 @@ class PlatsController extends Controller
 
         if ($platsWithoutLan && $oneLanName) {
             $prevDayEvents = CrimeEvent::
-                selectRaw('date(created_at) as dateYMD, count(*) as dateCount')
+                selectRaw('date_created_at as dateYMD, count(*) as dateCount')
                 ->where('created_at', '>', $dateYmdPlusOneDay)
                 ->where('created_at', '<', $dateYmdPlusManyDaysForward)
                 ->where("administrative_area_level_1", $oneLanName)
@@ -667,12 +667,12 @@ class PlatsController extends Controller
                     });
                 })
                 ->groupBy(\DB::raw('dateYMD'))
-                ->orderBy("created_at", "asc")
+                ->orderBy("dateYMD", "asc")
                 ->limit($numDays)
                 ->get();
         } else {
             $prevDayEvents = CrimeEvent::
-                selectRaw('date(created_at) as dateYMD, count(*) as dateCount')
+                selectRaw('date_created_at as dateYMD, count(*) as dateCount')
                 ->where('created_at', '>', $dateYmdPlusOneDay)
                 ->where('created_at', '<', $dateYmdPlusManyDaysForward)
                 ->where(function ($query) use ($platsWithoutLan) {
@@ -683,7 +683,7 @@ class PlatsController extends Controller
                     });
                 })
                 ->groupBy(\DB::raw('dateYMD'))
-                ->orderBy("created_at", "asc")
+                ->orderBy("dateYMD", "asc")
                 ->limit($numDays)
                 ->get();
         }

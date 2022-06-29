@@ -467,11 +467,11 @@ class Helper
             $numDays
         ) {
             $prevDayEvents = CrimeEvent::selectRaw(
-                'date(created_at) as dateYMD, count(*) as dateCount'
+                'date_created_at as dateYMD, count(*) as dateCount'
             )
                 ->where('created_at', '<', $dateYmd)
                 ->groupBy(\DB::raw('dateYMD'))
-                ->orderBy('created_at', 'desc')
+                ->orderBy('dateYMD', 'desc')
                 ->limit($numDays)
                 ->get();
 
@@ -505,11 +505,11 @@ class Helper
             $numDays
         ) {
             $nextDayEvents = CrimeEvent::selectRaw(
-                'date(created_at) as dateYMD, count(*) as dateCount'
+                'date_created_at as dateYMD, count(*) as dateCount'
             )
                 ->where('created_at', '>', $dateYmdPlusOneDay)
                 ->groupBy(\DB::raw('dateYMD'))
-                ->orderBy('created_at', 'asc')
+                ->orderBy('dateYMD', 'asc')
                 ->limit($numDays)
                 ->get();
 
@@ -545,12 +545,12 @@ class Helper
         $numDays = 5
     ) {
         $prevDayEvents = CrimeEvent::selectRaw(
-            'date(created_at) as dateYMD, count(*) as dateCount'
+            'date_created_at as dateYMD, count(*) as dateCount'
         )
             ->where('created_at', '<', $date->format('Y-m-d'))
             ->where("administrative_area_level_1", $lan)
             ->groupBy(\DB::raw('dateYMD'))
-            ->orderBy('created_at', 'desc')
+            ->orderBy('dateYMD', 'desc')
             ->limit($numDays)
             ->get();
 
@@ -593,12 +593,12 @@ class Helper
             ->format('Y-m-d');
 
         $nextDayEvents = CrimeEvent::selectRaw(
-            'date(created_at) as dateYMD, count(*) as dateCount, 1 as ppp'
+            'date_created_at as dateYMD, count(*) as dateCount, 1 as ppp'
         )
             ->where('created_at', '>', $dateYmdPlusOneDay)
             ->where("administrative_area_level_1", $lan)
             ->groupBy(\DB::raw('dateYMD'))
-            ->orderBy('created_at', 'asc')
+            ->orderBy('dateYMD', 'asc')
             ->limit($numDays)
             ->get();
 
