@@ -185,6 +185,7 @@ class VMAAlertsController extends Controller
   public function index()
   {
     $alerts = \App\Helper::getVMAAlerts();
+    $currentAlerts = \App\Helper::getCurrentAlerts();
 
     $breadcrumbs = new \Creitive\Breadcrumbs\Breadcrumbs();
     $breadcrumbs->setDivider('›');
@@ -195,6 +196,7 @@ class VMAAlertsController extends Controller
       'vma-overview', 
       [
         'alerts' => $alerts, 
+        'currentAlerts' => $currentAlerts,
         'breadcrumbs' => $breadcrumbs,
       ]
     );

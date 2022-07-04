@@ -1178,6 +1178,11 @@ class Helper
         return $undersidor;
     }
 
+    /**
+     * Hämta meddelanden.
+     *
+     * @return Collection
+     */
     public static function getVMAAlerts() {
         return Cache::remember('shared_vma_alerts', MINUTE_IN_SECONDS, function() {
             $alerts = VMAAlert::where('status', 'Actual')
@@ -1186,6 +1191,19 @@ class Helper
                     ->get();
             return $alerts;
         });
+    }
+
+    /**
+     * Hämta meddelanden som uppdaterats senaste 6o minuterna = rimligt aktuella.
+     *
+     * @return Collection
+     */
+    public static function getCurrentAlerts() {
+        return VMAAlert::where('status', 'Actual')
+                ->where('msgType', 'Alert')
+                ->where('updated_at', ">=", Carbon::now()->subMinutes(60))
+                ->orderByDesc('sent')
+                ->get();
     }
 
 }
