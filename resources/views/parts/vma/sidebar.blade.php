@@ -11,7 +11,7 @@
 
 @unless(isset($hideVMAAlerts) && $hideVMAAlerts === true)
     <section class="widget">
-        <h2>Meddelanden</h2>
+        <h2>VMA-Meddelanden</h2>
 
         <ul class="widget__listItems">
             @foreach ($shared_vma_alerts as $alert)

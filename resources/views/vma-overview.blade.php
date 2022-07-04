@@ -7,11 +7,17 @@
 @section('content')
 
     <div class="widget">
-        <h1 class="widget__title">VMA – Viktigt Meddelande till Allmänheten</h1>
+        <h1 class="widget__title">Lista på VMA – Viktigt Meddelande till Allmänheten</h1>
+
+        <div class="callout">
+            <p>Här listar vi de senaste VMA som sänts ut.</p>
+            <p>VMA är en förkortning av Viktigt meddelande till allmänheten, och det är ett varningssystem som används vid olyckor, allvarliga händelser och störningar i viktiga samhällsfunktioner.</p>
+            <p>Vi hämtar meddelandena från Sveriges Radio.</p>
+        </div>
 
         {{-- <h2>Aktuella meddelanden</h2> --}}
 
-        <h2>Tidigare meddelanden</h2>
+        <h2>Senaste meddelandena</h2>
 
         <ul class="list-none p-0">
             @foreach ($alerts as $alert)
