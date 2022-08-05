@@ -1184,12 +1184,12 @@ class Helper
      * @return Collection
      */
     public static function getVMAAlerts() {
-        return Cache::remember('shared_vma_alerts', MINUTE_IN_SECONDS, function() {
-            $alerts = VMAAlert::where('status', 'Actual')
+        // Cache is cleared when import detects new alerts.
+        return Cache::remember('shared_vma_alerts', HOUR_IN_SECONDS, function() {
+            return VMAAlert::where('status', 'Actual')
                     ->where('msgType', 'Alert')
                     ->orderByDesc('sent')
                     ->get();
-            return $alerts;
         });
     }
 
@@ -1199,11 +1199,14 @@ class Helper
      * @return Collection
      */
     public static function getCurrentAlerts() {
-        return VMAAlert::where('status', 'Actual')
-                ->where('msgType', 'Alert')
-                ->where('updated_at', ">=", Carbon::now()->subMinutes(60))
-                ->orderByDesc('sent')
-                ->get();
+        // Cache is cleared when import detects new alerts.
+        return Cache::remember('current_vma_alerts', HOUR_IN_SECONDS, function() {
+            return VMAAlert::where('status', 'Actual')
+                    ->where('msgType', 'Alert')
+                    ->where('updated_at', ">=", Carbon::now()->subMinutes(60))
+                    ->orderByDesc('sent')
+                    ->get();
+        });
     }
 
 }
