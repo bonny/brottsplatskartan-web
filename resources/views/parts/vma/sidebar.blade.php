@@ -30,7 +30,6 @@
     </section>
 @endunless
 
-
 <section class="widget widget--follow">
     <h2 class="widget__title">VMA är ett varningssystem</h2>
     <p>VMA är en förkortning av <em>"Viktigt Meddelande till Allmänheten"</em></p>

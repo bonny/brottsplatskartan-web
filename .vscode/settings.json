@@ -21,5 +21,6 @@
     "peacock.color": "#1e5429",
     "search.exclude": {
         "**/storage": true
-    }
+    },
+    "todo-tree.tree.showCountsInTree": false
 }

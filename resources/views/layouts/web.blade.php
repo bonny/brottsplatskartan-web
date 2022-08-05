@@ -118,8 +118,7 @@ $noAdsReason = '';
 
     <link rel="manifest" href="/manifest.webmanifest">
 
-    {{-- <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript> --}}
-    <style amp-custom>{!! HTMLMin::css(file_get_contents( public_path("css/styles.css") )) !!}</style>
+    <style>{!! HTMLMin::css(file_get_contents( public_path("css/styles.css") )) !!}</style>
 
     @if (env("APP_ENV") != "local")
       <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -184,9 +183,6 @@ $noAdsReason = '';
         @include('parts.sitefooter')
     </footer>
 
-    {{-- @include('parts.sidebar') --}}
-    {{-- @include('parts.cookie-consent') --}}
-
     {{--
       Pixel,
       ladda via JS för att minimera laddning via bots.
@@ -206,13 +202,6 @@ $noAdsReason = '';
         i.src='{{ $pixelUrl }}';
       })();
     </script>
-
-    @if (env('APP_ENV')=='production')
-        <amp-install-serviceworker
-          src="https://brottsplatskartan.se/serviceworker.js"
-          layout="nodisplay">
-        </amp-install-serviceworker>
-    @endif
 
 </body>
 </html>

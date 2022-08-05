@@ -159,11 +159,6 @@ if $single is set then larger image
     @endif
 
     @if ( isset($overview) )
-        {{--
-        <amp-social-share type="twitter" width=40 height=32 data-param-url="{{ $event->getPermalink(true) }}"></amp-social-share>
-        <amp-social-share type="facebook" width=40 height=32 data-param-url="{{ $event->getPermalink(true) }}" data-param-app_id="105986239475133"></amp-social-share>
-        <amp-social-share type="email" width=40 height=32 data-param-url="{{ $event->getPermalink(true) }}"></amp-social-share>
-        --}}
     @else
         @include('parts.crimeevent.newsarticles', ['newsarticles' => $newsarticles])
 

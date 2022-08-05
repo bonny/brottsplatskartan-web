@@ -1,8 +1,4 @@
-{{--
-
-Template för bloggens startsida
-
---}}
+{{-- Template för bloggens startsida --}}
 
 @extends('layouts.web')
 
@@ -36,7 +32,7 @@ Template för bloggens startsida
 @endsection
 
 @section('sidebar')
-@include('parts.widget-blog-entries')
+    @include('parts.widget-blog-entries')
     {{-- @include('parts.widget-facebook-page') --}}
     @include('parts.follow-us')
     @include('parts.lan-and-cities')
