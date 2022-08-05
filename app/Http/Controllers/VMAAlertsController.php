@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\VMAAlert;
+use Cache;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
@@ -175,6 +176,11 @@ class VMAAlertsController extends Controller
         ],
         $alertCollection->toArray()
       );
+
+      if ($alert->wasRecentlyCreated) {
+        Cache::forget('shared_vma_alerts');
+        Cache::forget('current_vma_alerts');
+      }
 
       $importedAlerts->push($alert);
     });
