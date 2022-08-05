@@ -1061,9 +1061,6 @@ class Helper
                 ->with('CrimeEvent', 'CrimeEvent.locations')
                 ->get();
 
-            // Can't get eager loading to work all way...
-            $mostViewed->load('CrimeEvent.locations');
-
             return $mostViewed;
         });
 

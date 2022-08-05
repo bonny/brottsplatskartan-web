@@ -34,25 +34,32 @@ class StartController extends Controller
         $daysBack = 3;
 
         // Dagens datum.
-        $date = ['date' =>Carbon::now()];
+        $date = ['date' => Carbon::now()];
 
         $mostCommonCrimeTypes = $this->getMostCommonCrimeTypesForToday(
             $date,
             $daysBack
         );
-        
+
         // Senaste händelserna
         $eventsRecent = $this->getEventsForToday($date, $daysBack);
-        
+
         // Behåll bara de n senaste
         $eventsRecent = $eventsRecent->take(20);
 
         // Mest lästa senaste nn minuterna.
         $eventsMostViewedRecently = Helper::getMostViewedEventsRecently(20, 20);
-        // dd($eventsMostViewedRecently);
+
+        // Mest lästa är crimeViews, ändra så vi behåller crimeEvents.
+        // Denna skapar en ny fråga för varje, fast eventsen borde redan vara hämtade tycker jag pga jag kör with() i getMostViewedEventsRecently...
+        $eventsMostViewedRecentlyCrimeEvents = cache::remember('startpage:eventsMostViewedRecentlyCrimeEvents', MINUTE_IN_SECONDS * 3, function () use ($eventsMostViewedRecently) {
+            return $eventsMostViewedRecently->map(function ($item) {
+                return $item->crimeEvent;
+            });
+        });
 
         // Mest lästa idag.
-        $eventsMostViewedToday = Helper::getMostViewedEvents(Carbon::now(), 10);
+        // $eventsMostViewedToday = Helper::getMostViewedEvents(Carbon::now(), 10);
 
         $introtext = null;
         $introtext_key = "introtext-start";
@@ -65,11 +72,6 @@ class StartController extends Controller
         $pageTitle = 'Polisens händelser – brott, nyheter, händelser från polisen';
         $pageMetaDescription =
             'Läs de senaste händelserna & brotten som Polisen rapporterat. Se polishändelser ✔ nära dig ✔ i din ort ✔ i ditt län. Händelserna hämtas direkt från Polisens webbplats.';
-
-        // Mest lästa är crimeViews, ändra så vi behåller crimeEvents.
-        $eventsMostViewedRecentlyCrimeEvents = $eventsMostViewedRecently->map(function ($item) {
-            return $item['crimeEvent'];
-        });
 
         $data = [
             'eventsMostViewedRecentlyCrimeEvents' => $eventsMostViewedRecentlyCrimeEvents,
@@ -123,7 +125,7 @@ class StartController extends Controller
             $mostCommonCrimeTypes = $this->getMostCommonCrimeTypesForToday(
                 $date,
                 $daysBack
-            );            
+            );
         } else {
             // Om inte idag.
             $beforeDate = $date['date']
