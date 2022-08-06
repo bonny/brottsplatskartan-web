@@ -167,7 +167,6 @@ class VMAAlertsController extends Controller
 
       $alertCollection['sent'] = new Carbon($alertCollection['sent']);
 
-      // $alertCollection->put('original_message', json_encode($alert));
       $alertCollection->put('original_message', $alert);
 
       $alert = VMAAlert::updateOrCreate(
@@ -177,7 +176,7 @@ class VMAAlertsController extends Controller
         $alertCollection->toArray()
       );
 
-      if ($alert->wasRecentlyCreated) {
+      if ($alert->wasRecentlyCreated || $alert->wasChanged()) {
         Cache::forget('shared_vma_alerts');
         Cache::forget('current_vma_alerts');
       }
