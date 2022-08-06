@@ -147,9 +147,7 @@ $noAdsReason = '';
 
         @include('parts.notificationbar')
         @include('parts.siteheader')
-
-        @if ($showAds)
-        @endif
+        @include('parts.vma-siteheader-alerts')
 
         @yield('beforeBreadcrumb')
         @include('parts.breadcrumb', ["single" => true])
