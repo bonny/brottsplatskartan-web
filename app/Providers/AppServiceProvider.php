@@ -36,7 +36,7 @@ class AppServiceProvider extends ServiceProvider
         \View::share('inbrott_undersidor', $inbrottUndersidor);
 
         \View::share('shared_vma_alerts', \App\Helper::getVMAAlerts());
-        \View::share('shared_vma_current_alerts', \App\Helper::getCurrentAlerts());
+        \View::share('shared_vma_current_alerts', \App\Helper::getCurrentVMAAlerts());
         
     }
 

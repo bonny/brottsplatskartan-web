@@ -1176,7 +1176,7 @@ class Helper
     }
 
     /**
-     * Hämta meddelanden.
+     * Hämta alla VMA-meddelanden.
      *
      * @return Collection
      */
@@ -1195,7 +1195,7 @@ class Helper
      *
      * @return Collection
      */
-    public static function getCurrentAlerts() {
+    public static function getCurrentVMAAlerts() {
         // Cache is cleared when import detects new alerts.
         return Cache::remember('current_vma_alerts', HOUR_IN_SECONDS, function() {
             return VMAAlert::where('status', 'Actual')
