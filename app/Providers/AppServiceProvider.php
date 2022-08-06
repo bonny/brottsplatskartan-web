@@ -37,6 +37,7 @@ class AppServiceProvider extends ServiceProvider
 
         \View::share('shared_vma_alerts', \App\Helper::getVMAAlerts());
         \View::share('shared_vma_current_alerts', \App\Helper::getCurrentVMAAlerts());
+        \View::share('shared_archived_vma_alerts', \App\Helper::getArchivedVMAAlerts());
         
     }
 

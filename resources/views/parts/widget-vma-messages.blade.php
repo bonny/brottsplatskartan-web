@@ -12,7 +12,11 @@
 
     <ul class="widget__listItems">
         @foreach ($shared_vma_current_alerts as $alert)
-            <li class="widget__listItem">
+            <li class="widget__listItem"
+                style="
+                    border-left: 8px solid #bb0a22;
+                    padding: 10px;
+                    background-color: #f2dee1;">
                 <p class="widget__listItem__preTitle">
                     <time datetime="{{ $alert->getIsoSentDateTime() }}">{{ $alert->getHumanSentDate() }}</time>
                 </p>
@@ -24,7 +28,7 @@
             </li>
         @endforeach
 
-        @foreach ($shared_vma_alerts->slice(0, 3) as $alert)
+        @foreach ($shared_archived_vma_alerts->slice(0, 3) as $alert)
             <li class="widget__listItem">
                 <p class="widget__listItem__preTitle">
                     <time datetime="{{ $alert->getIsoSentDateTime() }}">{{ $alert->getHumanSentDate() }}</time>

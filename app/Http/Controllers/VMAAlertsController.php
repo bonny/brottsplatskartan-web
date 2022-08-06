@@ -177,7 +177,8 @@ class VMAAlertsController extends Controller
       );
 
       if ($alert->wasRecentlyCreated || $alert->wasChanged()) {
-        Cache::forget('shared_vma_alerts');
+        Cache::forget('vma_alerts');
+        Cache::forget('archived_vma_alerts');
         Cache::forget('current_vma_alerts');
       }
 

@@ -1182,9 +1182,25 @@ class Helper
      */
     public static function getVMAAlerts() {
         // Cache is cleared when import detects new alerts.
-        return Cache::remember('shared_vma_alerts', HOUR_IN_SECONDS, function() {
+        return Cache::remember('vma_alerts', HOUR_IN_SECONDS, function() {
             return VMAAlert::where('status', 'Actual')
                     ->where('msgType', 'Alert')
+                    ->orderByDesc('sent')
+                    ->get();
+        });
+    }
+
+    /**
+     * Hämta VMA-meddelanden som inte är aktuella.
+     *
+     * @return Collection
+     */
+    public static function getArchivedVMAAlerts() {
+        // Cache is cleared when import detects new alerts.
+        return Cache::remember('archived_vma_alerts', HOUR_IN_SECONDS, function() {
+            return VMAAlert::where('status', 'Actual')
+                    ->where('msgType', 'Alert')
+                    ->whereNot('updated_at', ">=", Carbon::now()->subMinutes(60))
                     ->orderByDesc('sent')
                     ->get();
         });

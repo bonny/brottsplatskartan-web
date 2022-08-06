@@ -7,7 +7,7 @@
 @section('content')
 
     <div class="widget">
-        <h1 class="widget__title">Lista på VMA – Viktigt Meddelande till Allmänheten</h1>
+        <h1 class="widget__title">VMA – Viktiga Meddelanden till Allmänheten</h1>
 
         <div class="callout">
             <p>Här listar vi de senaste VMA som sänts ut.</p>
@@ -17,11 +17,16 @@
         </div>
 
         @if ($currentAlerts->count())
-            <h2>Aktuella meddelanden</h2>
+            <h2>Aktuella och pågående meddelanden</h2>
 
             <ul class="list-none p-0">
                 @foreach ($currentAlerts as $alert)
-                    <li class="mb-6 pb-6 u-border-bottom">
+                    <li class="mb-6 pb-6 u-border-bottom"
+                        style="
+                            border-left: 8px solid #bb0a22;
+                            padding: 10px;
+                            background-color: #f2dee1;
+                        ">
                         <a href="{{ $alert->getPermalink() }}">
                             <h2 class="m-0 font-normal">
                                 {{ $alert->getShortDescription() }}
@@ -38,7 +43,7 @@
             </ul>
         @endif
 
-        <h2>Senaste meddelandena</h2>
+        <h2>Tidigare meddelanden</h2>
 
         <ul class="list-none p-0">
             @foreach ($alerts as $alert)
