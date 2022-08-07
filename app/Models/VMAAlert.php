@@ -43,7 +43,9 @@ class VMAAlert extends Model
      */
     public function getDescription(): string
     {
-        return $this->original_message['info'][0]['description'] ?? '';
+        $description = $this->original_message['info'][0]['description'] ?? '';
+        $description = htmlspecialchars_decode($description);
+        return $description;
     }
 
     /**

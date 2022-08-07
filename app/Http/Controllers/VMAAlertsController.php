@@ -152,7 +152,7 @@ class VMAAlertsController extends Controller
     $json = $response->json();
     $alerts = collect($json['alerts']);
     $importedAlerts = collect();
-
+    
     $alerts->each(function ($alert) use ($importedAlerts) {
       $alertCollection = collect($alert);
 
