@@ -64,7 +64,7 @@ class VMAAlert extends Model
     /**
      * Ger första raden av beskrivningen,
      * oftast en text i stil med:
-     * "Viktigt meddelande till allmänheten i Uppsala i Uppsala kommun, Uppsala län."
+     * "Oljeläckage i vattnet längs kusten."
      * 
      * @return string 
      */
@@ -132,6 +132,19 @@ class VMAAlert extends Model
      */
     public function getText(): string {
         $lines = $this->getDescriptionLines()->slice(1);
+        $text = $lines->join(" \n");
+        $text = $this->nl2p($text);
+        return $text;
+    }
+
+    /**
+     * Hämtar texten till en händelse, minus två första raderna,
+     * dvs. typ texten som kommer efter titel och ingress.
+     * 
+     * @return string 
+     */
+    public function getText2(): string {
+        $lines = $this->getDescriptionLines()->slice(2);
         $text = $lines->join(" \n");
         $text = $this->nl2p($text);
         return $text;

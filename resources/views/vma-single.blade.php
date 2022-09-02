@@ -9,13 +9,15 @@
     <div class="widget">
         @if (isset($alert->sent))
             {{ $alert->getHumanSentDateTime() }}
+            <br />{{ $alert->getShortDescription() }}
         @endif
         <h1 class="widget__title">
-            {{ $alert->getShortDescription() }}
+            {{ $alert->getDescriptionSecondLine() }}
+            {{-- {{ $alert->getShortDescription() }} --}}
         </h1>
 
         <div class="vma-single--text">
-            {!! $alert->getText() !!}
+            {!! $alert->getText2() !!}
         </div>
 
         <details>

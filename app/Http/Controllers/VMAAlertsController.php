@@ -218,10 +218,7 @@ class VMAAlertsController extends Controller
     $breadcrumbs->setDivider('›');
     $breadcrumbs->addCrumb('Hem', '/');
     $breadcrumbs->addCrumb('VMA', route("vma-overview"));
-    $breadcrumbs->addCrumb(
-      $alert->getHumanSentDateTime() . ': ' . $alert->getShortDescription(), 
-      route("vma-single", ['slug' => $alert->getSlug()])
-    );
+    $breadcrumbs->addCrumb( $alert->getHumanSentDateTime() . ': ' . $alert->getDescriptionSecondLine() );
 
     return view(
       'vma-single',
