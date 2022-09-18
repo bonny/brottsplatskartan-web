@@ -150,7 +150,8 @@ class PlatsController extends Controller
             $plats = title_case($plats);
 
             // Hämta mest vanligt förekommande händelsetyperna
-            $mostCommonCrimeTypes = $this->getMostCommonCrimeTypesInPlats($plats, $dateYMD);
+            // $mostCommonCrimeTypes = $this->getMostCommonCrimeTypesInPlats($plats, $dateYMD);
+            $mostCommonCrimeTypes = collect();
 
             // Debugbar::info('Hämta events där vi bara vet platsnamn');
             // Indexera inte denna sida om det är en gata, men indexera om det är en ort osv.
@@ -512,6 +513,8 @@ class PlatsController extends Controller
 
 
     /**
+     * Hämta mest vanligt förekommande brottstyperna för en plats utan län (ocached version).
+     * 
      * @param string $plats 
      * @param string $dateYMD 
      * @param string $dateYmdPlusOneDay 
