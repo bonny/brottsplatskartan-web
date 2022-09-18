@@ -16,7 +16,7 @@ $eventLink = $eventLink . "?utm_source=previousPartners";
             <a href="{{ $eventLink }}">
                 <img
                     loading="lazy"
-                    alt="Karta som visar ungefär var händelsen inträffat"
+                    alt="{{ $event->getMapAltText() }}"
                     class="Event__mapImage"
                     src="{{ $event->getStaticImageSrc(640,320) }}"
                     width="640"

@@ -3,7 +3,7 @@
         <img loading="lazy" 
             src="{{ $event->getStaticImageSrcFar(640,340) }}" 
             class="rounded" 
-            alt="Karta som visar ungefär var händelsen inträffat" 
+            alt="{{ $event->getMapAltText() }}" 
             width="640" 
             height="340" 
             layout="responsive"

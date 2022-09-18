@@ -12,7 +12,7 @@
         <a class="ListEvent__imageLink " href="{{ $event->getPermalink() }}">
             <img
                 loading="lazy"
-                alt="Karta som visar ungefär var händelsen inträffat"
+                alt="{{ $event->getMapAltText() }}"
                 class="ListEvent__image"
                 src="{{ $event->getStaticImageSrc(160,160) }}"
                 width="90"
@@ -24,7 +24,7 @@
         <a class="ListEvent__imageLink " href="{{ $event->getPermalink() }}">
             <img
                 loading="lazy"
-                alt="Karta som visar ungefär var händelsen inträffat"
+                alt="{{ $event->getMapAltText() }}"
                 class="ListEvent__image"
                 src="{{ $event->getStaticImageSrcFar(160,160) }}"
                 width="90"

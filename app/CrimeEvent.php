@@ -1261,4 +1261,12 @@ class CrimeEvent extends Model implements Feedable
     {
         return $this->hasMany(CrimeView::class);
     }
+
+    public function getMapAltText(): string {
+        $altText = sprintf(
+            'Karta som med röd fyrkant ramar in %1$s',
+            $this->getLocationString()
+        );
+        return $altText;
+    }
 }

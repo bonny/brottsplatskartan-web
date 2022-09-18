@@ -59,7 +59,7 @@ if $single is set then larger image
 
             @if (isset($overview))
 
-                <img loading="lazy" alt="Karta som visar ungefär var händelsen inträffat" class="Event__mapImage" src="{{ $event->getStaticImageSrc(640,320) }}" width="640" height="320" layout="responsive"></img>
+                <img loading="lazy" alt="{{ $event->getMapAltText() }}" class="Event__mapImage" src="{{ $event->getStaticImageSrc(640,320) }}" width="640" height="320" layout="responsive"></img>
 
             @else
 
@@ -73,7 +73,7 @@ if $single is set then larger image
                     <span class="Event__mapImageWrap Event__mapImageWrap--near">
                         <img
                             loading="lazy"
-                            alt="Karta som visar ungefär var händelsen {{$event->parsed_title}}: {{$event->getDescriptionAsPlainText()}} inträffat"
+                            alt="{{ $event->getMapAltText() }}"
                             class="Event__mapImage Event__mapImage--near"
                             src="{{ $event->getStaticImageSrc(617,463) }}"
                             width="426"
