@@ -582,7 +582,7 @@ class CrimeEvent extends Model implements Feedable
     {
         $text = "";
 
-        $text .= trim($this->description) . " " . trim($this->parsed_content);
+        $text .= trim($this->parsed_content);
 
         $text = strip_tags(str_replace('<', ' <', $text));
         $text = str_limit($text, $length, '');
@@ -846,11 +846,10 @@ class CrimeEvent extends Model implements Feedable
     }
 
     /**
-     * Get title for an event
-     * Result is like:
-     * Brand, Bilbrand, Gustav Adolfs gata/Nytorgsbacken, Helsingborg.,
-     * Gustav Adolfs Gata, Nytorgsbacken, Helsingborg, 02 nov 2017",
-     *
+     * Get title for an event.
+     * 
+     * Example:
+     * "Knivlagen, En arg man med kniv tar tvärbanan från Valla torg., Tvärbanan, Valla Torg, Stockholm, 15 Sep 2022"
      *
      * @return string
      */
@@ -882,7 +881,10 @@ class CrimeEvent extends Model implements Feedable
     }
 
     /**
-     * Get a slightly shorter version of the title, used for ld+json
+     * Get a slightly shorter version of the title, used for ld+json.
+     * 
+     * Example: 
+     * "Knivlagen, En arg man med kniv tar tvärbanan från Valla torg."
      *
      * @return string
      */
@@ -893,14 +895,22 @@ class CrimeEvent extends Model implements Feedable
         $titleParts[] = $this->parsed_title;
         $titleParts[] = $this->getDescriptionAsPlainText();
 
-        // $prioOneLocations = $this->locations->where("prio", 1);
+        return implode(", ", $titleParts);
+    }
 
-        // foreach ($prioOneLocations as $oneLocation) {
-        //     $titleParts[] = title_case($oneLocation->name);
-        // }
+    /**
+     * Get an ever shorter version of the title.
+     * 
+     * Example: 
+     * "En arg man med kniv tar tvärbanan från Valla torg."
+     *
+     * @return string
+     */
+    public function getSingleEventTitleEvenShorter()
+    {
+        $titleParts = [];
 
-        // $titleParts[] = $this->parsed_title_location;
-        // $titleParts[] = $this->getPubDateFormatted('%d %b %Y');
+        $titleParts[] = $this->getDescriptionAsPlainText();
 
         return implode(", ", $titleParts);
     }
