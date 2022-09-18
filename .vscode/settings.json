@@ -1,5 +1,5 @@
 {
-    "workbench.colorCustomizations": {
+    "xworkbench.colorCustomizations": {
         "activityBar.activeBackground": "#2b7a3b",
         "activityBar.activeBorder": "#392a76",
         "activityBar.background": "#2b7a3b",
@@ -16,7 +16,9 @@
         "titleBar.activeBackground": "#1e5429",
         "titleBar.activeForeground": "#e7e7e7",
         "titleBar.inactiveBackground": "#1e542999",
-        "titleBar.inactiveForeground": "#e7e7e799"
+        "titleBar.inactiveForeground": "#e7e7e799",
+        "commandCenter.border": "#e7e7e799",
+        "commandCenter.foreground": "#000"
     },
     "peacock.color": "#1e5429",
     "search.exclude": {
