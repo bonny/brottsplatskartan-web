@@ -21,7 +21,7 @@
         </div>
 
         <details>
-            <summary>Visa orginalmeddelande som JSON</summary>
+            <summary class="u-color-link underline cursor-pointer">Visa orginalmeddelande som JSON</summary>
             <pre><code>{{ $alert->getOriginalMessageAsPrettyJson() }}</code></pre>
         </details>
 

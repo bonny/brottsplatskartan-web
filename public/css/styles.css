@@ -3180,3 +3180,7 @@ h2.widget__title {
     border-left: 0.5rem solid #ccc;
     border-radius: 0rem;
 }
+
+.cursor-pointer {
+    cursor: pointer;
+}
