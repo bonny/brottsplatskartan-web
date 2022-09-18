@@ -121,7 +121,7 @@ Route::get('/plats/', [PlatsController::class, 'overview'])->name("platserOvervi
  * https://brottsplatskartan.se/plats/<ortnamn>
  */
 Route::get('/orter/{ort}', function ($ort = "") {
-    return redirect()->route("platsSingle", ["ort" => $ort]);
+    return redirect()->route("platsSingle", ["plats" => $ort]);
 });
 
 /**
