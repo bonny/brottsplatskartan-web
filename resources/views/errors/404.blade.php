@@ -34,8 +34,8 @@
         <h2 class="u-margin-top-double">Mest läst</h2>
 
         <ul class="widget__listItems">
-            @foreach ($most_read_events as $event)
-                @include('parts.crimeevent-mapless')
+            @foreach ($most_read_events as $oneMostViewed)
+                @include('parts.crimeevent-mapless', ['event' => $oneMostViewed->crimeEvent,])
             @endforeach
         </ul>
 
