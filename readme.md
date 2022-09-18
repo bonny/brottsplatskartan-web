@@ -8,9 +8,9 @@ En sajt som visar [Polisens händelser](https://brottsplatskartan.se) lite finar
 
 Några exempel på sidor som sajten har. Både län och enskilda platser (gator, städer, osv.) finns.
 
-- [Händelser från Polisen i Stockholm](https://brottsplatskartan.se/lan/Stockholms%20l%C3%A4n)
-- [Händelser från Polisen i Malmö](https://brottsplatskartan.se/plats/Malmö)
-- [Inbrott som hänt nyligen](https://brottsplatskartan.se/inbrott/senaste-inbrotten)
+- [Händelser från Polisen i Stockholm](https://brottsplatskartan.se/plats/stockholm) och i hela [Stockholms län](https://brottsplatskartan.se/lan/Stockholms%20l%C3%A4n).
+- [Händelser från Polisen i Malmö](https://brottsplatskartan.se/plats/Malmö).
+- [Inbrott som hänt nyligen](https://brottsplatskartan.se/inbrott/senaste-inbrotten).
 
 ## Om datan
 
