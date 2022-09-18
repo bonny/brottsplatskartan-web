@@ -121,7 +121,7 @@ Route::get('/plats/', [PlatsController::class, 'overview'])->name("platserOvervi
  * https://brottsplatskartan.se/plats/<ortnamn>
  */
 Route::get('/orter/{ort}', function ($ort = "") {
-    return redirect()->route("platsSingle", ["plats" => $ort]);
+    return redirect()->route("platsSingle", ["plats" => $ort], 301);
 });
 
 /**
@@ -751,4 +751,3 @@ Route::get(
 Route::feeds();
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
-
