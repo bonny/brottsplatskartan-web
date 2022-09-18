@@ -11,23 +11,25 @@
 |
 */
 
+
+use App\Helper;
+use Carbon\Carbon;
 use App\CrimeEvent;
 use App\Dictionary;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
-use App\Http\Controllers\PlatsController;
-use App\Http\Controllers\PreviousPartnersController;
-use App\Http\Controllers\DebugController;
-use App\Http\Controllers\FullScreenMapController;
-use App\Http\Controllers\PixelController;
-use App\Http\Controllers\PolisstationerController;
-use App\Http\Controllers\StartController;
 use App\Http\Controllers\GeoController;
 use App\Http\Controllers\LanController;
-use App\Http\Controllers\MestLastController;
-use App\Http\Controllers\SearchController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\DebugController;
+use App\Http\Controllers\PixelController;
+use App\Http\Controllers\PlatsController;
+use App\Http\Controllers\StartController;
+use App\Http\Controllers\SearchController;
+use App\Http\Controllers\MestLastController;
 use App\Http\Controllers\VMAAlertsController;
+use App\Http\Controllers\FullScreenMapController;
+use App\Http\Controllers\PolisstationerController;
+use App\Http\Controllers\PreviousPartnersController;
 
 setlocale(LC_ALL, 'sv_SE', 'sv_SE.utf8');
 
@@ -565,7 +567,7 @@ Route::get('/brand/{undersida?}', function (
  *
  */
 Route::get('/{lan}/{eventName}', function ($lan, $eventName, Request $request) {
-    // event måste innehålla siffra sist = crime event id
+    // Event måste innehålla siffra sist = crime event id.
     preg_match('!\d+$!', $eventName, $matches);
     if (!isset($matches[0])) {
         abort(404);
@@ -574,7 +576,6 @@ Route::get('/{lan}/{eventName}', function ($lan, $eventName, Request $request) {
     // län får inte vara siffra, om det är det så är det en gammal url som besöks (finns träffar kvar i google)
     // https://brottsplatskartan.dev/20034/misshandel-grov-torget-karlskoga-2611-jun-2013
     if (is_numeric($lan)) {
-        // dd("old event, abort");
         abort(404);
     }
 
@@ -603,7 +604,6 @@ Route::get('/{lan}/{eventName}', function ($lan, $eventName, Request $request) {
             )
         );
     }
-
     $breadcrumbs->addCrumb(e($event->parsed_title) . ', ' . $event->getParsedDateDayMonth());
 
     // optional debug
@@ -705,10 +705,10 @@ Route::get('/design', function (Request $request) {
 /**
  * Skicka med data till 404-sidan
  */
-\View::composer('errors/404', function ($view) {
+\View::composer('errors::404', function ($view) {
     $data = [];
 
-    $data["events"] = CrimeEvent::orderBy("created_at", "desc")->paginate(10);
+    $data["events"] = CrimeEvent::orderBy("created_at", "desc")->paginate(5);
 
     // Hämta alla län, grupperat på län och antal
     $data["lan"] = DB::table('crime_events')
@@ -717,6 +717,8 @@ Route::get('/design', function (Request $request) {
         ->orderBy('administrative_area_level_1', 'asc')
         ->where('administrative_area_level_1', "!=", "")
         ->get();
+
+    $data["most_read_events"] = Helper::getMostViewedEventsRecently(20, 5);
 
     $view->with($data);
 });
