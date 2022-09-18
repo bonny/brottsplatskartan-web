@@ -105,7 +105,7 @@ class PlatsController extends Controller
         // Ta bort '-' och redirecta till platsen.
         if (ends_with($plats, '-')) {
             $plats = trim($plats, '-');
-            return redirect()->route('platsSingle', ['plats' => $plats]);
+            return redirect()->route('platsSingle', ['plats' => $plats], 301);
         }
 
         if ($foundMatchingLan) {
