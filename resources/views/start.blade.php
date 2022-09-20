@@ -1,8 +1,6 @@
 {{--
-
 Sidmall för startsidan
 samt för äldre dagar när man bläddrar i arkivet.
-
 --}}
 
 
