@@ -32,7 +32,11 @@ https://brottsplatskartan.localhost/plats/nacka
     <div class="widget">
         <h1 class="widget__title">
             @if ($isToday)
-                <strong>{{$plats}}</strong>: brott &amp; händelser
+                @if ($plats === 'Stockholm')
+                    Brott och händelser som Polisen har rapporterat in i Stockholm idag:
+                @else
+                    <strong>{{$plats}}</strong>: brott &amp; händelser
+                @endif
             @else
                 Brott &amp; händelser i {{$plats}} {{$dateForTitle}}
             @endif
