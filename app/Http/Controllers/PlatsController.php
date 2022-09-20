@@ -170,7 +170,11 @@ class PlatsController extends Controller
         }
         $mostCommonCrimeTypesMetaDescString = trim($mostCommonCrimeTypesMetaDescString, ', ');
 
-        $metaDescription = "Se senaste brotten som skett i och omkring $plats. $mostCommonCrimeTypesMetaDescString är vanliga händelser nära $plats. Informationen hämtas direkt från Polisen.";
+        $metaDescription = "Senaste händelserna som skett i och omkring $plats.";
+
+        if ($plats === 'Stockholm') {
+            $metaDescription = 'Vad har hänt i Stockholm idag? Se Polisens händelser med kartor som visar var varje händelse skett.';
+        }
 
         $linkRelPrev = null;
         $linkRelNext = null;
