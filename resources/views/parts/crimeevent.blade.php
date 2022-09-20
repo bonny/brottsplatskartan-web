@@ -171,12 +171,12 @@ if $single is set then larger image
             </div>
         @endif
 
-        @if ($event->isBrand())
+        {{-- @if ($event->isBrand())
             <div class="Event__drabbad" id="drabbad_brand">
                 <h2 class="Event__drabbad__title">Mer om bränder</h2>
                 <p>På vår särskilda sida <a href="{{route('brand')}}">om bränder</a> kan du läsa mer.</p>
             </div>
-        @endif
+        @endif --}}
 
     @endif
 
