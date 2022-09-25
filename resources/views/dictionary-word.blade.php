@@ -29,12 +29,12 @@ Template för ordlista/dictionary och ett enskild ord
         <ul class="DictionaryAllWordsListing__items">
             @foreach ($allWords as $word)
                 <li class="DictionaryAllWordsListing__item">
-                    <a class="DictionaryAllWordsListing__link" href="{{ route('ordlistaOrd', ['word' => $word]) }}">
+                    <a class="DictionaryAllWordsListing__link" href="{{ route('ordlistaOrd', ['word' => $word->word]) }}">
 
                         @if ($loop->last)
-                            {{ $word }}
+                            {{ $word->word }}
                         @else
-                            {{ $word }},
+                            {{ $word->word }},
                         @endif
 
                     </a>

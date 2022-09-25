@@ -303,7 +303,7 @@ Route::get('/ordlista/{word}', function ($word, Request $request) {
         route('ordlistaOrd', ['word' => $word->word])
     );
 
-    $allWords = Dictionary::pluck('word');
+    $allWords = Dictionary::select('word')->orderBy('word')->get();
 
     $data = [
         'word' => $word,
