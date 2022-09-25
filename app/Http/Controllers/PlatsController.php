@@ -250,7 +250,6 @@ class PlatsController extends Controller
             $breadcrumbs->addCrumb($place->lan, route("lanSingle", ['lan' => $place->lan]));
         }
 
-        #dd($platsOriginalFromSlug);
         $breadcrumbs->addCrumb(
             e($plats), 
             route(
@@ -302,6 +301,7 @@ class PlatsController extends Controller
             'prevDayLink' => $prevDayLink,
             'nextDayLink' => $nextDayLink,
             'dateForTitle' => $date['date']->formatLocalized('%e %B %Y'),
+            'mapDistance' => 'near',
         ];
 
         return view('single-plats', $data);

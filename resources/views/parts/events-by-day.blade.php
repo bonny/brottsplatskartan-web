@@ -24,7 +24,8 @@
                 @foreach($events as $event)
                     @include('parts.crimeevent-small', [
                         'event' => $event,
-                        'detailed' => true
+                        'detailed' => true,
+                        'mapDistance' => $mapDistance ?? null
                     ])
                 @endforeach
             </ul>
