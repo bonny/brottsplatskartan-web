@@ -28,13 +28,13 @@
         <h2>Händelser från Polisen i ditt län</h2>
 
         <ul class="SiteFooter__lanListing__items SiteFooter__navlinks">
-            @foreach (App\Helper::getAllLan() as $oneLan)
+            @foreach (App\Helper::getAllLan() as $oneLanName)
                 <li class="SiteFooter__lanListing__item">
                     <a
-                        href="{{ route("lanSingle", ["lan" => $oneLan->administrative_area_level_1]) }}"
-                        title="Händelser och brott från Polisen i {{ $oneLan->administrative_area_level_1 }}"
+                        href="{{ route("lanSingle", ["lan" => $oneLanName]) }}"
+                        title="Händelser och brott från Polisen i {{ $oneLanName }}"
                         >
-                        {{ $oneLan->administrative_area_level_1 }}
+                        {{ $oneLanName }}
                     </a>
                 </li>
             @endforeach

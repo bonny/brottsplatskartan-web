@@ -8,6 +8,7 @@ use DB;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use App\Models\VMAAlert;
+
 class Helper
 {
     /**
@@ -55,7 +56,7 @@ class Helper
 
         foreach ($stats["numEventsPerDay"] as $statRow) {
             $date = strtotime($statRow->YMD);
-            
+
             // Endast dag.
             $dateObj = new \DateTime($statRow->YMD);
             $date = $dateObj->format('d');
@@ -79,9 +80,9 @@ class Helper
      */
     public static function getLanStats($lan)
     {
-        $stats = Cache::remember('getLanStats', MINUTE_IN_SECONDS * 10, function() use ($lan) {
+        $stats = Cache::remember('getLanStats', MINUTE_IN_SECONDS * 10, function () use ($lan) {
             $stats = [];
-            
+
             $stats["numEventsPerDay"] = DB::table('crime_events')
                 ->select(
                     DB::raw('date_format(created_at, "%Y-%m-%d") as YMD'),
@@ -160,19 +161,17 @@ class Helper
         $lan = self::getAllLan();
 
         // Räkna alla händelser i det här länet för en viss period
-        $lan = $lan->map(function ($item, $key) {
-            // DB::enableQueryLog();
-
-            $cacheKey = "lan-stats-today-" . $item->administrative_area_level_1;
+        $lan = $lan->map(function ($lanName) {
+            $cacheKey = "lan-stats-today-" . $lanName . '-2';
             $numEventsToday = Cache::remember(
                 $cacheKey,
                 10 * 60,
-                function () use ($item) {
+                function () use ($lanName) {
                     $numEventsToday = DB::table('crime_events')
                         ->where(
                             'administrative_area_level_1',
                             "=",
-                            $item->administrative_area_level_1
+                            $lanName
                         )
                         ->where('created_at', '>', Carbon::now()->subDays(1))
                         ->count();
@@ -181,16 +180,16 @@ class Helper
                 }
             );
 
-            $cacheKey = "lan-stats-7days-" . $item->administrative_area_level_1;
+            $cacheKey = "lan-stats-7days-" . $lanName . '-2';
             $numEvents7Days = Cache::remember(
                 $cacheKey,
                 30 * 60,
-                function () use ($item) {
+                function () use ($lanName) {
                     $numEvents7Days = DB::table('crime_events')
                         ->where(
                             'administrative_area_level_1',
                             "=",
-                            $item->administrative_area_level_1
+                            $lanName
                         )
                         ->where('created_at', '>', Carbon::now()->subDays(7))
                         ->count();
@@ -200,16 +199,16 @@ class Helper
             );
 
             $cacheKey =
-                "lan-stats-30days-" . $item->administrative_area_level_1;
+                "lan-stats-30days-" . $lanName . '-2';
             $numEvents30Days = Cache::remember(
                 $cacheKey,
                 70 * 60,
-                function () use ($item) {
+                function () use ($lanName) {
                     $numEvents30Days = DB::table('crime_events')
                         ->where(
                             'administrative_area_level_1',
                             "=",
-                            $item->administrative_area_level_1
+                            $lanName
                         )
                         ->where('created_at', '>', Carbon::now()->subDays(30))
                         ->count();
@@ -218,13 +217,14 @@ class Helper
                 }
             );
 
-            $item->numEvents = [
-                "today" => $numEventsToday,
-                "last7days" => $numEvents7Days,
-                "last30days" => $numEvents30Days
+            return (object) [
+                'administrative_area_level_1' => $lanName,
+                'numEvents' => [
+                    "today" => $numEventsToday,
+                    "last7days" => $numEvents7Days,
+                    "last30days" => $numEvents30Days
+                ]
             ];
-
-            return $item;
         });
 
         return $lan;
@@ -232,18 +232,29 @@ class Helper
 
     public static function getAllLan()
     {
-        $minutes = 10 * 60;
-
-        $lan = Cache::remember('getAllLan', $minutes, function () {
-            $lan = DB::table('crime_events')
-                ->select("administrative_area_level_1")
-                ->groupBy('administrative_area_level_1')
-                ->orderBy('administrative_area_level_1', 'asc')
-                ->where('administrative_area_level_1', "!=", "")
-                ->get();
-
-            return $lan;
-        });
+        $lan = collect([
+            "Blekinge län",
+            "Dalarnas län",
+            "Gotlands län",
+            "Gävleborgs län",
+            "Hallands län",
+            "Jämtlands län",
+            "Jönköpings län",
+            "Kalmar län",
+            "Kronobergs län",
+            "Norrbottens län",
+            "Skåne län",
+            "Stockholms län",
+            "Södermanlands län",
+            "Uppsala län",
+            "Värmlands län",
+            "Västerbottens län",
+            "Västernorrlands län",
+            "Västmanlands län",
+            "Västra Götalands län",
+            "Örebro län",
+            "Östergötlands län"
+        ]);
 
         return $lan;
     }
@@ -677,7 +688,7 @@ class Helper
                 "shortName" => "Skåne"
             ],
             [
-                "name" => "Södermanland and Uppland Södermanlands län",
+                "name" => "Södermanlands län",
                 "shortName" => "Södermanland"
             ],
             [
@@ -1099,37 +1110,37 @@ class Helper
         $undersidor = [
             'start' => [
                 'title' =>
-                    'Inbrott - Fakta & information om inbrott i hus & lägenhet',
+                'Inbrott - Fakta & information om inbrott i hus & lägenhet',
                 'pageTitle' => 'Inbrott',
                 'pageSubtitle' =>
-                    'Fakta & information om inbrott i hus & lägenhet',
+                'Fakta & information om inbrott i hus & lägenhet',
                 'url' => '/inbrott/'
             ],
             'fakta' => [
                 'title' => "Fakta om inbrott",
                 'pageTitle' => "Fakta om inbrott",
                 'pageSubtitle' =>
-                    "Över 60 bostadsinbrott sker varje dag. (Men hur många klaras upp?)"
+                "Över 60 bostadsinbrott sker varje dag. (Men hur många klaras upp?)"
             ],
             'drabbad' => [
                 'title' =>
-                    'Drabbad av inbrott - det här ska du göra om du haft inbrott',
+                'Drabbad av inbrott - det här ska du göra om du haft inbrott',
                 'pageTitle' => 'Drabbad av inbrott',
                 'pageSubtitle' =>
-                    'Det här ska du göra om du haft inbrott i din villa eller lägenhet.'
+                'Det här ska du göra om du haft inbrott i din villa eller lägenhet.'
             ],
             'skydda-dig' => [
                 'title' =>
-                    'Skydda dig mot inbrott - skydda dig & ditt hem från inbrott med hjälp av tips & larm',
+                'Skydda dig mot inbrott - skydda dig & ditt hem från inbrott med hjälp av tips & larm',
                 'pageTitle' => 'Skydda dig mot inbrott',
                 'pageSubtitle' =>
-                    'Skydda ditt hem från inbrott med hjälp av tips & larm.'
+                'Skydda ditt hem från inbrott med hjälp av tips & larm.'
             ],
             'grannsamverkan' => [
                 'title' => 'Grannsamverkan mot brott',
                 'pageTitle' => 'Grannsamverkan mot brott',
                 'pageSubtitle' =>
-                    'Förebygg kriminalitet såsom inbrott genom att gå samman med grannarna i ditt närområde. Ett effektivt sätt att minska brottrisken i ditt område!'
+                'Förebygg kriminalitet såsom inbrott genom att gå samman med grannarna i ditt närområde. Ett effektivt sätt att minska brottrisken i ditt område!'
             ],
             'senaste-inbrotten' => [
                 'title' => 'Senaste inbrotten',
@@ -1158,10 +1169,10 @@ class Helper
         $undersidor = [
             'start' => [
                 'title' =>
-                    'Senaste nytt om bränder och brandrealterade händelser från Polisen',
+                'Senaste nytt om bränder och brandrealterade händelser från Polisen',
                 'pageTitle' => 'Brand',
                 'pageSubtitle' =>
-                    'Senaste nytt om bränder och brandrealterade händelser från Polisen',
+                'Senaste nytt om bränder och brandrealterade händelser från Polisen',
                 'url' => '/brand/'
             ]
         ];
@@ -1180,13 +1191,14 @@ class Helper
      *
      * @return Collection
      */
-    public static function getVMAAlerts() {
+    public static function getVMAAlerts()
+    {
         // Cache is cleared when import detects new alerts.
-        return Cache::remember('vma_alerts', HOUR_IN_SECONDS, function() {
+        return Cache::remember('vma_alerts', HOUR_IN_SECONDS, function () {
             return VMAAlert::where('status', 'Actual')
-                    ->where('msgType', 'Alert')
-                    ->orderByDesc('sent')
-                    ->get();
+                ->where('msgType', 'Alert')
+                ->orderByDesc('sent')
+                ->get();
         });
     }
 
@@ -1195,14 +1207,15 @@ class Helper
      *
      * @return Collection
      */
-    public static function getArchivedVMAAlerts() {
+    public static function getArchivedVMAAlerts()
+    {
         // Cache is cleared when import detects new alerts.
-        return Cache::remember('archived_vma_alerts', HOUR_IN_SECONDS, function() {
+        return Cache::remember('archived_vma_alerts', HOUR_IN_SECONDS, function () {
             return VMAAlert::where('status', 'Actual')
-                    ->where('msgType', 'Alert')
-                    ->whereNot('updated_at', ">=", Carbon::now()->subMinutes(60))
-                    ->orderByDesc('sent')
-                    ->get();
+                ->where('msgType', 'Alert')
+                ->whereNot('updated_at', ">=", Carbon::now()->subMinutes(60))
+                ->orderByDesc('sent')
+                ->get();
         });
     }
 
@@ -1211,15 +1224,15 @@ class Helper
      *
      * @return Collection
      */
-    public static function getCurrentVMAAlerts() {
+    public static function getCurrentVMAAlerts()
+    {
         // Cache is cleared when import detects new alerts.
-        return Cache::remember('current_vma_alerts', HOUR_IN_SECONDS, function() {
+        return Cache::remember('current_vma_alerts', HOUR_IN_SECONDS, function () {
             return VMAAlert::where('status', 'Actual')
-                    ->where('msgType', 'Alert')
-                    ->where('updated_at', ">=", Carbon::now()->subMinutes(60))
-                    ->orderByDesc('sent')
-                    ->get();
+                ->where('msgType', 'Alert')
+                ->where('updated_at', ">=", Carbon::now()->subMinutes(60))
+                ->orderByDesc('sent')
+                ->get();
         });
     }
-
 }
