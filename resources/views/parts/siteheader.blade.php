@@ -24,7 +24,7 @@
                             <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
                             <path d="M0 0h24v24H0z" fill="none"/>
                         </svg>
-                        <span>Start</span>
+                        <span>Händelser</span>
                     </a>
                 </li>
                 <li class="SiteNav__item SiteNav__item--latest">
