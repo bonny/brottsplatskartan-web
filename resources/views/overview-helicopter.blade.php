@@ -1,10 +1,8 @@
-{{--
-Template för helikopter-översikt
---}}
+{{-- Template för helikopter-översikt --}}
 
 @extends('layouts.web')
 @section('title', '🚁 Helikopter - polishelikopter eller ambulanshelikopter nära dig?')
-@section('metaDescription', e("Se senaste händelserna från Polisen som nämner helikopter"))
+@section('metaDescription', e('Se senaste händelserna från Polisen som nämner helikopter'))
 @section('canonicalLink', '/helikopter')
 
 @section('content')
@@ -24,18 +22,31 @@ Template för helikopter-översikt
         </p>
 
         <p>
-            Hittar du inte rätt händelse här så testa 
+            Hittar du inte rätt händelse här så testa
             <a href="https://twitter.com/search?q=helikopter">sök på Twitter efter helikopter</a>,
-            eller se om aktuellt helikopter finns med på som t.ex. 
+            eller se om aktuellt helikopter finns med på som t.ex.
             <a href="https://www.flightradar24.com/">flightradar24.com</a>
-            eller 
+            eller
             <a href="https://planefinder.net/">planefinder.net</a>.
+        </p>
+
+        <p>
+            Den svenska polisen har nio helikoptrar och de finns
+            i <a href="/plats/stockholm">Stockholm</a>, <a href="/plats/göteborg">Göteborg</a>, <a
+                href="/plats/malmö">Malmö</a>, <a href="/plats/östersund">Östersund</a> och <a href="/plats/boden">Boden</a>.
+        </p>
+
+        <p>
+            Helikopter används för räddningsverksamhet eller när grova brott har begåtts,
+            t.ex. för att följa gärningsmännens flyktväg efter ett väpnat rån.
+            De används också för att exempelvis undsätta nödställda fjällvandrare eller för att
+            övervaka demonstrationer.
         </p>
 
         <div class="PlatsListing">
 
             <ul class="widget__listItems">
-                @foreach($events as $event)
+                @foreach ($events as $event)
                     @include('parts.crimeevent-helicopter', ['event' => $event])
                 @endforeach
             </ul>
