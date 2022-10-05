@@ -290,7 +290,7 @@ Källor och mer information:
 
 ## Vad betyder VMA?
 
-VMA är en förtkorning av _Viktigt meddelande till allmänheten_.
+VMA är en förkortning av _Viktigt meddelande till allmänheten_.
 
 ## Vem får begära VMA?
 
