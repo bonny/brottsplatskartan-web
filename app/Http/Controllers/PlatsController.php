@@ -75,8 +75,7 @@ class PlatsController extends Controller
 
         // Om $plats slutar med namnet på ett län, t.ex. "örebro län", "gävleborgs län" osv
         // så ska platser i det länet med platsen $plats minus länets namn visas
-        $allLans = \App\Helper::getAllLan();
-        $allLansNames = $allLans->pluck("administrative_area_level_1");
+        $allLansNames = \App\Helper::getAllLan();
         $foundMatchingLan = false;
         $matchingLanName = null;
         $platsWithoutLan = null;
