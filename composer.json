@@ -62,7 +62,10 @@
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
         },
-        "files": []
+        "files": [],
+        "exclude-from-classmap": [
+            "/vendor/erusev/parsedown-extra/test"
+        ]
     },
     "autoload-dev": {
         "classmap": [
