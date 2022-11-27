@@ -915,12 +915,24 @@ class Helper
             $item,
             $key
         ) use ($slugsToNames) {
+            // "https://polisen.se/om-polisen/kontakt/polisstationer/vastra-gotaland/alingsas/"
             $place = $item->Url;
+
+            // Ersätt tidigare utseende på URL. Behåll utifall att Polisen går tillbaka till dom.
             $place = str_replace(
                 'https://polisen.se/kontakt/polisstationer/',
                 '',
                 $place
             );
+
+            // Ersätt nya formatet som är
+            // "https://polisen.se/om-polisen/kontakt/polisstationer/vastra-gotaland/alingsas/"
+            $place = str_replace(
+                'https://polisen.se/om-polisen/kontakt/polisstationer/',
+                '',
+                $place
+            );
+
             $place = trim($place, '/');
             $placeParts = explode('/', $place);
             $placeLan = $placeParts[0];
