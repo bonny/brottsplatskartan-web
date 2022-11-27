@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "59a5613d6c46e0a3f0113f0f783fe0b4",
+    "content-hash": "1f21cf5ad31e66489c8bbabc2c550c34",
     "packages": [
         {
             "name": "alfredo-ramos/parsedown-extra-laravel",
@@ -12436,17 +12436,17 @@
     "prefer-lowest": false,
     "platform": {
         "php": "^8.1",
-        "ext-redis": "*",
-        "ext-mbstring": "*",
-        "ext-ctype": "*",
         "ext-bcmath": "*",
+        "ext-ctype": "*",
         "ext-curl": "*",
         "ext-exif": "*",
         "ext-fileinfo": "*",
         "ext-gd": "*",
         "ext-json": "*",
-        "ext-pdo": "*",
+        "ext-mbstring": "*",
         "ext-openssl": "*",
+        "ext-pdo": "*",
+        "ext-redis": "*",
         "ext-tokenizer": "*",
         "ext-xml": "*",
         "ext-zip": "*"
