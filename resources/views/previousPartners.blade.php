@@ -5,19 +5,26 @@ Template for previousPartners in app view
 --}}
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>previousPartners | Händelser och brott rapporterade till Polisen</title>
     <meta charset="utf-8">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-L1WVBJ39GH"></script>
     <script>
-    window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-    ga('create', 'UA-181460-13', 'auto');
-    ga('set', 'anonymizeIp', true);
-    ga('send', 'pageview');
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'G-L1WVBJ39GH');
     </script>
     <script async src='https://www.google-analytics.com/analytics.js'></script>
     <style>
         body {
-            font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
             font-size: 16px;
             background: #f4f4f7;
             color: #111;
@@ -37,7 +44,8 @@ Template for previousPartners in app view
         }
 
         a {
-            color:; #15c;
+            color: ;
+            #15c;
             text-decoration: none;
         }
 
@@ -49,7 +57,7 @@ Template for previousPartners in app view
         .Event {
             background: #fff;
             padding: 20px;
-            box-shadow: 0 1px 2px rgba(0,0,0,.3);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, .3);
             margin-top: 20px;
             margin-bottom: 20px;
         }
@@ -73,13 +81,13 @@ Template for previousPartners in app view
             display: none;
         }
 
-        .Event__location {
-        }
+        .Event__location {}
     </style>
 </head>
+
 <body>
 
-    <h1>Händelser nära lat {{$lat}}, long {{$lng}}.</h1>
+    <h1>Händelser nära lat {{ $lat }}, long {{ $lng }}.</h1>
 
     {{-- <p>Detta är vyn för previousPartners. Alla texter här går att styra.</p> --}}
 
@@ -93,9 +101,7 @@ Template for previousPartners in app view
         <div class="Events Events--overview">
 
             @foreach ($events as $event)
-
-                @include('parts.crimeevent-previousPartners', ["overview" => true])
-
+                @include('parts.crimeevent-previousPartners', ['overview' => true])
             @endforeach
 
         </div>
@@ -103,4 +109,5 @@ Template for previousPartners in app view
     @endif
 
 </body>
+
 </html>

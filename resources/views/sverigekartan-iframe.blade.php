@@ -1,14 +1,18 @@
 <!doctype html>
 <html>
+
 <head>
     <title>Sverigekartan – karta med polisens händelser i hela Sverige</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.3/dist/leaflet.css" integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.3/dist/leaflet.css"
+        integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
         crossorigin="" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.Default.css" />
-    <script src="https://unpkg.com/leaflet@1.3.3/dist/leaflet.js" integrity="sha512-tAGcCfR4Sc5ZP5ZoVz0quoZDYX5aCtEm/eu1KhSLj2c9eFrylXZknQYmxUssFaVJKvvc0dJQixhGjG2yXWiV9Q=="
+    <script src="https://unpkg.com/leaflet@1.3.3/dist/leaflet.js"
+        integrity="sha512-tAGcCfR4Sc5ZP5ZoVz0quoZDYX5aCtEm/eu1KhSLj2c9eFrylXZknQYmxUssFaVJKvvc0dJQixhGjG2yXWiV9Q=="
         crossorigin=""></script>
-    <link rel="stylesheet" href="//unpkg.com/leaflet-gesture-handling/dist/leaflet-gesture-handling.min.css" type="text/css">
+    <link rel="stylesheet" href="//unpkg.com/leaflet-gesture-handling/dist/leaflet-gesture-handling.min.css"
+        type="text/css">
     <script src="//unpkg.com/leaflet-gesture-handling"></script>
     <script src="https://unpkg.com/leaflet.markercluster@1.3.0/dist/leaflet.markercluster.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -143,12 +147,11 @@
 
     <script>
         var mymap = L.map(
-            'mapid', 
-            { 
+            'mapid', {
                 gestureHandling: true
             }
         );
-        mymap.setView([{{$lat}},{{$lng}}], {{$zoom}});
+        mymap.setView([{{ $lat }}, {{ $lng }}], {{ $zoom }});
 
         /*
         https://stackoverflow.com/questions/17382012/is-there-a-way-to-resize-marker-icons-depending-on-zoom-level-in-leaflet
@@ -212,9 +215,9 @@
         }
 
         function addMarkers(eventsResponse) {
-            eventsResponse.json().then(function (events) {
+            eventsResponse.json().then(function(events) {
 
-                events.data.forEach(function (event) {
+                events.data.forEach(function(event) {
                     // console.log('addMarkers event', event);
                     let popupContent = `
                         <div class="Event--v2">
@@ -266,18 +269,18 @@
                     */
 
                     /*
-                    viewport_northeast_lat
-                    viewport_northeast_lng
-                    viewport_southwest_lat
-                    viewport_southwest_lng
+                        viewport_northeast_lat
+                        viewport_northeast_lng
+                        viewport_southwest_lat
+                        viewport_southwest_lng
 
-            $image_src .= "|{$this->viewport_northeast_lat},{$this->viewport_northeast_lng}";
-            $image_src .= "|{$this->viewport_southwest_lat},{$this->viewport_northeast_lng}";
+                $image_src .= "|{$this->viewport_northeast_lat},{$this->viewport_northeast_lng}";
+                $image_src .= "|{$this->viewport_southwest_lat},{$this->viewport_northeast_lng}";
 
-            $image_src .= "|{$this->viewport_southwest_lat},{$this->viewport_southwest_lng}";
-            $image_src .= "|{$this->viewport_northeast_lat},{$this->viewport_southwest_lng}";
+                $image_src .= "|{$this->viewport_southwest_lat},{$this->viewport_southwest_lng}";
+                $image_src .= "|{$this->viewport_northeast_lat},{$this->viewport_southwest_lng}";
 
-                    */
+                        */
                 }); // each marker
 
                 clusterize(markers);
@@ -301,16 +304,21 @@
 
         setLoadingStatus(true);
         getEvents();
-
     </script>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-181460-13"></script>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-L1WVBJ39GH"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
         gtag('js', new Date());
 
-        gtag('config', 'UA-181460-13');
+        gtag('config', 'G-L1WVBJ39GH');
     </script>
+
 </body>
+
 </html>
