@@ -1180,11 +1180,9 @@ class Helper
         // Undersidor och deras titlar.
         $undersidor = [
             'start' => [
-                'title' =>
-                'Senaste nytt om bränder och brandrealterade händelser från Polisen',
+                'title' => 'Senaste nytt om bränder och brandrealterade händelser från Polisen',
                 'pageTitle' => 'Brand',
-                'pageSubtitle' =>
-                'Senaste nytt om bränder och brandrealterade händelser från Polisen',
+                'pageSubtitle' => 'Senaste nytt om bränder & brandrealterade händelser från Polisen, Brandkåren och andra blåljusmyndigheter.',
                 'url' => '/brand/'
             ]
         ];
