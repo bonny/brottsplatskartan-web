@@ -348,7 +348,10 @@ Route::post('/{lan}/{eventName}', function (
         abort(404);
     }
 
-    $origin = $request->header('origin');
+    $validated = $request->validate([
+        'title' => 'required',
+        'url' => 'required',
+    ]);
 
     \App\Newsarticle::create([
         'crime_event_id' => $eventID,
@@ -358,13 +361,7 @@ Route::post('/{lan}/{eventName}', function (
         'source' => ''
     ]);
 
-    return response()
-        ->json([
-            'saved' => true
-        ])
-        ->withHeaders([
-            'AMP-Access-Control-Allow-Source-Origin' => $origin
-        ]);
+    return back()->with('status', 'Lade till media.');
 });
 
 /**

@@ -14,6 +14,7 @@
     --color-white: #eee;
     --color-black: #000;
     --color-yellow: #ffcc33;
+    --color-green: #a4dd9e;
     --default-margin: 1rem;
     --default-margin-half: calc(var(--default-margin) / 2);
     --default-margin-third: calc(var(--default-margin) / 3);
@@ -3185,4 +3186,25 @@ h2.widget__title {
 
 .cursor-pointer {
     cursor: pointer;
+}
+
+.alert {
+    padding: var(--default-margin);
+    margin: var(--default-margin) 0;
+}
+
+.alert ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.alert-danger {
+    background-color: var(--color-red);
+    color: var(--color-white);
+}
+
+.alert-success {
+    background-color: var(--color-green);
+    color: var(--color-black);
 }

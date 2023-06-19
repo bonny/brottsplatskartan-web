@@ -1,10 +1,30 @@
 @if (!isset($overview) && Auth::check())
-    <div class="Event__admin">
 
-        <details>
+    @php
+        $open = $errors->any() || session('status');
+    @endphp
+
+    <div class="Event__admin" id="event-admin">
+        <details @if ($open) open @endif>
             <summary class="cursor-pointer"
                 onclick="setTimeout(() => { document.querySelector('input[name=url]').focus(); }, 0);">Admingrejjer
             </summary>
+
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            @if (session('status'))
+                <div class="alert alert-success">
+                    {{ session('status') }}
+                </div>
+            @endif
 
             <form id="AdminFormAddMediaRef" method='post' class="AdminForm AdminForm--addMediaRef" target="_top">
                 <fieldset>
@@ -13,15 +33,18 @@
                     <p class="AddMediaFormFields">
                         <label>
                             URL<br>
-                            <input type="url" name="url" placeholder="" autocomplete="off">
+                            <input type="url" name="url" placeholder="" autocomplete="off"
+                                value="{{ old('url') }}">
                         </label>
                         <label>
                             Titel<br>
-                            <input type="text" name="title" placeholder="" autocomplete="off">
+                            <input type="text" name="title" placeholder="" autocomplete="off"
+                                value="{{ old('title') }}">
                         </label>
                         <label>
                             Kort beskrivning<br>
-                            <input type="text" name="shortdesc" placeholder="" autocomplete="off">
+                            <input type="text" name="shortdesc" placeholder="" autocomplete="off"
+                                value="{{ old('shortdesc') }}">
                         </label>
                     </p>
 
@@ -31,13 +54,13 @@
                         <button type="submit">Spara media</button>
                     </p>
 
-                    <div id="AdminFormAddMediaRef__successMessage" hidden>
+                    {{-- <div id="AdminFormAddMediaRef__successMessage" hidden>
                         <p>Ok! Tillagd!</p>
                     </div>
 
                     <div id="AdminFormAddMediaRef__errorMessage" hidden>
                         <p>Dang, något gick fel när media skulle sparas.</p>
-                    </div>
+                    </div> --}}
 
                 </fieldset>
 
