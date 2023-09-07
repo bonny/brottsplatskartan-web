@@ -17,6 +17,5 @@ https://brottsplatskartan.se/blogg/2018/sverigekartan-med-polisens-senaste-hande
 
 @section('sidebar')
     @include('parts.widget-blog-entries')
-    {{-- @include('parts.widget-facebook-page') --}}
     @include('parts.lan-and-cities')
 @endsection

@@ -33,6 +33,5 @@
 
 @section('sidebar')
     @include('parts.widget-blog-entries')
-    {{-- @include('parts.widget-facebook-page') --}}
     @include('parts.lan-and-cities')
 @endsection
