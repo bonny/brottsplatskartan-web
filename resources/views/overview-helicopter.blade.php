@@ -58,6 +58,5 @@
 @endsection
 
 @section('sidebar')
-    @include('parts.follow-us')
     @include('parts.lan-and-cities')
 @endsection

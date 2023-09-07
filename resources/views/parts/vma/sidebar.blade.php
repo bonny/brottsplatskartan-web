@@ -40,5 +40,3 @@
         <a href="{{ route('vma-textpage', ['slug' => 'vanliga-fragor-och-svar-om-vma']) }} ">Vanliga frågor.</a>
     </p>
 </section>
-{{-- @include('parts.lan-and-cities')
-@include('parts.follow-us') --}}

@@ -59,5 +59,4 @@ Template for geo results
 
 @section('sidebar')
     @include('parts.lan-and-cities')
-    @include('parts.follow-us')
 @endsection

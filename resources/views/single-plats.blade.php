@@ -117,8 +117,6 @@ https://brottsplatskartan.localhost/plats/nacka
         </section>
     @endif
 
-    @include('parts.follow-us')
-
     @include('parts.lan-and-cities')
 
 @endsection

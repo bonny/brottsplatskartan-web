@@ -156,19 +156,6 @@ Template för ordlista/dictionary
         </p>
     </div>
 
-    <section class="widget widget--follow">
-        <h2 class="widget__title">Följ oss på Twitter och Facebook</h2>
-        <ul>
-            <li>Följ
-                <a href="https://twitter.com/brottsplatser">
-                    @Brottsplatser</a> för att få alla rapporterade brott i ditt Twitterflöde.</li>
-            <li>Följ
-                <a href="https://twitter.com/StockholmsBrott">
-                    @StockholmsBrott</a> för att bara få brott i Stockholms län.</li>
-            <li>Gilla <a href="https://facebook.com/Brottsplatskartan/">facebook.com/Brottsplatskartan</a> på Facebook för att få nyheter och knasiga brott i ditt flöde.</li>
-        </ul>
-    </section>
-
     <section class="widget">
         <h2 class="widget__title">Se senaste händelserna &amp; brotten i ditt län</h2>
         <p><a href="https://brottsplatskartan.localhost/lan/Blekinge%20l%C3%A4n">Blekinge</a>, <a href="https://brottsplatskartan.localhost/lan/Dalarnas%20l%C3%A4n">Dalarna</a>, <a href="https://brottsplatskartan.localhost/lan/G%C3%A4vleborgs%20l%C3%A4n">Gävleborg</a>,

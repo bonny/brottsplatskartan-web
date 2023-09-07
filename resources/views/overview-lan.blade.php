@@ -8,10 +8,11 @@ Template för län-översikt
 @extends('layouts.web')
 
 @section('title', 'Välj ditt län | Brott i Sveriges län')
-@section('metaDescription', e("På Brottsplatskartan kan du län för län se på en karta var i Sverige brott sker - direkt från Polisen"))
+@section('metaDescription', e('På Brottsplatskartan kan du län för län se på en karta var i Sverige brott sker - direkt
+    från Polisen'))
 @section('canonicalLink', '/lan')
 
-@section('metaImage', config('app.url') . "/img/start-share-image.png")
+@section('metaImage', config('app.url') . '/img/start-share-image.png')
 @section('metaImageWidth', 600)
 @section('metaImageHeight', 315)
 
@@ -29,23 +30,21 @@ Template för län-översikt
         <div class="LanListing">
 
             @foreach ($lan as $oneLan)
-
                 <div class="LanListing__lan">
 
                     <h2 class="LanListing__title">
-                        <a href="{{ route("lanSingle", ["lan"=>$oneLan->administrative_area_level_1]) }}">
+                        <a href="{{ route('lanSingle', ['lan' => $oneLan->administrative_area_level_1]) }}">
                             {{ $oneLan->administrative_area_level_1 }}
                         </a>
                     </h2>
 
                     <p class="LanListing__events">
-                        <b>{{ $oneLan->numEvents["today"] }}</b> händelser idag
-                        <br><b>{{ $oneLan->numEvents["last7days"] }}</b> händelser senaste 7 dagarna
-                        <br><b>{{ $oneLan->numEvents["last30days"] }}</b> händelser senaste 30 dagarna
+                        <b>{{ $oneLan->numEvents['today'] }}</b> händelser idag
+                        <br><b>{{ $oneLan->numEvents['last7days'] }}</b> händelser senaste 7 dagarna
+                        <br><b>{{ $oneLan->numEvents['last30days'] }}</b> händelser senaste 30 dagarna
                     </p>
 
                 </div>
-
             @endforeach
 
         </div>
@@ -54,8 +53,5 @@ Template för län-översikt
 @endsection
 
 @section('sidebar')
-
-    @include('parts.follow-us')
     @include('parts.lan-and-cities')
-
 @endsection

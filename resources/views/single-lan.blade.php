@@ -108,7 +108,6 @@ https://brottsplatskartan.localhost/lan/Stockholms%20l%C3%A4n
 
     @include('parts.related-links')
     @include('parts.lan-policestations')
-    @include('parts.follow-us')
     @include('parts.lan-and-cities')
     @include('parts.widget-blog-entries')
 

@@ -48,5 +48,4 @@ Template för /brand
 @section('sidebar')
     @include('parts.widget-blog-entries')
     @include('parts.lan-and-cities')
-    @include('parts.follow-us')
 @endsection

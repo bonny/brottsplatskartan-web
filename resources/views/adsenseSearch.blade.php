@@ -10,9 +10,3 @@
     <script async src="https://cse.google.com/cse.js?cx=06ceb531c1dfd4f3a"></script>
     <div class="gcse-search" enableAutoComplete="true" data-sort_by="date" enableOrderBy></div>
 @endsection
-
-{{-- @section('sidebar')
-    @include('parts.widget-blog-entries')
-    @include('parts.lan-and-cities')
-    @include('parts.follow-us')
-@endsection --}}

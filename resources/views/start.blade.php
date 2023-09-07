@@ -129,7 +129,6 @@ samt för äldre dagar när man bläddrar i arkivet.
         </div>
     @endif
 
-    @include('parts.follow-us')
     @include('parts.lan-and-cities')
     @include('parts.widget-blog-entries')
     @include('parts.widget-vma-messages')
