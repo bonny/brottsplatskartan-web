@@ -29,17 +29,23 @@
         function gtag() {
             dataLayer.push(arguments);
         }
+
         gtag('js', new Date());
 
-        gtag('config', 'G-L1WVBJ39GH');
+        gtag(
+            'event',
+            'page_view', 
+            {
+                'event_callback': () => {
+                    setTimeout(() => {
+                        document.location = @json($redirectToUrl);
+                    }, 500);
+                }
+            }
+        );
     </script>
 </head>
 
 <body>
-
     <p>Vänta, söker efter <em>{{ $s }}</em> ...</p>
-
-    <script>
-        let redirecToUrl = @json($redirectToUrl);
-    </script>
 </body>
