@@ -21,7 +21,7 @@ samt för äldre dagar när man bläddrar i arkivet.
 
 @section('showTitleTagline', false)
 
-@section('metaImage', config('app.url') . "/img/start-share-image.png")
+@section('metaImage', config('app.url') . '/img/start-share-image.png')
 @section('metaImageWidth', 600)
 @section('metaImageHeight', 315)
 
@@ -38,7 +38,7 @@ samt för äldre dagar när man bläddrar i arkivet.
     <div class="widget">
         <h1 class="widget__title">
             @if (!empty($title))
-                {!!$title!!}
+                {!! $title !!}
             @else
                 Senaste polishändelserna i Sverige
             @endif
@@ -48,8 +48,9 @@ samt för äldre dagar när man bläddrar i arkivet.
 
         @if (isset($showLanSwitcher))
             <p class="Breadcrumbs__switchLan__belowTitle">
-                <a class="Breadcrumbs__switchLan" href="{{ route("lanOverview") }}">Välj län</a>
-                <a class="Breadcrumbs__switchLan Breadcrumbs__switchLan--geo" href="/nara-hitta-plats">Visa händelser nära min plats</a>
+                <a class="Breadcrumbs__switchLan" href="{{ route('lanOverview') }}">Välj län</a>
+                <a class="Breadcrumbs__switchLan Breadcrumbs__switchLan--geo" href="/nara-hitta-plats">Visa händelser nära
+                    min plats</a>
             </p>
         @endif
 
@@ -65,7 +66,7 @@ samt för äldre dagar när man bläddrar i arkivet.
                     @if ($isToday)
                         De vanligaste händelserna idag är
                     @else
-                        De vanligaste händelserna {{$dateFormattedForMostCommonCrimeTypes}} var
+                        De vanligaste händelserna {{ $dateFormattedForMostCommonCrimeTypes }} var
                     @endif
                     @foreach ($mostCommonCrimeTypes as $oneCrimeType)
                         @if ($loop->remaining == 0)
@@ -83,7 +84,8 @@ samt för äldre dagar när man bläddrar i arkivet.
             @if ($isToday)
                 {{-- <p><b>{{$numEvents}} händelser har rapporterats in från Polisen de senaste dagarna.</b><p> --}}
             @else
-                <p><b>{{$numEvents}} händelser från Polisen för detta datum.</b><p>
+                <p><b>{{ $numEvents }} händelser från Polisen för detta datum.</b>
+                <p>
             @endif
 
             @include('parts.events-by-day')
@@ -97,6 +99,7 @@ samt för äldre dagar när man bläddrar i arkivet.
 @endsection
 
 @section('sidebar')
+    @include('parts.sokruta')
 
     @if (isset($chartImgUrl))
         <div class="widget Stats Stats--lan">
@@ -104,7 +107,9 @@ samt för äldre dagar när man bläddrar i arkivet.
             <div class="widget__listItem__text">
                 <p>Antal rapporterade händelser från Polisen per dag i Sverige, 14 dagar tillbaka.</p>
             </div>
-            <p><img loading="lazy" layout="responsive" class="Stats__image" src='{{$chartImgUrl}}' alt='Linjediagram som visar antal Polisiära händelser per dag för Sverige' width=400 height=150></img></p>
+            <p><img loading="lazy" layout="responsive" class="Stats__image" src='{{ $chartImgUrl }}'
+                    alt='Linjediagram som visar antal Polisiära händelser per dag för Sverige' width=400 height=150></img>
+            </p>
         </div>
     @endif
 

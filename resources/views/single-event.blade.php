@@ -6,12 +6,12 @@ Template för ett event/händelse
 
 @extends('layouts.web')
 
-@section('title', $event->getSingleEventTitleEvenShorter() )
+@section('title', $event->getSingleEventTitleEvenShorter())
 @section('canonicalLink', $event->getPermalink(true))
 @section('ogUrl', $event->getPermalink(true))
 @section('metaDescription', e($event->getMetaDescription()))
-@section('metaImage'){!! $event->getStaticImageSrc(640,640) !!}@endsection
-{{-- @section('metaImage', config('app.url') . "/img/share-img-blur.jpg") --}}
+@section('metaImage'){!! $event->getStaticImageSrc(640, 640) !!}@endsection
+    {{-- @section('metaImage', config('app.url') . '/img/share-img-blur.jpg') --}}
 @section('metaImageWidth', 640)
 @section('metaImageHeight', 640)
 @section('ogType', 'article')
@@ -21,7 +21,7 @@ Template för ett event/händelse
 @endsection
 
 @section('content')
-    @include('parts.crimeevent', ["single" => true])
+    @include('parts.crimeevent', ['single' => true])
 
     @if (empty($mostViewed))
         <p>Inget mest tittat på idag ännu.</p>
@@ -31,8 +31,8 @@ Template för ett event/händelse
 @endsection
 
 @section('sidebar')
+    @include('parts.sokruta')
 
-    <p>{{-- show a card with nearby events --}}
     @if (isset($eventsNearby) && $eventsNearby->count())
 
         <aside class="RelatedEvents widget">

@@ -79,6 +79,7 @@ Sidmall för sidan med de mest lästa händelserna
 @endsection
 
 @section('sidebar')
+    @include('parts.sokruta')
     @include('parts.lan-and-cities')
     @include('parts.widget-blog-entries')
 @endsection

@@ -14,8 +14,10 @@ https://brottsplatskartan.localhost/plats/nacka
     @section('title', "Senaste nytt från Polisen i $plats – händelser & brott")
     @section('metaDescription', $metaDescription)
 @else
-    @section('title', "$dateForTitle - Brott och polishändelser i $plats. Karta med platsinfo. Information direkt från Polisen.")
-@endif
+    @section('title',
+        "$dateForTitle - Brott och polishändelser i $plats. Karta med platsinfo. Information direkt från
+        Polisen.")
+    @endif
 @section('canonicalLink', $canonicalLink)
 
 @section('metaContent')
@@ -35,10 +37,10 @@ https://brottsplatskartan.localhost/plats/nacka
                 @if ($plats === 'Stockholm')
                     Brott och händelser som Polisen har rapporterat in i Stockholm idag:
                 @else
-                    <strong>{{$plats}}</strong>: brott &amp; händelser
+                    <strong>{{ $plats }}</strong>: brott &amp; händelser
                 @endif
             @else
-                Brott &amp; händelser i {{$plats}} {{$dateForTitle}}
+                Brott &amp; händelser i {{ $plats }} {{ $dateForTitle }}
             @endif
         </h1>
 
@@ -82,6 +84,7 @@ https://brottsplatskartan.localhost/plats/nacka
 @endsection
 
 @section('sidebar')
+    @include('parts.sokruta')
 
     {{--
     <div class="Stats Stats--lan">
@@ -96,21 +99,22 @@ https://brottsplatskartan.localhost/plats/nacka
     {{-- Lista närmaste polisstationerna --}}
     @if ($policeStations)
         <section class="widget">
-            <h2 class="widget__title">Polisstationer nära {{$plats}}</h2>
+            <h2 class="widget__title">Polisstationer nära {{ $plats }}</h2>
             <ul class="widget__listItems">
                 @foreach ($policeStations->slice(0, 3) as $policeStation)
                     <li class="widget__listItem">
                         <h3 class="widget__listItem__title">
-                            <a href="{{route('polisstationer')}}#{{str_slug($place->lan . '-' . $policeStation->name)}}">
-                                {{$policeStation->name}}
+                            <a
+                                href="{{ route('polisstationer') }}#{{ str_slug($place->lan . '-' . $policeStation->name) }}">
+                                {{ $policeStation->name }}
                             </a>
                         </h3>
                         <div class="widget__listItem__text">
                             <p>
-                                {{$policeStation->location->name}}
+                                {{ $policeStation->location->name }}
                             </p>
                         </div>
-                        <p class="u-hidden">{{$policeStation->distance}} meter från mitten av {{$plats}}</p>
+                        <p class="u-hidden">{{ $policeStation->distance }} meter från mitten av {{ $plats }}</p>
                     </li>
                 @endforeach
             </ul>

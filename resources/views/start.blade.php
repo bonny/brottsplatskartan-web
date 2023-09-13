@@ -118,6 +118,7 @@ samt för äldre dagar när man bläddrar i arkivet.
 @endsection
 
 @section('sidebar')
+    @include('parts.sokruta')
 
     @if (isset($chartImgUrl))
         <div class="widget Stats Stats--lan">

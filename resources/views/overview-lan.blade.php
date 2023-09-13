@@ -53,5 +53,6 @@ Template för län-översikt
 @endsection
 
 @section('sidebar')
+    @include('parts.sokruta')
     @include('parts.lan-and-cities')
 @endsection

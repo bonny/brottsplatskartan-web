@@ -8,7 +8,8 @@ Template for geo results
 @extends('layouts.web')
 
 @section('title', 'Se brott som hänt nära dig')
-@section('metaDescription', e('Brottsplatskartan visar brott i hela Sverige och hämtar informationen direkt från Polisen.'))
+@section('metaDescription', e('Brottsplatskartan visar brott i hela Sverige och hämtar informationen direkt från
+    Polisen.'))
 
 @section('content')
 
@@ -18,7 +19,7 @@ Template for geo results
             Senaste brotten nära dig
 
             @if (isset($showLanSwitcher))
-                <a class="Breadcrumbs__switchLan" href="{{ route("lanOverview") }}">Välj län</a>
+                <a class="Breadcrumbs__switchLan" href="{{ route('lanOverview') }}">Välj län</a>
             @endif
         </h1>
 
@@ -32,8 +33,10 @@ Template for geo results
             <p><a class="Button" href="/nara-hitta-plats">Uppdatera position</a></p>
             <!-- Antal försök: {{ $numTries }} -->
 
-            @includeWhen($eventsByDay->count(), 'parts.events-by-day', ["overview" => true, 'mapDistance' => 'near'])
-
+            @includeWhen($eventsByDay->count(), 'parts.events-by-day', [
+                'overview' => true,
+                'mapDistance' => 'near',
+            ])
         @endif
 
         @if (isset($error) && $error)
@@ -43,20 +46,25 @@ Template for geo results
             </p>
             <p>
                 <i>Nära mig</i> fungerar bäst i din mobiltelefon.
-                Använder du en dator kan du <a href="/lan/">välja län manuellt</a> för att se senaste händelserna i ditt län eller <a href="/">se senaste händelserna i hela Sverige</a>.
+                Använder du en dator kan du <a href="/lan/">välja län manuellt</a> för att se senaste händelserna i ditt
+                län eller <a href="/">se senaste händelserna i hela Sverige</a>.
             </p>
-
         @endif
 
     </div>
 
     @if (isset($error) && $error)
-        @includeWhen(isset($error) && $error && !empty($mostViewedEvents), 'parts.mostViewed', ['mostViewed' => $mostViewedEvents])
-        @includeWhen(isset($error) && $error && !empty($latestEvents), 'parts.latestEvents', ['latestEvents' => $latestEvents])
+        @includeWhen(isset($error) && $error && !empty($mostViewedEvents), 'parts.mostViewed', [
+            'mostViewed' => $mostViewedEvents,
+        ])
+        @includeWhen(isset($error) && $error && !empty($latestEvents), 'parts.latestEvents', [
+            'latestEvents' => $latestEvents,
+        ])
     @endif
 
 @endsection
 
 @section('sidebar')
+    @include('parts.sokruta')
     @include('parts.lan-and-cities')
 @endsection
