@@ -662,7 +662,7 @@ Route::get('/sokresultat/', [SearchController::class, 'searchperform'])->name(
 /**
  * Sök med hjälp av AdSense search ("hemligt" test än så länge).
  */
-Route::get('/sok2/', [SearchController::class, 'adsenseSearch'])->name("adsenseSearch");
+Route::get('/sok-blåljushändelser/', [SearchController::class, 'adsenseSearch'])->name("adsenseSearch");
 
 /**
  * Route för previousPartners = företag och webbplatser vi tidigare samarbetet med men där
