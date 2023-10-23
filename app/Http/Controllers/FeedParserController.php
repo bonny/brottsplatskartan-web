@@ -2,16 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\CrimeEvent;
 use App\highways_added;
 use App\highways_ignored;
-use App\Http\Requests;
 use Carbon\Carbon;
-use Feeds;
-use Goutte\Client;
+use Symfony\Component\BrowserKit\HttpBrowser;
+use Symfony\Component\HttpClient\HttpClient;
 use HTMLPurifier_Config;
 use HTMLPurifier;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -157,7 +154,10 @@ class FeedParserController extends Controller
         // contentURL: https://polisen.se/aktuellt/handelser/2018/februari/22/22-februari-11.45-stold-ringa-karlstad/
 
         if (! $html || gettype($html) != "string") {
-            $client = new Client();
+            $client = new HttpBrowser(HttpClient::create([
+                'verify_peer' => false, 
+                'verify_host' => false
+            ]));
             // $contentURL .= '-make-it-a-404-to-test';
             $crawler = $client->request(
                 'GET',

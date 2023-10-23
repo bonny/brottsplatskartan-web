@@ -8,6 +8,7 @@ use Feeds;
 use App\CrimeEvent;
 
 use App\Http\Controllers\FeedParserController;
+use SimplePie;
 
 class FeedController extends Controller
 {
@@ -283,7 +284,6 @@ class FeedController extends Controller
     public function parseItemContentAndUpdateIfChanges($itemID)
     {
         $item = CrimeEvent::findOrFail($itemID);
-
         $parsed_content_items = $this->feedParser->parseContent($item->permalink);
 
         if ($parsed_content_items === false) {
@@ -373,7 +373,22 @@ class FeedController extends Controller
      */
     public function updateFeedsFromPolisen()
     {
-        $feed = \Feeds::make($this->RssURL);
+        $options = [
+            'curl.options' => [
+                CURLOPT_SSL_VERIFYPEER => false,
+            ]
+        ];
+
+        /** @var SimplePie\SimplePie */
+        $feed = \Feeds::make($this->RssURL, 0, false, $options);
+        /*
+                 if (isset($options) && is_array($options)) {
+            if (isset($options['curl.options']) && is_array($options['curl.options'])) {
+                $this->simplePie->set_curl_options($this->simplePie->curl_options + $options['curl.options']);
+            }
+
+        */
+
         $feed_items = $feed->get_items();
 
         $data = [
@@ -383,6 +398,7 @@ class FeedController extends Controller
         ];
 
         foreach ($feed_items as $item) {
+
             // Previously we used get_id for md5 but
             // after Polisen relaunched their site sometimes
             // we get duplicates. Try to solve this by
