@@ -62,14 +62,6 @@
         </li>
     </ul>
 
-
-    <h2>Följ oss på Twitter och få senaste Polishändelserna</h2>
-    <ul class="SiteFooter__navlinks">
-        <li><a href="https://twitter.com/brottsplatser">Följ @Brottsplatser på Twitter</a></li>
-        <li><a href="https://twitter.com/brottsplatser">Följ @Stockholmsbrott på Twitter</a> </a></li>
-        <li><a href="https://www.facebook.com/brottsplatskartan">Gilla Brottsplatskartan på Facebook</a></li>
-    </ul>
-
     <h2>Tysk version av Brottsplatskartan</h2>
     <p>
         Det finns nu även en tysk version av webbplatsen med namn <em><a href="https://wasistpassiert.com/">Was Ist Passiert</a></em>. 
