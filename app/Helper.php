@@ -54,19 +54,18 @@ class Helper {
 
         $html = '
             <div id="anatomy-simple-chart">
-                <table
-                    class="charts-css column show-heading show-labels show-primary-axis data-spacing-0 data-outside"
-                >
+                <table class="charts-css column show-heading show-labels show-primary-axis data-spacing-0 data-outside">
                     <thead>
                         <tr>
-                            <th scope="col">Year</th>
-                            <th scope="col">Value</th>
+                            <th scope="col">Dag</th>
+                            <th scope="col">Antal händelser</th>
                         </tr>
                     </thead>
                     <tbody>
                         ' . $tr_rows . '
                     </tbody>
                 </table>
+                <!-- <p class="text-center">Dag</p> -->
             </div>
         ';
 
