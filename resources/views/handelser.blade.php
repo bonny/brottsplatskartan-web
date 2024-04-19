@@ -101,15 +101,13 @@ samt för äldre dagar när man bläddrar i arkivet.
 @section('sidebar')
     @include('parts.sokruta')
 
-    @if (isset($chartImgUrl))
+    @if (isset($chartHtml))
         <div class="widget Stats Stats--lan">
             <h2 class="widget__title Stats__title">Brottsstatistik</h2>
             <div class="widget__listItem__text">
                 <p>Antal rapporterade händelser från Polisen per dag i Sverige, 14 dagar tillbaka.</p>
+                {!! $chartHtml !!}
             </div>
-            <p><img loading="lazy" layout="responsive" class="Stats__image" src='{{ $chartImgUrl }}'
-                    alt='Linjediagram som visar antal Polisiära händelser per dag för Sverige' width=400 height=150></img>
-            </p>
         </div>
     @endif
 

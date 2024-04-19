@@ -9,78 +9,77 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use App\Models\VMAAlert;
 
-class Helper
-{
+class Helper {
+
     /**
-     * Get chart image src for lan stats
+     * Get chart HTML to be used with CSS from https://chartscss.org/.
+     * 
+     * @param string $lan
+     * @return string HTML
      */
-    public static function getStatsImageChartUrl($lan)
-    {
+    public static function getStatsChartHtml($lan) {
         if ($lan == "home") {
             $stats = self::getHomeStats($lan);
         } else {
             $stats = self::getLanStats($lan);
         }
 
-        $chartImgUrl = 'https://chart.googleapis.com/chart?';
-        // Visible Axes chxt https://developers.google.com/chart/image/docs/gallery/bar_charts#axis_type
-        $chartImgUrl .= 'chxt=x,y';
-        // Chart Types (cht). bvs = Vertical bar chart with stacked bars.
-        $chartImgUrl .= '&cht=bvg';
-        // bar color
-        $chartImgUrl .= '&chco=76A4FB';
-        // size
-        $chartImgUrl .= '&chs=400x150';
-        // Data for almost all charts is sent using the chd parameter. 0-100 when using t:n,n,n
-        // https://developers.google.com/chart/image/docs/data_formats#text
-        // comma separated list of values, %1$s
-        $chartImgUrl .= '&chd=t:%1$s';
-        // Custom Axis Labels chxl
-        // https://developers.google.com/chart/image/docs/chart_params#axis_labels
-        // piped | separated values, like "|Jan|Feb|Mar|Apr|May" as %2$s
-        $chartImgUrl .= '&chxl=0:|%2$s';
-        // min, max values
-        $chartImgUrl .= '&chds=%3$s,%4$s';
-        // chxr, custom numeric range, other wise 0- 100
-        $chartImgUrl .= '&chxr=1,%3$s,%4$s';
-        // Bar Width and Spacing chbh
-        // https://developers.google.com/chart/image/docs/gallery/bar_charts#chbh
-        $chartImgUrl .= '&chbh=a';
-        // transparent background
-        $chartImgUrl .= '&chf=bg,s,FFFFFF00';
+        // $stats = array[items[YMD, count]]
+        // dd('$stats', $stats);
 
-        $chd = "";
-        $chxl = "";
-        $minValue = 0;
         $maxValue = 0;
+        foreach ($stats["numEventsPerDay"] as $statRow) {
+            $maxValue = max($maxValue, $statRow->count);
+        }
 
+        $tr_rows = '';
         foreach ($stats["numEventsPerDay"] as $statRow) {
             $date = strtotime($statRow->YMD);
 
             // Endast dag.
             $dateObj = new \DateTime($statRow->YMD);
             $date = $dateObj->format('d');
+            // Date and month.
+            # $date_and_month = $dateObj->format('d M');
 
-            $chd .= $statRow->count . ",";
-            $chxl .= $date . "|";
-            $maxValue = max($maxValue, $statRow->count);
+            $tr_rows .= '
+                <tr>
+                    <th>' . $date . '</th>
+                    <td style="--size: calc(' . $statRow->count . ' / ' . $maxValue . ')">'
+                    . '<span class="data">' . $statRow->count . '</span>'
+                    . '</td>
+                </tr>
+            ';
         }
 
-        $chd = trim($chd, ',');
-        $chxl = trim($chxl, '|');
+        $html = '
+            <div id="anatomy-simple-chart">
+                <table
+                    class="charts-css column show-heading show-labels show-primary-axis data-spacing-0 data-outside"
+                >
+                    <thead>
+                        <tr>
+                            <th scope="col">Year</th>
+                            <th scope="col">Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ' . $tr_rows . '
+                    </tbody>
+                </table>
+            </div>
+        ';
 
-        $chartImgUrl = sprintf($chartImgUrl, $chd, $chxl, $minValue, $maxValue);
-
-        return $chartImgUrl;
+        return $html;
     }
 
     /**
      * Get stats for a lan
      * used for graph
      */
-    public static function getLanStats($lan)
-    {
-        $stats = Cache::remember('getLanStats', MINUTE_IN_SECONDS * 10, function () use ($lan) {
+    public static function getLanStats($lan) {
+        $cacheKey = "getLanStats:" . $lan;
+        $stats = Cache::remember($cacheKey, MINUTE_IN_SECONDS * 10, function () use ($lan) {
             $stats = [];
 
             $stats["numEventsPerDay"] = DB::table('crime_events')
@@ -90,7 +89,7 @@ class Helper
                 )
                 ->where('administrative_area_level_1', $lan)
                 ->groupBy('YMD')
-                ->orderBy('YMD', 'desc')
+                ->orderBy('YMD', 'DESC')
                 ->limit(14)
                 ->get();
 
@@ -106,8 +105,7 @@ class Helper
      *
      * @return array med datum => antal.
      */
-    public static function getHomeStats($lan)
-    {
+    public static function getHomeStats($lan) {
         $stats = [
             "numEventsPerDay" => null
         ];
@@ -129,7 +127,7 @@ class Helper
                     )
                     ->where('created_at', '>', $dateDaysBack)
                     ->groupBy('YMD')
-                    ->orderBy('YMD', 'desc')
+                    ->orderBy('YMD', 'asc')
                     ->get();
 
                 return $numEventsPerDay;
@@ -139,8 +137,7 @@ class Helper
         return $stats;
     }
 
-    public static function getSingleLanWithStats($lanName = null)
-    {
+    public static function getSingleLanWithStats($lanName = null) {
         if (!$lanName) {
             return false;
         }
@@ -156,8 +153,7 @@ class Helper
         return false;
     }
 
-    public static function getAllLanWithStats()
-    {
+    public static function getAllLanWithStats() {
         $lan = self::getAllLan();
 
         // Räkna alla händelser i det här länet för en viss period
@@ -230,8 +226,7 @@ class Helper
         return $lan;
     }
 
-    public static function getAllLan()
-    {
+    public static function getAllLan() {
         $lan = collect([
             "Blekinge län",
             "Dalarnas län",
@@ -277,8 +272,7 @@ class Helper
     }
 
     // from http://cubiq.org/the-perfect-php-clean-url-generator
-    public static function toAscii($str, $replace = array(), $delimiter = '-')
-    {
+    public static function toAscii($str, $replace = array(), $delimiter = '-') {
         if (!empty($replace)) {
             $str = str_replace((array) $replace, ' ', $str);
         }
@@ -298,8 +292,7 @@ class Helper
         return $clean;
     }
 
-    public static function makeUrlUsePolisenDomain($url = null)
-    {
+    public static function makeUrlUsePolisenDomain($url = null) {
         if (empty($url)) {
             return $url;
         }
@@ -317,8 +310,7 @@ class Helper
     }
 
     // Encode a string to URL-safe base64
-    public static function encodeBase64UrlSafe($value)
-    {
+    public static function encodeBase64UrlSafe($value) {
         return str_replace(
             array('+', '/'),
             array('-', '_'),
@@ -327,8 +319,7 @@ class Helper
     }
 
     // Decode a string from URL-safe base64
-    public static function decodeBase64UrlSafe($value)
-    {
+    public static function decodeBase64UrlSafe($value) {
         return base64_decode(
             str_replace(array('-', '_'), array('+', '/'), $value)
         );
@@ -336,8 +327,7 @@ class Helper
 
     // Sign a URL with a given crypto key
     // Note that this URL must be properly URL-encoded
-    public static function signUrl($myUrlToSign)
-    {
+    public static function signUrl($myUrlToSign) {
         $privateKey = env("GOOGLE_SIGNING_SECRET");
 
         // parse the url
@@ -359,8 +349,7 @@ class Helper
 
     // echo signUrl("http://maps.google.com/maps/api/geocode/json?address=New+York&sensor=false&client=clientID", 'vNIXE0xscrmjlyV-12Nj_BvUPaw=');
 
-    public static function convertSwedishYearsToEnglish($str)
-    {
+    public static function convertSwedishYearsToEnglish($str) {
         $search = [
             'januari',
             'februari',
@@ -402,8 +391,7 @@ class Helper
      *
      * @return mixed array on success, false on error
      */
-    public static function getdateFromDateSlug($monthAndYear)
-    {
+    public static function getdateFromDateSlug($monthAndYear) {
         $monthAndYear = strtolower($monthAndYear);
         $monthAndYear = str_replace('-', ' ', $monthAndYear);
 
@@ -467,8 +455,7 @@ class Helper
      *
      * @return Collection Array med lite info.
      */
-    public static function getPrevDaysNavInfo($date = null, $numDays = 5)
-    {
+    public static function getPrevDaysNavInfo($date = null, $numDays = 5) {
         $dateYmd = $date->format('Y-m-d');
         $cacheKey = "getPrevDaysNavInfo:date:{$dateYmd}:numDays:$numDays";
         $cacheTTL = 15 * 60;
@@ -501,8 +488,7 @@ class Helper
      * @return Collection Array med lite info.
      */
 
-    public static function getNextDaysNavInfo($date = null, $numDays = 5)
-    {
+    public static function getNextDaysNavInfo($date = null, $numDays = 5) {
         $dateYmd = $date->format('Y-m-d');
         $dateYmdPlusOneDay = $date
             ->copy()
@@ -616,8 +602,7 @@ class Helper
         return $nextDayEvents;
     }
 
-    public static function getOrter()
-    {
+    public static function getOrter() {
         $orter = \DB::table('crime_events')
             ->select("parsed_title_location")
             ->where('parsed_title_location', "!=", "")
@@ -632,8 +617,7 @@ class Helper
      *
      * @return collection Collection med län.
      */
-    public static function getLans()
-    {
+    public static function getLans() {
         $lans = [
             [
                 "name" => "Blekinge län",
@@ -726,8 +710,7 @@ class Helper
         return $lans;
     }
 
-    public static function getLanSlugsToNameArray()
-    {
+    public static function getLanSlugsToNameArray() {
         $arr = [
             'blekinge-lan' => 'Blekinge län',
             'blekinge' => 'Blekinge län',
@@ -782,8 +765,7 @@ class Helper
      *
      * @return string Kortat länsnamn, t.ex. "Stockhol"
      */
-    public static function lanLongNameToShortName($lan)
-    {
+    public static function lanLongNameToShortName($lan) {
         $arr = [
             'Blekinge län' => 'Blekinge',
             'Dalarnas län' => 'Dalarna',
@@ -872,8 +854,7 @@ class Helper
      * [getPoliceStations description]
      * @return Collection
      */
-    public static function getPoliceStations()
-    {
+    public static function getPoliceStations() {
         $APIURL = 'https://polisen.se/api/policestations';
         $APIURL = \App\Helper::makeUrlUsePolisenDomain($APIURL);
 
@@ -963,8 +944,7 @@ class Helper
      * [getPoliceStationsCached description]
      * @return Collection
      */
-    public static function getPoliceStationsCached()
-    {
+    public static function getPoliceStationsCached() {
         // return \App\Helper::getPoliceStations();
         $locations = Cache::remember(
             'PoliceStationsLocations2',
@@ -977,8 +957,7 @@ class Helper
         return $locations;
     }
 
-    public static function getRelatedLinks($place = null, $lan = null)
-    {
+    public static function getRelatedLinks($place = null, $lan = null) {
         $place = is_string($place) ? mb_strtolower($place) : $place;
         $lan = is_string($lan) ? mb_strtolower($lan) : $lan;
 
@@ -1096,8 +1075,7 @@ class Helper
      * @param  integer $count [description]
      * @return Collection         [description]
      */
-    public static function getLatestEvents(int $count = 5)
-    {
+    public static function getLatestEvents(int $count = 5) {
         $cacheKey = __METHOD__ . ":latestEvents";
         $events = Cache::remember($cacheKey, 2 * 60, function () {
             $events = CrimeEvent::orderBy("created_at", "desc")
@@ -1116,8 +1094,7 @@ class Helper
      *
      * @return array Array med navigationalternativ för inbrott-sidorna.
      */
-    public static function getInbrottNavItems()
-    {
+    public static function getInbrottNavItems() {
         // Undersidor och deras titlar.
         $undersidor = [
             'start' => [
@@ -1175,8 +1152,7 @@ class Helper
      *
      * @return array Array med navigationalternativ för inbrott-sidorna.
      */
-    public static function getBrandNavItems()
-    {
+    public static function getBrandNavItems() {
         // Undersidor och deras titlar.
         $undersidor = [
             'start' => [
@@ -1201,8 +1177,7 @@ class Helper
      *
      * @return Collection
      */
-    public static function getVMAAlerts()
-    {
+    public static function getVMAAlerts() {
         // Cache is cleared when import detects new alerts.
         return Cache::remember('vma_alerts', HOUR_IN_SECONDS, function () {
             return VMAAlert::where('status', 'Actual')
@@ -1217,8 +1192,7 @@ class Helper
      *
      * @return Collection
      */
-    public static function getArchivedVMAAlerts()
-    {
+    public static function getArchivedVMAAlerts() {
         // Cache is cleared when import detects new alerts.
         return Cache::remember('archived_vma_alerts', HOUR_IN_SECONDS, function () {
             return VMAAlert::where('status', 'Actual')
@@ -1234,8 +1208,7 @@ class Helper
      *
      * @return Collection
      */
-    public static function getCurrentVMAAlerts()
-    {
+    public static function getCurrentVMAAlerts() {
         // Cache is cleared when import detects new alerts.
         return Cache::remember('current_vma_alerts', HOUR_IN_SECONDS, function () {
             return VMAAlert::where('status', 'Actual')

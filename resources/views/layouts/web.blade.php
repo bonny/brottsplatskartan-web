@@ -118,7 +118,8 @@ $noAdsReason = '';
 
     <link rel="manifest" href="/manifest.webmanifest">
 
-    <style>{!! HTMLMin::css(file_get_contents( public_path("css/styles.css") )) !!}</style>
+    <style>{!! HTMLMin::css(file_get_contents(public_path("css/styles.css"))) !!}</style>
+    <link rel="stylesheet" type="text/css" href="/css/charts.min.css" /> 
 
     @if (env("APP_ENV") != "local")
       <!-- Global site tag (gtag.js) - Google Analytics -->

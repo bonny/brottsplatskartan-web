@@ -76,7 +76,7 @@ class StartController extends Controller
         $data = [
             'eventsMostViewedRecentlyCrimeEvents' => $eventsMostViewedRecentlyCrimeEvents,
             'eventsRecent' => $eventsRecent,
-            'chartImgUrl' => \App\Helper::getStatsImageChartUrl("home"),
+            'chartHtml' => \App\Helper::getStatsChartHtml("home"),
             'title' => $title,
             'introtext' => $introtext,
             'canonicalLink' => $canonicalLink,
@@ -271,7 +271,7 @@ class StartController extends Controller
             'eventsByDay' => $eventsByDay,
             'showLanSwitcher' => true,
             'breadcrumbs' => null,
-            'chartImgUrl' => \App\Helper::getStatsImageChartUrl("home"),
+            'chartHtml' => \App\Helper::getStatsChartHtml("home"),
             'title' => $title,
             'nextDayLink' => $nextDayLink,
             'prevDayLink' => $prevDayLink,

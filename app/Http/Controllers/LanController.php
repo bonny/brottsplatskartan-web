@@ -237,7 +237,7 @@ class LanController extends Controller
         $data["introtext"] = \Markdown::parse(\Setting::get($introtext_key));
 
         // Hämta statistik för ett län
-        $data["lanChartImgUrl"] = \App\Helper::getStatsImageChartUrl($lan);
+        $data['chartHtml'] = \App\Helper::getStatsChartHtml($lan);
 
         $data["lanInfo"] = \App\Helper::getSingleLanWithStats($lan);
 
