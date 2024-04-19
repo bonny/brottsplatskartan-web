@@ -179,7 +179,6 @@ class PlatsController extends Controller
         $linkRelNext = null;
 
         // Hämta statistik för platsen
-        // $data["chartImgUrl"] = \App\Helper::getStatsImageChartUrl("Stockholms län");
         $introtext_key = "introtext-plats-$plats";
         $introtext = null;
 
