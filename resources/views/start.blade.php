@@ -59,7 +59,17 @@ samt för äldre dagar när man bläddrar i arkivet.
                 <path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z" />
                 <path d="M0 0h24v24H0z" fill="none" />
             </svg>
-            <a href="{{ route('mostRead') }}">Mest lästa händelserna</a>
+            <a href="{{ route('mostRead') }}">Mest läst</a>
+
+            <a href="{{ route('sverigekartan') }}" class="float-end">
+                <svg class="align-text-bottom" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#0c3256"
+                    width="18px" height="18px">
+                    <path
+                        d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z" />
+                    <path d="M0 0h24v24H0z" fill="none" />
+                </svg>
+                Karta
+            </a>
         </h2>
 
         @include('parts.events-heroes')
@@ -69,6 +79,7 @@ samt för äldre dagar när man bläddrar i arkivet.
         </div>
     </div>
 
+    {{-- Widget med bild av sverigekartan och länk till den. --}}
     <div class="widget">
         <h2 class="widget__title">
             <a href="{{ route('sverigekartan') }}">

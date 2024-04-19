@@ -56,7 +56,7 @@ body {
 body {
     padding-top: 150px;
     /*background: #fafafa;*/
-    background: #f4f4f7;
+    /* background: #f4f4f7; */
     margin: 0;
 }
 
@@ -3523,7 +3523,67 @@ h2.widget__title {
     text-align: end;
 }
 
+.float-start {
+    float: inline-start;
+}
+.float-end {
+    float: inline-end;
+}
+.float-right {
+    float: right;
+}
+.float-left {
+    float: left;
+}
+.float-none {
+    float: none;
+}
 
+.overflow-auto {
+    overflow: auto;
+}
+.overflow-hidden {
+    overflow: hidden;
+}
+.overflow-clip {
+    overflow: clip;
+}
+.overflow-visible {
+    overflow: visible;
+}
+.overflow-scroll {
+    overflow: scroll;
+}
+.overflow-x-auto {
+    overflow-x: auto;
+}
+.overflow-y-auto {
+    overflow-y: auto;
+}
+.overflow-x-hidden {
+    overflow-x: hidden;
+}
+.overflow-y-hidden {
+    overflow-y: hidden;
+}
+.overflow-x-clip {
+    overflow-x: clip;
+}
+.overflow-y-clip {
+    overflow-y: clip;
+}
+.overflow-x-visible {
+    overflow-x: visible;
+}
+.overflow-y-visible {
+    overflow-y: visible;
+}
+.overflow-x-scroll {
+    overflow-x: scroll;
+}
+.overflow-y-scroll {
+    overflow-y: scroll;
+}
 
 .alert {
     padding: var(--default-margin);

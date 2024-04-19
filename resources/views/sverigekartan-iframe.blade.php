@@ -72,8 +72,8 @@
             left: 50%;
             transform: translateX(-50%) translateY(-50%);
             */
-            padding: 25px;
-            border-bottom: 2px solid rgb(255, 204, 51);
+            padding: 0 25px 25px 25px;
+            /* border-bottom: 2px solid rgb(255, 204, 51); */
         }
 
         .map-loading-text {
