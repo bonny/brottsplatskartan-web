@@ -125,7 +125,10 @@ samt för äldre dagar när man bläddrar i arkivet.
     @if (isset($chartHtml))
         <div class="widget Stats Stats--lan">
             <h2 class="widget__title Stats__title">Brottsstatistik</h2>
-            <div class="widget__listItem__text">{!! $chartHtml !!}</div>
+            <div class="widget__listItem__text">
+                <p>Antal rapporterade händelser från Polisen per dag i Sverige, 14 dagar tillbaka.</p>
+                {!! $chartHtml !!}
+            </div>
         </div>
     @endif
 
