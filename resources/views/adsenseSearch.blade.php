@@ -9,9 +9,17 @@
 @section('content')
     <div class="widget">
         <h1>Sök blåljushändelser</h1>
+
         <p>Vår databas innehåller över 250.000 händelser.</p>
+
+        
         <script async src="https://cse.google.com/cse.js?cx=06ceb531c1dfd4f3a"></script>
         <div class="gcse-search" enableAutoComplete="true" data-sort_by="date" enableOrderBy></div>
+
+        <p>
+            <strong>Söktips:</strong> Kombinera händelsetyp (rån, stöld osv.) med platsnamn för bättre sökresultat.
+            För att t.ex. hitta skadegörelse i Stockholm så kan du söka efter "skadegörelse stockholm östermalm".
+        </p>
     </div>
 @endsection
 

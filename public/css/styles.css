@@ -3605,3 +3605,8 @@ h2.widget__title {
     background-color: var(--color-green);
     color: var(--color-black);
 }
+
+/* Google Custom Search Engine */
+.widget .gsc-control-cse {
+    padding: 0;
+}

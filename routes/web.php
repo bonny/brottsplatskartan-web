@@ -651,13 +651,10 @@ Route::get('/{lan}/{eventName}', function ($lan, $eventName, Request $request) {
 })->name("singleEvent");
 
 /**
- * sök
- * sökstartsida + sökresultatsida = samma sida
+ * Redirect gamla /sok/ till nya /sok-blåljushändelser.
  */
-Route::get('/sok/', [SearchController::class, 'index'])->name("search");
-Route::get('/sokresultat/', [SearchController::class, 'searchperform'])->name(
-    "searchperform"
-);
+Route::redirect('/sok/', 'sok-blåljushändelser', 301);
+Route::redirect('/sokresultat/', 'sok-blåljushändelser', 301);
 
 /**
  * Sök med hjälp av AdSense search ("hemligt" test än så länge).
