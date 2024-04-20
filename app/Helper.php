@@ -21,10 +21,8 @@ class Helper {
     public static function getStatsChartHtml($lan) {
         if ($lan == "home") {
             $stats = self::getHomeStats($lan);
-            $routeName = "startDatum";
         } else {
             $stats = self::getLanStats($lan);
-            $routeName = "lanDate";
         }
 
         $maxValue = 0;
@@ -46,7 +44,7 @@ class Helper {
             $formattedDateFortitle = trim($dateObj->formatLocalized('%A %e %B %Y'));
 
             if ($lan == "home") {
-                $day_link = route("startDatum", ['day' => $formattedDate]);
+                $day_link = route("startDatum", ['date' => $formattedDate]);
             } else {
                 $day_link = route("lanDate", ['lan' => $lan, 'date' => $formattedDate]);
             }
