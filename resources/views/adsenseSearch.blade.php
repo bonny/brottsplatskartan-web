@@ -8,7 +8,7 @@
 
 @section('content')
     <div class="widget">
-        <h1>Sök blåljushändelser</h1>
+        <h1><a href="{{ route('adsenseSearch') }}">Sök blåljushändelser</a></h1>
 
         <p>Vår databas innehåller över 250.000 händelser.</p>
 
