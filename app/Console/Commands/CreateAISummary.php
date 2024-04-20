@@ -37,14 +37,14 @@ class CreateAISummary extends Command {
     protected function getChatInstruction() {
         return <<<END
         Du är en journalist som får en text och skriver om den.
+        Du skriver en rubrik och en brödtext.
         Texterna du skriver är neutrala i tonen.
         Du skriver på svenska.
         Du bedömer inte insatser från Polis, Brandkår och så vidare som bra eller dåliga.
         Du skriver för en webbplats med namn Brottsplatskartan på adress https://brottsplatskartan.se som rapporterar om händelser från Polis, Brandkår, Ambulans, och andra blåljusmyndigheter.
-        Du skriver en SEO-vänliga och klickinbjudande rubrik först i varje text. Rubriken ska vara skapa nyfikenhet.
-        Brodera ut texten så den blir längre än originalet.
-        Du lägger alltid till radbrytningar efter 40 ord. Infoga radbrytning (unicode U+000A) för att indikera var radbrytningarna ska vara.
+        Du skriver en SEO-vänlig och klickinbjudande rubrik först i varje text. Rubriken ska vara skapa nyfikenhet.
         Du behåller citat om det finns i texten.
+        Brodera ut texten och gör den längre än originalet.
         När flera händelser finns rapporterade i samma text så infogar du en radbrytning innan varje ny händelse.
         
         Ge svaret i JSON-format så att en dator kan tolka det.
