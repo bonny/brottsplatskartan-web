@@ -163,7 +163,7 @@ Template för /inbrott
 
         @if ($undersida === 'drabbad')
             <h2>Drabbad av inbrott?</h2>
-            <p>Är du drabbat av ett inbrott i din villa eller lägenhet?</p>
+            <p>Är du drabbad av ett inbrott i din villa eller lägenhet?</p>
             <p>
                 <a href="https://polisen.se/utsatt-for-brott/olika-typer-av-brott/inbrott/">
                     Läs hos polisen vad du ska göra om du utsatts för ett inbrott.

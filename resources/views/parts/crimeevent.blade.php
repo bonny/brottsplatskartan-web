@@ -140,7 +140,7 @@ if $single is set then larger image
 
     @if ($event->isInbrott())
         <div class="Event__drabbad" id="drabbad_inbrott">
-            <h2 class="Event__drabbad__title">Drabbat av inbrott eller är rädd för att bli?</h2>
+            <h2 class="Event__drabbad__title">Drabbad av inbrott eller är rädd för att bli?</h2>
             <p>På vår särskilda sida <a href="{{ route('inbrott') }}">om inbrott</a> kan du läsa mer om
                 hur du gör för att bäst <a href="{{ route('inbrott', ['underida' => 'skydda-dig']) }}">skydda dig mot
                     inbrott</a>

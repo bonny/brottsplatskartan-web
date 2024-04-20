@@ -12,26 +12,26 @@ $noAdsReason = '';
 //     $showAds = false;
 //     $noAdsReason .= ' sourcepreviousPartners ';
 // }
-
 ?>
 <!DOCTYPE html>
 <html lang="sv">
+
 <head>
 
     <?php
     if ($showAds) {
       ?>
-      <?php
+    <?php
     }
     ?>
-    
+
     @stack('scripts')
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
     <meta content="IE=Edge" http-equiv="X-UA-Compatible">
     @hasSection('canonicalLink')
-    <link rel="canonical" href="@yield('canonicalLink', '/')">
+        <link rel="canonical" href="@yield('canonicalLink', '/')">
     @endif
 
     @include('feed::links')
@@ -57,8 +57,8 @@ $noAdsReason = '';
         <meta name="twitter:image" content="@yield('metaImage')">
         <meta name="twitter:card" content="summary_large_image">
         @hasSection('metaImageWidth')
-        <meta property="og:image:width" content="@yield('metaImageWidth')" />
-        <meta property="og:image:height" content="@yield('metaImageHeight')" />
+            <meta property="og:image:width" content="@yield('metaImageWidth')" />
+            <meta property="og:image:height" content="@yield('metaImageHeight')" />
         @endif
     @else
         <meta name="twitter:card" content="summary">
@@ -77,7 +77,7 @@ $noAdsReason = '';
     @endif
 
     @hasSection('ogUrl')
-    <meta property="og:url" content="@yield('ogUrl')" />
+        <meta property="og:url" content="@yield('ogUrl')" />
     @endif
 
     <meta property="og:title" content="@yield('title')" />
@@ -85,7 +85,10 @@ $noAdsReason = '';
     <meta name="twitter:site" content="@brottsplatser">
     <meta name="twitter:title" content="@yield('title')">
 
-    <title>@yield('title')@hasSection('showTitleTagline') → Brottsplatskartan @endif</title>
+    <title>@yield('title')@hasSection('showTitleTagline')
+            → Brottsplatskartan
+        @endif
+    </title>
 
     {{-- Don't index some pages --}}
     @if (isset($robotsNoindex) && $robotsNoindex)
@@ -118,50 +121,58 @@ $noAdsReason = '';
 
     <link rel="manifest" href="/manifest.webmanifest">
 
-    <style>{!! HTMLMin::css(file_get_contents(public_path("css/styles.css"))) !!}</style>
-    <link rel="stylesheet" type="text/css" href="/css/charts.min.css" /> 
+    <style>
+        {!! HTMLMin::css(file_get_contents(public_path('css/styles.css'))) !!}
+    </style>
+    <link rel="stylesheet" type="text/css" href="/css/charts.min.css" />
 
-    @if (env("APP_ENV") != "local")
-      <!-- Global site tag (gtag.js) - Google Analytics -->
-      <script async src="https://www.googletagmanager.com/gtag/js?id=G-L1WVBJ39GH"></script>
-      <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
+    @if (env('APP_ENV') != 'local')
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-L1WVBJ39GH"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
 
-        gtag('config', 'G-L1WVBJ39GH');
-      </script>
-      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1689239266452655" crossorigin="anonymous"></script>
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag('js', new Date());
+
+            gtag('config', 'G-L1WVBJ39GH');
+        </script>
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1689239266452655"
+            crossorigin="anonymous"></script>
     @endif
 
 </head>
-<body class="@if ($shared_notification_bar_contents) has-notification-bar @endif {{$noAdsReason}}">
+
+<body class="@if ($shared_notification_bar_contents) has-notification-bar @endif {{ $noAdsReason }}">
     <?php
     if ($showAds) {
       ?>
-      
-      <?php
+
+    <?php
     }
     ?>
 
+    @include('parts.notificationbar')
+    @include('parts.siteheader')
+
     <div class="container">
 
-        @include('parts.notificationbar')
-        @include('parts.siteheader')
         @include('parts.vma-siteheader-alerts')
 
         @yield('beforeBreadcrumb')
-        @include('parts.breadcrumb', ["single" => true])
+        @include('parts.breadcrumb', ['single' => true])
 
         {{-- Output debug data, if set --}}
-        @if (isset($debugData) && ! empty($debugData) )
+        @if (isset($debugData) && !empty($debugData))
             <pre>
 {{ json_encode($debugData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) }}
             </pre>
         @endif
-        @if (isset($debugData) && ! empty($debugData["itemGeocodeURL"]) )
+        @if (isset($debugData) && !empty($debugData['itemGeocodeURL']))
             itemGeocodeURL:<br>
-            <a href="{{ $debugData["itemGeocodeURL"] }}">{{ $debugData["itemGeocodeURL"] }}</a>
+            <a href="{{ $debugData['itemGeocodeURL'] }}">{{ $debugData['itemGeocodeURL'] }}</a>
         @endif
 
         @yield('beforeMainContent')
@@ -187,20 +198,21 @@ $noAdsReason = '';
       ladda via JS för att minimera laddning via bots.
     --}}
     @php
-      $pixelUrl = sprintf(
-        '%1$s/pixel?path=%2$s&rand=%3$s', 
-        env('APP_URL'), // 1
-        Request::path(), // 2
-        rand() // 3
-      );
+        $pixelUrl = sprintf(
+            '%1$s/pixel?path=%2$s&rand=%3$s',
+            env('APP_URL'), // 1
+            Request::path(), // 2
+            rand(), // 3
+        );
     @endphp
-    
+
     <script>
-      (function() {
-        let i = new Image();
-        i.src='{{ $pixelUrl }}';
-      })();
+        (function() {
+            let i = new Image();
+            i.src = '{{ $pixelUrl }}';
+        })();
     </script>
 
 </body>
+
 </html>
