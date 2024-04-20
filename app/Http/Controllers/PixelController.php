@@ -22,12 +22,18 @@ class PixelController extends Controller {
      * @return array
      */
     public function pixelSok(Request $req) {
-        $query = urldecode($req->input('query'));
-        $query = str($query)->trim()->lower()->limit(100)->toString();
+        $query = urldecode($req->input('q'));
+        $query = str($query)->trim()->lower()->stripTags()->limit(100)->toString();
+        
+        // Antal träffar. 10 = 10 eller fler pga paginering.
+        $results_count = (int) urldecode($req->input('c'));
+
+        $settingsKey = 'searches3';
 
         // Om show-setting finns så visa sökningar.
+        // Exempel: https://brottsplatskartan.se/pixel-sok?show-setting
         if ($req->has('show-setting')) {
-            $searches = \Setting::get('searches', []);
+            $searches = \Setting::get($settingsKey, []);
             return $searches;
         }
 
@@ -39,16 +45,19 @@ class PixelController extends Controller {
         // Hämta och spara setting.
         // Ändra antal för varje sökning
         // Ta bort de äldsta när de är för många.
-        $searches = \Setting::get('searches', []);
+        $searches = \Setting::get($settingsKey, []);
 
-        if (isset($searches[$query])) {
-            $searches[$query]++;
-        } else {
-            $searches[$query] = 1;
-        }
+        if (!isset($searches[$query]) || !is_array($searches[$query])) {
+            $searches[$query] = [
+                'hits' => $results_count,
+                'count' => 0,
+            ];
+        } 
+
+        $searches[$query]['count']++;
 
         // Spara setting.
-        \Setting::set('searches', $searches);
+        \Setting::set($settingsKey, $searches);
 
         $data = [
             'query' => $query,
