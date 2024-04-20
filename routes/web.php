@@ -45,8 +45,8 @@ Route::get('/sverigekartan-iframe/{location?}', [FullScreenMapController::class,
 
 // URL is like
 // https://brottsplatskartan.localhost/pixel?path=%2Fstockholms-lan%2Ftrafikolycka-taby-taby-kyrkby-37653&rand=0.1843466328440977
-//
 Route::get('/pixel', [PixelController::class, 'pixel']);
+Route::get('/pixel-sok', [PixelController::class, 'pixelSok'])->name('pixel-sok');
 
 Route::get('/polisstationer', [PolisstationerController::class, 'index'])->name(
     'polisstationer'

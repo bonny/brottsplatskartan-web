@@ -20,13 +20,15 @@
             För att t.ex. hitta skadegörelse i Stockholm så kan du söka efter "skadegörelse stockholm östermalm".
         </p>
     </div>
-
+    
     <script>
         // https://developers.google.com/custom-search/docs/element#results-ready
         function myResultsReadyCallback(gname, query, promoElts, resultElts) {
             console.log('Användare sökte');
             console.log('query:', query);
             console.log('resultElts:', resultElts);
+            // Skicka pixel för sökstatistik.
+            let i = (new Image()).src='{{ route("pixel-sok") }}?query=' + query;
         }
 
         window.__gcse || (window.__gcse = {});
