@@ -619,6 +619,10 @@ blockquote {
     font-size: 1.4rem;
 }
 
+.Event--single {
+    margin-top: 0 !important;
+}
+
 .Event--single .Event__title {
     font-size: 1.75rem;
 }
