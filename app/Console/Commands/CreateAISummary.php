@@ -69,7 +69,7 @@ class CreateAISummary extends Command {
         $this->line("Hittade händelse " .  $crimeEvent->parsed_date . ': ' . $crimeEvent->parsed_title);
         $this->newLine();
         // echo "chat instructions:\n" . $this->getChatInstruction() . "\n";exit;
-        $this->info('Skickar följande text till Open AI:');
+        $this->info('Text som skickas till OpenAI:');
         $this->line($userMessageContent);
 
         $result = $client->chat()->create([

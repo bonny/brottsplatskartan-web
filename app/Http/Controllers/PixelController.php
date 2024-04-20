@@ -2,13 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\CrimeEvent;
 use App\Models\CrimeView;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Cache;
 
 /**
  * Controller för pixel.
