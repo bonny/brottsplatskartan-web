@@ -8,6 +8,7 @@ use DB;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use App\Models\VMAAlert;
+use Illuminate\Support\Str;
 
 class Helper {
 
@@ -20,12 +21,11 @@ class Helper {
     public static function getStatsChartHtml($lan) {
         if ($lan == "home") {
             $stats = self::getHomeStats($lan);
+            $routeName = "startDatum";
         } else {
             $stats = self::getLanStats($lan);
+            $routeName = "lanDate";
         }
-
-        // $stats = array[items[YMD, count]]
-        // dd('$stats', $stats);
 
         $maxValue = 0;
         foreach ($stats["numEventsPerDay"] as $statRow) {
@@ -34,20 +34,36 @@ class Helper {
 
         $tr_rows = '';
         foreach ($stats["numEventsPerDay"] as $statRow) {
-            $date = strtotime($statRow->YMD);
+            $date_day = strtotime($statRow->YMD);
 
             // Endast dag.
-            $dateObj = new \DateTime($statRow->YMD);
-            $date = $dateObj->format('d');
+            $dateObj = new Carbon($statRow->YMD);
+            $date_day = $dateObj->format('d');
             // Date and month.
             # $date_and_month = $dateObj->format('d M');
 
+            $formattedDate = trim(str::lower($dateObj->formatLocalized('%e-%B-%Y')));
+            $formattedDateFortitle = trim($dateObj->formatLocalized('%A %e %B %Y'));
+
+            if ($lan == "home") {
+                $day_link = route("startDatum", ['day' => $formattedDate]);
+            } else {
+                $day_link = route("lanDate", ['lan' => $lan, 'date' => $formattedDate]);
+            }
+
+            // $prevDayLink = [
+            //     'title' => sprintf('‹ %1$s', $formattedDateFortitle),
+            //     'link' => route("lanDate", ['lan' => $lan, 'date' => $formattedDate])
+            // ];
+            $a_start = '<a href="' . $day_link . '" title="' . $formattedDateFortitle . '">';
+            $a_end = '</a>';
+
             $tr_rows .= '
                 <tr>
-                    <th>' . $date . '</th>
+                    <th>' . $a_start . $date_day . $a_end . '</th>
                     <td style="--size: calc(' . $statRow->count . ' / ' . $maxValue . ')">'
-                    . '<span class="data">' . $statRow->count . '</span>'
-                    . '</td>
+                . '<span class="data">' . $statRow->count . '</span>'
+                . '</td>
                 </tr>
             ';
         }
