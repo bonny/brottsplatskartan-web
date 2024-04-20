@@ -890,12 +890,12 @@ input[type="url"],
 }
 
 .Breadcrumbs {
+    display: none;
     list-style: none;
     margin-bottom: var(--default-margin);
     margin-left: 0;
     margin-right: 0;
     margin-top: var(--default-margin);
-    /*overflow: hidden;*/
     padding: 0;
     line-height: 1.2;
     font-size: var(--font-size-small);
