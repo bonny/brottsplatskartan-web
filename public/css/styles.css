@@ -1127,6 +1127,10 @@ input[type="url"],
 .Event__dictionaryWords__wrap > * {
     flex: 1 0 65%;
     scroll-snap-align: start;
+
+    @media only screen and (min-width: 1024px) {
+        flex-basis: 25%;
+    }
 }
 
 .Event__dictionaryWord {
