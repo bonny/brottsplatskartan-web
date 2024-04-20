@@ -54,10 +54,12 @@ body {
 }
 
 body {
-    padding-top: 139px;
-    /*background: #fafafa;*/
-    /* background: #f4f4f7; */
+    padding-top: 105px;
     margin: 0;
+}
+
+body.has-notification-bar {
+    padding-top: 137px;
 }
 
 h1,
