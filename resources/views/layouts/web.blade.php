@@ -15,7 +15,7 @@ $noAdsReason = '';
 
 ?>
 <!DOCTYPE html>
-<html lang="sv" class="amp-border-box">
+<html lang="sv">
 <head>
 
     <?php

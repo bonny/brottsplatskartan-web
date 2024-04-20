@@ -24,34 +24,6 @@ samt för äldre dagar när man bläddrar i arkivet.
 @section('metaImageHeight', 315)
 
 @section('content')
-
-    <div class="widget">
-        <h1 class="widget__title">
-            {!! $title !!}
-        </h1>
-
-        @if (empty($introtext))
-        @else
-            <div class="Introtext">{!! $introtext !!}</div>
-        @endif
-
-        @if ($mostCommonCrimeTypes && $mostCommonCrimeTypes->count() >= 5)
-            <p>
-                De vanligaste händelserna idag är
-                @foreach ($mostCommonCrimeTypes as $oneCrimeType)
-                    @if ($loop->remaining == 0)
-                        och <strong>{{ mb_strtolower($oneCrimeType->parsed_title) }}</strong>.
-                    @elseif ($loop->remaining == 1)
-                        <strong>{{ mb_strtolower($oneCrimeType->parsed_title) }}</strong>
-                    @else
-                        <strong>{{ mb_strtolower($oneCrimeType->parsed_title) }}</strong>,
-                    @endif
-                    <!-- {{ $oneCrimeType->antal }} -->
-                @endforeach
-            </p>
-        @endif
-    </div>
-
     <div class="widget">
         <h2 class="widget__title">
             <svg class="align-text-bottom" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#0c3256" width="18px"
@@ -71,6 +43,22 @@ samt för äldre dagar när man bläddrar i arkivet.
                 Karta
             </a>
         </h2>
+
+        @if ($mostCommonCrimeTypes && $mostCommonCrimeTypes->count() >= 5)
+            <p>
+                De vanligaste händelserna idag är
+                @foreach ($mostCommonCrimeTypes as $oneCrimeType)
+                    @if ($loop->remaining == 0)
+                        och <strong>{{ mb_strtolower($oneCrimeType->parsed_title) }}</strong>.
+                    @elseif ($loop->remaining == 1)
+                        <strong>{{ mb_strtolower($oneCrimeType->parsed_title) }}</strong>
+                    @else
+                        <strong>{{ mb_strtolower($oneCrimeType->parsed_title) }}</strong>,
+                    @endif
+                    <!-- {{ $oneCrimeType->antal }} -->
+                @endforeach
+            </p>
+        @endif
 
         @include('parts.events-heroes')
 

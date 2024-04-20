@@ -25,10 +25,10 @@
     --border-radius-normal: 10px;
 }
 
-.amp-border-box,
-.amp-border-box *,
-.amp-border-box :after,
-.amp-border-box :before {
+html,
+html *,
+html :after,
+html :before {
     box-sizing: border-box;
 }
 
@@ -44,7 +44,7 @@
 
 html,
 body {
-    background: white;
+    background: #ebebeb;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
         Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
     /*font-family: sans-serif;*/
@@ -54,7 +54,7 @@ body {
 }
 
 body {
-    padding-top: 150px;
+    padding-top: 139px;
     /*background: #fafafa;*/
     /* background: #f4f4f7; */
     margin: 0;
@@ -140,7 +140,7 @@ blockquote {
 .container {
     margin: 0 auto;
     max-width: 1400px;
-    padding: 0 var(--default-margin);
+    /* padding: 0 var(--default-margin); */
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
@@ -528,6 +528,7 @@ blockquote {
     margin-bottom: 0.25rem;
     /*word-break: break-all;*/
     font-weight: 400;
+    text-wrap: balance;
 }
 
 .Event__titleLink {
@@ -620,6 +621,10 @@ blockquote {
 
 .Event--single .Event__title {
     font-size: 1.75rem;
+}
+
+.Event--single .Event__teaser {
+    font-weight: 600;
 }
 
 .Event__teaser p {
