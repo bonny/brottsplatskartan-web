@@ -1122,20 +1122,33 @@ input[type="url"],
 
 .Event__dictionaryWordsTitle {
     margin-top: 0;
+    font-size: 1rem;
+}
+
+.Event__dictionaryWords__wrap {
+    overflow-x: auto;
+    display: flex;
+    gap: var(--default-margin-double);
+    scroll-snap-type: x mandatory;
+}
+
+.Event__dictionaryWords__wrap > * {
+    flex: 1 0 65%;
+    scroll-snap-align: start;
 }
 
 .Event__dictionaryWord {
-    float: left;
-    width: 48%;
+    /* float: left;
+    width: 48%; */
 }
 
-.Event__dictionaryWord:nth-child(2n + 1) {
+/* .Event__dictionaryWord:nth-child(2n + 1) {
     float: right;
 }
 
 .Event__dictionaryWord:nth-child(2n + 2) {
     clear: both;
-}
+} */
 
 .Event__dictionaryDictionaryLink {
     overflow: auto;
@@ -1150,10 +1163,13 @@ input[type="url"],
 
 .Event__dictionaryWordTitle {
     margin-top: 0;
+    display: inline;
+    font-size: inherit;
+    font-weight: bold;
 }
 
-.Event__dictionaryWordTitle {
-    font-size: 1rem;
+.Event__dictionaryWordDescription {
+    display: inline;
 }
 
 .Event__dictionaryWordDescription > p {

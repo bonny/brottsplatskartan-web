@@ -155,18 +155,20 @@ if $single is set then larger image
     <aside class="Event__dictionaryWords">
         <h2 class="Event__dictionaryWordsTitle">Ord som förekommer i händelsen</h2>
 
-        @foreach ($dictionaryWordsInText as $dictionaryWord)
-            <div class="Event__dictionaryWord">
-                <h3 class="Event__dictionaryWordTitle">
-                    <a href="{{ route('ordlistaOrd', ['word' => App\Helper::toAscii($dictionaryWord->word)]) }}">
-                        {{ $dictionaryWord->word }}
-                    </a>
-                </h3>
-                <div class="Event__dictionaryWordDescription">
-                    <p>{!! str_limit(strip_tags(Markdown::parse($dictionaryWord->description)), 100, '…') !!}</p>
+        <div class="Event__dictionaryWords__wrap">
+            @foreach ($dictionaryWordsInText as $dictionaryWord)
+                <div class="Event__dictionaryWord">
+                    <h3 class="Event__dictionaryWordTitle">
+                        <a href="{{ route('ordlistaOrd', ['word' => App\Helper::toAscii($dictionaryWord->word)]) }}">
+                            {{ $dictionaryWord->word }}
+                        </a>
+                    </h3>
+                    <p class="Event__dictionaryWordDescription">
+                        – {!! str_limit(strip_tags(Markdown::parse($dictionaryWord->description)), 100, '…') !!}
+                    </p>
                 </div>
-            </div>
-        @endforeach
+            @endforeach
+        </div>
 
         <p class="Event__dictionaryDictionaryLink"><a href="{{ Route('ordlista') }}">Fler ord hittar du i Ordlistan</a>
         </p>
