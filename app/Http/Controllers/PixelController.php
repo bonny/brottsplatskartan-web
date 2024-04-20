@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\CrimeView;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 /**
@@ -50,6 +51,7 @@ class PixelController extends Controller {
         } 
 
         $searches[$query]['count']++;
+        $searches[$query]['last'] = Carbon::now()->toIso8601String();
 
         // Spara setting.
         \Setting::set($settingsKey, $searches);
