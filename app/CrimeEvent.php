@@ -36,7 +36,9 @@ class CrimeEvent extends Model implements Feedable
         'location_lat',
         'parsed_teaser',
         'scanned_for_locations',
-        'geocoded'
+        'geocoded',
+        'title_alt_1',
+        'description_alt_1',
     ];
 
     /**
