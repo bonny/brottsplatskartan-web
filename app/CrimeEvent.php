@@ -721,6 +721,10 @@ class CrimeEvent extends Model implements Feedable
         // remove duplicate <br>
         $text = preg_replace('/(<br>)+/', '<br>', $text);
 
+        // remove duplicate <p> and </p>
+        $text = preg_replace('/(<p>)+/', '<p>', $text);
+        $text = preg_replace('/(<\/p>)+/', '</p>', $text);
+
         return $text;
     }
 
