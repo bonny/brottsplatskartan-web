@@ -49,6 +49,7 @@ class CreateAISummary extends Command {
         När flera händelser finns rapporterade i samma text så infogar du en radbrytning innan varje ny händelse.
         När en rad börjar med en tidpunkt så skapar du också en text där tidpunkten börjar med samma tidpunkt och med ny rad/nytt stycke. Så om en text börjar med "Vid hh.nn så hände det en sak" så skriver du en ny rad och sen "Vid hh.nn". Samma sak när en text börjar med "Klockan hh.nn" så skriver du en ny rad och sen "Klockan hh.nn".
         Gör platser, brottstyper, händelsetyper fetstilta. Händelsetyper är t.ex. inbrott, rån, mord, skadegörelse, och liknande.
+        När en rad börjar med "-" eller " - " så behåller du ny rad och bindestrecket i din text.
         
         Ge svaret i JSON-format så att en dator kan tolka det.
 
