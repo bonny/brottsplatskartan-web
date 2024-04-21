@@ -641,13 +641,31 @@ class CrimeEvent extends Model implements Feedable
     }
 
     /**
-     * Get the description
+     * Hämtar brödtextraden för en händelse.
      *
      * @return string The content
      */
     public function getParsedContent()
     {
         $text = $this->parsed_content;
+
+        $text = $this->autop($text);
+
+        return $text;
+    }
+
+    /**
+     * Hämtar textalternativ 1 (skapad av OpenAI) för en händelse, om det finns.
+     * Annars hämtas vanliga texten.
+     * 
+     * @return string The content
+     */
+    public function getParsedContentAlt1() {
+        $text = $this->description_alt_1;
+
+        if (empty($text)) {
+            $text = $this->parsed_content;
+        }
 
         $text = $this->autop($text);
 
