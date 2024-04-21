@@ -1780,6 +1780,55 @@ h2.widget__title {
     font-size: 4rem;
 }
 
+.text-inherit {
+    color: inherit;
+}
+.text-current {
+    color: currentColor;
+}
+.text-transparent {
+    color: transparent;
+}
+.text-black {
+    color: rgb(0 0 0);
+}
+.text-white {
+    color: rgb(255 255 255);
+}
+.text-gray-50 {
+    color: rgb(249 250 251);
+}
+.text-gray-100 {
+    color: rgb(243 244 246);
+}
+.text-gray-200 {
+    color: rgb(229 231 235);
+}
+.text-gray-300 {
+    color: rgb(209 213 219);
+}
+.text-gray-400 {
+    color: rgb(156 163 175);
+}
+.text-gray-500 {
+    color: rgb(107 114 128);
+}
+.text-gray-600 {
+    color: rgb(75 85 99);
+}
+.text-gray-700 {
+    color: rgb(55 65 81);
+}
+.text-gray-800 {
+    color: rgb(31 41 55);
+}
+.text-gray-900 {
+    color: rgb(17 24 39);
+}
+.text-gray-950 {
+    color: rgb(3 7 18);
+}
+
 .rounded-none {
     border-radius: 0;
 }

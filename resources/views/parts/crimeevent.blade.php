@@ -129,8 +129,9 @@ if $single is set then larger image
 @endif
 
 @if ($event->title_alt_1 || $event->description_alt_1)
-    <details>
-        <summary>Visa alternativa texter</summary>
+    <details class="mt-6">
+        <summary>Visa alternativ text</summary>
+
         <p>
             <strong>Alternativ titel:</strong>
             <br>
@@ -141,6 +142,8 @@ if $single is set then larger image
             <strong>Alternativ text:</strong>
             <br>{!! $event->autop($event->description_alt_1) !!}
         </p>
+
+        <p class="text-sm text-gray-500">Dessa texter är ofta automatiskt genererade av AI. Tolkningsfel kan förekomma.</p>
     </details>
 @endif
 
