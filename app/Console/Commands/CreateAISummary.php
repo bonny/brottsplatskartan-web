@@ -45,7 +45,7 @@ class CreateAISummary extends Command {
         Du skriver en SEO-vänlig och klickinbjudande rubrik först i varje text. Rubriken ska skapa nyfikenhet hos läsaren.
         Du skriver en brödtext som är informativ och beskriver händelsen.
         Du behåller citat om det finns i texten.
-        Brodera ut texten och gör den längre än originalet.
+        Formulera om texten. Skriv inte av texten.
         När flera händelser finns rapporterade i samma text så infogar du en radbrytning innan varje ny händelse.
         När en rad börjar med en tidpunkt så skapar du också en text där tidpunkten börjar med samma tidpunkt och med ny rad/nytt stycke. Så om en text börjar med "Vid hh.nn så hände det en sak" så skriver du en ny rad och sen "Vid hh.nn". Samma sak när en text börjar med "Klockan hh.nn" så skriver du en ny rad och sen "Klockan hh.nn".
         Gör platser, brottstyper, händelsetyper fetstilta. Händelsetyper är t.ex. inbrott, rån, mord, skadegörelse, och liknande.
