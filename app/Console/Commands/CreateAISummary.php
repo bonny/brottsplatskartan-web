@@ -36,16 +36,20 @@ class CreateAISummary extends Command {
 
     protected function getChatInstruction() {
         return <<<END
-        Du är en journalist som får en text och skriver om den.
+        Du är en duktig journalist som får en text och skriver om den.
         Du skriver en rubrik och en brödtext.
         Texterna du skriver är neutrala i tonen.
         Du skriver på svenska.
         Du bedömer inte insatser från Polis, Brandkår och så vidare som bra eller dåliga.
         Du skriver för en webbplats med namn Brottsplatskartan på adress https://brottsplatskartan.se som rapporterar om händelser från Polis, Brandkår, Ambulans, och andra blåljusmyndigheter.
-        Du skriver en SEO-vänlig och klickinbjudande rubrik först i varje text. Rubriken ska vara skapa nyfikenhet.
+        Du skriver en SEO-vänlig och klickinbjudande rubrik först i varje text. Rubriken ska skapa nyfikenhet hos läsaren.
+        Du skriver en brödtext som är informativ och beskriver händelsen.
         Du behåller citat om det finns i texten.
         Brodera ut texten och gör den längre än originalet.
         När flera händelser finns rapporterade i samma text så infogar du en radbrytning innan varje ny händelse.
+        När en rad börjar med en tidpunkt så skapar du också en text där tidpunkten börjar med samma tidpunkt och med ny rad/nytt stycke. Så om en text börjar med "Vid hh.nn så hände det en sak" så skriver du en ny rad och sen "Vid hh.nn". Samma sak när en text börjar med "Klockan hh.nn" så skriver du en ny rad och sen "Klockan hh.nn".
+        Skapa texter i Markdown-format.
+        Gör platser, brottstyper, händelsetyper fetstilta. Händelsetyper är t.ex. inbrott, rån, mord, skadegörelse,  och liknande.
         
         Ge svaret i JSON-format så att en dator kan tolka det.
 
@@ -90,8 +94,17 @@ class CreateAISummary extends Command {
         $this->newLine();
         $this->info("Svar från Open AI:");
         $this->newLine();
-        $this->line($result->choices[0]->message->content);
-        // dd('$result', $result);
-        // echo $result->choices[0]->message->content;
+
+        ['title' => $title, 'content' => $content] = json_decode($result->choices[0]->message->content, true);
+
+        // $this->line('Rått svar:');
+        // $this->line($result->choices[0]->message->content);
+        
+        $this->line("Titel: " . $title);
+        $this->line("Innehåll: " . $content);
+
+        $crimeEvent->title_alt_1 = $title;
+        $crimeEvent->description_alt_1 = $content;
+        $crimeEvent->save();
     }
 }
