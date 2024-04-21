@@ -99,7 +99,7 @@ https://brottsplatskartan.localhost/lan/Stockholms%20l%C3%A4n
     <div class="widget Stats Stats--lan" id="brottsstatistik">
         <h2 class="widget__title Stats__title">Brottsstatistik</h2>
         <div class="widget__listItem__text">
-            <p>Antal Polisiära händelser per dag för {{$lan}}, 14 dagar tillbaka.</p>
+            <p class="pb-6">Antal Polisiära händelser per dag för {{$lan}}, 14 dagar tillbaka.</p>
             {!! $chartHtml !!}
         </div>
     </div>
