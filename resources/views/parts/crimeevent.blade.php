@@ -128,24 +128,20 @@ if $single is set then larger image
     </a>
 @endif
 
-@if (!isset($overview) && Auth::check())
+@if ($event->title_alt_1 || $event->description_alt_1)
+    <details>
+        <summary>Visa alternativa texter</summary>
+        <p>
+            <strong>Alternativ titel:</strong>
+            <br>
+            {{ $event->title_alt_1 }}
+        </p>
 
-    @if ($event->title_alt_1 || $event->description_alt_1)
-        <details>
-            <summary>Visa alternativa texter</summary>
-            <p>
-                <strong>Alternativ titel:</strong>
-                <br>
-                {{ $event->title_alt_1 }}
-            </p>
-
-            <p>
-                <strong>Alternativ text:</strong>
-                <br>{!! $event->autop($event->description_alt_1) !!}
-            </p>
-        </details>
-    @endif
-
+        <p>
+            <strong>Alternativ text:</strong>
+            <br>{!! $event->autop($event->description_alt_1) !!}
+        </p>
+    </details>
 @endif
 
 @if (isset($single) && $event->shouldShowSourceLink())
