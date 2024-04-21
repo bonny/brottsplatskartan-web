@@ -48,7 +48,7 @@ class CreateAISummary extends Command {
         Brodera ut texten och gör den längre än originalet.
         När flera händelser finns rapporterade i samma text så infogar du en radbrytning innan varje ny händelse.
         När en rad börjar med en tidpunkt så skapar du också en text där tidpunkten börjar med samma tidpunkt och med ny rad/nytt stycke. Så om en text börjar med "Vid hh.nn så hände det en sak" så skriver du en ny rad och sen "Vid hh.nn". Samma sak när en text börjar med "Klockan hh.nn" så skriver du en ny rad och sen "Klockan hh.nn".
-        Gör platser, brottstyper, händelsetyper fetstilta. Händelsetyper är t.ex. inbrott, rån, mord, skadegörelse,  och liknande.
+        Gör platser, brottstyper, händelsetyper fetstilta. Händelsetyper är t.ex. inbrott, rån, mord, skadegörelse, och liknande.
         
         Ge svaret i JSON-format så att en dator kan tolka det.
 
@@ -66,8 +66,9 @@ class CreateAISummary extends Command {
         $client = \OpenAI::client($yourApiKey);
 
         $crimeEvent = CrimeEvent::find($crimeEventId);
-        $userMessageContent = $crimeEvent->parsed_title . ': ' . $crimeEvent->parsed_teaser . PHP_EOL . $crimeEvent->parsed_content;
-        $userMessageContent = strip_tags($userMessageContent);
+        $userMessageContent = 
+            "<h1>" . $crimeEvent->parsed_title . '</h1>'. PHP_EOL . '<p>' . $crimeEvent->parsed_teaser . '</p>' . PHP_EOL . $crimeEvent->autop($crimeEvent->parsed_content);
+        // $userMessageContent = strip_tags($userMessageContent);
 
         $this->line("Hittade händelse " .  $crimeEvent->parsed_date . ': ' . $crimeEvent->parsed_title);
         $this->newLine();
