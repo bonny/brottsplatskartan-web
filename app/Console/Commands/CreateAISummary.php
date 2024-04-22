@@ -12,7 +12,7 @@ class CreateAISummary extends Command {
      *
      * @var string
      */
-    protected $signature = 'crimeevents:create-summary {eventID}';
+    protected $signature = 'crimeevents:create-summary {eventID*}';
 
     /**
      * The console command description.
@@ -27,10 +27,13 @@ class CreateAISummary extends Command {
      * @return int
      */
     public function handle() {
-        $crimeEventId = $this->argument('eventID');
+        $crimeEventIds = $this->argument('eventID');
+
         $this->line('Ok, let\'s go!');
-        $this->line('Skapar sammanfattning av händelse med id ' . $crimeEventId);
-        $this->generateSummary($crimeEventId);
+        
+        foreach ($crimeEventIds as $crimeEventId) {
+            $this->generateSummary($crimeEventId);
+        }
         return Command::SUCCESS;
     }
 
@@ -66,11 +69,11 @@ class CreateAISummary extends Command {
         $yourApiKey = getenv('OPEN_AI_API_KEY');
         $client = \OpenAI::client($yourApiKey);
 
-        $crimeEvent = CrimeEvent::find($crimeEventId);
+        $crimeEvent = CrimeEvent::findOrFail($crimeEventId);
         $userMessageContent = 
             "<h1>" . $crimeEvent->parsed_title . '</h1>'. PHP_EOL . '<p>' . $crimeEvent->parsed_teaser . '</p>' . PHP_EOL . $crimeEvent->autop($crimeEvent->parsed_content);
         // $userMessageContent = strip_tags($userMessageContent);
-
+        $this->newLine();
         $this->line("Hittade händelse " .  $crimeEvent->parsed_date . ': ' . $crimeEvent->parsed_title);
         $this->newLine();
         // echo "chat instructions:\n" . $this->getChatInstruction() . "\n";exit;
