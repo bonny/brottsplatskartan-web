@@ -17,14 +17,6 @@ $noAdsReason = '';
 <html lang="sv">
 
 <head>
-
-    <?php
-    if ($showAds) {
-      ?>
-    <?php
-    }
-    ?>
-
     @stack('scripts')
 
     <meta charset="utf-8">
@@ -47,10 +39,6 @@ $noAdsReason = '';
     @hasSection('ldJson')
         @yield('ldJson')
     @endif
-
-    {{-- @else
-        <meta property="og:description" content="Se var brott sker nära dig">
-        <meta name="twitter:description" content="Se var brott sker nära dig"> --}}
 
     @hasSection('metaImage')
         <meta property="og:image" content="@yield('metaImage')" />
@@ -146,29 +134,20 @@ $noAdsReason = '';
 </head>
 
 <body class="@if ($shared_notification_bar_contents) has-notification-bar @endif {{ $noAdsReason }}">
-    <?php
-    if ($showAds) {
-      ?>
-
-    <?php
-    }
-    ?>
-
     @include('parts.notificationbar')
+    @include('parts.bar-mostread')
     @include('parts.siteheader')
 
     <div class="container">
-
         @include('parts.vma-siteheader-alerts')
-
         @yield('beforeBreadcrumb')
         @include('parts.breadcrumb', ['single' => true])
 
         {{-- Output debug data, if set --}}
         @if (isset($debugData) && !empty($debugData))
             <pre>
-{{ json_encode($debugData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) }}
-            </pre>
+    {{ json_encode($debugData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) }}
+                </pre>
         @endif
         @if (isset($debugData) && !empty($debugData['itemGeocodeURL']))
             itemGeocodeURL:<br>
@@ -178,9 +157,7 @@ $noAdsReason = '';
         @yield('beforeMainContent')
 
         <main class="MainContent">
-
             @yield('content')
-
         </main>
 
         <aside class="MainSidebar">
@@ -194,9 +171,9 @@ $noAdsReason = '';
     </footer>
 
     {{--
-      Pixel,
-      ladda via JS för att minimera laddning via bots.
-    --}}
+        Pixel,
+        ladda via JS för att minimera laddning via bots.
+        --}}
     @php
         $pixelUrl = sprintf(
             '%1$s/pixel?path=%2$s&rand=%3$s',
@@ -212,7 +189,6 @@ $noAdsReason = '';
             i.src = '{{ $pixelUrl }}';
         })();
     </script>
-
 </body>
 
 </html>

@@ -2,19 +2,16 @@
 
 namespace App\Providers;
 
+use Carbon\Carbon;
 use Illuminate\Support\ServiceProvider;
-use App\Models\VMAAlert;
-use Illuminate\Support\Facades\Cache;
 
-class AppServiceProvider extends ServiceProvider
-{
+class AppServiceProvider extends ServiceProvider {
     /**
      * Bootstrap any application services.
      *
      * @return void
      */
-    public function boot()
-    {
+    public function boot() {
         // https://stackoverflow.com/questions/24426423/laravel-generate-secure-https-url-from-route
         if (\App::environment() === 'production') {
             \URL::forceScheme('https');
@@ -22,7 +19,7 @@ class AppServiceProvider extends ServiceProvider
 
         // @TODO: Don't run the code below when we don't have any db connction
         // because we can install things using composer and so on.
-        
+
         // Lan listing is used in header nav so share it here for easy access.
         // https://laravel.com/docs/9.x/views#sharing-data-with-all-views
         $lan = \App\Helper::getAllLanWithStats();
@@ -38,7 +35,9 @@ class AppServiceProvider extends ServiceProvider
         \View::share('shared_vma_alerts', \App\Helper::getVMAAlerts());
         \View::share('shared_vma_current_alerts', \App\Helper::getCurrentVMAAlerts());
         \View::share('shared_archived_vma_alerts', \App\Helper::getArchivedVMAAlerts());
-        
+
+        // Most read.
+        \View::share('shared_most_viewed', \App\Helper::getMostViewedEvents(Carbon::now(), 10));
     }
 
     /**
@@ -46,8 +45,7 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register()
-    {
+    public function register() {
         //
     }
 }

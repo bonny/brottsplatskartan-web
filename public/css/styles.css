@@ -1632,6 +1632,29 @@ h2.widget__title {
     border: 0;
 }
 
+.sitebar__mostread {
+}
+
+.sitebar__mostreadItems {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    overflow-x: scroll;
+    scroll-snap-type: x proximity;
+}
+
+.sitebar__mostreadItem {
+    flex: 1 0 90%;
+    scroll-snap-align: start;
+}
+
+.sitebar__mostreadItemLink {
+    display: block;
+    white-space: nowrap;
+    padding: var(--default-margin-half);
+}
+
 /* Utilities */
 .u-margin-0 {
     margin: 0;
