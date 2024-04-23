@@ -114,6 +114,8 @@ $noAdsReason = '';
     </style>
     <link rel="stylesheet" type="text/css" href="/css/charts.min.css" />
 
+    <script src="/js/scroll-snap-slider.iife.js"></script>
+
     @if (env('APP_ENV') != 'local')
         <!-- Global site tag (gtag.js) - Google Analytics -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-L1WVBJ39GH"></script>
@@ -189,6 +191,15 @@ $noAdsReason = '';
             i.src = '{{ $pixelUrl }}';
         })();
     </script>
+
+    <script>
+        new ScrollSnapSlider.ScrollSnapSlider({
+            element: document.querySelector('.sitebar__EventsItems'),
+        }).with([
+            new ScrollSnapSlider.ScrollSnapAutoplay(4000),
+        ]);
+    </script>
+
 </body>
 
 </html>

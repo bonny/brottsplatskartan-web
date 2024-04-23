@@ -1614,7 +1614,9 @@ h2.widget__title {
     padding: 0;
     display: flex;
     overflow-x: scroll;
-    scroll-snap-type: x proximity;
+    scroll-behavior: smooth;
+    scroll-snap-stop: always;
+    scroll-snap-type: x mandatory;
 }
 
 .sitebar__EventsItem {
