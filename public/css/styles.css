@@ -26,6 +26,9 @@
     --font-size-large: 1.5rem;
     --font-size-small: 0.9rem;
     --border-radius-normal: 10px;
+    /* Breakpoints 667px, 1024px */
+    --breakpoint-medium: 667px;
+    --breakpoint-large: 1024px;
 }
 
 html,
@@ -59,10 +62,6 @@ body {
 body {
     /* padding-top: 105px; */
     margin: 0;
-}
-
-body.has-notification-bar {
-    /* padding-top: 137px; */
 }
 
 h1,
@@ -243,6 +242,7 @@ blockquote {
     font-size: 1.5rem;
     transform-origin: center;
     color: #333;
+    /* border-top: 4px solid var(--color-red-3); */
     border-bottom: 4px solid var(--color-red-3);
 }
 
@@ -270,9 +270,6 @@ blockquote {
     color: #fff;
     /* border-bottom: 4px solid #aaa; */
     background-color: #f5f5f5;
-}
-
-.SiteNav__inner {
 }
 
 .SiteNav__items {
@@ -317,10 +314,6 @@ blockquote {
     /* border-right: 1px solid rgb(104, 154, 200); */
     /* background-color: var(--color-blue-police); */
     /* padding-right: 0; */
-}
-
-.SiteNav__item:first-of-type a {
-    /* border-left: 1px solid rgb(104, 154, 200); */
 }
 
 .SiteNav__item a:hover,
@@ -1128,19 +1121,6 @@ input[type="url"],
     }
 }
 
-.Event__dictionaryWord {
-    /* float: left;
-    width: 48%; */
-}
-
-/* .Event__dictionaryWord:nth-child(2n + 1) {
-    float: right;
-}
-
-.Event__dictionaryWord:nth-child(2n + 2) {
-    clear: both;
-} */
-
 .Event__dictionaryDictionaryLink {
     overflow: auto;
     clear: both;
@@ -1371,7 +1351,7 @@ input[type="url"],
 
 }*/
 
-@media only screen and (max-width: 667px) {
+@media only screen and (min-width: 667px) {
     .SiteNav__item svg {
         display: none;
     }
@@ -1385,10 +1365,6 @@ input[type="url"],
 @media only screen and (min-width: 667px) {
     .SiteTitle {
         transform-origin: left;
-    }
-
-    .SiteNav__items {
-        /* text-align: left; */
     }
 
     .SiteNav__item a:hover {
@@ -1579,7 +1555,6 @@ h2.widget__title {
     margin-right: calc(-1 * var(--default-margin));
 }
 
-/* @media only screen and (max-width: 667px) { */
 .consent-element {
     background: rgb(250, 250, 250);
     /* padding: 2rem; */
@@ -1629,6 +1604,8 @@ h2.widget__title {
 
 .sitebar__Events {
     font-size: var(--font-size-small);
+    color: white;
+    background-color: var(--color-red-3);
 }
 
 .sitebar__EventsItems {
@@ -1648,16 +1625,31 @@ h2.widget__title {
 
 @media only screen and (min-width: 667px) {
     .sitebar__EventsItem {
-        flex: 1 0 20%;
+        flex: 1 0 40%;
+    }
+}
+
+@media only screen and (min-width: 1024px) {
+    .sitebar__EventsItem {
+        flex: 1 0 30%;
     }
 }
 
 .sitebar__EventsItemLink {
     display: block;
+    color: inherit;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
     padding: var(--default-margin-half);
+    border-right: 1px solid #f18e93;
+    text-align: center;
+}
+
+.sitebar__EventsItem__Time {
+    font-weight: bold;
+    font-size: 0.8em;
+    margin-right: 0.5em;
 }
 
 .charts-css.column {
@@ -2194,13 +2186,13 @@ h2.widget__title {
 .gap-y-px {
     row-gap: 1px;
 }
-.gap-0.5 {
+.gap-0\.5 {
     gap: 0.125rem; /* 2px */
 }
-.gap-x-0.5 {
+.gap-x-0\.5 {
     column-gap: 0.125rem; /* 2px */
 }
-.gap-y-0.5 {
+.gap-y-0\.5 {
     row-gap: 0.125rem; /* 2px */
 }
 .gap-1 {
@@ -2212,13 +2204,13 @@ h2.widget__title {
 .gap-y-1 {
     row-gap: 0.25rem; /* 4px */
 }
-.gap-1.5 {
+.gap-1\.5 {
     gap: 0.375rem; /* 6px */
 }
-.gap-x-1.5 {
+.gap-x-1\.5 {
     column-gap: 0.375rem; /* 6px */
 }
-.gap-y-1.5 {
+.gap-y-1\.5 {
     row-gap: 0.375rem; /* 6px */
 }
 .gap-2 {
@@ -2230,13 +2222,13 @@ h2.widget__title {
 .gap-y-2 {
     row-gap: 0.5rem; /* 8px */
 }
-.gap-2.5 {
+.gap-2\.5 {
     gap: 0.625rem; /* 10px */
 }
-.gap-x-2.5 {
+.gap-x-2\.5 {
     column-gap: 0.625rem; /* 10px */
 }
-.gap-y-2.5 {
+.gap-y-2\.5 {
     row-gap: 0.625rem; /* 10px */
 }
 .gap-3 {
@@ -2248,13 +2240,13 @@ h2.widget__title {
 .gap-y-3 {
     row-gap: 0.75rem; /* 12px */
 }
-.gap-3.5 {
+.gap-3\.5 {
     gap: 0.875rem; /* 14px */
 }
-.gap-x-3.5 {
+.gap-x-3\.5 {
     column-gap: 0.875rem; /* 14px */
 }
-.gap-y-3.5 {
+.gap-y-3\.5 {
     row-gap: 0.875rem; /* 14px */
 }
 .gap-4 {

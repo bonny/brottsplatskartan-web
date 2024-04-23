@@ -5,7 +5,7 @@
             @foreach ($shared_latest_events as $mostViewedItem)
                 <li class="sitebar__EventsItem">
                     <a class="sitebar__EventsItemLink" href="{{ $mostViewedItem->getPermalink() }}">
-                        {{ $mostViewedItem->getParsedDateInFormat('%H:%M') }}
+                        <span class="sitebar__EventsItem__Time">{{ $mostViewedItem->getParsedDateInFormat('%H:%M') }}</span>
                         {{ $mostViewedItem->title_alt_1 ? $mostViewedItem->title_alt_1 : $mostViewedItem->getSingleEventTitleShort() }}
                     </a>
                 </li>
