@@ -1084,6 +1084,8 @@ class Helper {
 
     /**
      * Hämta de senaste händelserna.
+     * Sortering är skapelsedatumet i db, 
+     * inte själva händelsedatumet.
      *
      * @param  integer $count [description]
      * @return Collection         [description]
@@ -1094,6 +1096,21 @@ class Helper {
             $events = CrimeEvent::orderBy("created_at", "desc")
                 ->with('locations')
                 ->limit(20)
+                ->get();
+
+            return $events;
+        });
+
+        return $events;
+    }
+
+    public static function getLatestEventsByPubdate(int $count = 5) {
+        $cacheKey = __METHOD__ . ":{$count}";
+
+        $events = Cache::remember($cacheKey, 2 * 60, function () use ($count) {
+            $events = CrimeEvent::orderBy("pubdate_iso8601", "desc")
+                ->with('locations')
+                ->limit($count)
                 ->get();
 
             return $events;

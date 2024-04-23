@@ -36,8 +36,11 @@ class AppServiceProvider extends ServiceProvider {
         \View::share('shared_vma_current_alerts', \App\Helper::getCurrentVMAAlerts());
         \View::share('shared_archived_vma_alerts', \App\Helper::getArchivedVMAAlerts());
 
-        // Most read.
-        \View::share('shared_most_viewed', \App\Helper::getMostViewedEvents(Carbon::now(), 10));
+        // Mest lästa.
+        \View::share('shared_most_viewed_events', \App\Helper::getMostViewedEvents(Carbon::now(), 10));
+
+        // Nyaste.
+        \View::share('shared_latest_events', \App\Helper::getLatestEventsByPubdate());
     }
 
     /**

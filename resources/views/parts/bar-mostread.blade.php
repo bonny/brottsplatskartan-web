@@ -1,17 +1,12 @@
 {{-- Visar de mest lästa händelserna i en "slider". --}}
-@if ($shared_most_viewed->count() > 0)
+@if ($shared_latest_events->count() > 0)
     <div class="sitebar__mostread">
         <ul class="sitebar__mostreadItems">
-            @foreach ($shared_most_viewed as $mostViewedItem)
-                {{-- Skip events with empty alt title --}}
-                @if (empty($mostViewedItem->crimeevent->title_alt_1))
-                    @continue
-                @endif
-
+            @foreach ($shared_latest_events as $mostViewedItem)
                 <li class="sitebar__mostreadItem">
-                    <a class="sitebar__mostreadItemLink" href="{{ $mostViewedItem->crimeevent->getPermalink() }}">
-                        {{ $mostViewedItem->crimeevent->getParsedDateInFormat('%H:%M') }}
-                        {{ $mostViewedItem->crimeevent->title_alt_1 }}
+                    <a class="sitebar__mostreadItemLink" href="{{ $mostViewedItem->getPermalink() }}">
+                        {{ $mostViewedItem->getParsedDateInFormat('%H:%M') }}
+                        {{ $mostViewedItem->title_alt_1 ? $mostViewedItem->title_alt_1 : $mostViewedItem->getSingleEventTitleShort() }}
                     </a>
                 </li>
             @endforeach
