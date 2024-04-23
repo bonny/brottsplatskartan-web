@@ -43,6 +43,11 @@ class SearchController extends Controller {
             return !isset($search['last']);
         });
 
+        // Ta bort lite mer:
+        // - sökningar som bara är siffror, t.ex. årtal "2024".
+        // - sökningar som är relativa tider, t.ex. "idag", "igår".
+        // - sökningar som är datum, t.ex. "16 april", "16 april 2024"
+
         if ($only_with_hits) {
             $searches = $searches->filter(function ($search) {
                 return $search['hits'] > 0;
