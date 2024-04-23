@@ -135,7 +135,7 @@ $noAdsReason = '';
 
 <body class="@if ($shared_notification_bar_contents) has-notification-bar @endif {{ $noAdsReason }}">
     @include('parts.notificationbar')
-    @include('parts.bar-mostread')
+    @include('parts.bar-events')
     @include('parts.siteheader')
 
     <div class="container">

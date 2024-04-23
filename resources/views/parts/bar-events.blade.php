@@ -1,10 +1,10 @@
-{{-- Visar de mest lästa händelserna i en "slider". --}}
+{{-- Visar en "notification bar" med händelser i en "slider". --}}
 @if ($shared_latest_events->count() > 0)
-    <div class="sitebar__mostread">
-        <ul class="sitebar__mostreadItems">
+    <div class="sitebar__Events">
+        <ul class="sitebar__EventsItems">
             @foreach ($shared_latest_events as $mostViewedItem)
-                <li class="sitebar__mostreadItem">
-                    <a class="sitebar__mostreadItemLink" href="{{ $mostViewedItem->getPermalink() }}">
+                <li class="sitebar__EventsItem">
+                    <a class="sitebar__EventsItemLink" href="{{ $mostViewedItem->getPermalink() }}">
                         {{ $mostViewedItem->getParsedDateInFormat('%H:%M') }}
                         {{ $mostViewedItem->title_alt_1 ? $mostViewedItem->title_alt_1 : $mostViewedItem->getSingleEventTitleShort() }}
                     </a>

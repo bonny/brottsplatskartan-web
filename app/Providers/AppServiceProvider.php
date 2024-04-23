@@ -40,7 +40,7 @@ class AppServiceProvider extends ServiceProvider {
         \View::share('shared_most_viewed_events', \App\Helper::getMostViewedEvents(Carbon::now(), 10));
 
         // Nyaste.
-        \View::share('shared_latest_events', \App\Helper::getLatestEventsByPubdate());
+        \View::share('shared_latest_events', \App\Helper::getLatestEventsByParsedDate(10));
     }
 
     /**

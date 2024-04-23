@@ -1630,11 +1630,11 @@ h2.widget__title {
     border: 0;
 }
 
-.sitebar__mostread {
+.sitebar__Events {
     font-size: var(--font-size-small);
 }
 
-.sitebar__mostreadItems {
+.sitebar__EventsItems {
     list-style-type: none;
     margin: 0;
     padding: 0;
@@ -1643,13 +1643,19 @@ h2.widget__title {
     scroll-snap-type: x proximity;
 }
 
-.sitebar__mostreadItem {
+.sitebar__EventsItem {
     flex: 1 0 80%;
     scroll-snap-align: start;
     overflow: hidden;
 }
 
-.sitebar__mostreadItemLink {
+@media only screen and (min-width: 667px) {
+    .sitebar__EventsItem {
+        flex: 1 0 20%;
+    }
+}
+
+.sitebar__EventsItemLink {
     display: block;
     overflow: hidden;
     white-space: nowrap;

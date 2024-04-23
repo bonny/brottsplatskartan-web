@@ -1104,11 +1104,11 @@ class Helper {
         return $events;
     }
 
-    public static function getLatestEventsByPubdate(int $count = 5) {
+    public static function getLatestEventsByParsedDate(int $count = 5) {
         $cacheKey = __METHOD__ . ":{$count}";
 
         $events = Cache::remember($cacheKey, 2 * 60, function () use ($count) {
-            $events = CrimeEvent::orderBy("pubdate_iso8601", "desc")
+            $events = CrimeEvent::orderBy("parsed_date", "desc")
                 ->with('locations')
                 ->limit($count)
                 ->get();
