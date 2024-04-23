@@ -227,11 +227,9 @@ blockquote {
 }
 
 .SiteHeader__loggedin {
-    position: absolute;
-    top: 0;
-    right: 0;
     color: darkgreen;
-    font-weight: bold;
+    margin: 0;
+    float: right;
 }
 
 .SiteTitle {
@@ -1633,6 +1631,7 @@ h2.widget__title {
 }
 
 .sitebar__mostread {
+    font-size: var(--font-size-small);
 }
 
 .sitebar__mostreadItems {
@@ -1645,13 +1644,16 @@ h2.widget__title {
 }
 
 .sitebar__mostreadItem {
-    flex: 1 0 90%;
+    flex: 1 0 80%;
     scroll-snap-align: start;
+    overflow: hidden;
 }
 
 .sitebar__mostreadItemLink {
     display: block;
+    overflow: hidden;
     white-space: nowrap;
+    text-overflow: ellipsis;
     padding: var(--default-margin-half);
 }
 

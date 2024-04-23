@@ -10,6 +10,7 @@
 
                 <li class="sitebar__mostreadItem">
                     <a class="sitebar__mostreadItemLink" href="{{ $mostViewedItem->crimeevent->getPermalink() }}">
+                        {{ $mostViewedItem->crimeevent->getParsedDateInFormat('%H:%M') }}
                         {{ $mostViewedItem->crimeevent->title_alt_1 }}
                     </a>
                 </li>
