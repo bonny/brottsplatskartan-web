@@ -35,7 +35,7 @@ class SearchController extends Controller {
        
         // Ta bort för korta sökningar.
         $searches = $searches->reject(function ($vals, $key) {
-            return mb_strlen($key) < 3;
+            return mb_strlen($key) < 4;
         });
 
         // Ta bort sökningar utan datum (gamla setting, försvinner automatiskt).
@@ -51,6 +51,11 @@ class SearchController extends Controller {
         // Ta bort sökningar som innehåller månadsnamn.
         $searches = $searches->reject(function ($search, $key) {
             return preg_match('/\b(januari|februari|mars|april|maj|juni|juli|augusti|september|oktober|november|december)\b/i', $key);
+        });
+
+        // Ta bort sökningar som endast är siffror.
+        $searches = $searches->reject(function ($search, $key) {
+            return preg_match('/^\d+$/', $key);
         });
 
         // Ta bort lite mer:
