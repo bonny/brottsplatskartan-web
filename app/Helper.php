@@ -59,28 +59,27 @@ class Helper {
             $tr_rows .= '
                 <tr>
                     <th>' . $a_start . $date_day . $a_end . '</th>
-                    <td style="--size: calc(' . $statRow->count . ' / ' . $maxValue . ')">'
-                . '<span class="data">' . $statRow->count . '</span>'
-                . '</td>
+                    <td style="--size: calc(' . $statRow->count . ' / ' . $maxValue . ')">' .
+                        '<span class="data">' . $statRow->count . '</span>' .
+                        $a_start . $a_end .
+                    '</td>
                 </tr>
             ';
         }
 
         $html = '
-            <div id="anatomy-simple-chart">
-                <table class="charts-css column show-heading show-labels show-primary-axis data-spacing-0 data-outside">
-                    <thead>
-                        <tr>
-                            <th scope="col">Dag</th>
-                            <th scope="col">Antal händelser</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ' . $tr_rows . '
-                    </tbody>
-                </table>
-                <!-- <p class="text-center">Dag</p> -->
-            </div>
+            <table class="charts-css column show-heading show-labels show-primary-axis data-spacing-1 data-outside">
+                <thead>
+                    <tr>
+                        <th scope="col">Dag</th>
+                        <th scope="col">Antal händelser</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ' . $tr_rows . '
+                </tbody>
+            </table>
+            <!-- <p class="text-center">Dag</p> -->
         ';
 
         return $html;

@@ -8,6 +8,9 @@
     --color-gray-2: #ddd;
     --color-gray-3: #333;
     --color-red: #cb4739;
+    --color-red-2: #dd2a30;
+    --color-red-3: #c4252b;
+    --color-red-4: #911c20;
     --color-red-light: rgb(148, 53, 44);
     --color-blue-police: #1862a8;
     --color-blue-police-active: #0c3256;
@@ -240,13 +243,7 @@ blockquote {
     font-size: 1.5rem;
     transform-origin: center;
     color: #333;
-    /* color: #982e22; */
-    /* font-weight: bold; */
-    --c-primary-01: #dd2a30;
-    --c-primary-02: #0078bd;
-    --c-primary-03: #c4252b;
-    --c-primary-04: #911c20;
-    border-bottom: 4px solid #e02e3d;
+    border-bottom: 4px solid var(--color-red-3);
 }
 
 .SiteTitle__inner,
@@ -1661,6 +1658,18 @@ h2.widget__title {
     white-space: nowrap;
     text-overflow: ellipsis;
     padding: var(--default-margin-half);
+}
+
+.charts-css.column {
+    --color: var(--color-red-3);
+}
+
+.charts-css .data + a {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
 }
 
 /* Utilities */
