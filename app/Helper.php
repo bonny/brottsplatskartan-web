@@ -1108,6 +1108,7 @@ class Helper {
 
         $events = Cache::remember($cacheKey, 2 * 60, function () use ($count) {
             $events = CrimeEvent::orderBy("parsed_date", "desc")
+                ->where('parsed_date', '<', Carbon::now())
                 ->with('locations')
                 ->limit($count)
                 ->get();
