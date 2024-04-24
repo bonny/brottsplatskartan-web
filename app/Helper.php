@@ -1070,8 +1070,6 @@ class Helper {
                     [$minutes]
                 )
                 ->where('created_at', '<', Carbon::now())
-                // Visa inte jättegamla saker, som t.ex. när 7 år gammal artikel Coop i Timrå började visas. Så max en vecka gammal.
-                ->where('created_at', '>', Carbon::now()->subDays(7))
                 ->groupBy('createdYMD', 'crime_event_id')
                 ->orderBy('views', 'desc')
                 ->limit($limit)
