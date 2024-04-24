@@ -59,7 +59,7 @@ class SearchController extends Controller {
         });
 
         // Sortera.
-        $searches = $searches->sortByDesc('last')->sortByDesc('hits');
+        $searches = $searches->sortByDesc('last')->sortByDesc('count');
 
         // Ta bort lite mer:
         // - sökningar som bara är siffror, t.ex. årtal "2024".
