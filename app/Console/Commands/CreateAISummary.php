@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use App\CrimeEvent;
 use Illuminate\Console\Command;
-use MO;
 
 class CreateAISummary extends Command {
     /**
