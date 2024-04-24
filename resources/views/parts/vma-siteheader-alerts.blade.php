@@ -4,8 +4,9 @@
             style="
                 display: block;
                 border-left: 8px solid #bb0a22;
-                padding: 10px;
+                padding: var(--default-margin);
                 background-color: #f2dee1;
+                font-size: var(--font-size-medium);
             ">
             <strong>{{ $alert->getShortDescription() }}</strong>
         </a>
