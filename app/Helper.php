@@ -1105,10 +1105,14 @@ class Helper {
 
     public static function getLatestEventsByParsedDate(int $count = 5) {
         $cacheKey = __METHOD__ . ":{$count}";
-
-        $events = Cache::remember($cacheKey, 2 * 60, function () use ($count) {
+        $date = Carbon::now();
+        
+        // Get date in format 2024-12-31 00:07:00
+        $date = $date->format('Y-m-d H:i:s');
+        
+        $events = Cache::remember($cacheKey, 2 * 60, function () use ($count, $date) {
             $events = CrimeEvent::orderBy("parsed_date", "desc")
-                // ->where('parsed_date', '<', Carbon::now())
+                ->where('parsed_date', '<', $date)
                 ->with('locations')
                 ->limit($count)
                 ->get();
