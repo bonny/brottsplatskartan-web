@@ -1069,6 +1069,7 @@ class Helper {
                     'created_at >= DATE_ADD(NOW(), INTERVAL -? MINUTE)',
                     [$minutes]
                 )
+                ->where('created_at', '<', Carbon::now())
                 ->groupBy('createdYMD', 'crime_event_id')
                 ->orderBy('views', 'desc')
                 ->limit($limit)
@@ -1105,9 +1106,9 @@ class Helper {
 
     public static function getLatestEventsByParsedDate(int $count = 5) {
         $cacheKey = __METHOD__ . ":{$count}";
-        $date = Carbon::now();
         
         // Get date in format 2024-12-31 00:07:00
+        $date = Carbon::now();
         $date = $date->format('Y-m-d H:i:s');
         
         $events = Cache::remember($cacheKey, 2 * 60, function () use ($count, $date) {
