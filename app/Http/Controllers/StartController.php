@@ -135,16 +135,16 @@ class StartController extends Controller
             $afterDate = $date['date']->format('Y-m-d');
 
             $events = CrimeEvent::where('created_at', '<', $beforeDate)
-                ->where('created_at', '>', $afterDate)
-                ->orderBy("created_at", "desc")
+                ->where('parsed_date', '>', $afterDate)
+                ->orderBy("parsed_date", "desc")
                 ->with('locations')
                 ->get();
 
             $mostCommonCrimeTypes = CrimeEvent::selectRaw(
                 'parsed_title, count(id) as antal'
             )
-                ->where('created_at', '<', $beforeDate)
-                ->where('created_at', '>', $afterDate)
+                ->where('parsed_date', '<', $beforeDate)
+                ->where('parsed_date', '>', $afterDate)
                 ->groupBy('parsed_title')
                 ->orderByRaw('antal DESC')
                 ->limit(5)
@@ -323,8 +323,8 @@ class StartController extends Controller
                 ->format('Y-m-d');
 
             $events = CrimeEvent::where('created_at', '<', $beforeDate)
-                ->where('created_at', '>', $afterDate)
-                ->orderBy("created_at", "desc")
+                ->where('parsed_date', '>', $afterDate)
+                ->orderBy("parsed_date", "desc")
                 ->with('locations')
                 ->limit(300)
                 ->get();
