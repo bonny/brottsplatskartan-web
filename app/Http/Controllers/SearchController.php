@@ -19,7 +19,7 @@ class SearchController extends Controller {
             [
                 'pageTitle' => 'Sök blåljushändelser',
                 'canonicalLink' => route('adsenseSearch'),
-                'userSearches' => $this->getSearches(true),
+                'userSearches' => $this->getSearches(2),
             ]
         );
     }
@@ -27,10 +27,10 @@ class SearchController extends Controller {
     /**
      * Hämta sökningar som användare gjort.
      * 
-     * @param bool $only_with_hits Om bara sökningar med träffar ska hämtas.
+     * @param bool $only_with_hits_more_than Om bara sökningar med träffar ska hämtas.
      * @return array
      */
-    public static function getSearches($only_with_hits = false) {
+    public static function getSearches($only_with_hits_more_than = 0) {
         $searches = Collection::make( \Setting::get('searches3', []) );
        
         // Ta bort för korta sökningar.
@@ -62,13 +62,12 @@ class SearchController extends Controller {
         $searches = $searches->sortByDesc('last')->sortByDesc('count');
 
         // Ta bort lite mer:
-        // - sökningar som bara är siffror, t.ex. årtal "2024".
         // - sökningar som är relativa tider, t.ex. "idag", "igår".
         // - sökningar som är datum, t.ex. "16 april", "16 april 2024"
 
-        if ($only_with_hits) {
-            $searches = $searches->filter(function ($search) {
-                return $search['hits'] > 0;
+        if ($only_with_hits_more_than) {
+            $searches = $searches->filter(function ($search) use ($only_with_hits_more_than) {
+                return $search['hits'] > $only_with_hits_more_than;
             });
         }
 
