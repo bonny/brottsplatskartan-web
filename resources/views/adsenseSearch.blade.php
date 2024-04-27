@@ -25,7 +25,11 @@
         <ul>
             @foreach ($userSearches as $searchWord => $searchInfo)
                 <li>
-                    <a href="{{ route('adsenseSearch', ['q' => $searchWord]) }}">
+                    <a 
+                        href="{{ route('adsenseSearch', ['q' => $searchWord]) }}" 
+                        data-debug-count={{ $searchInfo['count'] }} 
+                        data-debug-hits={{ $searchInfo['hits'] }}
+                    >
                         {{ $searchWord }}
                     </a>
                 </li>
