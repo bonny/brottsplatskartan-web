@@ -20,12 +20,12 @@
             För att t.ex. hitta skadegörelse i Stockholm så kan du söka efter "skadegörelse stockholm östermalm".
         </p>
 
-        <h2>Senaste sökningarna</h2>
+        <h2>Vanliga sökningar</h2>
 
-        <ul>
+        <ul class="u-margin-0 padding-0 list-none">
             @foreach ($userSearches as $searchWord => $searchInfo)
-                <li data-debug-count={{ $searchInfo['count'] }} data-debug-hits={{ $searchInfo['hits'] }}>
-                    <a href="{{ route('adsenseSearch', ['q' => $searchWord]) }}">
+                <li data-debug-count={{ $searchInfo['count'] }} data-debug-hits={{ $searchInfo['hits'] }} class="float-left">
+                    <a href="{{ route('adsenseSearch', ['q' => $searchWord]) }}" class="block px-3 py-2">
                         {{ $searchWord }}
                     </a>
                 </li>
