@@ -40,7 +40,7 @@ class ListEvents extends Command {
         }
 
         if ( in_array($order, ['parsed_date', 'id']) ) {
-            $events = CrimeEvent::select(['parsed_date', 'id', 'title'])
+            $events = CrimeEvent::select(['id', 'parsed_date', 'title'])
             ->orderByDesc($order)
             ->limit($count)
             ->get();
