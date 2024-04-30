@@ -17,7 +17,6 @@
     <div class="widget">
 
         @if ($pagename == 'api')
-
             @section('canonicalLink', '/sida/api')
 
             <h1 class="widget__title">Brottsplats API</h1>
@@ -68,12 +67,10 @@
             <h3>Hämta single event</h3>
 
             <p><code>/api/event/4095</code></p>
-
         @endif
 
 
         @if ($pagename == 'om')
-
             @section('canonicalLink', '/sida/om')
 
             <h1 class="widget__title">Om brottsplatskartan.se</h1>
@@ -99,7 +96,10 @@
 
             <p>Informationen om de händelser som visas på webbplatserna hämtas från Polisens webbplats.</p>
 
-            <p>Platsen för varje händelse är skapad automatiskt och det kan därför förekomma fel.</p>
+            <p>Platsen för varje händelse räknas ut automatiskt av vårt system och det kan därför förekomma fel.</p>
+
+            <p>Samma sak gäller händelsetexterna: dessa texter kan vara bearbetade av en dator och tolkningsfel kan
+                förekomma.</p>
 
             <h2>Kontakta brottsplatskartan</h2>
 
@@ -116,8 +116,8 @@
             <h2>Om tjänstens skapare</h2>
 
             <p>
-                Brottsplatskartans grundare är den kartintresserad webbutvecklaren <a
-                    href="https://twitter.com/eskapism">Pär Thernström</a>.
+                Brottsplatskartans grundare är den kartintresserad webbutvecklaren <a href="https://twitter.com/eskapism">Pär
+                    Thernström</a>.
             </p>
             <p>
                 Utöver Brottsplatskartan så har han även grundat <a href="https://texttv.nu/">Text TV-sajten texttv.nu</a>
@@ -140,12 +140,10 @@
                 ©&nbsp;<a href="https://openmaptiles.org/">OpenMapTiles</a>
                 ©&nbsp;<a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>.
             </p>
-
         @endif
 
 
         @if ($pagename == 'appar')
-
             @section('canonicalLink', '/sida/appar')
 
             <h1 class="widget__title">Polisens händelser direkt i din mobil</h1>
@@ -190,7 +188,6 @@
             <p>Om du gillar <a href="https://brottsplatskartan.se">hemsidan</a> mer än apparna så kan du välja att lägga ett
                 bokmärke till <a href="https://brottsplatskartan.se">brottsplatskartan.se</a> på
                 din hemskärm i din telefon.</p>
-
         @endif
 
         @if ($pagename == 'sekretesspolicy')
@@ -202,7 +199,6 @@
         @endif
 
         @if ($pagename == 'press')
-
             <h1 class="widget__title">Press</h1>
 
             <h2>Vad är Brottsplatskartan?</h2>
@@ -236,25 +232,25 @@
                 Brottsplatskartans logotyp i PNG-format:
                 <br>
                 <a href="/img/brottsplatskartan-logotyp.png">
-                    <img loading="lazy" src="/img/brottsplatskartan-logotyp.png" width=282 height=36 alt="Brottsplatskartan"></img>
+                    <img loading="lazy" src="/img/brottsplatskartan-logotyp.png" width=282 height=36
+                        alt="Brottsplatskartan"></img>
                 </a>
                 <br>
                 <a href="/img/brottsplatskartan-logotyp.png">brottsplatskartan-logotyp.png</a> (6KB, 626✕80, PNG)
             </p>
 
             <!--
-                <p>
-                    <a href="/img/brottsplatskartan-logotyp-symbol-only.png">
-                        <img loading="lazy" alt="Brottsplatskartan" src="/img/brottsplatskartan-logotyp-symbol-only.png" width=40 height=40></img>
-                    </a>
-                </p>
-                -->
+                    <p>
+                        <a href="/img/brottsplatskartan-logotyp-symbol-only.png">
+                            <img loading="lazy" alt="Brottsplatskartan" src="/img/brottsplatskartan-logotyp-symbol-only.png" width=40 height=40></img>
+                        </a>
+                    </p>
+                    -->
 
             <h2>Kontakt</h2>
 
             <p>För frågor kontakta Brottsplatskartan via e-post <a
                     href="mailto:kontakt@brottsplatskartan.se">kontakt@brottsplatskartan.se</a>.</p>
-
         @endif
 
     </div>

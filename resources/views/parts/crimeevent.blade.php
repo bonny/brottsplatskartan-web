@@ -142,8 +142,6 @@ if $single is set then larger image
             <strong>Alternativ text:</strong>
             <br>{!! $event->autop($event->description_alt_1) !!}
         </p>
-
-        <p class="text-sm text-gray-500">Dessa texter är ofta automatiskt genererade av AI. Tolkningsfel kan förekomma.</p>
     </details>
 @endif
 
