@@ -268,8 +268,9 @@ blockquote {
     padding: 0 var(--default-margin);
     font-size: 1rem;
     color: #fff;
-    /* border-bottom: 4px solid #aaa; */
     background-color: #f5f5f5;
+    border-bottom: 1px solid var(--color-gray-2);
+    margin-bottom: var(--default-margin);
 }
 
 .SiteNav__items {
