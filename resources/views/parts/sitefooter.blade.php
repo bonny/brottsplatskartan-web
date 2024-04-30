@@ -4,7 +4,7 @@
 
     <ul class="SiteFooter__navlinks">
         <li><a href="{{ route("start") }}">Händelser</a></li>
-        <li><a href="/nara-hitta-plats">Händelser nära mig</a></li>
+        <li><a href="/nara-hitta-plats">Händelser nära dig</a></li>
         <li><a href="{{ route('mostRead') }}">Mest lästa händelserna</a></li>
         <li><a href="{{ route("sverigekartan") }}">Sverigekartan</a></li>
         <li><a href="{{ route("helicopter") }}">Helikopter</a></li>

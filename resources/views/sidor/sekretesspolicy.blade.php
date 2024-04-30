@@ -39,7 +39,7 @@
 <h2>Geografisk plats</h2>
 
 <p>
-    Om du använder vår funktion <a href="/nara-hitta-plats">"nära mig"</a> så 
+    Om du använder vår funktion <a href="/nara-hitta-plats">"nära dig"</a> så 
     frågar vi din webbläsare om vi får hämta din geografiska position
     och om du godkänner detta så används denna information till att visa 
     händelser från Polisen som hänt nära dig. 

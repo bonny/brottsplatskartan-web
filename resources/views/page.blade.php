@@ -88,7 +88,7 @@
                 <li>Platsen för en händelse visas på en karta (på Polisens webbsida så står det bara en adress eller område,
                     men ingen länk till karta eller liknande)</li>
 
-                <li>Möjlighet att visa saker "nära mig" genom att använda GPS:en på en mobiltelefon (Polisen har ingen
+                <li>Möjlighet att visa saker "nära dig" genom att använda GPS:en på en mobiltelefon (Polisen har ingen
                     liknande funktion alls)</li>
             </ul>
 

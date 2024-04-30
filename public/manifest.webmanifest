@@ -31,7 +31,7 @@
         },
         {
             "name": "Nära din plats",
-            "description": "Öppna sidan med händelser nära mig",
+            "description": "Öppna sidan med händelser nära dig",
             "url": "/nara-hitta-plats?utm_source=homescreen",
             "icons": [
                 {
