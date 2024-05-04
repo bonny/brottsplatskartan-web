@@ -38,28 +38,15 @@ class CreateAISummary extends Command {
 
     protected function getChatInstruction() {
         return <<<END
-        Du är en duktig journalist som får en text och skriver om den.
-        Du skriver en rubrik och en brödtext.
-        Texterna du skriver är neutrala i tonen.
-        Du skriver på svenska.
-        Du bedömer inte insatser från Polis, Brandkår och så vidare som bra eller dåliga.
-        Du skriver för en webbplats med namn Brottsplatskartan på adress https://brottsplatskartan.se som rapporterar om händelser från Polis, Brandkår, Ambulans, och andra blåljusmyndigheter.
-        Du skriver en SEO-vänlig och klickinbjudande rubrik först i varje text. Rubriken ska skapa nyfikenhet hos läsaren.
-        Du skriver en brödtext som är informativ och beskriver händelsen.
-        Du behåller citat om det finns i texten.
-        Formulera om texten. Skriv inte av texten.
-        När flera händelser finns rapporterade i samma text så infogar du en radbrytning innan varje ny händelse.
-        När en rad börjar med en tidpunkt så skapar du också en text där tidpunkten börjar med samma tidpunkt och med ny rad/nytt stycke. Så om en text börjar med "Vid hh.nn så hände det en sak" så skriver du en ny rad och sen "Vid hh.nn". Samma sak när en text börjar med "Klockan hh.nn" så skriver du en ny rad och sen "Klockan hh.nn".
-        Gör platser, brottstyper, händelsetyper fetstilta. Händelsetyper är t.ex. inbrott, rån, mord, skadegörelse, och liknande.
-        När en rad börjar med "-" eller " - " så behåller du ny rad och bindestrecket i din text.
-        
-        Ge svaret i JSON-format så att en dator kan tolka det.
+        Du är en journalist som skriver för webbplatsen Brottsplatskartan.se. Dina läsare är intresserade av nyhetshändelser från så kallade "blåljusmyndigheter" (t.ex. Polis, Brandkår, Ambulans).
 
-        Exempel på svar:
-        {
-          "title": "Rubrik",
-          "content": "Text som är lite lång.\\nOch här är en rad till.",
-        }
+        Du kommer i nästa meddelande få en text och skriver om den. Texten ska vara neutral och saklig.
+        
+        Den nya texten ska innehålla en SEO-vänlig rubrik och en brödtext av hög journalistisk kvalitet.
+
+        Om en text har en rad som börjar med en tidpunkt (t.ex. "12:34") så ska den raden även börja med by rad i nya texten.
+
+        Skriv "Rubrik: " före rubriken och "Text: " före texten.
         END;
     }
 
@@ -69,9 +56,10 @@ class CreateAISummary extends Command {
         $client = \OpenAI::client($yourApiKey);
 
         $crimeEvent = CrimeEvent::findOrFail($crimeEventId);
-        $userMessageContent = 
-            "<h1>" . $crimeEvent->parsed_title . '</h1>'. PHP_EOL . '<p>' . $crimeEvent->parsed_teaser . '</p>' . PHP_EOL . $crimeEvent->autop($crimeEvent->parsed_content);
-        // $userMessageContent = strip_tags($userMessageContent);
+        $userMessageContent = "Typ: " . $crimeEvent->parsed_title . PHP_EOL;
+        $userMessageContent .= "Rubrik: " . $crimeEvent->parsed_teaser . PHP_EOL;
+        $userMessageContent .= "Text: " . strip_tags($crimeEvent->parsed_content);
+
         $this->newLine();
         $this->line("Hittade händelse " .  $crimeEvent->parsed_date . ': ' . $crimeEvent->parsed_title);
         $this->newLine();
@@ -98,19 +86,45 @@ class CreateAISummary extends Command {
         $this->info("Svar från Open AI:");
         $this->newLine();
 
-        $this->line("result");
-        $this->line(json_encode($result, JSON_PRETTY_PRINT));
+        #$this->line("result");
+        #$this->line(json_encode($result, JSON_PRETTY_PRINT));
 
-        ['title' => $title, 'content' => $content] = json_decode($result->choices[0]->message->content, true);
+        $content = $result->choices[0]->message->content;
+        #$this->line('result->choices[0]->message->content');
+        #$this->line($content);
 
-        // $this->line('Rått svar:');
-        // $this->line($result->choices[0]->message->content);
+        $lines = explode("\n", $content);
+        $title = '';
+        $text = '';
         
-        $this->line("Titel: " . $title);
-        $this->line("Innehåll: " . $content);
+        // Hitta raden som börjar med "Rubrik: ".
+        foreach ($lines as $line) {
+            if (strpos($line, 'Rubrik: ') === 0) {
+                $title = substr($line, 8);
+                break;
+            }
+        }
 
+        // Hitta raden som börjar med "Text: " och ta bort "Text: " och behåll all annan
+        // text på den raden och följande rader.
+        $foundText = false;
+        foreach ($lines as $line) {
+            if ($foundText) {
+                $text .= $line . "\n";
+            }
+            if (strpos($line, 'Text: ') === 0) {
+                $foundText = true;
+                $text .= substr($line, 6) . "\n";
+            }
+        }
+
+        $this->newLine();
+        $this->line( "Rubrik: " . $title);
+        $this->newLine();
+        $this->line( "Text: " . $text);
+    
         $crimeEvent->title_alt_1 = $title;
-        $crimeEvent->description_alt_1 = $content;
+        $crimeEvent->description_alt_1 = $text;
         $crimeEvent->save();
     }
 }
