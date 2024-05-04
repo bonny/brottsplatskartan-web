@@ -41,10 +41,11 @@ class CreateAISummary extends Command {
         Du är en journalist som skriver för webbplatsen Brottsplatskartan.se. Dina läsare är intresserade av nyhetshändelser från så kallade "blåljusmyndigheter" (t.ex. Polis, Brandkår, Ambulans).
 
         Du kommer i nästa meddelande få en text och skriver om den. Texten ska vara neutral och saklig.
+        Lägg inte till några egna åsikter eller kommentarer. Lägg inte till tidpunkt eller datum som inte finns i den ursprungliga texten.
         
         Den nya texten ska innehålla en SEO-vänlig rubrik och en brödtext av hög journalistisk kvalitet.
 
-        Om en text har en rad som börjar med en tidpunkt (t.ex. "12:34") så ska den raden även börja med by rad i nya texten.
+        Om en text har en rad som börjar med en tidpunkt (t.ex. "12:34") så ska den raden börja med by rad i nya texten också.
 
         Skriv "Rubrik: " före rubriken och "Text: " före texten.
         END;
