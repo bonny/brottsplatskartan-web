@@ -24,6 +24,7 @@
     --default-margin-double: calc(var(--default-margin) * 2);
     --default-margin-triple: calc(var(--default-margin) * 3);
     --font-size-medium: 1.3rem;
+    --font-size-medium-2: 1.15rem;
     --font-size-large: 1.5rem;
     --font-size-small: 0.9rem;
     --border-radius-normal: 10px;
@@ -612,6 +613,10 @@ blockquote {
 
 .Event--single .Event__teaser {
     font-weight: 600;
+}
+
+.Event--single .Event__content {
+    font-size: var(--font-size-medium-2);
 }
 
 .Event__teaser p {
