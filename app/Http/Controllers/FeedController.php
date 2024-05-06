@@ -305,7 +305,7 @@ class FeedController extends Controller
      * Find locations in crime event and save
      *
      * @param int $itemID Crime event ID
-     * @return bool
+     * @return CrimeEvent Crime event with locations added.
      */
     public function parseItemForLocations($itemID)
     {
@@ -335,7 +335,7 @@ class FeedController extends Controller
         $item->scanned_for_locations = true;
         $item->save();
 
-        return true;
+        return $item;
     }
 
     /**
