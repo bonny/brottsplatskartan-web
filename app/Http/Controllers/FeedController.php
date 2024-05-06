@@ -360,7 +360,7 @@ class FeedController extends Controller
         $this->parseItemContentAndUpdateIfChanges($itemID);
 
         // Find and save locations in teaser and content
-        $this->parseItemForLocations($itemID);
+        $item = $this->parseItemForLocations($itemID);
 
         return true;
     }
@@ -427,9 +427,10 @@ class FeedController extends Controller
                 continue;
             }
 
-            $data["numItemsAdded"]++;
-
+            
             $event = CrimeEvent::create($item_data);
+
+            $data["numItemsAdded"]++;
             $data["itemsAdded"][] = $event;
         }
 
