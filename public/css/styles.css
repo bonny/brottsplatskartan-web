@@ -577,6 +577,7 @@ blockquote {
 .Event__source {
     font-size: var(--font-size-small);
     color: #666;
+    overflow-wrap: break-word;
 }
 
 .Event__metaDivider {
@@ -1620,7 +1621,7 @@ h2.widget__title {
     position: absolute;
     margin: 0;
     padding: 0;
-    width: 25px;
+    width: 30px;
     height: 100%;
     background-color: var(--color-red-3);
     background-image: url(/img/schedule_FILL0_wght400_GRAD0_opsz20-white.svg);
@@ -1636,7 +1637,8 @@ h2.widget__title {
 
 .sitebar__EventsItems {
     position: relative;
-    left: 25px;
+    left: 30px;
+    max-width: calc(100% - 30px);
     list-style-type: none;
     margin: 0;
     padding: 0px;
