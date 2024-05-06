@@ -29,7 +29,7 @@ class CreateAISummary extends Command {
         $crimeEventIds = $this->argument('eventID');
 
         $this->line('Ok, let\'s go!');
-        
+
         foreach ($crimeEventIds as $crimeEventId) {
             $this->generateSummary($crimeEventId);
         }
@@ -45,7 +45,7 @@ class CreateAISummary extends Command {
         
         Den nya texten ska innehålla en SEO-vänlig rubrik och en brödtext av hög journalistisk kvalitet.
 
-        Om en text har en rad som börjar med en tidpunkt (t.ex. "12:34") så ska den raden börja med by rad i nya texten också.
+        Om en text har en rad som börjar med en tidpunkt ("hh:nn") så ska den raden börja med by rad i nya texten också.
 
         Skriv "Rubrik: " före rubriken och "Text: " före texten.
         END;
