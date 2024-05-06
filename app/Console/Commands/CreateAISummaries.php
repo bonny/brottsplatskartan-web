@@ -39,8 +39,9 @@ class CreateAISummaries extends Command {
 
         $daysBack = 1;
 
-        // Hämta händelser i området men max nn dagar gammal för att inte bli för mycket.
-        $events_in_area = CrimeEvent::where('administrative_area_level_1', $administrative_area_level_1)
+        // Hämta händelser i området som börjat på area men max nn dagar gammal för att inte bli för mycket.
+        $events_in_area = CrimeEvent::
+            where('administrative_area_level_1', 'like', "{$administrative_area_level_1}%")
             ->where('title_alt_1', null)
             ->where('created_at', '>=', now()->subDays($daysBack))
             ->get();
