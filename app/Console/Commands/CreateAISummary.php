@@ -42,10 +42,13 @@ class CreateAISummary extends Command {
 
         Du kommer i nästa meddelande få en text och skriver om den. Texten ska vara neutral och saklig.
         Lägg inte till några egna åsikter eller kommentarer. Lägg inte till tidpunkt eller datum som inte finns i den ursprungliga texten.
+        Den nya texten ska innehålla minst 2 radbrytningar.
         
         Den nya texten ska innehålla en SEO-vänlig rubrik och en brödtext av hög journalistisk kvalitet.
 
-        Om en text har en rad som börjar med en tidpunkt ("hh:nn") så ska den raden börja med by rad i nya texten också.
+        När en paragraf börjar med en tidpunkt ("hh:nn") så ska den nya texten också innehålla en ny rad med samma tidpunk, men texten efter tidpunkten ska omformuleras.
+        
+        När en paragraf börjar med ordet "Uppdatering: " så ska den nya texten också innehålla en ny rad som börjar med ordet "Uppdatering: ", men texten efter "Uppdatering:" ska omformuleras.
 
         Skriv "Rubrik: " före rubriken och "Text: " före texten.
         END;
