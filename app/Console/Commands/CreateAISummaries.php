@@ -34,10 +34,10 @@ class CreateAISummaries extends Command {
             return Command::FAILURE;
         }
 
+        $daysBack = 1;
+
         $this->line('Okej, låt oss skapa lite summeringar av händelser i en viss area.');
         $this->line("Area: " . $administrative_area_level_1);
-
-        $daysBack = 1;
 
         // Hämta händelser i området som börjat på area men max nn dagar gammal för att inte bli för mycket.
         $events_in_area = CrimeEvent::
