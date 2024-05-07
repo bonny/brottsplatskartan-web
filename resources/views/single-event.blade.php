@@ -6,7 +6,7 @@ Template för ett event/händelse
 
 @extends('layouts.web')
 
-@section('title', $event->getSingleEventTitleEvenShorter())
+@section('title', $event->getPageTitle())
 @section('canonicalLink', $event->getPermalink(true))
 @section('ogUrl', $event->getPermalink(true))
 @section('metaDescription', e($event->getMetaDescription()))

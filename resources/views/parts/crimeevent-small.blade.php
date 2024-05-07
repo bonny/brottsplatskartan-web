@@ -39,7 +39,7 @@
             @if (isset($detailed) && $detailed)
                 <span class="Event__parsedTitle Event__type">{{ $event->parsed_title }}</span>
             @endif
-            <span class="ListEvent__teaser widget__listItem__title">{!! $event->getDescriptionAsPlainText() !!}</span>
+            <span class="ListEvent__teaser widget__listItem__title">{!! $event->getHeadline() !!}</span>
         </a>
     </div>
 

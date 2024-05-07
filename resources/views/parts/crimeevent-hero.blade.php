@@ -1,11 +1,8 @@
-<article 
-    class="
-        @if (!$loop->first)
-            u-margin-top-double
-        @endif
+<article class="
+        @if (!$loop->first) u-margin-top-double @endif
     ">
     <a href="{{ $event->getPermalink() }}" class="u-color-black block hover:no-underline group">
-        
+
         @include('parts.atoms.event-map-far')
 
         <p class="u-margin-0 u-margin-bottom-third">
@@ -13,7 +10,7 @@
         </p>
 
         <h1 class="text-2xl font-bold break-hyphens u-margin-0 tracking-tight u-color-link group-hover:underline">
-            {{ $event->getDescriptionAsPlainText() }}
+            {{ $event->getHeadline() }}
         </h1>
 
         @include('parts.atoms.event-date')

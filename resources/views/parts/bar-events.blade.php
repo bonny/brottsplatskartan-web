@@ -13,7 +13,7 @@
                     <a class="sitebar__EventsItemLink" href="{{ $mostViewedItem->getPermalink() }}">
                         <span
                             class="sitebar__EventsItem__Time">{{ $mostViewedItem->getParsedDateInFormat('%H:%M') }}</span>
-                        {{ $mostViewedItem->title_alt_1 ? $mostViewedItem->title_alt_1 : $mostViewedItem->getSingleEventTitleShort() }}
+                        {{ $mostViewedItem->getHeadline() }}
                     </a>
                 </li>
             @endforeach

@@ -18,8 +18,7 @@ use App\Models\CrimeView;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 
-class CrimeEvent extends Model implements Feedable
-{
+class CrimeEvent extends Model implements Feedable {
     protected $fillable = [
         'title',
         'description',
@@ -44,8 +43,7 @@ class CrimeEvent extends Model implements Feedable
     /**
      * Get the locations for the event post.
      */
-    public function locations(): HasMany
-    {
+    public function locations(): HasMany {
         return $this->hasMany(Locations::class);
     }
 
@@ -59,8 +57,7 @@ class CrimeEvent extends Model implements Feedable
     }
 
     // return src for an image
-    public function getStaticImageSrc($width = 320, $height = 320, $scale = 1)
-    {
+    public function getStaticImageSrc($width = 320, $height = 320, $scale = 1) {
         // $google_api_key = env("GOOGLE_API_KEY");
 
         // $image_src = "https://maps.googleapis.com/maps/api/staticmap?";
@@ -253,7 +250,6 @@ class CrimeEvent extends Model implements Feedable
             // @TODO: return fallback iamge
             return '';
         }
-
     }
 
     /**
@@ -261,20 +257,17 @@ class CrimeEvent extends Model implements Feedable
      * i.e. when the crime is posted by polisen
      * the actual event may have happened much earlier
      */
-    public function getPubDateISO8601()
-    {
+    public function getPubDateISO8601() {
         return Carbon::createFromTimestamp($this->pubdate)->toIso8601String();
     }
 
-    public function getPubDateFormatted($format = '%A %d %B %Y')
-    {
+    public function getPubDateFormatted($format = '%A %d %B %Y') {
         return Carbon::createFromTimestamp($this->pubdate)->formatLocalized(
             $format
         );
     }
 
-    public function getPubDateFormattedForHumans()
-    {
+    public function getPubDateFormattedForHumans() {
         return Carbon::createFromTimestamp($this->pubdate)->diffForHumans();
     }
 
@@ -282,8 +275,7 @@ class CrimeEvent extends Model implements Feedable
      * Parsed date = the date that is written as text in each crime.
      * Is often much earlier than the date in the RSS data.
      */
-    public function getParsedDateFormattedForHumans()
-    {
+    public function getParsedDateFormattedForHumans() {
         $date = $this->parsed_date;
         if (empty($date)) {
             $date = $this->pubdate_iso8601;
@@ -297,8 +289,7 @@ class CrimeEvent extends Model implements Feedable
         return $diffHuman;
     }
 
-    public function getParsedDateDiffInSeconds()
-    {
+    public function getParsedDateDiffInSeconds() {
         $date = $this->parsed_date;
         if (empty($date)) {
             $date = $this->pubdate_iso8601;
@@ -308,8 +299,7 @@ class CrimeEvent extends Model implements Feedable
     }
 
     // ...but fallbacks to pubdate if parsed_date is null
-    public function getParsedDateISO8601()
-    {
+    public function getParsedDateISO8601() {
         $date = $this->parsed_date;
         if (empty($date)) {
             $date = $this->pubdate_iso8601;
@@ -318,8 +308,7 @@ class CrimeEvent extends Model implements Feedable
         return Carbon::createFromTimestamp(strtotime($date))->toIso8601String();
     }
 
-    public function getParsedDateAsCarbon()
-    {
+    public function getParsedDateAsCarbon() {
         $date = $this->parsed_date;
         if (empty($date)) {
             $date = $this->pubdate_iso8601;
@@ -339,8 +328,7 @@ class CrimeEvent extends Model implements Feedable
      *
      * @return string Date in format "Lördag 15 December 2018 13:20"
      */
-    public function getParsedDateYMD()
-    {
+    public function getParsedDateYMD() {
         $date = $this->parsed_date;
         if (empty($date)) {
             $date = $this->pubdate_iso8601;
@@ -365,8 +353,7 @@ class CrimeEvent extends Model implements Feedable
      *
      * @return string Date in format "21 Maj" or "21 Maj 2019" if not current year.
      */
-    public function getParsedDateDayMonth()
-    {
+    public function getParsedDateDayMonth() {
         $date = $this->parsed_date;
         if (empty($date)) {
             $date = $this->pubdate_iso8601;
@@ -390,8 +377,7 @@ class CrimeEvent extends Model implements Feedable
      * Kolla om året för denna händelse är samma år som just nu pågår.
      * @return boolean True om det är året som pågår, false om inte.
      */
-    public function isParsedDateThisYear()
-    {
+    public function isParsedDateThisYear() {
         $eventDateYear = Carbon::createFromTimestamp(
             strtotime($this->parsed_date)
         )->format('Y');
@@ -406,8 +392,7 @@ class CrimeEvent extends Model implements Feedable
      * Example return value:
      * /varmlands-lan/rattfylleri-2440
      */
-    public function getPermalink($absolute = false)
-    {
+    public function getPermalink($absolute = false) {
         $slugParts = [];
 
         if (!empty($this->administrative_area_level_1)) {
@@ -488,7 +473,7 @@ class CrimeEvent extends Model implements Feedable
             if (
                 $this->administrative_area_level_1 &&
                 $this->administrative_area_level_1 !==
-                    $this->parsed_title_location
+                $this->parsed_title_location
             ) {
                 $locations[] = $this->administrative_area_level_1;
             }
@@ -503,8 +488,7 @@ class CrimeEvent extends Model implements Feedable
      * Som getLocationString
      * men platser kan vara länkade, t.ex. länen
      */
-    public function getLocationStringWithLinks($args = [])
-    {
+    public function getLocationStringWithLinks($args = []) {
         $locations = [];
         $prioOneLocations = $this->locations->whereIn("prio", [1, 2]);
 
@@ -571,8 +555,7 @@ class CrimeEvent extends Model implements Feedable
     }
 
     // from http://cubiq.org/the-perfect-php-clean-url-generator
-    public function toAscii($str, $replace = array(), $delimiter = '-')
-    {
+    public function toAscii($str, $replace = array(), $delimiter = '-') {
         $text = Helper::toAscii($str, $replace, $delimiter);
         return $text;
     }
@@ -580,8 +563,7 @@ class CrimeEvent extends Model implements Feedable
     /**
      * @return string
      */
-    public function getMetaDescription($length = 250)
-    {
+    public function getMetaDescription($length = 250) {
         $text = "";
 
         $text .= trim($this->parsed_content);
@@ -620,8 +602,7 @@ class CrimeEvent extends Model implements Feedable
      * pga det är samma som description fast längre,
      * då description blir klippt i Polisens RSS/API.
      */
-    public function getDescription()
-    {
+    public function getDescription() {
         $text = $this->parsed_teaser;
         $text = $this->autop($text);
 
@@ -631,8 +612,7 @@ class CrimeEvent extends Model implements Feedable
     /**
      * Get description with tags stripped
      */
-    public function getDescriptionAsPlainText()
-    {
+    public function getDescriptionAsPlainText() {
         $text = $this->getDescription();
         $text = Helper::stripTagsWithWhitespace($text);
         $text = trim($text);
@@ -645,8 +625,7 @@ class CrimeEvent extends Model implements Feedable
      *
      * @return string The content
      */
-    public function getParsedContent()
-    {
+    public function getParsedContent() {
         $text = $this->parsed_content;
 
         $text = $this->autop($text);
@@ -677,8 +656,7 @@ class CrimeEvent extends Model implements Feedable
      *
      * @return string The content
      */
-    public function getParsedContentAsPlainText()
-    {
+    public function getParsedContentAsPlainText() {
         $text = $this->getParsedContent();
         $text = Helper::stripTagsWithWhitespace($text);
         $text = trim($text);
@@ -690,8 +668,7 @@ class CrimeEvent extends Model implements Feedable
      * Get the description, for overview pages, where text is cropped after nn chars
      * and styles removed to not interfere in listing
      */
-    public function getParsedContentTeaser($length = 160)
-    {
+    public function getParsedContentTeaser($length = 160) {
         $text = $this->parsed_content;
 
         // strip tags but make sure there is at least a space where the tag was
@@ -710,8 +687,7 @@ class CrimeEvent extends Model implements Feedable
      * Kinda like wp's autop function
      * replaces newlines with paragraphs, removes duplicate <br>:s and so on
      */
-    public function autop($text)
-    {
+    public function autop($text) {
         // replace <br> with new line
         $text = str_replace("<br>", "\n", $text);
 
@@ -779,8 +755,7 @@ class CrimeEvent extends Model implements Feedable
         return $events;
     }
 
-    public function getViewportSize()
-    {
+    public function getViewportSize() {
         $viewportSize =
             $this->viewport_northeast_lat -
             $this->viewport_southwest_lat +
@@ -803,8 +778,7 @@ class CrimeEvent extends Model implements Feedable
      * ca 0.005 - 0.06 = typ längre gata
      * mindre än det = jäkla nära
      */
-    public function getViewPortSizeAsString()
-    {
+    public function getViewPortSizeAsString() {
         $size = $this->getViewportSize();
 
         $sizeAsString = "";
@@ -842,8 +816,7 @@ class CrimeEvent extends Model implements Feedable
      *
      * @return array
      */
-    protected function maybeAddDebugData(Request $request, CrimeEvent $event)
-    {
+    protected function maybeAddDebugData(Request $request, CrimeEvent $event) {
         $data = [];
 
         $debugActions = (array) $request->input("debugActions");
@@ -877,8 +850,7 @@ class CrimeEvent extends Model implements Feedable
      *
      * @return string
      */
-    public function getSingleEventTitle()
-    {
+    public function getSingleEventTitle() {
         $cacheKey = __METHOD__ . ':' . $this->getKey();
         $seconds = 5 * 60;
         $title = Cache::remember($cacheKey, $seconds, function () {
@@ -912,8 +884,7 @@ class CrimeEvent extends Model implements Feedable
      *
      * @return string
      */
-    public function getSingleEventTitleShort()
-    {
+    public function getSingleEventTitleShort() {
         $titleParts = [];
 
         $titleParts[] = $this->parsed_title;
@@ -930,8 +901,7 @@ class CrimeEvent extends Model implements Feedable
      *
      * @return string
      */
-    public function getSingleEventTitleEvenShorter()
-    {
+    public function getSingleEventTitleEvenShorter() {
         $titleParts = [];
 
         $titleParts[] = $this->getDescriptionAsPlainText();
@@ -949,8 +919,7 @@ class CrimeEvent extends Model implements Feedable
      *
      * @return mixed Array with debug data on success. Null if not authed.
      */
-    public function maybeClearLocationData(Request $request)
-    {
+    public function maybeClearLocationData(Request $request) {
         if (!\Auth::check()) {
             return;
         }
@@ -1008,8 +977,7 @@ class CrimeEvent extends Model implements Feedable
      *
      * @return bool
      */
-    public function shouldShowSourceLink()
-    {
+    public function shouldShowSourceLink() {
         $pubDate = Carbon::createFromTimestamp(strtotime($this->parsed_date));
         $pubDatePlusSomeTime = $pubDate->addWeek();
 
@@ -1022,8 +990,7 @@ class CrimeEvent extends Model implements Feedable
      *
      * @return array
      */
-    public function toSearchableArray()
-    {
+    public function toSearchableArray() {
         $array = $this->toArray();
 
         // Remove some things we don't wanna search
@@ -1104,16 +1071,14 @@ class CrimeEvent extends Model implements Feedable
         return $array;
     }
 
-    public function newsarticles(): HasMany
-    {
+    public function newsarticles(): HasMany {
         return $this->hasMany(Newsarticle::class);
     }
 
     /**
      * Return ld+json for an article
      */
-    public function getLdJson()
-    {
+    public function getLdJson() {
         $permalink = $this->getPermalink(true);
         $title = $this->getSingleEventTitleShort();
         $image = $this->getStaticImageSrc(696, 420);
@@ -1130,27 +1095,27 @@ class CrimeEvent extends Model implements Feedable
             "@context" => "http://schema.org",
             "@type" => "NewsArticle",
             "mainEntityOfPage" => [
-              "@type" => "WebPage",
-              "@id" => "{$permalink}"
+                "@type" => "WebPage",
+                "@id" => "{$permalink}"
             ],
             "headline" => $title,
             "image" => [
-              "$image"
-             ],
+                "$image"
+            ],
             "datePublished" => $datePublished,
             "dateModified" => $dateModified,
             "author" => [
-              "@type" => "Organization",
-              "name" => "Brottsplatskartan",
-              "url" => "https://brottsplatskartan.se/",
+                "@type" => "Organization",
+                "name" => "Brottsplatskartan",
+                "url" => "https://brottsplatskartan.se/",
             ],
-             "publisher" => [
-              "@type" => "Organization",
-              "name" => "Brottsplatskartan",
-              "url" => "https://brottsplatskartan.se/",
-              "logo" => [
-                "@type" => "ImageObject",
-                "url" => "https://brottsplatskartan.se/img/brottsplatskartan-logotyp.png"
+            "publisher" => [
+                "@type" => "Organization",
+                "name" => "Brottsplatskartan",
+                "url" => "https://brottsplatskartan.se/",
+                "logo" => [
+                    "@type" => "ImageObject",
+                    "url" => "https://brottsplatskartan.se/img/brottsplatskartan-logotyp.png"
                 ]
             ],
             "description" => $description,
@@ -1175,8 +1140,7 @@ class CrimeEvent extends Model implements Feedable
      *
      * @return string
      */
-    public function getCreatedAtLocalized()
-    {
+    public function getCreatedAtLocalized() {
         $createdAtCarbon = Carbon::parse($this->created_at);
         $createdAtLocalized = $createdAtCarbon->formatLocalized('%A %e %B %Y');
         return $createdAtLocalized;
@@ -1187,8 +1151,7 @@ class CrimeEvent extends Model implements Feedable
      *
      * @return boolean
      */
-    public function isInbrott()
-    {
+    public function isInbrott() {
         $inbrottOrd = ['inbrott', 'larm', 'intrång'];
 
         $isInbrott =
@@ -1210,8 +1173,7 @@ class CrimeEvent extends Model implements Feedable
      *
      * @return boolean
      */
-    public function isBrand()
-    {
+    public function isBrand() {
         $ord = ['brand', 'rökutveckling', 'röklukt', 'brinner', 'brinna'];
 
         $isInbrott =
@@ -1233,8 +1195,7 @@ class CrimeEvent extends Model implements Feedable
      *
      * @return FeedItem
      */
-    public function toFeedItem(): FeedItem
-    {
+    public function toFeedItem(): FeedItem {
         return FeedItem::create()
             ->id((string) $this->id)
             ->title($this->getSingleEventTitle())
@@ -1291,8 +1252,7 @@ class CrimeEvent extends Model implements Feedable
         return $events;
     }
 
-    public function crimeViews(): HasMany
-    {
+    public function crimeViews(): HasMany {
         return $this->hasMany(CrimeView::class);
     }
 
@@ -1302,5 +1262,36 @@ class CrimeEvent extends Model implements Feedable
             $this->getLocationString()
         );
         return $altText;
+    }
+
+    /**
+     * Hämta rubrik, i första hand den som genereras av AI,
+     * annars fallbackt till annan rubrik.
+     * 
+     * Detta är en som ska användas i <h1> och liknande.
+     */
+    public function getHeadline(): string {
+        $headline = $this->title_alt_1;
+
+        if (empty($headline)) {
+            $headline = $this->getSingleEventTitleEvenShorter();
+        }
+
+        return $headline;
+    }
+
+    /**
+     * Hämta rubrik för sidtitel,
+     * som används för <title> och liknande.
+     */
+    public function getPageTitle(): string {
+        $title = $this->getHeadline();
+        $short_title = $this->getSingleEventTitleEvenShorter();
+
+        if ($title !== $short_title) {
+            $title = "$title ($short_title)";
+        }
+
+        return $title;
     }
 }

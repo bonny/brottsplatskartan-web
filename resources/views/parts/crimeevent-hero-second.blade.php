@@ -7,7 +7,7 @@
         </p>
 
         <h1 class="text-base font-semibold break-hyphens tracking-tight u-color-link u-margin-0">
-            {{ $event->getDescriptionAsPlainText() }}
+            {{ $event->getHeadline() }}
         </h1>
 
         @include('parts.atoms.event-date')

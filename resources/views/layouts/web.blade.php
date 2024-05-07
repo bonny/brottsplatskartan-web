@@ -69,7 +69,6 @@ $noAdsReason = '';
     @endif
 
     <meta property="og:title" content="@yield('title')" />
-
     <meta name="twitter:site" content="@brottsplatser">
     <meta name="twitter:title" content="@yield('title')">
 

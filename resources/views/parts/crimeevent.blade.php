@@ -85,16 +85,16 @@ if $single is set then larger image
     </p>
 @endif
 
-<h1 class="Event__title">
+<div class="Event__title">
     @if (isset($overview))
         <a href="{{ $event->getPermalink() }}">
     @endif
     <span class="Event__type">{{ $event->parsed_title }}</span>
-    <span class="Event__teaser">{{ $event->getDescriptionAsPlainText() }}</span>
+    <h1 class="Event__teaser">{{ $event->getHeadline() }}</h1>
     @if (isset($overview))
         </a>
     @endif
-</h1>
+</div>
 
 {{--
     Om bara vill visa när skillnad är mer än nn dagar/timmar osv.
