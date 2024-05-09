@@ -183,10 +183,8 @@ return [
 
         // installed
         // Sofa\Eloquence\ServiceProvider::class,
-        'HTMLMin\HTMLMin\HTMLMinServiceProvider',
         willvincent\Feeds\FeedsServiceProvider::class,
         // 'Kozz\Laravel\Providers\Guzzle',
-        Weidner\Goutte\GoutteServiceProvider::class,
         // 'Creitive\Breadcrumbs\BreadcrumbsServiceProvider',
         // 'Atymic\Twitter\TwitterServiceProvider',
         Unisharp\Setting\SettingServiceProvider::class,
@@ -243,12 +241,10 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Feeds'  => willvincent\Feeds\Facades\FeedsFacade::class,
         'Guzzle' => 'Kozz\Laravel\Facades\Guzzle',
-        'Goutte' => Weidner\Goutte\GoutteFacade::class,
         'Breadcrumbs' => 'Creitive\Breadcrumbs\Facades\Breadcrumbs',
         'Twitter' => 'Atymic\Twitter\Facades\Twitter',
         'Setting' => Unisharp\Setting\SettingFacade::class,
         'Markdown'  => AlfredoRamos\ParsedownExtra\Facades\ParsedownExtra::class,
-        'HTMLMin' => HTMLMin\HTMLMin\Facades\HTMLMin::class,
     ],
 
 ];

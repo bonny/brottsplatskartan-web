@@ -10,7 +10,7 @@
     "license": "MIT",
     "type": "project",
     "require": {
-        "php": "^8.1",
+        "php": "^8.2",
         "ext-bcmath": "*",
         "ext-ctype": "*",
         "ext-curl": "*",
@@ -28,13 +28,12 @@
         "atymic/twitter": "^3.1",
         "barryvdh/laravel-debugbar": "^3.2",
         "creitive/breadcrumbs": "^3.0",
-        "doctrine/dbal": "^3.0",
         "duzun/hquery": "^3.0.3",
+        "ezyang/htmlpurifier": "^4.17",
         "guzzlehttp/guzzle": "^7.4.2",
-        "htmlmin/htmlmin": "^9.0",
-        "laravel/framework": "^10.0",
+        "laravel/framework": "^11.0",
         "laravel/helpers": "^1.1",
-        "laravel/sanctum": "^3.2",
+        "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.7",
         "laravel/ui": "^4.0",
         "league/geotools": "^1.1.0",
@@ -42,16 +41,16 @@
         "predis/predis": "^1.1",
         "rap2hpoutre/laravel-log-viewer": "^2.1",
         "spatie/laravel-feed": "^4.0",
+        "spatie/laravel-ignition": "^2.0",
         "stevegrunwell/time-constants": "^1.1",
         "symfony/browser-kit": "^6.3",
+        "symfony/http-client": "^7.0",
         "unisharp/laravel-settings": "^2.0",
-        "weidner/goutte": "^2.2.0",
-        "willvincent/feeds": "^2.3.0",
-        "spatie/laravel-ignition": "^2.0"
+        "willvincent/feeds": "^2.3.0"
     },
     "repositories": [],
     "require-dev": {
-        "barryvdh/laravel-ide-helper": "^2.12",
+        "barryvdh/laravel-ide-helper": "^3.0",
         "nunomaduro/larastan": "^2.0",
         "phpunit/phpunit": "^9.5"
     },
@@ -97,6 +96,9 @@
     "config": {
         "preferred-install": "dist",
         "optimize-autoloader": true,
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
     }
 }
