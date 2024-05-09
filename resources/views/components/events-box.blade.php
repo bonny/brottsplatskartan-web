@@ -157,7 +157,7 @@
         <h2 class="Timeline-title">
             <a class="Timeline-titleLink" href="{{ route('handelser') }}">
                 <span class="Timeline-title-circle"></span>
-                Senaste händelserna
+                {{ $title }}
             </a>
         </h2>
 
