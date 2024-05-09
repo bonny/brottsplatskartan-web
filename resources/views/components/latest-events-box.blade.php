@@ -9,9 +9,25 @@
 
         .Timeline-title {}
 
+        .Timeline-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--default-margin);
+            padding-bottom: var(--default-margin-half);
+        }
+        
+        .Timeline-reloadLink {
+            display: block;
+            font-size: var(--font-size-medium-2);
+            padding-left: var(--default-margin);
+            color: inherit;
+            line-height: 1;
+        }
+
         .Timeline-items {
             list-style: none;
-            padding: var(--default-margin-half) 0 0 0;
+            padding: 0;
             font-size: 1rem;
         }
 
@@ -82,7 +98,7 @@
             width: 1px;
             background: var(--color-gray-1);
         }
-        
+
         .Timeline-item:nth-child(1)::before {
             top: var(--badge-size);
         }
@@ -130,15 +146,19 @@
     </style>
 @endonce
 
-<div {{ $attributes->merge(['class' => 'Timeline']) }}>
+<div {{ $attributes->merge(['class' => 'Timeline']) }} id="senaste-handelserna">
     {{ $slot }}
 
-    <h2 class="Timeline-title">
-        <a class="Timeline-titleLink" href="{{ route('handelser') }}">
-            <span class="Timeline-title-circle"></span>
-            Senaste händelserna
-        </a>
-    </h2>
+    <div class="Timeline-header">
+        <h2 class="Timeline-title">
+            <a class="Timeline-titleLink" href="{{ route('handelser') }}">
+                <span class="Timeline-title-circle"></span>
+                Senaste händelserna
+            </a>
+        </h2>
+
+        <a class="Timeline-reloadLink" href="{{ Request::Url() }}?t={{ time() . rand() }}#senaste-handelserna">↻ <span class="sr-only">Uppdatera</span></a>
+    </div>
 
     <ul class='Timeline-items'>
         @foreach ($latestEvents as $crimeEvent)
