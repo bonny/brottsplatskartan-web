@@ -60,9 +60,9 @@ class Helper {
                 <tr>
                     <th>' . $a_start . $date_day . $a_end . '</th>
                     <td style="--size: calc(' . $statRow->count . ' / ' . $maxValue . ')">' .
-                        '<span class="data">' . $statRow->count . '</span>' .
-                        $a_start . $a_end .
-                    '</td>
+                '<span class="data">' . $statRow->count . '</span>' .
+                $a_start . $a_end .
+                '</td>
                 </tr>
             ';
         }
@@ -1104,13 +1104,16 @@ class Helper {
         return $events;
     }
 
-    public static function getLatestEventsByParsedDate(int $count = 5) {
+    /**
+     * Hämta de senaste händelserna enligt händelsedatum.
+     */
+    public static function getLatestEventsByParsedDate(int $count = 5): Collection {
         $cacheKey = __METHOD__ . ":{$count}";
-        
+
         // Get date in format 2024-12-31 00:07:00
         $date = Carbon::now();
         $date = $date->format('Y-m-d H:i:s');
-        
+
         $events = Cache::remember($cacheKey, 2 * 60, function () use ($count, $date) {
             $events = CrimeEvent::orderBy("parsed_date", "desc")
                 ->where('parsed_date', '<', $date)
