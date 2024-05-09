@@ -317,7 +317,10 @@ class CrimeEvent extends Model implements Feedable {
         return Carbon::createFromTimestamp(strtotime($date));
     }
 
-    public function getParsedDateInFormat($dateFormat = '%A %d %B %H:%M') {
+    /**
+     * Datum för händelsen i formatet "Lördag 15 December 2018 13:20" eller i valfritt format.
+     */
+    public function getParsedDateInFormat($dateFormat = '%A %d %B %H:%M'): string {
         $carbonDate = $this->getParsedDateAsCarbon();
         $formattedDate = $carbonDate->formatLocalized($dateFormat);
         return $formattedDate;
@@ -906,7 +909,7 @@ class CrimeEvent extends Model implements Feedable {
 
         $titleParts[] = $this->getDescriptionAsPlainText();
 
-        return implode(", ", $titleParts);
+        return trim(implode(", ", $titleParts));
     }
 
     /**
@@ -1277,7 +1280,7 @@ class CrimeEvent extends Model implements Feedable {
             $headline = $this->getSingleEventTitleEvenShorter();
         }
 
-        return $headline;
+        return trim($headline);
     }
 
     /**
