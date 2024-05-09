@@ -3844,6 +3844,10 @@ h2.widget__title {
     display: flex;
 }
 
+.cols > * {
+    flex: 1;   
+}
+
 @media (max-width: 768px) {
     .cols {
         flex-direction: column;
