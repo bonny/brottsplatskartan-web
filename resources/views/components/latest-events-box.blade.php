@@ -1,14 +1,13 @@
 @once
     <style>
         .Timeline {
-            --badge-size: 9px;
+            --badge-size: 12px;
             background: white;
             padding: var(--default-margin);
             padding-bottom: var(--default-margin-half);
         }
 
-        .Timeline-title {
-        }
+        .Timeline-title {}
 
         .Timeline-items {
             list-style: none;
@@ -30,6 +29,10 @@
             margin: 0;
             line-height: 1;
             color: #1f2328;
+        }
+
+        .Timeline-titleLink {
+            display: block;
         }
 
         .Timeline-itemTime {
@@ -87,6 +90,21 @@
             height: var(--badge-size);
             border-radius: 50%;
             background-color: var(--color-red-2);
+            animation: ease-in-out pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            70% {
+                transform: scale(1.2);
+            }
+
+            100% {
+                transform: scale(1);
+            }
         }
     </style>
 @endonce
