@@ -28,10 +28,12 @@ class EventsBox extends Component {
             if ($eventsType === 'latest') {
                 $title = 'Senaste händelserna';
                 $containerId = 'senaste';
+                $moreEventsLink = route('handelser');
                 $events = Helper::getLatestEventsByParsedDate(5);
             } elseif ($eventsType === 'trending') {
                 $title = 'Mest lästa händelserna';
                 $containerId = 'mest-last';
+                $moreEventsLink = route('mostRead');
                 $events = Helper::getMostViewedEventsRecently();
                 $events = $events->map(function (CrimeView $crimeView) {
                     return $crimeView->crimeEvent;
@@ -45,7 +47,8 @@ class EventsBox extends Component {
                 ->with('events', $events)
                 ->with('containerId', $containerId)
                 ->with('eventsType', $eventsType)
-                ->with('title', $title);
+                ->with('title', $title)
+                ->with('moreEventsLink', $moreEventsLink);
         };
     }
 }

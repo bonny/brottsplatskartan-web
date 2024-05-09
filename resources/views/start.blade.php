@@ -89,6 +89,7 @@ samt för äldre dagar när man bläddrar i arkivet.
     </div>
 
     <x-latest-events-box />
+    <x-trending-events-box />
 
     @if ($eventsRecent)
         <div class="widget">

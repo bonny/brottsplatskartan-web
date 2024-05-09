@@ -185,7 +185,7 @@
         @endforelse
 
         <li class="Timeline-item">
-            <a href="{{ route('handelser') }}" class="Timeline-itemLink">
+            <a href="{{ $moreEventsLink }}" class="Timeline-itemLink">
                 <div class="Timeline-itemBadge"></div>
                 <div class="Timeline-itemContent">
                     <o class="Timeline-itemMoreLink">Visa fler →</o>
