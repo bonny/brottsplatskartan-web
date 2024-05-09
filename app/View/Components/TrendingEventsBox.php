@@ -2,19 +2,18 @@
 
 namespace App\View\Components;
 
-use App\Helper;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class LatestEventsBox extends Component
+class TrendingEventsBox extends Component
 {
     /**
      * Create a new component instance.
      */
     public function __construct()
     {
-        
+        //
     }
 
     /**
@@ -22,6 +21,6 @@ class LatestEventsBox extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.latest-events-box');
+        return view('components.trending-events-box');
     }
 }

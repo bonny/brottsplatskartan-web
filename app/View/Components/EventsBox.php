@@ -1,0 +1,48 @@
+<?php
+
+namespace App\View\Components;
+
+use App\Helper;
+use App\Models\CrimeView;
+use Closure;
+use Illuminate\Contracts\View\View;
+use Illuminate\View\Component;
+
+class EventsBox extends Component {
+    /**
+     * Create a new component instance.
+     */
+    public function __construct() {
+        //
+    }
+
+    /**
+     * Get the view / contents that represent the component.
+     */
+    public function render(): View|Closure|string {
+
+        return function (array $data) {
+
+            $eventsType = $data['attributes']['type'] ?? 'latest';
+
+            if ($eventsType === 'latest') {
+                $containerId = 'senaste';
+                $events = Helper::getLatestEventsByParsedDate(5);
+            } elseif ($eventsType === 'trending') {
+                $containerId = 'mest-last';
+                $events = Helper::getMostViewedEventsRecently();
+                $events = $events->map(function (CrimeView $crimeView) {
+                    return $crimeView->crimeEvent;
+                });
+    
+            } else {
+                return null;
+            }
+
+            return view('components.events-box')
+                ->with('events', $events)
+                ->with('containerId', $containerId)
+                ->with('eventsType', $eventsType);
+        };
+    }
+}
