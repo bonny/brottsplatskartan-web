@@ -246,6 +246,7 @@ blockquote {
     color: #333;
     /* border-top: 4px solid var(--color-red-3); */
     border-bottom: 4px solid var(--color-red-3);
+    font-weight: bold;
 }
 
 .SiteTitle__inner,
