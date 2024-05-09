@@ -1,10 +1,8 @@
 {{--
-
-Sidmall för startsidan
-samt för äldre dagar när man bläddrar i arkivet.
-
+Sidmall för:
+- startsidan
+ - äldre dagar när man bläddrar i arkivet
 --}}
-
 
 @extends('layouts.web')
 

@@ -88,6 +88,8 @@ samt för äldre dagar när man bläddrar i arkivet.
         </a>
     </div>
 
+    <x-latest-events-box />
+
     @if ($eventsRecent)
         <div class="widget">
             <h2 class="widget__title">

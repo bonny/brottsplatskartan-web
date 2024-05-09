@@ -11,7 +11,7 @@
 
         .Timeline-items {
             list-style: none;
-            padding: 0;
+            padding: var(--default-margin-half) 0 0 0;
             font-size: 1rem;
         }
 
@@ -41,6 +41,7 @@
 
         .Timeline-itemTitle {
             text-wrap: pretty;
+            line-height: 1.25;
         }
 
         .Timeline-itemLink {
@@ -81,7 +82,16 @@
             width: 1px;
             background: var(--color-gray-1);
         }
+        
+        .Timeline-item:nth-child(1)::before {
+            top: var(--badge-size);
+        }
 
+        .Timeline-item:last-child::before {
+            background-color: transparent;
+        }
+
+        .Timeline-title-circle,
         .Timeline-itemBadge-circle {
             display: block;
             position: relative;
@@ -90,6 +100,17 @@
             height: var(--badge-size);
             border-radius: 50%;
             background-color: var(--color-red-2);
+        }
+
+        .Timeline-itemBadge-circle {
+            --badge-size: 10px;
+            left: 1px;
+            top: .2em;
+        }
+
+        .Timeline-title-circle {
+            display: inline-block;
+            margin-right: var(--default-margin-half);
             animation: ease-in-out pulse 1.5s infinite;
         }
 
@@ -112,7 +133,12 @@
 <div {{ $attributes->merge(['class' => 'Timeline']) }}>
     {{ $slot }}
 
-    <h2 class="Timeline-title"><a class="Timeline-titleLink" href="{{ route('handelser') }}">Senaste händelserna</a></h2>
+    <h2 class="Timeline-title">
+        <a class="Timeline-titleLink" href="{{ route('handelser') }}">
+            <span class="Timeline-title-circle"></span>
+            Senaste händelserna
+        </a>
+    </h2>
 
     <ul class='Timeline-items'>
         @foreach ($latestEvents as $crimeEvent)
@@ -133,7 +159,7 @@
             <a href="{{ route('handelser') }}" class="Timeline-itemLink">
                 <div class="Timeline-itemBadge"></div>
                 <div class="Timeline-itemContent">
-                    <o class="Timeline-itemMoreLink">Visa fler händelser →</o>
+                    <o class="Timeline-itemMoreLink">Visa fler →</o>
                 </div>
             </a>
         </li>
