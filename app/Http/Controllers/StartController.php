@@ -63,9 +63,8 @@ class StartController extends Controller
 
         $introtext = null;
         $introtext_key = "introtext-start";
-        $introtext = \Markdown::parse(\Setting::get($introtext_key));
+        $introtext = Str::markdown(\Setting::get($introtext_key));
 
-        
         $canonicalLink = route('start');
         
         $title = 'Händelser från Polisen idag';
@@ -203,7 +202,7 @@ class StartController extends Controller
         $introtext = null;
         $introtext_key = "introtext-handelser";
         if ($isToday) {
-            $introtext = \Markdown::parse(\Setting::get($introtext_key));
+            $introtext = Str::markdown(\Setting::get($introtext_key, ''));
         }
 
         if ($isCurrentYear) {

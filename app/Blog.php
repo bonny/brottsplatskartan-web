@@ -23,7 +23,8 @@ class Blog extends Model
     public function getExcerpt($length = 50)
     {
         $str = $this->content;
-        $str = \Markdown::parse($str);
+        
+        $str = Str::markdown($str);
 
         // Behöver köra tweet-embedningen, även om vi inte ska visa tweets,
         // annars riskerar vi att det står "AMPTWEET: [...]" i utdraget.
@@ -61,8 +62,7 @@ class Blog extends Model
      */
     public function getContentFormatted()
     {
-        $str = $this->content;
-        $str = \Markdown::parse($str);
+        $str = Str::markdown($this->content);
 
         $str = $this->embedTweets($str);
         $str = $this->embedFacebook($str);

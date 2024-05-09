@@ -234,7 +234,7 @@ class LanController extends Controller
         // Kolla om förklarande text för län finns
         // key = like "introtext-lan-Stockholms län"
         $introtext_key = "introtext-lan-$lan";
-        $data["introtext"] = \Markdown::parse(\Setting::get($introtext_key));
+        $data["introtext"] = Str::markdown(\Setting::get($introtext_key, ''));
 
         // Hämta statistik för ett län
         $data['chartHtml'] = \App\Helper::getStatsChartHtml($lan);
