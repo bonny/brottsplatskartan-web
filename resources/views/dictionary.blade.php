@@ -46,7 +46,7 @@ Template för ordlista/dictionary
                     @if (empty($oneWord->description))
                         <p>Beskrivning saknas</p>
                     @else
-                        {!! Markdown::parse( $oneWord->getExcerpt() ) !!}
+                        {!! \Illuminate\Support\Str::markdown( $oneWord->getExcerpt() ) !!}
                     @endif
 
                 </div>

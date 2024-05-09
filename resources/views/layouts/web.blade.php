@@ -103,14 +103,9 @@ $noAdsReason = '';
     <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16" />
     <link rel="icon" type="image/png" href="/favicon-128.png" sizes="128x128" />
     <meta name="theme-color" content="#ffcc33">
-
     <meta name="apple-itunes-app" content="app-id=1174082309">
-
     <link rel="manifest" href="/manifest.webmanifest">
-
-    <style>
-        {!! HTMLMin::css(file_get_contents(public_path('css/styles.css'))) !!}
-    </style>
+    <link rel="stylesheet" type="text/css" href="/css/styles.css" />
     <link rel="stylesheet" type="text/css" href="/css/charts.min.css" />
 
     <script src="/js/scroll-snap-slider.iife.js"></script>
