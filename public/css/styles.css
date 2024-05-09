@@ -3839,6 +3839,17 @@ h2.widget__title {
     color: var(--color-black);
 }
 
+/* Kolumner på bredare skärmare */
+.cols {
+    display: flex;
+}
+
+@media (max-width: 768px) {
+    .cols {
+        flex-direction: column;
+    }
+}
+
 /* Google Custom Search Engine */
 .widget .gsc-control-cse {
     padding: 0;
