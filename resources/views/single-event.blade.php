@@ -21,13 +21,14 @@ Template för ett event/händelse
 @endsection
 
 @section('content')
+
     @include('parts.crimeevent', ['single' => true])
 
-    @if (empty($mostViewed))
-        <p>Inget mest tittat på idag ännu.</p>
-    @else
-        @include('parts.mostViewed')
-    @endif
+    <div class="cols">
+        <x-events-box type="trending" />
+        <x-events-box type="latest" />
+    </div>
+
 @endsection
 
 @section('sidebar')

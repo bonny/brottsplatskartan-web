@@ -128,23 +128,6 @@ if $single is set then larger image
     </a>
 @endif
 
-@if ($event->title_alt_1 || $event->description_alt_1)
-    <details class="mt-6">
-        <summary>Visa alternativ text</summary>
-
-        <p>
-            <strong>Alternativ titel:</strong>
-            <br>
-            {{ $event->title_alt_1 }}
-        </p>
-
-        <p>
-            <strong>Alternativ text:</strong>
-            <br>{!! $event->autop($event->description_alt_1) !!}
-        </p>
-    </details>
-@endif
-
 @if (isset($single) && $event->shouldShowSourceLink())
     <p class="Event__source">Källa: {{ $event->permalink }}</p>
 @endif
