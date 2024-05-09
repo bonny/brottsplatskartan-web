@@ -151,7 +151,7 @@ if $single is set then larger image
 
 @if (isset($overview))
 @else
-    @include('parts.crimeevent.newsarticles', ['newsarticles' => $newsarticles])
+    @include('parts.crimeevent.newsarticles', ['newsarticles' => $newsarticles ?? collect()])
 
     @include('parts.admin-crime')
 
