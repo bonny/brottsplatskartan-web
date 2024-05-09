@@ -3842,10 +3842,11 @@ h2.widget__title {
 /* Kolumner på bredare skärmare */
 .cols {
     display: flex;
+    gap: var(--default-margin);
 }
 
 .cols > * {
-    flex: 1;   
+    flex: 1;
 }
 
 @media (max-width: 768px) {

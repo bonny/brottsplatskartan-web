@@ -3,8 +3,6 @@
         .EventsBox {
             background: white;
             padding: var(--default-margin);
-            padding-bottom: var(--default-margin-half);
-            margin: var(--default-margin) 0;
         }
 
         .Timeline {
