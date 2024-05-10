@@ -3860,3 +3860,15 @@ h2.widget__title {
 .widget .gsc-control-cse {
     padding: 0;
 }
+
+.SiteFooter-about {
+    background-color: var(--color-gray-2);
+    padding: var(--default-margin-double);
+    font-size: var(--font-size-small);
+}
+
+.SiteFooter-cookies {
+    background-color: var(--color-gray-2);
+    padding: var(--default-margin-double);
+    text-align: center;
+}

@@ -162,9 +162,7 @@ $noAdsReason = '';
 
     </div>
 
-    <footer class="SiteFooter">
-        @include('parts.sitefooter')
-    </footer>
+    @include('parts.sitefooter')
 
     {{--
         Pixel,
