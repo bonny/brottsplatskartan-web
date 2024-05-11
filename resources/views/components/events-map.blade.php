@@ -11,6 +11,8 @@
                     html.innerHTML = '';
 
                     var expandButton = L.DomUtil.create('button', 'EventsMap-control-expand', html);
+                    // var buttonText = L.DomUtil.create('span', '', expandButton);
+                    // buttonText.innerText = 'Expandera karta';
 
                     var img = L.DomUtil.create('img', 'leaflet-control-watermark', expandButton);
                     img.src = '/img/expand_content_24dp_FILL0_wght400_GRAD0_opsz24.svg';
@@ -94,7 +96,10 @@
                     console.log('EventsMap.initMap:', this.mapContainer);
 
                     // Init in Jönköping
-                    let map = L.map(this.mapContainer);
+                    let map = L.map(this.mapContainer, {
+                        zoomControl: false,
+                        attributionControl: false,
+                    });
                     this.map = map;
 
                     window.map = map;
@@ -111,7 +116,7 @@
                     }).addTo(map);
 
                     L.control.watermark({
-                        position: 'topright'
+                        position: 'bottomright'
                     }).addTo(map);
                 }
             }
