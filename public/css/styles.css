@@ -690,6 +690,11 @@ blockquote {
     border-left: 5px solid white;
 }
 
+.Event__mapImage {
+    width: 100%;
+    height: auto;
+}
+
 /* typ län, göm sverigekarta pga ser redan var det är */
 .Event--distance_veryfar .Event__mapImageWrap--near,
 .Event--distance_far .Event__mapImageWrap--near {
