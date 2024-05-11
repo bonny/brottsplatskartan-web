@@ -19,7 +19,7 @@
 
                     L.DomEvent.on(expandButton, 'click', function(evt) {
                         console.log("click expand", evt);
-                        evt.stopPropagation();
+                        // evt.stopPropagation();
                         map.getContainer().classList.toggle('is-expanded');
 
                         // Invalidate size after css anim has finished.
@@ -53,8 +53,10 @@
             });
 
             class EventsMap {
-                map;
+                map;    
                 mapContainer;
+                blockerElm;
+                expandBtnElm;
                 zoom = {
                     default: 4,
                 };
@@ -71,6 +73,7 @@
                     const response = await fetch('/api/eventsMap');
                     const data = await response.json();
                     const events = data.data
+
                     console.log('EventsMap.loadMarkers data:', events);
 
                     events.forEach(event => {
@@ -92,32 +95,65 @@
                     });
                 }
 
+                expandMap() {
+                    this.map.getContainer().classList.toggle('is-expanded');
+
+                    // Enable click-through on blocker.
+                    this.blockerElm.classList.toggle('EventsMap__blocker--active');
+
+                    // Invalidate size after css anim has finished, so tiles are loaded.
+                    setTimeout(() => {
+                        this.map.invalidateSize({
+                            pan: true
+                        });
+                    }, 250);
+
+                }
+
                 initMap() {
+
                     console.log('EventsMap.initMap:', this.mapContainer);
 
-                    // Init in Jönköping
-                    let map = L.map(this.mapContainer, {
+                    this.map = L.map(this.mapContainer, {
                         zoomControl: false,
                         attributionControl: false,
+                        // scrollWheelZoom: false,
+                        // touchZoom: false,
+                        // dragging: false,
+                        // tap: false,
+                        // click: false,
                     });
-                    this.map = map;
 
-                    window.map = map;
+                    window.map = this.map;
                     console.log('window.map now available', window.map);
 
-                    map.on('load', () => {
+                    this.map.on('load', () => {
                         this.loadMarkers();
+
+                        // Map is "disabled" by default, no interaction because elements are on top of it.
+                        let parentElement = this.mapContainer.closest('.EventsMap__container');
+                        this.expandBtnElm = parentElement.querySelector('.EventsMap-control-expand');
+                        this.blockerElm = parentElement.querySelector('.EventsMap__blocker');
+
+                        this.blockerElm.addEventListener('click', (evt) => {
+                            this.expandMap();
+                        });
+
+                        this.expandBtnElm.addEventListener('click', (evt) => {
+                            this.expandMap();
+                        });
+
                     });
 
-                    map.setView([62, 15.5], this.zoom.default);
+                    this.map.setView([62, 15.5], this.zoom.default);
 
                     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>'
-                    }).addTo(map);
+                    }).addTo(this.map);
 
                     L.control.watermark({
                         position: 'bottomright'
-                    }).addTo(map);
+                    }).addTo(this.map);
                 }
             }
 
@@ -132,7 +168,29 @@
 
     @push('styles')
         <style>
+            .EventsMap__container {
+                position: relative;
+            }
+
+            .EventsMap__blocker {
+                display: none;
+                background-color: transparent;
+                position: absolute;
+                z-index: 1050;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+            }
+
+            .EventsMap__blocker--active {
+                display: block;
+            }
+
             .EventsMap {
+                display: flex;
+                align-items: center;
+                place-content: center;
                 height: 200px;
                 background-color: antiquewhite;
                 transition: height 0.25s ease-in-out;
@@ -143,10 +201,17 @@
             }
 
             .EventsMap-control-expand {
+                position: absolute;
+                right: 20px;
+                top: 20px;
+                z-index: 1055;
                 line-height: 1;
                 margin: 0;
                 padding: 2px;
                 cursor: pointer;
+                background-color: #eee;
+                padding: 5px;
+                border: 1px solid #ccc;
             }
 
             .EventsMap-control-expand img {
@@ -215,6 +280,16 @@
 <div class="widget">
     <h2 class="widget__title">Sverigekartan</h2>
     <div class="widget__fullwidth">
-        <div class="EventsMap">Laddar karta...</div>
+
+        <div class="EventsMap__container">
+            <div class="EventsMap-control-expand">
+                <img src="/img/expand_content_24dp_FILL0_wght400_GRAD0_opsz24.svg" alt="Expandera karta">
+            </div>
+
+            <div class="EventsMap__blocker EventsMap__blocker--active"></div>
+
+            <div class="EventsMap">Laddar karta...</div>
+        </div>
+
     </div>
 </div>
