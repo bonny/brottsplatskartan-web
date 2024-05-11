@@ -1436,6 +1436,10 @@ input[type="url"],
     overflow: hidden;
 }
 
+.widget__fullwidth {
+    margin: calc(-1 * var(--default-margin));
+}
+
 .widget__title {
     margin-top: 0;
     margin-left: calc(-1 * var(--default-margin));

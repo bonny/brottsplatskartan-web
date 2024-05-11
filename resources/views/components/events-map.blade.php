@@ -192,8 +192,7 @@
                 display: block;
             }
 
-            .EventsMap-marker-contentLink {
-            }
+            .EventsMap-marker-contentLink {}
 
             @keyframes fadein {
                 from {
@@ -208,4 +207,9 @@
     @endpush
 @endonce
 
-<div class="EventsMap">Laddar karta...</div>
+<div class="widget">
+    <h2 class="widget__title">Sverigekartan</h2>
+    <div class="widget__fullwidth">
+        <div class="EventsMap">Laddar karta...</div>
+    </div>
+</div>
