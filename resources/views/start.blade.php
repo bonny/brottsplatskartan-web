@@ -84,7 +84,7 @@ samt för äldre dagar när man bläddrar i arkivet.
         <a href="{{ route('sverigekartan') }}">
             <img loading="lazy"
                 src="https://brottsplatskartan.ams3.digitaloceanspaces.com/images/sverigekartan-mitten-av-sverige.png"
-                layout="responsive" width="250" height="240"></img>
+                width="250" height="240"></img>
         </a>
     </div>
 

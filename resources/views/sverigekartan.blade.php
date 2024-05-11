@@ -35,11 +35,12 @@ Template för sverigekartan
             </a>
         </h2>
 
-        <div class="block relative h-screen Sverigekartan__wrapper" style="margin-left: calc(-2 * var(--default-margin)); width: 100vw;">
+        <div class="block relative h-screen Sverigekartan__wrapper"
+            style="margin-left: calc(-2 * var(--default-margin)); width: 100vw;">
             <iframe width="auto" height="300"
-                sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox allow-top-navigation" layout="fill"
-                frameborder="0" src="/sverigekartan-iframe/">
-                <img loading="lazy" layout="fill" src="/img/share-img-blur.jpg" placeholder></img>
+                sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox allow-top-navigation" frameborder="0"
+                src="/sverigekartan-iframe/">
+                <img loading="lazy" src="/img/share-img-blur.jpg" placeholder></img>
             </iframe>
         </div>
     </div>

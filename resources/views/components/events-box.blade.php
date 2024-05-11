@@ -81,8 +81,19 @@
 
         .Timeline-itemContent {
             display: flex;
+            align-items: center;
+            gap: var(--default-margin);
+        }
+
+        .Timeline-mapImage {
+            border-radius: 2px;
+        }
+
+        .Timeline-itemContent-text {
+            display: flex;
             flex-direction: column;
             gap: var(--default-margin-third);
+
         }
 
         .Timeline-itemMoreLink {
@@ -171,8 +182,12 @@
                         <span class="Timeline-itemBadge-circle"></span>
                     </div>
                     <div class="Timeline-itemContent">
-                        <p class="Timeline-itemTime">{{ $crimeEvent->getParsedDateInFormat('%H:%M') }}</p>
-                        <h3 class="Timeline-itemTitle">{{ $crimeEvent->getHeadline() }}</h3>
+                        <div class="Timeline-itemContent-text">
+                            <p class="Timeline-itemTime">{{ $crimeEvent->getParsedDateInFormat('%H:%M') }}</p>
+                            <h3 class="Timeline-itemTitle">{{ $crimeEvent->getHeadline() }}</h3>
+                        </div>
+                        <img class="Timeline-mapImage" loading="lazy" alt="{{ $crimeEvent->getMapAltText() }}"
+                            src="{{ $crimeEvent->getStaticImageSrcFar(100, 100) }}" width="50" height="50" />
                     </div>
                 </a>
             </li>
