@@ -18,6 +18,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('model:prune')->daily();
         $schedule->command(ImportVMAAlerts::class)->everyFiveMinutes();
+        $schedule->command('app:importera-texttv')->everyFiveMinutes();
     }
 
     /**
