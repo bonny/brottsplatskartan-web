@@ -13,10 +13,8 @@ use Illuminate\Http\JsonResponse;
 /**
  * Controller för plats, översikt och detalj
  */
-class ApiController extends Controller
-{
-    public function eventsNearby(Request $request, Response $response)
-    {
+class ApiController extends Controller {
+    public function eventsNearby(Request $request, Response $response) {
         // The number of events to get. Max 50. Default 10.
         $lat = (float) $request->input("lat");
         $lng = (float) $request->input("lng");
@@ -31,7 +29,7 @@ class ApiController extends Controller
         $numTries = 0;
         $maxNumTries = 20;
         $nearbyCount = 25;
-        
+
         $nearbyInKm = $request->input('distance');
         $allowNearbyExpand = false;
         if (!is_numeric($nearbyInKm)) {
@@ -101,8 +99,7 @@ class ApiController extends Controller
         return response()->json($json)->withCallback($request->input('callback'));
     }
 
-    public function events(Request $request, Response $response)
-    {
+    public function events(Request $request, Response $response) {
         // The number of events to get. Max 50. Default 10.
         $limit = (int) $request->input("limit", 10);
 
@@ -228,8 +225,7 @@ class ApiController extends Controller
         return response()->json($json)->withCallback($callback);
     }
 
-    public function event(Request $request, Response $response, $eventID)
-    {
+    public function event(Request $request, Response $response, $eventID) {
         $event = CrimeEvent::findOrFail($eventID);
 
         $eventArray = $event->toArray();
@@ -261,8 +257,7 @@ class ApiController extends Controller
         return response()->json($json)->withCallback($request->input('callback'));
     }
 
-    public function areas(Request $request, Response $response)
-    {
+    public function areas(Request $request, Response $response) {
         $data = [
             "data" => [],
         ];
@@ -285,8 +280,7 @@ class ApiController extends Controller
      * @param  Response $response [description]
      * @return JsonResponse
      */
-    public function eventsInMedia(Request $request, Response $response)
-    {
+    public function eventsInMedia(Request $request, Response $response) {
 
         $limit = (int) $request->input("limit", 10);
 
@@ -299,7 +293,7 @@ class ApiController extends Controller
 
         $callback = $request->input('callback');
 
-        $events = CrimeEvent::whereHas('newsarticles', function($query) use ($media) {
+        $events = CrimeEvent::whereHas('newsarticles', function ($query) use ($media) {
             $query->where('url', 'like', "%{$media}%");
         })->with('newsarticles')->orderBy("created_at", "desc")->paginate($limit);
 
@@ -347,7 +341,7 @@ class ApiController extends Controller
             // Keep only some keys from the articles array.
             $newsArticles = $item->newsarticles->toArray();
             $keysToKeep = array_flip(['title', 'shortdesc', 'url']);
-            $newsArticles = array_map(function($itemArticle) use ($keysToKeep) {
+            $newsArticles = array_map(function ($itemArticle) use ($keysToKeep) {
                 return array_intersect_key($itemArticle, $keysToKeep);
             }, $newsArticles);
 
@@ -392,7 +386,7 @@ class ApiController extends Controller
     public function mostViewedRecently(Request $request, Response $response) {
         $events = Helper::getMostViewedEventsRecently($request->input('minutes', 10), $request->input('limit', 10));
 
-        $events = $events->map(function($data) {
+        $events = $events->map(function ($data) {
             $item = $data->crimeEvent;
 
             return [
@@ -431,4 +425,34 @@ class ApiController extends Controller
         return response()->json($json)->withCallback($request->input('callback'));
     }
 
+    /**
+     * Hämta data för eventsMap-komponenten.
+     */
+    public function eventsMap() {
+
+        $events = CrimeEvent::orderBy("created_at", "desc")->limit(300)->get();
+
+        $json = [
+            "data" => [],
+        ];
+
+        // create array with data is a format more suited for app and web
+        foreach ($events as $item) {
+            $event = [
+                "id" => $item->id,
+                'time' => $item->getParsedDateInFormat('%H:%M'),
+                'headline' => $item->getHeadline(),
+                "type" => $item->parsed_title,
+                "lat" => (float) $item->location_lat,
+                "lng" => (float) $item->location_lng,
+                "image" => $item->getStaticImageSrc(320, 320, 2),
+                "permalink" => $item->getPermalink(true),
+            ];
+
+            $json["data"][] = $event;
+        }
+
+        // return json or jsonp if ?callback is set
+        return $json;
+    }
 }

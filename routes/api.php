@@ -25,3 +25,4 @@ Route::get('/eventsNearby', [ApiController::class, 'eventsNearby']);
 Route::get('/events', [ApiController::class, 'events']);
 Route::get('/eventsInMedia', [ApiController::class, 'eventsInMedia']);
 Route::get('/mostViewedRecently', [ApiController::class, 'mostViewedRecently']);
+Route::get('/eventsMap', [ApiController::class, 'eventsMap']);

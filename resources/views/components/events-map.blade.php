@@ -23,7 +23,7 @@
                         // Invalidate size after css anim has finished.
                         setTimeout(() => {
                             map.invalidateSize({
-                                pan: false
+                                pan: true
                             });
                         }, 250);
                     });
@@ -40,8 +40,20 @@
                 return new L.Control.Watermark(opts);
             }
 
+            var markerIconFar = L.divIcon({
+                className: 'EventsMap-marker-icon EventsMap-marker-icon--far',
+            });
+
+            var markerIconNear = L.divIcon({
+                className: 'EventsMap-marker-icon EventsMap-marker-icon--near',
+            });
+
             class EventsMap {
-                mapContainer = null;
+                map;
+                mapContainer;
+                zoom = {
+                    default: 4,
+                };
 
                 constructor(mapContainer) {
                     this.mapContainer = mapContainer;
@@ -49,14 +61,37 @@
                     this.initMap();
                 }
 
+                async loadMarkers() {
+                    console.log('EventsMap.loadMarkers:', this);
+
+                    const response = await fetch('/api/eventsMap');
+                    const data = await response.json();
+                    const events = data.data
+                    console.log('EventsMap.loadMarkers data:', events);
+
+                    events.forEach(event => {
+                        L.marker([event.lat, event.lng])
+                            .setIcon(markerIconFar)
+                            .addTo(this.map)
+                            .bindPopup(`${event.time} ${event.headline}`);
+                    });
+                }
+
                 initMap() {
                     console.log('EventsMap.initMap:', this.mapContainer);
 
                     // Init in Jönköping
-                    let map = L.map(this.mapContainer).setView([59.1, 14.5], 6);
+                    let map = L.map(this.mapContainer);
+                    this.map = map;
 
                     window.map = map;
                     console.log('window.map now available', window.map);
+
+                    map.on('load', () => {
+                        this.loadMarkers();
+                    });
+
+                    map.setView([62, 15.5], this.zoom.default);
 
                     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>'
@@ -65,37 +100,14 @@
                     L.control.watermark({
                         position: 'topright'
                     }).addTo(map);
-
-                    // map.on("click", function(evt) {
-                    //     console.log("click expand", evt);
-                    //     evt.stopPropagation();
-                    //     map.getContainer().classList.toggle('is-expanded');
-                    //     map.invalidateSize();
-                    // });
-
-
-                    // L.marker([51.5, -0.09]).addTo(map)
-                    //     .bindPopup('A pretty CSS3 popup.<br> Easily customizable.')
-                    //     .openPopup();
                 }
             }
 
             document.addEventListener('DOMContentLoaded', function() {
                 let mapContainers = document.querySelectorAll('.EventsMap');
                 mapContainers.forEach(element => {
-                    console.log('element:', element);
                     new EventsMap(element);
                 });
-
-                // var map = L.map('EventsMap').setView([51.505, -0.09], 13);
-
-                // L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                //     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                // }).addTo(map);
-
-                // L.marker([51.5, -0.09]).addTo(map)
-                //     .bindPopup('A pretty CSS3 popup.<br> Easily customizable.')
-                //     .openPopup();
             });
         </script>
     @endpush
@@ -118,14 +130,40 @@
                 padding: 2px;
                 cursor: pointer;
             }
+
             .EventsMap-control-expand img {
                 display: block;
+            }
+
+            .EventsMap .leaflet-marker-icon,
+            .EventsMap .leaflet-marker-shadow {
+                animation: fadein .75s;
+            }
+
+            .EventsMap .leaflet-popup {
+                max-width: 50vw;
+            }
+
+            .EventsMap-marker-icon {
+                --icon-size: 10px;
+                background-color: var(--color-red);
+                border-radius: 50%;
+                border: 1px solid rgba(255, 255, 255, .25);
+                width: var(--icon-size);
+                height: var(--icon-size);
+            }
+
+            @keyframes fadein {
+                from {
+                    opacity: 0;
+                }
+
+                to {
+                    opacity: 1;
+                }
             }
         </style>
     @endpush
 @endonce
 
-<div>
-    <p>Karta.</p>
-    <div class="EventsMap">Laddar karta...</div>
-</div>
+<div class="EventsMap">Laddar karta...</div>

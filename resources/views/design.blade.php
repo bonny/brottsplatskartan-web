@@ -15,10 +15,11 @@ Template för ordlista/dictionary
 
     <x-events-map />
 
-    <x-text-tv-box />
-
     <x-latest-events-box />
+
     <x-trending-events-box />
+
+    <x-text-tv-box />
 
     <h1>En huvudrubrik av storlek h1. Lite överdrivet lång kanske men vi måste ju testa radbrytningar och så vidare</h1>
 
