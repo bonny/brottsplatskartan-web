@@ -43,7 +43,7 @@
                                     <div class="EventsMap-marker-contentImage">
                                         <img class="EventsMap-marker-image" src="${event.image}" alt="" />
                                     </div>
-                                    <a href="${event.permalink}" class="EventsMap-marker-contentText EventsMap-marker-contentLink">
+                                    <a href="${event.permalink}?utm_source=brottsplatskartan&utm_content=maplink" class="EventsMap-marker-contentText EventsMap-marker-contentLink">
                                         ${event.time} • ${event.type}
                                         <strong>${event.headline}</strong>
                                         <div>Läs mer →</div>

@@ -45,7 +45,7 @@
         <ul class="TextTVBox-newslisting">
             @foreach ($latestNews as $news)
                 <li>
-                    <a href="{{ $news['permalink'] }}">
+                    <a href="{{ $news['permalink'] }}?utm_source=brottsplatskartan&utm_content=newslist">
                         <div class="TextTVBox-newslisting-text">
                             <div>{{ $news['date_added_time'] }}</div>
                             <div>{{ $news['title'] }}</div>
@@ -63,7 +63,7 @@
         <ul class="TextTVBox-newslisting">
             @foreach ($mostRead as $news)
                 <li>
-                    <a href="{{ $news['permalink'] }}">
+                    <a href="{{ $news['permalink'] }}?utm_source=brottsplatskartan&utm_content=newslist">
                         <div class="TextTVBox-newslisting-text">
                             <div>{{ $news['date_added_time'] }}</div>
                             <div>{{ $news['title'] }}</div>
