@@ -5,43 +5,6 @@
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
             integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
         <script>
-            L.Control.Watermark = L.Control.extend({
-                onAdd: function(map) {
-                    var html = L.DomUtil.create('div');
-                    html.innerHTML = '';
-
-                    var expandButton = L.DomUtil.create('button', 'EventsMap-control-expand', html);
-                    // var buttonText = L.DomUtil.create('span', '', expandButton);
-                    // buttonText.innerText = 'Expandera karta';
-
-                    var img = L.DomUtil.create('img', 'leaflet-control-watermark', expandButton);
-                    img.src = '/img/expand_content_24dp_FILL0_wght400_GRAD0_opsz24.svg';
-
-                    L.DomEvent.on(expandButton, 'click', function(evt) {
-                        console.log("click expand", evt);
-                        // evt.stopPropagation();
-                        map.getContainer().classList.toggle('is-expanded');
-
-                        // Invalidate size after css anim has finished.
-                        setTimeout(() => {
-                            map.invalidateSize({
-                                pan: true
-                            });
-                        }, 250);
-                    });
-
-                    return html;
-                },
-
-                onRemove: function(map) {
-                    // Nothing to do here
-                },
-            });
-
-            L.control.watermark = function(opts) {
-                return new L.Control.Watermark(opts);
-            }
-
             var markerIconFar = L.divIcon({
                 className: 'EventsMap-marker-icon EventsMap-marker-icon--far',
                 iconSize: [8, 8],
@@ -53,7 +16,7 @@
             });
 
             class EventsMap {
-                map;    
+                map;
                 mapContainer;
                 blockerElm;
                 expandBtnElm;
@@ -63,18 +26,13 @@
 
                 constructor(mapContainer) {
                     this.mapContainer = mapContainer;
-                    console.log('EventsMap.constructor:', this.mapContainer);
                     this.initMap();
                 }
 
                 async loadMarkers() {
-                    console.log('EventsMap.loadMarkers:', this);
-
                     const response = await fetch('/api/eventsMap');
                     const data = await response.json();
                     const events = data.data
-
-                    console.log('EventsMap.loadMarkers data:', events);
 
                     events.forEach(event => {
                         L.marker([event.lat, event.lng])
@@ -111,9 +69,6 @@
                 }
 
                 initMap() {
-
-                    console.log('EventsMap.initMap:', this.mapContainer);
-
                     this.map = L.map(this.mapContainer, {
                         zoomControl: false,
                         attributionControl: false,
@@ -149,10 +104,6 @@
 
                     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>'
-                    }).addTo(this.map);
-
-                    L.control.watermark({
-                        position: 'bottomright'
                     }).addTo(this.map);
                 }
             }
