@@ -82,7 +82,7 @@ samt för äldre dagar när man bläddrar i arkivet.
         </h2>
         <p><a href="{{ route('sverigekartan') }}">Se händelser och brott i hela Sverige</a></p>
         <a href="{{ route('sverigekartan') }}">
-            <img loading="lazy"
+            <img loading="lazy" class="fill"
                 src="https://brottsplatskartan.ams3.digitaloceanspaces.com/images/sverigekartan-mitten-av-sverige.png"
                 width="250" height="240"></img>
         </a>
@@ -92,34 +92,6 @@ samt för äldre dagar när man bläddrar i arkivet.
         <x-latest-events-box />
         <x-trending-events-box />
     </div>
-
-    @if ($eventsRecent)
-        <div class="widget">
-            <h2 class="widget__title">
-                <svg class="align-text-bottom" fill="#0c3256" height="18" viewBox="0 0 24 24" width="18"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <path
-                        d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z" />
-                    <path d="M0 0h24v24H0z" fill="none" />
-                    <path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z" />
-                </svg>
-                <a href="{{ route('handelser') }}">Senaste händelserna</a>
-            </h2>
-
-            <ul class="Events">
-                @foreach ($eventsRecent as $event)
-                    @include('parts.crimeevent-small', [
-                        'event' => $event,
-                        'detailed' => true,
-                    ])
-                @endforeach
-            </ul>
-
-            <div class="widget__footer">
-                <a href="{{ route('handelser') }}">&raquo; Visa alla händelser idag</a>
-            </div>
-        </div>
-    @endif
 
 @endsection
 
