@@ -24,6 +24,8 @@ samt för äldre dagar när man bläddrar i arkivet.
 @section('metaImageHeight', 315)
 
 @section('content')
+    <x-events-map />
+
     <div class="widget">
         <h2 class="widget__title">
             <svg class="align-text-bottom" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#0c3256" width="18px"

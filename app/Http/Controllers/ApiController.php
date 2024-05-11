@@ -430,7 +430,6 @@ class ApiController extends Controller {
      * Hämta data för eventsMap-komponenten.
      */
     public function eventsMap() {
-
         $cacheSeconds = 5 * 60;
         $daysBack = 3;
         $cacheKey = __METHOD__ . "_{$daysBack}";

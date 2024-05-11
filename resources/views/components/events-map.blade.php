@@ -80,11 +80,11 @@
                                     <div class="EventsMap-marker-contentImage">
                                         <img class="EventsMap-marker-image" src="${event.image}" alt="" />
                                     </div>
-                                    <div class="EventsMap-marker-contentText">
+                                    <a href="${event.permalink}" class="EventsMap-marker-contentText EventsMap-marker-contentLink">
                                         ${event.time} • ${event.type}
                                         <strong>${event.headline}</strong>
-                                        <a href="${event.permalink}">Läs mer →</a>
-                                     </div>
+                                        <div>Läs mer →</div>
+                                    </a>
                                 </div>
                             `);
                     });
@@ -190,6 +190,9 @@
 
             .EventsMap-marker-contentText a {
                 display: block;
+            }
+
+            .EventsMap-marker-contentLink {
             }
 
             @keyframes fadein {
