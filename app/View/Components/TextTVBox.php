@@ -20,8 +20,8 @@ class TextTVBox extends Component {
      */
     public function render(): View|Closure|string {
 
-        $latestNews = Setting::get('texttv-last-updated');
-        $mostRead = Setting::get('texttv-most-read');
+        $latestNews = Setting::get('texttv-last-updated', []);
+        $mostRead = Setting::get('texttv-most-read', []);
 
         return view('components.text-tv-box', ['latestNews' => $latestNews, 'mostRead' => $mostRead]);
     }
