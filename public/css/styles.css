@@ -3830,6 +3830,11 @@ h2.widget__title {
     color: var(--color-black);
 }
 
+.fill {
+    width: 100%;
+    height: auto;
+}
+
 /* Kolumner på bredare skärmare */
 .cols {
     display: flex;

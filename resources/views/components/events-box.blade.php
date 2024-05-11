@@ -81,6 +81,7 @@
 
         .Timeline-itemContent {
             display: flex;
+            flex: 1;
             align-items: center;
             gap: var(--default-margin);
         }
@@ -91,9 +92,9 @@
 
         .Timeline-itemContent-text {
             display: flex;
+            flex: 1;
             flex-direction: column;
             gap: var(--default-margin-third);
-
         }
 
         .Timeline-itemMoreLink {
