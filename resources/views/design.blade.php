@@ -13,6 +13,8 @@ Template för ordlista/dictionary
 
 @section('content')
 
+    <x-events-map />
+
     <x-text-tv-box />
 
     <x-latest-events-box />
