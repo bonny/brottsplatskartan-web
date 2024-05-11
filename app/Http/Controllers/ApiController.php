@@ -432,7 +432,7 @@ class ApiController extends Controller {
     public function eventsMap() {
 
         $cacheSeconds = 5 * 60;
-        $daysBack = 7;
+        $daysBack = 3;
         $cacheKey = __METHOD__ . "_{$daysBack}";
         
         $events = Cache::remember($cacheKey, $cacheSeconds, function () use ($daysBack) {
