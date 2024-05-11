@@ -140,7 +140,7 @@
         .Timeline-title-circle {
             display: inline-block;
             margin-right: var(--default-margin-half);
-            animation: ease-in-out pulse 1.5s infinite;
+            animation: ease-in-out pulse 1s infinite;
         }
 
         @keyframes pulse {
@@ -148,7 +148,7 @@
                 transform: scale(1);
             }
 
-            70% {
+            50% {
                 transform: scale(1.2);
             }
 
