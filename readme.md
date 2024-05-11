@@ -16,3 +16,7 @@ Några exempel på sidor som sajten har. Både län och enskilda platser (gator,
 ## Om datan
 
 Alla uppgifter hämtas från [Polisens hemsida](https://polisen.se/Aktuellt/RSS/Lokala-RSS-floden/).
+
+## Nyheter
+
+Sidan visar även de senaste och mest lästa text-tv-nyheterna från vår "systersajt" [texttv.nu](https://texttv.nu).

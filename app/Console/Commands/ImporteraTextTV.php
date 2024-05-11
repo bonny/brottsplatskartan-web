@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Setting;
 
 class ImporteraTextTV extends Command
 {
@@ -20,21 +21,41 @@ class ImporteraTextTV extends Command
      */
     protected $description = 'Importerar text-tv från SVT:s text-tv-sidor.';
 
+    protected $appId = 'brottsplatskartan';
+
+    protected function importMostRead()
+    {
+        $APIEndpoint = "https://texttv.nu/api/most_read/news?count=5&{$this->appId}";
+        $mostRead = json_decode(file_get_contents($APIEndpoint), true);
+        
+        if ($mostRead === null) {
+            $this->error('Kunde inte hämta mest lästa nyheterna');
+        }
+
+        Setting::set('texttv-most-read', $mostRead['pages']);
+    }
+
+    protected function importLastUpdated()
+    {
+        $APIEndpoint = "https://texttv.nu/api/last_updated/news?count=5&{$this->appId}";
+        $lastUpdated = json_decode(file_get_contents($APIEndpoint), true);
+        
+        if ($lastUpdated === null) {
+            $this->error('Kunde inte hämta senaste nyheterna');
+        }
+
+        Setting::set('texttv-last-updated', $lastUpdated['pages']);
+    }
+
     /**
      * Execute the console command.
      */
     public function handle()
     {
-        $appId = 'brottsplatskartan';
-        $mostReadAPIEndpoint = "https://texttv.nu/api/most_read/news?count=5&{$appId}";
-        $mostRead = json_decode(file_get_contents($mostReadAPIEndpoint), true);
-        
-        if ($mostRead === null) {
-            $this->error('Kunde inte hämta mest lästa nyheter från text-tv.nu.');
-            return;
-        }
+        $this->importMostRead();
+        $this->importLastUpdated();
+        $this->info('Hämtade nyheter från text-tv.nu.');
 
-        $this->info('Hämtade mest lästa nyheter från text-tv.nu.');
         
     }
 }
