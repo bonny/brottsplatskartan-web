@@ -33,14 +33,14 @@
         </ul>
     </div>
 
+    <div class="cols">
+        <x-events-box type="trending" />
+        <x-events-box type="latest" />
+    </div>
+
     <script>
         // https://developers.google.com/custom-search/docs/element#results-ready
         function myResultsReadyCallback(gname, query, promoElts, resultElts) {
-            console.log('Användare sökte');
-            console.log('gname:', gname);
-            console.log('query:', query);
-            console.log('resultElts:', resultElts);
-            console.log('num results:', resultElts.length);
             // Skicka pixel för sökstatistik.
             let i = (new Image()).src = '{{ route('pixel-sok') }}?q=' + query + '&c=' + resultElts.length;
         }
