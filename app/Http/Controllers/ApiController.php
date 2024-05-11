@@ -8,6 +8,7 @@ use DB;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Helper;
+use Cache;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -430,7 +431,16 @@ class ApiController extends Controller {
      */
     public function eventsMap() {
 
-        $events = CrimeEvent::orderBy("created_at", "desc")->limit(300)->get();
+        $cacheSeconds = 5 * 60;
+        $daysBack = 7;
+        $cacheKey = __METHOD__ . "_{$daysBack}";
+        
+        $events = Cache::remember($cacheKey, $cacheSeconds, function () use ($daysBack) {
+            return CrimeEvent::orderBy("created_at", "desc")
+                ->where('created_at', '>=', now()->subDays($daysBack))
+                ->limit(500)
+                ->get();
+        });
 
         $json = [
             "data" => [],
