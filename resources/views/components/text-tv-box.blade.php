@@ -5,10 +5,15 @@
             color: #eee;
             padding: var(--default-margin);
             margin: var(--default-margin) 0;
+            border-radius: var(--border-radius-normal);
         }
 
         .TextTVBox a {
             color: inherit;
+        }
+
+        .TextTVBox-title {
+            margin-top: 0;
         }
 
         .TextTVBox-newslisting {
@@ -30,9 +35,9 @@
 @endonce
 
 <div class="TextTVBox">
-    <h2>Nyheter från Text TV</h2>
+    <h2 class="TextTVBox-title">Nyheter från Text TV</h2>
 
-    <p>Nyheterna presenteras i samarbete med <a href="https://texttv.nu/">TextTV.nu</a>.</p>
+    <p>Presenteras i samarbete med <a href="https://texttv.nu/">TextTV.nu</a>.</p>
 
     <h3>Senaste nytt</h3>
 

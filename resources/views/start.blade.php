@@ -112,4 +112,5 @@ samt för äldre dagar när man bläddrar i arkivet.
     @include('parts.widget-blog-entries')
     @include('parts.widget-vma-messages')
 
+    <x-text-tv-box />
 @endsection

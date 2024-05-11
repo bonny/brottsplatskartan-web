@@ -9,7 +9,7 @@
 
         <a href="{{ route('vma-overview') }}">VMA-meddelanden</a>
     </h2>
-
+    
     <ul class="widget__listItems">
         @foreach ($shared_vma_current_alerts as $alert)
             <li class="widget__listItem"
