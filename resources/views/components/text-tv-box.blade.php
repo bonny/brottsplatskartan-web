@@ -39,36 +39,40 @@
 
     <p>Presenteras i samarbete med <a href="https://texttv.nu/">TextTV.nu</a>.</p>
 
-    <h3>Senaste nytt</h3>
+    @if (isset($latestNews))
+        <h3>Senaste nytt</h3>
 
-    <ul class="TextTVBox-newslisting">
-        @foreach ($latestNews as $news)
-            <li>
-                <a href="{{ $news['permalink'] }}">
-                    <div class="TextTVBox-newslisting-text">
-                        <div>{{ $news['date_added_time'] }}</div>
-                        <div>{{ $news['title'] }}</div>
-                    </div>
-                    {{-- <p>{{ $news['page_content'] }}</p> --}}
-                </a>
-            </li>
-        @endforeach
-    </ul>
+        <ul class="TextTVBox-newslisting">
+            @foreach ($latestNews as $news)
+                <li>
+                    <a href="{{ $news['permalink'] }}">
+                        <div class="TextTVBox-newslisting-text">
+                            <div>{{ $news['date_added_time'] }}</div>
+                            <div>{{ $news['title'] }}</div>
+                        </div>
+                        {{-- <p>{{ $news['page_content'] }}</p> --}}
+                    </a>
+                </li>
+            @endforeach
+        </ul>
+    @endif
 
-    <h3>Mest läst</h3>
+    @if (isset($mostRead))
+        <h3>Mest läst</h3>
 
-    <ul class="TextTVBox-newslisting">
-        @foreach ($mostRead as $news)
-            <li>
-                <a href="{{ $news['permalink'] }}">
-                    <div class="TextTVBox-newslisting-text">
-                        <div>{{ $news['date_added_time'] }}</div>
-                        <div>{{ $news['title'] }}</div>
-                    </div>
-                    {{-- <p>{{ $news['page_content'] }}</p> --}}
-                </a>
-            </li>
-        @endforeach
-    </ul>
+        <ul class="TextTVBox-newslisting">
+            @foreach ($mostRead as $news)
+                <li>
+                    <a href="{{ $news['permalink'] }}">
+                        <div class="TextTVBox-newslisting-text">
+                            <div>{{ $news['date_added_time'] }}</div>
+                            <div>{{ $news['title'] }}</div>
+                        </div>
+                        {{-- <p>{{ $news['page_content'] }}</p> --}}
+                    </a>
+                </li>
+            @endforeach
+        </ul>
+    @endif
 
 </div>
