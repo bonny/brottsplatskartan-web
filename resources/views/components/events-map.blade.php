@@ -42,10 +42,12 @@
 
             var markerIconFar = L.divIcon({
                 className: 'EventsMap-marker-icon EventsMap-marker-icon--far',
+                iconSize: [8, 8],
             });
 
             var markerIconNear = L.divIcon({
                 className: 'EventsMap-marker-icon EventsMap-marker-icon--near',
+                iconSize: [20, 20],
             });
 
             class EventsMap {
@@ -73,7 +75,18 @@
                         L.marker([event.lat, event.lng])
                             .setIcon(markerIconFar)
                             .addTo(this.map)
-                            .bindPopup(`${event.time} ${event.headline}`);
+                            .bindPopup(`
+                                <div class="EventsMap-marker-content">
+                                    <div class="EventsMap-marker-contentImage">
+                                        <img class="EventsMap-marker-image" src="${event.image}" alt="" />
+                                    </div>
+                                    <div class="EventsMap-marker-contentText">
+                                        ${event.time} • ${event.type}
+                                        <strong>${event.headline}</strong>
+                                        <a href="${event.permalink}">Läs mer →</a>
+                                     </div>
+                                </div>
+                            `);
                     });
                 }
 
@@ -141,16 +154,42 @@
             }
 
             .EventsMap .leaflet-popup {
-                max-width: 50vw;
+                max-width: 80vw;
             }
 
             .EventsMap-marker-icon {
-                --icon-size: 10px;
                 background-color: var(--color-red);
                 border-radius: 50%;
                 border: 1px solid rgba(255, 255, 255, .25);
-                width: var(--icon-size);
-                height: var(--icon-size);
+            }
+
+            .EventsMap-marker-content {
+                display: flex;
+                flex-direction: row;
+                gap: var(--default-margin);
+            }
+
+            .EventsMap-marker-contentImage {
+                flex: 1 0 60px;
+            }
+
+            .EventsMap-marker-image {
+                max-width: 100%;
+                height: auto;
+            }
+
+            .EventsMap-marker-contentText {
+                display: flex;
+                flex-direction: column;
+                gap: var(--default-margin-third);
+            }
+
+            .EventsMap-marker-contentText strong {
+                font-size: var(--font-size-small);
+            }
+
+            .EventsMap-marker-contentText a {
+                display: block;
             }
 
             @keyframes fadein {
