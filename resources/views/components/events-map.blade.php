@@ -66,6 +66,7 @@
             var markerIconNear = L.divIcon({
                 className: 'EventsMap-marker-icon EventsMap-marker-icon--near',
                 iconSize: [25, 25],
+                html: ''
             });
 
             class EventsMap {
@@ -97,7 +98,9 @@
                             .bindPopup(`
                                 <div class="EventsMap-marker-content">
                                     <div class="EventsMap-marker-contentImage">
-                                        <img class="EventsMap-marker-image" src="${event.image}" alt="" />
+                                        <a href="${event.permalink}?utm_source=brottsplatskartan&utm_content=maplink">
+                                            <img class="EventsMap-marker-image" src="${event.image}" alt="" />
+                                        </a>
                                     </div>
                                     <a href="${event.permalink}?utm_source=brottsplatskartan&utm_content=maplink" class="EventsMap-marker-contentText EventsMap-marker-contentLink">
                                         ${event.time} • ${event.type}
@@ -160,14 +163,17 @@
                      */
                     this.map.on('zoomend', () => {
                         if (this.map.getZoom() >= 10) {
+                            let prevIcon;
                             this.map.eachLayer(function(layer) {
-                                if (layer instanceof L.Marker) {
+                                if (layer instanceof L.Marker && layer._icon.classList.contains(
+                                        'EventsMap-marker-icon')) {
                                     layer.setIcon(markerIconNear);
                                 }
                             });
                         } else {
                             this.map.eachLayer(function(layer) {
-                                if (layer instanceof L.Marker) {
+                                if (layer instanceof L.Marker && layer._icon.classList.contains(
+                                        'EventsMap-marker-icon')) {
                                     layer.setIcon(markerIconFar);
                                 }
                             });
@@ -247,7 +253,7 @@
 
             .EventsMap.is-expanded {
                 position: fixed !important;
-                height: 100vh;
+                height: 100dvh;
                 top: 0;
                 left: 0;
                 right: 0;
