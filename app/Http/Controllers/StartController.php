@@ -68,9 +68,9 @@ class StartController extends Controller
         $canonicalLink = route('start');
         
         $title = 'Händelser från Polisen idag';
-        $pageTitle = 'Polisens händelser – kartor med aktuella brott & senaste blåljusen';
+        $pageTitle = 'Polisens händelser – karta med aktuella brott & senaste blåljusen';
         $pageMetaDescription =
-            'Läs de senaste händelserna & brotten som Polisen rapporterat. Se polishändelser ✔ nära dig ✔ i din ort ✔ i ditt län. Händelserna hämtas direkt från Polisens webbplats.';
+            'Dom senaste händelserna & brotten som Polisen rapporterat. Se polishändelser ✔ nära dig ✔ i din ort ✔ i ditt län. Händelserna hämtas direkt från Polisens webbplats.';
 
         $data = [
             'eventsMostViewedRecentlyCrimeEvents' => $eventsMostViewedRecentlyCrimeEvents,
