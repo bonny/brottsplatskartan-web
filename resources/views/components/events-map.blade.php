@@ -66,7 +66,7 @@
             var markerIconNear = L.divIcon({
                 className: 'EventsMap-marker-icon EventsMap-marker-icon--near',
                 iconSize: [25, 25],
-                html: ''
+                html: '<span class="EventsMap-marker-icon-inner"></span>'
             });
 
             class EventsMap {
@@ -302,6 +302,9 @@
                 background-color: var(--color-red);
                 border-radius: 50%;
                 border: 1px solid rgba(255, 255, 255, .25);
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
 
             .EventsMap-marker-icon--near {
@@ -338,6 +341,33 @@
             }
 
             .EventsMap-marker-contentLink {}
+
+            .EventsMap-marker-icon-inner {
+                display: block;
+                position: absolute;
+                width: 25px;
+                height: 25px;
+                background-color: var(--color-red-2);
+                border-radius: 50%;
+                animation: ease-in-out markerPulse 2s infinite;
+            }
+
+            @keyframes markerPulse {
+                0% {
+                    transform: scale(1);
+                    opacity: 0;
+                }
+
+                50% {
+                    transform: scale(1.2);
+                    opacity: .5;
+                }
+
+                100% {
+                    transform: scale(1.5);
+                    opacity: 0;
+                }
+            }
 
             @keyframes fadein {
                 from {
