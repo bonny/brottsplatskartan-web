@@ -65,7 +65,7 @@
 
             var markerIconNear = L.divIcon({
                 className: 'EventsMap-marker-icon EventsMap-marker-icon--near',
-                iconSize: [20, 20],
+                iconSize: [25, 25],
             });
 
             class EventsMap {
@@ -296,6 +296,10 @@
                 background-color: var(--color-red);
                 border-radius: 50%;
                 border: 1px solid rgba(255, 255, 255, .25);
+            }
+
+            .EventsMap-marker-icon--near {
+                border: 2px solid rgba(255, 255, 255, .5);
             }
 
             .EventsMap-marker-content {
