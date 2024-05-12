@@ -34,7 +34,8 @@
                             map.getContainer().classList.add('is-expanded');
                             map.gestureHandling.disable();
                             // Få plats med Sverige.
-                            map.setView([65.15531, 15], 5);
+                            // Men bara om man inte rört kartan, irriterade att man hoppar bort från där man var annars.
+                            // map.setView([65.15531, 15], 5);
                         }
 
                         // Invalidate size after resize.
