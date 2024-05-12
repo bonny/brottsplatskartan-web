@@ -6,8 +6,11 @@
             integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
         <link rel="stylesheet" href="//unpkg.com/leaflet-gesture-handling/dist/leaflet-gesture-handling.min.css" type="text/css">
         <script src="//unpkg.com/leaflet-gesture-handling"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.81.0/dist/L.Control.Locate.min.css" />
+        <script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.81.0/dist/L.Control.Locate.min.js" charset="utf-8">
+        </script>
         <script>
-            L.Control.Watermark = L.Control.extend({
+            L.Control.ExpandButton = L.Control.extend({
                 onAdd: function(map) {
                     var html = L.DomUtil.create('div');
                     html.innerHTML = '';
@@ -50,8 +53,8 @@
                 },
             });
 
-            L.control.watermark = function(opts) {
-                return new L.Control.Watermark(opts);
+            L.control.ExpandButton = function(opts) {
+                return new L.Control.ExpandButton(opts);
             }
 
             var markerIconFar = L.divIcon({
@@ -117,7 +120,6 @@
                             pan: true
                         });
                     }, 250);
-
                 }
 
                 initMap() {
@@ -158,9 +160,22 @@
                         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>'
                     }).addTo(this.map);
 
-                    let x = L.control.watermark({
+                    let x = L.control.ExpandButton({
                         position: 'bottomright'
                     }).addTo(this.map);
+
+                    L.control.locate({
+                        locateOptions: {
+                            maxZoom: 10,
+                        },
+                        strings: {
+                            title: "Visa var jag är",
+                            metersUnit: "meter",
+                            feetUnit: "feet",
+                            popup: "Du är inom {distance} {unit} från denna punkt",
+                            outsideMapBoundsMsg: "Du verkar befinna dig utanför kartans gränser"
+                        }
+                    }).addTo(map);
                 }
             }
 
