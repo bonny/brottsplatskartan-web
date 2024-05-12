@@ -4,7 +4,56 @@
             integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
             integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+        <link rel="stylesheet" href="//unpkg.com/leaflet-gesture-handling/dist/leaflet-gesture-handling.min.css" type="text/css">
+        <script src="//unpkg.com/leaflet-gesture-handling"></script>
         <script>
+            L.Control.Watermark = L.Control.extend({
+                onAdd: function(map) {
+                    var html = L.DomUtil.create('div');
+                    html.innerHTML = '';
+
+                    var expandButton = L.DomUtil.create('button', 'EventsMap-control-expand', html);
+                    var buttonText = L.DomUtil.create('span', '', expandButton);
+                    buttonText.innerText = 'Expandera';
+
+                    var img = L.DomUtil.create('img', 'leaflet-control-watermark', expandButton);
+                    img.src = '/img/expand_content_24dp_FILL0_wght400_GRAD0_opsz24.svg';
+
+                    L.DomEvent.on(expandButton, 'click', function(evt) {
+                        console.log("click expand", evt);
+                        // evt.stopPropagation();
+                        let isExpanded = map.getContainer().classList.contains('is-expanded');
+
+                        if (isExpanded) {
+                            map.getContainer().classList.remove('is-expanded');
+                            map.gestureHandling.enable();
+                        } else {
+                            map.getContainer().classList.add('is-expanded');
+                            map.gestureHandling.disable();
+                            // Få plats med Sverige.
+                            map.setView([65.15531, 15], 5);
+                        }
+
+                        // Invalidate size after resize.
+                        map.invalidateSize({
+                            pan: true
+                        });
+
+                        // }, 0);
+                    });
+
+                    return html;
+                },
+
+                onRemove: function(map) {
+                    // Nothing to do here
+                },
+            });
+
+            L.control.watermark = function(opts) {
+                return new L.Control.Watermark(opts);
+            }
+
             var markerIconFar = L.divIcon({
                 className: 'EventsMap-marker-icon EventsMap-marker-icon--far',
                 iconSize: [8, 8],
@@ -18,10 +67,13 @@
             class EventsMap {
                 map;
                 mapContainer;
-                blockerElm;
+                // blockerElm;
                 expandBtnElm;
                 zoom = {
-                    default: 4,
+                    default: 5,
+                };
+                location = {
+                    default: [59, 15],
                 };
 
                 constructor(mapContainer) {
@@ -57,7 +109,7 @@
                     this.map.getContainer().classList.toggle('is-expanded');
 
                     // Enable click-through on blocker.
-                    this.blockerElm.classList.toggle('EventsMap__blocker--active');
+                    // this.blockerElm.classList.toggle('EventsMap__blocker--active');
 
                     // Invalidate size after css anim has finished, so tiles are loaded.
                     setTimeout(() => {
@@ -72,6 +124,7 @@
                     this.map = L.map(this.mapContainer, {
                         zoomControl: false,
                         attributionControl: false,
+                        gestureHandling: true
                         // scrollWheelZoom: false,
                         // touchZoom: false,
                         // dragging: false,
@@ -87,23 +140,26 @@
 
                         // Map is "disabled" by default, no interaction because elements are on top of it.
                         let parentElement = this.mapContainer.closest('.EventsMap__container');
-                        this.expandBtnElm = parentElement.querySelector('.EventsMap-control-expand');
-                        this.blockerElm = parentElement.querySelector('.EventsMap__blocker');
+                        // this.expandBtnElm = parentElement.querySelector('.EventsMap-blocker-expand');
+                        // this.blockerElm = parentElement.querySelector('.EventsMap__blocker');
 
-                        this.blockerElm.addEventListener('click', (evt) => {
-                            this.expandMap();
-                        });
+                        // this.blockerElm.addEventListener('click', (evt) => {
+                        //     this.expandMap();
+                        // });
 
-                        this.expandBtnElm.addEventListener('click', (evt) => {
-                            this.expandMap();
-                        });
-
+                        // this.expandBtnElm.addEventListener('click', (evt) => {
+                        //     this.expandMap();
+                        // });
                     });
 
-                    this.map.setView([62, 15.5], this.zoom.default);
+                    this.map.setView(this.location.default, this.zoom.default);
 
                     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>'
+                    }).addTo(this.map);
+
+                    let x = L.control.watermark({
+                        position: 'bottomright'
                     }).addTo(this.map);
                 }
             }
@@ -138,20 +194,27 @@
                 display: block;
             }
 
+            .EventsMap__container {}
+
             .EventsMap {
                 display: flex;
                 align-items: center;
                 place-content: center;
-                height: 200px;
+                height: 300px;
                 background-color: antiquewhite;
-                transition: height 0.25s ease-in-out;
+                background-image: url('/img/share-img-blur.jpg');
             }
 
             .EventsMap.is-expanded {
-                height: 70vh;
+                position: fixed !important;
+                height: 100vh;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
             }
 
-            .EventsMap-control-expand {
+            .EventsMap-blocker-expand {
                 position: absolute;
                 right: 20px;
                 top: 20px;
@@ -165,6 +228,17 @@
                 border: 1px solid #ccc;
             }
 
+            .EventsMap-control-expand {
+                display: flex;
+                align-items: center;
+                gap: var(--default-margin-half);
+            }
+
+            .EventsMap.is-expanded .EventsMap-control-expand span {
+                display: none;
+            }
+
+            .EventsMap-blocker-expand img,
             .EventsMap-control-expand img {
                 display: block;
             }
@@ -233,11 +307,11 @@
     <div class="widget__fullwidth">
 
         <div class="EventsMap__container">
-            <div class="EventsMap-control-expand">
+            {{-- <div class="EventsMap-blocker-expand">
                 <img src="/img/expand_content_24dp_FILL0_wght400_GRAD0_opsz24.svg" alt="Expandera karta">
-            </div>
+            </div> --}}
 
-            <div class="EventsMap__blocker EventsMap__blocker--active"></div>
+            {{-- <div class="EventsMap__blocker EventsMap__blocker--active"></div> --}}
 
             <div class="EventsMap">Laddar karta...</div>
         </div>
