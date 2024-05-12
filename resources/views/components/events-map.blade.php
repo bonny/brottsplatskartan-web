@@ -66,7 +66,7 @@
             var markerIconNear = L.divIcon({
                 className: 'EventsMap-marker-icon EventsMap-marker-icon--near',
                 iconSize: [25, 25],
-                html: '<span class="EventsMap-marker-icon-inner"></span>'
+                html: '<span class="EventsMap-marker-icon-inner"></span><span class="EventsMap-marker-icon-innerIcon"></span>'
             });
 
             class EventsMap {
@@ -170,16 +170,20 @@
                                 if (layer instanceof L.Marker && layer._icon.classList.contains(
                                         'EventsMap-marker-icon')) {
                                     layer.setIcon(markerIconNear);
-                                    console.log('marker type', layer.options.crimeEventData.type);
-                                    console.log('layer', layer._icon);
 
                                     let innerElm = layer._icon.querySelector(
                                         '.EventsMap-marker-icon-inner');
+                                    let innerIconElm = layer._icon.querySelector(
+                                        '.EventsMap-marker-icon-innerIcon');
                                     let crimeEventType = layer.options.crimeEventData.type;
+
                                     if (crimeEventType === 'Brand') {
-                                        innerElm.innerHTML = '🔥';
+                                        innerIconElm.classList.add('EventsMap-marker-icon-innerIcon--fire');
+                                    } else if (crimeEventType === 'Stöld' || crimeEventType === 'Inbrott') {
+                                        innerIconElm.classList.add('EventsMap-marker-icon-innerIcon--fire');
+                                    } else {
+                                        console.log('marker no icon support', crimeEventType);
                                     }
-                                    // 
                                 }
                             });
                         } else {
@@ -363,6 +367,19 @@
                 background-color: var(--color-red-2);
                 border-radius: 50%;
                 animation: ease-in-out markerPulse 2s infinite;
+            }
+
+            .EventsMap-marker-icon-innerIcon {
+                width: 20px;
+                height: 20px;
+                color: white;
+                z-index: 0;
+                background-size: contain;
+            }
+
+            .EventsMap-marker-icon-innerIcon--fire {
+                /* local_fire_department_24dp_FILL0_wght400_GRAD0_opsz24.svg */
+                background-image: url('/img/local_fire_department_24dp_FILL0_wght400_GRAD0_opsz24.svg');
             }
 
             @keyframes markerPulse {
