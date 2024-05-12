@@ -92,8 +92,10 @@
                     const events = data.data
 
                     events.forEach(event => {
-                        L.marker([event.lat, event.lng])
-                            .setIcon(markerIconFar)
+                        L.marker([event.lat, event.lng], {
+                                icon: markerIconFar,
+                                crimeEventData: event
+                            })
                             .addTo(this.map)
                             .bindPopup(`
                                 <div class="EventsMap-marker-content">
@@ -168,6 +170,16 @@
                                 if (layer instanceof L.Marker && layer._icon.classList.contains(
                                         'EventsMap-marker-icon')) {
                                     layer.setIcon(markerIconNear);
+                                    console.log('marker type', layer.options.crimeEventData.type);
+                                    console.log('layer', layer._icon);
+
+                                    let innerElm = layer._icon.querySelector(
+                                        '.EventsMap-marker-icon-inner');
+                                    let crimeEventType = layer.options.crimeEventData.type;
+                                    if (crimeEventType === 'Brand') {
+                                        innerElm.innerHTML = '🔥';
+                                    }
+                                    // 
                                 }
                             });
                         } else {
@@ -343,7 +355,8 @@
             .EventsMap-marker-contentLink {}
 
             .EventsMap-marker-icon-inner {
-                display: block;
+                display: grid;
+                place-items: center;
                 position: absolute;
                 width: 25px;
                 height: 25px;
