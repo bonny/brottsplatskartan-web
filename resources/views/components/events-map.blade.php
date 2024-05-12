@@ -155,6 +155,25 @@
                         // });
                     });
 
+                    /**
+                     * När zoom-nivå är 10 eller mer så visar vi större ikoner.
+                     */
+                    this.map.on('zoomend', () => {
+                        if (this.map.getZoom() >= 10) {
+                            this.map.eachLayer(function(layer) {
+                                if (layer instanceof L.Marker) {
+                                    layer.setIcon(markerIconNear);
+                                }
+                            });
+                        } else {
+                            this.map.eachLayer(function(layer) {
+                                if (layer instanceof L.Marker) {
+                                    layer.setIcon(markerIconFar);
+                                }
+                            });
+                        }
+                    });
+
                     this.map.setView(this.location.default, this.zoom.default);
 
                     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -168,6 +187,10 @@
                     L.control.locate({
                         locateOptions: {
                             maxZoom: 10,
+                        },
+                        clickBehavior: {
+                            inView: 'setView',
+                            outOfView: 'setView'
                         },
                         strings: {
                             title: "Visa var jag är",
@@ -213,6 +236,7 @@
             .EventsMap__container {}
 
             .EventsMap {
+                z-index: 1;
                 display: flex;
                 align-items: center;
                 place-content: center;
