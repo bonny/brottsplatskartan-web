@@ -87,14 +87,8 @@
         </p>
 
         <p>
-            Sidan är skapad av <a href="https://eskapism.se/">Pär Thernström</a>,
-            som även står bakom projekt som <a href="https://simple-history.com/">WordPress-händelseloggen Simple
-                History</a>,
-            och nyhetssajten <a href="https://texttv.nu/">TextTV.nu</a> (som såklart har den klassiska <a
-                href="https://texttv.nu/377">sportsidan 377</a>).
-
-            Om du har frågor eller synpunkter på Brottsplatskartan är du välkommen att kontakta mig via <a
-                href="mailto:par.thernstrom@gmail.com">par.thernstrom@gmail.com</a>.
+            Besök även nyhetssajten <a href="https://texttv.nu/">TextTV.nu</a> (som såklart har den klassiska <a
+                    href="https://texttv.nu/377">sportsidan 377</a>).
         </p>
     </div>
 
