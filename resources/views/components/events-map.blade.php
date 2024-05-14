@@ -185,10 +185,10 @@
                                         'vapenlagen': 'gun',
                                         'skottlossning': 'gun',
                                         'kontroll person/fordon': 'car',
-                                        'misshandel,  grov': 'unknown',
-                                        'misshandel': 'unknown',
+                                        'misshandel,  grov': 'blackeye',
+                                        'misshandel': 'blackeye',
                                         'motorfordon,  anträffat stulet': 'car',
-                                        'narkotikabrott': 'unknown',
+                                        'narkotikabrott': 'narcotics',
                                         'olaga hot': 'unknown',
                                         'olaga intrång': 'unknown',
                                         'olovlig körning': 'car',
@@ -478,6 +478,19 @@
             .EventsMap-marker-icon-innerIcon--gun {
                 background-image: url('/img/noun-gun-479957.svg');
             }
+
+            /* Black Eye by Dan Nemmers from <a href="https://thenounproject.com/browse/icons/term/black-eye/" target="_blank" title="Black Eye Icons">Noun Project</a> (CC BY 3.0) */
+            .EventsMap-marker-icon-innerIcon--blackeye {
+                background-image: url('/img/noun-black-eye-22280.svg');
+            }
+
+            /* narcotics by Natthapong Mueangmoon from <a href="https://thenounproject.com/browse/icons/term/narcotics/" target="_blank" title="narcotics Icons">Noun Project</a> (CC BY 3.0) */
+            .EventsMap-marker-icon-innerIcon--narcotics {
+                background-image: url('/img/noun-narcotics-5895354.svg');
+            }
+
+            
+
             @keyframes markerPulse {
                 0% {
                     transform: scale(1);
