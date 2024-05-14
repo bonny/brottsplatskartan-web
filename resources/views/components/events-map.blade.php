@@ -164,23 +164,66 @@
                      * När zoom-nivå är 10 eller mer så visar vi större ikoner.
                      */
                     this.map.on('zoomend', () => {
-                        if (this.map.getZoom() >= 10) {
+                        if (this.map.getZoom() >= 8) {
                             let prevIcon;
                             this.map.eachLayer(function(layer) {
                                 if (layer instanceof L.Marker && layer._icon.classList.contains(
                                         'EventsMap-marker-icon')) {
                                     layer.setIcon(markerIconNear);
 
+                                    let crimeTypesToClass = {
+                                        'anträffad död': 'murder',
+                                        'mord/dråp': 'murder',
+                                        'arbetsplatsolycka': 'workplace',
+                                        'brand': 'fire',
+                                        'djur': 'pets',
+                                        'farligt föremål,  misstänkt': 'unknown',
+                                        'försvunnen person': 'missing-person',
+                                        'fylleri/lob': 'sportsbar',
+                                        'inbrott': 'house',
+                                        'knivlagen': 'knife',
+                                        'vapenlagen': 'gun',
+                                        'skottlossning': 'gun',
+                                        'kontroll person/fordon': 'car',
+                                        'misshandel,  grov': 'unknown',
+                                        'misshandel': 'unknown',
+                                        'motorfordon,  anträffat stulet': 'car',
+                                        'narkotikabrott': 'unknown',
+                                        'olaga hot': 'unknown',
+                                        'olaga intrång': 'unknown',
+                                        'olovlig körning': 'car',
+                                        'övrigt': 'unknown',
+                                        'polisinsats/kommendering': 'police',
+                                        'rån,  försök': 'unknown',
+                                        'rån': 'unknown',
+                                        'rattfylleri': 'unknown',
+                                        'sammanfattning natt': 'unknown',
+                                        'sedlighetsbrott': 'unknown',
+                                        'skadegörelse': 'unknown',
+                                        'stöld,  försök': 'unknown',
+                                        'stöld': 'unknown',
+                                        'stöld/inbrott': 'house',
+                                        'trafikbrott': 'car',
+                                        'trafikhinder': 'traffic',
+                                        'trafikkontroll': 'traffic',
+                                        'trafikolycka,  personskada': 'car',
+                                        'trafikolycka,  smitning från': 'car',
+                                        'trafikolycka,  vilt': 'car',
+                                        'trafikolycka': 'car',
+                                        'våld/hot mot tjänsteman': 'unknown',
+                                        'våldtäkt': 'unknown',
+                                    };
+
                                     let innerElm = layer._icon.querySelector(
                                         '.EventsMap-marker-icon-inner');
                                     let innerIconElm = layer._icon.querySelector(
                                         '.EventsMap-marker-icon-innerIcon');
-                                    let crimeEventType = layer.options.crimeEventData.type;
+                                    let crimeEventType = layer.options.crimeEventData.type.toLowerCase();
 
-                                    if (crimeEventType === 'Brand') {
-                                        innerIconElm.classList.add('EventsMap-marker-icon-innerIcon--fire');
-                                    } else if (crimeEventType === 'Stöld' || crimeEventType === 'Inbrott') {
-                                        innerIconElm.classList.add('EventsMap-marker-icon-innerIcon--fire');
+                                    if (crimeTypesToClass[crimeEventType]) {
+                                        innerIconElm.classList.add(
+                                            `EventsMap-marker-icon-innerIcon--${crimeTypesToClass[crimeEventType]}`
+                                        );
                                     } else {
                                         console.log('marker no icon support', crimeEventType);
                                     }
@@ -356,6 +399,10 @@
                 display: block;
             }
 
+            .EventsMap a {
+                color: inherit;
+            }
+
             .EventsMap-marker-contentLink {}
 
             .EventsMap-marker-icon-inner {
@@ -374,14 +421,63 @@
                 height: 20px;
                 color: white;
                 z-index: 0;
-                background-size: contain;
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
             }
 
             .EventsMap-marker-icon-innerIcon--fire {
-                /* local_fire_department_24dp_FILL0_wght400_GRAD0_opsz24.svg */
                 background-image: url('/img/local_fire_department_24dp_FILL0_wght400_GRAD0_opsz24.svg');
             }
 
+            .EventsMap-marker-icon-innerIcon--house {
+                background-image: url('/img/home_24dp_FILL0_wght400_GRAD0_opsz24.svg');
+            }
+
+            .EventsMap-marker-icon-innerIcon--missing-person {
+                background-image: url('/img/person_alert_24dp_FILL0_wght400_GRAD0_opsz24.svg');
+            }
+
+            .EventsMap-marker-icon-innerIcon--pets {
+                background-image: url('/img/pets_24dp_FILL0_wght400_GRAD0_opsz24.svg');
+            }
+
+            .EventsMap-marker-icon-innerIcon--car {
+                background-image: url('/img/car_crash_24dp_FILL0_wght400_GRAD0_opsz24.svg');
+            }
+
+            .EventsMap-marker-icon-innerIcon--traffic {
+                background-image: url('/img/traffic_24dp_FILL0_wght400_GRAD0_opsz24.svg');
+            }
+
+            .EventsMap-marker-icon-innerIcon--police,
+            .EventsMap-marker-icon-innerIcon--unknown {
+                background-image: url('/img/local_police_24dp_FILL0_wght400_GRAD0_opsz24.svg');
+            }
+
+            /* murder by Aldric Rodríguez from <a href="https://thenounproject.com/browse/icons/term/murder/" target="_blank" title="murder Icons">Noun Project</a> (CC BY 3.0) */
+            .EventsMap-marker-icon-innerIcon--murder {
+                background-image: url('/img/noun-murder-810013.svg');
+            }
+
+            /* Workplace by MUHAMMAT SUKIRMAN from <a href="https://thenounproject.com/browse/icons/term/workplace/" target="_blank" title="Workplace Icons">Noun Project</a> (CC BY 3.0) */
+            .EventsMap-marker-icon-innerIcon--workplace {
+                background-image: url('/img/noun-workplace-5973332.svg');
+            }
+
+            .EventsMap-marker-icon-innerIcon--sportsbar {
+                background-image: url('/img/sports_bar_24dp_FILL0_wght400_GRAD0_opsz24.svg');
+            }
+            
+            /* Knife by Royyan Wijaya from <a href="https://thenounproject.com/browse/icons/term/knife/" target="_blank" title="Knife Icons">Noun Project</a> (CC BY 3.0) */
+            .EventsMap-marker-icon-innerIcon--knife {
+                background-image: url('/img/noun-knife-1659779.svg');
+            }
+
+            /* Gun by David Khai from <a href="https://thenounproject.com/browse/icons/term/gun/" target="_blank" title="Gun Icons">Noun Project</a> (CC BY 3.0) */
+            .EventsMap-marker-icon-innerIcon--gun {
+                background-image: url('/img/noun-gun-479957.svg');
+            }
             @keyframes markerPulse {
                 0% {
                     transform: scale(1);
