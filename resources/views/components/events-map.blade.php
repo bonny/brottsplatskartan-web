@@ -181,7 +181,6 @@
                                         'farligt föremål, misstänkt': 'unknown',
                                         'försvunnen person': 'missing-person',
                                         'fylleri/lob': 'sportsbar',
-                                        'inbrott': 'house',
                                         'knivlagen': 'knife',
                                         'vapenlagen': 'gun',
                                         'skottlossning': 'gun',
@@ -194,20 +193,21 @@
                                         'narkotikabrott': 'narcotics',
                                         'mord/dråp, försök': 'murder',
                                         'olaga hot': 'unknown',
-                                        'olaga intrång': 'unknown',
+                                        'olaga intrång': 'forbidden-sign',
                                         'olovlig körning': 'car',
                                         'övrigt': 'unknown',
                                         'polisinsats/kommendering': 'police',
-                                        'rån, försök': 'unknown',
-                                        'rån': 'unknown',
+                                        'rån, försök': 'robbery',
+                                        'rån': 'robbery',
+                                        'stöld, försök': 'robbery',
+                                        'stöld': 'robbery',
+                                        'inbrott': 'burglary',
+                                        'stöld/inbrott': 'burglary',
                                         'rattfylleri': 'unknown',
-                                        'sammanfattning natt': 'unknown',
-                                        'sammanfattning kväll och natt': 'unknown',
+                                        'sammanfattning natt': 'summarize',
+                                        'sammanfattning kväll och natt': 'summarize',
                                         'sedlighetsbrott': 'unknown',
                                         'skadegörelse': 'unknown',
-                                        'stöld, försök': 'unknown',
-                                        'stöld': 'unknown',
-                                        'stöld/inbrott': 'house',
                                         'trafikbrott': 'car',
                                         'trafikhinder': 'traffic',
                                         'trafikkontroll': 'traffic',
@@ -273,7 +273,8 @@
                             feetUnit: "feet",
                             popup: "Du är inom {distance} {unit} från denna punkt",
                             outsideMapBoundsMsg: "Du verkar befinna dig utanför kartans gränser"
-                        }
+                        },
+                        position: 'bottomright'
                     }).addTo(map);
                 }
             }
@@ -432,7 +433,6 @@
                 color: white;
                 z-index: 0;
                 background-size: cover;
-                background-position: center;
                 background-repeat: no-repeat;
             }
 
@@ -502,8 +502,28 @@
                 background-image: url('/img/noun-narcotics-5895354.svg');
             }
 
+            /* Forbidden Sign by Andy Horvath from <a href="https://thenounproject.com/browse/icons/term/forbidden-sign/" target="_blank" title="Forbidden Sign Icons">Noun Project</a> (CC BY 3.0) */
+            .EventsMap-marker-icon-innerIcon--forbidden-sign {
+                background-image: url('/img/noun-forbidden-sign-4589694.svg');
+                filter: invert(1);
+            }
+            
+            .EventsMap-marker-icon-innerIcon--summarize {
+                background-image: url('/img/summarize_24dp_FILL0_wght400_GRAD0_opsz24.svg');
+            }
 
+            /* robbery by Luiz Carvalho from <a href="https://thenounproject.com/browse/icons/term/robbery/" target="_blank" title="robbery Icons">Noun Project</a> (CC BY 3.0) */
+            .EventsMap-marker-icon-innerIcon--robbery {
+                background-image: url('/img/noun-robbery-4353961.svg');
+                filter: invert(1);
+            }
 
+            /* burglary by Luis Prado from <a href="https://thenounproject.com/browse/icons/term/burglary/" target="_blank" title="burglary Icons">Noun Project</a> (CC BY 3.0) */
+            .EventsMap-marker-icon-innerIcon--burglary {
+                background-image: url('/img/noun-burglary-80199.svg');
+            }
+
+            
 
             @keyframes markerPulse {
                 0% {
