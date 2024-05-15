@@ -72,6 +72,12 @@
                 html: '<span class="EventsMap-marker-icon-inner"></span><span class="EventsMap-marker-icon-innerIcon"></span>'
             });
 
+            var markerIconNearer = L.divIcon({
+                className: 'EventsMap-marker-icon EventsMap-marker-icon--nearer',
+                iconSize: [50, 50],
+                html: '<span class="EventsMap-marker-icon-inner"></span><span class="EventsMap-marker-icon-innerIcon"></span>'
+            });
+
             class EventsMap {
                 map;
                 mapContainer;
@@ -82,6 +88,56 @@
                 };
                 location = {
                     default: [59, 15],
+                };
+
+                crimeTypesToClass = {
+                    'anträffad död': 'murder',
+                    'mord/dråp': 'murder',
+                    'mord/dråp försök': 'murder',
+                    'arbetsplatsolycka': 'workplace',
+                    'brand': 'fire',
+                    'djur': 'pets',
+                    'farligt föremål, misstänkt': 'unknown',
+                    'försvunnen person': 'missing-person',
+                    'fylleri/lob': 'sportsbar',
+                    'knivlagen': 'knife',
+                    'vapenlagen': 'gun',
+                    'skottlossning': 'gun',
+                    'kontroll person/fordon': 'car',
+                    'misshandel, grov': 'blackeye',
+                    'misshandel': 'blackeye',
+                    'bråk': 'blackeye',
+                    'motorfordon, anträffat stulet': 'car',
+                    'motorfordon, stöld': 'car',
+                    'narkotikabrott': 'narcotics',
+                    'mord/dråp, försök': 'murder',
+                    'olaga hot': 'unknown',
+                    'olaga intrång': 'forbidden-sign',
+                    'olovlig körning': 'car',
+                    'övrigt': 'unknown',
+                    'polisinsats/kommendering': 'police',
+                    'rån, försök': 'robbery',
+                    'rån': 'robbery',
+                    'stöld, försök': 'robbery',
+                    'stöld': 'robbery',
+                    'inbrott': 'burglary',
+                    'stöld/inbrott': 'burglary',
+                    'rattfylleri': 'drunk-driver',
+                    'sammanfattning natt': 'summarize',
+                    'sammanfattning kväll och natt': 'summarize',
+                    'sedlighetsbrott': 'molestation',
+                    'skadegörelse': 'unknown',
+                    'trafikbrott': 'car',
+                    'trafikhinder': 'traffic',
+                    'trafikkontroll': 'traffic',
+                    'trafikolycka, personskada': 'car',
+                    'trafikolycka, smitning från': 'car',
+                    'trafikolycka, vilt': 'car',
+                    'trafikolycka': 'car',
+                    'trafikolycka, singel': 'car',
+                    'våld/hot mot tjänsteman': 'unknown',
+                    'våldtäkt': 'molestation',
+                    'ofredande/förargelse': 'bad-behavior',
                 };
 
                 constructor(mapContainer) {
@@ -167,75 +223,33 @@
                      * När zoom-nivå är 10 eller mer så visar vi större ikoner.
                      */
                     this.map.on('zoomend', () => {
+                        let that = this;
+                        console.log('that', that);
                         if (this.map.getZoom() >= 8) {
-                            let prevIcon;
+                            // Sätt större ikon om man zoomat in.
+                            let iconToSet = markerIconNear;
+                            if (this.map.getZoom() > 10) {
+                                // Ännu större!
+                                iconToSet = markerIconNearer;
+                            }
+
                             this.map.eachLayer(function(layer) {
                                 if (layer instanceof L.Marker && layer._icon.classList.contains(
                                         'EventsMap-marker-icon')) {
-                                    layer.setIcon(markerIconNear);
-
-                                    let crimeTypesToClass = {
-                                        'anträffad död': 'murder',
-                                        'mord/dråp': 'murder',
-                                        'mord/dråp försök': 'murder',
-                                        'arbetsplatsolycka': 'workplace',
-                                        'brand': 'fire',
-                                        'djur': 'pets',
-                                        'farligt föremål, misstänkt': 'unknown',
-                                        'försvunnen person': 'missing-person',
-                                        'fylleri/lob': 'sportsbar',
-                                        'knivlagen': 'knife',
-                                        'vapenlagen': 'gun',
-                                        'skottlossning': 'gun',
-                                        'kontroll person/fordon': 'car',
-                                        'misshandel, grov': 'blackeye',
-                                        'misshandel': 'blackeye',
-                                        'bråk': 'blackeye',
-                                        'motorfordon, anträffat stulet': 'car',
-                                        'motorfordon, stöld': 'car',
-                                        'narkotikabrott': 'narcotics',
-                                        'mord/dråp, försök': 'murder',
-                                        'olaga hot': 'unknown',
-                                        'olaga intrång': 'forbidden-sign',
-                                        'olovlig körning': 'car',
-                                        'övrigt': 'unknown',
-                                        'polisinsats/kommendering': 'police',
-                                        'rån, försök': 'robbery',
-                                        'rån': 'robbery',
-                                        'stöld, försök': 'robbery',
-                                        'stöld': 'robbery',
-                                        'inbrott': 'burglary',
-                                        'stöld/inbrott': 'burglary',
-                                        'rattfylleri': 'drunk-driver',
-                                        'sammanfattning natt': 'summarize',
-                                        'sammanfattning kväll och natt': 'summarize',
-                                        'sedlighetsbrott': 'molestation',
-                                        'skadegörelse': 'unknown',
-                                        'trafikbrott': 'car',
-                                        'trafikhinder': 'traffic',
-                                        'trafikkontroll': 'traffic',
-                                        'trafikolycka, personskada': 'car',
-                                        'trafikolycka, smitning från': 'car',
-                                        'trafikolycka, vilt': 'car',
-                                        'trafikolycka': 'car',
-                                        'trafikolycka, singel': 'car',
-                                        'våld/hot mot tjänsteman': 'unknown',
-                                        'våldtäkt': 'molestation',
-                                        'ofredande/förargelse': 'bad-behavior',
-                                    };
+                                    layer.setIcon(iconToSet);
 
                                     let innerElm = layer._icon.querySelector(
                                         '.EventsMap-marker-icon-inner');
                                     let innerIconElm = layer._icon.querySelector(
                                         '.EventsMap-marker-icon-innerIcon');
 
+                                    // Brottstyp utan mellanslag mellan ord (så max 1 mellanslag efter varandra).
                                     let crimeEventType = layer.options.crimeEventData.type.toLowerCase();
-                                    // Ta bort mellanslag så max 1 mellanslag efter varandra.
                                     crimeEventType = crimeEventType.replace(/\s\s+/g, ' ');
-
-                                    if (crimeTypesToClass[crimeEventType]) {
+                                    console.log('that inside', that);
+                                    if (that.crimeTypesToClass[crimeEventType]) {
                                         innerIconElm.classList.add(
-                                            `EventsMap-marker-icon-innerIcon--${crimeTypesToClass[crimeEventType]}`
+                                            `EventsMap-marker-icon-innerIcon--${that.crimeTypesToClass[crimeEventType]}`
                                         );
                                     } else {
                                         console.log('marker no icon support', crimeEventType);
@@ -243,6 +257,7 @@
                                 }
                             });
                         } else {
+                            // Sätt mindre ikon om man är utzoomad.
                             this.map.eachLayer(function(layer) {
                                 if (layer instanceof L.Marker && layer._icon.classList.contains(
                                         'EventsMap-marker-icon')) {
@@ -264,7 +279,7 @@
 
                     L.control.locate({
                         locateOptions: {
-                            maxZoom: 10,
+                            maxZoom: 11,
                         },
                         clickBehavior: {
                             inView: 'setView',
@@ -390,9 +405,11 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                transition: all .25s;
             }
 
-            .EventsMap-marker-icon--near {
+            .EventsMap-marker-icon--near,
+            .EventsMap-marker-icon--nearer {
                 border: 2px solid rgba(255, 255, 255, .5);
             }
 
@@ -451,6 +468,11 @@
                 background-repeat: no-repeat;
             }
 
+            .EventsMap-marker-icon--nearer .EventsMap-marker-icon-inner {
+                width: 50px;
+                height: 50px;
+            }
+
             .EventsMap-marker-icon-innerIcon--fire {
                 background-image: url('/img/local_fire_department_24dp_FILL0_wght400_GRAD0_opsz24.svg');
             }
@@ -482,13 +504,15 @@
 
             /* murder by Aldric Rodríguez from <a href="https://thenounproject.com/browse/icons/term/murder/" target="_blank" title="murder Icons">Noun Project</a> (CC BY 3.0) */
             .EventsMap-marker-icon-innerIcon--murder {
-                background-image: url('/img/noun-murder-810013.svg');
+                /* background-image: url('/img/noun-murder-810013.svg'); */
+                background-image: url('/img/noun-murder-810010.svg');
                 filter: invert(1);
             }
 
             /* Workplace by MUHAMMAT SUKIRMAN from <a href="https://thenounproject.com/browse/icons/term/workplace/" target="_blank" title="Workplace Icons">Noun Project</a> (CC BY 3.0) */
             .EventsMap-marker-icon-innerIcon--workplace {
                 background-image: url('/img/noun-workplace-5973332.svg');
+                filter: invert(1);
             }
 
             .EventsMap-marker-icon-innerIcon--sportsbar {
@@ -522,7 +546,7 @@
                 background-image: url('/img/noun-forbidden-sign-4589694.svg');
                 filter: invert(1);
             }
-            
+
             .EventsMap-marker-icon-innerIcon--summarize {
                 background-image: url('/img/summarize_24dp_FILL0_wght400_GRAD0_opsz24.svg');
             }
@@ -537,13 +561,14 @@
             .EventsMap-marker-icon-innerIcon--burglary {
                 background-image: url('/img/noun-burglary-80199.svg');
             }
-            
+
             /* drunk driver by Clément Payot from <a href="https://thenounproject.com/browse/icons/term/drunk-driver/" target="_blank" title="drunk driver Icons">Noun Project</a> (CC BY 3.0) */
             .EventsMap-marker-icon-innerIcon--drunk-driver {
                 background-image: url('/img/noun-drunk-driver-4088846.svg');
+                filter: invert(1);
             }
-            
-            /* bad by Adrien Coquet from <a href="https://thenounproject.com/browse/icons/term/bad/" target="_blank" title="bad Icons">Noun Project</a> (CC BY 3.0) */            
+
+            /* bad by Adrien Coquet from <a href="https://thenounproject.com/browse/icons/term/bad/" target="_blank" title="bad Icons">Noun Project</a> (CC BY 3.0) */
             .EventsMap-marker-icon-innerIcon--bad-behavior {
                 background-image: url('/img/noun-drunk-driver-4088846.svg');
             }
@@ -552,7 +577,9 @@
             .EventsMap-marker-icon-innerIcon--molestation {
                 background-image: url('/img/noun-molestation-4019945.svg');
             }
-        
+
+
+
 
             @keyframes markerPulse {
                 0% {
