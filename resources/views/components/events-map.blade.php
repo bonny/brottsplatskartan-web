@@ -16,11 +16,14 @@
                     html.innerHTML = '';
 
                     var expandButton = L.DomUtil.create('button', 'EventsMap-control-expand', html);
-                    var buttonText = L.DomUtil.create('span', '', expandButton);
+                    var buttonText = L.DomUtil.create('span', 'EventsMap-control-expandText', expandButton);
                     buttonText.innerText = 'Expandera';
 
-                    var img = L.DomUtil.create('img', 'leaflet-control-watermark', expandButton);
-                    img.src = '/img/expand_content_24dp_FILL0_wght400_GRAD0_opsz24.svg';
+                    var imgExpand = L.DomUtil.create('img', 'EventsMap-control-expandImg', expandButton);
+                    imgExpand.src = '/img/expand_content_24dp_FILL0_wght400_GRAD0_opsz24.svg';
+
+                    var imgMinimize = L.DomUtil.create('img', 'EventsMap-control-collapseImg', expandButton);
+                    imgMinimize.src = '/img/collapse_content_24dp_FILL0_wght400_GRAD0_opsz24.svg';
 
                     L.DomEvent.on(expandButton, 'click', function(evt) {
                         console.log("click expand", evt);
@@ -203,10 +206,10 @@
                                         'stöld': 'robbery',
                                         'inbrott': 'burglary',
                                         'stöld/inbrott': 'burglary',
-                                        'rattfylleri': 'unknown',
+                                        'rattfylleri': 'drunk-driver',
                                         'sammanfattning natt': 'summarize',
                                         'sammanfattning kväll och natt': 'summarize',
-                                        'sedlighetsbrott': 'unknown',
+                                        'sedlighetsbrott': 'molestation',
                                         'skadegörelse': 'unknown',
                                         'trafikbrott': 'car',
                                         'trafikhinder': 'traffic',
@@ -217,8 +220,8 @@
                                         'trafikolycka': 'car',
                                         'trafikolycka, singel': 'car',
                                         'våld/hot mot tjänsteman': 'unknown',
-                                        'våldtäkt': 'unknown',
-                                        'ofredande/förargelse': 'unknown',
+                                        'våldtäkt': 'molestation',
+                                        'ofredande/förargelse': 'bad-behavior',
                                     };
 
                                     let innerElm = layer._icon.querySelector(
@@ -350,8 +353,20 @@
                 gap: var(--default-margin-half);
             }
 
-            .EventsMap.is-expanded .EventsMap-control-expand span {
+            .EventsMap.is-expanded .EventsMap-control-expandText {
                 display: none;
+            }
+
+            .EventsMap .EventsMap-control-collapseImg {
+                display: none;
+            }
+
+            .EventsMap.is-expanded .EventsMap-control-expandImg {
+                display: none;
+            }
+
+            .EventsMap.is-expanded .EventsMap-control-collapseImg {
+                display: block;
             }
 
             .EventsMap-blocker-expand img,
@@ -522,8 +537,22 @@
             .EventsMap-marker-icon-innerIcon--burglary {
                 background-image: url('/img/noun-burglary-80199.svg');
             }
-
             
+            /* drunk driver by Clément Payot from <a href="https://thenounproject.com/browse/icons/term/drunk-driver/" target="_blank" title="drunk driver Icons">Noun Project</a> (CC BY 3.0) */
+            .EventsMap-marker-icon-innerIcon--drunk-driver {
+                background-image: url('/img/noun-drunk-driver-4088846.svg');
+            }
+            
+            /* bad by Adrien Coquet from <a href="https://thenounproject.com/browse/icons/term/bad/" target="_blank" title="bad Icons">Noun Project</a> (CC BY 3.0) */            
+            .EventsMap-marker-icon-innerIcon--bad-behavior {
+                background-image: url('/img/noun-drunk-driver-4088846.svg');
+            }
+
+            /* molestation by Teewara soontorn from <a href="https://thenounproject.com/browse/icons/term/molestation/" target="_blank" title="molestation Icons">Noun Project</a> (CC BY 3.0) */
+            .EventsMap-marker-icon-innerIcon--molestation {
+                background-image: url('/img/noun-molestation-4019945.svg');
+            }
+        
 
             @keyframes markerPulse {
                 0% {
