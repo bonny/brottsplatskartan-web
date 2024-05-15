@@ -174,10 +174,11 @@
                                     let crimeTypesToClass = {
                                         'anträffad död': 'murder',
                                         'mord/dråp': 'murder',
+                                        'mord/dråp försök': 'murder',
                                         'arbetsplatsolycka': 'workplace',
                                         'brand': 'fire',
                                         'djur': 'pets',
-                                        'farligt föremål,  misstänkt': 'unknown',
+                                        'farligt föremål, misstänkt': 'unknown',
                                         'försvunnen person': 'missing-person',
                                         'fylleri/lob': 'sportsbar',
                                         'inbrott': 'house',
@@ -185,40 +186,49 @@
                                         'vapenlagen': 'gun',
                                         'skottlossning': 'gun',
                                         'kontroll person/fordon': 'car',
-                                        'misshandel,  grov': 'blackeye',
+                                        'misshandel, grov': 'blackeye',
                                         'misshandel': 'blackeye',
-                                        'motorfordon,  anträffat stulet': 'car',
+                                        'bråk': 'blackeye',
+                                        'motorfordon, anträffat stulet': 'car',
+                                        'motorfordon, stöld': 'car',
                                         'narkotikabrott': 'narcotics',
+                                        'mord/dråp, försök': 'murder',
                                         'olaga hot': 'unknown',
                                         'olaga intrång': 'unknown',
                                         'olovlig körning': 'car',
                                         'övrigt': 'unknown',
                                         'polisinsats/kommendering': 'police',
-                                        'rån,  försök': 'unknown',
+                                        'rån, försök': 'unknown',
                                         'rån': 'unknown',
                                         'rattfylleri': 'unknown',
                                         'sammanfattning natt': 'unknown',
+                                        'sammanfattning kväll och natt': 'unknown',
                                         'sedlighetsbrott': 'unknown',
                                         'skadegörelse': 'unknown',
-                                        'stöld,  försök': 'unknown',
+                                        'stöld, försök': 'unknown',
                                         'stöld': 'unknown',
                                         'stöld/inbrott': 'house',
                                         'trafikbrott': 'car',
                                         'trafikhinder': 'traffic',
                                         'trafikkontroll': 'traffic',
-                                        'trafikolycka,  personskada': 'car',
-                                        'trafikolycka,  smitning från': 'car',
-                                        'trafikolycka,  vilt': 'car',
+                                        'trafikolycka, personskada': 'car',
+                                        'trafikolycka, smitning från': 'car',
+                                        'trafikolycka, vilt': 'car',
                                         'trafikolycka': 'car',
+                                        'trafikolycka, singel': 'car',
                                         'våld/hot mot tjänsteman': 'unknown',
                                         'våldtäkt': 'unknown',
+                                        'ofredande/förargelse': 'unknown',
                                     };
 
                                     let innerElm = layer._icon.querySelector(
                                         '.EventsMap-marker-icon-inner');
                                     let innerIconElm = layer._icon.querySelector(
                                         '.EventsMap-marker-icon-innerIcon');
+
                                     let crimeEventType = layer.options.crimeEventData.type.toLowerCase();
+                                    // Ta bort mellanslag så max 1 mellanslag efter varandra.
+                                    crimeEventType = crimeEventType.replace(/\s\s+/g, ' ');
 
                                     if (crimeTypesToClass[crimeEventType]) {
                                         innerIconElm.classList.add(
@@ -458,6 +468,7 @@
             /* murder by Aldric Rodríguez from <a href="https://thenounproject.com/browse/icons/term/murder/" target="_blank" title="murder Icons">Noun Project</a> (CC BY 3.0) */
             .EventsMap-marker-icon-innerIcon--murder {
                 background-image: url('/img/noun-murder-810013.svg');
+                filter: invert(1);
             }
 
             /* Workplace by MUHAMMAT SUKIRMAN from <a href="https://thenounproject.com/browse/icons/term/workplace/" target="_blank" title="Workplace Icons">Noun Project</a> (CC BY 3.0) */
@@ -468,7 +479,7 @@
             .EventsMap-marker-icon-innerIcon--sportsbar {
                 background-image: url('/img/sports_bar_24dp_FILL0_wght400_GRAD0_opsz24.svg');
             }
-            
+
             /* Knife by Royyan Wijaya from <a href="https://thenounproject.com/browse/icons/term/knife/" target="_blank" title="Knife Icons">Noun Project</a> (CC BY 3.0) */
             .EventsMap-marker-icon-innerIcon--knife {
                 background-image: url('/img/noun-knife-1659779.svg');
@@ -477,11 +488,13 @@
             /* Gun by David Khai from <a href="https://thenounproject.com/browse/icons/term/gun/" target="_blank" title="Gun Icons">Noun Project</a> (CC BY 3.0) */
             .EventsMap-marker-icon-innerIcon--gun {
                 background-image: url('/img/noun-gun-479957.svg');
+                filter: invert(1);
             }
 
             /* Black Eye by Dan Nemmers from <a href="https://thenounproject.com/browse/icons/term/black-eye/" target="_blank" title="Black Eye Icons">Noun Project</a> (CC BY 3.0) */
             .EventsMap-marker-icon-innerIcon--blackeye {
                 background-image: url('/img/noun-black-eye-22280.svg');
+                filter: invert(1);
             }
 
             /* narcotics by Natthapong Mueangmoon from <a href="https://thenounproject.com/browse/icons/term/narcotics/" target="_blank" title="narcotics Icons">Noun Project</a> (CC BY 3.0) */
@@ -489,7 +502,8 @@
                 background-image: url('/img/noun-narcotics-5895354.svg');
             }
 
-            
+
+
 
             @keyframes markerPulse {
                 0% {
