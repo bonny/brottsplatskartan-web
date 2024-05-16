@@ -405,7 +405,10 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                transition: all .25s;
+                transition:
+                    ease-in-out width .25s,
+                    ease-in-out height .25s,
+                    ease-in-out margin .25s;
             }
 
             .EventsMap-marker-icon--near,
@@ -466,6 +469,12 @@
                 z-index: 0;
                 background-size: cover;
                 background-repeat: no-repeat;
+                transition: ease-in-out width .25s, ease-in-out height .25s;
+            }
+
+            .EventsMap-marker-icon--nearer .EventsMap-marker-icon-innerIcon {
+                width: 30px;
+                height: 30px;
             }
 
             .EventsMap-marker-icon--nearer .EventsMap-marker-icon-inner {
@@ -522,6 +531,7 @@
             /* Knife by Royyan Wijaya from <a href="https://thenounproject.com/browse/icons/term/knife/" target="_blank" title="Knife Icons">Noun Project</a> (CC BY 3.0) */
             .EventsMap-marker-icon-innerIcon--knife {
                 background-image: url('/img/noun-knife-1659779.svg');
+                filter: invert(1);
             }
 
             /* Gun by David Khai from <a href="https://thenounproject.com/browse/icons/term/gun/" target="_blank" title="Gun Icons">Noun Project</a> (CC BY 3.0) */
@@ -560,6 +570,7 @@
             /* burglary by Luis Prado from <a href="https://thenounproject.com/browse/icons/term/burglary/" target="_blank" title="burglary Icons">Noun Project</a> (CC BY 3.0) */
             .EventsMap-marker-icon-innerIcon--burglary {
                 background-image: url('/img/noun-burglary-80199.svg');
+                filter: invert(1);
             }
 
             /* drunk driver by Clément Payot from <a href="https://thenounproject.com/browse/icons/term/drunk-driver/" target="_blank" title="drunk driver Icons">Noun Project</a> (CC BY 3.0) */
