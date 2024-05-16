@@ -169,7 +169,7 @@ $noAdsReason = '';
     {{--
         Pixel,
         ladda via JS för att minimera laddning via bots.
-        --}}
+    --}}
     @php
         $pixelUrl = sprintf(
             '%1$s/pixel?path=%2$s&rand=%3$s',
@@ -194,6 +194,7 @@ $noAdsReason = '';
         ]);
     </script>
 
+    @stack('footerscripts')
 </body>
 
 </html>
