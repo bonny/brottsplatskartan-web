@@ -10,6 +10,42 @@
         <script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.81.0/dist/L.Control.Locate.min.js" charset="utf-8">
         </script>
         <script>
+            (function() {
+                // Select the node that will be observed for mutations
+                const targetNode = document.getElementsByTagName("body")[0];
+
+                // Options for the observer (which mutations to observe)
+                const config = {
+                    attributes: false,
+                    childList: true,
+                    subtree: false,
+                };
+
+                // Callback function to execute when mutations are observed
+                const callback = (mutationList, observer) => {
+                    // console.log("Mutation list: ", mutationList);
+                    for (const mutation of mutationList) {
+                        if (mutation.type === "childList") {
+                            // console.log("A child node has been added or removed.");
+                            // console.log("added nodes: ", mutation.addedNodes);
+                            // Check for class "adsbygoogle.adsbygoogle-noablate".
+                            for (const node of mutation.addedNodes) {
+                                if (node.classList.contains("adsbygoogle-noablate")) {
+                                    console.log("Found sticky ad: ", node);
+                                }
+                            }
+                        }
+                    }
+                };
+
+                // Create an observer instance linked to the callback function
+                const observer = new MutationObserver(callback);
+
+                // Start observing the target node for configured mutations
+                observer.observe(targetNode, config);
+            })
+            ();
+
             L.Control.ExpandButton = L.Control.extend({
                 onAdd: function(map) {
                     var html = L.DomUtil.create('div');
@@ -26,7 +62,7 @@
                     imgMinimize.src = '/img/collapse_content_24dp_FILL0_wght400_GRAD0_opsz24.svg';
 
                     L.DomEvent.on(expandButton, 'click', function(evt) {
-                        console.log("click expand", evt);
+                        // console.log("click expand", evt);
                         // evt.stopPropagation();
                         let isExpanded = map.getContainer().classList.contains('is-expanded');
 
@@ -224,7 +260,7 @@
                      */
                     this.map.on('zoomend', () => {
                         let that = this;
-                        console.log('that', that);
+                        // console.log('that', that);
                         if (this.map.getZoom() >= 8) {
                             // Sätt större ikon om man zoomat in.
                             let iconToSet = markerIconNear;
@@ -246,7 +282,7 @@
                                     // Brottstyp utan mellanslag mellan ord (så max 1 mellanslag efter varandra).
                                     let crimeEventType = layer.options.crimeEventData.type.toLowerCase();
                                     crimeEventType = crimeEventType.replace(/\s\s+/g, ' ');
-                                    console.log('that inside', that);
+
                                     if (that.crimeTypesToClass[crimeEventType]) {
                                         innerIconElm.classList.add(
                                             `EventsMap-marker-icon-innerIcon--${that.crimeTypesToClass[crimeEventType]}`
