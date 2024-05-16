@@ -13,6 +13,11 @@
             (function() {
                 // Select the node that will be observed for mutations
                 const targetNode = document.body;
+                if (targetNode === null) {
+                    console.log("No target node found for mutation observer.", targetNode);
+                    return;
+                }
+
 
                 // Options for the observer (which mutations to observe)
                 const config = {
