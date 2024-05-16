@@ -12,7 +12,7 @@
         <script>
             (function() {
                 // Select the node that will be observed for mutations
-                const targetNode = document.getElementsByTagName("body")[0];
+                const targetNode = document.body;
 
                 // Options for the observer (which mutations to observe)
                 const config = {
