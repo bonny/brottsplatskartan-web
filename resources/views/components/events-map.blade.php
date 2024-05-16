@@ -159,11 +159,11 @@
                             .bindPopup(`
                                 <div class="EventsMap-marker-content">
                                     <div class="EventsMap-marker-contentImage">
-                                        <a href="${event.permalink}?utm_source=brottsplatskartan&utm_content=maplink">
+                                        <a href="${event.permalink}?utm_source=brottsplatskartan&utm_medium=maplink">
                                             <img class="EventsMap-marker-image" src="${event.image}" alt="" />
                                         </a>
                                     </div>
-                                    <a href="${event.permalink}?utm_source=brottsplatskartan&utm_content=maplink" class="EventsMap-marker-contentText EventsMap-marker-contentLink">
+                                    <a href="${event.permalink}?utm_source=brottsplatskartan&utm_medium=maplink" class="EventsMap-marker-contentText EventsMap-marker-contentLink">
                                         ${event.time} • ${event.type}
                                         <strong>${event.headline}</strong>
                                         <div>Läs mer →</div>
