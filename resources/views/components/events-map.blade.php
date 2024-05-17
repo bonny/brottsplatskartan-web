@@ -103,6 +103,7 @@
                     'knivlagen': 'knife',
                     'vapenlagen': 'gun',
                     'skottlossning': 'gun',
+                    'skottlossning, misstänkt': 'gun',
                     'kontroll person/fordon': 'car',
                     'misshandel, grov': 'blackeye',
                     'misshandel': 'blackeye',
@@ -123,6 +124,7 @@
                     'inbrott': 'burglary',
                     'inbrott, försök': 'burglary',
                     'stöld/inbrott': 'burglary',
+                    'häleri': 'burglary',
                     'rattfylleri': 'drunk-driver',
                     'sammanfattning natt': 'summarize',
                     'sammanfattning kväll och natt': 'summarize',
@@ -142,6 +144,8 @@
                     'åldringsbrott': 'unknown',
                     'vållande till kroppsskada': 'unknown',
                     'ordningslagen': 'unknown',
+                    'sjölagen': 'unknown',
+
                 };
 
                 constructor(mapContainer) {
@@ -339,6 +343,9 @@
                             for (const node of mutation.addedNodes) {
                                 if (node instanceof HTMLElement && node.classList.contains("adsbygoogle-noablate")) {
                                     console.log("Found sticky ad: ", node);
+                                    // Check status of ad.
+                                    console.log('dataset: ', node.dataset);
+                                    console.log('dataset stringified: ', JSON.stringify(node.dataset));
                                 }
                             }
                         }
