@@ -333,7 +333,7 @@
                             // console.log("added nodes: ", mutation.addedNodes);
                             // Check for class "adsbygoogle.adsbygoogle-noablate".
                             for (const node of mutation.addedNodes) {
-                                if (node.classList.contains("adsbygoogle-noablate")) {
+                                if (node instanceof HTMLElement && node.classList.contains("adsbygoogle-noablate")) {
                                     console.log("Found sticky ad: ", node);
                                 }
                             }
