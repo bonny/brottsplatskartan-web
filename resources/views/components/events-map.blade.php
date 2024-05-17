@@ -324,7 +324,6 @@
                     return;
                 }
 
-
                 // Options for the observer (which mutations to observe)
                 const config = {
                     attributes: false,
@@ -346,6 +345,20 @@
                                     // Check status of ad.
                                     console.log('dataset: ', node.dataset);
                                     console.log('dataset stringified: ', JSON.stringify(node.dataset));
+                                    
+                                    // Keep track of attribute changes on this ad.
+                                    const adObserver = new MutationObserver((adMutationsList, adObserver) => {
+                                        for (const mutation of mutationsList) {
+                                            if (mutation.type === "attributes") {
+                                                console.log("An attribute was modified on the ad: ", mutation);
+                                                console.log("Ad status: ", node.dataset);
+                                            }
+                                        }
+                                    });
+                                    adObserver.observe(node, {
+                                        attributes: true,
+                                        //attributeFilter: ['data-ad-status'],
+                                    });
                                 }
                             }
                         }
