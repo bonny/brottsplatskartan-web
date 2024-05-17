@@ -348,13 +348,14 @@
                                     
                                     // Keep track of attribute changes on this ad.
                                     const adObserver = new MutationObserver((adMutationsList, adObserver) => {
-                                        for (const mutation of mutationsList) {
+                                        for (const mutation of adMutationsList) {
                                             if (mutation.type === "attributes") {
                                                 console.log("An attribute was modified on the ad: ", mutation);
                                                 console.log("Ad status: ", node.dataset);
                                             }
                                         }
                                     });
+                                    
                                     adObserver.observe(node, {
                                         attributes: true,
                                         //attributeFilter: ['data-ad-status'],
