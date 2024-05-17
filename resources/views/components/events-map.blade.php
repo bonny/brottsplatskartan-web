@@ -356,11 +356,21 @@
                                             if (mutation.type === "attributes") {
                                                 console.log("An attribute was modified on the ad: ", mutation);
                                                 console.log("Ad status: ", node.dataset);
-                                                // behåll ads som har adStatus="filled", anchorStatus="displayed"
-                                                if (node.dataset.adsbygoogleStatus === "done" && node.dataset.anchorStatus ===
+
+                                                // Ad fälls ut och är visad.
+                                                if (node.dataset.adsbygoogleStatus === "done" && node.dataset
+                                                    .anchorStatus ===
                                                     "displayed" && node.dataset.anchorShown === "true") {
                                                     console.log("Ad is filled and displayed.", node);
                                                 }
+
+                                                // När anchorStatus = dismissed så är annonsen inte längre synlig för anv. klickat på fäll ihop-knappen.
+                                                if (node.dataset.adsbygoogleStatus === "done" && node.dataset
+                                                    .anchorStatus ===
+                                                    "dismissed" && node.dataset.anchorShown === "true") {
+                                                    console.log("Ad is hidden.", node);
+                                                }
+
                                             }
                                         }
                                     });
