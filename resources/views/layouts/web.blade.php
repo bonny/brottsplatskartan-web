@@ -3,22 +3,11 @@
 Layout template for web
 
 --}}
-<?php
-// Visa inte annonser för besökare som kommer via previousPartners.
-// utm_source=previousPartners
-$showAds = true;
-$noAdsReason = '';
-// if (request()->get('utm_source') === 'previousPartners') {
-//     $showAds = false;
-//     $noAdsReason .= ' sourcepreviousPartners ';
-// }
-?>
 <!DOCTYPE html>
 <html lang="sv">
 
 <head>
     @stack('scripts')
-
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
     <meta content="IE=Edge" http-equiv="X-UA-Compatible">
@@ -131,7 +120,7 @@ $noAdsReason = '';
 
 </head>
 
-<body class="@if ($shared_notification_bar_contents) has-notification-bar @endif {{ $noAdsReason }}">
+<body class="@if ($shared_notification_bar_contents) has-notification-bar @endif">
     @include('parts.notificationbar')
     @include('parts.bar-events')
     @include('parts.siteheader')
