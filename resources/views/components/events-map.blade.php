@@ -121,6 +121,7 @@
                     'stöld, försök': 'robbery',
                     'stöld': 'robbery',
                     'inbrott': 'burglary',
+                    'inbrott, försök': 'burglary',
                     'stöld/inbrott': 'burglary',
                     'rattfylleri': 'drunk-driver',
                     'sammanfattning natt': 'summarize',
@@ -138,6 +139,9 @@
                     'våld/hot mot tjänsteman': 'unknown',
                     'våldtäkt': 'molestation',
                     'ofredande/förargelse': 'bad-behavior',
+                    'åldringsbrott': 'unknown',
+                    'vållande till kroppsskada': 'unknown',
+                    'ordningslagen': 'unknown',
                 };
 
                 constructor(mapContainer) {
