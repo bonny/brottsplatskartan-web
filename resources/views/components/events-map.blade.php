@@ -357,8 +357,8 @@
                                                 console.log("An attribute was modified on the ad: ", mutation);
                                                 console.log("Ad status: ", node.dataset);
                                                 // behåll ads som har adStatus="filled", anchorStatus="displayed"
-                                                if (node.dataset.adsbygoogleStatus === "filled" && node.dataset.anchorStatus ===
-                                                    "displayed") {
+                                                if (node.dataset.adsbygoogleStatus === "done" && node.dataset.anchorStatus ===
+                                                    "displayed" && node.dataset.anchorShown === "true") {
                                                     console.log("Ad is filled and displayed.", node);
                                                 }
                                             }
