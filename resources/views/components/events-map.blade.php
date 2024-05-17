@@ -345,7 +345,7 @@
                                     // Check status of ad.
                                     console.log('dataset: ', node.dataset);
                                     console.log('dataset stringified: ', JSON.stringify(node.dataset));
-                                    
+
                                     // Keep track of attribute changes on this ad.
                                     const adObserver = new MutationObserver((adMutationsList, adObserver) => {
                                         for (const mutation of adMutationsList) {
@@ -355,10 +355,14 @@
                                             }
                                         }
                                     });
-                                    
+
                                     adObserver.observe(node, {
                                         attributes: true,
-                                        //attributeFilter: ['data-ad-status'],
+                                        attributeFilter: [
+                                            'data-adsbygoogle-status',
+                                            'data-anchor-status',
+                                            'data-ad-status',
+                                        ],
                                     });
                                 }
                             }
