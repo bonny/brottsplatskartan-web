@@ -316,6 +316,15 @@
 
     @push('footerscripts')
         <script>
+            // Räkna ut höjd på sidhuvud och händelserna.
+            let headerElmsHeight = Array.from(document.querySelectorAll('.sitebar__Events, .SiteHeader')).reduce(function(acc,
+                current) {
+                return acc + current.offsetHeight;
+            }, 0);
+            document.body.style.setProperty('--header-elms-height', `${headerElmsHeight}px`);
+
+            console.log('headerElmsHeight', headerElmsHeight);
+
             (function() {
                 // Select the node that will be observed for mutations
                 const targetNode = document.body;
