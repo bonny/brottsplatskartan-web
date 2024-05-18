@@ -335,6 +335,24 @@
                     subtree: false,
                 };
 
+                /**
+                 * Sätter CSS-vars på body baserat på en annons.
+                 */
+                function setVarsBasedOnAd(adElm) {
+                    let dataset = adElm.dataset;
+
+                    // Annons blivit synlig och är visad.
+                    if (dataset.adsbygoogleStatus === "done" && dataset.anchorStatus === "displayed" && dataset
+                        .anchorShown === "true") {
+                        console.log("setVarsBasedOnAd: Ad is filled and displayed.", adElm);
+                    }
+
+                    if (dataset.adsbygoogleStatus === "done" && dataset.anchorStatus === "dismissed" && dataset
+                        .anchorShown === "true") {
+                        console.log("setVarsBasedOnAd: Ad is hidden.", adElm);
+                    }
+                }
+
                 // Callback function to execute when mutations are observed
                 const callback = (mutationList, observer) => {
                     // console.log("Mutation list: ", mutationList);
@@ -362,6 +380,7 @@
                                                     .anchorStatus ===
                                                     "displayed" && node.dataset.anchorShown === "true") {
                                                     console.log("Ad is filled and displayed.", node);
+                                                    setVarsBasedOnAd(node);
                                                 }
 
                                                 // När anchorStatus = dismissed så är annonsen inte längre synlig för anv. klickat på fäll ihop-knappen.
@@ -369,6 +388,8 @@
                                                     .anchorStatus ===
                                                     "dismissed" && node.dataset.anchorShown === "true") {
                                                     console.log("Ad is hidden.", node);
+                                                    setVarsBasedOnAd(node);
+                                                    //document.body.style.setProperty('--header-elms-height', `${headerElmsHeight}px`);
                                                 }
 
                                             }
