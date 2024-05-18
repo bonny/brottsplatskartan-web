@@ -465,6 +465,12 @@
                 bottom: 0;
             }
 
+            /* Ta hänsyn till annonsers höjd i toppen eller botten. */
+            .EventsMap.is-expanded {
+                top: var(--ad-top-height);
+                bottom: var(--ad-bottom-height);
+            }
+
             .EventsMap-blocker-expand {
                 position: absolute;
                 right: 20px;
