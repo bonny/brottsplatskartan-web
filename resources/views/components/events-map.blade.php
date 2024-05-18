@@ -311,11 +311,17 @@
 
     @push('footerscripts')
         <script>
+            // Sätt standardvärden innan vi räknar ut höjd på saker.
+            document.body.style.setProperty('--ad-top-height', '0px');
+            document.body.style.setProperty('--ad-bottom-height', '0px');
+            document.body.style.setProperty('--header-elms-height', '0px');
+
             // Räkna ut höjd på sidhuvud och händelserna.
             let headerElmsHeight = Array.from(document.querySelectorAll('.sitebar__Events, .SiteHeader')).reduce(function(acc,
                 current) {
                 return acc + current.offsetHeight;
             }, 0);
+
             document.body.style.setProperty('--header-elms-height', `${headerElmsHeight}px`);
 
             console.log('headerElmsHeight', headerElmsHeight);
@@ -458,17 +464,11 @@
 
             .EventsMap.is-expanded {
                 position: fixed !important;
-                height: 100dvh;
-                top: 0;
+                height: calc(100% - var(--header-elms-height) - var(--ad-bottom-height));
+                top: calc(var(--header-elms-height) + var(--ad-top-height));
+                bottom: var(--ad-bottom-height);
                 left: 0;
                 right: 0;
-                bottom: 0;
-            }
-
-            /* Ta hänsyn till annonsers höjd i toppen eller botten. */
-            .EventsMap.is-expanded {
-                top: var(--ad-top-height);
-                bottom: var(--ad-bottom-height);
             }
 
             .EventsMap-blocker-expand {
