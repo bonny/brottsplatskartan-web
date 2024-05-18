@@ -340,11 +340,23 @@
                  */
                 function setVarsBasedOnAd(adElm) {
                     let dataset = adElm.dataset;
+                    let bodyStyle = document.body.style;
 
                     // Annons blivit synlig och är visad.
                     if (dataset.adsbygoogleStatus === "done" && dataset.anchorStatus === "displayed" && dataset
                         .anchorShown === "true") {
-                        console.log("setVarsBasedOnAd: Ad is filled and displayed.", adElm);
+                        // om top: 0px så är annonsen i toppen av sidan.
+                        // om bottom: 0px så är annonsen i botten av sidan.
+                        // när man fäller ihop annonsen så blir top: auto och bottom: auto så vi kan inte använda
+                        // det värdet för att avgöra om annonsen är i toppen eller botten.
+                        // men det andra hållets värde är auto så vi kan använda det för att avgöra var annonsen är.
+                        if (adElm.style.bottom === "auto") {
+                            console.log("setVarsBasedOnAd: Ad is at top of page.", adElm);
+                            bodyStyle.setProperty('--ad-top-height', adElm.style.height);
+                        } else if (adElm.style.top === "auto") {
+                            console.log("setVarsBasedOnAd: Ad is at bottom of page.", adElm);
+                            bodyStyle.setProperty('--ad-bottom-height', adElm.style.height);
+                        }
                     }
 
                     if (dataset.adsbygoogleStatus === "done" && dataset.anchorStatus === "dismissed" && dataset
@@ -363,23 +375,16 @@
                             // Check for class "adsbygoogle.adsbygoogle-noablate".
                             for (const node of mutation.addedNodes) {
                                 if (node instanceof HTMLElement && node.classList.contains("adsbygoogle-noablate")) {
-                                    console.log("Found sticky ad: ", node);
-                                    // Check status of ad.
-                                    console.log('dataset: ', node.dataset);
-                                    console.log('dataset stringified: ', JSON.stringify(node.dataset));
+                                    // console.log("Found sticky ad: ", node);
 
                                     // Keep track of attribute changes on this ad.
                                     const adObserver = new MutationObserver((adMutationsList, adObserver) => {
                                         for (const mutation of adMutationsList) {
                                             if (mutation.type === "attributes") {
-                                                console.log("An attribute was modified on the ad: ", mutation);
-                                                console.log("Ad status: ", node.dataset);
-
                                                 // Ad fälls ut och är visad.
                                                 if (node.dataset.adsbygoogleStatus === "done" && node.dataset
                                                     .anchorStatus ===
                                                     "displayed" && node.dataset.anchorShown === "true") {
-                                                    console.log("Ad is filled and displayed.", node);
                                                     setVarsBasedOnAd(node);
                                                 }
 
@@ -387,9 +392,7 @@
                                                 if (node.dataset.adsbygoogleStatus === "done" && node.dataset
                                                     .anchorStatus ===
                                                     "dismissed" && node.dataset.anchorShown === "true") {
-                                                    console.log("Ad is hidden.", node);
                                                     setVarsBasedOnAd(node);
-                                                    //document.body.style.setProperty('--header-elms-height', `${headerElmsHeight}px`);
                                                 }
 
                                             }
