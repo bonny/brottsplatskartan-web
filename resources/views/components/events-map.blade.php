@@ -315,6 +315,8 @@
             document.body.style.setProperty('--ad-top-height', '0px');
             document.body.style.setProperty('--ad-bottom-height', '0px');
             document.body.style.setProperty('--header-elms-height', '0px');
+            // Grippy is the expand/collapse button. Is 30 px high.
+            document.body.style.setProperty('--grippy-height', '0px');
 
             // Räkna ut höjd på sidhuvud och händelserna.
             let headerElmsHeight = Array.from(document.querySelectorAll('.sitebar__Events, .SiteHeader')).reduce(function(acc,
@@ -323,6 +325,11 @@
             }, 0);
 
             document.body.style.setProperty('--header-elms-height', `${headerElmsHeight}px`);
+            
+            // Höjden på .sitebar__Events.
+            let sitebarEventsElm = document.querySelector('.sitebar__Events');
+            let sitebarEventsHeight = sitebarEventsElm.offsetHeight;
+            document.body.style.setProperty('--sitebar-events-height', `${sitebarEventsHeight}px`);
 
             console.log('headerElmsHeight', headerElmsHeight);
 
@@ -471,6 +478,20 @@
                 left: 0;
             }
 
+            body.map-is-expanded .sitebar__Events {
+                top: var(--ad-top-height);
+                position: fixed;
+                left: 0;
+                right: 0;
+            }
+
+            body.map-is-expanded .SiteHeader {
+                top: calc(var(--ad-top-height) + var(--sitebar-events-height));
+                position: fixed;
+                left: 0;
+                right: 0;
+            }
+
             .EventsMap.is-expanded {
                 position: fixed !important;
                 height: calc(100% - var(--header-elms-height) - var(--ad-bottom-height));
@@ -478,6 +499,7 @@
                 bottom: var(--ad-bottom-height);
                 left: 0;
                 right: 0;
+                z-index: 20;
             }
 
             .EventsMap-blocker-expand {
