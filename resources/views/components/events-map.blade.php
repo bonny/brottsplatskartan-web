@@ -27,27 +27,31 @@
                     imgMinimize.src = '/img/collapse_content_24dp_FILL0_wght400_GRAD0_opsz24.svg';
 
                     L.DomEvent.on(expandButton, 'click', function(evt) {
-                        let isExpanded = map.getContainer().classList.contains('is-expanded');
 
-                        if (isExpanded) {
-                            document.body.classList.remove('map-is-expanded');
-                            map.getContainer().classList.remove('is-expanded');
-                            map.gestureHandling.enable();
-                        } else {
-                            document.body.classList.add('map-is-expanded');
-                            map.getContainer().classList.add('is-expanded');
-                            map.gestureHandling.disable();
-                            // Få plats med Sverige.
-                            // Men bara om man inte rört kartan, irriterade att man hoppar bort från där man var annars.
-                            // map.setView([65.15531, 15], 5);
+                        function expandMap(map) {
+                            let isExpanded = map.getContainer().classList.contains('is-expanded');
+
+                            if (isExpanded) {
+                                document.body.classList.remove('map-is-expanded');
+                                map.getContainer().classList.remove('is-expanded');
+                                map.gestureHandling.enable();
+                            } else {
+                                document.body.classList.add('map-is-expanded');
+                                map.getContainer().classList.add('is-expanded');
+                                map.gestureHandling.disable();
+                                // Få plats med Sverige.
+                                // Men bara om man inte rört kartan, irriterade att man hoppar bort från där man var annars.
+                                // map.setView([65.15531, 15], 5);
+                            }
+
+                            // Invalidate size after resize.
+                            map.invalidateSize({
+                                pan: true
+                            });
                         }
 
-                        // Invalidate size after resize.
-                        map.invalidateSize({
-                            pan: true
-                        });
+                        expandMap(map);
 
-                        // }, 0);
                     });
 
                     return html;
@@ -153,9 +157,10 @@
 
                 };
 
-                constructor(mapContainer) {
+                constructor(mapContainer, options = {}) {
                     this.mapContainer = mapContainer;
                     this.initMap();
+                    console.log('map options', options);
                 }
 
                 async loadMarkers() {
@@ -181,19 +186,19 @@
                     });
                 }
 
-                expandMap() {
-                    this.map.getContainer().classList.toggle('is-expanded');
+                // expandMap() {
+                //     this.map.getContainer().classList.toggle('is-expanded');
 
-                    // Enable click-through on blocker.
-                    // this.blockerElm.classList.toggle('EventsMap__blocker--active');
+                //     // Enable click-through on blocker.
+                //     // this.blockerElm.classList.toggle('EventsMap__blocker--active');
 
-                    // Invalidate size after css anim has finished, so tiles are loaded.
-                    setTimeout(() => {
-                        this.map.invalidateSize({
-                            pan: true
-                        });
-                    }, 250);
-                }
+                //     // Invalidate size after css anim has finished, so tiles are loaded.
+                //     setTimeout(() => {
+                //         this.map.invalidateSize({
+                //             pan: true
+                //         });
+                //     }, 250);
+                // }
 
                 initMap() {
                     this.map = L.map(this.mapContainer, {
@@ -284,6 +289,7 @@
                     let x = L.control.ExpandButton({
                         position: 'bottomright'
                     }).addTo(this.map);
+                    window.expandButtonControl = x;
 
                     L.control.locate({
                         locateOptions: {
@@ -308,7 +314,9 @@
             document.addEventListener('DOMContentLoaded', function() {
                 let mapContainers = document.querySelectorAll('.EventsMap');
                 mapContainers.forEach(element => {
-                    new EventsMap(element);
+                    new EventsMap(element, {
+                        size: '{{ $mapSize }}'
+                    });
                 });
             });
         </script>

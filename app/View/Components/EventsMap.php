@@ -11,7 +11,9 @@ class EventsMap extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct()
+    public function __construct(
+        public string $mapSize = 'normal'
+        )
     {
         //
     }
@@ -21,6 +23,7 @@ class EventsMap extends Component
      */
     public function render(): View|Closure|string
     {
+        //dd($this->mapSize);
         return view('components.events-map');
     }
 }
