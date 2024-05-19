@@ -245,13 +245,21 @@ blockquote {
     margin: auto;
 }
 
-.SiteTagline {
-    display: none;
+.SiteTitle__inner {
+    line-height: 1;
+    font-size: var(--font-size-small);
 }
 
-.SiteTitle a {
+.SiteTitle__titleLink {
     text-decoration: none;
     color: inherit;
+}
+
+.SiteTitle__titleName,
+.SiteTitle__titleDivider {
+    font-weight: bold;
+}
+.SiteTitle__titleTagName {
 }
 
 /* Site navigation */

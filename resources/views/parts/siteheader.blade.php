@@ -1,8 +1,11 @@
 <header class="SiteHeader" id="SiteHeader">
     <div class="SiteTitle">
         <div class="SiteTitle__inner">
-            <a href="/">Brottsplatskartan</a>
-            <em class="SiteTagline">– Se på karta var brott sker</em>
+            <a href="/" class="SiteTitle__titleLink">
+                <span class="SiteTitle__titleName">Brottsplatskartan</span>
+                <span class="SiteTitle__titleDivider">–</span>
+                <span class="SiteTitle__titleTagName">Polisens händelser på karta</span>
+            </a>
 
             @if (Auth::check())
                 <p class='SiteHeader__loggedin'>
