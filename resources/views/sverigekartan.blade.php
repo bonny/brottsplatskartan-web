@@ -13,7 +13,7 @@ Template för sverigekartan
 
 @section('content')
 
-    <x-events-map />
+    <x-events-map map-size="fullscreen" />
 
     <p>Gamla Sverigekartan: <a href="/sverigekartan-iframe/">/sverigekartan-iframe/</a>.</p>
 @endsection
