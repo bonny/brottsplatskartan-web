@@ -16,8 +16,9 @@
                     html.innerHTML = '';
 
                     var expandButton = L.DomUtil.create('button', 'EventsMap-control-expand', html);
+
                     var buttonText = L.DomUtil.create('span', 'EventsMap-control-expandText', expandButton);
-                    buttonText.innerText = 'Expandera';
+                    buttonText.innerText = 'Maximera';
 
                     var imgExpand = L.DomUtil.create('img', 'EventsMap-control-expandImg', expandButton);
                     imgExpand.src = '/img/expand_content_24dp_FILL0_wght400_GRAD0_opsz24.svg';
@@ -100,6 +101,7 @@
                     'farligt föremål, misstänkt': 'unknown',
                     'försvunnen person': 'missing-person',
                     'fylleri/lob': 'sportsbar',
+                    'alkohollagen': 'sportsbar',
                     'knivlagen': 'knife',
                     'vapenlagen': 'gun',
                     'skottlossning': 'gun',
@@ -117,13 +119,16 @@
                     'olovlig körning': 'car',
                     'övrigt': 'unknown',
                     'polisinsats/kommendering': 'police',
+                    'räddningsinsats': 'police',
                     'rån, försök': 'robbery',
+                    'rån övrigt': 'robbery',
                     'rån': 'robbery',
                     'stöld, försök': 'robbery',
                     'stöld': 'robbery',
                     'inbrott': 'burglary',
                     'inbrott, försök': 'burglary',
                     'stöld/inbrott': 'burglary',
+                    'larm inbrott': 'burglary',
                     'häleri': 'burglary',
                     'rattfylleri': 'drunk-driver',
                     'sammanfattning natt': 'summarize',
@@ -169,7 +174,7 @@
                                     <a target="_blank" href="${event.permalink}?utm_source=brottsplatskartan&utm_medium=maplink" class="EventsMap-marker-contentText EventsMap-marker-contentLink">
                                         ${event.time} • ${event.type}
                                         <strong>${event.headline}</strong>
-                                        <div>Läs mer →</div>
+                                        <!-- <div class="EventsMap-marker-contentLinkIcon">Läs mer →</div> -->
                                     </a>
                                 </div>
                             `);
@@ -192,7 +197,7 @@
 
                 initMap() {
                     this.map = L.map(this.mapContainer, {
-                        zoomControl: false,
+                        zoomControl: true,
                         attributionControl: false,
                         gestureHandling: true
                         // scrollWheelZoom: false,
@@ -325,7 +330,7 @@
             }, 0);
 
             document.body.style.setProperty('--header-elms-height', `${headerElmsHeight}px`);
-            
+
             // Höjden på .sitebar__Events.
             let sitebarEventsElm = document.querySelector('.sitebar__Events');
             let sitebarEventsHeight = sitebarEventsElm.offsetHeight;
@@ -494,7 +499,7 @@
 
             .EventsMap.is-expanded {
                 position: fixed !important;
-                height: calc(100% - var(--header-elms-height) - var(--ad-bottom-height));
+                height: calc(100dvh - var(--header-elms-height) - var(--ad-bottom-height));
                 top: calc(var(--header-elms-height) + var(--ad-top-height));
                 bottom: var(--ad-bottom-height);
                 left: 0;
@@ -574,16 +579,22 @@
                 display: flex;
                 flex-direction: row;
                 gap: var(--default-margin);
+                font-size: 1rem;
             }
 
             .EventsMap-marker-contentText {
                 display: flex;
                 flex-direction: column;
                 gap: var(--default-margin-third);
+                font-size: 1.1rem;
+            }
+
+            .EventsMap-marker-contentLinkIcon {
+                text-align: right;
             }
 
             .EventsMap-marker-contentText strong {
-                font-size: var(--font-size-small);
+                /* font-size: var(--font-size-small); */
             }
 
             .EventsMap-marker-contentText a {
