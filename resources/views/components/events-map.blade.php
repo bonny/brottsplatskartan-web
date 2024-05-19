@@ -10,6 +10,33 @@
         <script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.81.0/dist/L.Control.Locate.min.js" charset="utf-8">
         </script>
         <script>
+            /**
+             * Expandera kartan.
+             * 
+             * @param {L.Map} map
+             */
+            function expandMap(map) {
+                let isExpanded = map.getContainer().classList.contains('is-expanded');
+
+                if (isExpanded) {
+                    document.body.classList.remove('map-is-expanded');
+                    map.getContainer().classList.remove('is-expanded');
+                    map.gestureHandling.enable();
+                } else {
+                    document.body.classList.add('map-is-expanded');
+                    map.getContainer().classList.add('is-expanded');
+                    map.gestureHandling.disable();
+                    // Få plats med Sverige.
+                    // Men bara om man inte rört kartan, irriterade att man hoppar bort från där man var annars.
+                    // map.setView([65.15531, 15], 5);
+                }
+
+                // Invalidate size after resize.
+                map.invalidateSize({
+                    pan: true
+                });
+            }
+
             L.Control.ExpandButton = L.Control.extend({
                 onAdd: function(map) {
                     var html = L.DomUtil.create('div');
@@ -27,31 +54,7 @@
                     imgMinimize.src = '/img/collapse_content_24dp_FILL0_wght400_GRAD0_opsz24.svg';
 
                     L.DomEvent.on(expandButton, 'click', function(evt) {
-
-                        function expandMap(map) {
-                            let isExpanded = map.getContainer().classList.contains('is-expanded');
-
-                            if (isExpanded) {
-                                document.body.classList.remove('map-is-expanded');
-                                map.getContainer().classList.remove('is-expanded');
-                                map.gestureHandling.enable();
-                            } else {
-                                document.body.classList.add('map-is-expanded');
-                                map.getContainer().classList.add('is-expanded');
-                                map.gestureHandling.disable();
-                                // Få plats med Sverige.
-                                // Men bara om man inte rört kartan, irriterade att man hoppar bort från där man var annars.
-                                // map.setView([65.15531, 15], 5);
-                            }
-
-                            // Invalidate size after resize.
-                            map.invalidateSize({
-                                pan: true
-                            });
-                        }
-
                         expandMap(map);
-
                     });
 
                     return html;
@@ -159,8 +162,8 @@
 
                 constructor(mapContainer, options = {}) {
                     this.mapContainer = mapContainer;
+                    this.options = options;
                     this.initMap();
-                    console.log('map options', options);
                 }
 
                 async loadMarkers() {
@@ -230,6 +233,11 @@
                         // this.expandBtnElm.addEventListener('click', (evt) => {
                         //     this.expandMap();
                         // });
+                        //expandMap
+                        console.log('map loaded. options:', this.options);
+                        if (this.options.size === 'fullscreen') {
+                            expandMap(this.map);
+                        }
                     });
 
                     /**
