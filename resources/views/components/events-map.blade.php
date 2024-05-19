@@ -15,7 +15,7 @@
                     var html = L.DomUtil.create('div');
                     html.innerHTML = '';
 
-                    var expandButton = L.DomUtil.create('button', 'EventsMap-control-expand', html);
+                    var expandButton = L.DomUtil.create('button', 'leaflet-bar EventsMap-control-expand', html);
 
                     var buttonText = L.DomUtil.create('span', 'EventsMap-control-expandText', expandButton);
                     buttonText.innerText = 'Maximera';
@@ -533,12 +533,13 @@
                 display: flex;
                 align-items: center;
                 gap: var(--default-margin-half);
+                margin: 0;
                 appearance: none;
                 color: inherit;
                 background-color: #fff;
-                border: 2px solid rgba(255, 255, 255, .5);
-                padding: var(--default-margin-third) var(--default-margin-half);
-                border-radius: 2px;
+                /* border: 2px solid rgba(255, 255, 255, .5); */
+                padding: 3px;
+                /* border-radius: 2px; */
             }
 
             .EventsMap.is-expanded .EventsMap-control-expandText {
