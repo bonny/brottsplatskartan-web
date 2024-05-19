@@ -533,6 +533,12 @@
                 display: flex;
                 align-items: center;
                 gap: var(--default-margin-half);
+                appearance: none;
+                color: inherit;
+                background-color: #fff;
+                border: 2px solid rgba(255, 255, 255, .5);
+                padding: var(--default-margin-third) var(--default-margin-half);
+                border-radius: 2px;
             }
 
             .EventsMap.is-expanded .EventsMap-control-expandText {
