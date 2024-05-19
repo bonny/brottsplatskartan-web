@@ -26,14 +26,14 @@
                     imgMinimize.src = '/img/collapse_content_24dp_FILL0_wght400_GRAD0_opsz24.svg';
 
                     L.DomEvent.on(expandButton, 'click', function(evt) {
-                        // console.log("click expand", evt);
-                        // evt.stopPropagation();
                         let isExpanded = map.getContainer().classList.contains('is-expanded');
 
                         if (isExpanded) {
+                            document.body.classList.remove('map-is-expanded');
                             map.getContainer().classList.remove('is-expanded');
                             map.gestureHandling.enable();
                         } else {
+                            document.body.classList.add('map-is-expanded');
                             map.getContainer().classList.add('is-expanded');
                             map.gestureHandling.disable();
                             // Få plats med Sverige.
@@ -460,6 +460,15 @@
                 height: 300px;
                 background-color: antiquewhite;
                 background-image: url('/img/share-img-blur.jpg');
+            }
+
+            body.map-is-expanded {
+                overflow: hidden;
+                position: fixed;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
             }
 
             .EventsMap.is-expanded {
