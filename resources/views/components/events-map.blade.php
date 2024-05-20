@@ -515,7 +515,7 @@
 
             .EventsMap.is-expanded {
                 position: fixed !important;
-                height: calc(100dvh - var(--header-elms-height) - var(--ad-bottom-height));
+                height: calc(100dvh - var(--header-elms-height) - var(--ad-top-height) - var(--ad-bottom-height));
                 top: calc(var(--header-elms-height) + var(--ad-top-height));
                 bottom: var(--ad-bottom-height);
                 left: 0;
