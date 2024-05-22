@@ -24,6 +24,8 @@ Template för ett event/händelse
 
     @include('parts.crimeevent', ['single' => true])
 
+    <x-events-map />
+
     <div class="cols">
         <x-events-box type="trending" />
         <x-events-box type="latest" />
