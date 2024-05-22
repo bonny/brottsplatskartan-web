@@ -9,6 +9,12 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.81.0/dist/L.Control.Locate.min.css" />
         <script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.81.0/dist/L.Control.Locate.min.js" charset="utf-8">
         </script>
+
+        <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" type="text/css">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css"
+            type="text/css">
+        <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js" charset="utf-8"></script>
+
         <script>
             /**
              * Expandera kartan.
@@ -93,9 +99,11 @@
                 expandBtnElm;
                 zoom = {
                     default: 5,
+                    fullscreen: 6,
                 };
                 location = {
                     default: [59, 15],
+                    fullscreen: [60, 15],
                 };
 
                 crimeTypesToClass = {
@@ -136,6 +144,8 @@
                     'inbrott, försök': 'burglary',
                     'stöld/inbrott': 'burglary',
                     'larm inbrott': 'burglary',
+                    'larm överfall': 'burglary',
+                    'varningslarm/haveri': 'unknown',
                     'häleri': 'burglary',
                     'rattfylleri': 'drunk-driver',
                     'sammanfattning natt': 'summarize',
@@ -157,7 +167,7 @@
                     'vållande till kroppsskada': 'unknown',
                     'ordningslagen': 'unknown',
                     'sjölagen': 'unknown',
-
+                    'sjukdom/olycksfall': 'unknown',
                 };
 
                 constructor(mapContainer, options = {}) {
@@ -170,9 +180,10 @@
                     const response = await fetch('/api/eventsMap');
                     const data = await response.json();
                     const events = data.data
+                    const markers = [];
 
                     events.forEach(event => {
-                        L.marker([event.lat, event.lng], {
+                        const oneMarker = L.marker([event.lat, event.lng], {
                                 icon: markerIconFar,
                                 crimeEventData: event
                             })
@@ -180,13 +191,21 @@
                             .bindPopup(`
                                 <div class="EventsMap-marker-content">
                                     <a target="_blank" href="${event.permalink}?utm_source=brottsplatskartan&utm_medium=maplink" class="EventsMap-marker-contentText EventsMap-marker-contentLink">
-                                        ${event.time} • ${event.type}
+                                        ${event.time_human} • ${event.type}
                                         <strong>${event.headline}</strong>
                                         <!-- <div class="EventsMap-marker-contentLinkIcon">Läs mer →</div> -->
                                     </a>
                                 </div>
                             `);
+
+                        markers.push(oneMarker);
                     });
+
+                    console.log('markers', markers);
+
+                    // var clusterGroupMarkers = L.markerClusterGroup({});
+                    // clusterGroupMarkers.addLayers(markers);
+                    // map.addLayer(clusterGroupMarkers);
                 }
 
                 // expandMap() {
@@ -237,6 +256,8 @@
                         console.log('map loaded. options:', this.options);
                         if (this.options.size === 'fullscreen') {
                             expandMap(this.map);
+                            //this.map.setZoom(this.zoom.fullscreen);
+                            this.map.flyTo(this.location.fullscreen, this.zoom.fullscreen);
                         }
                     });
 
@@ -762,6 +783,7 @@
             /* bad by Adrien Coquet from <a href="https://thenounproject.com/browse/icons/term/bad/" target="_blank" title="bad Icons">Noun Project</a> (CC BY 3.0) */
             .EventsMap-marker-icon-innerIcon--bad-behavior {
                 background-image: url('/img/noun-drunk-driver-4088846.svg');
+                filter: invert(1);
             }
 
             /* molestation by Teewara soontorn from <a href="https://thenounproject.com/browse/icons/term/molestation/" target="_blank" title="molestation Icons">Noun Project</a> (CC BY 3.0) */
@@ -803,7 +825,7 @@
 @endonce
 
 <div class="widget">
-    <h2 class="widget__title">Sverigekartan</h2>
+    <h2 class="widget__title">Händelsekarta</h2>
     <div class="widget__fullwidth">
 
         <div class="EventsMap__container">
