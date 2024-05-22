@@ -615,10 +615,10 @@
                     ease-in-out margin .25s;
             }
 
-            .EventsMap-marker-icon--near,
-            .EventsMap-marker-icon--nearer {
-                border: 2px solid rgba(255, 255, 255, .5);
-            }
+            /* .EventsMap-marker-icon--near,
+                    .EventsMap-marker-icon--nearer {
+                        border: 2px solid rgba(255, 255, 255, .5);
+                    } */
 
             .EventsMap-marker-content {
                 display: flex;
