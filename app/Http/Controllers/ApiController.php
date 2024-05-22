@@ -450,6 +450,7 @@ class ApiController extends Controller {
             $event = [
                 "id" => $item->id,
                 'time' => $item->getParsedDateInFormat('%H:%M'),
+                'time_human' => $item->getParsedDateFormattedForHumans(),
                 'headline' => $item->getHeadline(),
                 "type" => $item->parsed_title,
                 "lat" => (float) $item->location_lat,
