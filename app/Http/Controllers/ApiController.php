@@ -235,6 +235,7 @@ class ApiController extends Controller {
     }
 
     public function event(Request $request, Response $response, $eventID) {
+        /** @var CrimeEvent $event */
         $event = CrimeEvent::findOrFail($eventID);
 
         $eventArray = $event->toArray();
@@ -258,6 +259,12 @@ class ApiController extends Controller {
             "viewport_southwest_lat",
             "viewport_southwest_lng",
         ]);
+
+        // Append headline, images, content_teaser.
+        $eventArray['headline'] = $event->getHeadline();
+        $eventArray['image'] = $event->getStaticImageSrc(640, 320, 1);
+        $eventArray['image_far'] = $event->getStaticImageSrcFar(640, 320, 2);
+        $eventArray['content_teaser'] = $event->getParsedContentTeaser();
 
         $json = [
             "data" => $eventArray,
