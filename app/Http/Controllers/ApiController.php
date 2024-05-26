@@ -396,6 +396,7 @@ class ApiController extends Controller {
         $events = Helper::getMostViewedEventsRecently($request->input('minutes', 10), $request->input('limit', 10));
 
         $events = $events->map(function ($data) {
+            /** @var CrimeEvent $item */
             $item = $data->crimeEvent;
 
             return [
@@ -406,6 +407,7 @@ class ApiController extends Controller {
                 "parsed_date_hm" => $item->getParsedDateInFormat('%H:%M'),
                 "title_type" => $item->parsed_title,
                 "title_location" => $item->parsed_title_location,
+                "headline" => $item->getHeadline(),
                 "description" => $item->description,
                 "content" => $item->parsed_content,
                 "content_formatted" => $item->getParsedContent(),
@@ -417,15 +419,10 @@ class ApiController extends Controller {
                 "administrative_area_level_1" => $item->administrative_area_level_1,
                 "administrative_area_level_2" => $item->administrative_area_level_2,
                 "image" => $item->getStaticImageSrc(640, 320, 1),
+                "image_far" => $item->getStaticImageSrcFar(640, 320, 2),
                 "permalink" => $item->getPermalink(true),
             ];
         });
-
-        $json = [
-            'items' => [
-                'values' => $events
-            ]
-        ];
 
         $json = [
             'items' => $events
