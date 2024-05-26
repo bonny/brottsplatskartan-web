@@ -100,6 +100,10 @@ class ApiController extends Controller {
         return response()->json($json)->withCallback($request->input('callback'));
     }
 
+    /**
+     * Example URL:
+     * https://brottsplatskartan.se/api/events?app=bpk4&page=2
+     */
     public function events(Request $request, Response $response) {
         // The number of events to get. Max 50. Default 10.
         $limit = (int) $request->input("limit", 10);
@@ -113,6 +117,7 @@ class ApiController extends Controller {
         }
 
         // ?page=n, picked up by Laravel automatically
+        // https://laravel.com/docs/11.x/pagination
 
         // area = administrative_area_level_1 = "Uppsala län" and so on
         $area = (string) $request->input("area");
@@ -168,6 +173,7 @@ class ApiController extends Controller {
         unset($json["links"]["data"]);
 
         // create array with data is a format more suited for app and web
+        /** @var CrimeEvent $item */
         foreach ($events->items() as $item) {
 
             /*
@@ -199,6 +205,7 @@ class ApiController extends Controller {
                 "pubdate_unix" => $item->pubdate,
                 "title_type" => $item->parsed_title,
                 "title_location" => $item->parsed_title_location,
+                'headline' => $item->getHeadline(),
                 "description" => $item->description,
                 "content" => $item->parsed_content,
                 "content_formatted" => $item->getParsedContent(),
@@ -215,6 +222,7 @@ class ApiController extends Controller {
                 "administrative_area_level_1" => $item->administrative_area_level_1,
                 "administrative_area_level_2" => $item->administrative_area_level_2,
                 "image" => $item->getStaticImageSrc(640, 320, 1),
+                "image_far" => $item->getStaticImageSrcFar(640, 320, 2),
                 "external_source_link" => $item->permalink,
                 "permalink" => $item->getPermalink(true),
             ];
