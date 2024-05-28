@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\CrimeEvent;
-use App\Newsarticle;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -66,6 +65,7 @@ class ApiController extends Controller {
         $api_app = $request->get('app');
 
         // create array with data is a format more suited for app and web
+        /** @var CrimeEvent $item */
         foreach ($events as $item) {
             $permalink = $item->getPermalink(true);
 
@@ -90,6 +90,9 @@ class ApiController extends Controller {
                 "viewport_southwest_lat" => $item->viewport_southwest_lat,
                 "viewport_southwest_lng" => $item->viewport_southwest_lng,
                 "image" => $item->getStaticImageSrc(320, 320, 2),
+                "image_far" => $item->getStaticImageSrcFar(320, 320, 2),
+                'headline' => $item->getHeadline(),
+                'date_human' => $item->getParsedDateFormattedForHumans(),
                 "permalink" => $permalink,
             ];
 
