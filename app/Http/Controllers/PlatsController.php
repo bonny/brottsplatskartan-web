@@ -303,6 +303,288 @@ class PlatsController extends Controller
         return view('single-plats', $data);
     }
 
+    protected function dieAfterTryCount() {
+        static $tryCount = 0;
+
+        $count = request('dieCount');
+
+        if ($count === null) {
+            return;
+        }
+
+        if ((int) $count === $tryCount) {
+            dd('Died.', debug_backtrace());
+        }
+
+        $tryCount++;
+    }
+
+    /**
+     * Enskild plats/ort, med debuginfo.
+     * Exempel på URL:
+     * https://brottsplatskartan.localhost/plats/stockholm
+     */
+    public function dayDebug(Request $request, $plats, $date = null)
+    {
+        $dateOriginalFromArg = $date;
+        $platsOriginalFromSlug = $plats;
+
+        $this->dieAfterTryCount();
+
+        $date = \App\Helper::getdateFromDateSlug($date);
+        $this->dieAfterTryCount();
+        if (!$date) {
+            $this->dieAfterTryCount();
+            abort(500, 'Knas med datum hörru');
+        }
+
+        // Om page finns så är det en gammal URL,
+        // skriv om till ny (eller hänvisa canonical iaf och använd dagens datum)
+        $page = (int) $request->input("page", 0);
+        if ($page) {
+            $this->dieAfterTryCount();
+            $page = 0;
+            $date = \App\Helper::getdateFromDateSlug(null);
+        }
+        $this->dieAfterTryCount();
+        $dateYMD = $date['date']->format('Y-m-d');
+        $isToday = $date['date']->isToday();
+        $isYesterday = $date['date']->isYesterday();
+        $isCurrentYear = $date['date']->isCurrentYear();
+        $this->dieAfterTryCount();
+        // Om $plats slutar med namnet på ett län, t.ex. "örebro län", "gävleborgs län" osv
+        // så ska platser i det länet med platsen $plats minus länets namn visas
+        $allLansNames = \App\Helper::getAllLan();
+        $foundMatchingLan = false;
+        $matchingLanName = null;
+        $platsWithoutLan = null;
+        $platsSluggified = \App\Helper::toAscii($plats);
+        $this->dieAfterTryCount();
+        // Kolla om platsen $plats även inkluderar ett län
+        // T.ex. om URL är # så ska vi hitta "stockholms län"
+        foreach ($allLansNames as $oneLanName) {
+            $lanSlug = \App\Helper::toAscii($oneLanName);
+            $this->dieAfterTryCount();
+            if (ends_with($platsSluggified, "-" . $lanSlug)) {
+                $foundMatchingLan = true;
+                $matchingLanName = $oneLanName;
+                $this->dieAfterTryCount();
+                $lanStrLen = mb_strlen($oneLanName);
+                $platsStrLen = mb_strlen($plats);
+                $platsWithoutLan = mb_substr($plats, 0, $platsStrLen - $lanStrLen);
+                $platsWithoutLan = str_replace("-", " ", $platsWithoutLan);
+                $platsWithoutLan = trim($platsWithoutLan);
+                break;
+            }
+        }
+        $this->dieAfterTryCount();
+        // Om en plats är i "sverige" snarare än ett specifikt län så blir plats-url fel:
+        // https://brottsplatskartan.localhost/plats/basvägen-
+        // Ta bort '-' och redirecta till platsen.
+        if (ends_with($plats, '-')) {
+            $plats = trim($plats, '-');
+            return redirect()->route('platsSingle', ['plats' => $plats], 301);
+        }
+        $this->dieAfterTryCount();
+        if ($foundMatchingLan) {
+            // Hämta events där vi vet både plats och län
+            // t.ex. "Stockholm" i "Stockholms län"
+            $events = $this->getEventsInPlatsWithLan($platsWithoutLan, $matchingLanName, $date, 7, $isToday);
+            $this->dieAfterTryCount();
+            // Hämta mest vanligt förekommande händelsetyperna
+            $mostCommonCrimeTypes = $this->getMostCommonCrimeTypesInPlatsWithLan($platsWithoutLan, $matchingLanName, $dateYMD);
+            $this->dieAfterTryCount();
+            // Skapa fint namn av platsen och länet, blir t.ex. "Orminge i Stockholms Län"
+            $plats = sprintf(
+                '%1$s i %2$s',
+                title_case($platsWithoutLan),
+                title_case($matchingLanName)
+            );
+        } else {
+            // Hämta events där plats är från huvudtabellen
+            // Används när $plats är bara en plats, typ "insjön",
+            // "östersunds centrum", "östra karup", "kungsgatan" osv.
+            // Exempel på url:
+            // https://brottsplatskartan.localhost/plats/bananskal
+            $this->dieAfterTryCount();
+            $events = $this->getEventsInPlats($plats, $date, 14, $isToday);
+            $this->dieAfterTryCount();
+            // Om inga events för vald period, kolla om något finns alls.
+            if (!$events->count()) {
+                $eventsExists = CrimeEvent::where(function ($query) use ($plats) {
+                    $query->where("parsed_title_location", $plats);
+                    $query->orWhere("administrative_area_level_2", $plats);
+                    $query->orWhereHas('locations', function ($query) use ($plats) {
+                        $query->where('name', '=', $plats);
+                    });
+                })
+                ->exists();
+                $this->dieAfterTryCount();
+                if (!$eventsExists) {
+                    abort(404);
+                }
+            }
+            $this->dieAfterTryCount();
+            // Gör så att plats blir "Västra Hejsan Hoppsan" och inte "västra hejsan hoppsan".
+            $plats = title_case($plats);
+            $this->dieAfterTryCount();
+            // Hämta mest vanligt förekommande händelsetyperna
+            // $mostCommonCrimeTypes = $this->getMostCommonCrimeTypesInPlats($plats, $dateYMD);
+            $mostCommonCrimeTypes = collect();
+
+            // Debugbar::info('Hämta events där vi bara vet platsnamn');
+            // Indexera inte denna sida om det är en gata, men indexera om det är en ort osv.
+            // Får avvakta med denna pga vet inte exakt vad en plats är för en..eh..plats.
+            // $data['robotsNoindex'] = true;
+        }
+        $this->dieAfterTryCount();
+        // Group events by day
+        $eventsByDay = $events->groupBy(function ($item, $key) {
+            return date('Y-m-d', strtotime($item->created_at));
+        });
+        $this->dieAfterTryCount();
+        $mostCommonCrimeTypesMetaDescString = '';
+        foreach ($mostCommonCrimeTypes as $oneCrimeType) {
+            $mostCommonCrimeTypesMetaDescString .= $oneCrimeType->parsed_title . ', ';
+        }
+        $mostCommonCrimeTypesMetaDescString = trim($mostCommonCrimeTypesMetaDescString, ', ');
+
+        $metaDescription = "Senaste händelserna som skett i och omkring $plats.";
+
+        if ($plats === 'Stockholm') {
+            $metaDescription = 'Vad har hänt i Stockholm idag? Se Polisens händelser med kartor som visar var varje händelse skett.';
+        }
+
+        $linkRelPrev = null;
+        $linkRelNext = null;
+
+        // Hämta statistik för platsen
+        $introtext_key = "introtext-plats-$plats";
+        $introtext = null;
+        $this->dieAfterTryCount();
+        // Start daynav
+        if ($foundMatchingLan) {
+            $prevDaysNavInfo = $this->getPlatsPrevDaysNavInfo($date['date'], 5, $platsWithoutLan, $matchingLanName);
+            $nextDaysNavInfo = $this->getPlatsNextDaysNavInfo($date['date'], 5, $platsWithoutLan, $matchingLanName);
+        } else {
+            $prevDaysNavInfo = $this->getPlatsPrevDaysNavInfo($date['date'], 5, $plats);
+            $nextDaysNavInfo = $this->getPlatsNextDaysNavInfo($date['date'], 5, $plats);
+        }
+        $this->dieAfterTryCount();
+        $prevDayLink = null;
+        if ($prevDaysNavInfo->count()) {
+            $firstDay = $prevDaysNavInfo->first();
+            $firstDayDate = Carbon::parse($firstDay['dateYMD']);
+            $fintFormateratDatum = $firstDayDate->formatLocalized('%A %e %B %Y');
+            $formattedDate = trim(str::lower($firstDayDate->formatLocalized('%e-%B-%Y')));
+            $formattedDateFortitle = trim($fintFormateratDatum);
+            $prevDayLink = [
+                'title' => sprintf('‹ %1$s', $formattedDateFortitle),
+                'link' => route("platsDatum", ['plats' => $platsOriginalFromSlug, 'date' => $formattedDate]),
+            ];
+        }
+        $this->dieAfterTryCount();
+        $nextDayLink = null;
+        if ($nextDaysNavInfo->count()) {
+            $firstDay = $nextDaysNavInfo->first();
+            $firstDayDate = Carbon::parse($firstDay['dateYMD']);
+            $fintFormateratDatum = $firstDayDate->formatLocalized('%A %e %B %Y');
+            $formattedDate = trim(str::lower($firstDayDate->formatLocalized('%e-%B-%Y')));
+            $formattedDateFortitle = trim($fintFormateratDatum);
+            $nextDayLink = [
+                'title' => sprintf('%1$s ›', $formattedDateFortitle),
+                'link' => route("platsDatum", ['plats' => $platsOriginalFromSlug, 'date' => $formattedDate]),
+            ];
+        }
+        $this->dieAfterTryCount();
+        // Inkludera inte datum i canonical url om det är idag vi tittar på.
+        if ($dateOriginalFromArg) {
+            // There was a date included
+            $canonicalLink = route(
+                'platsDatum',
+                [
+                    'plats' => mb_strtolower($platsOriginalFromSlug),
+                    'date' => trim(str::lower($date['date']->formatLocalized('%e-%B-%Y'))),
+                ]
+            );
+        } else {
+            $canonicalLink = route(
+                'platsSingle',
+                [
+                    'plats' => mb_strtolower($platsOriginalFromSlug),
+                ]
+            );
+        }
+
+        $place = Place::where('name', $plats)->first();
+        $this->dieAfterTryCount();
+        // Add breadcrumb.
+        $breadcrumbs = new \Creitive\Breadcrumbs\Breadcrumbs;
+        $breadcrumbs->setDivider('›');
+        $breadcrumbs->addCrumb('Hem', '/');
+        $breadcrumbs->addCrumb('Platser', route("platserOverview"));
+
+        if ($place) {
+            $breadcrumbs->addCrumb($place->lan, route("lanSingle", ['lan' => $place->lan]));
+        }
+        $this->dieAfterTryCount();
+        $breadcrumbs->addCrumb(
+            e($plats), 
+            route(
+                'platsSingle',
+                ['plats' => mb_strtolower($platsOriginalFromSlug)]
+            )
+        );
+
+        if (!$isToday && !empty($fintFormateratDatum)) {
+            $breadcrumbs->addCrumb($fintFormateratDatum);
+        }
+        $this->dieAfterTryCount();
+        // Hämta närmaste polisstation.
+        // https://github.com/thephpleague/geotools
+        $lanPolicestations = null;
+        $relatedLinks = null;
+
+        if ($place) {
+            // Detta fungerar ej på PHP 8.0 pga får varning typ
+            // "deg2rad(): Argument #1 ($num) must be of type float, string given php 8.0".
+            // Aktivera igen när https://github.com/thephpleague/geotools uppdateras
+            $lanPolicestations = $place->getClosestPolicestations();
+        }
+        $this->dieAfterTryCount();
+        if ($foundMatchingLan) {
+            $relatedLinks = \App\Helper::getRelatedLinks($platsWithoutLan, $matchingLanName);
+        } else {
+            $relatedLinks = \App\Helper::getRelatedLinks($plats);
+        }
+        $this->dieAfterTryCount();
+        $data = [
+            'plats' => $plats,
+            'place' => $place,
+            'policeStations' => $lanPolicestations,
+            'relatedLinks' => $relatedLinks,
+            'events' => $events,
+            'eventsByDay' => $eventsByDay,
+            'mostCommonCrimeTypes' => $mostCommonCrimeTypes,
+            'metaDescription' => $metaDescription,
+            "linkRelPrev" => $linkRelPrev,
+            "linkRelNext" => $linkRelNext,
+            "page" => $page,
+            "breadcrumbs" => $breadcrumbs,
+            "introtext" => $introtext,
+            'isToday' => $isToday,
+            'isYesterday' => $isYesterday,
+            'isCurrentYear' => $isCurrentYear,
+            "canonicalLink" => $canonicalLink,
+            'prevDayLink' => $prevDayLink,
+            'nextDayLink' => $nextDayLink,
+            'dateForTitle' => $date['date']->formatLocalized('%e %B %Y'),
+            'mapDistance' => 'near',
+        ];
+
+        return view('single-plats', $data);
+    }
+
     /**
      * Hämta händelser för en plats som inkluderar län.
      * URL är t.ex.
