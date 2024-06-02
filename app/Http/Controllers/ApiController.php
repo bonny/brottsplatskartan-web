@@ -271,6 +271,8 @@ class ApiController extends Controller {
         $eventArray['image'] = $event->getStaticImageSrc(640, 320, 1);
         $eventArray['image_far'] = $event->getStaticImageSrcFar(640, 320, 2);
         $eventArray['content_teaser'] = $event->getParsedContentTeaser();
+        $eventArray["location_string"]  = $event->getLocationString();
+        $eventArray["location_string_2"] = $event->getLocationString(true, true, false);
 
         $json = [
             "data" => $eventArray,
