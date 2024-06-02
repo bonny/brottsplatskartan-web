@@ -63,7 +63,7 @@ class StartController extends Controller
 
         $introtext = null;
         $introtext_key = "introtext-start";
-        $introtext = Str::markdown(\Setting::get($introtext_key));
+        $introtext = Str::markdown(\Setting::get($introtext_key, ''));
 
         $canonicalLink = route('start');
         

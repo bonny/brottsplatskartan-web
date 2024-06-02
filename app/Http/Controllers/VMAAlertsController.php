@@ -333,7 +333,7 @@ Hos Krisinformation och MSB kan du läsa fler vanliga frågor och svar:
         $text = '';
     }
 
-    $text = Str::markdown($text);
+    $text = Str::markdown($text ?? '');
 
     return view(
       'vma-text', 

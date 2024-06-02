@@ -16,7 +16,7 @@ Template för ordlista/dictionary och ett enskild ord
 
         <h1 class="widget__title">{{ $word->word }}</h1>
 
-        {!! \Illuminate\Support\Str::markdown($word->description) !!}
+        {!! \Illuminate\Support\Str::markdown($word->description ?? '') !!}
 
         {{-- Om inbrott så visa lista med typ 3 inbrott och sen länka till sidan om inbrott --}}
         {{-- @if (str_contains(mb_strtolower($word->word), ['inbrott']) || str_contains(mb_strtolower($word->description), ['inbrott']))
