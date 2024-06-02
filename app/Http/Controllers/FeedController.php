@@ -136,7 +136,6 @@ class FeedController extends Controller
 
             // only return first matching place
             break;
-
         }
 
         // Non ok is if types contains "Country" because then we have a really zoomed out location.
@@ -179,9 +178,9 @@ class FeedController extends Controller
         }
 
         return [
-            'error' => false
+            'error' => false,
+            'geocodeUrl' => $apiUrl
         ];
-
     }
 
     public function geocodeItemFallbackVersion($itemID, $fallbackLocation) {

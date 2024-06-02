@@ -99,6 +99,8 @@ class FetchEvents extends Command
             $geocodeResult = $this->feedController->geocodeItem($oneItem->getKey());
             if ($geocodeResult['error']) {
                 $this->error("Error during geocodeItem():\n" . $geocodeResult['error_message']);
+            } else {
+                $this->info("Geocoded using url: " . $geocodeResult['geocodeUrl']);
             }
 
             // $bar->advance();

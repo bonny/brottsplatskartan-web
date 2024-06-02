@@ -32,8 +32,6 @@ class PlatsController extends Controller
 
         $orter = \App\Helper::getOrter();
         $data["orter"] = $orter;
-        // \Debugbar::info('$orter', $orter);
-        // print_r($orter);
 
         $breadcrumbs = new \Creitive\Breadcrumbs\Breadcrumbs;
         $breadcrumbs->setDivider('›');
