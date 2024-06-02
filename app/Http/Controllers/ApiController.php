@@ -83,6 +83,8 @@ class ApiController extends Controller {
                 "description" => $item->description,
                 "content" => $item->parsed_content,
                 "locations" => $item->locations,
+                "location_string" => $item->getLocationString(),
+                "location_string_2" => $item->getLocationString(true, true, false),
                 "lat" => (float) $item->location_lat,
                 "lng" => (float) $item->location_lng,
                 "viewport_northeast_lat" => $item->viewport_northeast_lat,
