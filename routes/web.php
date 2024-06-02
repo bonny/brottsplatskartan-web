@@ -35,10 +35,12 @@ setlocale(LC_ALL, 'sv_SE', 'sv_SE.utf8');
 
 Route::get('/debug/{what}', [DebugController::class, 'debug'])->name('debug');
 
-Route::redirect('/karta/', '/sverigekartan/', 301);
-Route::get('/sverigekartan/{location?}', [FullScreenMapController::class, 'index'])->name(
+Route::redirect('/sverigekartan/', '/karta/', 301);
+
+Route::get('/karta/{location?}', [FullScreenMapController::class, 'index'])->name(
     'sverigekartan'
 );
+
 Route::get('/sverigekartan-iframe/{location?}', [FullScreenMapController::class, 'iframe'])->name(
     'sverigekartanIframe'
 );

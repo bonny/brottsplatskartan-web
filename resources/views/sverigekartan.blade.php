@@ -6,9 +6,7 @@ Template för sverigekartan
 
 @extends('layouts.web')
 
-@section('title',
-    'Sverigekartan – Brottsplatskartans karta med brott och händelser från hela Sverige utmarkerade på
-    karta')
+@section('title', 'Brottskarta – brott och händelser från Polisen utmarkerade på karta')
 @section('canonicalLink', route('sverigekartan'))
 
 @section('content')

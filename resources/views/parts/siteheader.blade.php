@@ -35,7 +35,7 @@
                     <a href="/nara-hitta-plats">Nära</a>
                 </li>
                 <li class="SiteNav__item SiteNav__item--sverigekartan">
-                    <a href="{{ route('sverigekartan', [], false) }}">Sverigekartan</a>
+                    <a href="{{ route('sverigekartan', [], false) }}">Karta</a>
                 </li>
                 <li class="SiteNav__item SiteNav__item--search">
                     <a href="{{ route('adsenseSearch', [], false) }}">Sök</a>
