@@ -64,6 +64,8 @@ class ApiController extends Controller {
 
         $api_app = $request->get('app');
 
+        $json["data"] = [];
+        
         // create array with data is a format more suited for app and web
         /** @var CrimeEvent $item */
         foreach ($events as $item) {
