@@ -43,6 +43,7 @@ class PixelController extends Controller {
         // Ta bort de äldsta när de är för många.
         $searches = \Setting::get($settingsKey, []);
 
+        // Lägg till key med aktuell sökning om den inte redan finns.
         if (!isset($searches[$query]) || !is_array($searches[$query])) {
             $searches[$query] = [
                 'hits' => $results_count,
@@ -51,7 +52,17 @@ class PixelController extends Controller {
         } 
 
         $searches[$query]['count']++;
+
+        // Key "last" innehåller datumet då sökningen senast gjordes.
         $searches[$query]['last'] = Carbon::now()->toIso8601String();
+
+        // För att undvika att settings-fältet blir för stort
+        // så tar vi bort gamla sökningar innan vi sparar.
+        $numDaysBackToKeep = 5;
+        $searches = array_filter($searches, function ($search) use ($numDaysBackToKeep) {
+            $last = Carbon::parse($search['last']);
+            return $last->diffInDays(Carbon::now()) <= $numDaysBackToKeep;
+        });
 
         // Spara setting.
         \Setting::set($settingsKey, $searches);
