@@ -58,7 +58,7 @@ class PixelController extends Controller {
 
         // För att undvika att settings-fältet blir för stort
         // så tar vi bort gamla sökningar innan vi sparar.
-        $numDaysBackToKeep = 5;
+        $numDaysBackToKeep = 3;
         $searches = array_filter($searches, function ($search) use ($numDaysBackToKeep) {
             $last = Carbon::parse($search['last']);
             return $last->diffInDays(Carbon::now()) <= $numDaysBackToKeep;
