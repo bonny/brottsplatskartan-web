@@ -509,6 +509,7 @@
                 height: 70dvh;
                 background-color: antiquewhite;
                 background-image: url('/img/share-img-blur.jpg');
+                background-size: cover;
             }
 
             body.map-is-expanded {
