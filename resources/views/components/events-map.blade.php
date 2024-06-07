@@ -506,7 +506,7 @@
                 display: flex;
                 align-items: center;
                 place-content: center;
-                height: 300px;
+                height: 70dvh;
                 background-color: antiquewhite;
                 background-image: url('/img/share-img-blur.jpg');
             }
@@ -616,9 +616,9 @@
             }
 
             /* .EventsMap-marker-icon--near,
-                    .EventsMap-marker-icon--nearer {
-                        border: 2px solid rgba(255, 255, 255, .5);
-                    } */
+                                    .EventsMap-marker-icon--nearer {
+                                        border: 2px solid rgba(255, 255, 255, .5);
+                                    } */
 
             .EventsMap-marker-content {
                 display: flex;
@@ -827,16 +827,8 @@
 <div class="widget">
     <h2 class="widget__title">Händelsekarta</h2>
     <div class="widget__fullwidth">
-
         <div class="EventsMap__container">
-            {{-- <div class="EventsMap-blocker-expand">
-                <img src="/img/expand_content_24dp_FILL0_wght400_GRAD0_opsz24.svg" alt="Expandera karta">
-            </div> --}}
-
-            {{-- <div class="EventsMap__blocker EventsMap__blocker--active"></div> --}}
-
             <div class="EventsMap">Laddar karta...</div>
         </div>
-
     </div>
 </div>
