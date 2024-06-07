@@ -254,12 +254,18 @@ blockquote {
     text-decoration: none;
     color: inherit;
 }
-
+.SiteTitle__titleName {
+    
+}
 .SiteTitle__titleName,
 .SiteTitle__titleDivider {
     font-weight: bold;
 }
+.SiteTitle__titleDivider {
+    display: none;
+}
 .SiteTitle__titleTagName {
+    font-weight: normal;
 }
 
 /* Site navigation */
