@@ -7,9 +7,8 @@ Template för län-översikt
 
 @extends('layouts.web')
 
-@section('title', 'Välj ditt län | Brott i Sveriges län')
-@section('metaDescription', e('På Brottsplatskartan kan du län för län se på en karta var i Sverige brott sker - direkt
-    från Polisen'))
+@section('title', 'Välj län att visa händelser i')
+@section('metaDescription', e('Välj län för att se polisens händelser i det länet'))
 @section('canonicalLink', '/lan')
 
 @section('metaImage', config('app.url') . '/img/start-share-image.png')
@@ -19,7 +18,7 @@ Template för län-översikt
 @section('content')
 
     <div class="widget">
-        <h1 class="widget__title">Senaste händelserna &amp; brotten i ditt län</h1>
+        <h1 class="widget__title">Senaste händelserna &amp; brotten i Sveriges län</h1>
 
         <p>
             Välj län nedan för att se de senaste brotten
