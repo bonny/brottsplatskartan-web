@@ -253,7 +253,11 @@ eller hot och informera om hur berörda människor omedelbart ska agera
 för att skydda sig. 
 
 Vid VMA avbryter t.ex. Sveriges Radio sändningarna för att snabbt få ut informationen och
-skickar även vidare informationen till bland andra SVT och TV4.
+skickar även vidare informationen till bland andra SVT och TV4. 
+
+På [SVT:s Text-TV](https://texttv.nu/) skriver man när en VMA-situation pågår. På [startsidan 100](https://texttv.nu/100)
+står det att ett VMA är utfärdat och hänvisar för mer information till [Text-TV sidan 599](https://texttv.nu/) där mer information
+om VMA-meddelandet finns att läsa.
 
 **Meddelandet VMA skickas ut i flera olika kanaler:**
 
@@ -262,7 +266,9 @@ skickar även vidare informationen till bland andra SVT och TV4.
 - som notis i Sveriges Radios app SR Play.
 - via utomhusvarning i form av ljudsändare, i folkmun kallat "Hesa Fredrik"
 
-**Det är inte vem som helst som kan skicka ut ett VMA.** Behöriga att begära VMA är bland andra
+**Det är inte vem som helst som kan skicka ut ett VMA.**
+
+Behöriga att begära VMA är bland andra
 
 - räddningsledare för kommunal och statlig räddningstjänst
 - Polisen
