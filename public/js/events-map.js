@@ -191,7 +191,7 @@ function getLayerIcon(layer, map, classToAdd = "", innerText = "") {
 
     // Default zoomed out icons.
     let className = `EventsMap-marker-icon EventsMap-marker-icon--far ${classToAdd}`;
-    let iconSize = [8, 8];
+    let iconSize = [10, 10];
     let html = ``;
 
     if (zoomLevel >= ICON_NEAR_ZOOM_LEVEL) {
