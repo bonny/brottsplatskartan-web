@@ -64,6 +64,11 @@ const crimeTypesToClass = {
     ordningslagen: "unknown",
     sjölagen: "unknown",
     "sjukdom/olycksfall": "unknown",
+    // missing:
+    // - miljöbrott
+    // bad icons:
+    // - våldtäkt
+    // - misshandel
 };
 
 /**
@@ -264,7 +269,7 @@ class EventsMap {
             markers.push(oneMarker);
         });
 
-        console.log("markers", markers);
+        console.log("markers loaded", markers);
 
         const markerClusterOptions = {
             // Small number to create very small clusters since I don't like when they are big.
@@ -303,6 +308,8 @@ class EventsMap {
         // map.on('spiderfied unspiderfied', function() {
         //     console.log('unspiderfied 2');
         // });
+
+        this.controlLoader.hide();
     }
 
     // expandMap() {
@@ -333,6 +340,9 @@ class EventsMap {
 
         window.map = this.map;
         console.log("window.map now available", window.map);
+
+        this.controlLoader = L.control.loader().addTo(this.map);
+        this.controlLoader.show();
 
         this.map.on("load", () => {
             this.loadMarkers();
@@ -442,10 +452,13 @@ class EventsMap {
 
 document.addEventListener("DOMContentLoaded", function () {
     let mapContainers = document.querySelectorAll(".EventsMap");
+
+    if (!mapContainers.length) {
+        return;
+    }
+
     mapContainers.forEach((element) => {
         new EventsMap(element, {
-            // Todo: This used to be blade template, so rewrite this to use data-attributes.
-            // Get size from data-events-map-size
             size: element.getAttribute("data-events-map-size"),
         });
     });
