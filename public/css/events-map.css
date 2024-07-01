@@ -130,10 +130,11 @@ body.map-is-expanded .SiteHeader {
     display: block;
 }
 
-.EventsMap .leaflet-marker-icon,
+/* .EventsMap .leaflet-marker-icon,
 .EventsMap .leaflet-marker-shadow {
-    /* animation: fadein 0.75s; */
+    animation: fadein 0.75s;
 }
+*/
 
 .EventsMap .leaflet-popup {
     max-width: 80vw;

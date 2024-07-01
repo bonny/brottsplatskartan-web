@@ -157,14 +157,14 @@ function setLayerIcon(layer, map, classToAdd = "", innerText = "") {
 function getLayerIcon(layer, map, classToAdd = "", innerText = "") {
     const zoomLevel = map.getZoom();
 
-    let markerType; // normal | cluster | spiderfied
-    if (layer instanceof L.MarkerCluster) {
-        markerType = "cluster";
-    } else if (layer instanceof L.Marker) {
-        markerType = "normal";
-    } else {
-        console.log("Unknown marker type", layer);
-    }
+    // let markerType; // normal | cluster | spiderfied
+    // if (layer instanceof L.MarkerCluster) {
+    //     markerType = "cluster";
+    // } else if (layer instanceof L.Marker) {
+    //     markerType = "normal";
+    // } else {
+    //     console.log("Unknown marker type", layer);
+    // }
     // console.log("markerType", markerType);
 
     // Brottstyp utan mellanslag mellan ord (så max 1 mellanslag efter varandra).
@@ -348,11 +348,14 @@ class EventsMap {
             }
         });
 
+        this.map.on("locateactivate", () => {
+            expandMap(this.map);
+        });
+
         /**
          * Set icons depending on zoom level.
          */
         this.map.on("zoomend", () => {
-            console.log("on zoomend");
             // For each marker, set the icon.
             this.map.eachLayer(function (layer) {
                 // Ensure to act only on markers with crime events data.
@@ -386,14 +389,13 @@ class EventsMap {
                 '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>',
         }).addTo(this.map);
 
-        let x = L.control
+        L.control
             .ExpandButton({
                 position: "bottomright",
             })
             .addTo(this.map);
-        window.expandButtonControl = x;
 
-        L.control
+        window.locateControl = L.control
             .locate({
                 locateOptions: {
                     maxZoom: 11,
