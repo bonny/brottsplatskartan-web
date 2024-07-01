@@ -234,15 +234,31 @@ class EventsMap {
                 L.marker([event.lat, event.lng], {
                     icon: getLayerIcon(null, map, "", ""),
                     crimeEventData: event,
-                }).bindPopup(`
-                    <div class="EventsMap-marker-content">
-                        <a target="_blank" href="${event.permalink}?utm_source=brottsplatskartan&utm_medium=maplink" class="EventsMap-marker-contentText EventsMap-marker-contentLink">
-                            ${event.time_human} • ${event.type}
-                            <strong>${event.headline}</strong>
-                            <!-- <div class="EventsMap-marker-contentLinkIcon">Läs mer →</div> -->
-                        </a>
-                    </div>
-                `);
+                })
+                    .bindTooltip(
+                        `
+                        <div class="EventsMap-markerTooltip">
+                            <img class="EventsMap-markerTooltip-image" src="${event.image}" alt="">
+                            <h1 class="EventsMap-markerTooltip-headline">${event.headline}</h1>
+                            <div class="EventsMap-markerTooltip-text">${event.time_human} • ${event.type}</div>
+                        </div>
+                    `,
+                        { direction: "bottom", permanent: false }
+                    )
+                    // .bindPopup(
+                    //     `
+                    //     <div class="EventsMap-marker-content">
+                    //         <a target="_blank" href="${event.permalink}?utm_source=brottsplatskartan&utm_medium=maplink" class="EventsMap-marker-contentText EventsMap-marker-contentLink">
+                    //             ${event.time_human} • ${event.type}
+                    //             <strong>${event.headline}</strong>
+                    //             <!-- <div class="EventsMap-marker-contentLinkIcon">Läs mer →</div> -->
+                    //         </a>
+                    //     </div>                `
+                    // )
+                    .on("click", function (evt) {
+                        const link = evt.target.options.crimeEventData.permalink + "?utm_source=brottsplatskartan&utm_medium=maplink";
+                        window.open(link, "_blank");
+                    });
 
             markers.push(oneMarker);
         });

@@ -152,10 +152,39 @@ body.map-is-expanded .SiteHeader {
         ease-in-out margin 0.25s;
 }
 
-/* .EventsMap-marker-icon--near,
-                                                                                                                                                        .EventsMap-marker-icon--nearer {
-                                                                                                                                                            border: 2px solid rgba(255, 255, 255, .5);
-                                                                                                                                                        } */
+/* Tooltip, shown on hover */
+/* <div class="EventsMap-markerTooltip">
+<img class="EventsMap-markerTooltip-image" src="${event.image}" alt="">
+<h1 class="class="EventsMap-markerTooltip-headline">${event.headline}</h1>
+<div class="EventsMap-markerTooltip-text">${event.time_human} • ${event.type}</div>
+</div> */
+.EventsMap-markerTooltip {
+    display: flex;
+    flex-direction: column;
+    gap: var(--default-margin-third);
+    width: 225px;
+    max-width: 90vw;
+}
+
+.EventsMap-markerTooltip-image {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 5px;
+}
+
+.EventsMap-markerTooltip-headline {
+    font-size: var(--font-size-small);
+    font-weight: 500;
+    margin: 0;
+    white-space: normal;
+}
+
+.EventsMap-markerTooltip-text {
+    font-size: var(--font-size-small);
+    white-space: normal;
+}
 
 .EventsMap-marker-content {
     display: flex;
