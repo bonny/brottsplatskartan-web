@@ -66,6 +66,8 @@ const crimeTypesToClass = {
     "sjukdom/olycksfall": "unknown",
     // missing:
     // - miljöbrott
+    // - fjällräddning
+    // - hemfridsbrott
     // bad icons:
     // - våldtäkt
     // - misshandel
@@ -148,23 +150,6 @@ L.control.ExpandButton = function (opts) {
     return new L.Control.ExpandButton(opts);
 };
 
-var markerIconFar = L.divIcon({
-    className: "EventsMap-marker-icon EventsMap-marker-icon--far",
-    iconSize: [8, 8],
-});
-
-var markerIconNear = L.divIcon({
-    className: "EventsMap-marker-icon EventsMap-marker-icon--near",
-    iconSize: [25, 25],
-    html: '<span class="EventsMap-marker-icon-inner"></span><span class="EventsMap-marker-icon-innerIcon"></span>',
-});
-
-var markerIconNearer = L.divIcon({
-    className: "EventsMap-marker-icon EventsMap-marker-icon--nearer",
-    iconSize: [50, 50],
-    html: '<span class="EventsMap-marker-icon-inner"></span><span class="EventsMap-marker-icon-innerIcon"></span>',
-});
-
 function setLayerIcon(layer, map, classToAdd = "", innerText = "") {
     layer.setIcon(getLayerIcon(layer, map, classToAdd, innerText));
 }
@@ -180,7 +165,7 @@ function getLayerIcon(layer, map, classToAdd = "", innerText = "") {
     } else {
         console.log("Unknown marker type", layer);
     }
-    console.log("markerType", markerType);
+    // console.log("markerType", markerType);
 
     // Brottstyp utan mellanslag mellan ord (så max 1 mellanslag efter varandra).
     let crimeEventTypeClassForInnerIcon = "";
@@ -197,7 +182,7 @@ function getLayerIcon(layer, map, classToAdd = "", innerText = "") {
     // Default zoomed out icons.
     let className = `EventsMap-marker-icon EventsMap-marker-icon--far ${classToAdd}`;
     let iconSize = [10, 10];
-    let html = ``;
+    let html = '<span class="EventsMap-marker-icon-inner"></span>';
 
     if (zoomLevel >= ICON_NEAR_ZOOM_LEVEL) {
         className = `EventsMap-marker-icon EventsMap-marker-icon--near ${classToAdd}`;
@@ -210,13 +195,6 @@ function getLayerIcon(layer, map, classToAdd = "", innerText = "") {
             html = `<span class="EventsMap-marker-icon-inner"></span><span class="EventsMap-marker-icon-innerIcon ${crimeEventTypeClassForInnerIcon}">${innerText}</span>`;
         }
     }
-
-    // let innerElm = layer._icon.querySelector(
-    //     ".EventsMap-marker-icon-inner"
-    // );
-    // let innerIconElm = layer._icon.querySelector(
-    //     ".EventsMap-marker-icon-innerIcon"
-    // );
 
     return L.divIcon({
         className,
@@ -254,7 +232,7 @@ class EventsMap {
         events.forEach((event) => {
             const oneMarker = //.addTo(this.map)
                 L.marker([event.lat, event.lng], {
-                    icon: markerIconFar,
+                    icon: getLayerIcon(null, map, "", ""),
                     crimeEventData: event,
                 }).bindPopup(`
                     <div class="EventsMap-marker-content">
@@ -374,6 +352,7 @@ class EventsMap {
          * Set icons depending on zoom level.
          */
         this.map.on("zoomend", () => {
+            console.log("on zoomend");
             // For each marker, set the icon.
             this.map.eachLayer(function (layer) {
                 // Ensure to act only on markers with crime events data.
@@ -381,36 +360,23 @@ class EventsMap {
                 // Todo: Code in here should be in a function.
                 if (typeof layer.getAllChildMarkers === "function") {
                     layer.getAllChildMarkers().forEach((childMarker) => {
-                        console.log("childMarker", childMarker);
+                        // console.log("childMarker", childMarker);
                         setLayerIcon(childMarker, map, "", "");
                     });
                     return;
                 }
 
                 if (!layer.options.crimeEventData) {
-                    console.log(
-                        "no crimeEventData for layer",
-                        layer,
-                        typeof layer.getAllChildMarkers
-                    );
+                    // console.log(
+                    //     "no crimeEventData for layer",
+                    //     layer,
+                    //     typeof layer.getAllChildMarkers
+                    // );
                     return;
                 }
 
-                // Todo: the getIconForZoomLevel should also add the crime event type to the icon.
-                // layer.setIcon(getIconForZoomLevel(zoomLevel, "", ""));
                 setLayerIcon(layer, map, "", "");
             });
-            // } else {
-            //     // Sätt mindre ikon om man är utzoomad.
-            //     this.map.eachLayer(function (layer) {
-            //         if (
-            //             layer instanceof L.Marker &&
-            //             layer._icon.classList.contains("EventsMap-marker-icon")
-            //         ) {
-            //             setLayerIcon(layer, map, "", "");
-            //         }
-            //     });
-            // }
         });
 
         this.map.setView(this.location.default, this.zoom.default);
