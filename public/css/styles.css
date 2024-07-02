@@ -256,7 +256,6 @@ blockquote {
     color: inherit;
 }
 .SiteTitle__titleName {
-    
 }
 .SiteTitle__titleName,
 .SiteTitle__titleDivider {
@@ -308,6 +307,10 @@ blockquote {
     /* width: 25%; */
     white-space: nowrap;
     flex: 1 1 100%;
+}
+
+.SiteNav__item.is-current {
+    font-weight: bold;
 }
 
 .SiteNav__item a {
