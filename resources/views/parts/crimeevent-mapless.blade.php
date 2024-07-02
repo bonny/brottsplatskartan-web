@@ -22,7 +22,7 @@
                   >
                     {{ $event->getParsedDateFormattedForHumans() }}
                 </time>
-                &middot; {{ $event->getLocationString($includePrioLocations = true, $includeParsedTitleLocation = true, $inclueAdministrativeAreaLevel1Locations = false) }}
+                &middot; {{ $event->getLocationString($includePrioLocations = true, $includeParsedTitleLocation = true, $includeAdministrativeAreaLevel1Locations = false) }}
             </span>
           </p>
     </div>

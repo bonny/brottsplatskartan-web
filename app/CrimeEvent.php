@@ -452,7 +452,7 @@ class CrimeEvent extends Model implements Feedable {
     public function getLocationString(
         $includePrioLocations = true,
         $includeParsedTitleLocation = true,
-        $inclueAdministrativeAreaLevel1Locations = true
+        $includeAdministrativeAreaLevel1Locations = true
     ) {
         $locations = [];
 
@@ -472,7 +472,7 @@ class CrimeEvent extends Model implements Feedable {
             }
         }
 
-        if ($inclueAdministrativeAreaLevel1Locations) {
+        if ($includeAdministrativeAreaLevel1Locations) {
             if (
                 $this->administrative_area_level_1 &&
                 $this->administrative_area_level_1 !==
