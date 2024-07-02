@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ApiController;
+use App\Http\Controllers\ApiEventsMapController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,4 +26,4 @@ Route::get('/eventsNearby', [ApiController::class, 'eventsNearby']);
 Route::get('/events', [ApiController::class, 'events']);
 Route::get('/eventsInMedia', [ApiController::class, 'eventsInMedia']);
 Route::get('/mostViewedRecently', [ApiController::class, 'mostViewedRecently']);
-Route::get('/eventsMap', [ApiController::class, 'eventsMap']);
+Route::get('/eventsMap', [ApiEventsMapController::class, 'index']);
