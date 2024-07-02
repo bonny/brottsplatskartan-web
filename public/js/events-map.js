@@ -230,31 +230,26 @@ class EventsMap {
         const markers = [];
 
         events.forEach((event) => {
-            const oneMarker = //.addTo(this.map)
-                L.marker([event.lat, event.lng], {
-                    icon: getLayerIcon(null, map, "", ""),
-                    crimeEventData: event,
-                }).bindPopup(
-                    `
-                        <div class="EventsMap-markerTooltip">
-                            <img class="EventsMap-markerTooltip-image" src="${event.image}" alt="">
-                            <div class="EventsMap-markerTooltip-innerContent">
-                                <div class="EventsMap-markerTooltip-locations">${event.locations}</div>
-                                <h1 class="EventsMap-markerTooltip-headline">
-                                    <a class="EventsMap-markerTooltip-link" href="${event.permalink}" target="_blank">
-                                        ${event.headline}
-                                    </a>
-                                </h1>
-                                <div class="EventsMap-markerTooltip-text">${event.time_human} • ${event.type}</div>
-                            </div>
+            const oneMarker = L.marker([event.lat, event.lng], {
+                icon: getLayerIcon(null, map, "", ""),
+                crimeEventData: event,
+            }).bindPopup(
+                `
+                    <div class="EventsMap-markerTooltip">
+                        <img class="EventsMap-markerTooltip-image" src="${event.image}" alt="">
+                        <div class="EventsMap-markerTooltip-innerContent">
+                            <div class="EventsMap-markerTooltip-locations">${event.locations}</div>
+                            <h1 class="EventsMap-markerTooltip-headline">
+                                <a class="EventsMap-markerTooltip-link" href="${event.permalink}?utm_source=brottsplatskartan&utm_medium=maplink" target="_blank">
+                                    ${event.headline}
+                                </a>
+                            </h1>
+                            <div class="EventsMap-markerTooltip-text">${event.time_human} • ${event.type}</div>
                         </div>
-                    `,
-                    { direction: "bottom", permanent: false }
-                );
-            // .on("click", function (evt) {
-            //     const link = evt.target.options.crimeEventData.permalink + "?utm_source=brottsplatskartan&utm_medium=maplink";
-            //     window.open(link, "_blank");
-            // });
+                    </div>
+                `,
+                { direction: "bottom", permanent: false }
+            );
 
             markers.push(oneMarker);
         });
@@ -360,8 +355,16 @@ class EventsMap {
             }
         });
 
+        /**
+         * Expand map when locate is activated.
+         */
         this.map.on("locateactivate", () => {
-            expandMap(this.map);
+            let isExpanded = map
+                .getContainer()
+                .classList.contains("is-expanded");
+            if (!isExpanded) {
+                expandMap(this.map);
+            }
         });
 
         /**
@@ -401,11 +404,16 @@ class EventsMap {
                 '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>',
         }).addTo(this.map);
 
-        L.control
-            .ExpandButton({
-                position: "bottomright",
-            })
-            .addTo(this.map);
+        /**
+         * Add expand button, but not if fullscreen, because then it's already expanded.
+         */
+        if (this.options.size !== "fullscreen") {
+            L.control
+                .ExpandButton({
+                    position: "bottomright",
+                })
+                .addTo(this.map);
+        }
 
         window.locateControl = L.control
             .locate({
