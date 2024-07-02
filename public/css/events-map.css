@@ -163,7 +163,8 @@ body.map-is-expanded .SiteHeader {
     flex-direction: column;
     gap: var(--default-margin-third);
     width: 225px;
-    max-width: 90vw;
+    /* Remove leaflet default margins */
+    margin: -14px -26px -13px -21px;
 }
 
 .EventsMap-markerTooltip-image {
@@ -174,9 +175,32 @@ body.map-is-expanded .SiteHeader {
     border-radius: 5px;
 }
 
+.EventsMap-markerTooltip-innerContent {
+    display: flex;
+    flex-direction: column;
+    gap: var(--default-margin-third);
+    margin: var(--default-margin-half);
+}
+
+.EventsMap-markerTooltip-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+}
+
 .EventsMap-markerTooltip-headline {
     font-size: var(--font-size-small);
     font-weight: 500;
+    margin: 0;
+    white-space: normal;
+}
+
+.EventsMap-markerTooltip-locations {
+    font-size: var(--font-size-small);
+    line-height: 1;
     margin: 0;
     white-space: normal;
 }
@@ -186,7 +210,7 @@ body.map-is-expanded .SiteHeader {
     white-space: normal;
 }
 
-.EventsMap-marker-content {
+/* .EventsMap-marker-content {
     display: flex;
     flex-direction: row;
     gap: var(--default-margin);
@@ -206,7 +230,7 @@ body.map-is-expanded .SiteHeader {
 
 .EventsMap-marker-contentText a {
     display: block;
-}
+} */
 
 .EventsMap a {
     color: inherit;

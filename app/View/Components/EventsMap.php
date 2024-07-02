@@ -23,7 +23,6 @@ class EventsMap extends Component
      */
     public function render(): View|Closure|string
     {
-        //dd($this->mapSize);
         return view('components.events-map');
     }
 }

@@ -5,8 +5,7 @@ namespace App\Http\Controllers;
 use App\CrimeEvent;
 use Cache;
 
-class ApiEventsMapController extends Controller
-{
+class ApiEventsMapController extends Controller {
     /**
      * Hämta data för eventsMap-komponenten.
      */
@@ -14,7 +13,7 @@ class ApiEventsMapController extends Controller
         $cacheSeconds = 5 * 60;
         $daysBack = 3;
         $cacheKey = __METHOD__ . "_{$daysBack}";
-        
+
         $events = Cache::remember($cacheKey, $cacheSeconds, function () use ($daysBack) {
             return CrimeEvent::orderBy("created_at", "desc")
                 ->where('created_at', '>=', now()->subDays($daysBack))
@@ -26,7 +25,11 @@ class ApiEventsMapController extends Controller
             "data" => [],
         ];
 
-        // create array with data is a format more suited for app and web
+        /** 
+         * Create array with data is a format more suited for app and web
+         * @var array<CrimeEvent> $events
+         * @var CrimeEvent $item
+         */
         foreach ($events as $item) {
             $event = [
                 "id" => $item->id,
@@ -34,6 +37,7 @@ class ApiEventsMapController extends Controller
                 'time_human' => $item->getParsedDateFormattedForHumans(),
                 'headline' => $item->getHeadline(),
                 "type" => $item->parsed_title,
+                "locations" => $item->getLocationString(includeAdministrativeAreaLevel1Locations: false),
                 "lat" => (float) $item->location_lat,
                 "lng" => (float) $item->location_lng,
                 "image" => $item->getStaticImageSrc(320, 320, 2),
