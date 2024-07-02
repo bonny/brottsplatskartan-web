@@ -11,10 +11,8 @@ use Illuminate\Support\Str;
 use Illuminate\Contracts\View;
 use \Illuminate\Contracts\View\Factory as ViewFactory;
 
-class VMAAlertsController extends Controller
-{
-  function exampleAlerts(Request $request)
-  {
+class VMAAlertsController extends Controller {
+  function exampleAlerts(Request $request) {
 
     $json_data = '
         {
@@ -146,13 +144,12 @@ class VMAAlertsController extends Controller
    * 
    * @return void 
    */
-  public static function import()
-  {
+  public static function import() {
     $response = Http::get(config('app.vma_alerts_url'));
     $json = $response->json();
     $alerts = collect($json['alerts']);
     $importedAlerts = collect();
-    
+
     $alerts->each(function ($alert) use ($importedAlerts) {
       $alertCollection = collect($alert);
 
@@ -188,8 +185,7 @@ class VMAAlertsController extends Controller
     return ['importedAlerts' => $importedAlerts];
   }
 
-  public function index()
-  {
+  public function index() {
     $alerts = \App\Helper::getVMAAlerts();
     $currentAlerts = \App\Helper::getCurrentVMAAlerts();
 
@@ -199,17 +195,16 @@ class VMAAlertsController extends Controller
     $breadcrumbs->addCrumb('VMA', route("vma-overview"));
 
     return view(
-      'vma-overview', 
+      'vma-overview',
       [
-        'alerts' => $alerts, 
+        'alerts' => $alerts,
         'currentAlerts' => $currentAlerts,
         'breadcrumbs' => $breadcrumbs,
       ]
     );
   }
 
-  public function single(Request $request, string $slug)
-  {
+  public function single(Request $request, string $slug) {
     $id = Str::of($slug)->explode('-')->last();
     $alert = VMAAlert::findOrFail($id);
     $title = $alert->getShortDescription() . " " . $alert->getDescriptionSecondLine();
@@ -218,7 +213,7 @@ class VMAAlertsController extends Controller
     $breadcrumbs->setDivider('›');
     $breadcrumbs->addCrumb('Hem', '/');
     $breadcrumbs->addCrumb('VMA', route("vma-overview"));
-    $breadcrumbs->addCrumb( $alert->getHumanSentDateTime() . ': ' . $alert->getDescriptionSecondLine() );
+    $breadcrumbs->addCrumb($alert->getHumanSentDateTime() . ': ' . $alert->getDescriptionSecondLine());
 
     return view(
       'vma-single',
@@ -231,8 +226,7 @@ class VMAAlertsController extends Controller
     );
   }
 
-  public function text(Request $request, string $slug)
-  {
+  public function text(Request $request, string $slug) {
 
     $breadcrumbs = new \Creitive\Breadcrumbs\Breadcrumbs();
     $breadcrumbs->setDivider('›');
@@ -314,6 +308,14 @@ VMA är en förkortning av _Viktigt meddelande till allmänheten_.
 - Regeringen med regeringskansliet. Alla bevakningsansvariga myndigheter. Kommuner och landsting.
 - Försvarsmakten  
 
+## Var kan jag läsa eller höra mer om pågående viktiga meddelanden?
+
+Det finns flera platser där du kan läsa eller lyssna på mer information om ett pågående VMA:
+
+- På [Text TV sid 599](https://texttv.nu/599).
+- På https://brottsplatskartan.se/vma/
+- På https://sverigesradio.se/
+
 ## När testas VMA?
 
 Signalerna **Viktigt Meddelande** och **Faran över** 
@@ -342,10 +344,10 @@ Hos Krisinformation och MSB kan du läsa fler vanliga frågor och svar:
     $text = Str::markdown($text ?? '');
 
     return view(
-      'vma-text', 
+      'vma-text',
       [
-        'slug' => $slug, 
-        'title' => $title, 
+        'slug' => $slug,
+        'title' => $title,
         'text' => $text,
         'breadcrumbs' => $breadcrumbs,
       ]
