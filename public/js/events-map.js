@@ -210,11 +210,11 @@ class EventsMap {
     expandBtnElm;
     zoom = {
         default: 6,
-        fullscreen: 7,
+        fullscreen: 5.5,
     };
     location = {
         default: [59, 15],
-        fullscreen: [60, 15],
+        fullscreen: [61, 15],
     };
 
     constructor(mapContainer, options = {}) {
