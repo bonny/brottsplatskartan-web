@@ -336,6 +336,7 @@ body.map-is-expanded .SiteHeader {
 /* narcotics by Natthapong Mueangmoon from <a href="https://thenounproject.com/browse/icons/term/narcotics/" target="_blank" title="narcotics Icons">Noun Project</a> (CC BY 3.0) */
 .EventsMap-marker-icon-innerIcon--narcotics {
     background-image: url("/img/noun-narcotics-5895354.svg");
+    filter: invert(1);
 }
 
 /* Forbidden Sign by Andy Horvath from <a href="https://thenounproject.com/browse/icons/term/forbidden-sign/" target="_blank" title="Forbidden Sign Icons">Noun Project</a> (CC BY 3.0) */
