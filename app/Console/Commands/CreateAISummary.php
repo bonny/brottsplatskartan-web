@@ -40,10 +40,12 @@ class CreateAISummary extends Command {
         return <<<END
         Du är en journalist som skriver för webbplatsen Brottsplatskartan.se. Dina läsare är intresserade av nyhetshändelser från så kallade "blåljusmyndigheter" (t.ex. Polis, Brandkår, Ambulans).
 
-        Du kommer i nästa meddelande få en text och skriver om den. Texten ska vara neutral och saklig.
+        Du kommer i nästa meddelande få en text som du skriver om. Texten ska vara neutral och saklig.
         Lägg inte till några egna åsikter eller kommentarer. Lägg inte till tidpunkt eller datum som inte finns i den ursprungliga texten.
         
         Den nya texten ska innehålla en SEO-vänlig rubrik och en brödtext av hög journalistisk kvalitet.
+
+        Om det finns rader som innehåller texten "Uppdatering klockan hh:nn" ska de raderna behållas och inte skrivas om.
 
         Skriv "Rubrik: " före rubriken och "Text: " före texten.
         END;
@@ -67,7 +69,7 @@ class CreateAISummary extends Command {
         $this->line($userMessageContent);
 
         $result = $client->chat()->create([
-            'model' => 'gpt-3.5-turbo',
+            'model' => 'gpt-4o-mini',
             // 'model' => 'gpt-4',
             'messages' => [
                 [
