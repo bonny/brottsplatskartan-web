@@ -1,2 +1,11 @@
 User-agent: *
 Disallow: /pixel?
+
+User-agent: ClaudeBot
+Disallow: /
+
+User-agent: GPTBot
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
