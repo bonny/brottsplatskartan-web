@@ -379,7 +379,13 @@ class FeedController extends Controller
         ];
 
         /** @var SimplePie\SimplePie */
-        $feed = \Feeds::make($this->RssURL, 0, false, $options);
+        $feed = \Feeds::make(
+            $this->RssURL, 
+            0, // Limit
+            true, // forceFeed
+            $options
+        );
+        
         /*
                  if (isset($options) && is_array($options)) {
             if (isset($options['curl.options']) && is_array($options['curl.options'])) {
