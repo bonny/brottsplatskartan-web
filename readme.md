@@ -8,6 +8,10 @@ En sajt som visar [Polisens händelser](https://brottsplatskartan.se) lite finar
 
 `./artisan serve`
 
+## Uppdatera composer-paket
+
+`composer update <paketnamn> --ignore-platform-req=ext-redis`
+
 ## Exempel
 
 Några exempel på sidor som sajten har. Både län och enskilda platser (gator, städer, osv.) finns.
