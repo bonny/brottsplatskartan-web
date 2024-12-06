@@ -4,6 +4,10 @@
 
 En sajt som visar [Polisens händelser](https://brottsplatskartan.se) lite finare och bättre. Fokus på karta.
 
+## Lokal utveckling
+
+`./artisan serve`
+
 ## Exempel
 
 Några exempel på sidor som sajten har. Både län och enskilda platser (gator, städer, osv.) finns.
