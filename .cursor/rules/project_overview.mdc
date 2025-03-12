@@ -16,7 +16,7 @@ Brottsplatskartan is a web application that displays crime events from the Swedi
 - Provides filtering for specific types of crimes (e.g., burglaries)
 - Integrates news from texttv.nu (a sister site)
 - Fetches data from the Swedish Police's official RSS feeds
-- Public fronting language is Swedish. 
+- Public fronting language is Swedish.
 - Uses Swedish for GIT commit messages.
 
 ## Technology Stack
@@ -31,10 +31,8 @@ Brottsplatskartan is a web application that displays crime events from the Swedi
 
 ### Frontend
 
-- **Framework**: Vue.js 2.6
-- **CSS Framework**: Bootstrap 5
-- **Build Tool**: Laravel Mix (based on webpack)
-- **Map Visualization**: OpenStreetMap (inferred from directory structure)
+- ...
+-
 
 ### DevOps
 
@@ -47,7 +45,6 @@ Brottsplatskartan is a web application that displays crime events from the Swedi
 - `app/Helper.php`: Utility functions
 - `routes/web.php`: Main application routes
 - `resources/views/`: Blade templates
-- `resources/js/`: Vue components and JavaScript code
 - `resources/sass/`: SCSS stylesheets
 
 ## Development

@@ -1,14 +1,21 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
 # Routes and Endpoints
 
 This rule documents the key routes and endpoints in Brottsplatskartan.
 
 ## Main Route Files
+
 - `routes/web.php`: Contains all web-accessible routes
 - `routes/api.php`: Contains API endpoints
 
 ## Key Web Routes (Inferred)
 
 ### Home and Main Pages
+
 - `/`: Home page with recent events and map
 - `/senaste-handelserna`: Latest events
 - `/lan/{county}`: Events filtered by county
@@ -16,17 +23,20 @@ This rule documents the key routes and endpoints in Brottsplatskartan.
 - `/inbrott/senaste-inbrotten`: Recent burglary events
 
 ### Content Pages
+
 - `/om`: About page
 - `/blogg`: Blog listing
 - `/blogg/{slug}`: Individual blog post
 
 ### Map Views
+
 - `/karta`: Full map view
 - `/karta/{location}`: Map focused on specific location
 
 ## API Endpoints (Inferred)
 
 The application likely provides API endpoints for:
+
 - Fetching crime events
 - Geocoding locations
 - Searching for places
@@ -35,6 +45,7 @@ The application likely provides API endpoints for:
 ## Route Patterns
 
 The application follows Laravel routing conventions:
+
 - Resource controllers for CRUD operations
 - Named routes for easier reference in views
 - Route parameters for dynamic content
@@ -42,9 +53,7 @@ The application follows Laravel routing conventions:
 ## Authentication
 
 The application may have authentication for:
+
 - Admin area
 - API access
-- User accounts (if applicable)
 
-## Note
-This is an inferred structure based on the project files and common Laravel patterns. The actual routes may vary. 

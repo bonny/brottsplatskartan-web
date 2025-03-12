@@ -1,62 +1,34 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
 # Frontend Architecture
 
 This rule documents the frontend architecture of Brottsplatskartan.
 
-## Technology Stack
-- **Framework**: Vue.js 2.6
-- **CSS Framework**: Bootstrap 5
-- **Build Tool**: Laravel Mix (webpack)
-- **Template Engine**: Blade (Laravel)
-
-## Directory Structure
-- `resources/js/`: JavaScript and Vue components
-- `resources/sass/`: SCSS stylesheets
-- `resources/views/`: Blade templates
-- `resources/assets/`: Static assets
-- `public/`: Compiled assets and entry points
-
-## Key Components (Inferred)
-
 ### Map Components
+
 - Interactive map using OpenStreetMap
 - Markers for crime events
 - Filtering and clustering capabilities
 - Geolocation features
 
 ### UI Components
+
 - Navigation and header
 - Event listings and cards
 - Filters and search interfaces
 - County and place selectors
 
-## Asset Compilation
-
-The project uses Laravel Mix for asset compilation:
-- Defined in `webpack.mix.js`
-- Compiles SCSS to CSS
-- Bundles JavaScript modules
-- Processes Vue components
-- Optimizes assets for production
-
 ## Responsive Design
 
-The application likely implements responsive design using:
-- Bootstrap's grid system
 - Media queries for different device sizes
-- Flexible map components
-
-## JavaScript Libraries (Inferred)
-
-Based on the project structure, these libraries are likely used:
-- Axios for HTTP requests
-- Lodash for utility functions
-- Mapping libraries (Leaflet or similar)
-- Date/time manipulation libraries
 
 ## Blade Templates
 
 The application uses Laravel's Blade templating with:
+
 - Layout templates and partials
 - Component-based structure
-- Integration with Vue components
-- Dynamic content rendering 
+- Dynamic content rendering
