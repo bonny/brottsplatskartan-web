@@ -1,0 +1,47 @@
+# Data Models
+
+This rule documents the key data models in Brottsplatskartan and their relationships.
+
+## Core Models
+
+### CrimeEvent
+The central model representing a police event/incident.
+- Located at: `app/CrimeEvent.php`
+- Contains information about crime events including location, type, description, and timestamps
+- Handles geocoding and categorization of police events
+
+### Place
+Represents a geographic location (city, street, etc.).
+- Located at: `app/Place.php`
+- Used for mapping and filtering events by location
+
+### Newsarticle
+Represents news content, likely from the texttv.nu integration.
+- Located at: `app/Newsarticle.php`
+- Contains news article data including title, content, and publication date
+
+### Blog
+Represents blog posts on the site.
+- Located at: `app/Blog.php`
+- Contains blog content and metadata
+
+## Helper Classes
+
+### Dictionary
+- Located at: `app/Dictionary.php`
+- Likely handles translation and categorization of police event descriptions
+
+### Helper
+- Located at: `app/Helper.php`
+- Contains utility functions used throughout the application
+
+### RelatedLinks
+- Located at: `app/RelatedLinks.php`
+- Manages related content links between different parts of the application
+
+## Data Flow
+
+1. Police event data is fetched from the Swedish Police RSS feeds
+2. Data is processed, categorized, and geocoded
+3. Events are stored in the database
+4. The application serves these events to users through various views and filters 
