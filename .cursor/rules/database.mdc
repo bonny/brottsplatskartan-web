@@ -1,0 +1,270 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Database Structure
+
+## How Crime Events Are Processed
+
+When a crime event is imported and displayed in the system, it flows through several tables that work together:
+
+1. Initial Import (`crime_events` table):
+
+   - A new crime event is first stored in the `crime_events` table with basic data (title, description, permalink)
+   - The system generates an MD5 hash to prevent duplicates
+   - Raw data includes publication date and ISO8601 formatted date
+
+2. Location Processing:
+
+   - The system parses location information from both title and content
+   - Extracted coordinates (parsed_lat, parsed_lng) are stored
+   - Administrative areas (län/county, municipality) are identified and stored
+   - Location geometry type and viewport are saved for map display
+
+3. Multiple Locations (`locations` table):
+
+   - A single crime event can have multiple associated locations
+   - Each location is stored in the `locations` table with a priority
+   - Links back to crime_events via crime_event_id
+   - Useful for events that span multiple areas or have unclear locations
+
+4. Place Matching (`places` table):
+
+   - Extracted locations are matched against known places
+   - Places table serves as a geographic reference with verified coordinates
+   - Includes län (county) information for regional grouping
+   - Helps standardize location names and coordinates
+
+5. Related Content:
+   - News articles (`newsarticles` table) are linked to provide additional context
+   - Related links (`related_links` table) provide place-specific resources
+   - Both can be soft-deleted without losing historical data
+
+Output Generation:
+
+- When displaying a crime event, the system:
+  1. Fetches the core event data from `crime_events`
+  2. Retrieves all associated locations from `locations`
+  3. Matches locations with standardized `places`
+  4. Gathers related news articles from `newsarticles`
+  5. Collects relevant place-specific links from `related_links`
+  6. Combines all this information into a comprehensive view
+
+This structure allows the system to handle complex scenarios like:
+
+- Events with multiple locations
+- Ambiguous location descriptions
+- Regional and county-level aggregation
+- Related news and resources by location
+- Historical tracking of changes through timestamps
+
+The application uses a MySQL database with the following tables and their structures:
+
+## Main Tables
+
+### 1. crime_events
+
+The core table storing crime incidents
+
+| Column                      | Type          | Null | Key | Default | Extra             |
+| --------------------------- | ------------- | ---- | --- | ------- | ----------------- |
+| id                          | int           | NO   | PRI | NULL    | auto_increment    |
+| title                       | varchar(255)  | NO   |     | NULL    |                   |
+| description                 | text          | NO   |     | NULL    |                   |
+| permalink                   | varchar(255)  | NO   |     | NULL    |                   |
+| pubdate                     | varchar(255)  | NO   |     | NULL    |                   |
+| pubdate_iso8601             | varchar(255)  | NO   |     | NULL    |                   |
+| md5                         | varchar(255)  | NO   | MUL | NULL    |                   |
+| parsed_date                 | datetime      | YES  |     | NULL    |                   |
+| parsed_title_location       | text          | YES  |     | NULL    |                   |
+| parsed_content_location     | text          | YES  |     | NULL    |                   |
+| parsed_content              | text          | YES  |     | NULL    |                   |
+| parsed_lng                  | decimal(10,7) | YES  |     | NULL    |                   |
+| parsed_lat                  | decimal(10,7) | YES  |     | NULL    |                   |
+| parsed_title                | text          | YES  |     | NULL    |                   |
+| parsed_teaser               | text          | YES  |     | NULL    |                   |
+| administrative_area_level_1 | varchar(255)  | YES  |     | NULL    |                   |
+| administrative_area_level_2 | varchar(255)  | YES  |     | NULL    |                   |
+| location_geometry_type      | varchar(255)  | YES  |     | NULL    |                   |
+| location_geometry_viewport  | varchar(255)  | YES  |     | NULL    |                   |
+| tweeted                     | tinyint(1)    | YES  |     | 0       |                   |
+| date_created_at             | date          | YES  | MUL | NULL    | VIRTUAL GENERATED |
+| created_at                  | timestamp     | YES  |     | NULL    |                   |
+| updated_at                  | timestamp     | YES  |     | NULL    |                   |
+
+### 2. locations
+
+Stores locations associated with crime events
+
+| Column         | Type         | Null | Key | Default | Extra          |
+| -------------- | ------------ | ---- | --- | ------- | -------------- |
+| id             | int          | NO   | PRI | NULL    | auto_increment |
+| name           | varchar(255) | YES  |     | NULL    |                |
+| prio           | int          | YES  |     | NULL    |                |
+| crime_event_id | int          | NO   | MUL | NULL    |                |
+| created_at     | timestamp    | YES  |     | NULL    |                |
+| updated_at     | timestamp    | YES  |     | NULL    |                |
+
+### 3. newsarticles
+
+Related news articles for crime events
+
+| Column         | Type         | Null | Key | Default | Extra          |
+| -------------- | ------------ | ---- | --- | ------- | -------------- |
+| id             | int          | NO   | PRI | NULL    | auto_increment |
+| crime_event_id | int          | NO   | MUL | NULL    |                |
+| title          | varchar(255) | NO   |     | NULL    |                |
+| shortdesc      | text         | NO   |     | NULL    |                |
+| url            | varchar(255) | NO   |     | NULL    |                |
+| deleted_at     | timestamp    | YES  |     | NULL    |                |
+| created_at     | timestamp    | YES  |     | NULL    |                |
+| updated_at     | timestamp    | YES  |     | NULL    |                |
+
+### 4. crime_views
+
+Tracks views/visits to crime events
+
+| Column         | Type      | Null | Key | Default | Extra          |
+| -------------- | --------- | ---- | --- | ------- | -------------- |
+| id             | int       | NO   | PRI | NULL    | auto_increment |
+| crime_event_id | int       | NO   | MUL | NULL    |                |
+| created_at     | timestamp | YES  |     | NULL    |                |
+| updated_at     | timestamp | YES  |     | NULL    |                |
+
+### 5. vma_alerts
+
+Stores VMA (Important Public Announcements) alerts
+
+| Column           | Type         | Null | Key | Default | Extra          |
+| ---------------- | ------------ | ---- | --- | ------- | -------------- |
+| id               | bigint       | NO   | PRI | NULL    | auto_increment |
+| identifier       | varchar(255) | NO   |     | NULL    |                |
+| sent             | datetime     | YES  |     | NULL    |                |
+| status           | varchar(255) | YES  |     | NULL    |                |
+| msgType          | varchar(255) | YES  |     | NULL    |                |
+| references       | varchar(255) | YES  |     | NULL    |                |
+| incidents        | varchar(255) | YES  |     | NULL    |                |
+| original_message | json         | YES  |     | NULL    |                |
+| created_at       | timestamp    | YES  |     | NULL    |                |
+| updated_at       | timestamp    | YES  |     | NULL    |                |
+
+### 6. places
+
+Geographic location reference table
+
+| Column     | Type          | Null | Key | Default | Extra          |
+| ---------- | ------------- | ---- | --- | ------- | -------------- |
+| id         | int           | NO   | PRI | NULL    | auto_increment |
+| name       | varchar(100)  | NO   | UNI | NULL    |                |
+| lan        | varchar(100)  | YES  | UNI | NULL    |                |
+| lat        | decimal(10,7) | YES  |     | NULL    |                |
+| lng        | decimal(10,7) | YES  |     | NULL    |                |
+| created_at | timestamp     | YES  |     | NULL    |                |
+| updated_at | timestamp     | YES  |     | NULL    |                |
+
+### 7. related_links
+
+Stores related links for places
+
+| Column     | Type         | Null | Key | Default           | Extra          |
+| ---------- | ------------ | ---- | --- | ----------------- | -------------- |
+| id         | int          | NO   | PRI | NULL              | auto_increment |
+| place      | varchar(100) | YES  | MUL | NULL              |                |
+| lan        | varchar(100) | YES  | MUL | NULL              |                |
+| title      | varchar(255) | YES  |     | NULL              |                |
+| desc       | text         | YES  |     | NULL              |                |
+| url        | varchar(255) | YES  |     | NULL              |                |
+| prio       | int          | YES  |     | 0                 |                |
+| deleted_at | timestamp    | YES  |     | NULL              |                |
+| created_at | timestamp    | YES  |     | CURRENT_TIMESTAMP |                |
+| updated_at | timestamp    | YES  |     | CURRENT_TIMESTAMP |                |
+
+### 8. blog
+
+Simple blog post storage
+
+| Column     | Type         | Null | Key | Default | Extra          |
+| ---------- | ------------ | ---- | --- | ------- | -------------- |
+| id         | int          | NO   | PRI | NULL    | auto_increment |
+| slug       | varchar(280) | NO   |     | NULL    |                |
+| title      | varchar(280) | NO   |     | NULL    |                |
+| content    | longtext     | NO   |     | NULL    |                |
+| created_at | timestamp    | YES  |     | NULL    |                |
+| updated_at | timestamp    | YES  |     | NULL    |                |
+
+## Supporting Tables
+
+### users
+
+Standard Laravel user authentication
+
+| Column         | Type         | Null | Key | Default | Extra          |
+| -------------- | ------------ | ---- | --- | ------- | -------------- |
+| id             | int          | NO   | PRI | NULL    | auto_increment |
+| name           | varchar(255) | NO   |     | NULL    |                |
+| email          | varchar(255) | NO   | UNI | NULL    |                |
+| password       | varchar(255) | NO   |     | NULL    |                |
+| remember_token | varchar(100) | YES  |     | NULL    |                |
+| created_at     | timestamp    | YES  |     | NULL    |                |
+| updated_at     | timestamp    | YES  |     | NULL    |                |
+
+### password_resets
+
+Password reset tokens
+
+| Column     | Type         | Null | Key | Default | Extra |
+| ---------- | ------------ | ---- | --- | ------- | ----- |
+| email      | varchar(255) | NO   | MUL | NULL    |       |
+| token      | varchar(255) | NO   |     | NULL    |       |
+| created_at | timestamp    | YES  |     | NULL    |       |
+
+### settings
+
+Application settings key-value store
+
+| Column | Type         | Null | Key | Default | Extra |
+| ------ | ------------ | ---- | --- | ------- | ----- |
+| key    | varchar(255) | NO   |     | NULL    |       |
+| value  | varchar(255) | YES  |     | NULL    |       |
+| locale | varchar(255) | YES  |     | NULL    |       |
+
+### cache
+
+Laravel's cache table
+
+| Column     | Type         | Null | Key | Default | Extra |
+| ---------- | ------------ | ---- | --- | ------- | ----- |
+| key        | varchar(255) | NO   | UNI | NULL    |       |
+| value      | text         | NO   |     | NULL    |       |
+| expiration | int          | NO   |     | NULL    |       |
+
+### highways_ignored
+
+Manage ignored highway references
+
+| Column     | Type         | Null | Key | Default | Extra          |
+| ---------- | ------------ | ---- | --- | ------- | -------------- |
+| id         | int          | NO   | PRI | NULL    | auto_increment |
+| name       | varchar(255) | NO   | UNI | NULL    |                |
+| created_at | timestamp    | YES  |     | NULL    |                |
+| updated_at | timestamp    | YES  |     | NULL    |                |
+
+### highways_added
+
+Manage added highway references
+
+| Column     | Type         | Null | Key | Default | Extra          |
+| ---------- | ------------ | ---- | --- | ------- | -------------- |
+| id         | int          | NO   | PRI | NULL    | auto_increment |
+| name       | varchar(255) | NO   | UNI | NULL    |                |
+| created_at | timestamp    | YES  |     | NULL    |                |
+| updated_at | timestamp    | YES  |     | NULL    |                |
+
+## General Notes
+
+- Most tables use InnoDB engine with UTF8MB4 character set and collation
+- Foreign keys are properly constrained with ON DELETE/UPDATE actions
+- Timestamps are automatically managed by Laravel's timestamp columns
+- Indexes are created on frequently queried columns and foreign keys
+- Some tables use soft deletes (deleted_at column) for data preservation
