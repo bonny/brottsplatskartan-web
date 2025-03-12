@@ -1,0 +1,59 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Project Overview: Brottsplatskartan
+
+## What is Brottsplatskartan?
+
+Brottsplatskartan is a web application that displays crime events from the Swedish Police (Polisen) in a more user-friendly way, with a focus on map visualization. The name "Brottsplatskartan" translates to "Crime Scene Map" in English.
+
+## Core Functionality
+
+- Displays police events/incidents on an interactive map
+- Allows users to browse events by location (cities, counties, streets)
+- Provides filtering for specific types of crimes (e.g., burglaries)
+- Integrates news from texttv.nu (a sister site)
+- Fetches data from the Swedish Police's official RSS feeds
+- Public fronting language is Swedish. 
+- Uses Swedish for GIT commit messages.
+
+## Technology Stack
+
+### Backend
+
+- **Framework**: Laravel 11 (PHP 8.2+)
+- **Database**: MySQL/MariaDB
+- **Caching**: Redis
+- **API Integration**: Guzzle HTTP client for fetching police data
+- **Geolocation**: League Geotools for geographic calculations
+
+### Frontend
+
+- **Framework**: Vue.js 2.6
+- **CSS Framework**: Bootstrap 5
+- **Build Tool**: Laravel Mix (based on webpack)
+- **Map Visualization**: OpenStreetMap (inferred from directory structure)
+
+### DevOps
+
+- **CI/CD**: GitHub Actions for deployment
+- **Hosting**: Unknown, but configured for Nginx (based on config files)
+
+## Key Files and Directories
+
+- `app/CrimeEvent.php`: Core model for crime events
+- `app/Helper.php`: Utility functions
+- `routes/web.php`: Main application routes
+- `resources/views/`: Blade templates
+- `resources/js/`: Vue components and JavaScript code
+- `resources/sass/`: SCSS stylesheets
+
+## Development
+
+Local development is done using Laravel's built-in server:
+
+```
+./artisan serve
+```
