@@ -24,7 +24,7 @@ class CityController extends Controller
             'name' => 'Stockholm',
             'lat' => 59.328930,
             'lng' => 18.064910,
-            'distance' => 5, // km
+            'distance' => 20, // km
             'pageTitle' => 'Polishändelser och blåljus i Stockholm idag',
             'title' => 'Stockholm idag: Senaste blåljusen och händelser från Polisen',
             'description' => 'Se aktuella polishändelser och blåljuslarm från räddningstjänsten i Stockholm idag',
