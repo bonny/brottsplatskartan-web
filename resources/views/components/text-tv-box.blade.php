@@ -31,6 +31,22 @@
             color: rgb(252, 254, 1);
             text-wrap: pretty;
         }
+
+        .TextTVBox-pages {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: space-evenly;
+            border-top: 1px solid var(--color-gray-1);
+            border-bottom: 1px solid var(--color-gray-1);
+            margin-block-start: 1rem;
+
+            a {
+                display: block;
+                padding: 1rem;
+            }
+        }
     </style>
 @endonce
 
@@ -38,6 +54,15 @@
     <h2 class="TextTVBox-title">Nyheter från Text TV</h2>
 
     <p>Presenteras i samarbete med <a href="https://texttv.nu/">TextTV.nu</a>.</p>
+
+    <ul class="TextTVBox-pages">
+        <li><a href="https://texttv.nu/100">Nyheter</a></li>
+        <li><a href="https://texttv.nu/300">Sport</a></li>
+        <li><a href="https://texttv.nu/377">Målservice</a></li>
+        <li><a href="https://texttv.nu/400">Väder</a></li>
+        <li><a href="https://texttv.nu/700">Innehåll</a></li>
+    </ul>
+
 
     @if (isset($latestNews))
         <h3>Senaste nytt</h3>
@@ -50,7 +75,6 @@
                             <div>{{ $news['date_added_time'] }}</div>
                             <div>{{ $news['title'] }}</div>
                         </div>
-                        {{-- <p>{{ $news['page_content'] }}</p> --}}
                     </a>
                 </li>
             @endforeach
@@ -68,11 +92,9 @@
                             <div>{{ $news['date_added_time'] }}</div>
                             <div>{{ $news['title'] }}</div>
                         </div>
-                        {{-- <p>{{ $news['page_content'] }}</p> --}}
                     </a>
                 </li>
             @endforeach
         </ul>
     @endif
-
 </div>
