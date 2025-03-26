@@ -30,6 +30,7 @@ use App\Http\Controllers\VMAAlertsController;
 use App\Http\Controllers\FullScreenMapController;
 use App\Http\Controllers\PolisstationerController;
 use App\Http\Controllers\PreviousPartnersController;
+use App\Http\Controllers\CityController;
 
 setlocale(LC_ALL, 'sv_SE', 'sv_SE.utf8');
 
@@ -753,3 +754,11 @@ Route::get(
 Route::feeds();
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
+
+/**
+ * City specific events
+ * Example URL: /stockholm
+ */
+Route::get('/{city}', [CityController::class, 'show'])
+    ->name('city')
+    ->where('city', 'stockholm'); // Add more cities by separating with |
