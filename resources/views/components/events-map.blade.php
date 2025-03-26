@@ -149,7 +149,10 @@
 @endonce
 
 <div class="widget">
-    <h2 class="widget__title">Händelsekarta</h2>
+    <h2 class="widget__title">
+        <a href="{{ route('sverigekartan') }}">Händelsekarta</a>
+    </h2>
+
     <div class="widget__fullwidth">
         <div class="EventsMap__container">
             <div class="EventsMap" data-events-map-size="{{ $mapSize }}">Laddar karta...</div>
