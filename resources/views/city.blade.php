@@ -1,6 +1,6 @@
 @extends('layouts.web')
 
-@section('title', $city['title'])
+@section('title', $city['pageTitle'])
 @section('metaDescription', $city['description'])
 
 @section('content')

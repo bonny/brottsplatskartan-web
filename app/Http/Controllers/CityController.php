@@ -6,6 +6,17 @@ use App\CrimeEvent;
 use Illuminate\Http\Request;
 use Creitive\Breadcrumbs\Breadcrumbs;
 
+/*
+Keywords to focus on:
+stockholm
+idag
+polisen
+händelser
+polishändelser
+blåljus
+räddningstjänsten
+larm
+*/
 class CityController extends Controller
 {
     private $cities = [
@@ -14,19 +25,35 @@ class CityController extends Controller
             'lat' => 59.328930,
             'lng' => 18.064910,
             'distance' => 5, // km
-            'title' => 'Händelser i Stockholm',
-            'description' => 'Se de senaste polishändelserna i Stockholm',
-            'pageTitle' => 'Händelser från Polisen i Stockholm'
+            'pageTitle' => 'Polishändelser och blåljus i Stockholm idag',
+            'title' => 'Stockholm idag: Senaste blåljusen och händelser från Polisen',
+            'description' => 'Se aktuella polishändelser och blåljuslarm från räddningstjänsten i Stockholm idag',
         ]
     ];
 
+    /**
+     * Normalize city slug to lowercase and handle redirects if needed
+     */
+    private function normalizeCitySlug($citySlug) 
+    {
+        $normalized = mb_strtolower($citySlug);
+        return $normalized;
+    }
+
     public function show($citySlug)
     {
-        if (!isset($this->cities[$citySlug])) {
+        $normalizedSlug = $this->normalizeCitySlug($citySlug);
+        
+        // If original slug doesn't match normalized, redirect to normalized version
+        if ($citySlug !== $normalizedSlug) {
+            return redirect()->route('city', ['city' => $normalizedSlug], 301);
+        }
+
+        if (!isset($this->cities[$normalizedSlug])) {
             abort(404);
         }
 
-        $city = $this->cities[$citySlug];
+        $city = $this->cities[$normalizedSlug];
         
         $events = CrimeEvent::getEventsNearLocation(
             $city['lat'],
@@ -38,7 +65,7 @@ class CityController extends Controller
         $breadcrumbs = new Breadcrumbs();
         $breadcrumbs->setDivider('›');
         $breadcrumbs->addCrumb('Hem', '/');
-        $breadcrumbs->addCrumb($city['name'], route('city', ['city' => $citySlug]));
+        $breadcrumbs->addCrumb($city['name'], route('city', ['city' => $normalizedSlug]));
 
         return view('city', [
             'city' => $city,

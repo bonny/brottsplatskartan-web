@@ -760,5 +760,4 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
  * Example URL: /stockholm
  */
 Route::get('/{city}', [CityController::class, 'show'])
-    ->name('city')
-    ->where('city', 'stockholm'); // Add more cities by separating with |
+    ->name('city');
