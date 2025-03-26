@@ -12,9 +12,9 @@ Och besök sedan [http://localhost:8000](http://localhost:8000).
 
 ## Importera data
 
-Kör ett jobb för att var femte minut hämta data från Polisen.
-
-`./artisan schedule:work`
+- `./artisan crimeevents:fetch` för att hämta Polishändelser
+- `./artisan texttv:fetch` för att hämta TextTV-nyheter
+- 
 
 ## Uppdatera composer-paket
 
