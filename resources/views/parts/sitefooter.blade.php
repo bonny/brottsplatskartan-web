@@ -82,29 +82,17 @@
 
         <p>
             Brottsplatskartan är en plattform som erbjuder aktuell information om händelser och brott som
-            rapporteras av  Polisen i Sverige. På sajten kan du enkelt ta del av de senaste nyheterna om brott på lokal nivå,
-            kategoriserat efter län, stad och gata. Informationen hämtas direkt från Polisens RSS-flöden och presenteras på
+            rapporteras av Polisen i Sverige. På sajten kan du enkelt ta del av de senaste nyheterna om brott på lokal
+            nivå,
+            kategoriserat efter län, stad och gata. Informationen hämtas direkt från Polisens RSS-flöden och presenteras
+            på
             ett överskådligt sätt, så att du snabbt kan hålla dig uppdaterad om vad som händer i ditt närområde.
         </p>
 
         <p>
             Besök även nyhetssajten <a href="https://texttv.nu/">TextTV.nu</a> (som såklart har den klassiska <a
-                    href="https://texttv.nu/377">sportsidan 377</a>).
+                href="https://texttv.nu/377">sportsidan 377</a>).
         </p>
-    </div>
-
-    <div class="">
-        <h2>Tyska polishändelser</h2>
-
-        <p>
-            Det finns nu även en tysk version av webbplatsen med namn 
-            <em><a href="https://wasistpassiert.com/">Was Ist Passiert</a></em>.
-            Till att börja med visas händelser från polisen i Berlin.
-        </p>
-        <p>
-            Besök <a href="https://wasistpassiert.com/">WasIstPassiert.com för att se polishändelser i Berlin</a>.
-        </p>
-
     </div>
 </div>
 
