@@ -12,7 +12,11 @@
 
                 <ul>
                     @foreach ($events as $event)
-                        @include('parts.crimeevent-small', ['event' => $event])
+                        @include('parts.crimeevent-small', [
+                            'event' => $event,
+                            'detailed' => true,
+                            'mapDistance' => 'near',
+                        ])
                     @endforeach
                 </ul>
             </div>
