@@ -12,7 +12,7 @@ class ApiEventsMapController extends Controller {
     public function index() {
         $cacheSeconds = 5 * 60;
         $daysBack = 3;
-        $cacheKey = __METHOD__ . "_{$daysBack}";
+        $cacheKey = __METHOD__ . "_{$daysBack}_{$cacheSeconds}";
 
         $events = Cache::remember($cacheKey, $cacheSeconds, function () use ($daysBack) {
             return CrimeEvent::orderBy("created_at", "desc")

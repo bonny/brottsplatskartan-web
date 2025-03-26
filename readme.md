@@ -8,6 +8,14 @@ En sajt som visar [Polisens händelser](https://brottsplatskartan.se) lite finar
 
 `./artisan serve`
 
+Och besök sedan [http://localhost:8000](http://localhost:8000).
+
+## Importera data
+
+- `./artisan crimeevents:fetch` för att hämta Polishändelser
+- `./artisan texttv:fetch` för att hämta TextTV-nyheter
+- 
+
 ## Uppdatera composer-paket
 
 `composer update <paketnamn> --ignore-platform-req=ext-redis`
@@ -28,3 +36,10 @@ Alla uppgifter hämtas från [Polisens hemsida](https://polisen.se/Aktuellt/RSS/
 ## Nyheter
 
 Sidan visar även de senaste och mest lästa text-tv-nyheterna från vår "systersajt" [texttv.nu](https://texttv.nu).
+
+Populära Text TV-sidor:
+
+-   [Sida 100 - Nyheter](https://texttv.nu/100)
+-   [Sida 300 - Sport](https://texttv.nu/300)
+-   [Sida 377 - Målservice](https://texttv.nu/377)
+-   [Sida 700 - Innehåll](https://texttv.nu/700)
