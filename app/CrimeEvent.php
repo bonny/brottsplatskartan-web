@@ -40,6 +40,8 @@ class CrimeEvent extends Model implements Feedable {
         'description_alt_1',
     ];
 
+    private const EARTH_RADIUS_KM = 6371;
+
     /**
      * Get the locations for the event post.
      */
@@ -733,7 +735,30 @@ class CrimeEvent extends Model implements Feedable {
         return $events;
     }
 
-    private const EARTH_RADIUS_KM = 6371;
+    public static function getEventsNearLocationUncached(
+        $lat,
+        $lng,
+        $nearbyCount = 10,
+        $nearbyInKm = 25
+    ) {
+        $someDaysAgoYMD = Carbon::now()
+            ->subDays(15)
+            ->format('Y-m-d');
+
+        $events = CrimeEvent::selectRaw( // välj de som är rimligt nära, värdet är i km
+            '*, ( 6371 * acos( cos( radians(?) ) * cos( radians( location_lat ) ) * cos( radians( location_lng ) - radians(?) ) + sin( radians(?) ) * sin( radians( location_lat ) ) ) ) AS distance',
+            [$lat, $lng, $lat]
+        )
+            ->where('created_at', '>', $someDaysAgoYMD)
+            ->having("distance", "<=", $nearbyInKm)
+            ->orderBy("parsed_date", "DESC")
+            ->orderBy("distance", "ASC")
+            ->limit($nearbyCount)
+            ->with('locations')
+            ->get();
+
+        return $events;
+    }
 
     /**
      * Get events near a specific location without caching.
