@@ -780,8 +780,20 @@ class CrimeEvent extends Model implements Feedable {
         ?int $page = null
     ) {
 
+        // Convert distance to degrees (approximate)
+        $distanceInDegrees = $nearbyInKm / 111;
+
+        // Calculate bounding box
+        $latMin = $lat - $distanceInDegrees;
+        $latMax = $lat + $distanceInDegrees;
+        $lngMin = $lng - $distanceInDegrees / cos(deg2rad($lat));
+        $lngMax = $lng + $distanceInDegrees / cos(deg2rad($lat));
+
+
         // Select only needed columns plus distance calculation
-        $query = self::selectRaw(
+        $query = self::whereBetween('location_lat', [$latMin, $latMax])
+                ->whereBetween('location_lng', [$lngMin, $lngMax])
+                ->selectRaw(
             '
                 *,
                 (' . self::EARTH_RADIUS_KM . ' * 
