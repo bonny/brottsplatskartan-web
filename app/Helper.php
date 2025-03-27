@@ -407,35 +407,6 @@ class Helper {
         $monthAndYear = strtolower($monthAndYear);
         $monthAndYear = str_replace('-', ' ', $monthAndYear);
 
-        $search = [
-            'januari',
-            'februari',
-            'mars',
-            'april',
-            'maj',
-            'juni',
-            'juli',
-            'augusti',
-            'september',
-            'oktober',
-            'november',
-            'december'
-        ];
-        $replace = [
-            'january',
-            'february',
-            'march',
-            'april',
-            'may',
-            'june',
-            'july',
-            'august',
-            'september',
-            'october',
-            'november',
-            'december'
-        ];
-
         // Translate swedish months to english months, so we can parse
         $monthAndYearInEnglish = self::convertSwedishYearsToEnglish(
             $monthAndYear
