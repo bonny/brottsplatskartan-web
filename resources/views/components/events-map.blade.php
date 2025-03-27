@@ -149,13 +149,15 @@
 @endonce
 
 <div class="widget">
-    <h2 class="widget__title">
-        <a href="{{ route('sverigekartan') }}">Händelsekarta</a>
-    </h2>
+    @if ($showMapTitle)
+        <h2 class="widget__title">
+            <a href="{{ route('sverigekartan') }}">Händelsekarta</a>
+        </h2>
+    @endif
 
     <div class="widget__fullwidth">
         <div class="EventsMap__container">
-            <div class="EventsMap" data-events-map-size="{{ $mapSize }}">Laddar karta...</div>
+            <div class="EventsMap EventsMap--city" data-events-map-size="{{ $mapSize }}">Laddar karta...</div>
         </div>
     </div>
 </div>

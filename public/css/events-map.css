@@ -379,6 +379,11 @@ body.map-is-expanded .SiteHeader {
     filter: invert(1);
 }
 
+/* Map customization for city page (i.e. /stockholm) */
+.EventsMap--city {
+    height: 30vh;
+}
+
 @keyframes markerPulse {
     0% {
         transform: scale(1);

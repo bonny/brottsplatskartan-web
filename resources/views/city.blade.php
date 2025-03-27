@@ -8,11 +8,17 @@
     <div class="container">
         <div class="row">
             <div class="col-12">
+
+                {{-- Introtext. --}}
                 <h1>
                     <strong>{{ $city['name'] }}</strong>
-                    <span class="u-block text-2xl">{{ $city['title'] }}</span>
+                    <span class="u-block text-2xl mt-4">{{ $city['title'] }}</span>
                 </h1>
-                
+
+                {{-- Karta med händelser --}}
+                <x-events-map :show-map-title="false" />
+
+                {{-- Händelselista. --}}
                 <ul class="widget__listItems u-margin-top-double">
                     @foreach ($events as $event)
                         @include('parts.crimeevent-small', [
