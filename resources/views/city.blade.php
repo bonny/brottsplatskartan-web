@@ -23,7 +23,7 @@
                     @endforeach
                 </ul>
 
-                {{ $events->links() }}
+                {{ $events->links('vendor.pagination.default') }}
             </div>
         </div>
     </div>

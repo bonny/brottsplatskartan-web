@@ -25,7 +25,7 @@ class CityController extends Controller
             'lat' => 59.328930,
             'lng' => 18.064910,
             'distance' => 20, // km
-            'pageTitle' => 'Polishändelser och blåljus i Stockholm idag',
+            'pageTitle' => 'Stockholm: Polishändelser och blåljus',
             'title' => 'Senaste blåljusen och händelser från Polisen idag',
             'description' => 'Se aktuella polishändelser och blåljuslarm från räddningstjänsten i Stockholm idag',
         ]
@@ -58,7 +58,7 @@ class CityController extends Controller
         $events = CrimeEvent::getEventsForCity(
             lat: $city['lat'],
             lng: $city['lng'],
-            perPage: 5, // number of events
+            perPage: 5,
             nearbyInKm: $city['distance']
         );
 
