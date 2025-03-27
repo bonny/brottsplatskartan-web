@@ -58,7 +58,7 @@ class CityController extends Controller
         $events = CrimeEvent::getEventsForCity(
             lat: $city['lat'],
             lng: $city['lng'],
-            perPage: 5,
+            perPage: 25,
             nearbyInKm: $city['distance']
         );
 
