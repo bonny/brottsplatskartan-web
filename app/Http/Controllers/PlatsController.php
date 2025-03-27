@@ -54,6 +54,7 @@ class PlatsController extends Controller
         $platsOriginalFromSlug = $plats;
 
         $date = \App\Helper::getdateFromDateSlug($date);
+
         if (!$date) {
             abort(500, 'Knas med datum hörru');
         }

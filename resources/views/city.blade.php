@@ -8,9 +8,12 @@
     <div class="container">
         <div class="row">
             <div class="col-12">
-                <h1>{{ $city['title'] }}</h1>
-
-                <ul>
+                <h1>
+                    <strong>{{ $city['name'] }}</strong>
+                    <span class="u-block text-2xl">{{ $city['title'] }}</span>
+                </h1>
+                
+                <ul class="widget__listItems u-margin-top-double">
                     @foreach ($events as $event)
                         @include('parts.crimeevent-small', [
                             'event' => $event,
@@ -19,6 +22,8 @@
                         ])
                     @endforeach
                 </ul>
+
+                {{ $events->links() }}
             </div>
         </div>
     </div>

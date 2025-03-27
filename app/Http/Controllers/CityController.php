@@ -26,7 +26,7 @@ class CityController extends Controller
             'lng' => 18.064910,
             'distance' => 20, // km
             'pageTitle' => 'Polishändelser och blåljus i Stockholm idag',
-            'title' => 'Stockholm idag: Senaste blåljusen och händelser från Polisen',
+            'title' => 'Senaste blåljusen och händelser från Polisen idag',
             'description' => 'Se aktuella polishändelser och blåljuslarm från räddningstjänsten i Stockholm idag',
         ]
     ];
@@ -55,11 +55,11 @@ class CityController extends Controller
 
         $city = $this->cities[$normalizedSlug];
         
-        $events = CrimeEvent::getEventsNearLocation(
-            $city['lat'],
-            $city['lng'],
-            25, // number of events
-            $city['distance']
+        $events = CrimeEvent::getEventsForCity(
+            lat: $city['lat'],
+            lng: $city['lng'],
+            perPage: 5, // number of events
+            nearbyInKm: $city['distance']
         );
 
         $breadcrumbs = new Breadcrumbs();

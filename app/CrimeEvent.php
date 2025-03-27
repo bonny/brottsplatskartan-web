@@ -733,29 +733,52 @@ class CrimeEvent extends Model implements Feedable {
         return $events;
     }
 
-    public static function getEventsNearLocationUncached(
-        $lat,
-        $lng,
-        $nearbyCount = 10,
-        $nearbyInKm = 25
-    ) {
-        $someDaysAgoYMD = Carbon::now()
-            ->subDays(15)
-            ->format('Y-m-d');
+    private const EARTH_RADIUS_KM = 6371;
 
-        $events = CrimeEvent::selectRaw( // välj de som är rimligt nära, värdet är i km
-            '*, ( 6371 * acos( cos( radians(?) ) * cos( radians( location_lat ) ) * cos( radians( location_lng ) - radians(?) ) + sin( radians(?) ) * sin( radians( location_lat ) ) ) ) AS distance',
+    /**
+     * Get events near a specific location without caching.
+     *
+     * Uses the Haversine formula to calculate distances between coordinates.
+     * 
+     * @param float $lat Latitude of the center point
+     * @param float $lng Longitude of the center point
+     * @param int $perPage Number of items per page
+     * @param int $nearbyInKm Maximum distance in kilometers
+     * @param int|null $page Current page number (null for auto-detect)
+     * @return \Illuminate\Pagination\LengthAwarePaginator
+     */
+    public static function getEventsForCity(
+        float $lat,
+        float $lng,
+        int $perPage = 10,
+        int $nearbyInKm = 25,
+        ?int $page = null
+    ) {
+
+        // Select only needed columns plus distance calculation
+        $query = self::selectRaw(
+            '
+                *,
+                (' . self::EARTH_RADIUS_KM . ' * 
+                    acos(
+                        cos(radians(?)) * 
+                        cos(radians(location_lat)) * 
+                        cos(radians(location_lng) - radians(?)) + 
+                        sin(radians(?)) * 
+                        sin(radians(location_lat))
+                    )
+                ) AS distance',
             [$lat, $lng, $lat]
         )
-            ->where('created_at', '>', $someDaysAgoYMD)
-            ->having("distance", "<=", $nearbyInKm)
-            ->orderBy("parsed_date", "DESC")
-            ->orderBy("distance", "ASC")
-            ->limit($nearbyCount)
-            ->with('locations')
-            ->get();
+            ->having('distance', '<=', $nearbyInKm)
+            ->orderBy('parsed_date', 'DESC')
+            ->orderBy('distance', 'ASC')
+            ->with('locations');
 
-        return $events;
+        return $query->paginate(
+            perPage: $perPage,
+            page: $page
+        );
     }
 
     public function getViewportSize() {
