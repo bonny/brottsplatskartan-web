@@ -770,6 +770,7 @@ class CrimeEvent extends Model implements Feedable {
      * @param int $perPage Number of items per page
      * @param int $nearbyInKm Maximum distance in kilometers
      * @param int|null $page Current page number (null for auto-detect)
+     * @param int $days Number of days to filter by date
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
     public static function getEventsForCity(
@@ -777,9 +778,9 @@ class CrimeEvent extends Model implements Feedable {
         float $lng,
         int $perPage = 10,
         int $nearbyInKm = 25,
-        ?int $page = null
+        ?int $page = null,
+        int $days = 30
     ) {
-
         // Convert distance to degrees (approximate)
         $distanceInDegrees = $nearbyInKm / 111;
 
@@ -792,7 +793,8 @@ class CrimeEvent extends Model implements Feedable {
         // Build query starting with the geographical bounds
         $query = self::whereBetween('location_lat', [$latMin, $latMax])
             ->whereBetween('location_lng', [$lngMin, $lngMax])
-            ->useIndex('idx_crime_events_location_date')  // Apply index after where conditions
+            ->whereDate('parsed_date', '>=', Carbon::now()->subDays($days))
+            ->useIndex('idx_crime_events_location_date')
             ->selectRaw(
                 '*,
                 (' . self::EARTH_RADIUS_KM . ' * 
