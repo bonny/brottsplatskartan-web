@@ -41,9 +41,9 @@ class DebugController extends Controller
             $format = 'Y-m-d H:i';
             echo "<br><br>date($format):<br>" . date($format);
 
-            $format = '%A %d %B %Y %H:%M';
+            $format = 'dddd D MMMM YYYY HH:mm';
             $carbonDate = Carbon::now();
-            $carbonDateFormatted = $carbonDate->formatLocalized($format);
+            $carbonDateFormatted = $carbonDate->isoFormat($format);
             echo "<br><br>carbon::formatLocalized($format):<br>$carbonDateFormatted";
 
             $strftimestr = strftime($format);

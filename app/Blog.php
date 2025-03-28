@@ -10,9 +10,9 @@ class Blog extends Model
 {
     protected $table = 'blog';
 
-    public function getCreatedAtFormatted($format = '%d %B %Y')
+    public function getCreatedAtFormatted($format = 'D MMMM YYYY')
     {
-        return Carbon::parse($this->created_at)->formatLocalized($format);
+        return Carbon::parse($this->created_at)->isoFormat($format);
     }
 
     public function getCreatedAtAsW3cString()
@@ -47,7 +47,7 @@ class Blog extends Model
         return route(
             'blogItem',
             [
-                'year' => date('Y', $this->created_at->timestamp),
+                'year' => $this->created_at->isoFormat('YYYY'),
                 'slug' => $this->slug
             ]
         );

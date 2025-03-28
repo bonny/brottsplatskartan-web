@@ -40,8 +40,8 @@ class Helper {
             // Date and month.
             # $date_and_month = $dateObj->format('d M');
 
-            $formattedDate = trim(str::lower($dateObj->formatLocalized('%e-%B-%Y')));
-            $formattedDateFortitle = trim($dateObj->formatLocalized('%A %e %B %Y'));
+            $formattedDate = trim(str::lower($dateObj->isoFormat('D-MMMM-YYYY')));
+            $formattedDateFortitle = trim($dateObj->isoFormat('dddd D MMMM YYYY'));
 
             if ($lan == "home") {
                 $day_link = route("startDatum", ['date' => $formattedDate]);

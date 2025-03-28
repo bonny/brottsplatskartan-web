@@ -194,8 +194,8 @@ class PlatsController extends Controller
         if ($prevDaysNavInfo->count()) {
             $firstDay = $prevDaysNavInfo->first();
             $firstDayDate = Carbon::parse($firstDay['dateYMD']);
-            $fintFormateratDatum = $firstDayDate->formatLocalized('%A %e %B %Y');
-            $formattedDate = trim(str::lower($firstDayDate->formatLocalized('%e-%B-%Y')));
+            $fintFormateratDatum = $firstDayDate->isoFormat('dddd D MMMM YYYY');
+            $formattedDate = trim(str::lower($firstDayDate->isoFormat('D-MMMM-YYYY')));
             $formattedDateFortitle = trim($fintFormateratDatum);
             $prevDayLink = [
                 'title' => sprintf('‹ %1$s', $formattedDateFortitle),
@@ -207,8 +207,8 @@ class PlatsController extends Controller
         if ($nextDaysNavInfo->count()) {
             $firstDay = $nextDaysNavInfo->first();
             $firstDayDate = Carbon::parse($firstDay['dateYMD']);
-            $fintFormateratDatum = $firstDayDate->formatLocalized('%A %e %B %Y');
-            $formattedDate = trim(str::lower($firstDayDate->formatLocalized('%e-%B-%Y')));
+            $fintFormateratDatum = $firstDayDate->isoFormat('dddd D MMMM YYYY');
+            $formattedDate = trim(str::lower($firstDayDate->isoFormat('D-MMMM-YYYY')));
             $formattedDateFortitle = trim($fintFormateratDatum);
             $nextDayLink = [
                 'title' => sprintf('%1$s ›', $formattedDateFortitle),
@@ -223,7 +223,7 @@ class PlatsController extends Controller
                 'platsDatum',
                 [
                     'plats' => mb_strtolower($platsOriginalFromSlug),
-                    'date' => trim(str::lower($date['date']->formatLocalized('%e-%B-%Y'))),
+                    'date' => trim(str::lower($date['date']->isoFormat('D-MMMM-YYYY'))),
                 ]
             );
         } else {
@@ -476,8 +476,8 @@ class PlatsController extends Controller
         if ($prevDaysNavInfo->count()) {
             $firstDay = $prevDaysNavInfo->first();
             $firstDayDate = Carbon::parse($firstDay['dateYMD']);
-            $fintFormateratDatum = $firstDayDate->formatLocalized('%A %e %B %Y');
-            $formattedDate = trim(str::lower($firstDayDate->formatLocalized('%e-%B-%Y')));
+            $fintFormateratDatum = $firstDayDate->isoFormat('dddd D MMMM YYYY');
+            $formattedDate = trim(str::lower($firstDayDate->isoFormat('D-MMMM-YYYY')));
             $formattedDateFortitle = trim($fintFormateratDatum);
             $prevDayLink = [
                 'title' => sprintf('‹ %1$s', $formattedDateFortitle),
@@ -489,8 +489,8 @@ class PlatsController extends Controller
         if ($nextDaysNavInfo->count()) {
             $firstDay = $nextDaysNavInfo->first();
             $firstDayDate = Carbon::parse($firstDay['dateYMD']);
-            $fintFormateratDatum = $firstDayDate->formatLocalized('%A %e %B %Y');
-            $formattedDate = trim(str::lower($firstDayDate->formatLocalized('%e-%B-%Y')));
+            $fintFormateratDatum = $firstDayDate->isoFormat('dddd D MMMM YYYY');
+            $formattedDate = trim(str::lower($firstDayDate->isoFormat('D-MMMM-YYYY')));
             $formattedDateFortitle = trim($fintFormateratDatum);
             $nextDayLink = [
                 'title' => sprintf('%1$s ›', $formattedDateFortitle),
@@ -505,7 +505,7 @@ class PlatsController extends Controller
                 'platsDatum',
                 [
                     'plats' => mb_strtolower($platsOriginalFromSlug),
-                    'date' => trim(str::lower($date['date']->formatLocalized('%e-%B-%Y'))),
+                    'date' => trim(str::lower($date['date']->isoFormat('D-MMMM-YYYY'))),
                 ]
             );
         } else {

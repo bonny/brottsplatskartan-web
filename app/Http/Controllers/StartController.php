@@ -170,12 +170,8 @@ class StartController extends Controller
         if ($prevDaysNavInfo->count()) {
             $firstDay = $prevDaysNavInfo->first();
             $firstDayDate = Carbon::parse($firstDay['dateYMD']);
-            $formattedDate = trim(
-                str::lower($firstDayDate->formatLocalized('%e-%B-%Y'))
-            );
-            $formattedDateFortitle = trim(
-                $firstDayDate->formatLocalized('%A %e %B %Y')
-            );
+            $formattedDate = trim(str::lower($firstDayDate->isoFormat('D-MMMM-YYYY')));
+            $formattedDateFortitle = trim($firstDayDate->isoFormat('dddd D MMMM YYYY'));
             $prevDayLink = [
                 'title' => sprintf('‹ %1$s', $formattedDateFortitle),
                 'link' => route("startDatum", ['date' => $formattedDate]),
@@ -186,12 +182,8 @@ class StartController extends Controller
         if ($nextDaysNavInfo->count()) {
             $firstDay = $nextDaysNavInfo->first();
             $firstDayDate = Carbon::parse($firstDay['dateYMD']);
-            $formattedDate = trim(
-                str::lower($firstDayDate->formatLocalized('%e-%B-%Y'))
-            );
-            $formattedDateFortitle = trim(
-                $firstDayDate->formatLocalized('%A %e %B %Y')
-            );
+            $formattedDate = trim(str::lower($firstDayDate->isoFormat('D-MMMM-YYYY')));
+            $formattedDateFortitle = trim($firstDayDate->isoFormat('dddd D MMMM YYYY'));
             $nextDayLink = [
                 'title' => sprintf('%1$s ›', $formattedDateFortitle),
                 'link' => route("startDatum", ['date' => $formattedDate]),
