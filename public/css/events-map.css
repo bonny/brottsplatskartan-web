@@ -381,7 +381,7 @@ body.map-is-expanded .SiteHeader {
 
 /* Map customization for city page (i.e. /stockholm) */
 .EventsMap--city {
-    height: 30vh;
+    height: 15vh;
 }
 
 @keyframes markerPulse {

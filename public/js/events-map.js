@@ -64,6 +64,8 @@ const crimeTypesToClass = {
     ordningslagen: "unknown",
     sjölagen: "unknown",
     "sjukdom/olycksfall": "unknown",
+    "bedrägeri, försök": "unknown",
+    "bedrägeri": "unknown",
     // missing:
     // - miljöbrott
     // - fjällräddning
@@ -156,16 +158,6 @@ function setLayerIcon(layer, map, classToAdd = "", innerText = "") {
 
 function getLayerIcon(layer, map, classToAdd = "", innerText = "") {
     const zoomLevel = map.getZoom();
-
-    // let markerType; // normal | cluster | spiderfied
-    // if (layer instanceof L.MarkerCluster) {
-    //     markerType = "cluster";
-    // } else if (layer instanceof L.Marker) {
-    //     markerType = "normal";
-    // } else {
-    //     console.log("Unknown marker type", layer);
-    // }
-    // console.log("markerType", markerType);
 
     // Brottstyp utan mellanslag mellan ord (så max 1 mellanslag efter varandra).
     let crimeEventTypeClassForInnerIcon = "";
@@ -316,11 +308,6 @@ class EventsMap {
             zoomControl: true,
             attributionControl: false,
             gestureHandling: true,
-            // scrollWheelZoom: false,
-            // touchZoom: false,
-            // dragging: false,
-            // tap: false,
-            // click: false,
         });
 
         window.map = this.map;
@@ -336,21 +323,11 @@ class EventsMap {
             let parentElement = this.mapContainer.closest(
                 ".EventsMap__container"
             );
-            // this.expandBtnElm = parentElement.querySelector('.EventsMap-blocker-expand');
-            // this.blockerElm = parentElement.querySelector('.EventsMap__blocker');
 
-            // this.blockerElm.addEventListener('click', (evt) => {
-            //     this.expandMap();
-            // });
+            console.log("map loaded with options:", this.options);
 
-            // this.expandBtnElm.addEventListener('click', (evt) => {
-            //     this.expandMap();
-            // });
-            //expandMap
-            console.log("map loaded. options:", this.options);
             if (this.options.size === "fullscreen") {
                 expandMap(this.map);
-                //this.map.setZoom(this.zoom.fullscreen);
                 this.map.flyTo(this.location.fullscreen, this.zoom.fullscreen);
             }
         });
@@ -397,7 +374,15 @@ class EventsMap {
             });
         });
 
-        this.map.setView(this.location.default, this.zoom.default);
+        console.log(
+            "map init location",
+            this.location.default,
+            this.zoom.default,
+            this.options.latLng,
+            this.options.zoom
+        );
+
+        this.map.setView(this.options.latLng, this.options.zoom);
 
         L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
             attribution:
@@ -448,6 +433,11 @@ document.addEventListener("DOMContentLoaded", function () {
     mapContainers.forEach((element) => {
         new EventsMap(element, {
             size: element.getAttribute("data-events-map-size"),
+            latLng: JSON.parse(
+                element.getAttribute("data-events-map-lat-lng")
+            ),
+            zoom: parseInt(element.getAttribute("data-events-map-zoom")),
         });
     });
 });
+ 

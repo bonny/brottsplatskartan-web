@@ -16,7 +16,7 @@
                 </h1>
 
                 {{-- Karta med händelser --}}
-                <x-events-map :show-map-title="false" />
+                <x-events-map :show-map-title="false" :lat-lng=$mapStartLatLng :map-zoom=$mapZoom />
 
                 {{-- Händelselista. --}}
                 <ul class="widget__listItems u-margin-top-double">

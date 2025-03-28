@@ -24,6 +24,7 @@ class CityController extends Controller
             'name' => 'Stockholm',
             'lat' => 59.328930,
             'lng' => 18.064910,
+            'mapZoom' => 9,
             'distance' => 20, // km
             'pageTitle' => 'Stockholm: Polishändelser och blåljus',
             'title' => 'Senaste blåljusen och händelser från Polisen idag',
@@ -71,7 +72,9 @@ class CityController extends Controller
             'city' => $city,
             'events' => $events,
             'breadcrumbs' => $breadcrumbs,
-            'pageTitle' => $city['pageTitle']
+            'pageTitle' => $city['pageTitle'],
+            'mapStartLatLng' => [$city['lat'], $city['lng']],
+            'mapZoom' => $city['mapZoom'] ?? 12,
         ]);
     }
 }

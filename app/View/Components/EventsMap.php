@@ -12,7 +12,9 @@ class EventsMap extends Component {
      */
     public function __construct(
         public string $mapSize = 'normal',
-        public bool $showMapTitle = true
+        public bool $showMapTitle = true,
+        public array $latLng = [59, 15],
+        public int $mapZoom = 6,
     ) {
         //
     }
