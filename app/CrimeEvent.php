@@ -322,9 +322,9 @@ class CrimeEvent extends Model implements Feedable {
     /**
      * Datum för händelsen i formatet "Lördag 15 December 2018 13:20" eller i valfritt format.
      */
-    public function getParsedDateInFormat($dateFormat = '%A %d %B %H:%M'): string {
+    public function getParsedDateInFormat($dateFormat = 'dddd D MMMM HH:mm'): string {
         $carbonDate = $this->getParsedDateAsCarbon();
-        $formattedDate = $carbonDate->formatLocalized($dateFormat);
+        $formattedDate = $carbonDate->isoFormat($dateFormat);
         return $formattedDate;
     }
 
@@ -344,10 +344,10 @@ class CrimeEvent extends Model implements Feedable {
         $formattedDate = '';
         if ($this->isParsedDateThisYear()) {
             // Pågående år, ta inte med år.
-            $formattedDate = $date->formatLocalized('%A %d %B %H:%M');
+            $formattedDate = $date->isoFormat('dddd D MMMM HH:mm');
         } else {
             // Inte pågående år, inkludera år.
-            $formattedDate = $date->formatLocalized('%A %d %B %Y %H:%M');
+            $formattedDate = $date->isoFormat('dddd D MMMM YYYY HH:mm');
         }
 
         return $formattedDate;
@@ -369,10 +369,10 @@ class CrimeEvent extends Model implements Feedable {
         $formattedDate = '';
         if ($this->isParsedDateThisYear()) {
             // Pågående år, ta inte med år.
-            $formattedDate = $date->formatLocalized('%d %B');
+            $formattedDate = $date->isoFormat('D MMMM');
         } else {
             // Inte pågående år, inkludera år.
-            $formattedDate = $date->formatLocalized('%d %B %Y');
+            $formattedDate = $date->isoFormat('D MMMM YYYY');
         }
 
         return $formattedDate;
@@ -1206,7 +1206,7 @@ class CrimeEvent extends Model implements Feedable {
      */
     public function getCreatedAtLocalized() {
         $createdAtCarbon = Carbon::parse($this->created_at);
-        $createdAtLocalized = $createdAtCarbon->formatLocalized('%A %e %B %Y');
+        $createdAtLocalized = $createdAtCarbon->isoFormat('dddd D MMMM YYYY');
         return $createdAtLocalized;
     }
 

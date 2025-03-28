@@ -297,7 +297,7 @@ class PlatsController extends Controller
             "canonicalLink" => $canonicalLink,
             'prevDayLink' => $prevDayLink,
             'nextDayLink' => $nextDayLink,
-            'dateForTitle' => $date['date']->formatLocalized('%e %B %Y'),
+            'dateForTitle' => $date['date']->isoFormat('D MMMM YYYY'),
             'mapDistance' => 'near',
         ];
 
@@ -579,7 +579,7 @@ class PlatsController extends Controller
             "canonicalLink" => $canonicalLink,
             'prevDayLink' => $prevDayLink,
             'nextDayLink' => $nextDayLink,
-            'dateForTitle' => $date['date']->formatLocalized('%e %B %Y'),
+            'dateForTitle' => $date['date']->isoFormat('D MMMM YYYY'),
             'mapDistance' => 'near',
         ];
 

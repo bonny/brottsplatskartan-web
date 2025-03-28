@@ -83,7 +83,7 @@ class StartController extends Controller
             'pageMetaDescription' => $pageMetaDescription,
             'mostCommonCrimeTypes' => $mostCommonCrimeTypes,
             'dateFormattedForMostCommonCrimeTypes' => trim(
-                $date['date']->formatLocalized('%e %B')
+                $date['date']->isoFormat('D MMMM')
             ),
         ];
 
@@ -198,10 +198,10 @@ class StartController extends Controller
 
         if ($isCurrentYear) {
             // Skriv inte ut datum om det är nuvarande år
-            $dateLocalized = trim($date['date']->formatLocalized('%A %e %B'));
+            $dateLocalized = trim($date['date']->isoFormat('dddd D MMMM'));
         } else {
             $dateLocalized = trim(
-                $date['date']->formatLocalized('%A %e %B %Y')
+                $date['date']->isoFormat('dddd D MMMM YYYY')
             );
         }
 
@@ -276,7 +276,7 @@ class StartController extends Controller
             'pageMetaDescription' => $pageMetaDescription,
             'mostCommonCrimeTypes' => $mostCommonCrimeTypes,
             'dateFormattedForMostCommonCrimeTypes' => trim(
-                $date['date']->formatLocalized('%e %B')
+                $date['date']->isoFormat('D MMMM')
             )
         ];
 

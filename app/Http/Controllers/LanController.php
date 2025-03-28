@@ -179,7 +179,7 @@ class LanController extends Controller
             );
         }
         
-        $fintFormateratDatum = trim($date['date']->formatLocalized('%A %e %B %Y'));
+        $fintFormateratDatum = trim($date['date']->isoFormat('dddd D MMMM YYYY'));
 
         if ($isToday) {
             $pageTitle = "Brott och händelser från Polisen i $lan";
@@ -191,7 +191,6 @@ class LanController extends Controller
                 $lan
             );
         }
-
 
         $data = [
             'title' => $title,
