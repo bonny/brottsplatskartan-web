@@ -6,8 +6,8 @@
     ">
 
     <div class="ListEvent__title">
-        <h3 class="ListEvent__teaser widget__listItem__title">            
-            <a class="ListEvent__titleLink " href="{{ $event->getPermalink() }}">
+        <h3 class="ListEvent__teaser widget__listItem__title text-2xl">
+            <a class="ListEvent__titleLink" href="{{ $event->getPermalink() }}">
                 <span class="ListEvent__titleLink__clickarea"></span>
                 {!! $event->getHeadline() !!}
             </a>

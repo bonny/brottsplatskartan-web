@@ -47,7 +47,6 @@ if $single is set then larger image
 
     --}}
 
-
 @if ($event->geocoded)
     <p class="Event__map">
         @if (isset($overview))

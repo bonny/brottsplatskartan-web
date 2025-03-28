@@ -1512,9 +1512,24 @@ h2.widget__title {
     position: relative;
 }
 
+.widget__listItems--city .widget__listItem__text {
+    position: relative;
+    overflow: hidden;
+    max-height: 3rem;
+}
+
+.widget__listItems--city .widget__listItem__text::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, transparent 1rem, white 100%);
+    pointer-events: none;
+}
+
 .ListEvent__titleLink__clickarea {
     position: absolute;
     inset: 0;
+    z-index: 1;
 }
 
 .teaser {
@@ -1550,6 +1565,7 @@ h2.widget__title {
     -webkit-hyphens: auto;
     -ms-hyphens: auto;
     hyphens: auto;
+    text-wrap: pretty;
 }
 
 .widget__listItem__text {
