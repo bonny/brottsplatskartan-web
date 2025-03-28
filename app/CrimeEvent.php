@@ -1353,6 +1353,125 @@ class CrimeEvent extends Model implements Feedable {
     }
 
     /**
+     * Returns a headline with keywords bolded using <strong> tags
+     * to make them stand out in listings.
+     
+     * @return string 
+     */
+    public function getHeadlineWithBoldedKeywords(): string {
+        // Put longest words first.
+        $words_to_bold = [
+            'körde av vägen',
+            'misstänkt farligt föremål',
+            'skottlossning mot bostad',
+            'misstänkt grov mordbrand',
+            'misstänkt skottlossning',
+            'misstänkt inbrottstjuv',
+            'föremål har exploderat',
+            'vårdslöshet i trafik',
+            'misstänkta för stöld',
+            'vårdlöshet i trafik',
+            'kontrollerar person',
+            'brott mot knivlagen',
+            'vandaliserar bilar',
+            'sexuellt ofredande',
+            'sexuellt ofredande',
+            'misstänkt våldtäkt',
+            'misshandlat kvinna',
+            'kontroll av person',
+            'föremål detonerade',
+            'skadad efter fall',
+            'sexuellt ofredade',
+            'misstänkt inbrott',
+            'man vandaliserade',
+            'skott avlossade',
+            'planerad övning',
+            'drograttfylleri',
+            'död efter skottlossning',
+            'misstankar om inbrott',
+            'hot med stickvapen',
+            'man omhändertagen',
+            'blottat sig',
+            'blottare',
+            'lägenhetsbrand',
+            'brand i lägenhet',
+            'svårt skadad efter skottlossning',
+            'svårt skadad person efter skottlossning',
+            'bedrägeriförsök',
+            'skott avlossat',
+            'villabrand',
+            'blottade sig',
+            'misstänkt rattfyllerist',
+            'berusad man',
+            'narkotikabrott',
+            'inbrottstjuvar',
+            'hittad avliden',
+            'cyklist påkörd',
+            'frihetsberövad',
+            'misshandelssituation',
+            'hittad avliden',
+            'hittad livlös',
+            'otillåtet fiske',
+            'personrån',
+            'villainbrott',
+            'vandaliserade',
+            'skottlossning',
+            'trafikolyckor',
+            'kört mot rött',
+            'dödar',
+            'hotfull',
+            'man hotade',
+            'hotade',
+            'krockar',
+            'flerbilskrock',
+            'butiksstölder',
+            'aggressiv man',
+            'trafikolycka',
+            'skadegörelse',
+            'bråkande män',
+            'rattfylleri',
+            'misshandlad',
+            'mordförsök',
+            'misshandel',
+            'kolliderat',
+            'knivskadad',
+            'detonation',
+            'olaga hot',
+            'nedslagen',
+            'kollision',
+            'explosion',
+            'bedrägeri',
+            'slagsmål',
+            'bestulen',
+            'båtbrand',
+            'smällar',
+            'krock',
+            'krockat',
+            'slagen',
+            'stöld',
+            'rånad',
+            'brand',
+            'larm',
+            'bråk',
+            'rån',
+        ];
+
+        $headline = $this->getHeadline();
+
+        // Append strong only for whole word matches.
+        foreach ($words_to_bold as $word) {
+            $pattern = '/\b(' . preg_quote($word, '/') . ')\b/i';
+            $headline = preg_replace(
+            $pattern,
+            '<strong>$1</strong>',
+            $headline
+            );
+        }
+
+        return $headline;
+    }
+
+    /**
      * Hämta rubrik för sidtitel,
      * som används för <title> och liknande.
      */

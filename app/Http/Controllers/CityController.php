@@ -41,7 +41,7 @@ class CityController extends Controller
         return $normalized;
     }
 
-    public function show($citySlug)
+    public function show($citySlug, Request $request)
     {
         $normalizedSlug = $this->normalizeCitySlug($citySlug);
         
@@ -61,7 +61,8 @@ class CityController extends Controller
             lng: $city['lng'],
             perPage: 25,
             nearbyInKm: $city['distance'],
-            days: 365
+            days: 365,
+            page: $request->query('page', 1),
         );
 
         $breadcrumbs = new Breadcrumbs();
