@@ -355,7 +355,7 @@ Route::post('/{lan}/{eventName}', function (
         abort(404);
     }
 
-    $validated = $request->validate([
+    $request->validate([
         'title' => 'required',
         'url' => 'required',
     ]);

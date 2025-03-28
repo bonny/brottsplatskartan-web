@@ -411,8 +411,6 @@ class CrimeEvent extends Model implements Feedable {
 
         if (!empty($this->parsed_title_location)) {
             $slugParts[] = $this->parsed_title_location;
-        } else {
-            #$eventName = "";
         }
 
         $prio1locations = $this->locations->filter(function ($val, $key) {
@@ -428,6 +426,11 @@ class CrimeEvent extends Model implements Feedable {
         // Endast för länkar skapade efter 2022-02-11 så inte gamla länkar påverkas.
         if ($this->getParsedDateInFormat('%Y-%m-%d') > "2022-02-10") {
             $slugParts[] = $this->getDescriptionAsPlainText();
+        }
+
+        // If lan contains Stockholm then just use stockholm as lan to make it shorter.
+        if (strpos($lan, 'stockholm') !== false) {
+            $lan = 'stockholm';
         }
 
         $slugParts[] = $this->getKey();
