@@ -789,13 +789,12 @@ class CrimeEvent extends Model implements Feedable {
         $lngMin = $lng - $distanceInDegrees / cos(deg2rad($lat));
         $lngMax = $lng + $distanceInDegrees / cos(deg2rad($lat));
 
-
-        // Select only needed columns plus distance calculation
+        // Build query starting with the geographical bounds
         $query = self::whereBetween('location_lat', [$latMin, $latMax])
-                ->whereBetween('location_lng', [$lngMin, $lngMax])
-                ->selectRaw(
-            '
-                *,
+            ->whereBetween('location_lng', [$lngMin, $lngMax])
+            ->useIndex('idx_crime_events_location_date')  // Apply index after where conditions
+            ->selectRaw(
+                '*,
                 (' . self::EARTH_RADIUS_KM . ' * 
                     acos(
                         cos(radians(?)) * 
@@ -805,8 +804,8 @@ class CrimeEvent extends Model implements Feedable {
                         sin(radians(location_lat))
                     )
                 ) AS distance',
-            [$lat, $lng, $lat]
-        )
+                [$lat, $lng, $lat]
+            )
             ->having('distance', '<=', $nearbyInKm)
             ->orderBy('parsed_date', 'DESC')
             ->orderBy('distance', 'ASC')
