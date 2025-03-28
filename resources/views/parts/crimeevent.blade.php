@@ -58,25 +58,17 @@ if $single is set then larger image
             <img loading="lazy" alt="{{ $event->getMapAltText() }}" class="Event__mapImage"
                 src="{{ $event->getStaticImageSrc(640, 320) }}" width="640" height="320"></img>
         @else
-            <a href="https://google.se/maps/{{ '@' . $event->location_lat }},{{ $event->location_lng }},12z"
-                target="_blank" class="FreddysGoogleMapsLink"
-                title="Öppna ungefärlig plats för händelsen/brottet i Google Maps (öppnas i ny flik)">
-                {{-- @if (false) --}}
-                <span class="Event__mapImageWrap Event__mapImageWrap--near">
-                    <img loading="lazy" alt="{{ $event->getMapAltText() }}"
-                        class="Event__mapImage Event__mapImage--near" src="{{ $event->getStaticImageSrc(617, 463) }}"
-                        width="426" height="320"></img>
-                </span>
-                {{-- @endif --}}
+            <span class="Event__mapImageWrap Event__mapImageWrap--near">
+                <img loading="lazy" alt="{{ $event->getMapAltText() }}" class="Event__mapImage Event__mapImage--near"
+                    src="{{ $event->getStaticImageSrc(617, 463) }}" width="426" height="320"></img>
+            </span>
 
-                <span class="Event__mapImageWrap Event__mapImageWrap--far">
-                    <img loading="lazy"
-                        alt="Översiktskarta som visar hela Sverige med en markör som visar ungefär var händelsen inträffat"
-                        class="Event__mapImage Event__mapImage--far" src="{{ $event->getStaticImageSrcFar(213, 332) }}"
-                        width="213" height="332"></img>
-                </span>
-
-            </a>
+            <span class="Event__mapImageWrap Event__mapImageWrap--far">
+                <img loading="lazy"
+                    alt="Översiktskarta som visar hela Sverige med en markör som visar ungefär var händelsen inträffat"
+                    class="Event__mapImage Event__mapImage--far" src="{{ $event->getStaticImageSrcFar(213, 332) }}"
+                    width="213" height="332"></img>
+            </span>
         @endif
 
         @if (isset($overview))
