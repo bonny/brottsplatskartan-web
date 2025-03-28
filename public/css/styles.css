@@ -1505,6 +1505,18 @@ h2.widget__title {
     padding-top: 0;
 }
 
+.widget__listItems--city {
+}
+
+.widget__listItems--city .ListEvent {
+    position: relative;
+}
+
+.ListEvent__titleLink__clickarea {
+    position: absolute;
+    inset: 0;
+}
+
 .teaser {
     font-size: var(--font-size-medium);
     color: var(--color-gray-1);

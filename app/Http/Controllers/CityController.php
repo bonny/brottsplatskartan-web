@@ -60,7 +60,8 @@ class CityController extends Controller
             lat: $city['lat'],
             lng: $city['lng'],
             perPage: 25,
-            nearbyInKm: $city['distance']
+            nearbyInKm: $city['distance'],
+            days: 365
         );
 
         $breadcrumbs = new Breadcrumbs();

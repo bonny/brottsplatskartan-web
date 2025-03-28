@@ -20,7 +20,7 @@
 
                 {{-- Händelselista. --}}
                 <div class="widget">
-                    <div class="widget__listItems u-margin-top-double">
+                    <div class="widget__listItems widget__listItems--city u-margin-top-double">
                         @foreach ($events as $event)
                             @include('parts.crimeevent-city', [
                                 'event' => $event,
