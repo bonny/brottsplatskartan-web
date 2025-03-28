@@ -794,6 +794,7 @@ class CrimeEvent extends Model implements Feedable {
         $query = self::whereBetween('location_lat', [$latMin, $latMax])
             ->whereBetween('location_lng', [$lngMin, $lngMax])
             ->whereDate('parsed_date', '>=', Carbon::now()->subDays($days))
+            ->whereDate('parsed_date', '<=', Carbon::now())
             ->useIndex('idx_crime_events_location_date')
             ->selectRaw(
                 '*,
