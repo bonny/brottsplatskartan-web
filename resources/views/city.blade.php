@@ -19,15 +19,15 @@
                 <x-events-map :show-map-title="false" :lat-lng=$mapStartLatLng :map-zoom=$mapZoom />
 
                 {{-- Händelselista. --}}
-                <ul class="widget__listItems u-margin-top-double">
-                    @foreach ($events as $event)
-                        @include('parts.crimeevent-small', [
-                            'event' => $event,
-                            'detailed' => true,
-                            'mapDistance' => 'near',
-                        ])
-                    @endforeach
-                </ul>
+                <div class="widget">
+                    <div class="widget__listItems u-margin-top-double">
+                        @foreach ($events as $event)
+                            @include('parts.crimeevent-city', [
+                                'event' => $event,
+                            ])
+                        @endforeach
+                    </div>
+                </div>
 
                 {{ $events->links('vendor.pagination.default') }}
             </div>
