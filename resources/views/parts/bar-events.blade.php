@@ -12,7 +12,7 @@
                 <li class="sitebar__EventsItem">
                     <a class="sitebar__EventsItemLink" href="{{ $mostViewedItem->getPermalink() }}">
                         <span
-                            class="sitebar__EventsItem__Time">{{ $mostViewedItem->getParsedDateInFormat('%H:%M') }}</span>
+                            class="sitebar__EventsItem__Time">{{ $mostViewedItem->getParsedDateInFormat('HH:mm') }}</span>
                         {{ $mostViewedItem->getHeadline() }}
                     </a>
                 </li>
