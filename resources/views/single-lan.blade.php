@@ -96,6 +96,7 @@ https://brottsplatskartan.localhost/lan/Stockholms%20l%C3%A4n
 
 @section('sidebar')
     @include('parts.sokruta')
+
     <div class="widget Stats Stats--lan" id="brottsstatistik">
         <h2 class="widget__title Stats__title">Brottsstatistik</h2>
         <div class="widget__listItem__text">

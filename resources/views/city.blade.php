@@ -37,6 +37,15 @@
 @endsection
 
 @section('sidebar')
+
+    <div class="widget Stats Stats--lan" id="brottsstatistik">
+        <h2 class="widget__title Stats__title">Brottsstatistik</h2>
+        <div class="widget__listItem__text">
+            <p class="pb-6">Antal Polisiära händelser per dag för {{ $lan }}, 14 dagar tillbaka.</p>
+            {!! $chartHtml !!}
+        </div>
+    </div>
+
     @include('parts.sokruta')
     @include('parts.lan-and-cities')
     @include('parts.widget-blog-entries')
