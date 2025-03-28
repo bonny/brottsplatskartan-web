@@ -174,7 +174,7 @@ class LanController extends Controller
                 'lanDate',
                 [
                     'lan' => $lan,
-                    'date' => trim(str::lower($date['date']->formatLocalized('%e-%B-%Y')))
+                    'date' => trim(str::lower($date['date']->isoFormat('D-MMMM-YYYY')))
                 ]
             );
         }

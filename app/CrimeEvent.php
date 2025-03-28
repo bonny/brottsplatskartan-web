@@ -263,8 +263,8 @@ class CrimeEvent extends Model implements Feedable {
         return Carbon::createFromTimestamp($this->pubdate)->toIso8601String();
     }
 
-    public function getPubDateFormatted($format = '%A %d %B %Y') {
-        return Carbon::createFromTimestamp($this->pubdate)->formatLocalized(
+    public function getPubDateFormatted($format = 'dddd D MMMM YYYY') {
+        return Carbon::createFromTimestamp($this->pubdate)->isoFormat(
             $format
         );
     }
@@ -1290,7 +1290,7 @@ class CrimeEvent extends Model implements Feedable {
 
         if ($lan && $plats) {
             // "15-januari-2018"
-            $dateString = Carbon::parse('today')->formatLocalized('%d-%B-%Y');
+            $dateString = Carbon::parse('today')->isoFormat('D-MMMM-YYYY');
             $date = \App\Helper::getdateFromDateSlug($dateString);
             $events = $platsController->getEventsInPlatsWithLanUncached(
                 $plats,

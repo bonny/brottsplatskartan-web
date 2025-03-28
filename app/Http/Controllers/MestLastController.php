@@ -37,7 +37,7 @@ class MestLastController extends Controller
                     'date' => $date,
                     'title' => sprintf(
                         'Mest lästa händelserna %1$s',
-                        $date->formatLocalized('%d %B %Y')
+                        $date->isoFormat('D MMMM YYYY')
                     ),
                     'events' => Helper::getMostViewedEvents(
                         $date,

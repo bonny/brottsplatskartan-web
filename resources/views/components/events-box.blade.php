@@ -184,7 +184,7 @@
                     </div>
                     <div class="Timeline-itemContent">
                         <div class="Timeline-itemContent-text">
-                            <p class="Timeline-itemTime">{{ $crimeEvent->getParsedDateInFormat('%H:%M') }}</p>
+                            <p class="Timeline-itemTime">{{ $crimeEvent->getParsedDateInFormat('HH:mm') }}</p>
                             <h3 class="Timeline-itemTitle">{{ $crimeEvent->getHeadline() }}</h3>
                         </div>
                         <img class="Timeline-mapImage" loading="lazy" alt="{{ $crimeEvent->getMapAltText() }}"

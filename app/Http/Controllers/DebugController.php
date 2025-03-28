@@ -44,7 +44,7 @@ class DebugController extends Controller
             $format = 'dddd D MMMM YYYY HH:mm';
             $carbonDate = Carbon::now();
             $carbonDateFormatted = $carbonDate->isoFormat($format);
-            echo "<br><br>carbon::formatLocalized($format):<br>$carbonDateFormatted";
+            echo "<br><br>carbon::isoFormat($format):<br>$carbonDateFormatted";
 
             $strftimestr = strftime($format);
             echo "<br><br>strftime($format):<br>$strftimestr";

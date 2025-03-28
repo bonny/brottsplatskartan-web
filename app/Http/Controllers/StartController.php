@@ -235,7 +235,7 @@ class StartController extends Controller
         } else {
             $canonicalLink = route('startDatum', [
                 'date' => trim(
-                    str::lower($date['date']->formatLocalized('%e-%B-%Y'))
+                    str::lower($date['date']->isoFormat('D-MMMM-YYYY'))
                 ),
             ]);
         }
@@ -252,7 +252,7 @@ class StartController extends Controller
             $pageTitle = sprintf(
                 'Händelser från Polisen %2$s - %1$d händelser',
                 $events->count(),
-                trim($date['date']->formatLocalized('%A %e %B %Y'))
+                trim($date['date']->isoFormat('dddd D MMMM YYYY'))
             );
         }
 
