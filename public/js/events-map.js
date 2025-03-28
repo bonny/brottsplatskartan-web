@@ -382,12 +382,12 @@ class EventsMap {
             this.options.zoom
         );
 
-        this.map.setView(this.options.latLng, this.options.zoom);
-
         L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
             attribution:
                 '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>',
         }).addTo(this.map);
+
+        this.map.setView(this.options.latLng, this.options.zoom);
 
         /**
          * Add expand button, but not if fullscreen, because then it's already expanded.

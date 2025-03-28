@@ -22,9 +22,10 @@ class CityController extends Controller
     private $cities = [
         'stockholm' => [
             'name' => 'Stockholm',
+            'lan' => 'Stockholms län',
             'lat' => 59.328930,
             'lng' => 18.064910,
-            'mapZoom' => 9,
+            'mapZoom' => 10,
             'distance' => 20, // km
             'pageTitle' => 'Stockholm: Polishändelser och blåljus',
             'title' => 'Senaste blåljusen och händelser från Polisen idag',
@@ -56,6 +57,11 @@ class CityController extends Controller
 
         $city = $this->cities[$normalizedSlug];
         
+        $city_lan = $city['lan'];
+        $policeStations = \App\Helper::getPoliceStationsCached()->first(function ($val, $key) use ($city_lan) {
+            return mb_strtolower($val['lanName']) === mb_strtolower($city_lan);
+        });
+
         $events = CrimeEvent::getEventsForCity(
             lat: $city['lat'],
             lng: $city['lng'],
@@ -77,6 +83,7 @@ class CityController extends Controller
             'pageTitle' => $city['pageTitle'],
             'mapStartLatLng' => [$city['lat'], $city['lng']],
             'mapZoom' => $city['mapZoom'] ?? 12,
+            'policeStations' => $policeStations,
         ]);
     }
 }

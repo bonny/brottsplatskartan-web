@@ -35,3 +35,10 @@
     </div>
 
 @endsection
+
+@section('sidebar')
+    @include('parts.sokruta')
+    @include('parts.lan-and-cities')
+    @include('parts.widget-blog-entries')
+    @include('parts.lan-policestations')
+@endsection
