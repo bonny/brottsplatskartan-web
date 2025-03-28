@@ -781,43 +781,50 @@ class CrimeEvent extends Model implements Feedable {
         ?int $page = null,
         int $days = 30
     ) {
-        // Convert distance to degrees (approximate)
-        $distanceInDegrees = $nearbyInKm / 111;
 
-        // Calculate bounding box
-        $latMin = $lat - $distanceInDegrees;
-        $latMax = $lat + $distanceInDegrees;
-        $lngMin = $lng - $distanceInDegrees / cos(deg2rad($lat));
-        $lngMax = $lng + $distanceInDegrees / cos(deg2rad($lat));
+        $cache_key = "getEventsForCity:lat{$lat}:lng{$lng}:nearby{$nearbyInKm}:perPage{$perPage}:page{$page}:days{$days}";
 
-        // Build query starting with the geographical bounds
-        $query = self::whereBetween('location_lat', [$latMin, $latMax])
-            ->whereBetween('location_lng', [$lngMin, $lngMax])
-            ->whereDate('parsed_date', '>=', Carbon::now()->subDays($days))
-            ->whereDate('parsed_date', '<=', Carbon::now())
-            ->useIndex('idx_crime_events_location_date')
-            ->selectRaw(
-                '*,
-                (' . self::EARTH_RADIUS_KM . ' * 
-                    acos(
-                        cos(radians(?)) * 
-                        cos(radians(location_lat)) * 
-                        cos(radians(location_lng) - radians(?)) + 
-                        sin(radians(?)) * 
-                        sin(radians(location_lat))
-                    )
-                ) AS distance',
-                [$lat, $lng, $lat]
-            )
-            ->having('distance', '<=', $nearbyInKm)
-            ->orderBy('parsed_date', 'DESC')
-            ->orderBy('distance', 'ASC')
-            ->with('locations');
+        $query_pagination = Cache::flexible($cache_key, [MINUTE_IN_SECONDS, 10 * MINUTE_IN_SECONDS], function () use ($lat, $lng, $perPage, $nearbyInKm, $page, $days) {
+            // Convert distance to degrees (approximate)
+            $distanceInDegrees = $nearbyInKm / 111;
 
-        return $query->paginate(
-            perPage: $perPage,
-            page: $page
-        );
+            // Calculate bounding box
+            $latMin = $lat - $distanceInDegrees;
+            $latMax = $lat + $distanceInDegrees;
+            $lngMin = $lng - $distanceInDegrees / cos(deg2rad($lat));
+            $lngMax = $lng + $distanceInDegrees / cos(deg2rad($lat));
+
+            // Build query starting with the geographical bounds
+            $query = self::whereBetween('location_lat', [$latMin, $latMax])
+                ->whereBetween('location_lng', [$lngMin, $lngMax])
+                ->whereDate('parsed_date', '>=', Carbon::now()->subDays($days))
+                ->whereDate('parsed_date', '<=', Carbon::now())
+                ->useIndex('idx_crime_events_location_date')
+                ->selectRaw(
+                    '*,
+                    (' . self::EARTH_RADIUS_KM . ' * 
+                        acos(
+                            cos(radians(?)) * 
+                            cos(radians(location_lat)) * 
+                            cos(radians(location_lng) - radians(?)) + 
+                            sin(radians(?)) * 
+                            sin(radians(location_lat))
+                        )
+                    ) AS distance',
+                    [$lat, $lng, $lat]
+                )
+                ->having('distance', '<=', $nearbyInKm)
+                ->orderBy('parsed_date', 'DESC')
+                ->orderBy('distance', 'ASC')
+                ->with('locations');
+
+            return $query->paginate(
+                perPage: $perPage,
+                page: $page
+            );
+        });
+
+        return $query_pagination;
     }
 
     public function getViewportSize() {
