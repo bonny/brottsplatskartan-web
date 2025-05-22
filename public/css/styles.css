@@ -34,6 +34,10 @@
     --breakpoint-large: 1024px;
 }
 
+@view-transition {
+    navigation: auto;
+}
+
 html,
 html *,
 html :after,
@@ -1519,7 +1523,7 @@ h2.widget__title {
 }
 
 .widget__listItems--city .widget__listItem__text::after {
-    content: '';
+    content: "";
     position: absolute;
     inset: 0;
     background: linear-gradient(to bottom, transparent 1rem, white 100%);
