@@ -96,22 +96,22 @@ class PreviousPartnersController extends Controller
 
         $randompost = collect([
             [
-                'image' => 'https://brottsplatskartan.ams3.digitaloceanspaces.com/blog/2022-textbild-fyra-nakna-man.png',
+                'image' => 'https://brottsplatskartan.hel1.your-objectstorage.com/blog/2022-textbild-fyra-nakna-man.png',
                 'link' => 'https://brottsplatskartan.se/blogg/2021/fyra-nakna-man-pa-museeum-och-andra-knasiga-handelser-fran-polisen-2021',
                 'description' => "Fyra nakna män!?",
             ],
             [
-                'image' => 'https://brottsplatskartan.ams3.digitaloceanspaces.com/blog/2022-textbild-grannsamverkan.png',
+                'image' => 'https://brottsplatskartan.hel1.your-objectstorage.com/blog/2022-textbild-grannsamverkan.png',
                 'link' => 'https://brottsplatskartan.se/inbrott/grannsamverkan?',
                 'description' => 'Carehood, Safeland, eller SSF Grannsamverkan. Vilken app väljer du?',
             ],
             [
-                'image' => 'https://brottsplatskartan.ams3.digitaloceanspaces.com/blog/2022-textbild-text-tv.png',
+                'image' => 'https://brottsplatskartan.hel1.your-objectstorage.com/blog/2022-textbild-text-tv.png',
                 'link' => 'https://texttv.nu/?',
                 'description' => 'Korta, snabba nyheter med Text TV-appen från TextTV.nu',
             ],
             [
-                'image' => 'https://brottsplatskartan.ams3.digitaloceanspaces.com/blog/2022-textbild-business-referral-2.jpg',
+                'image' => 'https://brottsplatskartan.hel1.your-objectstorage.com/blog/2022-textbild-business-referral-2.jpg',
                 'link' => 'https://adtraction.com/se?ref=bkwT-gk-34',
                 'description' => 'Click for more info',
             ],
