@@ -17,30 +17,42 @@ class AppServiceProvider extends ServiceProvider {
             \URL::forceScheme('https');
         }
 
-        // @TODO: Don't run the code below when we don't have any db connction
-        // because we can install things using composer and so on.
+        // Skip database queries when running console commands or if database is not available
+        if (!app()->runningInConsole()) {
+            try {
+                // Lan listing is used in header nav so share it here for easy access.
+                // https://laravel.com/docs/9.x/views#sharing-data-with-all-views
+                $lan = \App\Helper::getAllLanWithStats();
+                \View::share('shared_lan_with_stats', $lan);
 
-        // Lan listing is used in header nav so share it here for easy access.
-        // https://laravel.com/docs/9.x/views#sharing-data-with-all-views
-        $lan = \App\Helper::getAllLanWithStats();
-        \View::share('shared_lan_with_stats', $lan);
+                // Contents in notification bar = red banner on top of all pages.
+                $notificationBarContents = \Setting::get('notification-bar-contents');
+                \View::share('shared_notification_bar_contents', trim($notificationBarContents));
 
-        // Contents in notification bar = red banner on top of all pages.
-        $notificationBarContents = \Setting::get('notification-bar-contents');
-        \View::share('shared_notification_bar_contents', trim($notificationBarContents));
+                $inbrottUndersidor = \App\Helper::getInbrottNavItems();
+                \View::share('inbrott_undersidor', $inbrottUndersidor);
 
-        $inbrottUndersidor = \App\Helper::getInbrottNavItems();
-        \View::share('inbrott_undersidor', $inbrottUndersidor);
+                \View::share('shared_vma_alerts', \App\Helper::getVMAAlerts());
+                \View::share('shared_vma_current_alerts', \App\Helper::getCurrentVMAAlerts());
+                \View::share('shared_archived_vma_alerts', \App\Helper::getArchivedVMAAlerts());
 
-        \View::share('shared_vma_alerts', \App\Helper::getVMAAlerts());
-        \View::share('shared_vma_current_alerts', \App\Helper::getCurrentVMAAlerts());
-        \View::share('shared_archived_vma_alerts', \App\Helper::getArchivedVMAAlerts());
+                // Mest lästa.
+                \View::share('shared_most_viewed_events', \App\Helper::getMostViewedEvents(Carbon::now(), 10));
 
-        // Mest lästa.
-        \View::share('shared_most_viewed_events', \App\Helper::getMostViewedEvents(Carbon::now(), 10));
-
-        // Nyaste.
-        \View::share('shared_latest_events', \App\Helper::getLatestEventsByParsedDate(10));
+                // Nyaste.
+                \View::share('shared_latest_events', \App\Helper::getLatestEventsByParsedDate(10));
+            } catch (\Exception $e) {
+                // Database not available - set empty defaults
+                \View::share('shared_lan_with_stats', []);
+                \View::share('shared_notification_bar_contents', '');
+                \View::share('inbrott_undersidor', []);
+                \View::share('shared_vma_alerts', []);
+                \View::share('shared_vma_current_alerts', []);
+                \View::share('shared_archived_vma_alerts', []);
+                \View::share('shared_most_viewed_events', []);
+                \View::share('shared_latest_events', []);
+            }
+        }
     }
 
     /**
