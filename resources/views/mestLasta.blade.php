@@ -49,7 +49,7 @@ Sidmall för sidan med de mest lästa händelserna
         <p>Dessa händelser har inom kort tid fått många visningar.</p>
         
         @if($mestLastaNyligen['events'])
-            <ul class="widget__listItems widget__listItems--mostViewed">
+            <ul class="widget__listItems">
                 @foreach($mestLastaNyligen['events'] as $oneMostViewed)
                     @include('parts.crimeevent-small', [
                         'event' => $oneMostViewed->crimeEvent,
@@ -63,7 +63,7 @@ Sidmall för sidan med de mest lästa händelserna
 
         @foreach ($mestLasta as $mestLastKey => $mestLastValue)
             <h2>{{$mestLastValue['title']}}</h2>
-            <ul class="widget__listItems widget__listItems--mostViewed">
+            <ul class="widget__listItems">
                 @foreach($mestLastValue['events'] as $oneMostViewed)
                     @include('parts.crimeevent-small', [
                         'event' => $oneMostViewed->crimeEvent,

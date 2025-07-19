@@ -1,35 +1,15 @@
-<ul class="Events Events--overview">
-    @foreach ($eventsByDay as $dayYmd => $events)
-        <li class="Events__day">
+@foreach ($eventsByDay as $dayYmd => $events)
+    <h3 class="Events__dayTitle">
+        <time>{{ $events->get(0)->getCreatedAtLocalized() }}</time>
+    </h3>
 
-            <h3 class="Events__dayTitle">
-                <time>{{ $events->get(0)->getCreatedAtLocalized() }}</time>
-                {{-- @if ($events->count() == 1)
-                    <span>– En händelse</span>
-                @else
-                    <span>– {{ $events->count() }} händelser</span>
-                @endif --}}
-            </h3>
-
-            <ul class="Events__dayEvents">
-                {{-- @foreach ($events as $event)
-                    @include('parts.crimeevent_v2', [
-                        'overview' => true,
-                        // Om det är väldigt många grejjer på en sida så se till att bara de första
-                        // n händelserna som får bild, annars blir det för dyrt med alla API-anrop.
-                        'hideMapImage' => ($loop->index >= 10) || (isset($hideMapImage) && $hideMapImage) || $loop->parent->index > 2
-                    ])
-                @endforeach --}}
-
-                @foreach($events as $event)
-                    @include('parts.crimeevent-small', [
-                        'event' => $event,
-                        'detailed' => true,
-                        'mapDistance' => $mapDistance ?? null
-                    ])
-                @endforeach
-            </ul>
-
-        </li>
-    @endforeach
-</ul>
+    <ul class="widget__listItems">
+        @foreach($events as $event)
+            @include('parts.crimeevent-small', [
+                'event' => $event,
+                'detailed' => true,
+                'mapDistance' => $mapDistance ?? null
+            ])
+        @endforeach
+    </ul>
+@endforeach

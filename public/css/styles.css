@@ -26,6 +26,7 @@
     --font-size-medium: 1.3rem;
     --font-size-medium-2: 1.15rem;
     --font-size-large: 1.5rem;
+    --font-size-normal: 1rem;
     --font-size-small: 0.9rem;
     --font-size-xsmall: 0.75rem;
     --border-radius-normal: 10px;
@@ -1308,6 +1309,10 @@ input[type="url"],
     margin-bottom: 0;
 }
 
+.widget--blogentries .widget__listItem__title {
+    font-size: var(--font-size-normal);
+}
+
 .PoliceStation-locationsNav,
 .PoliceStation-servicesItems {
     list-style: none;
@@ -1500,9 +1505,6 @@ h2.widget__title {
     padding-bottom: var(--default-margin);
 }
 
-.widget__listItems--mostViewed .widget__listItem__title {
-    font-size: var(--font-size-medium);
-}
 
 .widget__listItem:first-of-type {
     border-top: none;
@@ -1570,6 +1572,7 @@ h2.widget__title {
     -ms-hyphens: auto;
     hyphens: auto;
     text-wrap: pretty;
+    font-size: var(--font-size-medium);
 }
 
 .widget__listItem__text {
