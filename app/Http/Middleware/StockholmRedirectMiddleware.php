@@ -24,10 +24,13 @@ class StockholmRedirectMiddleware
             'plats/stockholm',
             'sida/stockholm',
             'lan/stockholms-lan',
+            'lan/stockholm',
             'plats/stockholm-city',
             'plats/stockholms-län-stockholms-län',
             'plats/södra-stockholm-stockholms-län',
-            'lan/Stockholms län'
+            'lan/Stockholms län',
+            'lan/stockholms%20lan',
+            'lan/Stockholm%20County'
         ];
 
         // Check if the current path matches any of our patterns
