@@ -8,6 +8,10 @@ Brottsplatskartan är en svensk brottskartewebbplats som visar polishändelser f
 
 **Viktigt**: Detta är en svenskspråkig webbplats. All användargenererat innehåll, felmeddelanden, kommentarer och dokumentation ska vara på svenska.
 
+## Språkliga riktlinjer
+
+- Använd svenska när vi pratar.
+
 ## Teknikstack
 
 - **Backend**: Laravel 12 (PHP 8.2+)
@@ -176,3 +180,4 @@ Viktiga miljövariabler som behöver konfigureras:
 2. **Composer**: PHP-beroenden installeras
 3. **Database migrations**: Kör automatiskt vid deployment
 4. **Asset optimization**: Minifiering och versioning
+```
