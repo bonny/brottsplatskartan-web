@@ -1,6 +1,6 @@
 @props(['summary', 'title'])
 
-<div class="widget mb-8">
+<div class="widget">
     <div class="widget__header">
         <h2 class="widget__title">{{ $title }}</h2>
     </div>
