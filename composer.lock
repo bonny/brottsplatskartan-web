@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ede54c123892a63f7239513144f4eab0",
+    "content-hash": "5bfdd6aaac8f84182fb14804acaa108b",
     "packages": [
         {
             "name": "barryvdh/laravel-debugbar",
@@ -482,6 +482,51 @@
                 }
             ],
             "time": "2024-02-09T16:56:22+00:00"
+        },
+        {
+            "name": "claude-php/claude-3-api",
+            "version": "0.1.23",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/claude-php/claude-3-api.git",
+                "reference": "d059bcace9598ed8425e4ff68605b1979761ce53"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/claude-php/claude-3-api/zipball/d059bcace9598ed8425e4ff68605b1979761ce53",
+                "reference": "d059bcace9598ed8425e4ff68605b1979761ce53",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "guzzlehttp/guzzle": "^7.8",
+                "php": "^8.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^11.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Claude\\Claude3Api\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Dale Hurley",
+                    "email": "dale@createmy.com.au"
+                }
+            ],
+            "description": "A PHP package for the Claude 3.7 Sonnet API",
+            "support": {
+                "issues": "https://github.com/claude-php/claude-3-api/issues",
+                "source": "https://github.com/claude-php/claude-3-api/tree/v0.1.23"
+            },
+            "time": "2025-03-02T08:38:13+00:00"
         },
         {
             "name": "creitive/breadcrumbs",
@@ -10892,7 +10937,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {},
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
@@ -10912,6 +10957,6 @@
         "ext-xml": "*",
         "ext-zip": "*"
     },
-    "platform-dev": [],
-    "plugin-api-version": "2.2.0"
+    "platform-dev": {},
+    "plugin-api-version": "2.6.0"
 }

@@ -180,4 +180,7 @@ Viktiga miljövariabler som behöver konfigureras:
 2. **Composer**: PHP-beroenden installeras
 3. **Database migrations**: Kör automatiskt vid deployment
 4. **Asset optimization**: Minifiering och versioning
-```
+
+## Utvecklingsanteckningar
+
+- Toppen, lägg till korta kommentarer till funktionerna så de är lätta att förstå.

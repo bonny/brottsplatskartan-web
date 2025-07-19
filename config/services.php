@@ -35,4 +35,8 @@ return [
         'secret' => env('STRIPE_SECRET'),
     ],
 
+    'claude' => [
+        'api_key' => env('CLAUDE_API_KEY'),
+    ],
+
 ];

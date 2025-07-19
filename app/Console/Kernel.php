@@ -20,6 +20,9 @@ class Kernel extends ConsoleKernel
         $schedule->command(ImportVMAAlerts::class)->everyFiveMinutes();
         $schedule->command('app:importera-texttv')->everyFiveMinutes();
         $schedule->command('crimeevents:create-summaries --administrative_area_level_1=stockholm')->everyFiveMinutes();
+        
+        // Generera AI-sammanfattning för Stockholm varje dag kl 23:00
+        $schedule->command('summary:generate stockholm --yesterday')->dailyAt('23:00');
     }
 
     /**

@@ -15,6 +15,21 @@
                     <span class="u-block text-2xl mt-4">{{ $city['title'] }}</span>
                 </h1>
 
+                {{-- AI-sammanfattningar --}}
+                @if($todaysSummary)
+                    <x-daily-summary 
+                        :summary="$todaysSummary" 
+                        title="Sammanfattning av dagens händelser" 
+                    />
+                @endif
+
+                @if($yesterdaysSummary)
+                    <x-daily-summary 
+                        :summary="$yesterdaysSummary" 
+                        :title="'Sammanfattning från ' . $yesterdaysSummary->summary_date->locale('sv')->isoFormat('dddd D MMMM')" 
+                    />
+                @endif
+
                 {{-- Karta med händelser --}}
                 <x-events-map :show-map-title="false" :lat-lng=$mapStartLatLng :map-zoom=$mapZoom />
 

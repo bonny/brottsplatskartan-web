@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\CrimeEvent;
+use App\Models\DailySummary;
 use Illuminate\Http\Request;
 use Creitive\Breadcrumbs\Breadcrumbs;
+use Carbon\Carbon;
 
 /*
 Keywords to focus on:
@@ -28,8 +30,8 @@ class CityController extends Controller
             'mapZoom' => 10,
             'distance' => 20, // km
             'pageTitle' => 'Stockholm: Polishändelser och blåljus',
-            'title' => 'Senaste blåljusen och händelser från Polisen idag.',
-            'description' => 'Se aktuella polishändelser och blåljuslarm från räddningstjänsten i Stockholm idag',
+            'title' => 'Senaste blåljusen och händelser från Polisen.',
+            'description' => 'Se aktuella polishändelser och blåljuslarm från räddningstjänsten i Stockholm',
         ]
     ];
 
@@ -71,6 +73,23 @@ class CityController extends Controller
             page: $request->query('page', 1),
         );
 
+        // Hämta AI-sammanfattningar endast på första sidan
+        $todaysSummary = null;
+        $yesterdaysSummary = null;
+        
+        if ($request->query('page', 1) == 1) {
+            // Hämta både dagens och gårdagens sammanfattning i en query
+            $summaries = DailySummary::where('area', $normalizedSlug)
+                ->whereIn('summary_date', [Carbon::today()->format('Y-m-d'), Carbon::yesterday()->format('Y-m-d')])
+                ->get()
+                ->keyBy(function($item) {
+                    return $item->summary_date->format('Y-m-d');
+                });
+            
+            $todaysSummary = $summaries->get(Carbon::today()->format('Y-m-d'));
+            $yesterdaysSummary = $summaries->get(Carbon::yesterday()->format('Y-m-d'));
+        }
+
         $breadcrumbs = new Breadcrumbs();
         $breadcrumbs->setDivider('›');
         $breadcrumbs->addCrumb('Hem', '/');
@@ -86,7 +105,9 @@ class CityController extends Controller
             'policeStations' => $policeStations,
             'lan' => $city_lan,
             'chartHtml' => \App\Helper::getStatsChartHtml($city_lan),
-            'lanInfo' => \App\Helper::getSingleLanWithStats($city_lan)
+            'lanInfo' => \App\Helper::getSingleLanWithStats($city_lan),
+            'todaysSummary' => $todaysSummary,
+            'yesterdaysSummary' => $yesterdaysSummary
         ]);
     }
 }
