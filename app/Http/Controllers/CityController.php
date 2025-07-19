@@ -21,14 +21,14 @@ class CityController extends Controller
 {
     private $cities = [
         'stockholm' => [
-            'name' => 'Stockholm',
+            'name' => 'Stockholm och Stockholms län',
             'lan' => 'Stockholms län',
             'lat' => 59.328930,
             'lng' => 18.064910,
             'mapZoom' => 10,
             'distance' => 20, // km
             'pageTitle' => 'Stockholm: Polishändelser och blåljus',
-            'title' => 'Senaste blåljusen och händelser från Polisen idag',
+            'title' => 'Senaste blåljusen och händelser från Polisen idag.',
             'description' => 'Se aktuella polishändelser och blåljuslarm från räddningstjänsten i Stockholm idag',
         ]
     ];
