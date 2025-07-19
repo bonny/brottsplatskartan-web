@@ -2,109 +2,177 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Project Overview
+## Projektöversikt
 
-Brottsplatskartan is a Swedish crime mapping website that displays police incidents from the Swedish Police website in a user-friendly format with map visualization. The site aggregates and presents crime data, focusing on geographical representation and recent events.
+Brottsplatskartan är en svensk brottskartewebbplats som visar polishändelser från Polisens webbplats i ett användarvänligt format med kartvisualisering. Sajten aggregerar och presenterar brottsdata med fokus på geografisk representation och senaste händelser.
 
-## Tech Stack
+**Viktigt**: Detta är en svenskspråkig webbplats. All användargenererat innehåll, felmeddelanden, kommentarer och dokumentation ska vara på svenska.
+
+## Teknikstack
 
 - **Backend**: Laravel 12 (PHP 8.2+)
 - **Frontend**: Vue.js 2.6, Bootstrap 5
 - **Build Tool**: Laravel Mix (Webpack wrapper)
-- **Database**: MySQL with Redis caching
-- **Maps**: Leaflet.js
+- **Databas**: MySQL med Redis-cachning
+- **Kartor**: Leaflet.js
 - **Styling**: Sass/SCSS
 
-## Development Commands
+## Utvecklingskommandon
 
-### Local Development
+### Lokal utveckling
 ```bash
-# Start development server
+# Starta utvecklingsserver
 ./artisan serve
-# Visits http://localhost:8000
+# Besök http://localhost:8000
 
-# Watch for asset changes during development
+# Bevaka ändringar i assets under utveckling
 npm run watch
 
-# Build assets for development
+# Bygg assets för utveckling
 npm run dev
 
-# Build assets for production
+# Bygg assets för produktion
 npm run production
 ```
 
-### Data Import Commands
+### Dataimportkommandon
 ```bash
-# Fetch police crime events
+# Hämta polishändelser
 ./artisan crimeevents:fetch
 
-# Fetch TextTV news articles
+# Hämta TextTV-nyhetsartiklar
 ./artisan texttv:fetch
 ```
 
-### Package Management
+### Pakethantering
 ```bash
-# Update composer packages (note Redis requirement handling)
-composer update <package-name> --ignore-platform-req=ext-redis
+# Uppdatera composer-paket (notera Redis-kravhantering)
+composer update <paketnamn> --ignore-platform-req=ext-redis
 
-# Install npm dependencies
+# Installera npm-beroenden
 npm install
 ```
 
-### Testing
+### Testning
 ```bash
-# Run PHPUnit tests
+# Kör PHPUnit-tester
 ./vendor/bin/phpunit
 
-# Alternative test command
+# Alternativt testkommando
 php artisan test
 ```
 
-## Key Architecture Components
+## Nyckelarkitekturkomponenter
 
-### Models
-- `CrimeEvent` - Main crime incident data model
-- `VMAAlert` - Emergency alert system data
-- `Place` - Geographic location data
-- `Locations` - City/area mappings
-- `Dictionary` - Crime type categorization
+### Modeller
+- `CrimeEvent` - Huvudmodell för brottshändelser
+- `VMAAlert` - Data för varningssystem
+- `Place` - Geografisk platsdata
+- `Locations` - Stad/område-mappningar
+- `Dictionary` - Kategorisering av brottstyper
 
 ### Controllers
-- `StartController` - Homepage and main views
-- `PlatsController` - Location-specific crime data
-- `CityController` - City-specific pages
-- `LanController` - County-level data
-- `ApiController` - API endpoints for data access
-- `VMAAlertsController` - Emergency alerts
+- `StartController` - Startsida och huvudvyer
+- `PlatsController` - Platsspecifik brottsdata
+- `CityController` - Stadsspecifika sidor
+- `LanController` - Länsdata
+- `ApiController` - API-endpoints för dataåtkomst
+- `VMAAlertsController` - Nödvarningar
 
-### Key Features
-- Real-time crime data aggregation from Swedish Police RSS feeds
-- Interactive map visualization using Leaflet
-- Geographic filtering by cities, counties, and specific locations
-- Integration with TextTV for news content
-- Mobile-responsive design with PWA capabilities
+### Nyckelfunktioner
+- Realtidsaggregering av brottsdata från Polisens RSS-flöden
+- Interaktiv kartvisualisering med Leaflet
+- Geografisk filtrering efter städer, län och specifika platser
+- Integration med TextTV för nyhetsinnehåll
+- Mobilresponsiv design med PWA-funktioner
 
-### Data Sources
-- Swedish Police RSS feeds (https://polisen.se/Aktuellt/RSS/Lokala-RSS-floden/)
-- TextTV news integration
-- OpenStreetMap for geographic data
+### Datakällor
+- Polisens RSS-flöden (https://polisen.se/Aktuellt/RSS/Lokala-RSS-floden/)
+- TextTV-nyhetsintegration
+- OpenStreetMap för geografisk data
 
 ### Frontend Assets
-- Main JS bundle: `resources/js/app.js` → `public/js/app.js`
+- Huvud JS-bundle: `resources/js/app.js` → `public/js/app.js`
 - Styles: `resources/sass/app.scss` → `public/css/app.css`
-- Vue components in `resources/views/components/`
-- Map-specific JS: `public/js/events-map.js`
+- Vue-komponenter i `resources/views/components/`
+- Kartspecifik JS: `public/js/events-map.js`
 
-### Database Structure
-Crime events are stored with:
-- Geographic coordinates (lat/lng)
-- Administrative area levels
-- Parsed location names
-- Crime categorization
-- Timestamp data
-- View tracking for popular content
+### Databasstruktur
+Brottshändelser lagras med:
+- Geografiska koordinater (lat/lng)
+- Administrativa områdesnivåer
+- Parsade platsnamn
+- Brottskategorisering
+- Tidsstämpeldata
+- Visningsspårning för populärt innehåll
 
-### Caching Strategy
-- Redis used for session storage and caching
-- Database query caching for geographic lookups
-- Asset versioning via Laravel Mix manifest
+### Cachningsstrategi
+- Redis används för sessionslagring och cachning
+- Databassökningscachning för geografiska uppslagningar
+- Asset-versionering via Laravel Mix manifest
+
+## Svenska termer och konventioner
+
+### Brottstyper (crime types)
+- Inbrott - Burglary
+- Stöld - Theft
+- Rån - Robbery
+- Misshandel - Assault
+- Trafikolycka - Traffic accident
+- Narkotikabrott - Drug offense
+
+### Geografiska termer
+- Län - County
+- Kommun - Municipality
+- Stad - City
+- Plats - Location/Place
+
+## Deployment och Produktion
+
+### Produktionsmiljö
+
+**Dokku (Automatisk deployment)**
+- GitHub Actions deployment till `brottsplatskartan.se`
+- Triggas automatiskt vid push till `main`-branch
+- SSL-terminering och gzip-komprimering
+- Nginx-konfiguration med felhantering
+
+### Deployment-process
+
+Deployment sker automatiskt när kod pushas till `main`-branch:
+1. GitHub Actions triggas vid push
+2. Kod deployar till Dokku-server via SSH
+3. Assets byggs automatiskt i produktionsmiljön
+4. Nginx startas om med ny konfiguration
+
+### Lokal utvecklingsmiljö med Docker
+
+```bash
+# Starta med Laravel Sail
+./vendor/bin/sail up -d
+
+# Alternativt via alias (om konfigurerat)
+sail up -d
+
+# Tjänster som startas:
+# - Laravel app (port 80)
+# - MySQL 8.0 (port 3306) 
+# - Redis (port 6379)
+```
+
+### Miljövariabler för produktion
+
+Viktiga miljövariabler som behöver konfigureras:
+- `APP_ENV=production`
+- `APP_DEBUG=false`
+- `APP_URL` - produktions-URL
+- Databaskonfiguration för MySQL
+- Redis-konfiguration för cachning
+- Mail-inställningar för notifikationer
+
+### Build-process
+
+1. **Frontend assets**: Laravel Mix kompilerar JS/CSS med `npm run production`
+2. **Composer**: PHP-beroenden installeras
+3. **Database migrations**: Kör automatiskt vid deployment
+4. **Asset optimization**: Minifiering och versioning
