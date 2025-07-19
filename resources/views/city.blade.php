@@ -20,10 +20,12 @@
 
                 {{-- Händelselista. --}}
                 <div class="widget">
-                    <div class="widget__listItems widget__listItems--city u-margin-top-double">
+                    <div class="widget__listItems widget__listItems--city u-margin-top">
                         @foreach ($events as $event)
-                            @include('parts.crimeevent-city', [
+                            @include('parts.crimeevent-small', [
                                 'event' => $event,
+                                'detailed' => true,
+                                'mapDistance' => 'near'
                             ])
                         @endforeach
                     </div>

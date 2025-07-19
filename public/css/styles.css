@@ -841,7 +841,7 @@ input[type="url"],
     overflow: hidden;
     width: 90px;
     height: 90px;
-    margin-right: var(--default-margin-half);
+    margin-right: var(--default-margin);
     border-radius: var(--border-radius-normal);
 }
 
