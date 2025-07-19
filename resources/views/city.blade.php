@@ -15,23 +15,30 @@
                     <span class="u-block text-2xl mt-4">{{ $city['title'] }}</span>
                 </h1>
 
+                {{-- Karta med händelser --}}
+                @if(request()->query('page', 1) == 1)
+                    <x-events-map :show-map-title="false" :lat-lng=$mapStartLatLng :map-zoom=$mapZoom />
+                @endif
+
+                {{-- Paginering högst upp om inte sida 1 --}}
+                @if(request()->query('page', 1) > 1)
+                    {{ $events->links('vendor.pagination.default') }}
+                @endif
+
                 {{-- AI-sammanfattningar --}}
                 @if($todaysSummary)
                     <x-daily-summary 
                         :summary="$todaysSummary" 
-                        title="Sammanfattning av dagens händelser" 
+                        title="🤖 Sammanfattning av dagens händelser" 
                     />
                 @endif
 
-                @if($yesterdaysSummary)
+                {{-- @if($yesterdaysSummary)
                     <x-daily-summary 
                         :summary="$yesterdaysSummary" 
-                        :title="'Sammanfattning från ' . $yesterdaysSummary->summary_date->locale('sv')->isoFormat('dddd D MMMM')" 
+                        :title="'Sammanfattning från ' . $yesterdaysSummary->summary_date->locale('sv')->isoFormat('dddd D MMMB')" 
                     />
-                @endif
-
-                {{-- Karta med händelser --}}
-                <x-events-map :show-map-title="false" :lat-lng=$mapStartLatLng :map-zoom=$mapZoom />
+                @endif --}}
 
                 {{-- Händelselista. --}}
                 <div class="widget">
