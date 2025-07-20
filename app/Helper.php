@@ -1045,7 +1045,10 @@ class Helper {
                 ->orderBy('views', 'desc')
                 ->limit($limit)
                 ->with('CrimeEvent', 'CrimeEvent.locations')
-                ->get();
+                ->get()
+                ->filter(function (CrimeView $crimeView) {
+                    return $crimeView->crimeEvent !== null;
+                });
 
             return $mostViewed;
         });
