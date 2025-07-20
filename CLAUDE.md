@@ -213,6 +213,7 @@ dokku run brottsplatskartan php artisan view:cache
 ### Projekthanteringsverktyg
 
 -   **GitHub CLI**: Använd `gh` kommandot för effektiv hantering av GitHub-issues och pull requests
+-   **Git Branch-hantering**: När du jobbar med GitHub och dess CLI-verktyg så se till att skapa en ny branch när vi börjar arbeta med ett nytt issue
 
 ## Händelsefiltrering och innehållshantering
 
