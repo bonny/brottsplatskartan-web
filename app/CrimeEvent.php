@@ -97,12 +97,18 @@ class CrimeEvent extends Model implements Feedable {
                 "stroke" => "rgba(255,0,0,.2)"
             ]);
 
-            $tileServerPath = "";
-            $tileServerPath .= "|{$this->viewport_northeast_lat},{$this->viewport_northeast_lng}";
-            $tileServerPath .= "|{$this->viewport_southwest_lat},{$this->viewport_northeast_lng}";
+            // Formatera koordinater med 3 decimaler
+            $viewport_northeast_lat = number_format($this->viewport_northeast_lat, 3, '.', '');
+            $viewport_northeast_lng = number_format($this->viewport_northeast_lng, 3, '.', '');
+            $viewport_southwest_lat = number_format($this->viewport_southwest_lat, 3, '.', '');
+            $viewport_southwest_lng = number_format($this->viewport_southwest_lng, 3, '.', '');
 
-            $tileServerPath .= "|{$this->viewport_southwest_lat},{$this->viewport_southwest_lng}";
-            $tileServerPath .= "|{$this->viewport_northeast_lat},{$this->viewport_southwest_lng}";
+            $tileServerPath = "";
+            $tileServerPath .= "|{$viewport_northeast_lat},{$viewport_northeast_lng}";
+            $tileServerPath .= "|{$viewport_southwest_lat},{$viewport_northeast_lng}";
+
+            $tileServerPath .= "|{$viewport_southwest_lat},{$viewport_southwest_lng}";
+            $tileServerPath .= "|{$viewport_northeast_lat},{$viewport_southwest_lng}";
 
             $tileServerPath = trim($tileServerPath, '|');
 
@@ -166,8 +172,12 @@ class CrimeEvent extends Model implements Feedable {
             $zoomLevel = 5;
             $expandNumber = 0.25;
 
+            // Formatera koordinater med 3 decimaler
+            $location_lng = number_format($this->location_lng, 3, '.', '');
+            $location_lat = number_format($this->location_lat, 3, '.', '');
+
             $tileserverUrl .= 'styles/basic-preview/static/';
-            $tileserverUrl .= "{$this->location_lng},{$this->location_lat},{$zoomLevel}";
+            $tileserverUrl .= "{$location_lng},{$location_lat},{$zoomLevel}";
             $tileserverUrl .= "/{$width}x{$height}.jpg";
             $tileServerQueryArgs = array_merge($tileServerQueryArgs, [
                 "latlng" => 1,
@@ -180,26 +190,26 @@ class CrimeEvent extends Model implements Feedable {
 
             $viewport_northeast_lat_first = number_format(
                 $this->viewport_northeast_lat + $expandNumber,
-                5,
+                3,
                 '.',
                 ''
             );
             $viewport_northeast_lng = number_format(
                 $this->viewport_northeast_lng + $expandNumber,
-                5,
+                3,
                 '.',
                 ''
             );
 
             $viewport_southwest_lat = number_format(
                 $this->viewport_southwest_lat - $expandNumber,
-                5,
+                3,
                 '.',
                 ''
             );
             $viewport_southwest_lng = number_format(
                 $this->viewport_southwest_lng - $expandNumber,
-                5,
+                3,
                 '.',
                 ''
             );
