@@ -38,14 +38,52 @@ class CheckEventPublicity extends Command
         if ($apply) {
             // Applicera ändringarna
             $this->info('Applicerar ändringarna...');
-            $result = $contentFilterService->markEventsAsNonPublic($since);
             
-            $this->info("✅ Markerade {$result['updated_count']} händelser som icke-publika:");
+            // Först räkna totalt antal händelser att kontrollera
+            $totalEvents = \App\CrimeEvent::withoutGlobalScope('public')
+                ->where('created_at', '>=', now()->subDays($since))
+                ->where('is_public', true)
+                ->count();
             
-            if ($result['updated_count'] > 0) {
+            $this->info("Kontrollerar {$totalEvents} händelser...");
+            
+            // Skapa progress bar
+            $progressBar = $this->output->createProgressBar($totalEvents);
+            $progressBar->setFormat('verbose');
+            $progressBar->start();
+            
+            $foundCount = 0;
+            $eventsToUpdate = $contentFilterService->getEventsToMarkAsNonPublic($since, function ($processed, $found) use ($progressBar, &$foundCount) {
+                $foundCount = $found;
+                $progressBar->setProgress($processed);
+                $progressBar->setMessage("Hittade: {$found}", 'found');
+            });
+            
+            $progressBar->finish();
+            $this->newLine(2);
+            
+            // Nu markera som icke-publika
+            $updatedCount = 0;
+            $updatedEvents = [];
+
+            foreach ($eventsToUpdate as $event) {
+                $event->is_public = false;
+                $event->save();
+                
+                $updatedCount++;
+                $updatedEvents[] = [
+                    'id' => $event->id,
+                    'title' => $event->title,
+                    'reason' => $contentFilterService->isPressNotice($event) ? 'Presstalesperson-meddelande' : 'Okänd anledning'
+                ];
+            }
+            
+            $this->info("✅ Markerade {$updatedCount} händelser som icke-publika:");
+            
+            if ($updatedCount > 0) {
                 $this->table(
                     ['ID', 'Titel', 'Anledning'],
-                    collect($result['updated_events'])->map(function ($event) {
+                    collect($updatedEvents)->map(function ($event) {
                         return [
                             $event['id'],
                             Str::limit($event['title'], 50),
@@ -70,7 +108,20 @@ class CheckEventPublicity extends Command
                 $this->warn("⚠️  Detta är många händelser ({$totalEvents}). Processen kan ta tid.");
             }
             
-            $eventsToUpdate = $contentFilterService->getEventsToMarkAsNonPublic($since);
+            // Skapa progress bar
+            $progressBar = $this->output->createProgressBar($totalEvents);
+            $progressBar->setFormat('verbose');
+            $progressBar->start();
+            
+            $foundCount = 0;
+            $eventsToUpdate = $contentFilterService->getEventsToMarkAsNonPublic($since, function ($processed, $found) use ($progressBar, &$foundCount) {
+                $foundCount = $found;
+                $progressBar->setProgress($processed);
+                $progressBar->setMessage("Hittade: {$found}", 'found');
+            });
+            
+            $progressBar->finish();
+            $this->newLine(2);
             
             if ($eventsToUpdate->isEmpty()) {
                 $this->info('✅ Inga händelser behöver markeras som icke-publika.');

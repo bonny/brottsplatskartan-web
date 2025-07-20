@@ -75,21 +75,29 @@ class ContentFilterService
      * Hämtar händelser som ska markeras som icke-publika.
      *
      * @param int $daysBack Antal dagar bakåt att kontrollera
+     * @param callable|null $progressCallback Callback för att visa progress (antal processade, totalt antal)
      * @return Collection
      */
-    public function getEventsToMarkAsNonPublic(int $daysBack = 30): Collection
+    public function getEventsToMarkAsNonPublic(int $daysBack = 30, ?callable $progressCallback = null): Collection
     {
         $eventsToUpdate = collect();
+        $processed = 0;
         
         // Använd chunk för att hantera stora dataset
         CrimeEvent::withoutGlobalScope('public')
             ->where('created_at', '>=', now()->subDays($daysBack))
             ->where('is_public', true)
-            ->chunk(1000, function ($events) use ($eventsToUpdate) {
+            ->chunk(1000, function ($events) use ($eventsToUpdate, &$processed, $progressCallback) {
                 foreach ($events as $event) {
                     if (!$this->shouldBePublic($event)) {
                         $eventsToUpdate->push($event);
                     }
+                    $processed++;
+                }
+                
+                // Anropa progress callback om den finns
+                if ($progressCallback) {
+                    $progressCallback($processed, $eventsToUpdate->count());
                 }
             });
 
