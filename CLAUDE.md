@@ -19,10 +19,8 @@ Brottsplatskartan är en svensk webbapplikation för visualisering av polishänd
 ### Utvecklingsmiljö
 
 -   **Backend-ramverk**: Laravel 12 (PHP 8.2+)
--   **Build-verktyg**: Laravel Mix (Webpack wrapper)
 -   **Databashantering**: MySQL 8.0 med Redis-cachning
 -   **Kartvisualisering**: Leaflet.js
--   **Stilhantering**: Sass/SCSS
 
 ## Utvecklingsarbetsflöde
 
@@ -168,6 +166,7 @@ public/js/events-map.js                             (Kartspecifik funktionalitet
 ### Deployment-arbetsflöde
 
 **Automatisk deployment:**
+
 1. Push till `main`-branch
 2. GitHub Actions triggar automatisk deployment
 3. Dokku deployar senaste koden till `brottsplatskartan.se`
@@ -186,10 +185,11 @@ dokku run brottsplatskartan php artisan view:cache
 ```
 
 **Vanliga post-deployment kommandon:**
-- **Databasmigrationer**: `dokku run brottsplatskartan php artisan migrate`
-- **Cache-clearing**: `dokku run brottsplatskartan php artisan cache:clear`
-- **Config-cache**: `dokku run brottsplatskartan php artisan config:cache`
-- **Rensa icke-publika händelser**: `dokku run brottsplatskartan php artisan crimeevents:check-publicity --apply --since=365`
+
+-   **Databasmigrationer**: `dokku run brottsplatskartan php artisan migrate`
+-   **Cache-clearing**: `dokku run brottsplatskartan php artisan cache:clear`
+-   **Config-cache**: `dokku run brottsplatskartan php artisan config:cache`
+-   **Rensa icke-publika händelser**: `dokku run brottsplatskartan php artisan crimeevents:check-publicity --apply --since=365`
 
 ### Produktionskonfiguration
 
@@ -221,15 +221,18 @@ dokku run brottsplatskartan php artisan view:cache
 Systemet använder `ContentFilterService` för att automatiskt identifiera och dölja icke-relevanta händelser:
 
 **Filtertyper:**
-- **Presstalesperson-meddelanden**: Händelser med information om presstalespersoners tjänstgöringstider
-- **Pressnummer-information**: Meddelanden om polisens pressnummer och tillgänglighet
+
+-   **Presstalesperson-meddelanden**: Händelser med information om presstalespersoners tjänstgöringstider
+-   **Pressnummer-information**: Meddelanden om polisens pressnummer och tillgänglighet
 
 **Automatisk filtrering:**
-- Körs automatiskt vid import av nya händelser (`crimeevents:fetch`)
-- Använder Global Scope för att endast visa publika händelser på sajten
-- Händelser markeras som `is_public = false` istället för att raderas
+
+-   Körs automatiskt vid import av nya händelser (`crimeevents:fetch`)
+-   Använder Global Scope för att endast visa publika händelser på sajten
+-   Händelser markeras som `is_public = false` istället för att raderas
 
 **Manuell hantering:**
+
 ```bash
 # Kontrollera vilka händelser som skulle döljas (dry-run)
 php artisan crimeevents:check-publicity --since=365
