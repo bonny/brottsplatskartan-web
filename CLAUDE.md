@@ -167,12 +167,33 @@ public/js/events-map.js                             (Kartspecifik funktionalitet
 
 ### Deployment-arbetsflöde
 
-Deploy till produktion (brottsplatskartan.se) sker automatiskt via GitHub Actions.
-Vid push till `main`-branch körs en GitHub Action som gör så att sajten använder Dokku för att deploya senaste koden.
+**Automatisk deployment:**
+1. Push till `main`-branch
+2. GitHub Actions triggar automatisk deployment
+3. Dokku deployar senaste koden till `brottsplatskartan.se`
+
+**Post-deployment åtgärder:**
+När deployment är klart kan manuella kommandon behöva köras på servern:
+
+```bash
+# Logga in på produktionsservern
+ssh <server>
+
+# Kör kommandon via Dokku
+dokku run brottsplatskartan php artisan migrate
+dokku run brottsplatskartan php artisan config:cache
+dokku run brottsplatskartan php artisan view:cache
+```
+
+**Vanliga post-deployment kommandon:**
+- **Databasmigrationer**: `dokku run brottsplatskartan php artisan migrate`
+- **Cache-clearing**: `dokku run brottsplatskartan php artisan cache:clear`
+- **Config-cache**: `dokku run brottsplatskartan php artisan config:cache`
+- **Rensa icke-publika händelser**: `dokku run brottsplatskartan php artisan crimeevents:check-publicity --apply --since=365`
 
 ### Produktionskonfiguration
 
-**Kritiska miljövariabler**:
+**Kritiska miljövariabler:**
 
 -   `APP_ENV=production` - Produktionsmiljö-flagga
 -   `APP_DEBUG=false` - Avaktivera debug-läge för säkerhet
@@ -192,3 +213,30 @@ Vid push till `main`-branch körs en GitHub Action som gör så att sajten anvä
 ### Projekthanteringsverktyg
 
 -   **GitHub CLI**: Använd `gh` kommandot för effektiv hantering av GitHub-issues och pull requests
+
+## Händelsefiltrering och innehållshantering
+
+### ContentFilterService
+
+Systemet använder `ContentFilterService` för att automatiskt identifiera och dölja icke-relevanta händelser:
+
+**Filtertyper:**
+- **Presstalesperson-meddelanden**: Händelser med information om presstalespersoners tjänstgöringstider
+- **Pressnummer-information**: Meddelanden om polisens pressnummer och tillgänglighet
+
+**Automatisk filtrering:**
+- Körs automatiskt vid import av nya händelser (`crimeevents:fetch`)
+- Använder Global Scope för att endast visa publika händelser på sajten
+- Händelser markeras som `is_public = false` istället för att raderas
+
+**Manuell hantering:**
+```bash
+# Kontrollera vilka händelser som skulle döljas (dry-run)
+php artisan crimeevents:check-publicity --since=365
+
+# Applicera filtrering för befintliga händelser
+php artisan crimeevents:check-publicity --apply --since=365
+
+# På produktionsservern
+dokku run brottsplatskartan php artisan crimeevents:check-publicity --apply --since=365
+```
