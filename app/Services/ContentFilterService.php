@@ -25,6 +25,11 @@ class ContentFilterService
             return false;
         }
 
+        // Kontrollera om det är ett pressnummer-informationsmeddelande
+        if ($this->isPhoneNumberInfo($event)) {
+            return false;
+        }
+
         // Lägg till fler filter här i framtiden
 
         return true;
@@ -62,6 +67,50 @@ class ContentFilterService
             if (empty($text)) continue;
             
             foreach ($pressPatterns as $pattern) {
+                if (preg_match($pattern, $text)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Identifierar pressnummer-informationsmeddelanden som inte ska visas publikt.
+     *
+     * @param CrimeEvent $event
+     * @return bool
+     */
+    public function isPhoneNumberInfo(CrimeEvent $event): bool
+    {
+        $title = strtolower($event->title ?? '');
+        $description = strtolower($event->description ?? '');
+        $parsedContent = strtolower($event->parsed_content ?? '');
+
+        // Mönster för pressnummer-informationsmeddelanden
+        $phoneNumberPatterns = [
+            // Huvudmönster för titel
+            '/information om polisens pressnummer/i',
+            '/polisens pressnummer/i',
+            
+            // Huvudmönster för innehåll
+            '/presstalesperson avslutar sin tjänstgöring för dagen/i',
+            '/under resten av kvällen och natten besvaras samtal/i',
+            '/besvaras samtal till polisens pressnummer av personal vid regionledningscentralen/i',
+            '/i morgon är presstalesperson i tjänst från klockan/i',
+            '/när nattsammanfattningarna är publicerade besvaras samtal på pressnumret/i',
+            '/regionledningscentralen i mån av tid/i',
+            '/besvaras samtal på pressnumret/i',
+        ];
+
+        // Kontrollera alla textfält mot alla mönster
+        $textFields = [$title, $description, $parsedContent];
+        
+        foreach ($textFields as $text) {
+            if (empty($text)) continue;
+            
+            foreach ($phoneNumberPatterns as $pattern) {
                 if (preg_match($pattern, $text)) {
                     return true;
                 }
@@ -145,6 +194,10 @@ class ContentFilterService
     {
         if ($this->isPressNotice($event)) {
             return 'Presstalesperson-meddelande';
+        }
+
+        if ($this->isPhoneNumberInfo($event)) {
+            return 'Pressnummer-information';
         }
 
         return 'Okänd anledning';
