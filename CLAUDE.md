@@ -1,186 +1,194 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Denna fil tillhandahåller vägledning för Claude Code (claude.ai/code) vid arbete med kod i denna repository.
 
 ## Projektöversikt
 
-Brottsplatskartan är en svensk brottskartewebbplats som visar polishändelser från Polisens webbplats i ett användarvänligt format med kartvisualisering. Sajten aggregerar och presenterar brottsdata med fokus på geografisk representation och senaste händelser.
+Brottsplatskartan är en svensk webbapplikation för visualisering av polishändelser från Polisens officiella webbplats. Applikationen aggregerar och presenterar brottsdata genom interaktiv kartvisualisering med fokus på geografisk representation och realtidsuppdateringar.
 
-**Viktigt**: Detta är en svenskspråkig webbplats. All användargenererat innehåll, felmeddelanden, kommentarer och dokumentation ska vara på svenska.
+**Viktigt**: Denna applikation är utvecklad för svenskspråkiga användare. All användargenererat innehåll, felmeddelanden, kodkommentarer och dokumentation ska författas på svenska.
 
-## Språkliga riktlinjer
+## Kommunikationsriktlinjer
 
-- Använd svenska när vi pratar.
+-   Kommunicera uteslutande på svenska under utvecklingsarbetet
+-   Använd tydligt och professionellt språk i all koddokumentation
+-   Följ svenska terminologi för brottstyper och geografiska begrepp
 
-## Teknikstack
+## Teknisk arkitektur
 
-- **Backend**: Laravel 12 (PHP 8.2+)
-- **Frontend**: Vue.js 2.6, Bootstrap 5
-- **Build Tool**: Laravel Mix (Webpack wrapper)
-- **Databas**: MySQL med Redis-cachning
-- **Kartor**: Leaflet.js
-- **Styling**: Sass/SCSS
+### Utvecklingsmiljö
 
-## Utvecklingskommandon
+-   **Backend-ramverk**: Laravel 12 (PHP 8.2+)
+-   **Build-verktyg**: Laravel Mix (Webpack wrapper)
+-   **Databashantering**: MySQL 8.0 med Redis-cachning
+-   **Kartvisualisering**: Leaflet.js
+-   **Stilhantering**: Sass/SCSS
 
-### Lokal utveckling
+## Utvecklingsarbetsflöde
+
+### Lokal utvecklingsmiljö
+
 ```bash
-# Starta utvecklingsserver
+# Starta lokal utvecklingsserver
 ./artisan serve
-# Besök http://localhost:8000
+# Applikationen är tillgänglig på http://localhost:8000
 
-# Bevaka ändringar i assets under utveckling
+# Aktivera automatisk kompilering av frontend-assets
 npm run watch
 
-# Bygg assets för utveckling
+# Kompilera assets för utveckling
 npm run dev
 
-# Bygg assets för produktion
+# Kompilera och optimera assets för produktion
 npm run production
 ```
 
-### Dataimportkommandon
+### Datahantering och import
+
 ```bash
-# Hämta polishändelser
+# Importera aktuella polishändelser från RSS-flöden
 ./artisan crimeevents:fetch
 
-# Hämta TextTV-nyhetsartiklar
+# Importera nyhetsartiklar från TextTV
 ./artisan texttv:fetch
 ```
 
-### Pakethantering
+### Pakethantering och beroenden
+
 ```bash
-# Uppdatera composer-paket (notera Redis-kravhantering)
+# Uppdatera PHP-beroenden via Composer
+# Observera: Redis-tillägget kan kräva särskild hantering
 composer update <paketnamn> --ignore-platform-req=ext-redis
 
-# Installera npm-beroenden
+# Installera eller uppdatera Node.js-beroenden
 npm install
 ```
 
-### Testning
+### Kvalitetssäkring och testning
+
 ```bash
-# Kör PHPUnit-tester
+# Kör fullständig testsvit med PHPUnit
 ./vendor/bin/phpunit
 
-# Alternativt testkommando
+# Alternativt testkommando via Laravel Artisan
 php artisan test
 ```
 
-## Nyckelarkitekturkomponenter
+## Systemarkitektur
 
-### Modeller
-- `CrimeEvent` - Huvudmodell för brottshändelser
-- `VMAAlert` - Data för varningssystem
-- `Place` - Geografisk platsdata
-- `Locations` - Stad/område-mappningar
-- `Dictionary` - Kategorisering av brottstyper
+### Datamodeller (Models)
 
-### Controllers
-- `StartController` - Startsida och huvudvyer
-- `PlatsController` - Platsspecifik brottsdata
-- `CityController` - Stadsspecifika sidor
-- `LanController` - Länsdata
-- `ApiController` - API-endpoints för dataåtkomst
-- `VMAAlertsController` - Nödvarningar
+-   **`CrimeEvent`** - Huvudmodell för hantering av brottshändelser och polisrapporter
+-   **`VMAAlert`** - Datamodell för nationella varnings- och informationssystem
+-   **`Place`** - Geografisk platsdata och koordinathantering
+-   **`Locations`** - Mappning av geografiska områden (städer, kommuner, län)
+-   **`Dictionary`** - Kategorisering och klassificering av brottstyper
 
-### Nyckelfunktioner
-- Realtidsaggregering av brottsdata från Polisens RSS-flöden
-- Interaktiv kartvisualisering med Leaflet
-- Geografisk filtrering efter städer, län och specifika platser
-- Integration med TextTV för nyhetsinnehåll
-- Mobilresponsiv design med PWA-funktioner
+### Kontrollenheter (Controllers)
 
-### Datakällor
-- Polisens RSS-flöden (https://polisen.se/Aktuellt/RSS/Lokala-RSS-floden/)
-- TextTV-nyhetsintegration
-- OpenStreetMap för geografisk data
+-   **`StartController`** - Hantering av startsida och primära användarvyer
+-   **`PlatsController`** - Platsspecifik brottsdata och geografisk filtrering
+-   **`CityController`** - Stadsspecifika sidor och kommundata
+-   **`LanController`** - Länsövergripande data och statistik
+-   **`ApiController`** - RESTful API-endpoints för extern dataåtkomst
+-   **`VMAAlertsController`** - Hantering av nationella varningar och alerts
 
-### Frontend Assets
-- Huvud JS-bundle: `resources/js/app.js` → `public/js/app.js`
-- Styles: `resources/sass/app.scss` → `public/css/app.css`
-- Vue-komponenter i `resources/views/components/`
-- Kartspecifik JS: `public/js/events-map.js`
+### Kärnfunktionalitet
 
-### Databasstruktur
-Brottshändelser lagras med:
-- Geografiska koordinater (lat/lng)
-- Administrativa områdesnivåer
-- Parsade platsnamn
-- Brottskategorisering
-- Tidsstämpeldata
-- Visningsspårning för populärt innehåll
+-   **Realtidsaggregering** av brottsdata från Polisens officiella RSS-flöden
+-   **Interaktiv kartvisualisering** med responsiv Leaflet.js-implementation
+-   **Avancerad geografisk filtrering** baserat på städer, län och specifika platser
+-   **Nyhetsintegration** med TextTV för kompletterande innehåll
+-   **Mobilresponsiv design** med Progressive Web App (PWA) funktionalitet
 
-### Cachningsstrategi
-- Redis används för sessionslagring och cachning
-- Databassökningscachning för geografiska uppslagningar
-- Asset-versionering via Laravel Mix manifest
+### Datakällor och integration
 
-## Svenska termer och konventioner
+-   **Polisens RSS-flöden**: [Lokala RSS-flöden](https://polisen.se/Aktuellt/RSS/Lokala-RSS-floden/)
+-   **TextTV-nyhetsintegration**: Automatiserad hämtning av relevanta nyhetsartiklar
+-   **OpenStreetMap**: Geografisk kartdata och geokodning
 
-### Brottstyper (crime types)
-- Inbrott - Burglary
-- Stöld - Theft
-- Rån - Robbery
-- Misshandel - Assault
-- Trafikolycka - Traffic accident
-- Narkotikabrott - Drug offense
+### Frontend-arkitektur
 
-### Geografiska termer
-- Län - County
-- Kommun - Municipality
-- Stad - City
-- Plats - Location/Place
-
-## Deployment och Produktion
-
-### Produktionsmiljö
-
-**Dokku (Automatisk deployment)**
-- GitHub Actions deployment till `brottsplatskartan.se`
-- Triggas automatiskt vid push till `main`-branch
-- SSL-terminering och gzip-komprimering
-- Nginx-konfiguration med felhantering
-
-### Deployment-process
-
-Deployment sker automatiskt när kod pushas till `main`-branch:
-1. GitHub Actions triggas vid push
-2. Kod deployar till Dokku-server via SSH
-3. Assets byggs automatiskt i produktionsmiljön
-4. Nginx startas om med ny konfiguration
-
-### Lokal utvecklingsmiljö med Docker
-
-```bash
-# Starta med Laravel Sail
-./vendor/bin/sail up -d
-
-# Alternativt via alias (om konfigurerat)
-sail up -d
-
-# Tjänster som startas:
-# - Laravel app (port 80)
-# - MySQL 8.0 (port 3306) 
-# - Redis (port 6379)
+```
+Frontend Asset Pipeline:
+resources/js/app.js        → public/js/app.js        (Huvud JavaScript-bundle)
+resources/sass/app.scss    → public/css/app.css      (Huvudstilark)
+public/js/events-map.js                             (Kartspecifik funktionalitet)
 ```
 
-### Miljövariabler för produktion
+### Databasdesign
 
-Viktiga miljövariabler som behöver konfigureras:
-- `APP_ENV=production`
-- `APP_DEBUG=false`
-- `APP_URL` - produktions-URL
-- Databaskonfiguration för MySQL
-- Redis-konfiguration för cachning
-- Mail-inställningar för notifikationer
+**Brottshändelser** struktureras med följande dataattribut:
 
-### Build-process
+-   **Geografiska koordinater** (latitud/longitud för exakt positionering)
+-   **Administrativa områdesnivåer** (kommun, län, region)
+-   **Parsad platsinformation** (strukturerad adress- och platsdata)
+-   **Brottskategorisering** (standardiserad klassificering enligt Polisens taxonomy)
+-   **Temporal data** (tidsstämplar för händelse och rapportering)
+-   **Engagement-mätning** (visningsstatistik för populärt innehåll)
 
-1. **Frontend assets**: Laravel Mix kompilerar JS/CSS med `npm run production`
-2. **Composer**: PHP-beroenden installeras
-3. **Database migrations**: Kör automatiskt vid deployment
-4. **Asset optimization**: Minifiering och versioning
+### Prestanda och cachning
 
-## Utvecklingsanteckningar
+-   **Redis-implementation** för sessionshantering och högpresterande cachning
+-   **Databassökningscachning** för optimering av geografiska uppslagningar
+-   **Asset-versionering** via Laravel Mix manifest för efficient browser-cachning
 
-- Toppen, lägg till korta kommentarer till funktionerna så de är lätta att förstå.
+## Terminologi och konventioner
+
+### Brottskategorier
+
+| **Svenska termer** | **Engelska motsvarigheter** | **Beskrivning**                            |
+| ------------------ | --------------------------- | ------------------------------------------ |
+| Inbrott            | Burglary                    | Olagligt intrång i byggnad eller fordon    |
+| Stöld              | Theft                       | Olovligt tillgrepp av egendom              |
+| Rån                | Robbery                     | Stöld med våld eller hot om våld           |
+| Misshandel         | Assault                     | Fysiskt våld mot person                    |
+| Trafikolycka       | Traffic accident            | Olycka i trafiken med personskada          |
+| Narkotikabrott     | Drug offense                | Brott relaterat till narkotiska substanser |
+
+### Geografisk nomenklatur
+
+| **Svenska termer** | **Engelska motsvarigheter** | **Administrativ nivå**    |
+| ------------------ | --------------------------- | ------------------------- |
+| Län                | County                      | Regional nivå             |
+| Kommun             | Municipality                | Kommunal nivå             |
+| Stad               | City                        | Urban enhet               |
+| Plats              | Location/Place              | Specifik geografisk punkt |
+
+## Produktionsmiljö och deployment
+
+### Automatiserad deployment via Dokku
+
+**Produktionsinfrastruktur**:
+
+-   **Plattform**: Dokku-baserad deployment till `brottsplatskartan.se`
+-   **CI/CD Pipeline**: GitHub Actions för automatiserad deployment
+-   **Trigger**: Automatisk deployment vid push till `main`-branch
+
+### Deployment-arbetsflöde
+
+Deploy till produktion (brottsplatskartan.se) sker automatiskt via GitHub Actions.
+Vid push till `main`-branch körs en GitHub Action som gör så att sajten använder Dokku för att deploya senaste koden.
+
+### Produktionskonfiguration
+
+**Kritiska miljövariabler**:
+
+-   `APP_ENV=production` - Produktionsmiljö-flagga
+-   `APP_DEBUG=false` - Avaktivera debug-läge för säkerhet
+-   `APP_URL` - Kanonisk produktions-URL
+-   **Databaskonfiguration**: MySQL-anslutningsparametrar
+-   **Redis-inställningar**: Cache-server konfiguration
+-   **Mail-konfiguration**: SMTP-inställningar för systemnotifikationer
+
+## Utvecklingsriktlinjer
+
+### Kodkvalitet och dokumentation
+
+-   **Funktionskommentarer**: Implementera kortfattade, beskrivande kommentarer för alla funktioner
+-   **Kodens läsbarhet**: Prioritera tydlig och välstrukturerad kod
+-   **Svenska terminologi**: Konsekvent användning av svenska termer i kommentarer och dokumentation
+
+### Projekthanteringsverktyg
+
+-   **GitHub CLI**: Använd `gh` kommandot för effektiv hantering av GitHub-issues och pull requests
