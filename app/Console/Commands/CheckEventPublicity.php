@@ -57,6 +57,19 @@ class CheckEventPublicity extends Command
         } else {
             // Endast visa vad som skulle ändras (dry-run)
             $this->info('🔍 Dry-run läge - visar händelser som skulle markeras som icke-publika:');
+            
+            // Först räkna totalt antal händelser att kontrollera
+            $totalEvents = \App\CrimeEvent::withoutGlobalScope('public')
+                ->where('created_at', '>=', now()->subDays($since))
+                ->where('is_public', true)
+                ->count();
+            
+            $this->info("Kontrollerar {$totalEvents} händelser...");
+            
+            if ($totalEvents > 10000) {
+                $this->warn("⚠️  Detta är många händelser ({$totalEvents}). Processen kan ta tid.");
+            }
+            
             $eventsToUpdate = $contentFilterService->getEventsToMarkAsNonPublic($since);
             
             if ($eventsToUpdate->isEmpty()) {

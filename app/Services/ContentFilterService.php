@@ -79,15 +79,21 @@ class ContentFilterService
      */
     public function getEventsToMarkAsNonPublic(int $daysBack = 30): Collection
     {
-        // Använd withoutGlobalScope för att se alla händelser
-        $events = CrimeEvent::withoutGlobalScope('public')
+        $eventsToUpdate = collect();
+        
+        // Använd chunk för att hantera stora dataset
+        CrimeEvent::withoutGlobalScope('public')
             ->where('created_at', '>=', now()->subDays($daysBack))
-            ->where('is_public', true) // Bara de som fortfarande är publika
-            ->get();
+            ->where('is_public', true)
+            ->chunk(1000, function ($events) use ($eventsToUpdate) {
+                foreach ($events as $event) {
+                    if (!$this->shouldBePublic($event)) {
+                        $eventsToUpdate->push($event);
+                    }
+                }
+            });
 
-        return $events->filter(function ($event) {
-            return !$this->shouldBePublic($event);
-        });
+        return $eventsToUpdate;
     }
 
     /**
