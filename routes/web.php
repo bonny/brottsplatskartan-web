@@ -469,11 +469,14 @@ Route::get('/inbrott/{undersida?}', function (
     $undersida = 'start'
 ) {
     // Hämta se senaste händelserna som innehåller "inbrott", "larm", "intrång", osv.
-    $latestInbrottEvents = CrimeEvent::orderBy("created_at", "desc")
-        ->where("parsed_title", 'like', '%inbrott%')
-        ->orWhere("parsed_title", 'like', '%larm%')
-        ->orWhere("parsed_title", 'like', '%intrång%')
-        ->paginate(40);
+    $cacheKey = "latestInbrottEvents:page:" . ($request->get('page', 1));
+    $latestInbrottEvents = Cache::remember($cacheKey, 15 * 60, function () {
+        return CrimeEvent::orderBy("created_at", "desc")
+            ->where("parsed_title", 'like', '%inbrott%')
+            ->orWhere("parsed_title", 'like', '%larm%')
+            ->orWhere("parsed_title", 'like', '%intrång%')
+            ->paginate(40);
+    });
 
     $undersidor = \App\Helper::getInbrottNavItems();
 
@@ -518,15 +521,17 @@ Route::get('/brand/{undersida?}', function (
     $undersida = 'start'
 ) {
     // Hämta se senaste händelserna som innehåller "brand" osv.
-    $latestBrandEvents = CrimeEvent::orderBy("created_at", "desc")
-        ->where("parsed_title", 'like', '%brand%')
-        ->orWhere("parsed_title", 'like', '%brand%')
-        ->orWhere("parsed_title", 'like', '%mordbrand%')
-        ->orWhere("parsed_title", 'like', '%brinner%')
-        ->orWhere("parsed_title", 'like', '%brinna%')
-        ->orWhere("parsed_title", 'like', '%rökutveckling%')
-        ->orWhere("parsed_title", 'like', '%röklukt%')
-        ->paginate(40);
+    $cacheKey = "latestBrandEvents:page:" . ($request->get('page', 1));
+    $latestBrandEvents = Cache::remember($cacheKey, 15 * 60, function () {
+        return CrimeEvent::orderBy("created_at", "desc")
+            ->where("parsed_title", 'like', '%brand%')
+            ->orWhere("parsed_title", 'like', '%mordbrand%')
+            ->orWhere("parsed_title", 'like', '%brinner%')
+            ->orWhere("parsed_title", 'like', '%brinna%')
+            ->orWhere("parsed_title", 'like', '%rökutveckling%')
+            ->orWhere("parsed_title", 'like', '%röklukt%')
+            ->paginate(40);
+    });
 
     $undersidor = \App\Helper::getBrandNavItems();
 
