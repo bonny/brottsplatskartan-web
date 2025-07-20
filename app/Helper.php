@@ -959,12 +959,12 @@ class Helper {
      * "just nu" för en grej som pågått en hel dag kan ha fått fler totala
      * visningar än en grej som fått 1000 visningar senaste minuten.
      *
-     * @param  Carbon  $date  [description]
+     * @param  Carbon|null  $date  [description]
      * @param  integer $limit [description]
      * @return Collection          [description]
      */
     public static function getMostViewedEvents(
-        Carbon $date = null,
+        ?Carbon $date = null,
         int $limit = 10
     ) {
         if (!$date) {
