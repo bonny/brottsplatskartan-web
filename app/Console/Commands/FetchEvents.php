@@ -10,6 +10,7 @@ use App\highways_ignored;
 use Carbon\Carbon;
 use App;
 use DB;
+use App\Services\ContentFilterService;
 
 class FetchEvents extends Command
 {
@@ -108,6 +109,17 @@ class FetchEvents extends Command
 
         // $bar->finish();
         // End geocode.
+
+        // Kontrollera och markera händelser som inte ska vara publika
+        $this->info('Kontrollerar händelser för publicitetsstatus...');
+        $contentFilterService = new ContentFilterService();
+        $filterResult = $contentFilterService->markEventsAsNonPublic(1); // Bara händelser från idag
+        
+        if ($filterResult['updated_count'] > 0) {
+            $this->info("Markerade {$filterResult['updated_count']} händelser som icke-publika");
+        } else {
+            $this->info('Inga händelser behövde markeras som icke-publika');
+        }
 
         $this->info('Done!');
     }

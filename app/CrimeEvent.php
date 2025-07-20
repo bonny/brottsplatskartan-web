@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Cache;
 use App\Http\Controllers\FeedParserController;
 use App\Http\Controllers\FeedController;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Spatie\Feed\Feedable;
 use Spatie\Feed\FeedItem;
 use App\Http\Controllers\PlatsController;
@@ -38,9 +39,17 @@ class CrimeEvent extends Model implements Feedable {
         'geocoded',
         'title_alt_1',
         'description_alt_1',
+        'is_public',
     ];
 
     private const EARTH_RADIUS_KM = 6371;
+
+    protected static function booted(): void
+    {
+        static::addGlobalScope('public', function (Builder $builder) {
+            $builder->where('is_public', true);
+        });
+    }
 
     /**
      * Get the locations for the event post.
