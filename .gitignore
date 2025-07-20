@@ -11,3 +11,4 @@ Homestead.yaml
 /storage/crime_events.index
 /storage/debugbar
 
+.claude/settings.local.json
