@@ -806,7 +806,7 @@ class CrimeEvent extends Model implements Feedable {
 
         $cache_key = "getEventsForCity:lat{$lat}:lng{$lng}:nearby{$nearbyInKm}:perPage{$perPage}:page{$page}:days{$days}";
 
-        $query_pagination = Cache::flexible($cache_key, [MINUTE_IN_SECONDS, 10 * MINUTE_IN_SECONDS], function () use ($lat, $lng, $perPage, $nearbyInKm, $page, $days) {
+        $query_pagination = Cache::flexible($cache_key, [5 * MINUTE_IN_SECONDS, 10 * MINUTE_IN_SECONDS], function () use ($lat, $lng, $perPage, $nearbyInKm, $page, $days) {
             // Convert distance to degrees (approximate)
             $distanceInDegrees = $nearbyInKm / 111;
 
