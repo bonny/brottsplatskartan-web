@@ -24,11 +24,8 @@ class Kernel extends ConsoleKernel
         // Generera gårdagens sammanfattning tidigt på morgonen (klar för dagen)
         $schedule->command('summary:generate stockholm --yesterday')->dailyAt('06:00');
         
-        // Generera AI-sammanfattning för Stockholm flera gånger per dag
-        $schedule->command('summary:generate stockholm')->at('08:00');
-        $schedule->command('summary:generate stockholm')->at('12:00'); 
-        $schedule->command('summary:generate stockholm')->at('16:00');
-        $schedule->command('summary:generate stockholm')->at('20:00');
+        // Generera AI-sammanfattning för Stockholm var 30:e minut (optimerad för att bara köra AI när händelser ändrats)
+        $schedule->command('summary:generate stockholm')->everyThirtyMinutes();
     }
 
     /**

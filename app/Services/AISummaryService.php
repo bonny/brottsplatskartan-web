@@ -24,28 +24,40 @@ class AISummaryService
 
     /**
      * Genererar en AI-sammanfattning av dagens händelser för ett specifikt område
+     * Kontrollerar först om händelserna har ändrats sedan senaste körningen
      * 
      * @param string $area Område att summera (t.ex. 'stockholm')
      * @param Carbon $date Datum att summera
-     * @return DailySummary|null Sammanfattning eller null om ingen kunde skapas
+     * @return array ['summary' => DailySummary|null, 'ai_generated' => bool]
      */
-    public function generateDailySummary(string $area, Carbon $date): ?DailySummary
+    public function generateDailySummary(string $area, Carbon $date): array
     {
         $events = $this->getEventsForDate($area, $date);
         
         if ($events->isEmpty()) {
             Log::info("Inga händelser hittades för {$area} på {$date->format('Y-m-d')}");
-            return null;
+            return ['summary' => null, 'ai_generated' => false];
         }
 
+        // Kontrollera om sammanfattning redan finns och om händelserna har ändrats
+        $existingSummary = DailySummary::where('summary_date', $date->format('Y-m-d'))
+            ->where('area', $area)
+            ->first();
+        
+        if ($existingSummary && $this->eventsUnchanged($events, $existingSummary)) {
+            Log::info("Händelserna för {$area} på {$date->format('Y-m-d')} har inte ändrats - hoppar över AI-generering");
+            return ['summary' => $existingSummary, 'ai_generated' => false];
+        }
+
+        Log::info("Händelser har ändrats för {$area} på {$date->format('Y-m-d')} - genererar ny sammanfattning");
         $summary = $this->generateSummaryText($events, $area, $date);
         
         if (!$summary) {
             Log::error("Kunde inte generera sammanfattning för {$area} på {$date->format('Y-m-d')}");
-            return null;
+            return ['summary' => null, 'ai_generated' => false];
         }
 
-        return DailySummary::updateOrCreate(
+        $dailySummary = DailySummary::updateOrCreate(
             [
                 'summary_date' => $date->format('Y-m-d'),
                 'area' => $area
@@ -56,6 +68,8 @@ class AISummaryService
                 'events_count' => $events->count()
             ]
         );
+        
+        return ['summary' => $dailySummary, 'ai_generated' => true];
     }
 
     /**
@@ -180,5 +194,30 @@ Händelserna nedan är strukturerade med XML-taggar. Använd informationen från
 {$eventsText}
 
 Skriv sammanfattningen:";
+    }
+    
+    /**
+     * Kontrollerar om händelserna har ändrats sedan senaste sammanfattning
+     * 
+     * @param \Illuminate\Database\Eloquent\Collection $events Aktuella händelser
+     * @param DailySummary $existingSummary Befintlig sammanfattning
+     * @return bool True om händelserna är oförändrade
+     */
+    private function eventsUnchanged($events, DailySummary $existingSummary): bool
+    {
+        // Jämför antal händelser
+        if ($events->count() !== $existingSummary->events_count) {
+            return false;
+        }
+        
+        // Skapa hash av händelse-ID:n för snabb jämförelse
+        $currentEventIds = $events->pluck('id')->sort()->values()->toArray();
+        $previousEventIds = collect($existingSummary->events_data ?? [])
+            ->pluck('id')
+            ->sort()
+            ->values()
+            ->toArray();
+        
+        return $currentEventIds === $previousEventIds;
     }
 }

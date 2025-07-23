@@ -42,10 +42,16 @@ class GenerateDailySummary extends Command
         $this->info("Genererar sammanfattning för {$area} den {$date->format('Y-m-d')}...");
 
         try {
-            $summary = $summaryService->generateDailySummary($area, $date);
+            $result = $summaryService->generateDailySummary($area, $date);
+            $summary = $result['summary'];
+            $aiGenerated = $result['ai_generated'];
             
             if ($summary) {
-                $this->info("✅ Sammanfattning skapad!");
+                if ($aiGenerated) {
+                    $this->info("✅ Ny sammanfattning genererad med AI!");
+                } else {
+                    $this->info("ℹ️ Händelserna har inte ändrats - använder befintlig sammanfattning");
+                }
                 $this->info("Antal händelser: {$summary->events_count}");
                 $this->line("Sammanfattning:");
                 $this->line($summary->summary);
