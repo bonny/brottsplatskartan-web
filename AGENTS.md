@@ -2,6 +2,19 @@
 
 Denna fil tillhandahåller vägledning för Claude Code (claude.ai/code) vid arbete med kod i denna repository.
 
+## API-dokumentation
+
+För komplett API-dokumentation, se **[API.md](API.md)**.
+
+**Snabbreferens:**
+- `/api/events` - Hämta händelser med filtrering
+- `/api/eventsMap` - Händelser för kartvisning (cachad, optimerad)
+- `/api/event/{id}` - Enskild händelse
+- `/api/eventsNearby` - Händelser nära koordinat
+- `/api/areas` - Lista över län
+
+Alla endpoints returnerar JSON. Se API.md för fullständiga exempel och parametrar.
+
 ## Projektöversikt
 
 Brottsplatskartan är en svensk webbapplikation för visualisering av polishändelser från Polisens officiella webbplats. Applikationen aggregerar och presenterar brottsdata genom interaktiv kartvisualisering med fokus på geografisk representation och realtidsuppdateringar.
