@@ -1,6 +1,17 @@
-# Långsamma SQL-queries - Date Index Problem
+# Databas-optimering - Slow Queries & N+1 Problem
 
-## Problem
+## Översikt
+
+Detta dokument beskriver två separata men relaterade problem som orsakade hög CPU-användning på MariaDB:
+
+1. **Datum-index problem** - Queries använde fel kolumn i WHERE-clausuler
+2. **N+1 Query problem** - API-endpoints saknade eager loading av relations
+
+Tillsammans orsakade dessa problem att MariaDB konstant hade hög CPU-användning (40-80%) med hundratals onödiga queries.
+
+---
+
+## Problem 1: Date Index Problem
 
 SQL-queries mot `crime_events` tabellen använde inte datum-index korrekt, vilket ledde till full table scans (ALL) istället för index-användning.
 
@@ -189,8 +200,12 @@ LIMIT 5;
 1. ✅ Ändra queries i `app/Helper.php` - **KLART**
 2. ✅ Ändra queries i `app/Http/Controllers/PlatsController.php` - **KLART**
 3. ✅ Testa att index används korrekt efter ändringarna - **KLART (2025-11-10)**
-4. ⏳ Verifiera prestanda-förbättring i produktion
-5. ⏳ Rensa cache efter deployment
+4. ✅ Identifiera N+1 problem via slow request log - **KLART**
+5. ✅ Fixa N+1 problem i API-endpoints - **KLART**
+6. ⏳ Deploya båda fixes till produktion
+7. ⏳ Rensa cache efter deployment
+8. ⏳ Monitorera MariaDB CPU-användning i htop
+9. ⏳ Verifiera prestanda-förbättring i produktion
 
 ## Testresultat
 
@@ -212,9 +227,78 @@ Rows: 282,742 (men med index-access)
 
 **Slutsats:** Optimeringen fungerar perfekt! Index används nu konsekvent i alla uppdaterade queries.
 
-## Sammanfattning av ändringar
+---
 
-### Totalt 8 metoder uppdaterade:
+## Problem 2: N+1 Query Problem
+
+### Upptäckt
+
+Efter att ha fixat datum-index problemet var MariaDB fortfarande ofta högt belastad. Analys av PHP-FPM slow request log (`slow-queries.log`) visade:
+
+**Vanligaste långsamma anrop:**
+- `ApiController.php:159` - 20 förekomster
+- `ApiEventsMapController.php:40` - 15 förekomster
+- `CrimeEvent.php:484` (getLocationString) - 15 förekomster
+
+### Orsak
+
+API-endpoints hämtade CrimeEvents utan att eager-loada `locations`-relationen:
+
+```php
+// Problematisk kod
+$events = CrimeEvent::orderBy("created_at", "desc")
+    ->limit(500)
+    ->get(); // Saknar ->with('locations')
+
+// Senare i loopen
+foreach ($events as $event) {
+    $event->getLocationString(); // Triggrar lazy load = 1 query per event
+}
+```
+
+**Resultat:**
+- ApiController: 1 + 1 + 20 = **22 queries** per request
+- ApiEventsMapController: 1 + 500 = **501 queries** var 5:e minut
+
+### Lösning
+
+Lägg till `->with('locations')` för eager loading:
+
+```php
+$events = CrimeEvent::orderBy("created_at", "desc")
+    ->with('locations') // Eager load i en enda query
+    ->limit(500)
+    ->get();
+```
+
+**Resultat:**
+- ApiController: 1 + 1 + 1 = **3 queries** per request (85% minskning)
+- ApiEventsMapController: 1 + 1 = **2 queries** var 5:e minut (99% minskning)
+
+### Ändringar
+
+**1. ApiController.php (rad 160):**
+```php
+// Eager load locations för att undvika N+1 query problem
+$events = $events->with('locations')->paginate($limit);
+```
+
+**2. ApiEventsMapController.php (rad 20):**
+```php
+return CrimeEvent::orderBy("created_at", "desc")
+    ->where('created_at', '>=', now()->subDays($daysBack))
+    ->with('locations') // Eager load för att undvika N+1 query problem
+    ->limit(500)
+    ->get();
+```
+
+Se `readme.issue.n-plus-one.md` för mer detaljerad dokumentation om N+1-problemet.
+
+---
+
+## Sammanfattning av alla ändringar
+
+### Problem 1: Datum-index (8 metoder)
 
 **Helper.php (4 metoder):**
 - `getPrevDaysNavInfo()` - Rad 453
@@ -228,14 +312,52 @@ Rows: 282,742 (men med index-access)
 
 Alla queries som använder `date_created_at as dateYMD` i SELECT-delen använder nu konsekvent `date_created_at` i WHERE-clausulerna.
 
+### Problem 2: N+1 Query (2 endpoints)
+
+**ApiController.php:**
+- `events()` - Rad 160: Lagt till `->with('locations')`
+
+**ApiEventsMapController.php:**
+- `index()` - Rad 20: Lagt till `->with('locations')`
+
+## Commits
+
+1. **Datum-index fix** - Commit: `55a4f1b`
+   - "Optimera SQL-queries för att använda date_created_at index"
+   - 3 files changed, 253 insertions(+), 12 deletions(-)
+
+2. **N+1 fix** - Commit: `890629d` (ej pushad ännu)
+   - "Fixa N+1 query problem i API-endpoints genom eager loading"
+   - 3 files changed, 195 insertions(+), 1 deletion(-)
+
+## Förväntad impact
+
+### Före optimeringarna:
+- Datum-navigering: Full table scan på 282,742 rader
+- API-endpoints: 22-501 queries per request
+- MariaDB CPU: Ofta 40-80%
+- PHP-FPM: Många slow requests
+
+### Efter optimeringarna:
+- Datum-navigering: Index range scan
+- API-endpoints: 2-3 queries per request
+- MariaDB CPU: Förväntas minska dramatiskt
+- PHP-FPM: Färre slow requests
+
+**Total reduktion av queries för API-endpoints: ~90-99%**
+
 ## Relaterade filer
 
 - `/database/migrations/2022_06_29_211007_generate_crime_events_virtual_col_and_index.php` - Skapar virtuell kolumn
 - `/database/migrations/2022_06_29_191304_generate_crime_events_indexes.php` - Skapar index på `created_at`
 - `/.cursor/rules/database.mdc` - Databas-schema dokumentation
+- `/slow-queries.log` - PHP-FPM slow request log (analys av N+1 problem)
+- `/readme.issue.n-plus-one.md` - Detaljerad dokumentation av N+1-problemet
 
 ## Referenser
 
 - [MySQL Virtual Columns](https://dev.mysql.com/doc/refman/8.0/en/create-table-generated-columns.html)
 - [MariaDB Generated Columns](https://mariadb.com/kb/en/generated-columns/)
 - [Laravel Query Builder - WHERE Clauses](https://laravel.com/docs/queries#where-clauses)
+- [Laravel Eager Loading](https://laravel.com/docs/eloquent-relationships#eager-loading)
+- [N+1 Query Problem](https://stackoverflow.com/questions/97197/what-is-the-n1-selects-problem-in-orm-object-relational-mapping)
