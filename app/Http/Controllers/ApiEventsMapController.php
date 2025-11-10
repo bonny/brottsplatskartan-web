@@ -17,6 +17,7 @@ class ApiEventsMapController extends Controller {
         $events = Cache::remember($cacheKey, $cacheSeconds, function () use ($daysBack) {
             return CrimeEvent::orderBy("created_at", "desc")
                 ->where('created_at', '>=', now()->subDays($daysBack))
+                ->with('locations') // Eager load för att undvika N+1 query problem
                 ->limit(500)
                 ->get();
         });

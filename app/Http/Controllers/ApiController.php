@@ -156,7 +156,8 @@ class ApiController extends Controller {
             $events = $events->where("parsed_title", $type);
         }
 
-        $events = $events->paginate($limit);
+        // Eager load locations för att undvika N+1 query problem
+        $events = $events->with('locations')->paginate($limit);
 
         $callback = $request->input('callback');
 
