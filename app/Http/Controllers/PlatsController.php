@@ -870,8 +870,8 @@ class PlatsController extends Controller
             // Både plats och län
             $prevDayEvents = CrimeEvent::
                 selectRaw('date_created_at as dateYMD, count(*) as dateCount, 1 as vvv')
-                ->where('created_at', '<', $dateYmd)
-                ->where('created_at', '>', $dateYmdMinusManyDaysBack)
+                ->where('date_created_at', '<', $dateYmd)
+                ->where('date_created_at', '>', $dateYmdMinusManyDaysBack)
                 ->where("administrative_area_level_1", $oneLanName)
                 ->where(function ($query) use ($platsWithoutLan) {
                     $query->where("parsed_title_location", $platsWithoutLan);
@@ -893,8 +893,8 @@ class PlatsController extends Controller
             // Plats utan län
             $prevDayEvents = CrimeEvent::
                 selectRaw('date_created_at as dateYMD, count(*) as dateCount')
-                ->where('created_at', '<', $dateYmd)
-                ->where('created_at', '>', $dateYmdMinusManyDaysBack)
+                ->where('date_created_at', '<', $dateYmd)
+                ->where('date_created_at', '>', $dateYmdMinusManyDaysBack)
                 ->where(function ($query) use ($platsWithoutLan) {
                     $query->where("parsed_title_location", $platsWithoutLan);
                     $query->orWhere("administrative_area_level_2", $platsWithoutLan);
@@ -937,8 +937,8 @@ class PlatsController extends Controller
         if ($platsWithoutLan && $oneLanName) {
             $prevDayEvents = CrimeEvent::
                 selectRaw('date_created_at as dateYMD, count(*) as dateCount')
-                ->where('created_at', '>', $dateYmdPlusOneDay)
-                ->where('created_at', '<', $dateYmdPlusManyDaysForward)
+                ->where('date_created_at', '>', $dateYmdPlusOneDay)
+                ->where('date_created_at', '<', $dateYmdPlusManyDaysForward)
                 ->where("administrative_area_level_1", $oneLanName)
                 ->where(function ($query) use ($platsWithoutLan) {
                     $query->where("parsed_title_location", $platsWithoutLan);
@@ -959,8 +959,8 @@ class PlatsController extends Controller
         } else {
             $prevDayEvents = CrimeEvent::
                 selectRaw('date_created_at as dateYMD, count(*) as dateCount')
-                ->where('created_at', '>', $dateYmdPlusOneDay)
-                ->where('created_at', '<', $dateYmdPlusManyDaysForward)
+                ->where('date_created_at', '>', $dateYmdPlusOneDay)
+                ->where('date_created_at', '<', $dateYmdPlusManyDaysForward)
                 ->where(function ($query) use ($platsWithoutLan) {
                     $query->where("parsed_title_location", $platsWithoutLan);
                     $query->orWhere("administrative_area_level_2", $platsWithoutLan);
