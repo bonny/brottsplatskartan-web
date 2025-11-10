@@ -12,3 +12,4 @@ Homestead.yaml
 /storage/debugbar
 
 .claude/settings.local.json
+CLAUDE.local.md
