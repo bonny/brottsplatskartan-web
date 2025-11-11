@@ -38,7 +38,11 @@ class EventsBox extends Component {
                 $events = $events->map(function (CrimeView $crimeView) {
                     return $crimeView->crimeEvent;
                 });
-    
+
+                // Eager-loada locations för att undvika N+1 queries
+                // Efter mappning försvinner eager-loaded relationer
+                $events->load('locations');
+
             } else {
                 return null;
             }
