@@ -61,9 +61,10 @@ class StartController extends Controller
         // Mest lästa idag.
         // $eventsMostViewedToday = Helper::getMostViewedEvents(Carbon::now(), 10);
 
-        $introtext = null;
-        $introtext_key = "introtext-start";
-        $introtext = Str::markdown(\Setting::get($introtext_key, ''));
+        // Cacha introtext i 24 timmar eftersom det nästan aldrig ändras
+        $introtext = Cache::remember('introtext-start-cached', DAY_IN_SECONDS, function() {
+            return Str::markdown(\Setting::get('introtext-start', ''));
+        });
 
         $canonicalLink = route('start');
         
