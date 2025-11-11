@@ -125,6 +125,7 @@ class ApiController extends Controller {
 
         // ?page=n, picked up by Laravel automatically
         // https://laravel.com/docs/11.x/pagination
+        $page = (int) $request->input("page", 1);
 
         // area = administrative_area_level_1 = "Uppsala län" and so on
         $area = (string) $request->input("area");
@@ -139,25 +140,39 @@ class ApiController extends Controller {
         // nearby = lat,lng to show events nearby
         // $nearby = (string) $request->input("nearby");
 
-        // get collection with events
-        $events = CrimeEvent::orderBy("created_at", "desc");
+        // Bygg cache-nyckel baserat på alla parametrar som påverkar queryn
+        $cacheKey = sprintf(
+            'api:events:area=%s:location=%s:type=%s:page=%d:limit=%d',
+            $area,
+            $location,
+            $type,
+            $page,
+            $limit
+        );
 
-        if ($area) {
-            $events = $events->where("administrative_area_level_1", $area);
-        }
+        // Cacha hela paginated resultatet för att undvika upprepade COUNT queries
+        // Cache i 2 minuter för att balansera mellan prestanda och fräschhet
+        $events = Cache::remember($cacheKey, 120, function () use ($area, $location, $type, $limit) {
+            // get collection with events
+            $query = CrimeEvent::orderBy("created_at", "desc");
 
-        if ($location) {
-            $events = $events->whereHas("locations", function ($query) use ($location) {
-                $query->where('name', 'like', $location);
-            });
-        }
+            if ($area) {
+                $query = $query->where("administrative_area_level_1", $area);
+            }
 
-        if ($type) {
-            $events = $events->where("parsed_title", $type);
-        }
+            if ($location) {
+                $query = $query->whereHas("locations", function ($query) use ($location) {
+                    $query->where('name', 'like', $location);
+                });
+            }
 
-        // Eager load locations för att undvika N+1 query problem
-        $events = $events->with('locations')->paginate($limit);
+            if ($type) {
+                $query = $query->where("parsed_title", $type);
+            }
+
+            // Eager load locations för att undvika N+1 query problem
+            return $query->with('locations')->paginate($limit);
+        });
 
         $callback = $request->input('callback');
 
@@ -316,13 +331,26 @@ class ApiController extends Controller {
         }
 
         // texttv
-        $media = $request->input('media');
+        $media = $request->input('media', '');
+        $page = (int) $request->input('page', 1);
 
         $callback = $request->input('callback');
 
-        $events = CrimeEvent::whereHas('newsarticles', function ($query) use ($media) {
-            $query->where('url', 'like', "%{$media}%");
-        })->with('newsarticles')->orderBy("created_at", "desc")->paginate($limit);
+        // Bygg cache-nyckel baserat på parametrar
+        $cacheKey = sprintf(
+            'api:eventsInMedia:media=%s:page=%d:limit=%d',
+            $media,
+            $page,
+            $limit
+        );
+
+        // Cacha resultatet för att undvika upprepade COUNT queries
+        // Cache i 5 minuter eftersom mediahändelser inte uppdateras lika ofta
+        $events = Cache::remember($cacheKey, 300, function () use ($media, $limit) {
+            return CrimeEvent::whereHas('newsarticles', function ($query) use ($media) {
+                $query->where('url', 'like', "%{$media}%");
+            })->with('newsarticles')->orderBy("created_at", "desc")->paginate($limit);
+        });
 
         $events->appends([
             "limit" => $limit,
