@@ -57,6 +57,11 @@ class StartController extends Controller
             return $item->crimeEvent;
         });
 
+        // Eager-loada locations för att undvika N+1 queries
+        // Efter deserialisering från cache försvinner eager-loaded relationer,
+        // så vi behöver explicit ladda dem igen
+        $eventsMostViewedRecentlyCrimeEvents->load('locations');
+
         // Mest lästa idag.
         // $eventsMostViewedToday = Helper::getMostViewedEvents(Carbon::now(), 10);
 
