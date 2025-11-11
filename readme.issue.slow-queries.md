@@ -2,10 +2,11 @@
 
 ## Översikt
 
-Detta dokument beskriver två separata men relaterade problem som orsakade hög CPU-användning på MariaDB:
+Detta dokument beskriver tre separata men relaterade problem som orsakade hög CPU-användning på MariaDB:
 
 1. **Datum-index problem** - Queries använde fel kolumn i WHERE-clausuler
 2. **N+1 Query problem** - API-endpoints saknade eager loading av relations
+3. **Ocachade COUNT queries** - Laravels paginate() körde COUNT queries vid varje API-anrop
 
 Tillsammans orsakade dessa problem att MariaDB konstant hade hög CPU-användning (40-80%) med hundratals onödiga queries.
 
@@ -296,6 +297,145 @@ Se `readme.issue.n-plus-one.md` för mer detaljerad dokumentation om N+1-problem
 
 ---
 
+## Problem 3: Ocachade COUNT Queries från paginate()
+
+### Upptäckt
+
+Efter att ha fixat både datum-index och N+1 problemen observerades fortfarande upprepade COUNT queries i MySQL processlist:
+
+```sql
+select count(*) as aggregate from `crime_events` where `administrative_area_level_1` = ?
+select count(*) as aggregate from `crime_events` where `is_public` = 1
+```
+
+### Orsak
+
+Laravels `paginate()` metod kör automatiskt en COUNT query för att beräkna totalt antal sidor. Denna COUNT query är **inte cachad** och körs vid varje API-anrop, även om data returnerar samma resultat.
+
+**Problematisk kod (ApiController.php:160):**
+```php
+// Detta kör 3 queries VARJE gång, även för identiska requests:
+// 1. COUNT(*) query (ocachad!)
+// 2. SELECT för events
+// 3. SELECT för locations (eager loaded)
+$events = $events->with('locations')->paginate($limit);
+```
+
+**Observerad impact:**
+- Varje anrop till `/api/events?area=Stockholms+län` kör en COUNT query
+- Om API:et anropas ofta (t.ex. från karta som uppdateras) körs samma COUNT många gånger
+- COUNT queries syns som upprepade queries i MySQL processlist
+
+### Lösning
+
+Cacha hela det paginerade resultatet med `Cache::remember()`, inklusive COUNT-queryn:
+
+**Optimerad kod:**
+```php
+// Bygg cache-nyckel baserat på alla parametrar som påverkar queryn
+$cacheKey = sprintf(
+    'api:events:area=%s:location=%s:type=%s:page=%d:limit=%d',
+    $area,
+    $location,
+    $type,
+    $page,
+    $limit
+);
+
+// Cacha hela paginated resultatet för att undvika upprepade COUNT queries
+// Cache i 2 minuter för att balansera mellan prestanda och fräschhet
+$events = Cache::remember($cacheKey, 120, function () use ($area, $location, $type, $limit) {
+    $query = CrimeEvent::orderBy("created_at", "desc");
+
+    if ($area) {
+        $query = $query->where("administrative_area_level_1", $area);
+    }
+
+    if ($location) {
+        $query = $query->whereHas("locations", function ($query) use ($location) {
+            $query->where('name', 'like', $location);
+        });
+    }
+
+    if ($type) {
+        $query = $query->where("parsed_title", $type);
+    }
+
+    // Eager load locations för att undvika N+1 query problem
+    return $query->with('locations')->paginate($limit);
+});
+```
+
+**Resultat:**
+- **Första anropet:** 3 queries (COUNT + SELECT events + SELECT locations)
+- **Efterföljande anrop (inom 2 min):** 0 queries (från cache)
+- **Olika parametrar:** Ny cache-nyckel = nya queries (korrekt beteende)
+
+### Ändringar
+
+**1. ApiController.php (rad 114-175):**
+- Lagt till `$page` parameter för cache-nyckel
+- Implementerat `Cache::remember()` runt paginering
+- Cache-tid: 120 sekunder (2 minuter)
+- Cache-nyckel inkluderar alla filter-parametrar
+
+**2. ApiController.php, eventsInMedia() (rad 325-353):**
+- Implementerat samma caching-mönster
+- Cache-tid: 300 sekunder (5 minuter) - media-händelser uppdateras mindre frekvent
+
+### Verifiering
+
+Testet (`test-paginate-cache.php`) visar:
+
+```
+=== Test av API paginate() cachning ===
+
+1. Rensar cache...
+   ✓ Cache rensad
+
+2. Första API-anropet (ska köra COUNT query):
+   Antal queries: 3
+   1. select count(*) as aggregate from `crime_events` where `administrative_area_level_1` = ?
+   2. select * from `crime_events` where `administrative_area_level_1` = ?
+   3. select * from `locations` where `locations`.`crime_event_id` in (...)
+
+3. Andra API-anropet (ska hämta från cache):
+   Antal queries: 0
+   ✓ Perfekt! Inga queries kördes, data hämtades från cache
+
+4. Tredje anropet med OLIKA parametrar (ska köra COUNT query igen):
+   Antal queries: 3
+   1. select count(*) as aggregate from `crime_events` where `administrative_area_level_1` = ?
+   2. select * from `crime_events` where `administrative_area_level_1` = ?
+   3. select * from `locations` where `locations`.`crime_event_id` in (...)
+
+=== Sammanfattning ===
+✓ Cache-implementeringen fungerar korrekt!
+✓ COUNT queries körs bara första gången för varje unik parameter-kombination
+✓ Efterföljande anrop med samma parametrar hämtas från cache (0 queries)
+✓ Cache-tid: 120 sekunder (2 minuter)
+```
+
+### Cache-strategi
+
+**Cache-tid vald baserat på:**
+- `/api/events` - 2 minuter (120s): Balans mellan fräschhet och prestanda
+- `/api/eventsInMedia` - 5 minuter (300s): Media-händelser uppdateras mindre ofta
+
+**Cache-nycklar är unika för:**
+- area (län)
+- location (plats)
+- type (händelsetyp)
+- page (sidnummer)
+- limit (antal per sida)
+
+**Fördelar:**
+- Dramatisk minskning av databas-queries för populära filter-kombinationer
+- COUNT queries körs max 1 gång per 2 minuter för varje unik parameterkombination
+- Ingen risk för gammal data - cache uppdateras automatiskt efter TTL
+
+---
+
 ## Sammanfattning av alla ändringar
 
 ### Problem 1: Datum-index (8 metoder)
@@ -320,6 +460,16 @@ Alla queries som använder `date_created_at as dateYMD` i SELECT-delen använder
 **ApiEventsMapController.php:**
 - `index()` - Rad 20: Lagt till `->with('locations')`
 
+### Problem 3: Ocachade COUNT queries (2 endpoints)
+
+**ApiController.php:**
+- `events()` - Rad 114-175: Implementerat `Cache::remember()` runt `paginate()` (2 min cache)
+- `eventsInMedia()` - Rad 325-353: Implementerat `Cache::remember()` runt `paginate()` (5 min cache)
+
+**Cache-nycklar inkluderar:**
+- area, location, type, page, limit (events)
+- media, page, limit (eventsInMedia)
+
 ## Commits
 
 1. **Datum-index fix** - Commit: `55a4f1b`
@@ -334,17 +484,22 @@ Alla queries som använder `date_created_at as dateYMD` i SELECT-delen använder
 
 ### Före optimeringarna:
 - Datum-navigering: Full table scan på 282,742 rader
-- API-endpoints: 22-501 queries per request
+- API-endpoints: 22-501 queries per request (inklusive N+1 problem)
+- Upprepade COUNT queries: Vid varje API-anrop (ocachade)
 - MariaDB CPU: Ofta 40-80%
 - PHP-FPM: Många slow requests
 
 ### Efter optimeringarna:
-- Datum-navigering: Index range scan
-- API-endpoints: 2-3 queries per request
+- Datum-navigering: Index range scan (dramatisk förbättring)
+- API-endpoints: 2-3 queries första gången, 0 queries vid cache-träff
+- COUNT queries: Max 1 gång per 2-5 minuter per unik parameterkombination
 - MariaDB CPU: Förväntas minska dramatiskt
 - PHP-FPM: Färre slow requests
 
-**Total reduktion av queries för API-endpoints: ~90-99%**
+**Total reduktion av queries:**
+- Problem 1 (Datum-index): Full table scan → Index range scan
+- Problem 2 (N+1): 90-99% färre queries (22-501 → 2-3)
+- Problem 3 (COUNT cache): 100% reduktion vid cache-träff (3 → 0 queries)
 
 ## Relaterade filer
 
@@ -353,6 +508,7 @@ Alla queries som använder `date_created_at as dateYMD` i SELECT-delen använder
 - `/.cursor/rules/database.mdc` - Databas-schema dokumentation
 - `/slow-queries.log` - PHP-FPM slow request log (analys av N+1 problem)
 - `/readme.issue.n-plus-one.md` - Detaljerad dokumentation av N+1-problemet
+- `/test-paginate-cache.php` - Verifiering av paginate() cache-implementering
 
 ## Referenser
 
@@ -360,4 +516,5 @@ Alla queries som använder `date_created_at as dateYMD` i SELECT-delen använder
 - [MariaDB Generated Columns](https://mariadb.com/kb/en/generated-columns/)
 - [Laravel Query Builder - WHERE Clauses](https://laravel.com/docs/queries#where-clauses)
 - [Laravel Eager Loading](https://laravel.com/docs/eloquent-relationships#eager-loading)
+- [Laravel Cache](https://laravel.com/docs/cache)
 - [N+1 Query Problem](https://stackoverflow.com/questions/97197/what-is-the-n1-selects-problem-in-orm-object-relational-mapping)

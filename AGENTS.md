@@ -215,6 +215,155 @@ dokku run brottsplatskartan php artisan view:cache
 -   **Redis-inställningar**: Cache-server konfiguration
 -   **Mail-konfiguration**: SMTP-inställningar för systemnotifikationer
 
+### Produktionsserver - Användbara kommandon
+
+**Redis-hantering:**
+
+```bash
+# Anslut till Redis CLI
+dokku redis:connect brottsplatskartan
+
+# Visa Redis-info och statistik
+dokku redis:info brottsplatskartan
+
+# Redis-logs
+dokku redis:logs brottsplatskartan
+dokku redis:logs brottsplatskartan -t  # följ i realtid
+
+# Exportera Redis-data (backup)
+dokku redis:export brottsplatskartan
+```
+
+**Redis CLI-kommandon (när ansluten med `redis:connect`):**
+
+```bash
+# Monitorera alla Redis-operationer i realtid (bästa sättet att verifiera caching!)
+MONITOR
+
+# Lista cache-nycklar
+KEYS laravel_cache:api:*
+KEYS laravel_cache:api:events:*
+
+# Visa cache-värde
+GET "laravel_cache:api:events:area=Stockholms län:location=:type=:page=1:limit=10"
+
+# Visa TTL (time to live) för en nyckel
+TTL "laravel_cache:api:events:area=Stockholms län:location=:type=:page=1:limit=10"
+
+# Visa statistik
+INFO stats
+INFO keyspace
+
+# Räkna antal nycklar
+DBSIZE
+
+# Avsluta
+exit
+```
+
+**Verifiera cache-implementering på produktion:**
+
+```bash
+# Workflow för att verifiera att API-caching fungerar:
+
+# 1. Rensa cache
+dokku run brottsplatskartan php artisan cache:clear
+
+# 2. Terminal 1: Starta Redis MONITOR
+dokku redis:connect brottsplatskartan
+> MONITOR
+
+# 3. Terminal 2: Gör API-anrop
+curl "https://brottsplatskartan.se/api/events?area=Stockholms+län&limit=5"
+
+# 4. I MONITOR ser du SETEX (cache skapas med TTL)
+# 5. Gör samma anrop igen (inom 2 min)
+curl "https://brottsplatskartan.se/api/events?area=Stockholms+län&limit=5"
+
+# 6. I MONITOR ser du nu GET (cache-träff!)
+```
+
+**Snabb cache-verifiering:**
+
+```bash
+# Ett-rads kommandon för att kolla cache
+dokku redis:connect brottsplatskartan <<< "KEYS laravel_cache:api:events:*"
+dokku redis:connect brottsplatskartan <<< "INFO stats"
+dokku redis:connect brottsplatskartan <<< "DBSIZE"
+```
+
+**Applikationsloggar:**
+
+```bash
+# Visa senaste loggarna
+dokku logs brottsplatskartan
+
+# Följ loggar i realtid
+dokku logs brottsplatskartan -t
+
+# Filtrera loggar
+dokku logs brottsplatskartan --tail 100 | grep "Cache"
+dokku logs brottsplatskartan --tail 100 | grep "ERROR"
+```
+
+**MariaDB-hantering:**
+
+```bash
+# Anslut till MariaDB
+dokku mariadb:connect brottsplatskartan
+```
+
+**MariaDB-kommandon (när ansluten med `mariadb:connect`):**
+
+```sql
+-- Visa aktiva queries (för att identifiera upprepade COUNT queries)
+SHOW PROCESSLIST;
+
+-- Analysera query-prestanda
+EXPLAIN SELECT date_created_at as dateYMD, count(*) as dateCount
+FROM crime_events
+WHERE date_created_at < CURDATE();
+
+-- Avsluta
+exit;
+```
+
+**Applikationskommandon:**
+
+```bash
+# Kör artisan-kommandon
+dokku run brottsplatskartan php artisan cache:clear
+dokku run brottsplatskartan php artisan config:cache
+dokku run brottsplatskartan php artisan migrate
+dokku run brottsplatskartan php artisan tinker
+
+# Kör anpassade kommandon
+dokku run brottsplatskartan php artisan crimeevents:fetch
+dokku run brottsplatskartan php artisan crimeevents:check-publicity --apply --since=365
+
+# Öppna bash-session
+dokku run brottsplatskartan bash
+```
+
+**Container-hantering:**
+
+```bash
+# Visa app-info
+dokku apps:info brottsplatskartan
+
+# Visa processer
+dokku ps:report brottsplatskartan
+
+# Starta om appen
+dokku ps:restart brottsplatskartan
+
+# Skala upp/ner
+dokku ps:scale brottsplatskartan web=2
+
+# Visa resursutnyttjande
+dokku ps:top brottsplatskartan
+```
+
 ## Utvecklingsriktlinjer
 
 ### Kodkvalitet och dokumentation
@@ -257,3 +406,7 @@ php artisan crimeevents:check-publicity --apply --since=365
 # På produktionsservern
 dokku run brottsplatskartan php artisan crimeevents:check-publicity --apply --since=365
 ```
+
+### Övrigt/blandat
+
+- Lagra aldrig API-nycklar eller auth tokens i readme-filer.

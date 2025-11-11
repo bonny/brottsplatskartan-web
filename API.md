@@ -257,8 +257,22 @@ Följande endpoints har optimerats för att undvika N+1 query-problem:
 
 ### Cache
 
-- `/api/eventsMap` - Cachad i 5 minuter
+**API-endpoint caching (2025-11-11):**
+- `/api/events` - Cachad i 2 minuter (120 sekunder)
+  - Cache-nyckel baserad på: area, location, type, page, limit
+  - Förhindrar upprepade COUNT queries från `paginate()`
+- `/api/eventsInMedia` - Cachad i 5 minuter (300 sekunder)
+  - Cache-nyckel baserad på: media, page, limit
+- `/api/eventsMap` - Cachad i 5 minuter (300 sekunder)
+
+**Geografiska queries:**
 - Vissa geografiska queries cachade i 9-15 minuter
+- Datum-navigering cachad i 14-23 minuter
+
+**Cache-implementation:**
+- Använder Laravel Cache facade med Redis som backend
+- Automatisk cache-invalidering efter TTL
+- Unik cache-nyckel för varje parameter-kombination
 
 ---
 
@@ -392,6 +406,12 @@ curl http://localhost:8000/api/areas
 ---
 
 ## Changelog
+
+### 2025-11-11
+- ✅ Implementerat cache för `/api/events` (2 min TTL) - eliminerar upprepade COUNT queries
+- ✅ Implementerat cache för `/api/eventsInMedia` (5 min TTL)
+- ✅ 100% query-reduktion vid cache-träff (3 queries → 0 queries)
+- ✅ Cache-nycklar unika per parameter-kombination
 
 ### 2025-11-10
 - ✅ Fixat N+1 query problem i `/api/events` och `/api/eventsMap`
