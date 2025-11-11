@@ -50,12 +50,11 @@ class StartController extends Controller
         // Mest lästa senaste nn minuterna.
         $eventsMostViewedRecently = Helper::getMostViewedEventsRecently(20, 20);
 
-        // Mest lästa är crimeViews, ändra så vi behåller crimeEvents.
-        // Denna skapar en ny fråga för varje, fast eventsen borde redan vara hämtade tycker jag pga jag kör with() i getMostViewedEventsRecently...
-        $eventsMostViewedRecentlyCrimeEvents = cache::remember('startpage:eventsMostViewedRecentlyCrimeEvents', MINUTE_IN_SECONDS * 3, function () use ($eventsMostViewedRecently) {
-            return $eventsMostViewedRecently->map(function ($item) {
-                return $item->crimeEvent;
-            });
+        // Mappar CrimeView-objekt till CrimeEvent-objekt.
+        // Vi cachar inte resultatet här eftersom getMostViewedEventsRecently() redan cachar,
+        // och dubbel-cachning kan förstöra eager-loadade relationer (locations).
+        $eventsMostViewedRecentlyCrimeEvents = $eventsMostViewedRecently->map(function ($item) {
+            return $item->crimeEvent;
         });
 
         // Mest lästa idag.
