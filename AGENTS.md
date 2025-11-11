@@ -394,6 +394,45 @@ dokku ps:top brottsplatskartan
 -   **GitHub CLI**: Använd `gh` kommandot för effektiv hantering av GitHub-issues och pull requests
 -   **Git Branch-hantering**: När du jobbar med GitHub och dess CLI-verktyg så se till att skapa en ny branch när vi börjar arbeta med ett nytt issue
 
+### GitHub-projektet
+
+**Projekt-URL**: https://github.com/bonny/brottsplatskartan-web/
+
+**Hantera issues med GitHub CLI:**
+
+```bash
+# Lista öppna issues
+gh issue list
+
+# Lista alla issues (även stängda)
+gh issue list --state all
+
+# Visa detaljer för ett specifikt issue
+gh issue view <issue-nummer>
+
+# Skapa nytt issue
+gh issue create
+```
+
+**Övervaka GitHub Actions:**
+
+```bash
+# Lista senaste workflow-körningar
+gh run list
+
+# Lista tillgängliga workflows
+gh workflow list
+
+# Visa detaljer för en specifik körning
+gh run view <run-id>
+
+# Visa logg för en körning
+gh run view <run-id> --log
+
+# Följ en pågående körning i realtid
+gh run watch
+```
+
 ## Händelsefiltrering och innehållshantering
 
 ### ContentFilterService
