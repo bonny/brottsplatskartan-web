@@ -13,7 +13,7 @@ return [
      *  You can provide your own class given that it implements the
      *  CacheProfile interface.
      */
-    'cache_profile' => Spatie\ResponseCache\CacheProfiles\CacheAllSuccessfulGetRequests::class,
+    'cache_profile' => \App\CacheProfiles\BrottsplatskartanCacheProfile::class,
 
     /*
      *  Optionally, you can specify a header that will force a cache bypass.
@@ -85,7 +85,7 @@ return [
      * This class is responsible for generating a hash for a request. This hash
      * is used to look up a cached response.
      */
-    'hasher' => \Spatie\ResponseCache\Hasher\DefaultHasher::class,
+    'hasher' => \App\ResponseCache\CustomRequestHasher::class,
 
     /*
      * This class is responsible for serializing responses.
