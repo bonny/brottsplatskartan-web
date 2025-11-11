@@ -292,6 +292,23 @@ dokku redis:connect brottsplatskartan <<< "INFO stats"
 dokku redis:connect brottsplatskartan <<< "DBSIZE"
 ```
 
+**Laravel Debugbar på produktion:**
+
+Debugbar aktiveras via cookie (implementerat i `app/Http/Middleware/DebugBarMaybeEnable.php`):
+
+```javascript
+// Aktivera debugbar (i webbläsarens Console):
+document.cookie = "show-debugbar=1; path=/; max-age=86400";
+// Ladda om sidan
+
+// Stäng av debugbar:
+document.cookie = "show-debugbar=; path=/; max-age=0";
+```
+
+✅ Säkert - bara du som sätter cookien ser debugbar
+✅ Ingen kod-ändring behövs i produktion
+✅ Fungerar direkt utan att ändra APP_DEBUG
+
 **Applikationsloggar:**
 
 ```bash
