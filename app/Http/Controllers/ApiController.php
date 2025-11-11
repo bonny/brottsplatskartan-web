@@ -451,7 +451,7 @@ class ApiController extends Controller {
                 "views" => $data->views,
                 "pubdate_iso8601" => $item->pubdate_iso8601,
                 "pubdate_unix" => $item->pubdate,
-                "parsed_date_hm" => $item->getParsedDateInFormat('%H:%M'),
+                "parsed_date_hm" => $item->getParsedDateInFormat('HH:mm'),
                 "title_type" => $item->parsed_title,
                 "title_location" => $item->parsed_title_location,
                 "headline" => $item->getHeadline(),

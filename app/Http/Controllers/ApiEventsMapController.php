@@ -34,7 +34,7 @@ class ApiEventsMapController extends Controller {
         foreach ($events as $item) {
             $event = [
                 "id" => $item->id,
-                'time' => $item->getParsedDateInFormat('%H:%M'),
+                    'time' => $item->getParsedDateInFormat('HH:mm'), // Carbon isoFormat, inte strftime
                 'time_human' => $item->getParsedDateFormattedForHumans(),
                 'headline' => $item->getHeadline(),
                 "type" => $item->parsed_title,
