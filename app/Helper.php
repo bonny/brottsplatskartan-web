@@ -123,7 +123,7 @@ class Helper {
         ];
 
         $cacheKey = "lan-homestats-" . $lan;
-        $cacheTTL = 120 * 60;
+        $cacheTTL = 2 * HOUR_IN_SECONDS;
         $dateDaysBack = Carbon::now()
             ->subDays(13)
             ->format('Y-m-d');
@@ -931,7 +931,7 @@ class Helper {
         // return \App\Helper::getPoliceStations();
         $locations = Cache::remember(
             'PoliceStationsLocations2',
-            60 * 2 * 60,
+            2 * HOUR_IN_SECONDS,
             function () {
                 return \App\Helper::getPoliceStations();
             }
