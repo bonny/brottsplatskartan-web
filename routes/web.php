@@ -760,6 +760,40 @@ Route::feeds();
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
+// Debug route for testing response cache
+Route::get('/debug-response-cache', function () {
+    $profile = app(config('responsecache.cache_profile'));
+    $request = request();
+
+    return response()->json([
+        'timestamp' => now()->toDateTimeString(),
+        'random' => rand(1000, 9999),
+        'config' => [
+            'enabled' => config('responsecache.enabled'),
+            'cache_profile' => config('responsecache.cache_profile'),
+            'cache_store' => config('responsecache.cache_store'),
+        ],
+        'profile_checks' => [
+            'enabled' => $profile->enabled($request),
+            'shouldCacheRequest' => $profile->shouldCacheRequest($request),
+        ],
+        'request' => [
+            'method' => $request->method(),
+            'url' => $request->fullUrl(),
+            'isMethodCacheable' => $request->isMethodCacheable(),
+            'ajax' => $request->ajax(),
+        ],
+        'app' => [
+            'runningInConsole' => app()->runningInConsole(),
+            'environment' => app()->environment(),
+        ],
+        'headers' => [
+            'has_cache_header' => $request->headers->has('laravel-responsecache'),
+            'cache_header_value' => $request->headers->get('laravel-responsecache'),
+        ],
+    ]);
+});
+
 /**
  * City specific events
  * Example URL: /stockholm
