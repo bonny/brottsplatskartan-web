@@ -257,22 +257,27 @@ Följande endpoints har optimerats för att undvika N+1 query-problem:
 
 ### Cache
 
-**API-endpoint caching (2025-11-11):**
-- `/api/events` - Cachad i 2 minuter (120 sekunder)
-  - Cache-nyckel baserad på: area, location, type, page, limit
-  - Förhindrar upprepade COUNT queries från `paginate()`
-- `/api/eventsInMedia` - Cachad i 5 minuter (300 sekunder)
-  - Cache-nyckel baserad på: media, page, limit
-- `/api/eventsMap` - Cachad i 5 minuter (300 sekunder)
+**API endpoints använder två cache-lager:**
 
-**Geografiska queries:**
-- Vissa geografiska queries cachade i 9-15 minuter
-- Datum-navigering cachad i 14-23 minuter
+1. **Response Cache (Spatie Laravel Response Cache)**
+   - Cachar hela HTTP-responsen (snabbast vid cache hit)
+   - `/api/events` - 10 minuter
+   - `/api/eventsMap` - Hanteras av web-routes standard (30 min)
+   - Response header: `laravel-responsecache: cached on <timestamp>`
+
+2. **Query Cache (Laravel Cache facade)**
+   - Cachar databas-resultat som fallback
+   - `/api/events` - 2 minuter (förhindrar COUNT queries från paginate)
+   - `/api/eventsInMedia` - 5 minuter
+   - `/api/eventsMap` - 5 minuter
+   - Geografiska queries - 9-15 minuter
+   - Datum-navigering - 14-23 minuter
 
 **Cache-implementation:**
-- Använder Laravel Cache facade med Redis som backend
+- Redis som backend för båda lagren
 - Automatisk cache-invalidering efter TTL
-- Unik cache-nyckel för varje parameter-kombination
+- Unik cache-nyckel per parameter-kombination
+- Query-parametrar som `?t=`, `?_=` filtreras bort (skapar inte separata cache-entries)
 
 ---
 
@@ -407,13 +412,17 @@ curl http://localhost:8000/api/areas
 
 ## Changelog
 
-### 2025-11-11
-- ✅ Implementerat cache för `/api/events` (2 min TTL) - eliminerar upprepade COUNT queries
-- ✅ Implementerat cache för `/api/eventsInMedia` (5 min TTL)
-- ✅ 100% query-reduktion vid cache-träff (3 queries → 0 queries)
-- ✅ Cache-nycklar unika per parameter-kombination
+### 2024-11-12
+- ✅ Implementerat Spatie Response Cache för API endpoints (10-30 min TTL)
+- ✅ CustomRequestHasher filtrerar query-parametrar (`?t=`, `?_=`)
+- ✅ Multi-tier caching: Response Cache (yttre) + Query Cache (inre)
 
-### 2025-11-10
+### 2024-11-11
+- ✅ Implementerat query cache för `/api/events` (2 min TTL) - eliminerar upprepade COUNT queries
+- ✅ Implementerat query cache för `/api/eventsInMedia` (5 min TTL)
+- ✅ 100% query-reduktion vid cache-träff (3 queries → 0 queries)
+
+### 2024-11-10
 - ✅ Fixat N+1 query problem i `/api/events` och `/api/eventsMap`
 - ✅ Reducerat antal queries med 85-99%
 - ✅ Förbättrad prestanda och minskad databas-belastning

@@ -4,14 +4,15 @@ Denna fil tillhandahåller vägledning för Claude Code (claude.ai/code) vid arb
 
 ## API-dokumentation
 
-För komplett API-dokumentation, se **[API.md](API.md)**.
+För komplett API-dokumentation, se **[API.md](docs/API.md)**.
 
 **Snabbreferens:**
-- `/api/events` - Hämta händelser med filtrering
-- `/api/eventsMap` - Händelser för kartvisning (cachad, optimerad)
-- `/api/event/{id}` - Enskild händelse
-- `/api/eventsNearby` - Händelser nära koordinat
-- `/api/areas` - Lista över län
+
+-   `/api/events` - Hämta händelser med filtrering
+-   `/api/eventsMap` - Händelser för kartvisning (cachad, optimerad)
+-   `/api/event/{id}` - Enskild händelse
+-   `/api/eventsNearby` - Händelser nära koordinat
+-   `/api/areas` - Lista över län
 
 Alla endpoints returnerar JSON. Se API.md för fullständiga exempel och parametrar.
 
@@ -32,7 +33,9 @@ Brottsplatskartan är en svensk webbapplikation för visualisering av polishänd
 ### Utvecklingsmiljö
 
 -   **Backend-ramverk**: Laravel 12 (PHP 8.2+)
--   **Databashantering**: MySQL 8.0 med Redis-cachning
+-   **Databashantering**: MariaDB
+-   **Cache**: Redis
+-   **Response Cache**: Spatie Laravel Response Cache
 -   **Kartvisualisering**: Leaflet.js
 
 ## Utvecklingsarbetsflöde
@@ -43,15 +46,6 @@ Brottsplatskartan är en svensk webbapplikation för visualisering av polishänd
 # Starta lokal utvecklingsserver
 ./artisan serve
 # Applikationen är tillgänglig på http://localhost:8000
-
-# Aktivera automatisk kompilering av frontend-assets
-npm run watch
-
-# Kompilera assets för utveckling
-npm run dev
-
-# Kompilera och optimera assets för produktion
-npm run production
 ```
 
 ### Datahantering och import
@@ -68,21 +62,8 @@ npm run production
 
 ```bash
 # Uppdatera PHP-beroenden via Composer
-# Observera: Redis-tillägget kan kräva särskild hantering
+# Vi har inte Redis lokalt, så vi ignorerar detta.
 composer update <paketnamn> --ignore-platform-req=ext-redis
-
-# Installera eller uppdatera Node.js-beroenden
-npm install
-```
-
-### Kvalitetssäkring och testning
-
-```bash
-# Kör fullständig testsvit med PHPUnit
-./vendor/bin/phpunit
-
-# Alternativt testkommando via Laravel Artisan
-php artisan test
 ```
 
 ## Systemarkitektur
@@ -140,7 +121,8 @@ public/js/events-map.js                             (Kartspecifik funktionalitet
 
 ### Prestanda och cachning
 
--   **Redis-implementation** för sessionshantering och högpresterande cachning
+-   **Response Cache** - Spatie Laravel Response Cache för hela HTTP-responses (2-30 min TTL)
+-   **Redis** - Query cache och sessionshantering
 -   **Databassökningscachning** för optimering av geografiska uppslagningar
 -   **Asset-versionering** via Laravel Mix manifest för efficient browser-cachning
 
@@ -350,6 +332,7 @@ exit;
 ```bash
 # Kör artisan-kommandon
 dokku run brottsplatskartan php artisan cache:clear
+dokku run brottsplatskartan php artisan responsecache:clear
 dokku run brottsplatskartan php artisan config:cache
 dokku run brottsplatskartan php artisan migrate
 dokku run brottsplatskartan php artisan tinker
@@ -465,4 +448,4 @@ dokku run brottsplatskartan php artisan crimeevents:check-publicity --apply --si
 
 ### Övrigt/blandat
 
-- Lagra aldrig API-nycklar eller auth tokens i readme-filer.
+-   Lagra aldrig API-nycklar eller auth tokens i readme-filer.
