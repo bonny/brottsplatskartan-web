@@ -155,6 +155,8 @@ public/js/events-map.js                             (Kartspecifik funktionalitet
 **Produktionsinfrastruktur**:
 
 -   **Plattform**: Dokku-baserad deployment till `brottsplatskartan.se`
+-   **Operativsystem**: Ubuntu 22.04.5 LTS
+-   **Hosting**: Digital Ocean (8 GB Memory / 160 GB Disk / FRA1)
 -   **CI/CD Pipeline**: GitHub Actions för automatiserad deployment
 -   **Trigger**: Automatisk deployment vid push till `main`-branch
 
