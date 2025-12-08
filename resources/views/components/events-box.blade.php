@@ -171,8 +171,10 @@
             </a>
         </h2>
 
-        <a class="Timeline-reloadLink" rel="nofollow" href="{{ Request::Url() }}?t={{ time() . rand() }}#{{ $containerId }}">
-            ↻ <span class="sr-only">Uppdatera</span></a>
+        @if ($showReloadLink)
+            <a class="Timeline-reloadLink" rel="nofollow" href="{{ Request::Url() }}?t={{ time() . rand() }}#{{ $containerId }}">
+                ↻ <span class="sr-only">Uppdatera</span></a>
+        @endif
     </div>
 
     <ul class='Timeline-items'>

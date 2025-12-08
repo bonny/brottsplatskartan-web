@@ -34,8 +34,8 @@
     </div>
 
     <div class="cols">
-        <x-events-box type="trending" />
-        <x-events-box type="latest" />
+        <x-events-box type="trending" show-reload-link="false" />
+        <x-events-box type="latest" show-reload-link="false" />
     </div>
 
     <script>
