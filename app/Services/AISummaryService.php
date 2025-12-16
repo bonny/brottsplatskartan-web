@@ -81,10 +81,7 @@ class AISummaryService
      */
     private function getEventsForDate(string $area, Carbon $date): \Illuminate\Database\Eloquent\Collection
     {
-        $startOfDay = $date->copy()->startOfDay();
-        $endOfDay = $date->copy()->endOfDay();
-
-        $query = CrimeEvent::whereBetween('created_at', [$startOfDay, $endOfDay]);
+        $query = CrimeEvent::whereDate('date_created_at', $date->format('Y-m-d'));
 
         if (strtolower($area) === 'stockholm') {
             $query->where(function ($q) {
@@ -96,7 +93,7 @@ class AISummaryService
             $query->where('administrative_area_level_2', 'like', "%{$area}%");
         }
 
-        return $query->orderBy('created_at', 'desc')->get();
+        return $query->orderBy('date_created_at', 'desc')->get();
     }
 
     /**
