@@ -161,8 +161,8 @@ Layout template for web
     --}}
     @php
         $pixelUrl = sprintf(
-            '%1$s/pixel?path=%2$s&rand=%3$s',
-            env('APP_URL'), // 1
+            '%1$s?path=%2$s&rand=%3$s',
+            url('/pixel'), // 1
             Request::path(), // 2
             rand(), // 3
         );
