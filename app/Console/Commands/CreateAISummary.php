@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\CrimeEvent;
+use ClaudePhp\ClaudePhp;
 use Illuminate\Console\Command;
 
 class CreateAISummary extends Command {
@@ -18,7 +19,7 @@ class CreateAISummary extends Command {
      *
      * @var string
      */
-    protected $description = 'Skapar en sammanfattning av händelserna via Open AI';
+    protected $description = 'Skapar en sammanfattning av händelserna via Claude AI';
 
     /**
      * Execute the console command.
@@ -42,7 +43,7 @@ class CreateAISummary extends Command {
 
         Du kommer i nästa meddelande få en text som du skriver om. Texten ska vara neutral och saklig.
         Lägg inte till några egna åsikter eller kommentarer. Lägg inte till tidpunkt eller datum som inte finns i den ursprungliga texten.
-        
+
         Den nya texten ska innehålla en SEO-vänlig rubrik och en brödtext av hög journalistisk kvalitet.
 
         Om det finns rader som innehåller texten "Uppdatering klockan hh:nn" ska de raderna behållas och inte skrivas om.
@@ -51,10 +52,10 @@ class CreateAISummary extends Command {
         END;
     }
 
-    // https://github.com/openai-php/client
     protected function generateSummary($crimeEventId) {
-        $yourApiKey = getenv('OPEN_AI_API_KEY');
-        $client = \OpenAI::client($yourApiKey);
+        $client = new ClaudePhp(
+            apiKey: config('services.claude.api_key')
+        );
 
         $crimeEvent = CrimeEvent::findOrFail($crimeEventId);
         $userMessageContent = "Typ: " . $crimeEvent->parsed_title . PHP_EOL;
@@ -64,18 +65,14 @@ class CreateAISummary extends Command {
         $this->newLine();
         $this->line("Hittade händelse " .  $crimeEvent->parsed_date . ': ' . $crimeEvent->parsed_title);
         $this->newLine();
-        // echo "chat instructions:\n" . $this->getChatInstruction() . "\n";exit;
-        $this->info('Text som skickas till OpenAI:');
+        $this->info('Text som skickas till Claude:');
         $this->line($userMessageContent);
 
-        $result = $client->chat()->create([
-            'model' => 'gpt-4o-mini',
-            // 'model' => 'gpt-4',
+        $response = $client->messages()->create([
+            'model' => config('services.claude.model', 'claude-sonnet-4-5-20250929'),
+            'max_tokens' => 4096,
+            'system' => $this->getChatInstruction(),
             'messages' => [
-                [
-                    'role' => 'system',
-                    'content' => $this->getChatInstruction(),
-                ],
                 [
                     'role' => 'user',
                     'content' => $userMessageContent,
@@ -84,20 +81,15 @@ class CreateAISummary extends Command {
         ]);
 
         $this->newLine();
-        $this->info("Svar från Open AI:");
+        $this->info("Svar från Claude:");
         $this->newLine();
 
-        #$this->line("result");
-        #$this->line(json_encode($result, JSON_PRETTY_PRINT));
-
-        $content = $result->choices[0]->message->content;
-        #$this->line('result->choices[0]->message->content');
-        #$this->line($content);
+        $content = $response->content[0]['text'] ?? '';
 
         $lines = explode("\n", $content);
         $title = '';
         $text = '';
-        
+
         // Hitta raden som börjar med "Rubrik: ".
         foreach ($lines as $line) {
             if (strpos($line, 'Rubrik: ') === 0) {
@@ -123,7 +115,7 @@ class CreateAISummary extends Command {
         $this->line( "Rubrik: " . $title);
         $this->newLine();
         $this->line( "Text: " . $text);
-    
+
         $crimeEvent->title_alt_1 = $title;
         $crimeEvent->description_alt_1 = $text;
         $crimeEvent->save();

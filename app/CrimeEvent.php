@@ -661,9 +661,9 @@ class CrimeEvent extends Model implements Feedable {
     }
 
     /**
-     * Hämtar textalternativ 1 (skapad av OpenAI) för en händelse, om det finns.
+     * Hämtar textalternativ 1 (skapad av Claude AI) för en händelse, om det finns.
      * Annars hämtas vanliga texten.
-     * 
+     *
      * @return string The content
      */
     public function getParsedContentAlt1() {
