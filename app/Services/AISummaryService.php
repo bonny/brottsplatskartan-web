@@ -4,8 +4,7 @@ namespace App\Services;
 
 use App\CrimeEvent;
 use App\Models\DailySummary;
-use Claude\Claude3Api\Client;
-use Claude\Claude3Api\Config;
+use ClaudePhp\ClaudePhp;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 
@@ -18,8 +17,9 @@ class AISummaryService
      */
     public function __construct()
     {
-        $config = new Config(config('services.claude.api_key'));
-        $this->claude = new Client($config);
+        $this->claude = new ClaudePhp(
+            apiKey: config('services.claude.api_key')
+        );
     }
 
     /**
@@ -114,8 +114,14 @@ class AISummaryService
         $prompt = $this->buildPrompt($eventsText, $area, $date);
 
         try {
-            $response = $this->claude->chat($prompt);
-            return $response->getContent()[0]['text'] ?? null;
+            $response = $this->claude->messages()->create([
+                'model' => config('services.claude.model', 'claude-sonnet-4-5-20250929'),
+                'max_tokens' => 8192,
+                'messages' => [
+                    ['role' => 'user', 'content' => $prompt]
+                ]
+            ]);
+            return $response->content[0]['text'] ?? null;
         } catch (\Exception $e) {
             Log::error("Claude API fel: " . $e->getMessage());
             return null;

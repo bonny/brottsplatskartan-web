@@ -26,7 +26,7 @@
         "ext-xml": "*",
         "ext-zip": "*",
         "barryvdh/laravel-debugbar": "^3.2",
-        "claude-php/claude-3-api": "^0.1.23",
+        "claude-php/claude-php-sdk": "^0.5.1",
         "creitive/breadcrumbs": "^3.0",
         "duzun/hquery": "^3.0.3",
         "ezyang/htmlpurifier": "^4.17",
