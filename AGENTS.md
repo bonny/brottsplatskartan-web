@@ -48,6 +48,16 @@ Brottsplatskartan är en svensk webbapplikation för visualisering av polishänd
 # Applikationen är tillgänglig på http://localhost:8000
 ```
 
+**Rensa cache vid ändringar i Blade-templates:**
+
+Om ändringar i `.blade.php`-filer inte syns i webbläsaren, rensa Laravels kompilerade vyer:
+
+```bash
+php artisan cache:clear && php artisan view:clear && php artisan route:clear
+```
+
+Laravel cachar kompilerade Blade-templates. Vid utveckling kan gamla versioner ligga kvar och visa utdaterat innehåll.
+
 ### Datahantering och import
 
 ```bash
