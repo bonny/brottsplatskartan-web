@@ -100,8 +100,107 @@ Template för ordlista/dictionary
 
     <hr>
 
-    <h2>En `parts.crimeevent`</h2>
-    @include('parts.crimeevent', ['single' => true])
+    <h2>Event-kort templates</h2>
+    <p>Nedan visas alla varianter av event-kort som finns i systemet.</p>
+
+    {{-- 1. crimeevent (original) --}}
+    <section class="u-margin-top-double u-padding u-border u-bg-gray-light">
+        <h3><code>parts.crimeevent</code> (single=true)</h3>
+        <p class="text-sm u-color-gray-1">Används på: Detaljsidor för enskild händelse. Stort kort med karta och fullständigt innehåll.</p>
+        <div class="u-margin-top u-bg-white u-padding">
+            @include('parts.crimeevent', ['single' => true])
+        </div>
+    </section>
+
+    <section class="u-margin-top-double u-padding u-border u-bg-gray-light">
+        <h3><code>parts.crimeevent</code> (overview=true)</h3>
+        <p class="text-sm u-color-gray-1">Används på: Listningssidor. Kort med länk och teaser-text.</p>
+        <div class="u-margin-top u-bg-white u-padding">
+            <ul class="widget__listItems">
+                @include('parts.crimeevent', ['overview' => true])
+            </ul>
+        </div>
+    </section>
+
+    {{-- 2. crimeevent_v2 --}}
+    <section class="u-margin-top-double u-padding u-border u-bg-gray-light">
+        <h3><code>parts.crimeevent_v2</code> (overview=true)</h3>
+        <p class="text-sm u-color-gray-1">Används på: Län-sidor, plats-sidor. Nyare två-kolumn layout med karta till vänster.</p>
+        <div class="u-margin-top u-bg-white u-padding">
+            <ul class="widget__listItems">
+                @include('parts.crimeevent_v2', ['overview' => true])
+            </ul>
+        </div>
+    </section>
+
+    {{-- 3. crimeevent-hero --}}
+    <section class="u-margin-top-double u-padding u-border u-bg-gray-light">
+        <h3><code>parts.crimeevent-hero</code></h3>
+        <p class="text-sm u-color-gray-1">Används på: Startsidan (topp 3 mest lästa). Stor hero med Sverigekartan och teaser-text.</p>
+        <div class="u-margin-top u-bg-white u-padding">
+            @php $loop = (object)['first' => true]; @endphp
+            @include('parts.crimeevent-hero')
+        </div>
+    </section>
+
+    {{-- 4. crimeevent-hero-second --}}
+    <section class="u-margin-top-double u-padding u-border u-bg-gray-light">
+        <h3><code>parts.crimeevent-hero-second</code></h3>
+        <p class="text-sm u-color-gray-1">Används på: Startsidan (rad 2, 6 st i 2x3 rutnät). Medium hero med kortare text.</p>
+        <div class="u-margin-top u-bg-white u-padding" style="max-width: 47%;">
+            @include('parts.crimeevent-hero-second')
+        </div>
+    </section>
+
+    {{-- 5. crimeevent-small --}}
+    <section class="u-margin-top-double u-padding u-border u-bg-gray-light">
+        <h3><code>parts.crimeevent-small</code></h3>
+        <p class="text-sm u-color-gray-1">Används på: Startsidan (lista nedanför heroes), sidebars, "Mest läst"-listor. Liten thumbnail med titel.</p>
+        <div class="u-margin-top u-bg-white u-padding">
+            <ul class="widget__listItems">
+                @include('parts.crimeevent-small', ['detailed' => true])
+            </ul>
+        </div>
+    </section>
+
+    <section class="u-margin-top-double u-padding u-border u-bg-gray-light">
+        <h3><code>parts.crimeevent-small</code> (detailed=false)</h3>
+        <p class="text-sm u-color-gray-1">Variant utan brottstyp-etikett.</p>
+        <div class="u-margin-top u-bg-white u-padding">
+            <ul class="widget__listItems">
+                @include('parts.crimeevent-small', ['detailed' => false])
+            </ul>
+        </div>
+    </section>
+
+    {{-- 6. crimeevent-city --}}
+    <section class="u-margin-top-double u-padding u-border u-bg-gray-light">
+        <h3><code>parts.crimeevent-city</code></h3>
+        <p class="text-sm u-color-gray-1">Används på: Stadssidor. Kompakt kort utan bild, bara rubrik och meta-beskrivning.</p>
+        <div class="u-margin-top u-bg-white u-padding">
+            @include('parts.crimeevent-city')
+        </div>
+    </section>
+
+    {{-- 7. crimeevent-mapless --}}
+    <section class="u-margin-top-double u-padding u-border u-bg-gray-light">
+        <h3><code>parts.crimeevent-mapless</code></h3>
+        <p class="text-sm u-color-gray-1">Används på: Kompakta listor där karta inte behövs. Minimal textversion.</p>
+        <div class="u-margin-top u-bg-white u-padding">
+            <ul class="widget__listItems">
+                @include('parts.crimeevent-mapless')
+            </ul>
+        </div>
+    </section>
+
+    {{-- 8. crimeevent-helicopter --}}
+    <section class="u-margin-top-double u-padding u-border u-bg-gray-light">
+        <h3><code>parts.crimeevent-helicopter</code></h3>
+        <p class="text-sm u-color-gray-1">Används på: /helikopter-sidan. Specialversion som highlightar "helikopter" i texten.</p>
+        <div class="u-margin-top u-bg-white u-padding">
+            @include('parts.crimeevent-helicopter')
+        </div>
+    </section>
 
     <hr>
 
