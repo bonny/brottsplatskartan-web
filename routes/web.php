@@ -592,11 +592,12 @@ Route::get('/{lan}/{eventName}', function ($lan, $eventName, Request $request) {
 
     $cacheKey = "route-lan-event:{$lan}:{$eventName}";
     $event = Cache::remember($cacheKey, 2 * 60, function () use ($eventID) {
-        $event = CrimeEvent::with(['locations', 'newsarticles'])->findOrFail(
-            $eventID
-        );
-        return $event;
+        return CrimeEvent::with(['locations', 'newsarticles'])->find($eventID);
     });
+
+    if (!$event) {
+        abort(404);
+    }
 
     $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs();
     $breadcrumbs->setDivider('›');

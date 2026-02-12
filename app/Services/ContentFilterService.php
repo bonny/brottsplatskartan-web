@@ -20,10 +20,13 @@ class ContentFilterService
             return false;
         }
 
-        // Kontrollera om det är ett presstalesperson-meddelande
-        if ($this->isPressNotice($event)) {
-            return false;
-        }
+        // Presstalesperson-filtret är avaktiverat tills vidare.
+        // TODO: Återaktivera med bättre logik som bara filtrerar händelser
+        // som enbart handlar om presstalespersonens tillgänglighet och inte
+        // innehåller faktisk händelsedata (t.ex. sammanfattningar).
+        // if ($this->isPressNotice($event)) {
+        //     return false;
+        // }
 
         // Kontrollera om det är ett pressnummer-informationsmeddelande
         if ($this->isPhoneNumberInfo($event)) {
