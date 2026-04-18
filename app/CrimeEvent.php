@@ -77,7 +77,7 @@ class CrimeEvent extends Model implements Feedable {
         // $image_src .= "&scale={$scale}";
         // $image_src .= "&language=sv";
 
-        $tileserverUrl = 'https://kartbilder.brottsplatskartan.se/';
+        $tileserverUrl = config('services.tileserver.url');
         $tileServerQueryArgs = [];
         // http_build_query([1 => 2, 'a' => 'b']);
         // return $tileServerQueryArgs;
@@ -160,7 +160,7 @@ class CrimeEvent extends Model implements Feedable {
         $height = 320,
         $scale = 1
     ) {
-        $tileserverUrl = 'https://kartbilder.brottsplatskartan.se/';
+        $tileserverUrl = config('services.tileserver.url');
         $tileServerQueryArgs = [];
 
         // if viewport info exists use that and skip manual zoom level

@@ -40,4 +40,8 @@ return [
         'model' => env('CLAUDE_MODEL', 'claude-sonnet-4-5-20250929'),
     ],
 
+    'tileserver' => [
+        'url' => env('TILESERVER_URL', 'https://kartbilder.brottsplatskartan.se/'),
+    ],
+
 ];
