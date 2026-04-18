@@ -13,3 +13,6 @@ Homestead.yaml
 
 .claude/settings.local.json
 CLAUDE.local.md
+
+# Tileserver mbtiles (laddas ner vid provisionering, ~1.2 GB)
+/deploy/tileserver/*.mbtiles

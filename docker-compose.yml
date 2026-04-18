@@ -1,0 +1,85 @@
+services:
+  app:
+    image: serversideup/php:8.4-fpm-nginx
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      # Se https://serversideup.net/open-source/docker-php/ för alla alternativ
+      SSL_MODE: "off"                    # Caddy terminerar SSL
+      LOG_OUTPUT_LEVEL: info
+      AUTORUN_ENABLED: "true"
+      AUTORUN_LARAVEL_MIGRATION: "false"  # Körs manuellt från deploy.sh
+      AUTORUN_LARAVEL_STORAGE_LINK: "true"
+      AUTORUN_LARAVEL_CONFIG_CACHE: "true"
+      AUTORUN_LARAVEL_ROUTE_CACHE: "true"
+      AUTORUN_LARAVEL_VIEW_CACHE: "true"
+      AUTORUN_LARAVEL_EVENT_CACHE: "true"
+      PHP_OPCACHE_ENABLE: "1"
+    volumes:
+      - ./:/var/www/html
+    depends_on:
+      mariadb:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    networks: [internal]
+
+  mariadb:
+    image: mariadb:11
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${DB_DATABASE}
+      MARIADB_USER: ${DB_USERNAME}
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--su-mysql", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [internal]
+
+  redis:
+    image: redis:8-alpine
+    restart: unless-stopped
+    command: >
+      redis-server
+      --maxmemory 1gb
+      --maxmemory-policy allkeys-lru
+      --appendonly yes
+      --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - redis-data:/data
+    networks: [internal]
+
+  tileserver:
+    image: maptiler/tileserver-gl:v4.4.4
+    restart: unless-stopped
+    command: ["-p", "8080", "--verbose"]
+    volumes:
+      - ./deploy/tileserver:/data:ro
+    networks: [internal]
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on: [app, tileserver]
+    networks: [internal]
+
+volumes:
+  mariadb-data:
+  redis-data:
+  caddy-data:
+  caddy-config:
+
+networks:
+  internal:
