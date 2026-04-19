@@ -155,15 +155,16 @@ zcat /tmp/bpk.dump.gz | docker compose exec -T mariadb mysql -u root -p"$DB_ROOT
 
 ## 12. Sätt upp cron på host
 
+Laravel Scheduler (`app/Console/Kernel.php`) hanterar alla schemalagda
+jobb internt – host-cron behöver bara tigga Laravel varje minut.
+
 ```bash
 sudo crontab -e
 ```
 
 Lägg till:
 ```
-* * * * * /opt/brottsplatskartan/deploy/cron.sh schedule >> /var/log/bpk-cron.log 2>&1
-*/12 * * * * /opt/brottsplatskartan/deploy/cron.sh fetch >> /var/log/bpk-cron.log 2>&1
-*/33 * * * * /opt/brottsplatskartan/deploy/cron.sh check-updates >> /var/log/bpk-cron.log 2>&1
+* * * * * /opt/brottsplatskartan/deploy/cron.sh >> /var/log/bpk-cron.log 2>&1
 ```
 
 ## 13. Test via hetzner.brottsplatskartan.se

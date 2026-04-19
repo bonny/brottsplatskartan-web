@@ -17,15 +17,36 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('model:prune')->daily();
-        $schedule->command(ImportVMAAlerts::class)->everyFiveMinutes();
-        $schedule->command('app:importera-texttv')->everyFiveMinutes();
-        $schedule->command('crimeevents:create-summaries --administrative_area_level_1=stockholm')->everyFiveMinutes();
-        
+
+        // Hämta nya polishändelser (tidigare host-cron, */12 * * * *).
+        $schedule->command('crimeevents:fetch')
+            ->cron('*/12 * * * *')
+            ->withoutOverlapping();
+
+        // Kolla uppdateringar för befintliga händelser (tidigare host-cron, */33 * * * *).
+        $schedule->command('crimeevents:checkForUpdates')
+            ->cron('*/33 * * * *')
+            ->withoutOverlapping();
+
+        $schedule->command(ImportVMAAlerts::class)
+            ->everyFiveMinutes()
+            ->withoutOverlapping();
+
+        $schedule->command('app:importera-texttv')
+            ->everyFiveMinutes()
+            ->withoutOverlapping();
+
+        $schedule->command('crimeevents:create-summaries --administrative_area_level_1=stockholm')
+            ->everyFiveMinutes()
+            ->withoutOverlapping();
+
         // Generera gårdagens sammanfattning tidigt på morgonen (klar för dagen)
         $schedule->command('summary:generate stockholm --yesterday')->dailyAt('06:00');
-        
+
         // Generera AI-sammanfattning för Stockholm var 30:e minut (optimerad för att bara köra AI när händelser ändrats)
-        $schedule->command('summary:generate stockholm')->everyThirtyMinutes();
+        $schedule->command('summary:generate stockholm')
+            ->everyThirtyMinutes()
+            ->withoutOverlapping();
     }
 
     /**
