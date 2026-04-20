@@ -235,16 +235,19 @@ document.cookie = "show-debugbar=; path=/; max-age=0";
 
 Bara den som satt cookien ser debugbar. Kräver ingen ändring av `APP_DEBUG`.
 
-## Scheduler / cron
+## Scheduler
 
-Allt schemaläggs i `app/Console/Kernel.php`. Host-cron kör bara
-`schedule:run` varje minut:
+Allt schemaläggs i `app/Console/Kernel.php`. Körs av en dedikerad
+`scheduler`-container som kör `php artisan schedule:work` — ingen
+host-cron behövs.
 
-```cron
-* * * * * /opt/brottsplatskartan/deploy/cron.sh
+Se `app/Console/Kernel.php` för aktiva jobb.
+
+Kontrollera att schedulern lever:
+```bash
+docker compose ps scheduler
+docker compose logs -f scheduler
 ```
-
-Se scheduler-listan i `Kernel.php` för aktiva jobb.
 
 ## Utvecklingsriktlinjer
 

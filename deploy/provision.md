@@ -166,18 +166,16 @@ scp /tmp/bpk.dump.gz deploy@<hetzner-ip>:/tmp/
 zcat /tmp/bpk.dump.gz | docker compose exec -T mariadb mysql -u root -p"$DB_ROOT_PASSWORD" brottsplatskartan
 ```
 
-## 12. Sätt upp cron på host
+## 12. Scheduler
 
-Laravel Scheduler (`app/Console/Kernel.php`) hanterar alla schemalagda
-jobb internt – host-cron behöver bara tigga Laravel varje minut.
+Ingen host-cron behövs. En dedikerad `scheduler`-container i
+`docker-compose.yml` kör `php artisan schedule:work` vilket triggar
+Laravel Scheduler varje minut internt.
 
+Verifiera att den kör:
 ```bash
-sudo crontab -e
-```
-
-Lägg till:
-```
-* * * * * /opt/brottsplatskartan/deploy/cron.sh >> /var/log/bpk-cron.log 2>&1
+docker compose ps scheduler
+docker compose logs -f scheduler
 ```
 
 ## 13. Test via hetzner.brottsplatskartan.se

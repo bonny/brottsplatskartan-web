@@ -27,6 +27,29 @@ services:
         condition: service_started
     networks: [internal]
 
+  scheduler:
+    image: brottsplatskartan-app:local
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile.app
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      AUTORUN_ENABLED: "false"   # App-containern sköter caching/storage:link
+      LOG_OUTPUT_LEVEL: info
+    volumes:
+      - ./:/var/www/html
+    depends_on:
+      app:
+        condition: service_started
+      mariadb:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    # schedule:work kör schedule:run internt varje minut, hanterar jobb-signaler
+    command: ["php", "/var/www/html/artisan", "schedule:work"]
+    networks: [internal]
+
   mariadb:
     image: mariadb:11
     restart: unless-stopped
