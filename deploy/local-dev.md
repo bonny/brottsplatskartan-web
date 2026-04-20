@@ -3,6 +3,35 @@
 Samma stack som på Hetzner, men utan Caddy/SSL. Snabb filsync via
 named volumes för `vendor/`, `node_modules/` och `storage/framework/*`.
 
+## .test-domäner via Valet (rekommenderat)
+
+Med [Laravel Valet](https://laravel.com/docs/valet) kan du nå sajten på
+`https://brottsplatskartan.test` istället för `http://localhost:8350`.
+
+Engångssetup:
+
+```bash
+valet proxy brottsplatskartan http://127.0.0.1:8350 --secure
+valet proxy kartbilder.brottsplatskartan http://127.0.0.1:8351 --secure
+```
+
+Sätt sen i `.env`:
+
+```env
+APP_URL=https://brottsplatskartan.test
+TILESERVER_URL=https://kartbilder.brottsplatskartan.test/
+```
+
+Lista / ta bort senare:
+
+```bash
+valet proxies
+valet unproxy brottsplatskartan
+valet unproxy kartbilder.brottsplatskartan
+```
+
+Utan Valet använder du portarna direkt: <http://localhost:8350>.
+
 ## Engångssetup
 
 ```bash
