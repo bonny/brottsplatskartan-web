@@ -43,10 +43,8 @@ services:
     profiles: [never]
     ports: []
 
-  # Tileservern är opt-in lokalt – kräver att du laddat ner mbtiles-filen först.
-  # Starta med: docker compose --profile tileserver up -d
-  # Ladda ner mbtiles: ./deploy/download-tiles.sh
+  # Tileservern startas alltid lokalt. Kräver att mbtiles finns i
+  # ./deploy/tileserver/ – ladda ner med: ./deploy/download-tiles.sh
   tileserver:
-    profiles: [tileserver]
     ports:
       - "127.0.0.1:8351:8080"

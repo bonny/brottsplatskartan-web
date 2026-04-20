@@ -129,28 +129,25 @@ Troliga orsaker + fix:
 | TablePlus / Sequel Ace | 127.0.0.1 | 33012 | `.env` DB_USERNAME/DB_PASSWORD |
 | RedisInsight / TablePlus (Redis) | 127.0.0.1 | 63012 | `.env` REDIS_PASSWORD |
 
-## Tileservern lokalt (valfritt)
+## Tileservern lokalt
 
-Tileservern genererar kartbilder för händelsesidor. **Du behöver inte den
-för 95% av dev-arbetet** — sajten fungerar utan, bara att `<img>` för
-kartbilden blir trasig.
+Tileservern genererar kartbilder för händelsesidor. Startas automatiskt
+med `docker compose up -d`.
 
-Vill du ändå köra:
+Kräver att mbtiles finns på disken (1.21 GB, gitignored):
 
 ```bash
-# 1. Ladda ner mbtiles (1.21 GB, idempotent)
 ./deploy/download-tiles.sh
-
-# 2. Starta stacken INKL. tileservern
-docker compose --profile tileserver up -d
-
-# 3. Kolla att den svarar
-curl http://kartbilder.brottsplatskartan.test:8351
 ```
 
-Stäng av: `docker compose stop tileserver`
+Om filen inte finns kraschar tileserver-containern. Ladda ner och
+starta om:
 
-Mbtiles är gitignored, förorenar inte repot.
+```bash
+docker compose up -d tileserver
+```
+
+Nås på <http://kartbilder.brottsplatskartan.test:8351>.
 
 ## Bind-mount
 
