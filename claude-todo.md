@@ -163,4 +163,77 @@ Alla uppgifter pausade tills vidare. Färdiga analyser:
 
 ---
 
-*Senast uppdaterad: 2026-01-12*
+## 4. Uppdatera mbtiles till nyare version
+
+Nuvarande fil: `2017-07-03_europe_sweden.mbtiles` (~1.21 GB, från 2017).
+Ligger i Hetzner Object Storage, laddas ner via `deploy/download-tiles.sh`.
+
+**Behöver undersökas:**
+- Hur genererades filen från början? (OSM-extract + tippecanoe? Planetiler?
+  Annan pipeline?)
+- Finns script/dokumentation från första gången någonstans? Kolla
+  `../brottsplatskartan-tileserver` och nvALT.
+- Vilket stylesheet/schema använder tileserver-gl för att rendera? Ny
+  mbtiles kan behöva matchande style.
+- Hur ofta uppdateras OSM-data tillräckligt mycket för att motivera
+  en ny extract? (Vägar i Sverige ändras långsamt — kanske vart 2–3:e år.)
+
+**Pipeline-skiss (att verifiera):**
+1. Ladda ner senaste Sverige-extract från Geofabrik
+   (`https://download.geofabrik.de/europe/sweden-latest.osm.pbf`)
+2. Konvertera till mbtiles med `planetiler` eller `tilemaker`
+3. Ladda upp till Hetzner Object Storage-bucket `brottsplatskartan/tiles/`
+4. Uppdatera `TILES_FILE` + `TILES_URL` i `deploy/download-tiles.sh`
+5. Deploy — containern plockar upp nya filen
+
+### Status
+- [ ] Hitta/dokumentera ursprunglig pipeline
+- [ ] Testa ny extract med planetiler eller tilemaker
+- [ ] Verifiera att tileserver-gl:s default-style fungerar med ny mbtiles
+- [ ] Committa dokumentation till `deploy/update-tiles.md` eller liknande
+
+---
+
+## 5. Uppgradera spatie/laravel-responsecache 7.7 → 8.x (SWR-stöd)
+
+**Att göra EFTER Hetzner-cutover** — inte innan, för att undvika
+rörliga delar mitt i flytten.
+
+### Varför
+
+Version 8.0 (feb 2025) lade till **flexible caching**: stale responses
+serveras direkt medan cachen regenereras i bakgrunden. Exakt
+SWR-mönstret som `Cache::flexible` använder internt, men på
+response-cache-nivå (hela HTML-svaret).
+
+Löser konkret problem: `/stockholm` är seg ibland när outer response
+cache expirerar (30 min TTL) och användaren måste vänta på hela
+regenereringen (geo-spatial query + stats-aggregering + Blade).
+
+### Krav (vi uppfyller)
+
+- PHP 8.4+ ✅
+- Laravel 12+ ✅
+
+### Migration
+
+1. `composer require spatie/laravel-responsecache:^8.0`
+2. Uppdatera `BrottsplatskartanCacheProfile` för SWR-API (fresh/stale-fönster)
+3. Lokalt test: verifiera att stale-svar serveras inom grace-perioden
+4. Deploy
+
+### Förväntad vinst
+
+- `/stockholm`, `/lan/*`, `/plats/*`, startsidan: nästan aldrig kall cache
+- Dagens "30 min TTL utan SWR" → 25 min fresh + 5-15 min stale-window
+- Eliminerar ~3s väntetider som nu drabbar enstaka användare var 30:e minut
+
+### Status
+- [ ] Vänta till efter cutover (DO-server avstängd)
+- [ ] Läs migration-guide från Spatie
+- [ ] Implementera + testa lokalt
+- [ ] Deploy och verifiera
+
+---
+
+*Senast uppdaterad: 2026-04-20*
