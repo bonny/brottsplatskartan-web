@@ -35,6 +35,7 @@ services:
     environment:
       AUTORUN_ENABLED: "false"   # App-containern sköter caching/storage:link
       LOG_OUTPUT_LEVEL: info
+      PHP_OPCACHE_ENABLE: "1"
     volumes:
       - ./:/var/www/html
     depends_on:
