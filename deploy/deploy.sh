@@ -45,4 +45,10 @@ fi
 echo "→ docker compose restart app scheduler"
 $DC restart app scheduler
 
+# Rensa Spatie response cache (Redis). Annars serveras gamla cachade
+# svar tills TTL (2–30 min) löper ut — irriterande när man just deployat
+# en Blade-fix.
+echo "→ responsecache:clear"
+$DC exec -T app php artisan responsecache:clear || true
+
 echo "✅ Deploy klart ($NEW_SHA)"
