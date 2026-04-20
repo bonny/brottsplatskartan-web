@@ -194,16 +194,27 @@ Ligger i Hetzner Object Storage, laddas ner via `deploy/download-tiles.sh`.
 
 ---
 
-## 5. Uppgradera spatie/laravel-responsecache 7.7 → 8.x (SWR-stöd)
+## 5. Uppgradera Laravel 12 → 13 + spatie/laravel-responsecache 7.7 → 8.x
 
 **Att göra EFTER Hetzner-cutover** — inte innan, för att undvika
-rörliga delar mitt i flytten.
+rörliga delar mitt i flytten. Båda uppgraderingarna görs bäst samtidigt.
 
-### Varför
+### Laravel 13 (släppt 17 mars 2026)
 
-Version 8.0 (feb 2025) lade till **flexible caching**: stale responses
-serveras direkt medan cachen regenereras i bakgrunden. Exakt
-SWR-mönstret som `Cache::flexible` använder internt, men på
+- Minimum PHP 8.3 (vi kör 8.4 ✅)
+- "Relatively minor upgrade in terms of effort"
+- 18 mån bug fix + 2 år security fix
+- Intressanta nya features:
+  - `Cache::touch()` för att förlänga TTL utan att re-store
+  - First-party AI SDK (kunde ersätta manuella Claude/OpenAI-anrop)
+  - Utökade PHP attributes (`#[Middleware]`, `#[Tries]`, `#[Backoff]` etc.)
+  - Queue routing (`Queue::route(...)`)
+  - Semantic/vector search (PostgreSQL + pgvector) — irrelevant för oss
+
+### spatie/laravel-responsecache 8.x (släppt feb 2025)
+
+Version 8.0 lade till **flexible caching**: stale responses serveras
+direkt medan cachen regenereras i bakgrunden. SWR-mönstret men på
 response-cache-nivå (hela HTML-svaret).
 
 Löser konkret problem: `/stockholm` är seg ibland när outer response
@@ -213,24 +224,26 @@ regenereringen (geo-spatial query + stats-aggregering + Blade).
 ### Krav (vi uppfyller)
 
 - PHP 8.4+ ✅
-- Laravel 12+ ✅
+- Spatie ResponseCache 8.2+ stöder Laravel 13 ✅
 
 ### Migration
 
-1. `composer require spatie/laravel-responsecache:^8.0`
-2. Uppdatera `BrottsplatskartanCacheProfile` för SWR-API (fresh/stale-fönster)
-3. Lokalt test: verifiera att stale-svar serveras inom grace-perioden
-4. Deploy
+1. `composer require laravel/framework:^13.0 spatie/laravel-responsecache:^8.2`
+2. Följ Laravel 13 upgrade guide (få breaking changes)
+3. Uppdatera `BrottsplatskartanCacheProfile` för SWR-API (fresh/stale-fönster)
+4. Lokalt test: verifiera att stale-svar serveras inom grace-perioden
+5. Deploy
 
 ### Förväntad vinst
 
 - `/stockholm`, `/lan/*`, `/plats/*`, startsidan: nästan aldrig kall cache
 - Dagens "30 min TTL utan SWR" → 25 min fresh + 5-15 min stale-window
 - Eliminerar ~3s väntetider som nu drabbar enstaka användare var 30:e minut
+- Bonus: `Cache::touch()` kan ersätta en del manuell cache-logik
 
 ### Status
 - [ ] Vänta till efter cutover (DO-server avstängd)
-- [ ] Läs migration-guide från Spatie
+- [ ] Läs Laravel 13 upgrade guide + Spatie 8.x release notes
 - [ ] Implementera + testa lokalt
 - [ ] Deploy och verifiera
 
