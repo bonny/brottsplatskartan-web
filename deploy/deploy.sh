@@ -10,13 +10,9 @@ cd /opt/brottsplatskartan
 # laddas automatiskt på servern.
 DC="docker compose -f compose.yaml"
 
-# Auto-detektera aktuell branch så skriptet fungerar både under test-fasen
-# (flytt-till-hetzner) och efter cutover (main).
-BRANCH=$(git rev-parse --abbrev-ref HEAD)
-
-echo "→ git pull (branch: $BRANCH)"
+echo "→ git pull ($(git rev-parse --abbrev-ref HEAD))"
 PREV_SHA=$(git rev-parse HEAD)
-git pull --ff-only origin "$BRANCH"
+git pull --ff-only
 NEW_SHA=$(git rev-parse HEAD)
 
 if [ "$PREV_SHA" = "$NEW_SHA" ]; then
