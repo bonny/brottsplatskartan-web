@@ -3,34 +3,26 @@
 Samma stack som på Hetzner, men utan Caddy/SSL. Snabb filsync via
 named volumes för `vendor/`, `node_modules/` och `storage/framework/*`.
 
-## .test-domäner via Valet (rekommenderat)
+## .test-domäner via dnsmasq (utan port-konflikt)
 
-Med [Laravel Valet](https://laravel.com/docs/valet) kan du nå sajten på
-`https://brottsplatskartan.test` istället för `http://localhost:8350`.
+Valet installerar **dnsmasq** som löser alla `*.test` till `127.0.0.1`.
+Du kan använda `.test`-hostnames med port direkt — ingen Valet-proxy
+behövs, ingen konflikt med port 80/443.
 
-Engångssetup:
-
-```bash
-valet proxy brottsplatskartan http://127.0.0.1:8350 --secure
-valet proxy kartbilder.brottsplatskartan http://127.0.0.1:8351 --secure
-```
-
-Sätt sen i `.env`:
+Sätt i `.env`:
 
 ```env
-APP_URL=https://brottsplatskartan.test
-TILESERVER_URL=https://kartbilder.brottsplatskartan.test/
+APP_URL=http://brottsplatskartan.test:8350
+TILESERVER_URL=http://kartbilder.brottsplatskartan.test:8351/
 ```
 
-Lista / ta bort senare:
+Surfa sen till:
 
-```bash
-valet proxies
-valet unproxy brottsplatskartan
-valet unproxy kartbilder.brottsplatskartan
-```
+- <http://brottsplatskartan.test:8350>
+- <http://kartbilder.brottsplatskartan.test:8351> (med tileserver-profil)
 
-Utan Valet använder du portarna direkt: <http://localhost:8350>.
+HTTPS lokalt är överflödigt – cutover-rehearsal mot riktig Hetzner-server
+fångar eventuella HTTPS-specifika buggar innan prod-flytt.
 
 ## Engångssetup
 
