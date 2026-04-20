@@ -21,17 +21,26 @@ class AppServiceProvider extends ServiceProvider {
         // Data till 404-sidan. Registreras här (inte i routes/web.php) så att
         // den fungerar även när route:cache är aktiverat — då laddas routes
         // inte dynamiskt och \View::composer-kall i routes-filen skippas.
+        //
+        // Allt cachas i 10 min eftersom 404 är botmagnet (skannare hammar
+        // .env/.git/.vscode osv) och vi vill inte köra tunga GROUP BY-queries
+        // per bot-request.
         \View::composer('errors::404', function ($view) {
-            $view->with([
-                'events' => \App\CrimeEvent::orderBy('created_at', 'desc')->paginate(5),
-                'lan' => DB::table('crime_events')
-                    ->select('administrative_area_level_1')
-                    ->groupBy('administrative_area_level_1')
-                    ->orderBy('administrative_area_level_1', 'asc')
-                    ->where('administrative_area_level_1', '!=', '')
-                    ->get(),
-                'most_read_events' => \App\Helper::getMostViewedEventsRecently(20, 5),
-            ]);
+            $data = \Cache::remember('errors.404.composer', 10 * 60, function () {
+                return [
+                    'events' => \App\CrimeEvent::orderBy('created_at', 'desc')
+                        ->limit(5)
+                        ->get(),
+                    'lan' => DB::table('crime_events')
+                        ->select('administrative_area_level_1')
+                        ->groupBy('administrative_area_level_1')
+                        ->orderBy('administrative_area_level_1', 'asc')
+                        ->where('administrative_area_level_1', '!=', '')
+                        ->get(),
+                    'most_read_events' => \App\Helper::getMostViewedEventsRecently(20, 5),
+                ];
+            });
+            $view->with($data);
         });
 
         // Skip database queries when running console commands or if database is not available
