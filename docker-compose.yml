@@ -28,10 +28,8 @@ services:
     networks: [internal]
 
   scheduler:
+    # Samma image som app – byggs en gång av app-servicen.
     image: brottsplatskartan-app:local
-    build:
-      context: .
-      dockerfile: deploy/Dockerfile.app
     restart: unless-stopped
     env_file: .env
     environment:
@@ -48,6 +46,10 @@ services:
         condition: service_started
     # schedule:work kör schedule:run internt varje minut, hanterar jobb-signaler
     command: ["php", "/var/www/html/artisan", "schedule:work"]
+    # Disable imagens default-healthcheck – den kollar PHP-FPM/nginx som
+    # inte körs i scheduler-containern.
+    healthcheck:
+      disable: true
     networks: [internal]
 
   mariadb:

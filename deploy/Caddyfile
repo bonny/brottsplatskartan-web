@@ -4,19 +4,25 @@
 }
 
 # Produktionsdomäner
-brottsplatskartan.se, www.brottsplatskartan.se {
+
+# www → apex redirect
+www.brottsplatskartan.se {
 	redir https://brottsplatskartan.se{uri} permanent
 }
 
 brottsplatskartan.se {
 	reverse_proxy app:8080
 	encode gzip zstd
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+	}
 }
 
 kartbilder.brottsplatskartan.se {
 	reverse_proxy tileserver:8080
 	encode gzip zstd
-
 	# Aggressiv cache — tiles ändras sällan
 	header Cache-Control "public, max-age=604800, immutable"
 }

@@ -10,9 +10,14 @@ class TrustProxies extends Middleware
     /**
      * The trusted proxies for this application.
      *
+     * Vi kör bakom Caddy i Docker Compose – proxyn är alltid en
+     * container på internt nätverk (okänd IP vid runtime, dockernät
+     * varierar). Litar därför på alla proxyer. Laravel tar då hänsyn
+     * till X-Forwarded-* så url()/scheme() ger rätt HTTPS-URL.
+     *
      * @var array<int, string>|string|null
      */
-    protected $proxies;
+    protected $proxies = '*';
 
     /**
      * The headers that should be used to detect proxies.
