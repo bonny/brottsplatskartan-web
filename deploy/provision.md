@@ -1,13 +1,18 @@
-# Provisionering av Hetzner CAX31
+# Provisionering av Hetzner-server
 
-Körs en gång när den nya servern skapas. Antar Debian 12 Bookworm arm64.
+Körs en gång när den nya servern skapas. Antar **Debian 13 Trixie x86_64**.
+
+Stacken är multi-arch så både CX (AMD x86) och CAX (ARM Ampere) fungerar
+utan kodändringar. Nuvarande prod kör CX33 i Helsinki.
 
 ## 1. Skapa server i Hetzner Cloud Console
 
-- Location: **Falkenstein (FSN1)**
-- Type: **CAX31** (ARM, 8 vCPU / 16 GB / 160 GB)
-- Image: **Debian 12**
-- SSH key: lägg till din publika nyckel
+- Location: **Helsinki (HEL1)** (alternativ: Falkenstein/Nuremberg — alla EU)
+- Type: **CX33** (x86 AMD, 4 vCPU / 8 GB / 80 GB, ~€6.49/mån)
+  - Uppgradera senare till CX43 vid behov (kräver ~3 min downtime)
+  - CAX-serien (ARM) fungerar också om du föredrar det
+- Image: **Debian 13** (Trixie)
+- SSH key: lägg till din publika nyckel (`~/.ssh/id_ed25519.pub`)
 - Backups: **aktivera** (+20% kostnad)
 - Networking: IPv4 + IPv6
 - Firewall: skapa en basic firewall (SSH 22, HTTP 80, HTTPS 443)
@@ -18,9 +23,21 @@ Körs en gång när den nya servern skapas. Antar Debian 12 Bookworm arm64.
 ssh root@<hetzner-ip>
 ```
 
-## 3. Härda och installera basics
+## 3. Sätt hostname + härda + installera basics
 
 ```bash
+# Sätt hostname (byt ut vid behov)
+hostnamectl set-hostname bpk-prod-hel1
+
+# Hetzner cloud-init skriver om /etc/hosts vid boot per default.
+# Stäng av det så vår ändring persisterar:
+cat > /etc/cloud/cloud.cfg.d/99-disable-hosts.cfg <<'EOF'
+manage_etc_hosts: false
+EOF
+
+# Uppdatera /etc/hosts så sudo inte klagar
+sed -i "s/127.0.1.1 .*/127.0.1.1 $(hostname)/" /etc/hosts
+
 # Uppdatera allt
 apt update && apt upgrade -y
 
@@ -166,7 +183,65 @@ scp /tmp/bpk.dump.gz deploy@<hetzner-ip>:/tmp/
 zcat /tmp/bpk.dump.gz | docker compose exec -T mariadb mysql -u root -p"$DB_ROOT_PASSWORD" brottsplatskartan
 ```
 
-## 12. Scheduler
+## 12. Dagliga DB-dumps (backup-lager 2)
+
+Hetzner gör dagliga disk-snapshots (aktiverat i steg 1), men en
+lokal SQL-dump i klartext är snabbare att inspektera och återställa
+från vid misstag (råkat köra fel DELETE etc.).
+
+```bash
+sudo mkdir -p /opt/backups
+sudo chown deploy:deploy /opt/backups
+
+Skapa ett backup-script (följer MariaDB:s officiella Docker-doc —
+lösenordet expanderas *inuti* containern via `$MARIADB_ROOT_PASSWORD`,
+syns aldrig i host:ens process-listning):
+
+```bash
+sudo tee /usr/local/bin/bpk-db-backup.sh > /dev/null <<'EOF'
+#!/bin/bash
+set -euo pipefail
+cd /opt/brottsplatskartan
+OUT="/opt/backups/bpk-$(date +%F).sql.gz"
+docker compose exec -T mariadb sh -c '
+  exec mariadb-dump \
+    --single-transaction \
+    --routines --triggers --events \
+    --databases brottsplatskartan \
+    -u root -p"$MARIADB_ROOT_PASSWORD"
+' | gzip > "$OUT"
+find /opt/backups -name 'bpk-*.sql.gz' -mtime +7 -delete
+EOF
+sudo chmod +x /usr/local/bin/bpk-db-backup.sh
+
+echo "0 4 * * * deploy /usr/local/bin/bpk-db-backup.sh >> /var/log/bpk-db-backup.log 2>&1" | \
+  sudo tee /etc/cron.d/bpk-db-backup > /dev/null
+sudo chmod 644 /etc/cron.d/bpk-db-backup
+```
+
+- `--single-transaction` = konsistent snapshot av InnoDB utan table locks
+  (läsningar och skrivningar fortsätter obehindrat under dumpen).
+- `--routines --triggers --events` = komplett dump av stored procedures,
+  triggers och scheduled events.
+- `--databases brottsplatskartan` = inkluderar `CREATE DATABASE`-statements,
+  så restore blir idempotent (skapar DB:n om den inte finns).
+
+Dumpar klockan 04:00 varje natt, behåller 7 dagar. Testa direkt:
+
+```bash
+/usr/local/bin/bpk-db-backup.sh
+ls -lh /opt/backups/
+```
+
+Återställning (från host):
+
+```bash
+cd /opt/brottsplatskartan
+zcat /opt/backups/bpk-2026-04-20.sql.gz | \
+  docker compose exec -T mariadb sh -c 'mariadb -u root -p"$MARIADB_ROOT_PASSWORD"'
+```
+
+## 13. Scheduler
 
 Ingen host-cron behövs. En dedikerad `scheduler`-container i
 `compose.yaml` kör `php artisan schedule:work` vilket triggar
@@ -178,7 +253,7 @@ docker compose ps scheduler
 docker compose logs -f scheduler
 ```
 
-## 13. Test via hetzner.brottsplatskartan.se
+## 14. Test via hetzner.brottsplatskartan.se
 
 - Lägg A-record `hetzner.brottsplatskartan.se → <hetzner-ip>` i Loopia (TTL 300 s)
 - Samma för `hetzner-kartbilder.brottsplatskartan.se`
@@ -186,13 +261,13 @@ docker compose logs -f scheduler
 - Caddy utfärdar automatiskt Let's Encrypt-cert
 - Verifiera sajten
 
-## 14. GitHub Actions secrets
+## 15. GitHub Actions secrets
 
 I repots settings → Secrets:
 
 - `HETZNER_HOST` = servers publika IP eller domän
 - `HETZNER_SSH_KEY` = deploy-userns privata nyckel (generera på servern, lägg till pubkey i `~/.ssh/authorized_keys`)
 
-## 15. Cutover (när allt är testat)
+## 16. Cutover (när allt är testat)
 
 Se migrationsplanen i huvuddokumentet (Fas 6).

@@ -147,7 +147,7 @@ public/js/events-map.js                              (karta)
 ## Produktionsmiljö (Hetzner)
 
 - **Plattform:** Hetzner Cloud (EU)
-- **Server:** CAX ARM (Ampere Altra), Debian 12 (Bookworm)
+- **Server:** CX33 (x86 AMD, 4 vCPU / 8 GB / 80 GB), Debian 13 (Trixie), Helsinki
 - **Deploy-stack:** Docker Compose (`compose.yaml` + egen `Dockerfile.app`)
 - **Reverse proxy:** Caddy med auto-Let's Encrypt
 - **Kod-plats:** `/opt/brottsplatskartan/`
