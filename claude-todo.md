@@ -363,4 +363,42 @@ Polisen per dag i Sverige, 14 dagar tillbaka" (genereras av
 
 ---
 
+## 7. Fixa PHPStan-errors och lägga till i CI
+
+**Status:** PHPStan (Larastan 3.x) är installerat och konfigurerat på
+level 5, men inte i CI och errors är inte åtgärdade. Composer-script
+finns nu: `composer analyse`.
+
+### Att göra
+
+- [ ] Kör `composer analyse` och triage errors
+  - [ ] Fixa de enklaste direkt
+  - [ ] Svårare → baseline med `composer analyse:baseline`
+- [ ] Lägg till GitHub Actions-workflow som kör phpstan på PR/push
+  ```yaml
+  # .github/workflows/phpstan.yml
+  name: PHPStan
+  on: [push, pull_request]
+  jobs:
+    phpstan:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
+        - uses: shivammathur/setup-php@v2
+          with: { php-version: 8.4 }
+        - run: composer install --no-interaction
+        - run: composer analyse
+  ```
+- [ ] Överväg att öka level 5 → 6 eller 7 över tid
+- [ ] Lägg till Laravel Pint (`composer require laravel/pint --dev`)
+  som code formatter + composer-script `"format": "pint"`
+
+### Varför senare
+
+Kräver dedikerad tid att gå igenom varningarna utan att distraheras
+av migrationsarbetet. Bättre efter cutover när vi inte också jagar
+migration-buggar.
+
+---
+
 *Senast uppdaterad: 2026-04-20*

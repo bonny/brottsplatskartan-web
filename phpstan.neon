@@ -6,7 +6,7 @@ parameters:
     paths:
         - app
 
-    # The level 9 is the highest level
+    # Level 9 är högsta. 5 är rimligt för äldre Laravel-kodbas.
     level: 5
 
     ignoreErrors:
@@ -14,6 +14,3 @@ parameters:
 
     excludePaths:
         - ./*/*/FileToBeExcluded.php
-
-    checkMissingIterableValueType: false
-    
