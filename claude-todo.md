@@ -259,6 +259,71 @@ regenereringen (geo-spatial query + stats-aggregering + Blade).
 - [ ] Implementera + testa lokalt
 - [ ] Deploy och verifiera
 
+### Uppföljning: ersätt rap2hpoutre/laravel-log-viewer med Laravel Pail
+
+`laravel/pail` är det officiella alternativet i Laravel-ekosystemet.
+Används via artisan direkt: `php artisan pail` → realtids-log-stream
+i terminalen med filter/search. Fungerar mot alla log-drivers
+(single, daily, stderr m.fl.).
+
+**Migration:**
+1. `composer require laravel/pail --dev`
+2. Ta bort rap2hpoutre/laravel-log-viewer från composer.json
+3. Ta bort routen i `routes/web.php:736-737`
+4. Dokumentera nya flödet i AGENTS.md:
+   ```bash
+   docker compose -f compose.yaml exec app php artisan pail
+   ```
+
+Pail har inget webb-UI (tmpt — bara terminal). För tillfällena när
+man vill se logs från browser: använd `tail` direkt eller Telescope.
+Men troligen aldrig behövt i praktiken.
+
+### Uppföljning: ersätt egen Claude-SDK med Laravel 13:s AI-primitiver
+
+Nuvarande setup:
+- `claude-php/claude-php-sdk` (composer-dependency)
+- `app/Services/AISummaryService.php` — wrapper
+- `app/Console/Commands/CreateAISummary.php` — scheduled command
+- `app/CrimeEvent.php` refererar Claude-API
+
+Laravel 13 (mars 2026) lade till **first-party AI SDK** — en enhetlig
+API för text generation, tool-calling, embeddings osv. över flera
+providers (Anthropic, OpenAI m.fl.).
+
+**Potentiella vinster:**
+- En abstraktion över providers → lättare att byta framtida modell
+- Officiellt paket — underhållsansvar hos Laravel-teamet
+- Inbyggt i Laravel → mindre glue-kod
+- Testbarhet via fakes/mocks (om SDK:n följer Laravel-mönstret)
+
+**Oklart att utreda:**
+- Stöder SDK:n Claude (Anthropic) eller bara OpenAI-kompatibla modeller?
+- Har den samma kapabilitet (streaming, tool-use, vision m.fl.)?
+- Är den mogen nog (v1 i mars 2026) eller värd att vänta en release eller två?
+
+### Uppföljning: hantera willvincent/feeds
+
+Paketet underhålls långsamt (~årlig uppdatering). Kritiskt för
+RSS-import från polisen.se. Tre vägar:
+
+**A. Ersätt med SimplePie direkt**
+willvincent/feeds är en tunn Laravel-wrapper över SimplePie. Skriv
+om `FeedController::parseFeed()` för att anropa SimplePie direkt
+(~20-50 rader). Bort med mellanlagret, behåll samma funktionalitet.
+
+**B. Forka paketet**
+Skapa `bonny/feeds` fork på GitHub, uppdatera composer-constraints,
+använd via `repositories`-section i composer.json. Låg insats men
+skapar teknisk skuld.
+
+**C. Vänta på official uppdatering**
+Öppna issue/PR på upstream. Risk: kan ta 6-12 mån, blockerar hela
+Laravel 13-uppgraderingen under tiden.
+
+**Rekommenderad:** A. Paketet är så tunt att en direkt SimplePie-lösning
+är snabbast långsiktigt.
+
 ---
 
 ## 6. Flytta "Brottsstatistik"-ruta från startsidan → egen /statistik-sida
