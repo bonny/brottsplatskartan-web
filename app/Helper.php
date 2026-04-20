@@ -12,13 +12,26 @@ use Illuminate\Support\Str;
 
 class Helper {
 
+    /** Per-request memoization för getAllLanWithStats. */
+    private static $allLanWithStatsCache = null;
+
     /**
      * Get chart HTML to be used with CSS from https://chartscss.org/.
-     * 
+     *
+     * Själva HTML-genereringen cachas i 15 min (SWR 15/25) eftersom
+     * både DB-queryn och Blade-liknande string-bygget är icke-trivialt
+     * på cache-miss. URL-route-generering kan vara särskilt dyrt.
+     *
      * @param string $lan
      * @return string HTML
      */
     public static function getStatsChartHtml($lan) {
+        return Cache::flexible('getStatsChartHtml:' . $lan, [15 * MINUTE_IN_SECONDS, 25 * MINUTE_IN_SECONDS], function () use ($lan) {
+            return self::buildStatsChartHtml($lan);
+        });
+    }
+
+    private static function buildStatsChartHtml($lan) {
         if ($lan == "home") {
             $stats = self::getHomeStats($lan);
         } else {
@@ -91,7 +104,9 @@ class Helper {
      */
     public static function getLanStats($lan) {
         $cacheKey = "getLanStats:" . $lan;
-        $stats = Cache::remember($cacheKey, MINUTE_IN_SECONDS * 10, function () use ($lan) {
+        // 15 min matchar fetch-intervallen (*/12 min) så vi sällan
+        // har stale data längre än en fetch-cykel.
+        $stats = Cache::remember($cacheKey, MINUTE_IN_SECONDS * 15, function () use ($lan) {
             $stats = [];
 
             $stats["numEventsPerDay"] = DB::table('crime_events')
@@ -166,6 +181,14 @@ class Helper {
     }
 
     public static function getAllLanWithStats() {
+        // Per-request memoization: även om varje inre Cache::remember är
+        // snabbt (~0.5ms Redis-trip) blir 63 upprop (21 län × 3 perioder)
+        // 30+ ms. Vi får en request-level cache gratis genom att bara
+        // returnera den förstberäknade collectionen.
+        if (self::$allLanWithStatsCache !== null) {
+            return self::$allLanWithStatsCache;
+        }
+
         $lan = self::getAllLan();
 
         // Räkna alla händelser i det här länet för en viss period
@@ -234,6 +257,8 @@ class Helper {
                 ]
             ];
         });
+
+        self::$allLanWithStatsCache = $lan;
 
         return $lan;
     }
@@ -586,13 +611,17 @@ class Helper {
     }
 
     public static function getOrter() {
-        $orter = \DB::table('crime_events')
-            ->select("parsed_title_location")
-            ->where('parsed_title_location', "!=", "")
-            ->orderBy('parsed_title_location', 'asc')
-            ->distinct()
-            ->get();
-        return $orter;
+        // DISTINCT över 460k+ rader utan WHERE-filter = dyr query.
+        // Nya orter tillkommer sällan (nya adressnamn i RSS-feeds).
+        // 24h TTL räcker gott.
+        return Cache::remember('getOrter', 24 * HOUR_IN_SECONDS, function () {
+            return \DB::table('crime_events')
+                ->select("parsed_title_location")
+                ->where('parsed_title_location', "!=", "")
+                ->orderBy('parsed_title_location', 'asc')
+                ->distinct()
+                ->get();
+        });
     }
 
     /**
@@ -944,11 +973,15 @@ class Helper {
         $place = is_string($place) ? mb_strtolower($place) : $place;
         $lan = is_string($lan) ? mb_strtolower($lan) : $lan;
 
-        $relatedLinks = RelatedLinks::where(['place' => $place, 'lan' => $lan])
-            ->orderBy('prio', 'desc')
-            ->get();
+        // RelatedLinks ändras bara via manuell admin-editering — säkert
+        // att cacha länge. Används på varje /plats/* och /lan/*.
+        $cacheKey = 'getRelatedLinks:' . ($place ?? 'null') . ':' . ($lan ?? 'null');
 
-        return $relatedLinks;
+        return Cache::remember($cacheKey, 24 * HOUR_IN_SECONDS, function () use ($place, $lan) {
+            return RelatedLinks::where(['place' => $place, 'lan' => $lan])
+                ->orderBy('prio', 'desc')
+                ->get();
+        });
     }
 
     /**
