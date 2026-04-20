@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+  # Tillåt manuell trigger via GitHub UI (Actions → Deploy to Hetzner → Run workflow)
+  workflow_dispatch:
 
 # Bara en deploy åt gången
 concurrency:
