@@ -16,7 +16,7 @@ services:
       - "127.0.0.1:8350:8080"
     environment:
       SSL_MODE: "off"
-      LOG_OUTPUT_LEVEL: debug
+      LOG_OUTPUT_LEVEL: notice
       PHP_OPCACHE_ENABLE: "0"     # Ingen opcache i dev – snabbare iteration
       AUTORUN_LARAVEL_CONFIG_CACHE: "false"
       AUTORUN_LARAVEL_ROUTE_CACHE: "false"
