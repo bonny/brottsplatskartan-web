@@ -18,10 +18,13 @@ fi
 
 echo "→ Deploy $PREV_SHA → $NEW_SHA"
 
-# Kör composer install bara om composer.lock ändrats
+# Kör composer install bara om composer.lock ändrats.
+# Körs som root pga named volume-perms, AUTORUN av för att slippa
+# storage:link före vendor/ finns. Chownar tillbaka till www-data.
 if ! git diff "$PREV_SHA" "$NEW_SHA" --quiet -- composer.lock composer.json; then
 	echo "→ composer install (composer.lock ändrades)"
-	docker compose run --rm --no-deps app composer install --no-dev --optimize-autoloader --no-interaction
+	docker compose run --rm --no-deps -u root -e AUTORUN_ENABLED=false app \
+		sh -c 'composer install --no-dev --optimize-autoloader --no-interaction && chown -R www-data:www-data /var/www/html/vendor /var/www/html/bootstrap/cache'
 else
 	echo "→ Skippar composer install (ingen ändring)"
 fi

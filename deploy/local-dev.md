@@ -1,58 +1,80 @@
 # Lokal utveckling med Docker Compose
 
-Samma stack som på Hetzner, men utan Caddy/SSL. Snabb filsync via
-named volumes för `vendor/`, `node_modules/` och `storage/framework/*`.
+Samma stack som på Hetzner: `serversideup/php:8.4-fpm-nginx` (+ egna
+PHP-extensions), MariaDB 11, Redis 8, tileserver-gl. Lokalt används
+`docker-compose.override.yml` som laddas automatiskt och gör stacken
+dev-vänlig utan att röra prod-filen.
 
-## .test-domäner via dnsmasq (utan port-konflikt)
+## Portar (för att inte krocka med andra projekt)
 
-Valet installerar **dnsmasq** som löser alla `*.test` till `127.0.0.1`.
-Du kan använda `.test`-hostnames med port direkt — ingen Valet-proxy
-behövs, ingen konflikt med port 80/443.
+| Service | Port |
+|---|---|
+| App | 8350 |
+| Tileserver (profil) | 8351 |
+| MariaDB | 33012 |
+| Redis | 63012 |
 
-Sätt i `.env`:
+Registrerat i `nvALT/Earth People/web projects local ports.md`.
+
+## .test-domäner via dnsmasq (Valet-installerat)
+
+Valet installerar `dnsmasq` som löser alla `*.test` till `127.0.0.1`.
+Du behöver **ingen Valet-proxy** — bara använda `.test`-hostname med
+port direkt. Undviker konflikt med port 80/443 som används av annat
+projekt.
+
+`.env` lokalt:
 
 ```env
 APP_URL=http://brottsplatskartan.test:8350
 TILESERVER_URL=http://kartbilder.brottsplatskartan.test:8351/
 ```
 
-Surfa sen till:
+Sajt på <http://brottsplatskartan.test:8350>.
 
-- <http://brottsplatskartan.test:8350>
-- <http://kartbilder.brottsplatskartan.test:8351> (med tileserver-profil)
+HTTPS lokalt är överflödigt — cutover-rehearsal mot riktig Hetzner-server
+fångar HTTPS-specifika buggar innan prod-flytt.
 
-HTTPS lokalt är överflödigt – cutover-rehearsal mot riktig Hetzner-server
-fångar eventuella HTTPS-specifika buggar innan prod-flytt.
+### HSTS-problem?
+
+Om Chrome auto-redirectar till `https://` och vägrar HTTP:
+
+1. `chrome://net-internals/#hsts`
+2. "Delete domain security policies" → `brottsplatskartan.test` → Delete
+3. Samma för `kartbilder.brottsplatskartan.test`
+4. Ny flik → `http://brottsplatskartan.test:8350` fungerar igen
 
 ## Engångssetup
 
 ```bash
-# 1. Kopiera env-mallen och fyll i (eller låt Laravel generera key)
+# 1. Kopiera env-mallen och fyll i egna värden
 cp deploy/.env.local.example .env
 
-# 2. Starta stacken
-docker compose up -d
+# 2. Bygg + starta stacken (app-image byggs första gången med Dockerfile.app)
+docker compose up -d --build
 
-# 3. Installera dependencies (första gången – hamnar i named volume)
-#    Måste köras som root eftersom named volume ägs av root,
-#    och utan AUTORUN eftersom storage:link kräver vendor/.
+# 3. Installera composer-dependencies
+#    GOTCHA: named volume för vendor/ ägs av root initialt, och AUTORUN
+#    kör storage:link som kräver vendor/. Därför: -u root + AUTORUN_ENABLED=false.
 docker compose run --rm --no-deps -u root -e AUTORUN_ENABLED=false app \
   sh -c 'composer install && chown -R www-data:www-data /var/www/html/vendor /var/www/html/bootstrap/cache /var/www/html/storage'
+
+# 4. Node-paket + build (för frontend-assets)
 docker compose exec app npm install
 docker compose exec app npm run build
 
-# 4. Generera APP_KEY (om det är blankt i .env)
+# 5. Generera APP_KEY (om det är blankt i .env)
 docker compose exec app php artisan key:generate
 
-# 5. Migrera databasen
+# 6. Migrera databasen
 docker compose exec app php artisan migrate
 
-# 6. (Valfritt) importera produktionsdump för realistisk testdata
+# 7. (Valfritt) importera produktionsdump för realistisk testdata
 scp root@brottsplatskartan.se:/tmp/bpk.sql.gz .
 zcat bpk.sql.gz | docker compose exec -T mariadb mysql -u root -plocal-dev-root-password brottsplatskartan
 ```
 
-Sajten finns nu på <http://localhost:8350>.
+Sajten finns nu på <http://brottsplatskartan.test:8350>.
 
 ## Dagligt flöde
 
@@ -60,37 +82,60 @@ Sajten finns nu på <http://localhost:8350>.
 # Starta
 docker compose up -d
 
-# Läs logs i realtid
+# Läs logs
 docker compose logs -f app
 
-# Kör artisan
+# Artisan
 docker compose exec app php artisan migrate
 docker compose exec app php artisan tinker
 
-# Kör composer
-docker compose exec app composer require <paket>
+# Composer (enklast att köra som root för att undvika perm-issues)
+docker compose exec -u root app composer require <paket>
+docker compose exec -u root app composer update
 
-# Stoppa
+# Npm
+docker compose exec app npm run dev
+
+# Stoppa (behåller data i named volumes)
 docker compose down
+
+# Stoppa + radera data (DESTRUKTIVT)
+docker compose down -v
 ```
+
+## Varför containern loopar / krashar?
+
+Troliga orsaker + fix:
+
+**"Failed opening required '/var/www/html/vendor/autoload.php'"**
+→ `composer install` har inte körts. Kör engångsettan ovan.
+
+**"Permission denied" i vendor/ eller storage/**
+→ Named volume ägs av root. Kör: `docker compose exec -u root app chown -R www-data:www-data /var/www/html/vendor /var/www/html/storage /var/www/html/bootstrap/cache`
+
+**Port-konflikt vid uppstart**
+→ Kör `docker compose down` först, sen `up -d`. Om det inte hjälper:
+  `docker ps -a --format '{{.Names}}' | grep brottsplatskartan | xargs docker rm -f`
+  `docker network prune -f`
+
+**"Ports are not available" (något annat håller porten)**
+→ `lsof -iTCP:33012 -sTCP:LISTEN` för att se vem. Byt ev. port i
+  `docker-compose.override.yml` + `.env` + port-registret.
 
 ## Ansluta med GUI-verktyg
 
-Från docker-compose.override.yml exposas:
-
-- **MariaDB** på `127.0.0.1:33012` (TablePlus, Sequel Ace, DBeaver)
-- **Redis** på `127.0.0.1:63012` (RedisInsight, TablePlus)
-- **Tileservern** på <http://localhost:8351> (bara om du startat den, se nedan)
-
-Credentials matchar det du satte i `.env`.
+| Verktyg | Värd | Port | Credentials |
+|---|---|---|---|
+| TablePlus / Sequel Ace | 127.0.0.1 | 33012 | `.env` DB_USERNAME/DB_PASSWORD |
+| RedisInsight / TablePlus (Redis) | 127.0.0.1 | 63012 | `.env` REDIS_PASSWORD |
 
 ## Tileservern lokalt (valfritt)
 
-Tileservern genererar kartbilder för händelsesidor. **Du behöver inte den för
-95% av dev-arbetet** — sajten fungerar utan, bara att `<img>` för kartbilden
-blir trasig.
+Tileservern genererar kartbilder för händelsesidor. **Du behöver inte den
+för 95% av dev-arbetet** — sajten fungerar utan, bara att `<img>` för
+kartbilden blir trasig.
 
-Vill du ändå starta den lokalt:
+Vill du ändå köra:
 
 ```bash
 # 1. Ladda ner mbtiles (1.21 GB, idempotent)
@@ -100,41 +145,67 @@ Vill du ändå starta den lokalt:
 docker compose --profile tileserver up -d
 
 # 3. Kolla att den svarar
-curl http://localhost:8351
+curl http://kartbilder.brottsplatskartan.test:8351
 ```
 
-Stänga av tileservern igen:
+Stäng av: `docker compose stop tileserver`
+
+Mbtiles är gitignored, förorenar inte repot.
+
+## Named volumes vs bind-mount
+
+Följande finns som **named volumes** (snabbare än bind-mount på macOS):
+
+- `vendor/` — composer-paket
+- `node_modules/` — npm-paket
+- `storage/framework/cache/views/sessions/` — Laravel-runtime
+
+Din kod i övriga mappar är bind-mount:ad → editera på host som vanligt,
+ändringar syns direkt i containern.
+
+### Om prestandan ändå är seg
+
+Prova **OrbStack** (<https://orbstack.dev>) — drop-in-ersättare för
+Docker Desktop med betydligt snabbare filsync. Samma kommandon, inget
+att ändra i configen. Gratis för personligt bruk.
+
+## Bygga om app-imagen
+
+Vi har en egen `Dockerfile.app` som extendar `serversideup/php` med
+`bcmath`, `exif` och `gd` (behövs av `league/geotools` och
+bildmanipulation).
+
+När du ändrar `Dockerfile.app`:
+
 ```bash
-docker compose --profile tileserver down tileserver
+docker compose build app
+docker compose up -d
 ```
 
-Mbtiles-filen är git-ignored — den förorenar inte repot.
+## Varför config cache är AV lokalt
 
-## Varför named volumes för vendor/ och storage?
+I `docker-compose.override.yml`:
 
-På macOS är bind-mounts ~3x långsammare än native filsystem (VirtioFS har
-förbättrat det men är fortfarande overhead). Kataloger som skrivs ofta och
-inte behöver synkas tillbaka till host (vendor, node_modules, cache, logs)
-läggs därför i named volumes — mycket snabbare.
+```yaml
+AUTORUN_LARAVEL_CONFIG_CACHE: "false"
+AUTORUN_LARAVEL_ROUTE_CACHE: "false"
+AUTORUN_LARAVEL_VIEW_CACHE: "false"
+AUTORUN_LARAVEL_EVENT_CACHE: "false"
+```
 
-Du redigerar alltså koden på host som vanligt, men `composer install` och
-Laravel-caches sker inne i containern utan att tråla genom VirtioFS.
+Annars kräver varje ändring i `config/*.php` eller `.env` en
+`php artisan config:clear`. Lokalt vill vi att allt läses fräscht.
 
-## Prestanda fortfarande segt?
+På prod är alla dessa `true` för snabbare request-hantering.
 
-Prova **OrbStack** (<https://orbstack.dev>) istället för Docker Desktop.
-Drop-in-ersättare, samma kommandon, betydligt snabbare på macOS. Gratis
-för personligt bruk.
+## Produktionsläge lokalt (sällan)
 
-## Produktionsläge lokalt
-
-Om du vill testa hela prod-setupen (inkl. Caddy med lokala certs):
+Om du vill testa full prod-setup (inkl. Caddy + SSL):
 
 ```bash
+# Ignorera override.yml
 docker compose -f docker-compose.yml up -d
 ```
 
-Ignorera då docker-compose.override.yml. Du behöver också lägga till
-`127.0.0.1 brottsplatskartan.se kartbilder.brottsplatskartan.se` i
-`/etc/hosts` och konfigurera Caddy för självsignerat cert. Oftast
-överflödigt — standard `docker compose up` räcker.
+Kräver också att port 80/443 är fri. Oftast överflödigt — dev mot
+`http://brottsplatskartan.test:8350` är tillräckligt.
