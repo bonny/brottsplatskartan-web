@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider {
@@ -16,6 +17,22 @@ class AppServiceProvider extends ServiceProvider {
         if (\App::environment() === 'production') {
             \URL::forceScheme('https');
         }
+
+        // Data till 404-sidan. Registreras här (inte i routes/web.php) så att
+        // den fungerar även när route:cache är aktiverat — då laddas routes
+        // inte dynamiskt och \View::composer-kall i routes-filen skippas.
+        \View::composer('errors::404', function ($view) {
+            $view->with([
+                'events' => \App\CrimeEvent::orderBy('created_at', 'desc')->paginate(5),
+                'lan' => DB::table('crime_events')
+                    ->select('administrative_area_level_1')
+                    ->groupBy('administrative_area_level_1')
+                    ->orderBy('administrative_area_level_1', 'asc')
+                    ->where('administrative_area_level_1', '!=', '')
+                    ->get(),
+                'most_read_events' => \App\Helper::getMostViewedEventsRecently(20, 5),
+            ]);
+        });
 
         // Skip database queries when running console commands or if database is not available
         if (!app()->runningInConsole()) {

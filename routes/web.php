@@ -709,26 +709,8 @@ Route::get('/design', function (Request $request) {
     return view('design', $data);
 });
 
-/**
- * Skicka med data till 404-sidan
- */
-\View::composer('errors::404', function ($view) {
-    $data = [];
-
-    $data["events"] = CrimeEvent::orderBy("created_at", "desc")->paginate(5);
-
-    // Hämta alla län, grupperat på län och antal
-    $data["lan"] = DB::table('crime_events')
-        ->select("administrative_area_level_1")
-        ->groupBy('administrative_area_level_1')
-        ->orderBy('administrative_area_level_1', 'asc')
-        ->where('administrative_area_level_1', "!=", "")
-        ->get();
-
-    $data["most_read_events"] = Helper::getMostViewedEventsRecently(20, 5);
-
-    $view->with($data);
-});
+// 404-composer finns i AppServiceProvider::boot() för att fungera även
+// när route:cache är aktivt.
 
 /*
 Route::get('loggain', function () {

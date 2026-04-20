@@ -18,33 +18,29 @@
 
 
 
-    @isset($events)
-        @if ($events->count())
-            <h2 class="u-margin-top-double">Senast rapporterat</h2>
+    @if ($events->count())
+        <h2 class="u-margin-top-double">Senast rapporterat</h2>
 
-            <ul class="widget__listItems">
-                @foreach ($events as $event)
-                    @include('parts.crimeevent-mapless')
-                @endforeach
-            </ul>
+        <ul class="widget__listItems">
+            @foreach ($events as $event)
+                @include('parts.crimeevent-mapless')
+            @endforeach
+        </ul>
 
-            <p><a href="{{ route('handelser') }}">› Visa fler nya händelser</a></p>
-        @endif
-    @endisset
+        <p><a href="{{ route('handelser') }}">› Visa fler nya händelser</a></p>
+    @endif
 
-    @isset($most_read_events)
-        @if ($most_read_events->count())
-            <h2 class="u-margin-top-double">Mest läst</h2>
+    @if ($most_read_events->count())
+        <h2 class="u-margin-top-double">Mest läst</h2>
 
-            <ul class="widget__listItems">
-                @foreach ($most_read_events as $oneMostViewed)
-                    @include('parts.crimeevent-mapless', ['event' => $oneMostViewed->crimeEvent,])
-                @endforeach
-            </ul>
+        <ul class="widget__listItems">
+            @foreach ($most_read_events as $oneMostViewed)
+                @include('parts.crimeevent-mapless', ['event' => $oneMostViewed->crimeEvent,])
+            @endforeach
+        </ul>
 
-            <p><a href="{{ route('mostRead') }}">› Visa fler händelser som många läser nu</a></p>
-        @endif
-    @endisset
+        <p><a href="{{ route('mostRead') }}">› Visa fler händelser som många läser nu</a></p>
+    @endif
 
 
     @if (!empty($lan))
