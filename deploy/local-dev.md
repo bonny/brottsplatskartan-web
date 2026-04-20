@@ -56,9 +56,39 @@ Från docker-compose.override.yml exposas:
 
 - **MariaDB** på `127.0.0.1:3306` (TablePlus, Sequel Ace, DBeaver)
 - **Redis** på `127.0.0.1:6379` (RedisInsight, TablePlus)
-- **Tileservern** på <http://localhost:8181>
+- **Tileservern** på <http://localhost:8181> (bara om du startat den, se nedan)
 
 Credentials matchar det du satte i `.env`.
+
+## Tileservern lokalt (valfritt)
+
+Tileservern genererar kartbilder för händelsesidor. **Du behöver inte den för
+95% av dev-arbetet** — sajten fungerar utan, bara att `<img>` för kartbilden
+blir trasig.
+
+Vill du ändå starta den lokalt:
+
+```bash
+# 1. Skapa mappen
+mkdir -p deploy/tileserver
+
+# 2. Ladda ner mbtiles (1.21 GB, tar några minuter)
+curl -fL -o deploy/tileserver/2017-07-03_europe_sweden.mbtiles \
+  https://brottsplatskartan.hel1.your-objectstorage.com/tiles/2017-07-03_europe_sweden.mbtiles
+
+# 3. Starta stacken INKL. tileservern
+docker compose --profile tileserver up -d
+
+# 4. Kolla att den svarar
+curl http://localhost:8181
+```
+
+Stänga av tileservern igen:
+```bash
+docker compose --profile tileserver down tileserver
+```
+
+Mbtiles-filen är git-ignored — den förorenar inte repot.
 
 ## Varför named volumes för vendor/ och storage?
 
