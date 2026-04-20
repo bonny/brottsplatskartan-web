@@ -1,6 +1,9 @@
 services:
   app:
-    image: serversideup/php:8.4-fpm-nginx
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile.app
+    image: brottsplatskartan-app:local
     restart: unless-stopped
     env_file: .env
     environment:

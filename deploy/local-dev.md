@@ -42,7 +42,10 @@ cp deploy/.env.local.example .env
 docker compose up -d
 
 # 3. Installera dependencies (första gången – hamnar i named volume)
-docker compose exec app composer install
+#    Måste köras som root eftersom named volume ägs av root,
+#    och utan AUTORUN eftersom storage:link kräver vendor/.
+docker compose run --rm --no-deps -u root -e AUTORUN_ENABLED=false app \
+  sh -c 'composer install && chown -R www-data:www-data /var/www/html/vendor /var/www/html/bootstrap/cache /var/www/html/storage'
 docker compose exec app npm install
 docker compose exec app npm run build
 
