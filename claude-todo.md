@@ -241,8 +241,20 @@ regenereringen (geo-spatial query + stats-aggregering + Blade).
 - Eliminerar ~3s väntetider som nu drabbar enstaka användare var 30:e minut
 - Bonus: `Cache::touch()` kan ersätta en del manuell cache-logik
 
+### Paketkompatibilitet (koll mot `composer why-not laravel/framework ^13.0`)
+
+| Paket | L13-stöd | Åtgärd |
+|---|---|---|
+| barryvdh/laravel-debugbar | ✅ i 4.2.7+ | Uppdatera |
+| laravel/tinker | ✅ i 3.0.2+ | Uppdatera |
+| spatie/laravel-responsecache | ✅ i 8.2+ | Uppdatera (redan planerat) |
+| **rap2hpoutre/laravel-log-viewer** | ❌ | Ersätt med `laravel/pail` eller ta bort |
+| **willvincent/feeds** | ❌ | Ersätt med SimplePie direkt, eller vänta |
+
 ### Status
 - [ ] Vänta till efter cutover (DO-server avstängd)
+- [ ] Besluta: vänta på willvincent/feeds eller ersätt med SimplePie?
+- [ ] Ta bort eller ersätt rap2hpoutre/laravel-log-viewer
 - [ ] Läs Laravel 13 upgrade guide + Spatie 8.x release notes
 - [ ] Implementera + testa lokalt
 - [ ] Deploy och verifiera
