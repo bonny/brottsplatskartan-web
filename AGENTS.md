@@ -148,7 +148,7 @@ public/js/events-map.js                              (karta)
 
 - **Plattform:** Hetzner Cloud (EU)
 - **Server:** CAX ARM (Ampere Altra), Debian 12 (Bookworm)
-- **Deploy-stack:** Docker Compose (`docker-compose.yml` + egen `Dockerfile.app`)
+- **Deploy-stack:** Docker Compose (`compose.yaml` + egen `Dockerfile.app`)
 - **Reverse proxy:** Caddy med auto-Let's Encrypt
 - **Kod-plats:** `/opt/brottsplatskartan/`
 - **CI/CD:** GitHub Actions (`.github/workflows/deploy-hetzner.yml`) → SSH → `deploy/deploy.sh`

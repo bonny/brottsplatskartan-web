@@ -1,5 +1,5 @@
 # Auto-loadad av `docker compose up` för LOKAL utveckling.
-# Ändringar ovanpå docker-compose.yml:
+# Ändringar ovanpå compose.yaml:
 #
 #  * App exposeas på localhost:8350 (ingen Caddy lokalt)
 #  * Caddy disablas via profiles: [never]
@@ -11,8 +11,8 @@
 # filer i editorn. MariaDB/Redis/Caddy behåller named volumes – de innehåller
 # binärdata du ändå inte skulle läsa.
 #
-# På servern används enbart docker-compose.yml:
-#   docker compose -f docker-compose.yml up -d
+# På servern används enbart compose.yaml:
+#   docker compose -f compose.yaml up -d
 
 services:
   app:

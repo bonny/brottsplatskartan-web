@@ -2,7 +2,7 @@
 
 Samma stack som på Hetzner: `serversideup/php:8.4-fpm-nginx` (+ egna
 PHP-extensions), MariaDB 11, Redis 8, tileserver-gl. Lokalt används
-`docker-compose.override.yml` som laddas automatiskt och gör stacken
+`compose.override.yaml` som laddas automatiskt och gör stacken
 dev-vänlig utan att röra prod-filen.
 
 ## Portar (för att inte krocka med andra projekt)
@@ -120,7 +120,7 @@ Troliga orsaker + fix:
 
 **"Ports are not available" (något annat håller porten)**
 → `lsof -iTCP:33012 -sTCP:LISTEN` för att se vem. Byt ev. port i
-  `docker-compose.override.yml` + `.env` + port-registret.
+  `compose.override.yaml` + `.env` + port-registret.
 
 ## Ansluta med GUI-verktyg
 
@@ -152,16 +152,15 @@ Stäng av: `docker compose stop tileserver`
 
 Mbtiles är gitignored, förorenar inte repot.
 
-## Named volumes vs bind-mount
+## Bind-mount
 
-Följande finns som **named volumes** (snabbare än bind-mount på macOS):
+Hela projektet bind-mountas från host → container (`./:/var/www/html`).
+Det innebär att `vendor/`, `node_modules/`, `storage/` m.fl. ligger på
+ditt filsystem och är läsbara av din IDE (viktigt för autocomplete,
+PHPStan, Pint).
 
-- `vendor/` — composer-paket
-- `node_modules/` — npm-paket
-- `storage/framework/cache/views/sessions/` — Laravel-runtime
-
-Din kod i övriga mappar är bind-mount:ad → editera på host som vanligt,
-ändringar syns direkt i containern.
+Named volumes används bara för **binär data som inte behöver ses på
+host** — MariaDB-filer, Redis-dumps, Caddy-certifikat.
 
 ### Om prestandan ändå är seg
 
@@ -184,7 +183,7 @@ docker compose up -d
 
 ## Varför config cache är AV lokalt
 
-I `docker-compose.override.yml`:
+I `compose.override.yaml`:
 
 ```yaml
 AUTORUN_LARAVEL_CONFIG_CACHE: "false"
@@ -204,7 +203,7 @@ Om du vill testa full prod-setup (inkl. Caddy + SSL):
 
 ```bash
 # Ignorera override.yml
-docker compose -f docker-compose.yml up -d
+docker compose -f compose.yaml up -d
 ```
 
 Kräver också att port 80/443 är fri. Oftast överflödigt — dev mot

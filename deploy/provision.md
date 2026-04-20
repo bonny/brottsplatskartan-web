@@ -169,7 +169,7 @@ zcat /tmp/bpk.dump.gz | docker compose exec -T mariadb mysql -u root -p"$DB_ROOT
 ## 12. Scheduler
 
 Ingen host-cron behövs. En dedikerad `scheduler`-container i
-`docker-compose.yml` kör `php artisan schedule:work` vilket triggar
+`compose.yaml` kör `php artisan schedule:work` vilket triggar
 Laravel Scheduler varje minut internt.
 
 Verifiera att den kör:
