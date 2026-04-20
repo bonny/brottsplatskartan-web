@@ -236,4 +236,41 @@ regenereringen (geo-spatial query + stats-aggregering + Blade).
 
 ---
 
+## 6. Flytta "Brottsstatistik"-ruta från startsidan → egen /statistik-sida
+
+Nuvarande: stapeldiagram på startsidan "Antal rapporterade händelser från
+Polisen per dag i Sverige, 14 dagar tillbaka" (genereras av
+`Helper::getStatsChartHtml('home')`).
+
+**Problem:**
+- Ger inte stort mervärde för en första-besökare på startsidan
+- Tar plats från mer relevant innehåll (senaste händelser, karta)
+- Statistik i sig är intressant men förtjänar egen yta för djupdykning
+
+**Förslag:**
+- Ta bort statistik-rutan från startsidan
+- Skapa `/statistik` med:
+  - Nuvarande 14-dagars-graf för hela Sverige (högst upp)
+  - Motsvarande per län (små grafer i grid)
+  - Ev. top 10 brottstyper senaste veckan
+  - Karta med värmeindex över landet
+  - Lista med rekord (högsta/lägsta-dagar)
+- Länka till /statistik från footer eller nav
+
+**Tekniskt:**
+- `getStatsChartHtml('home')` finns redan i `Helper.php` — återanvänd
+- Route: `Route::get('/statistik', [StatisticsController::class, 'index'])`
+- Ny controller `StatisticsController`
+- Ny vy `resources/views/statistics/index.blade.php`
+- SEO: meta-titel "Brottsstatistik för Sverige — Brottsplatskartan"
+
+### Status
+- [ ] Designa statistik-sidans layout
+- [ ] Skapa StatisticsController + route + vy
+- [ ] Flytta befintlig graf från startsidan
+- [ ] Lägg till länk i footer/nav
+- [ ] SEO (meta, sitemap, canonical)
+
+---
+
 *Senast uppdaterad: 2026-04-20*
