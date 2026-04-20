@@ -401,4 +401,54 @@ migration-buggar.
 
 ---
 
+## 8. Konfigurera Google Analytics MCP-server i Claude Code
+
+Ger Claude Code direkt access till GA4-data under utvecklings-sessions.
+Kraftfullt för datadrivna beslut om:
+
+- **Cache pre-warm:** vilka sidor är faktiskt mest besökta? (topp 20 istället för alla 330)
+- **Todo 1 (cache-entries):** identifiera routes som ingen besöker → ta bort
+- **Todo 2 (SEO):** prioritera optimeringar efter trafik
+- **Todo 6 (/statistik):** se om nuvarande stats-ruta faktiskt används
+- Generellt: "vilka sidor är mina top 20?", "bounce rate per typ?", m.fl.
+
+### Setup
+
+Repo: https://github.com/googleanalytics/google-analytics-mcp
+
+1. `pipx install google-analytics-mcp` (eller `pip install`)
+2. Skapa service account i Google Cloud Console med GA4 Data API-access
+3. Ladda ner JSON-credentials → spara säkert (inte i git)
+4. Ge service account "Viewer"-access i GA4-propertyn
+5. Lägg till i Claude Code config (`~/.claude/claude_code_config.json`):
+   ```json
+   {
+     "mcpServers": {
+       "google-analytics": {
+         "command": "uvx",
+         "args": ["google-analytics-mcp"],
+         "env": {
+           "GOOGLE_APPLICATION_CREDENTIALS": "/path/to/sa-key.json",
+           "GA_PROPERTY_ID": "<ga4-property-id>"
+         }
+       }
+     }
+   }
+   ```
+6. Starta om Claude Code
+
+### Status
+
+- [ ] Skapa service account + JSON-nyckel
+- [ ] Installera + konfigurera MCP-servern
+- [ ] Testa: be Claude ranka topp-URL:er senaste 30 dagarna
+- [ ] Använd data för att besluta cache pre-warm-URL:er (se todo #1)
+
+### Alternativ (quick)
+
+Om MCP-setup känns krångligt: exportera CSV från GA4 manuellt → mata
+Claude direkt. Enstaka analyser, ingen löpande integration.
+
+---
+
 *Senast uppdaterad: 2026-04-20*
