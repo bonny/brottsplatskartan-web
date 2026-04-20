@@ -6,9 +6,17 @@ set -euo pipefail
 
 cd /opt/brottsplatskartan
 
-echo "→ git pull"
+# Explicit -f compose.yaml hindrar att compose.override.yaml (dev-config)
+# laddas automatiskt på servern.
+DC="docker compose -f compose.yaml"
+
+# Auto-detektera aktuell branch så skriptet fungerar både under test-fasen
+# (flytt-till-hetzner) och efter cutover (main).
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+
+echo "→ git pull (branch: $BRANCH)"
 PREV_SHA=$(git rev-parse HEAD)
-git pull --ff-only origin main
+git pull --ff-only origin "$BRANCH"
 NEW_SHA=$(git rev-parse HEAD)
 
 if [ "$PREV_SHA" = "$NEW_SHA" ]; then
@@ -23,7 +31,7 @@ echo "→ Deploy $PREV_SHA → $NEW_SHA"
 # storage:link före vendor/ finns. Chownar tillbaka till www-data.
 if ! git diff "$PREV_SHA" "$NEW_SHA" --quiet -- composer.lock composer.json; then
 	echo "→ composer install (composer.lock ändrades)"
-	docker compose run --rm --no-deps -u root -e AUTORUN_ENABLED=false app \
+	$DC run --rm --no-deps -u root -e AUTORUN_ENABLED=false app \
 		sh -c 'composer install --no-dev --optimize-autoloader --no-interaction && chown -R www-data:www-data /var/www/html/vendor /var/www/html/bootstrap/cache'
 else
 	echo "→ Skippar composer install (ingen ändring)"
@@ -32,13 +40,13 @@ fi
 # Kör migrations om något nytt finns i database/migrations/
 if ! git diff "$PREV_SHA" "$NEW_SHA" --quiet -- database/migrations/; then
 	echo "→ artisan migrate (nya migrationer)"
-	docker compose exec -T app php artisan migrate --force
+	$DC exec -T app php artisan migrate --force
 else
 	echo "→ Inga nya migrationer"
 fi
 
 # AUTORUN fixar config/route/view cache vid restart
-echo "→ docker compose restart app"
-docker compose restart app
+echo "→ docker compose restart app scheduler"
+$DC restart app scheduler
 
 echo "✅ Deploy klart ($NEW_SHA)"
