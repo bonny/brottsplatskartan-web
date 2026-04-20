@@ -28,7 +28,7 @@ scp root@brottsplatskartan.se:/tmp/bpk.sql.gz .
 zcat bpk.sql.gz | docker compose exec -T mariadb mysql -u root -plocal-dev-root-password brottsplatskartan
 ```
 
-Sajten finns nu på <http://localhost:8080>.
+Sajten finns nu på <http://localhost:8350>.
 
 ## Dagligt flöde
 
@@ -54,9 +54,9 @@ docker compose down
 
 Från docker-compose.override.yml exposas:
 
-- **MariaDB** på `127.0.0.1:3306` (TablePlus, Sequel Ace, DBeaver)
-- **Redis** på `127.0.0.1:6379` (RedisInsight, TablePlus)
-- **Tileservern** på <http://localhost:8181> (bara om du startat den, se nedan)
+- **MariaDB** på `127.0.0.1:33011` (TablePlus, Sequel Ace, DBeaver)
+- **Redis** på `127.0.0.1:63011` (RedisInsight, TablePlus)
+- **Tileservern** på <http://localhost:8351> (bara om du startat den, se nedan)
 
 Credentials matchar det du satte i `.env`.
 
@@ -76,7 +76,7 @@ Vill du ändå starta den lokalt:
 docker compose --profile tileserver up -d
 
 # 3. Kolla att den svarar
-curl http://localhost:8181
+curl http://localhost:8351
 ```
 
 Stänga av tileservern igen:
