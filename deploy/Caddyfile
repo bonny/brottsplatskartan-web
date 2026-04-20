@@ -1,3 +1,8 @@
+# Global config
+{
+	email par.thernstrom@gmail.com
+}
+
 # Produktionsdomäner
 brottsplatskartan.se, www.brottsplatskartan.se {
 	redir https://brottsplatskartan.se{uri} permanent

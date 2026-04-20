@@ -1,0 +1,59 @@
+# Auto-loadad av `docker compose up` för LOKAL utveckling.
+# Ändringar ovanpå docker-compose.yml:
+#
+#  * Expose:ar app direkt på localhost:8080 (ingen Caddy lokalt)
+#  * Caddy tas bort ur lokal start (tomma depends_on)
+#  * MariaDB + Redis exposed på host så du kan ansluta med TablePlus/RedisInsight
+#  * Named volumes för vendor/, node_modules/, storage/logs/ för snabbare
+#    filsync på macOS (slipper bind-mount-overhead för ofta-skrivna kataloger)
+#
+# På servern används enbart docker-compose.yml:
+#   docker compose -f docker-compose.yml up -d
+
+services:
+  app:
+    ports:
+      - "127.0.0.1:8080:8080"
+    environment:
+      SSL_MODE: "off"
+      LOG_OUTPUT_LEVEL: debug
+      PHP_OPCACHE_ENABLE: "0"     # Ingen opcache i dev – snabbare iteration
+      AUTORUN_LARAVEL_CONFIG_CACHE: "false"
+      AUTORUN_LARAVEL_ROUTE_CACHE: "false"
+      AUTORUN_LARAVEL_VIEW_CACHE: "false"
+      AUTORUN_LARAVEL_EVENT_CACHE: "false"
+    volumes:
+      # Named volumes – snabbare än bind-mount på macOS
+      - vendor:/var/www/html/vendor
+      - node_modules:/var/www/html/node_modules
+      - storage-logs:/var/www/html/storage/logs
+      - storage-cache:/var/www/html/storage/framework/cache
+      - storage-sessions:/var/www/html/storage/framework/sessions
+      - storage-views:/var/www/html/storage/framework/views
+
+  mariadb:
+    ports:
+      - "127.0.0.1:3306:3306"
+
+  redis:
+    ports:
+      - "127.0.0.1:6379:6379"
+
+  # Caddy ska inte köras lokalt – ingen port 80/443 open,
+  # ingen Let's Encrypt för lokal utveckling.
+  caddy:
+    profiles: [never]
+    ports: []
+
+  # Tileservern kan behållas men exposa direkt så man kan testa den.
+  tileserver:
+    ports:
+      - "127.0.0.1:8181:8080"
+
+volumes:
+  vendor:
+  node_modules:
+  storage-logs:
+  storage-cache:
+  storage-sessions:
+  storage-views:
