@@ -54,9 +54,8 @@ class DebugController extends Controller
             echo "<br><br>setlocale(LC_ALL, 0):<br>";
             var_dump($currentLocal);
 
-            // "Locale" fanns inte på DO/Dokku
-            // $currentLocal = \Locale::getDefault();
-            // echo "<br><br>$currentLocal:<br>$currentLocal";
+            $currentLocal = \Locale::getDefault();
+            echo "<br><br>Locale::getDefault():<br>$currentLocal";
         } elseif ($what == 'urls') {
 
             echo "

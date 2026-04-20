@@ -166,7 +166,7 @@ Tillsammans orsakade dessa mycket hög CPU-användning på MariaDB.
 ## Nästa steg efter deployment
 
 1. ⏳ Deploya ändringarna till produktion
-2. ⏳ Rensa cache: `dokku run brottsplatskartan php artisan cache:clear`
+2. ⏳ Rensa cache: `docker compose exec app php artisan cache:clear`
 3. ⏳ Monitorera MariaDB CPU-användning i `htop`
 4. ⏳ Kolla PHP-FPM slow request log efter några timmar
 5. ⏳ Verifiera färre queries med query logging

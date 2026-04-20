@@ -149,9 +149,11 @@ Alla berörda metoder använder cache med TTL på 14-23 minuter:
 
 **Rekommendation:** Rensa cache efter deployment för att få omedelbar effekt:
 ```bash
-php artisan cache:clear
-# eller på produktion:
-dokku run brottsplatskartan php artisan cache:clear
+# Lokalt
+docker compose exec app php artisan cache:clear
+
+# På produktion (Hetzner)
+ssh deploy@brottsplatskartan.se 'cd /opt/brottsplatskartan && docker compose exec app php artisan cache:clear'
 ```
 
 ## Verifiering

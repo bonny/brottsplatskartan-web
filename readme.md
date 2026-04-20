@@ -1,24 +1,38 @@
 # Brottsplatskartan
 
-![Deploy till live](https://github.com/bonny/brottsplatskartan-web/workflows/Deploy%20to%20live/badge.svg)
+![Deploy till Hetzner](https://github.com/bonny/brottsplatskartan-web/actions/workflows/deploy-hetzner.yml/badge.svg)
 
 En sajt som visar [Polisens händelser](https://brottsplatskartan.se) lite finare och bättre. Fokus på karta.
 
 ## Lokal utveckling
 
-`./artisan serve`
+```bash
+docker compose up -d
+```
 
-Och besök sedan [http://localhost:8000](http://localhost:8000).
+Sajten finns på <http://brottsplatskartan.test:8350>.
+
+Se [deploy/local-dev.md](deploy/local-dev.md) för full guide.
 
 ## Importera data
 
-- `./artisan crimeevents:fetch` för att hämta Polishändelser
-- `./artisan texttv:fetch` för att hämta TextTV-nyheter
-- 
+```bash
+docker compose exec app php artisan crimeevents:fetch   # Polishändelser
+docker compose exec app php artisan texttv:fetch        # TextTV-nyheter
+```
 
 ## Uppdatera composer-paket
 
-`composer update <paketnamn> --ignore-platform-req=ext-redis`
+```bash
+docker compose exec -u root app composer update <paketnamn>
+```
+
+## Dokumentation
+
+- [AGENTS.md](AGENTS.md) — arkitektur + vanliga kommandon
+- [deploy/local-dev.md](deploy/local-dev.md) — lokal Docker-setup
+- [deploy/provision.md](deploy/provision.md) — provisionera ny Hetzner-server
+- [docs/API.md](docs/API.md) — API-referens
 
 ## Exempel
 

@@ -125,10 +125,10 @@ curl -H "X-Response-Cache-Bypass: <token>" https://brottsplatskartan.se/
 
 ```bash
 # Lokalt
-php artisan responsecache:clear
+docker compose exec app php artisan responsecache:clear
 
-# Produktion
-dokku run brottsplatskartan php artisan responsecache:clear
+# Produktion (Hetzner)
+ssh deploy@brottsplatskartan.se 'cd /opt/brottsplatskartan && docker compose exec app php artisan responsecache:clear'
 ```
 
 ### Metod 3: Selektiv Invalidering
@@ -197,22 +197,20 @@ curl -I "https://brottsplatskartan.se/?t=456"
 ### Redis Cache Metrics
 
 ```bash
-# Anslut till Redis
-dokku redis:connect brottsplatskartan
+# Anslut till Redis-containern (Hetzner)
+ssh deploy@brottsplatskartan.se
+cd /opt/brottsplatskartan
+docker compose exec redis redis-cli -a "$REDIS_PASSWORD"
 
-# Antal cache keys
-DBSIZE
+# Lokalt:
+docker compose exec redis redis-cli -a "$REDIS_PASSWORD"
 
-# Cache hit rate
-INFO stats
-# Kolla: keyspace_hits / (keyspace_hits + keyspace_misses)
-
-# Response cache keys
-KEYS responsecache:*
-
-# Inspektera specifik cache + TTL
-GET "responsecache:https://brottsplatskartan.se/:"
-TTL "responsecache:https://brottsplatskartan.se/:"
+# I redis-cli:
+DBSIZE                              # Antal cache keys
+INFO stats                          # Cache hit rate
+KEYS laravelresponsecache-*         # Response cache keys
+GET "laravelresponsecache-<hash>"   # Inspektera specifik cache
+TTL "laravelresponsecache-<hash>"   # TTL i sekunder
 ```
 
 ### Performance Metrics
@@ -234,46 +232,26 @@ TTL "responsecache:https://brottsplatskartan.se/:"
 
 ### Lokal Development
 
+Se till att `.env` har:
 ```bash
-# Skapa katalog för custom klasser
-mkdir -p app/CacheProfiles app/ResponseCache
-
-# Skapa BrottsplatskartanCacheProfile.php och CustomRequestHasher.php
-# (Se faktiska filer för kod)
-
-# Uppdatera .env
-echo "CACHE_DRIVER=redis" >> .env
-echo "RESPONSE_CACHE_DRIVER=redis" >> .env
-echo "RESPONSE_CACHE_ADD_TIME_HEADER=true" >> .env
-
-# Cacha config
-php artisan config:cache
-
-# Testa
-php artisan serve
-curl -I http://localhost:8000/
+CACHE_DRIVER=redis
+RESPONSE_CACHE_DRIVER=redis
+RESPONSE_CACHE_ADD_TIME_HEADER=true
 ```
 
-### Produktion (Dokku)
+```bash
+docker compose exec app php artisan config:clear
+curl -I http://brottsplatskartan.test:8350/
+```
+
+### Produktion (Hetzner)
+
+`.env` på servern sätts vid provisionering (se `deploy/provision.md`).
+Ändringar deployas via `git push main` → GitHub Actions → deploy.sh.
 
 ```bash
-# Push till main (GitHub Actions deployar automatiskt)
-git push origin main
-
-# SSH till servern
-ssh <server>
-
-# Sätt environment variables
-dokku config:set brottsplatskartan \
-  CACHE_DRIVER=redis \
-  RESPONSE_CACHE_DRIVER=redis \
-  RESPONSE_CACHE_ADD_TIME_HEADER=true \
-  CACHE_BYPASS_HEADER_NAME=X-Response-Cache-Bypass \
-  CACHE_BYPASS_HEADER_VALUE=$(openssl rand -hex 32)
-
-# Rensa och optimera
-dokku run brottsplatskartan php artisan config:cache
-dokku run brottsplatskartan php artisan responsecache:clear
+# Efter deploy – rensa response cache vid behov
+ssh deploy@brottsplatskartan.se 'cd /opt/brottsplatskartan && docker compose exec app php artisan responsecache:clear'
 
 # Verifiera
 curl -I https://brottsplatskartan.se/  # Första (cachar)

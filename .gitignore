@@ -5,6 +5,9 @@
 Homestead.json
 Homestead.yaml
 .env
+.env.*
+.env-*
+!.env.example
 .tags
 .tags1
 .DS_Store
