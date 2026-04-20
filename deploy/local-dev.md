@@ -69,17 +69,13 @@ blir trasig.
 Vill du ändå starta den lokalt:
 
 ```bash
-# 1. Skapa mappen
-mkdir -p deploy/tileserver
+# 1. Ladda ner mbtiles (1.21 GB, idempotent)
+./deploy/download-tiles.sh
 
-# 2. Ladda ner mbtiles (1.21 GB, tar några minuter)
-curl -fL -o deploy/tileserver/2017-07-03_europe_sweden.mbtiles \
-  https://brottsplatskartan.hel1.your-objectstorage.com/tiles/2017-07-03_europe_sweden.mbtiles
-
-# 3. Starta stacken INKL. tileservern
+# 2. Starta stacken INKL. tileservern
 docker compose --profile tileserver up -d
 
-# 4. Kolla att den svarar
+# 3. Kolla att den svarar
 curl http://localhost:8181
 ```
 

@@ -128,12 +128,10 @@ docker run --rm -v $PWD:/app serversideup/php:8.4-cli php -r "echo 'base64:'.bas
 ## 9. Ladda ner mbtiles (engångsvis, ~1.2 GB)
 
 ```bash
-mkdir -p deploy/tileserver
-curl -fL -o deploy/tileserver/2017-07-03_europe_sweden.mbtiles \
-  https://brottsplatskartan.hel1.your-objectstorage.com/tiles/2017-07-03_europe_sweden.mbtiles
+./deploy/download-tiles.sh
 ```
 
-Tileserver behöver också en `config.json` i samma mapp (kopieras från tileserver-repot — se separat steg).
+Scriptet är idempotent och hoppar över om filen redan finns. Tileserver-gl auto-detekterar mbtiles i `/data` och serverar dem med default-config — inget `config.json` behövs.
 
 ## 10. Starta stacken
 
