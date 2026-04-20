@@ -1,11 +1,15 @@
 # Auto-loadad av `docker compose up` för LOKAL utveckling.
 # Ändringar ovanpå docker-compose.yml:
 #
-#  * Expose:ar app direkt på localhost:8080 (ingen Caddy lokalt)
-#  * Caddy tas bort ur lokal start (tomma depends_on)
-#  * MariaDB + Redis exposed på host så du kan ansluta med TablePlus/RedisInsight
-#  * Named volumes för vendor/, node_modules/, storage/logs/ för snabbare
-#    filsync på macOS (slipper bind-mount-overhead för ofta-skrivna kataloger)
+#  * App exposeas på localhost:8350 (ingen Caddy lokalt)
+#  * Caddy disablas via profiles: [never]
+#  * MariaDB + Redis exposeas på host för GUI-verktyg
+#  * Tileservern är opt-in via profile
+#  * Dev-vänliga env-vars (config cache av, lägre log-nivå, ingen opcache)
+#
+# Koden + vendor/ + node_modules/ bind-mountas från host så du ser alla
+# filer i editorn. MariaDB/Redis/Caddy behåller named volumes – de innehåller
+# binärdata du ändå inte skulle läsa.
 #
 # På servern används enbart docker-compose.yml:
 #   docker compose -f docker-compose.yml up -d
@@ -22,14 +26,8 @@ services:
       AUTORUN_LARAVEL_ROUTE_CACHE: "false"
       AUTORUN_LARAVEL_VIEW_CACHE: "false"
       AUTORUN_LARAVEL_EVENT_CACHE: "false"
-    volumes:
-      # Named volumes – snabbare än bind-mount på macOS
-      - vendor:/var/www/html/vendor
-      - node_modules:/var/www/html/node_modules
-      - storage-logs:/var/www/html/storage/logs
-      - storage-cache:/var/www/html/storage/framework/cache
-      - storage-sessions:/var/www/html/storage/framework/sessions
-      - storage-views:/var/www/html/storage/framework/views
+    # Ingen override av volumes – vi använder bind-mount från base (./:/var/www/html)
+    # så vendor/, node_modules/ och storage/ är synliga på host.
 
   mariadb:
     ports:
@@ -39,7 +37,7 @@ services:
     ports:
       - "127.0.0.1:63012:6379"
 
-  # Caddy ska inte köras lokalt – ingen port 80/443 open,
+  # Caddy ska inte köras lokalt – ingen port 80/443 öppen,
   # ingen Let's Encrypt för lokal utveckling.
   caddy:
     profiles: [never]
@@ -47,16 +45,8 @@ services:
 
   # Tileservern är opt-in lokalt – kräver att du laddat ner mbtiles-filen först.
   # Starta med: docker compose --profile tileserver up -d
-  # Ladda ner mbtiles: se deploy/local-dev.md
+  # Ladda ner mbtiles: ./deploy/download-tiles.sh
   tileserver:
     profiles: [tileserver]
     ports:
       - "127.0.0.1:8351:8080"
-
-volumes:
-  vendor:
-  node_modules:
-  storage-logs:
-  storage-cache:
-  storage-sessions:
-  storage-views:
