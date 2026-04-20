@@ -220,7 +220,7 @@ Kritiska variabler:
 - DB: `DB_HOST=mariadb`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`, `DB_ROOT_PASSWORD`
 - Redis: `REDIS_HOST=redis`, `REDIS_PASSWORD`
 - Cache: `CACHE_DRIVER=redis`, `RESPONSE_CACHE_DRIVER=redis`, `SESSION_DRIVER=redis`
-- API-nycklar: `CLAUDE_API_KEY`, `OPEN_AI_API_KEY`, `GOOGLE_API_KEY`, m.fl.
+- API-nycklar: `CLAUDE_API_KEY`, `GOOGLE_API_KEY`, m.fl.
 
 ### Laravel Debugbar i produktion
 

@@ -19,3 +19,10 @@ CLAUDE.local.md
 
 # Tileserver mbtiles (laddas ner vid provisionering, ~1.2 GB)
 /deploy/tileserver/*.mbtiles
+
+# DB-dumpar ska aldrig committas
+*.sql
+*.sql.gz
+*.dump
+*.dump.gz
+bpk*.gz

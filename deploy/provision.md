@@ -152,25 +152,36 @@ Scriptet är idempotent och hoppar över om filen redan finns. Tileserver-gl aut
 
 ## 10. Starta stacken
 
+**Viktigt — ordning:** `vendor/` bind-mountas från host. Om mappen
+inte finns fails hela app-containern vid boot. Kör därför composer
+install **före** `docker compose up`.
+
+### 10a. Bygg app-imagen (utan att starta)
+
 ```bash
-# Första körningen bygger också app-imagen (tar ~30 sek pga install-php-extensions)
-docker compose up -d --build
-docker compose logs -f
+docker compose build app
 ```
 
-## 10b. Installera composer-dependencies (engångsvis)
-
-**Gotcha:** named volume `vendor/` ägs av root initialt, och AUTORUN
-kör `storage:link` som kräver `vendor/`. Därför måste första composer
-install:en köras som root med AUTORUN avstängt:
+### 10b. Composer install (engångsvis, skapar vendor/ på host)
 
 ```bash
 docker compose run --rm --no-deps -u root -e AUTORUN_ENABLED=false app \
   sh -c 'composer install --no-dev --optimize-autoloader && chown -R www-data:www-data /var/www/html/vendor /var/www/html/bootstrap/cache /var/www/html/storage'
 ```
 
+`--no-deps` = starta inte DB/Redis/Caddy bara för composer.
+`-u root` = behövs för att chown:a efteråt (annars perm-issues i named volumes som MariaDB).
+`AUTORUN_ENABLED=false` = kör inte Laravel-init (storage:link m.fl.) i den här engångscontainern.
+
 Senare composer install (vid `composer.lock`-ändringar) görs av
 `deploy/deploy.sh` som också hanterar perms.
+
+### 10c. Starta stacken
+
+```bash
+docker compose up -d
+docker compose logs -f
+```
 
 ## 11. Importera DB-dump från DO
 

@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - flytt-till-hetzner  # TODO: ta bort efter cutover
   # Tillåt manuell trigger via GitHub UI (Actions → Deploy to Hetzner → Run workflow)
   workflow_dispatch:
 
