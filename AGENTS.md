@@ -59,7 +59,7 @@ docker compose exec app php artisan config:clear
 
 ```bash
 docker compose exec app php artisan crimeevents:fetch
-docker compose exec app php artisan texttv:fetch
+docker compose exec app php artisan app:importera-texttv
 docker compose exec app php artisan migrate
 docker compose exec app php artisan tinker
 ```

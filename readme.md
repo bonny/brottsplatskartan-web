@@ -18,7 +18,7 @@ Se [deploy/local-dev.md](deploy/local-dev.md) för full guide.
 
 ```bash
 docker compose exec app php artisan crimeevents:fetch   # Polishändelser
-docker compose exec app php artisan texttv:fetch        # TextTV-nyheter
+docker compose exec app php artisan app:importera-texttv        # TextTV-nyheter
 ```
 
 ## Uppdatera composer-paket
