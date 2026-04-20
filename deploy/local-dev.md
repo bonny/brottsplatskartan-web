@@ -83,8 +83,8 @@ docker compose down
 
 Från docker-compose.override.yml exposas:
 
-- **MariaDB** på `127.0.0.1:33011` (TablePlus, Sequel Ace, DBeaver)
-- **Redis** på `127.0.0.1:63011` (RedisInsight, TablePlus)
+- **MariaDB** på `127.0.0.1:33012` (TablePlus, Sequel Ace, DBeaver)
+- **Redis** på `127.0.0.1:63012` (RedisInsight, TablePlus)
 - **Tileservern** på <http://localhost:8351> (bara om du startat den, se nedan)
 
 Credentials matchar det du satte i `.env`.

@@ -33,11 +33,11 @@ services:
 
   mariadb:
     ports:
-      - "127.0.0.1:33011:3306"
+      - "127.0.0.1:33012:3306"
 
   redis:
     ports:
-      - "127.0.0.1:63011:6379"
+      - "127.0.0.1:63012:6379"
 
   # Caddy ska inte köras lokalt – ingen port 80/443 open,
   # ingen Let's Encrypt för lokal utveckling.
