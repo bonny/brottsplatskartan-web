@@ -6,17 +6,27 @@ _Skapad: 2026-04-21. Ersätter och inkluderar tidigare todo #2 (legacy SEO-revie
 
 **Fas 1 KLAR 2026-04-21** (commit `83b3b19` + `27241d5`):
 
-- Sitemap: `spatie/laravel-sitemap`, `sitemap:generate`-command, nattlig scheduler kl 04:00
+- Sitemap: `spatie/laravel-sitemap`, `sitemap:generate`-command, scheduler var 30 min
 - `Sitemap:`-rad i `public/robots.txt`
 - Canonical + meta-description-fallback i `layouts/web.blade.php`
 - BreadcrumbList JSON-LD i `parts/breadcrumb.blade.php`
 - Global Organization + WebSite JSON-LD (med SearchAction) i layout
 - Dubbel `<meta name="robots">` sammanslagen
+- Alt-text: verifierat att alla `<img>` har alt-attribut (inga saknas)
 
-Kvar i Fas 1 (trivialt, görs när tid finns):
-- Alt-text audit för `crimeevent-small`, `crimeevent-helicopter`, `crimeevent-previousPartners`, `page.blade.php`
+**Fas 2 påbörjad 2026-04-21** (commit `ece48de`):
 
-Fas 2/3 kvarstår enligt plan nedan.
+- Place/City/AdministrativeArea JSON-LD på `single-plats`, `city`, `single-lan`
+  via delad partial `parts/place-jsonld.blade.php`.
+
+Kvar i Fas 2 (kräver beslut / GA4-data / post-cutover):
+- Beslut: `noindex`+canonical eller borttagning av `/plats/*/handelser/{date}`
+  och `/lan/*/handelser/{date}` (synkas med todo #1, behöver GA4)
+- Noindex-strategi för gamla/thin events (`crimeevents:mark-thin`)
+- H1-audit via script
+- Core Web Vitals efter Hetzner-cutover
+
+Fas 3 kvarstår enligt plan nedan.
 
 
 ## Sammanfattning
