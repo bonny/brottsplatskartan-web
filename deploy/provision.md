@@ -194,11 +194,18 @@ scp /tmp/bpk.dump.gz deploy@<hetzner-ip>:/tmp/
 zcat /tmp/bpk.dump.gz | docker compose exec -T mariadb mysql -u root -p"$DB_ROOT_PASSWORD" brottsplatskartan
 ```
 
-## 12. Dagliga DB-dumps (backup-lager 2)
+## 12. Dagliga DB-dumps (backup-lager 2) — **HOPPA ÖVER**
 
-Hetzner gör dagliga disk-snapshots (aktiverat i steg 1), men en
-lokal SQL-dump i klartext är snabbare att inspektera och återställa
-från vid misstag (råkat köra fel DELETE etc.).
+**Tidigare rekommendation, numera skippad.** Hetzner-snapshots (aktiverade
+i steg 1) räcker för katastrofåterställning och vi vill undvika extra
+backup-infrastruktur lokalt.
+
+**Planerad förbättring:** SQL-dumps till extern Object Storage i stället
+för lokala filer (se `claude-todo.md` sektion 9). Då får vi både
+granularitet och off-site redundans — bättre än lokala dumpar.
+
+<details>
+<summary>Tidigare instruktioner (för referens)</summary>
 
 ```bash
 sudo mkdir -p /opt/backups
@@ -251,6 +258,8 @@ cd /opt/brottsplatskartan
 zcat /opt/backups/bpk-2026-04-20.sql.gz | \
   docker compose exec -T mariadb sh -c 'mariadb -u root -p"$MARIADB_ROOT_PASSWORD"'
 ```
+
+</details>
 
 ## 13. Scheduler
 

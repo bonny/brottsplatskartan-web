@@ -451,4 +451,58 @@ Claude direkt. Enstaka analyser, ingen löpande integration.
 
 ---
 
-*Senast uppdaterad: 2026-04-20*
+## 9. Extern DB-backup via Hetzner Object Storage (eller S3)
+
+**Nuläge:** bara Hetzner-snapshots (hela diskens backup, dagligen, 7 dagar
+retention). Räcker för katastrofåterställning men:
+
+- Ligger på samma leverantör
+- Kan inte inspekteras (binär snapshot)
+- Kräver ~5 min att boota från backup för att hämta databas-data
+- Om *hela Hetzner-kontot* skulle tas över / stängas ned = inget
+
+**Mål:** Dagliga SQL-dumps till **extern** Object Storage så vi har:
+
+- Läsbar/sökbar dump
+- Off-site redundans
+- Snabb partial-restore (bara DB, utan att röra servern)
+
+### Implementering
+
+1. Skapa bucket i Hetzner Object Storage (Helsinki eller annan region)
+2. Generera access key (gärna skrivbegränsad till specifik bucket)
+3. Installera `rclone` eller `aws-cli` i en dedikerad backup-container
+   (eller på host, om det är enklare)
+4. Script som i cron-jobb:
+   - Dumpar DB via `mariadb-dump --single-transaction ... | gzip`
+   - Uppladdar till `s3://brottsplatskartan-backups/db/YYYY-MM-DD.sql.gz`
+   - Raderar lokala dumpar efter upload (spar disk)
+   - Roterar bort dumpar äldre än 30 dagar i bucket (lifecycle policy)
+
+### Alternativ: annan leverantör
+
+För geografisk redundans kan backupen gå till helt annan leverantör
+än Hetzner:
+- **Backblaze B2** (billigast för backup-data)
+- **AWS S3** (mest standard, men dyrast)
+- **Wasabi** (S3-kompatibel, $6/TB/månad flat)
+
+Fördelen: om Hetzner-kontot av någon anledning försvinner har vi backup
+på oberoende plats.
+
+### Status
+
+- [ ] Besluta: Hetzner Object Storage (enklast) eller extern leverantör?
+- [ ] Skapa bucket + access keys
+- [ ] Implementera backup-script + cron
+- [ ] Testa återställning från dump (viktigt — backup som inte testats är ingen backup)
+- [ ] Dokumentera i `deploy/provision.md`
+
+### Prioritet
+
+Låg innan cutover. Efter cutover — gör detta inom första månaden då
+det är ett verkligt skydd mot människliga fel.
+
+---
+
+*Senast uppdaterad: 2026-04-21*
