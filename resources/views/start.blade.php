@@ -79,15 +79,15 @@ samt för äldre dagar när man bläddrar i arkivet.
 @section('sidebar')
     @include('parts.sokruta')
 
-    @if (isset($chartHtml))
-        <div class="widget Stats Stats--lan">
-            <h2 class="widget__title Stats__title">Brottsstatistik</h2>
-            <div class="widget__listItem__text">
-                <p class="pb-6">Antal rapporterade händelser från Polisen per dag i Sverige, 14 dagar tillbaka.</p>
-                {!! $chartHtml !!}
-            </div>
+    <div class="widget">
+        <h2 class="widget__title"><a href="{{ route('statistik') }}">Brottsstatistik</a></h2>
+        <div class="widget__listItem__text">
+            <p>
+                Se alla händelser per dag, topp 10 brottstyper och länstopplistan på
+                <a href="{{ route('statistik') }}">statistik-sidan</a>.
+            </p>
         </div>
-    @endif
+    </div>
 
     @include('parts.lan-and-cities')
     @include('parts.widget-blog-entries')
