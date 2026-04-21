@@ -10,6 +10,11 @@ if $single is true then larger image
 @php
     $_overview = $overview ?? false;
     $_single = $single ?? false;
+    // $highlight: array med ord som ska framhävas i innehållet (t.ex. på /helikopter).
+    $_highlight = $highlight ?? [];
+    // Full content istället för teaser om highlight är satt — annars
+    // kan ordet ligga utanför teaserns 160 tecken.
+    $_useFullContent = !$_overview || !empty($_highlight);
 @endphp
 
 @if ($_overview)
@@ -113,11 +118,17 @@ if $single is true then larger image
 @endif
 
 <div class="Event__content">
-    @if ($_overview)
-        {!! $event->getParsedContentTeaser() !!}
-    @else
-        {!! $event->getParsedContent() !!}
-    @endif
+    @php
+        $_content = $_useFullContent
+            ? $event->getParsedContent()
+            : $event->getParsedContentTeaser();
+
+        if (!empty($_highlight)) {
+            $_pattern = '/\b(' . implode('|', array_map('preg_quote', $_highlight)) . ')\b/i';
+            $_content = preg_replace($_pattern, '<em class="highlightedWord">$1</em>', $_content);
+        }
+    @endphp
+    {!! $_content !!}
 </div>
 
 @if ($_overview)

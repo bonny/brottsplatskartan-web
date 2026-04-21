@@ -29,7 +29,6 @@ use App\Http\Controllers\MestLastController;
 use App\Http\Controllers\VMAAlertsController;
 use App\Http\Controllers\FullScreenMapController;
 use App\Http\Controllers\PolisstationerController;
-use App\Http\Controllers\PreviousPartnersController;
 use App\Http\Controllers\CityController;
 
 setlocale(LC_ALL, 'sv_SE', 'sv_SE.utf8');
@@ -688,22 +687,6 @@ Route::redirect('/sokresultat/', 'sok-blåljushändelser', 301);
  * Sök med hjälp av AdSense search ("hemligt" test än så länge).
  */
 Route::get('/sok-blåljushändelser/', [SearchController::class, 'adsenseSearch'])->name("adsenseSearch");
-
-/**
- * Route för previousPartners = företag och webbplatser vi tidigare samarbetet med men där
- * samarbetet upphört.
- * 
- * previousPartners: sida för samarbete med previousPartners.se, visas i deras app och hemsida
- * Exempel för Danderyd: 59.407905 | Longitud: 18.019075
- * https://brottsplatskartan.localhost/previousPartners?lat=59.407905&lng=18.019075&distance=5&count=25
- * To view as (simple) HTML.
- * https://brottsplatskartan.localhost/previousPartners?lat=59.407905&lng=18.019075&distance=5&count=25&format=html
- *
- * @param $lat och $lng som get-params. anger plats där händelser ska visas nära
- * @param $distance anger inom hur långt avstånd händelser ska hämtas, i km
- * @param $count max number of events to get
- */
-Route::resource('previousPartners', PreviousPartnersController::class);
 
 Route::get('/helikopter', [PlatsController::class, 'helicopter'])->name('helicopter');
 

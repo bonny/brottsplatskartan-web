@@ -47,7 +47,11 @@
 
             <ul class="widget__listItems">
                 @foreach ($events as $event)
-                    @include('parts.crimeevent-helicopter', ['event' => $event])
+                    @include('parts.crimeevent', [
+                        'event' => $event,
+                        'overview' => true,
+                        'highlight' => ['polishelikopter', 'ambulanshelikopter', 'helikopter'],
+                    ])
                 @endforeach
             </ul>
 

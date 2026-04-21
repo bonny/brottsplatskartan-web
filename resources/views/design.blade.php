@@ -175,12 +175,17 @@ Template för ordlista/dictionary
         </div>
     </section>
 
-    {{-- 8. crimeevent-helicopter --}}
+    {{-- 8. crimeevent med highlight --}}
     <section class="u-margin-top-double u-padding u-border u-bg-gray-light">
-        <h3><code>parts.crimeevent-helicopter</code></h3>
-        <p class="text-sm u-color-gray-1">Används på: /helikopter-sidan. Specialversion som highlightar "helikopter" i texten.</p>
+        <h3><code>parts.crimeevent</code> (overview + highlight)</h3>
+        <p class="text-sm u-color-gray-1">Används på: /helikopter-sidan. Highlightar ord i texten via \$highlight-prop.</p>
         <div class="u-margin-top u-bg-white u-padding">
-            @include('parts.crimeevent-helicopter')
+            <ul class="widget__listItems">
+                @include('parts.crimeevent', [
+                    'overview' => true,
+                    'highlight' => ['polishelikopter', 'helikopter'],
+                ])
+            </ul>
         </div>
     </section>
 
