@@ -42,6 +42,7 @@
         "spatie/laravel-feed": "^4.0",
         "spatie/laravel-ignition": "^2.0",
         "spatie/laravel-responsecache": "^8.0",
+        "spatie/laravel-sitemap": "^8.1",
         "stevegrunwell/time-constants": "^1.1",
         "symfony/browser-kit": "^6.3",
         "symfony/http-client": "^7.0",

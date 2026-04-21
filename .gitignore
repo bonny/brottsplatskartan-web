@@ -26,3 +26,6 @@ CLAUDE.local.md
 *.dump
 *.dump.gz
 bpk*.gz
+
+# Sitemap genereras per miljö av sitemap:generate
+/public/sitemap.xml

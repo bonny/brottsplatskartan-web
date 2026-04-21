@@ -56,6 +56,12 @@ class Kernel extends ConsoleKernel
             ->everyFifteenMinutes()
             ->withoutOverlapping()
             ->name('warm-cache');
+
+        // Generera sitemap.xml en gång per dag — tar ~30-60s för ~10k events.
+        $schedule->command('sitemap:generate')
+            ->dailyAt('04:00')
+            ->withoutOverlapping()
+            ->name('sitemap');
     }
 
     /**
