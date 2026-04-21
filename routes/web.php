@@ -69,19 +69,18 @@ Route::match(['get', 'post'], '/', [StartController::class, 'start'])->name('sta
 
 Route::get('/statistik', [\App\Http\Controllers\StatisticsController::class, 'index'])->name('statistik');
 
-// Sitemap serveras från Redis (fylld av sitemap:generate-schemat var
-// 30:e min). Om cachen skulle vara tom genererar routen on-the-fly
-// som fallback.
+// Sitemap-suite. Index + main + aktuellt år från Redis (regen var 30 min
+// av sitemap:generate). Historiska år från storage/app/sitemaps/
+// (byggda en gång av sitemap:generate-historical).
 Route::get('/sitemap.xml', function () {
-    $xml = \Cache::get(\App\Console\Commands\GenerateSitemap::CACHE_KEY);
-    if (!$xml) {
-        \Illuminate\Support\Facades\Artisan::call('sitemap:generate');
-        $xml = \Cache::get(\App\Console\Commands\GenerateSitemap::CACHE_KEY);
-    }
-    return response($xml, 200, [
-        'Content-Type' => 'application/xml; charset=UTF-8',
-    ]);
+    return \App\Http\Controllers\SitemapController::serveCached('index');
 });
+Route::get('/sitemap-main.xml', function () {
+    return \App\Http\Controllers\SitemapController::serveCached('main');
+});
+Route::get('/sitemap-events-{year}.xml', function ($year) {
+    return \App\Http\Controllers\SitemapController::serveEventsYear((int) $year);
+})->where('year', '[0-9]{4}');
 
 Route::get('/handelser/{date}', [StartController::class, 'day'])->name('startDatum');
 Route::get('/handelser/', [StartController::class, 'day'])->name('handelser');

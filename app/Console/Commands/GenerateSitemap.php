@@ -9,28 +9,37 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Spatie\Sitemap\Sitemap;
+use Spatie\Sitemap\SitemapIndex;
+use Spatie\Sitemap\Tags\Sitemap as IndexEntry;
 use Spatie\Sitemap\Tags\Url;
 
 /**
- * Bygger sitemap.xml och sparar i Redis under `sitemap.xml`.
- * Routen `/sitemap.xml` läser från cachen och serverar direkt.
+ * Bygger sitemap-suite:
  *
- * Tidigare skrevs filen till disk (public/ eller storage/app/) men
- * containern har inte skrivrättigheter till public/ och storage-
- * varianten krävde extra fil-I/O för varje request. Redis är redan
- * igång och ger snabbare respons.
+ *   /sitemap.xml                    index, cachas i Redis
+ *   /sitemap-main.xml               statiska + län + plats + typ, Redis
+ *   /sitemap-events-{year}.xml      aktuellt år: Redis (regen var 30 min)
+ *                                   historiska år: storage/app/sitemaps/
+ *
+ * Historiska år byggs en gång via `sitemap:generate-historical` och
+ * läggs på disk — de ändras aldrig. Redis är bara för de delar som
+ * regenereras ofta. Disk-placeringen är storage/app/sitemaps/ som
+ * app-containern har skrivrätt till (och som persistar via volume).
  */
 class GenerateSitemap extends Command
 {
-    public const CACHE_KEY = 'sitemap.xml';
+    public const CACHE_PREFIX = 'sitemap:';
 
-    protected $signature = 'sitemap:generate {--events-days=90 : Antal dagar bakåt av events att inkludera}';
-    protected $description = 'Bygger sitemap.xml och cachar i Redis';
+    protected $signature = 'sitemap:generate';
+    protected $description = 'Bygger main + aktuellt-års events + index i Redis';
 
     public function handle(): int
     {
-        $sitemap = Sitemap::create();
         $now = now();
+        $currentYear = (int) $now->format('Y');
+
+        // 1. Main sitemap: statiska sidor + län
+        $main = Sitemap::create();
 
         $static = [
             '/' => ['freq' => Url::CHANGE_FREQUENCY_HOURLY, 'priority' => 1.0],
@@ -44,7 +53,7 @@ class GenerateSitemap extends Command
         ];
 
         foreach ($static as $path => $meta) {
-            $sitemap->add(
+            $main->add(
                 Url::create($path)
                     ->setLastModificationDate($now)
                     ->setChangeFrequency($meta['freq'])
@@ -54,7 +63,7 @@ class GenerateSitemap extends Command
 
         foreach (Helper::getAllLan() as $lanName) {
             $slug = Str::slug($lanName);
-            $sitemap->add(
+            $main->add(
                 Url::create("/lan/{$slug}")
                     ->setLastModificationDate($now)
                     ->setChangeFrequency(Url::CHANGE_FREQUENCY_DAILY)
@@ -62,13 +71,48 @@ class GenerateSitemap extends Command
             );
         }
 
-        $daysBack = (int) $this->option('events-days');
-        $since = Carbon::now()->subDays($daysBack);
+        Cache::forever(self::CACHE_PREFIX . 'main', $main->render());
 
-        $eventsAdded = 0;
-        CrimeEvent::where('created_at', '>=', $since)
+        // 2. Events för aktuellt år
+        $eventsYear = $this->buildYearSitemap($currentYear);
+        $count = $eventsYear['count'];
+        Cache::forever(self::CACHE_PREFIX . "events-{$currentYear}", $eventsYear['xml']);
+
+        // 3. Index — refererar main + alla år (aktuellt i Redis, historiska på disk)
+        $index = SitemapIndex::create();
+        $index->add(IndexEntry::create(url('/sitemap-main.xml'))->setLastModificationDate($now));
+        $index->add(IndexEntry::create(url("/sitemap-events-{$currentYear}.xml"))->setLastModificationDate($now));
+
+        foreach ($this->historicalYears($currentYear) as $year) {
+            $path = $this->historicalPath($year);
+            if (file_exists($path)) {
+                $index->add(
+                    IndexEntry::create(url("/sitemap-events-{$year}.xml"))
+                        ->setLastModificationDate(Carbon::createFromTimestamp(filemtime($path)))
+                );
+            }
+        }
+
+        Cache::forever(self::CACHE_PREFIX . 'index', $index->render());
+
+        $this->info('Sitemap-suite cachad i Redis.');
+        $this->line('  main (statiska + län): OK');
+        $this->line("  events-{$currentYear}: {$count} händelser");
+        $this->line('  index: skapad');
+
+        return self::SUCCESS;
+    }
+
+    private function buildYearSitemap(int $year): array
+    {
+        $sitemap = Sitemap::create();
+        $start = Carbon::create($year, 1, 1, 0, 0, 0);
+        $end = Carbon::create($year, 12, 31, 23, 59, 59);
+        $count = 0;
+
+        CrimeEvent::whereBetween('created_at', [$start, $end])
             ->orderBy('id', 'desc')
-            ->chunk(500, function ($events) use ($sitemap, &$eventsAdded) {
+            ->chunk(1000, function ($events) use ($sitemap, &$count) {
                 foreach ($events as $event) {
                     $permalink = $event->getPermalink();
                     if (! $permalink) {
@@ -77,22 +121,31 @@ class GenerateSitemap extends Command
                     $sitemap->add(
                         Url::create($permalink)
                             ->setLastModificationDate($event->updated_at ?? $event->created_at)
-                            ->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY)
+                            ->setChangeFrequency(Url::CHANGE_FREQUENCY_MONTHLY)
                             ->setPriority(0.5)
                     );
-                    $eventsAdded++;
+                    $count++;
                 }
             });
 
-        $xml = $sitemap->render();
-        Cache::forever(self::CACHE_KEY, $xml);
+        return ['xml' => $sitemap->render(), 'count' => $count];
+    }
 
-        $this->info('Sitemap cachad i Redis under nyckel "' . self::CACHE_KEY . '"');
-        $this->line('  Statiska sidor: ' . count($static));
-        $this->line('  Län: ' . count(Helper::getAllLan()));
-        $this->line("  Händelser (senaste {$daysBack} dagar): {$eventsAdded}");
-        $this->line('  XML-storlek: ' . number_format(strlen($xml) / 1024, 1) . ' KB');
+    public static function historicalPath(int $year): string
+    {
+        return storage_path("app/sitemaps/sitemap-events-{$year}.xml");
+    }
 
-        return self::SUCCESS;
+    /**
+     * Alla år mellan första events-året i DB och året innan aktuellt.
+     */
+    public function historicalYears(int $currentYear): array
+    {
+        $minYear = (int) Cache::remember(
+            'sitemap:min-event-year',
+            7 * DAY_IN_SECONDS,
+            fn () => CrimeEvent::min(\DB::raw('YEAR(created_at)')) ?: $currentYear
+        );
+        return range($minYear, $currentYear - 1);
     }
 }
