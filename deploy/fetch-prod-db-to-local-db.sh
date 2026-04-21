@@ -91,6 +91,7 @@ done
 REMOTE
 )
 
+# shellcheck disable=SC2029  # avsiktlig: REMOTE_DIR expanderas lokalt, skickas som literal till servern
 ssh "$REMOTE_HOST" "REMOTE_DIR='$REMOTE_DIR' bash -s" <<< "$REMOTE_CMD" \
     | gzip -d \
     | docker compose exec -T mariadb \
