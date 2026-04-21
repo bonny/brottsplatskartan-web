@@ -84,7 +84,9 @@ class GenerateSitemap extends Command
                 }
             });
 
-        $path = public_path('sitemap.xml');
+        // Skriver till storage/ eftersom containern inte har skrivrätt
+        // till public/. Serveras via route /sitemap.xml.
+        $path = storage_path('app/sitemap.xml');
         $sitemap->writeToFile($path);
 
         $this->info("Sitemap skriven till {$path}");

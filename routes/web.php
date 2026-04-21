@@ -69,6 +69,18 @@ Route::match(['get', 'post'], '/', [StartController::class, 'start'])->name('sta
 
 Route::get('/statistik', [\App\Http\Controllers\StatisticsController::class, 'index'])->name('statistik');
 
+// Serverar sitemap.xml från storage/ (containern kan inte skriva till public/).
+// Regenereras var 30:e min av sitemap:generate-schemat.
+Route::get('/sitemap.xml', function () {
+    $path = storage_path('app/sitemap.xml');
+    if (!file_exists($path)) {
+        abort(404, 'Sitemap har inte genererats än.');
+    }
+    return response(file_get_contents($path), 200, [
+        'Content-Type' => 'application/xml; charset=UTF-8',
+    ]);
+});
+
 Route::get('/handelser/{date}', [StartController::class, 'day'])->name('startDatum');
 Route::get('/handelser/', [StartController::class, 'day'])->name('handelser');
 // Route::redirect('/handelser/', '/');
