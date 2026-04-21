@@ -41,14 +41,14 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
-            \Spatie\ResponseCache\Middlewares\CacheResponse::class,
+            \App\Http\Middleware\FlexibleCacheResponse::class,
             \App\Http\Middleware\DebugBarMaybeEnable::class,
         ],
 
         'api' => [
             'throttle:500,1',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
-            \Spatie\ResponseCache\Middlewares\CacheResponse::class,
+            \App\Http\Middleware\FlexibleCacheResponse::class,
         ],
     ];
 

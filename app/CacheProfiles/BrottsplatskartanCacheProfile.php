@@ -43,6 +43,43 @@ class BrottsplatskartanCacheProfile extends CacheAllSuccessfulGetRequests
         return 30 * MINUTE_IN_SECONDS;
     }
 
+    /**
+     * Grace-period för SWR (stale-while-revalidate).
+     *
+     * Under grace-fönstret serveras stale-svar omedelbart medan en
+     * bakgrundsprocess regenererar. Tumregel: ~4x fresh-tid för hot
+     * paths. För data som aldrig ändras (historiska datum) är grace
+     * irrelevant. För VMA prioriterar vi färskhet före latens.
+     */
+    public function graceInSeconds(Request $request): int
+    {
+        // VMA: prioritera färsk data, ingen SWR.
+        if ($request->is('vma') || $request->is('api/vma')) {
+            return 0;
+        }
+
+        // Startsida: kort fresh -> längre grace för att slippa köbildning.
+        if ($request->is('/') || $request->is('')) {
+            return 10 * MINUTE_IN_SECONDS;
+        }
+
+        // Historiska datum: data ändras aldrig, grace spelar ingen roll.
+        if ($request->is('handelser/*')) {
+            $date = $this->extractDateFromUrl($request->path());
+            if ($date && $date->diffInDays(now()) > 7) {
+                return HOUR_IN_SECONDS;
+            }
+        }
+
+        // API
+        if ($request->is('api/events')) {
+            return HOUR_IN_SECONDS;
+        }
+
+        // Standard: 2h grace
+        return 2 * HOUR_IN_SECONDS;
+    }
+
     private function extractDateFromUrl(string $path): ?\Carbon\Carbon
     {
         if (preg_match('/(\d{1,2})-([a-zåäö]+)-(\d{4})/i', $path, $matches)) {
