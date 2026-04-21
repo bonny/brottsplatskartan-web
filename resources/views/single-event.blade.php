@@ -22,7 +22,12 @@ Template för ett event/händelse
 
 @section('content')
 
-    @include('parts.crimeevent', ['single' => true])
+    <x-crimeevent.card
+        :event="$event"
+        single
+        :newsarticles="$newsarticles ?? null"
+        :dictionary-words-in-text="$dictionaryWordsInText ?? null"
+    />
 
     <x-events-map />
 
@@ -42,7 +47,7 @@ Template för ett event/händelse
             <h2 class="widget__title RelatedEvents__title">Fler händelser i närheten</h2>
             <ul class="widget__listItems RelatedEvents__items">
                 @foreach ($eventsNearby as $event)
-                    @include('parts.crimeevent-small', ['mapDistance' => 'near'])
+                    <x-crimeevent.list-item :event="$event" map-distance="near" />
                 @endforeach
             </ul>
         </aside>

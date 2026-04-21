@@ -1,19 +1,27 @@
-@php
-    $_size = $size ?? 'large';
-    $_isLarge = $_size === 'large';
-    $_isFirst = isset($loop) && $loop->first;
-@endphp
-<article class="@if ($_isLarge && !$_isFirst) u-margin-top-double @endif">
-    <a href="{{ $event->getPermalink() }}"
-        class="u-color-black {{ $_isLarge ? 'block hover:no-underline group' : '' }}">
+@props([
+    'event',
+    'size' => 'large',
+    // Första kortet i listan — sätter loading=eager + fetchpriority=high för LCP.
+    // Måste passas explicit eftersom $loop inte ärvs in i komponenten.
+    'first' => false,
+])
 
-        @include('parts.atoms.event-map-far', ['eager' => $_isLarge && $_isFirst])
+@php
+    $isLarge = $size === 'large';
+    $isFirst = (bool) $first;
+@endphp
+
+<article class="@if ($isLarge && !$isFirst) u-margin-top-double @endif">
+    <a href="{{ $event->getPermalink() }}"
+        class="u-color-black {{ $isLarge ? 'block hover:no-underline group' : '' }}">
+
+        @include('parts.atoms.event-map-far', ['eager' => $isLarge && $isFirst])
 
         <p class="u-margin-0 u-margin-bottom-third">
             <span class="Event__parsedTitle Event__type">{{ $event->parsed_title }}</span>
         </p>
 
-        @if ($_isLarge)
+        @if ($isLarge)
             <h2 class="text-2xl font-bold break-hyphens u-margin-0 tracking-tight u-color-link group-hover:underline">
                 {{ $event->getHeadline() }}
             </h2>
@@ -25,8 +33,8 @@
 
         @include('parts.atoms.event-date')
 
-        <div class="{{ $_isLarge ? '' : 'text-sm' }}">
-            @if ($_isLarge)
+        <div class="{{ $isLarge ? '' : 'text-sm' }}">
+            @if ($isLarge)
                 {!! $event->getParsedContentTeaser() !!}
             @else
                 {!! $event->getParsedContentTeaser(80) !!}

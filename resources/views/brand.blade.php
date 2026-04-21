@@ -36,9 +36,7 @@ Template för /brand
 
         <ul class="widget__listItems">
             @foreach ($latestBrandEvents as $event)
-                @include('parts.crimeevent-small', [
-                    'overview' => true,
-                ])
+                <x-crimeevent.list-item :event="$event" />
             @endforeach
         </ul>
     </div>

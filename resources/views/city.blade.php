@@ -56,11 +56,11 @@
                 <div class="widget">
                     <div class="widget__listItems widget__listItems--city u-margin-top">
                         @foreach ($events as $event)
-                            @include('parts.crimeevent-small', [
-                                'event' => $event,
-                                'detailed' => true,
-                                'mapDistance' => 'near'
-                            ])
+                            <x-crimeevent.list-item
+                                :event="$event"
+                                detailed
+                                map-distance="near"
+                            />
                         @endforeach
                     </div>
                 </div>

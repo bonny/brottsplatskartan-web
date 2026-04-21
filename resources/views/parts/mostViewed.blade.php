@@ -5,12 +5,7 @@
 
     <ul class="widget__listItems">
         @foreach ($mostViewed as $view)
-            @php
-                $event = $view->crimeEvent;
-            @endphp
-            @include('parts.crimeevent-small', [
-                'detailed' => true
-            ])
+            <x-crimeevent.list-item :event="$view->crimeEvent" detailed />
         @endforeach
     </ul>
 </section>

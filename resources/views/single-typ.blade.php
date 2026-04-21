@@ -19,7 +19,7 @@ Template för ett län
         @if ($events)
             <ul class="Events Events--overview">
                 @foreach ($events as $event)
-                    @include('parts.crimeevent-small', ['overview' => true])
+                    <x-crimeevent.list-item :event="$event" />
                 @endforeach
             </ul>
 

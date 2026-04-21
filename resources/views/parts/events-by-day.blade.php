@@ -5,11 +5,11 @@
 
     <ul class="widget__listItems">
         @foreach($events as $event)
-            @include('parts.crimeevent-small', [
-                'event' => $event,
-                'detailed' => true,
-                'mapDistance' => $mapDistance ?? null
-            ])
+            <x-crimeevent.list-item
+                :event="$event"
+                detailed
+                :map-distance="$mapDistance ?? null"
+            />
         @endforeach
     </ul>
 @endforeach

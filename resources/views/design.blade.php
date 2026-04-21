@@ -103,88 +103,87 @@ Template för ordlista/dictionary
     <h2>Event-kort templates</h2>
     <p>Nedan visas alla varianter av event-kort som finns i systemet.</p>
 
-    {{-- 1. crimeevent (original) --}}
+    {{-- 1. x-crimeevent.card (single) --}}
     <section class="u-margin-top-double u-padding u-border u-bg-gray-light">
-        <h3><code>parts.crimeevent</code> (single=true)</h3>
+        <h3><code>&lt;x-crimeevent.card single /&gt;</code></h3>
         <p class="text-sm u-color-gray-1">Används på: Detaljsidor för enskild händelse. Stort kort med karta och fullständigt innehåll.</p>
         <div class="u-margin-top u-bg-white u-padding">
-            @include('parts.crimeevent', ['single' => true])
+            <x-crimeevent.card :event="$event" single />
         </div>
     </section>
 
     <section class="u-margin-top-double u-padding u-border u-bg-gray-light">
-        <h3><code>parts.crimeevent</code> (overview=true)</h3>
+        <h3><code>&lt;x-crimeevent.card overview /&gt;</code></h3>
         <p class="text-sm u-color-gray-1">Används på: Listningssidor. Kort med länk och teaser-text.</p>
         <div class="u-margin-top u-bg-white u-padding">
             <ul class="widget__listItems">
-                @include('parts.crimeevent', ['overview' => true])
+                <x-crimeevent.card :event="$event" overview />
             </ul>
         </div>
     </section>
 
-
-    {{-- 3. crimeevent-hero (size=large) --}}
+    {{-- 3. x-crimeevent.hero (size=large) --}}
     <section class="u-margin-top-double u-padding u-border u-bg-gray-light">
-        <h3><code>parts.crimeevent-hero</code> (size=large)</h3>
+        <h3><code>&lt;x-crimeevent.hero size="large" /&gt;</code></h3>
         <p class="text-sm u-color-gray-1">Används på: Startsidan (topp 3 mest lästa). Stor hero med Sverigekartan och teaser-text.</p>
         <div class="u-margin-top u-bg-white u-padding">
-            @php $loop = (object)['first' => true]; @endphp
-            @include('parts.crimeevent-hero', ['size' => 'large'])
+            <x-crimeevent.hero :event="$event" size="large" :first="true" />
+            <p class="text-sm u-color-gray-1 u-margin-top-half">Första heron har <code>:first="true"</code> för LCP → <code>loading="eager"</code> + <code>fetchpriority="high"</code>.</p>
         </div>
     </section>
 
-    {{-- 4. crimeevent-hero (size=small) --}}
+    {{-- 4. x-crimeevent.hero (size=small) --}}
     <section class="u-margin-top-double u-padding u-border u-bg-gray-light">
-        <h3><code>parts.crimeevent-hero</code> (size=small)</h3>
+        <h3><code>&lt;x-crimeevent.hero size="small" /&gt;</code></h3>
         <p class="text-sm u-color-gray-1">Används på: Startsidan (rad 2, 6 st i 2x3 rutnät). Medium hero med kortare text.</p>
         <div class="u-margin-top u-bg-white u-padding" style="max-width: 47%;">
-            @include('parts.crimeevent-hero', ['size' => 'small'])
+            <x-crimeevent.hero :event="$event" size="small" />
         </div>
     </section>
 
-    {{-- 5. crimeevent-small --}}
+    {{-- 5. x-crimeevent.list-item (detailed) --}}
     <section class="u-margin-top-double u-padding u-border u-bg-gray-light">
-        <h3><code>parts.crimeevent-small</code></h3>
+        <h3><code>&lt;x-crimeevent.list-item detailed /&gt;</code></h3>
         <p class="text-sm u-color-gray-1">Används på: Startsidan (lista nedanför heroes), sidebars, "Mest läst"-listor. Liten thumbnail med titel.</p>
         <div class="u-margin-top u-bg-white u-padding">
             <ul class="widget__listItems">
-                @include('parts.crimeevent-small', ['detailed' => true])
+                <x-crimeevent.list-item :event="$event" detailed />
             </ul>
         </div>
     </section>
 
     <section class="u-margin-top-double u-padding u-border u-bg-gray-light">
-        <h3><code>parts.crimeevent-small</code> (detailed=false)</h3>
+        <h3><code>&lt;x-crimeevent.list-item /&gt;</code></h3>
         <p class="text-sm u-color-gray-1">Variant utan brottstyp-etikett.</p>
         <div class="u-margin-top u-bg-white u-padding">
             <ul class="widget__listItems">
-                @include('parts.crimeevent-small', ['detailed' => false])
+                <x-crimeevent.list-item :event="$event" />
             </ul>
         </div>
     </section>
 
-
-    {{-- 7. crimeevent-small (showMap=false) --}}
+    {{-- 7. x-crimeevent.list-item (show-map=false) --}}
     <section class="u-margin-top-double u-padding u-border u-bg-gray-light">
-        <h3><code>parts.crimeevent-small</code> (showMap=false)</h3>
+        <h3><code>&lt;x-crimeevent.list-item :show-map="false" /&gt;</code></h3>
         <p class="text-sm u-color-gray-1">Används på: Kompakta listor där karta inte behövs (t.ex. 404-sidan). Minimal textversion.</p>
         <div class="u-margin-top u-bg-white u-padding">
             <ul class="widget__listItems">
-                @include('parts.crimeevent-small', ['showMap' => false])
+                <x-crimeevent.list-item :event="$event" :show-map="false" />
             </ul>
         </div>
     </section>
 
-    {{-- 8. crimeevent med highlight --}}
+    {{-- 8. x-crimeevent.card med highlight --}}
     <section class="u-margin-top-double u-padding u-border u-bg-gray-light">
-        <h3><code>parts.crimeevent</code> (overview + highlight)</h3>
+        <h3><code>&lt;x-crimeevent.card overview :highlight="..." /&gt;</code></h3>
         <p class="text-sm u-color-gray-1">Används på: /helikopter-sidan. Highlightar ord i texten via \$highlight-prop.</p>
         <div class="u-margin-top u-bg-white u-padding">
             <ul class="widget__listItems">
-                @include('parts.crimeevent', [
-                    'overview' => true,
-                    'highlight' => ['polishelikopter', 'helikopter'],
-                ])
+                <x-crimeevent.card
+                    :event="$event"
+                    overview
+                    :highlight="['polishelikopter', 'helikopter']"
+                />
             </ul>
         </div>
     </section>

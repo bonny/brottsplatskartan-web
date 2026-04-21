@@ -1,146 +1,108 @@
-{{--
-
-Template part for single crime event, part of loop or single
-
-if $overview is true then adds link etc
-if $single is true then larger image
-
---}}
+@props([
+    'event',
+    'overview' => false,
+    'single' => false,
+    // $highlight: array med ord som ska framhävas i innehållet (t.ex. på /helikopter).
+    'highlight' => [],
+    // Valfria data från parent-scope (används bara när !$overview på single-event).
+    'newsarticles' => null,
+    'dictionaryWordsInText' => null,
+])
 
 @php
-    $_overview = $overview ?? false;
-    $_single = $single ?? false;
-    // $highlight: array med ord som ska framhävas i innehållet (t.ex. på /helikopter).
-    $_highlight = $highlight ?? [];
     // Full content istället för teaser om highlight är satt — annars
     // kan ordet ligga utanför teaserns 160 tecken.
-    $_useFullContent = !$_overview || !empty($_highlight);
+    $useFullContent = !$overview || !empty($highlight);
 @endphp
 
-@if ($_overview)
-    <li
-        class="
-            Event
-            @if ($_overview) Event--overview @endif
-            @if ($_single) Event--single @endif
-            @if (isset($event->location_geometry_type)) Event--distance_{{ $event->getViewPortSizeAsString() }} @endif
-        ">
+@if ($overview)
+    <li class="Event
+        @if ($overview) Event--overview @endif
+        @if ($single) Event--single @endif
+        @if (isset($event->location_geometry_type)) Event--distance_{{ $event->getViewPortSizeAsString() }} @endif
+    ">
         <article>
-        @else
-            <article
-                class="
-            Event
-            @if ($_overview) Event--overview @endif
-            @if ($_single) Event--single @endif
-            @if (isset($event->location_geometry_type)) Event--distance_{{ $event->getViewPortSizeAsString() }} @endif
-        ">
+@else
+    <article class="Event
+        @if ($overview) Event--overview @endif
+        @if ($single) Event--single @endif
+        @if (isset($event->location_geometry_type)) Event--distance_{{ $event->getViewPortSizeAsString() }} @endif
+    ">
 @endif
-
-
-{{--
-
-    "ROOFTOP" indicates that the returned result is a precise geocode for which we have location information accurate down to street address precision.
-
-    "GEOMETRIC_CENTER" indicates that the returned result is the geometric center of a result such as a polyline (for example, a street) or polygon (region).
-
-    "APPROXIMATE" indicates that the returned result is approximate.
-
-    // typ hela sverige visas, eller en by/stad
-    .Event--location_type_approximate {
-
-    }
-
-    // typ en gata eller nära område
-    .Event--location_type_geometric_center {
-
-    }
-
-    --}}
 
 @if ($event->geocoded)
     <p class="Event__map">
-        @if ($_overview)
+        @if ($overview)
             <a href="{{ $event->getPermalink() }}">
-        @endif
-
-        @if ($_overview)
-            <img loading="lazy" alt="{{ $event->getMapAltText() }}" class="Event__mapImage"
-                src="{{ $event->getStaticImageSrc(640, 320) }}" width="640" height="320"></img>
+                <img loading="lazy" alt="{{ $event->getMapAltText() }}" class="Event__mapImage"
+                    src="{{ $event->getStaticImageSrc(640, 320) }}" width="640" height="320" />
+            </a>
         @else
             <span class="Event__mapImageWrap Event__mapImageWrap--near">
                 <img loading="lazy" alt="{{ $event->getMapAltText() }}" class="Event__mapImage Event__mapImage--near"
-                    src="{{ $event->getStaticImageSrc(617, 463) }}" width="426" height="320"></img>
+                    src="{{ $event->getStaticImageSrc(617, 463) }}" width="426" height="320" />
             </span>
-
             <span class="Event__mapImageWrap Event__mapImageWrap--far">
                 <img loading="lazy"
                     alt="Översiktskarta som visar hela Sverige med en markör som visar ungefär var händelsen inträffat"
                     class="Event__mapImage Event__mapImage--far" src="{{ $event->getStaticImageSrcFar(213, 332) }}"
-                    width="213" height="332"></img>
+                    width="213" height="332" />
             </span>
-        @endif
-
-        @if ($_overview)
-            </a>
         @endif
     </p>
 @endif
 
 <div class="Event__title">
-    @if ($_overview)
+    @if ($overview)
         <a href="{{ $event->getPermalink() }}">
     @endif
     <span class="Event__type">{{ $event->parsed_title }}</span>
     <h1 class="Event__teaser">{{ $event->getHeadline() }}</h1>
-    @if ($_overview)
+    @if ($overview)
         </a>
     @endif
 </div>
 
-{{--
-    Om bara vill visa när skillnad är mer än nn dagar/timmar osv.
-    http://stackoverflow.com/questions/23336261/laravel-carbon-display-date-difference-only-in-days
-    --}}
 <p class="Event__meta">
     @if ($event->locations->count())
         <span class="Event__location">{!! $event->getLocationStringWithLinks() !!}</span>
     @endif
-    {{-- <span class="Event__metaDivider"> | </span> --}}
-    <span class="Event__dateHuman"><time class="Event__dateHuman__time"
+    <span class="Event__dateHuman">
+        <time class="Event__dateHuman__time"
             title="Tidpunkt då Polisen anger att händelsen inträffat"
-            datetime="{{ $event->getParsedDateISO8601() }}">{{ $event->getParsedDateFormattedForHumans() }} –
-            {{ $event->getParsedDateYMD() }}
-        </time></span>
+            datetime="{{ $event->getParsedDateISO8601() }}">
+            {{ $event->getParsedDateFormattedForHumans() }} – {{ $event->getParsedDateYMD() }}
+        </time>
+    </span>
 </p>
 
-@if ($_overview)
+@if ($overview)
     <a class="Event__contentLink" href="{{ $event->getPermalink() }}">
 @endif
 
 <div class="Event__content">
     @php
-        $_content = $_useFullContent
+        $content = $useFullContent
             ? $event->getParsedContent()
             : $event->getParsedContentTeaser();
 
-        if (!empty($_highlight)) {
-            $_pattern = '/\b(' . implode('|', array_map('preg_quote', $_highlight)) . ')\b/i';
-            $_content = preg_replace($_pattern, '<em class="highlightedWord">$1</em>', $_content);
+        if (!empty($highlight)) {
+            $pattern = '/\b(' . implode('|', array_map('preg_quote', $highlight)) . ')\b/i';
+            $content = preg_replace($pattern, '<em class="highlightedWord">$1</em>', $content);
         }
     @endphp
-    {!! $_content !!}
+    {!! $content !!}
 </div>
 
-@if ($_overview)
+@if ($overview)
     </a>
 @endif
 
-@if ($_single && $event->shouldShowSourceLink())
+@if ($single && $event->shouldShowSourceLink())
     <p class="Event__source">Källa: {{ $event->permalink }}</p>
 @endif
 
-@if ($_overview)
-@else
+@if (!$overview)
     @include('parts.crimeevent.newsarticles', ['newsarticles' => $newsarticles ?? collect()])
 
     @include('parts.admin-crime')
@@ -155,7 +117,6 @@ if $single is true then larger image
                     inbrott</a>.
         </div>
     @endif
-
 @endif
 
 @if (!empty($dictionaryWordsInText) && $dictionaryWordsInText->count())
@@ -177,14 +138,12 @@ if $single is true then larger image
             @endforeach
         </div>
 
-        <p class="Event__dictionaryDictionaryLink"><a href="{{ Route('ordlista') }}">Fler ord hittar du i Ordlistan</a>
-        </p>
-
+        <p class="Event__dictionaryDictionaryLink"><a href="{{ Route('ordlista') }}">Fler ord hittar du i Ordlistan</a></p>
     </aside>
 @endif
 
-@if ($_overview)
-    </article>
+@if ($overview)
+        </article>
     </li>
 @else
     </article>

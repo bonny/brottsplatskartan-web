@@ -32,17 +32,14 @@ $normalEventsToShow = $eventsMostViewedRecentlyCrimeEvents->slice($numHeroEvents
 @endphp
 
 @foreach ($heroEventsToShow as $event)
-    @include('parts.crimeevent-hero', ['event' => $event, 'size' => 'large'])
+    <x-crimeevent.hero :event="$event" size="large" :first="$loop->first" />
 @endforeach
 
 @foreach ($smallHeroEventsToShow->chunk(2) as $chunk)
     <div class="flex justify-between u-margin-top-double">
         @foreach ($chunk as $event)
             <div class="w-47">
-                @include('parts.crimeevent-hero', [
-                    'event' => $event,
-                    'size' => 'small',
-                ])
+                <x-crimeevent.hero :event="$event" size="small" />
             </div>
         @endforeach
     </div>
@@ -52,10 +49,7 @@ $normalEventsToShow = $eventsMostViewedRecentlyCrimeEvents->slice($numHeroEvents
 @if ($normalEventsToShow->count())
     <ul class="widget__listItems u-margin-top-double">
         @foreach($normalEventsToShow as $event)
-            @include('parts.crimeevent-small', [
-                'event' => $event,
-                'detailed' => true
-            ])
+            <x-crimeevent.list-item :event="$event" detailed />
         @endforeach
     </ul>
 @endif

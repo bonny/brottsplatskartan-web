@@ -60,10 +60,7 @@ Sidmall för sidan med de mest lästa händelserna
         @if($mestLastaNyligen['events'])
             <ul class="widget__listItems">
                 @foreach($mestLastaNyligen['events'] as $oneMostViewed)
-                    @include('parts.crimeevent-small', [
-                        'event' => $oneMostViewed->crimeEvent,
-                        'detailed' => true
-                    ])
+                    <x-crimeevent.list-item :event="$oneMostViewed->crimeEvent" detailed />
                 @endforeach
             </ul>
         @else
@@ -74,14 +71,11 @@ Sidmall för sidan med de mest lästa händelserna
             <h2>{{$mestLastValue['title']}}</h2>
             <ul class="widget__listItems">
                 @foreach($mestLastValue['events'] as $oneMostViewed)
-                    @include('parts.crimeevent-small', [
-                        'event' => $oneMostViewed->crimeEvent,
-                        'detailed' => true
-                    ])
+                    <x-crimeevent.list-item :event="$oneMostViewed->crimeEvent" detailed />
                 @endforeach
             </ul>
 
-        @endforeach 
+        @endforeach
 
     </div>
 
