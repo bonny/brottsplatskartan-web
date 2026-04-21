@@ -1,18 +1,32 @@
 # Todo #3 – Konsolidering av crimeevent-kort (Blade-templates)
 
-**Status: Klar 2026-04-21** (commits `f3f525a`, `9252c33`).
+**Status: Klar 2026-04-21** (commits `f3f525a`, `9252c33`, `2e70e92`, `f4c9da9`, `7ec93b7`, `d5d6273`, `fc00cbb`, `8e77bb7`, `d0bf1cf`, `1ff4746`, `09b337d`).
 
 Gjort:
 - Raderat `crimeevent_v2` + `crimeevent-city` (dött, bara /design).
 - Fixat `</li>/</article>`-nesting-bugg i `crimeevent.blade.php`.
 - Slagit ihop `crimeevent-hero` + `crimeevent-hero-second` till en partial med `$size = 'large'|'small'`. LCP eager bevarat.
 - Slagit ihop `crimeevent-mapless` med `crimeevent-small` via `$showMap = false`. 404-sidan uppdaterad.
+- Normaliserat `isset($prop)` till `??`-pattern + defensiv `$_isFirst`.
+- Slagit ihop `crimeevent-helicopter` med `crimeevent` via nytt `$highlight`-prop
+  (array med ord att framhäva). Full content används automatiskt när
+  highlight är satt så ordet syns även utanför teaser.
+- Avvecklat `previousPartners` helt (route, controller, views, 2 partials).
+- Konverterat de återstående 3 partialerna till Blade components med `@props`:
+  `parts/crimeevent.blade.php`       → `components/crimeevent/card.blade.php`
+  `parts/crimeevent-small.blade.php` → `components/crimeevent/list-item.blade.php`
+  `parts/crimeevent-hero.blade.php`  → `components/crimeevent/hero.blade.php`
+  Alla 12 call-sites uppdaterade till `<x-crimeevent.*>`-syntax.
+- Code review-fixar: h1→h2 i overview-vy (SEO), `str_limit`→`Str::limit`,
+  konsoliderad teaser-kod.
+- **Bonus:** embedda ADS-B Exchange-karta på `/helikopter`.
 
 Ej gjort (avprioriterat):
 - Atom-extraktion (event-map, event-title, event-meta). Merges lyckades
   utan detta. Öppen fråga om BEM vs Tailwind behöver lösas först.
 
-Netto: 9 event-kort-partials → 5, ~130 rader borta, en tyst bugg fixad.
+Netto: 9 event-kort-partials → 3 Blade components (+ 1 `newsarticles`-sub-partial),
+~−400 rader, två tysta buggar fixade (`</li>` + multiple-h1 i overview).
 
 
 ## Sammanfattning
