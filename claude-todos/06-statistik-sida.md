@@ -1,5 +1,11 @@
 # Todo #6 — Flytta Brottsstatistik till egen /statistik-sida
 
+**Status: Klar 2026-04-21.** `/statistik` finns med 14d-graf, topp-brottstyper,
+län-topplista, topp-dagar och totalsiffra. Brottsstatistik-rutan ersatt med
+CTA-puff på startsida, län-, stads- och händelsesidor. V2 (per-timme-mönster,
+21 län-grafer, datum-filter) är ej planerat.
+
+
 ## Sammanfattning
 
 Brottsstatistik-rutan på startsidan (14-dagars stapeldiagram för hela Sverige)
