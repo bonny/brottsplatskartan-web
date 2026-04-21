@@ -122,16 +122,6 @@ Template för ordlista/dictionary
         </div>
     </section>
 
-    {{-- 2. crimeevent_v2 --}}
-    <section class="u-margin-top-double u-padding u-border u-bg-gray-light">
-        <h3><code>parts.crimeevent_v2</code> (overview=true)</h3>
-        <p class="text-sm u-color-gray-1">Används på: Län-sidor, plats-sidor. Nyare två-kolumn layout med karta till vänster.</p>
-        <div class="u-margin-top u-bg-white u-padding">
-            <ul class="widget__listItems">
-                @include('parts.crimeevent_v2', ['overview' => true])
-            </ul>
-        </div>
-    </section>
 
     {{-- 3. crimeevent-hero --}}
     <section class="u-margin-top-double u-padding u-border u-bg-gray-light">
@@ -173,14 +163,6 @@ Template för ordlista/dictionary
         </div>
     </section>
 
-    {{-- 6. crimeevent-city --}}
-    <section class="u-margin-top-double u-padding u-border u-bg-gray-light">
-        <h3><code>parts.crimeevent-city</code></h3>
-        <p class="text-sm u-color-gray-1">Används på: Stadssidor. Kompakt kort utan bild, bara rubrik och meta-beskrivning.</p>
-        <div class="u-margin-top u-bg-white u-padding">
-            @include('parts.crimeevent-city')
-        </div>
-    </section>
 
     {{-- 7. crimeevent-mapless --}}
     <section class="u-margin-top-double u-padding u-border u-bg-gray-light">

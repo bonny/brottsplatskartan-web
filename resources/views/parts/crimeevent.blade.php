@@ -168,8 +168,8 @@ if $single is set then larger image
 @endif
 
 @if (isset($overview))
-    </li>
     </article>
+    </li>
 @else
     </article>
 @endif
