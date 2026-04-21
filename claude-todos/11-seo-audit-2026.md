@@ -1,6 +1,23 @@
 # Todo #11 — SEO-audit enligt best practice 2026
 
-*Skapad: 2026-04-21. Ersätter och inkluderar tidigare todo #2 (legacy SEO-review) från 2026-04-21.*
+_Skapad: 2026-04-21. Ersätter och inkluderar tidigare todo #2 (legacy SEO-review) från 2026-04-21._
+
+## Status
+
+**Fas 1 KLAR 2026-04-21** (commit `83b3b19` + `27241d5`):
+
+- Sitemap: `spatie/laravel-sitemap`, `sitemap:generate`-command, nattlig scheduler kl 04:00
+- `Sitemap:`-rad i `public/robots.txt`
+- Canonical + meta-description-fallback i `layouts/web.blade.php`
+- BreadcrumbList JSON-LD i `parts/breadcrumb.blade.php`
+- Global Organization + WebSite JSON-LD (med SearchAction) i layout
+- Dubbel `<meta name="robots">` sammanslagen
+
+Kvar i Fas 1 (trivialt, görs när tid finns):
+- Alt-text audit för `crimeevent-small`, `crimeevent-helicopter`, `crimeevent-previousPartners`, `page.blade.php`
+
+Fas 2/3 kvarstår enligt plan nedan.
+
 
 ## Sammanfattning
 
@@ -37,51 +54,51 @@ Checklista med ja/nej/delvis + filhänvisningar.
 
 ### Tekniskt
 
-| Punkt | Status | Fil / anmärkning |
-|---|---|---|
-| `<title>` per sida | Ja | `resources/views/layouts/web.blade.php:64`, unik per vy via `@section('title', …)` |
-| Titel-längd ≤ ~60 chars | Delvis | Vissa lång t.ex. `overview-helicopter.blade.php:4` (97 chars inkl. emoji), `polisstationer.blade.php:9`. `single-plats.blade.php:17` bygger dynamiskt |
-| Meta description | Delvis | `resources/views/layouts/web.blade.php:20–24` — villkorlig via `@hasSection('metaDescription')`. **Ingen fallback** |
-| Unika descriptions per sida | Delvis | Finns där `@section` explicit sätts. Övriga sidor: ingen description alls |
-| Canonical URL | Delvis | `layouts/web.blade.php:14–16` — villkorlig. Ingen fallback till `url()->current()` |
-| H1 unik per sida | Delvis | 126 förekomster fördelat över 55 filer — ej verifierat att varje vy renderar exakt *en* H1. `design.blade.php` har 10, men är debugvy |
-| NewsArticle JSON-LD | Ja | `app/CrimeEvent.php:1175` + `single-event.blade.php:19` |
-| Event JSON-LD | Nej | Används inte — NewsArticle valt istället (rimligt) |
-| Place JSON-LD | Nej | Ingen `Place`/`City`-markup på `single-plats`, `single-lan`, `city.blade.php` |
-| BreadcrumbList JSON-LD | Nej | `parts/breadcrumb.blade.php` renderar bara visuellt |
-| Organization / WebSite | Nej | Ingen global Organization/WebSite-markup i layout |
-| robots.txt | Delvis | `public/robots.txt` — finns men saknar `Sitemap:`-rad och styr inga parameter-URL:er |
-| sitemap.xml | **Nej** | Ingen route, ingen controller, inget paket installerat |
-| RSS/Atom | Ja | `spatie/laravel-feed` via `Route::feeds()`, inkluderas i layout rad 18 |
-| Mobile viewport | Ja | `layouts/web.blade.php:12` |
-| `lang="sv"` | Ja | `layouts/web.blade.php:7` |
-| `max-image-preview:large` | Ja | `layouts/web.blade.php:26` |
-| Noindex-strategi | Delvis | `$robotsNoindex`-flagga finns, men ingen duplicate-hantering för datum-URL:er |
-| Dubbel `<meta name="robots">` | Ja (bug) | Layout skriver två separata taggar när noindex sätts (rad 26 + 71) |
-| Core Web Vitals (LCP/INP/CLS) | Ej mätt | Gör via PageSpeed Insights mot `brottsplatskartan.se` efter Hetzner-cutover |
+| Punkt                         | Status   | Fil / anmärkning                                                                                                                                      |
+| ----------------------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `<title>` per sida            | Ja       | `resources/views/layouts/web.blade.php:64`, unik per vy via `@section('title', …)`                                                                    |
+| Titel-längd ≤ ~60 chars       | Delvis   | Vissa lång t.ex. `overview-helicopter.blade.php:4` (97 chars inkl. emoji), `polisstationer.blade.php:9`. `single-plats.blade.php:17` bygger dynamiskt |
+| Meta description              | Delvis   | `resources/views/layouts/web.blade.php:20–24` — villkorlig via `@hasSection('metaDescription')`. **Ingen fallback**                                   |
+| Unika descriptions per sida   | Delvis   | Finns där `@section` explicit sätts. Övriga sidor: ingen description alls                                                                             |
+| Canonical URL                 | Delvis   | `layouts/web.blade.php:14–16` — villkorlig. Ingen fallback till `url()->current()`                                                                    |
+| H1 unik per sida              | Delvis   | 126 förekomster fördelat över 55 filer — ej verifierat att varje vy renderar exakt _en_ H1. `design.blade.php` har 10, men är debugvy                 |
+| NewsArticle JSON-LD           | Ja       | `app/CrimeEvent.php:1175` + `single-event.blade.php:19`                                                                                               |
+| Event JSON-LD                 | Nej      | Används inte — NewsArticle valt istället (rimligt)                                                                                                    |
+| Place JSON-LD                 | Nej      | Ingen `Place`/`City`-markup på `single-plats`, `single-lan`, `city.blade.php`                                                                         |
+| BreadcrumbList JSON-LD        | Nej      | `parts/breadcrumb.blade.php` renderar bara visuellt                                                                                                   |
+| Organization / WebSite        | Nej      | Ingen global Organization/WebSite-markup i layout                                                                                                     |
+| robots.txt                    | Delvis   | `public/robots.txt` — finns men saknar `Sitemap:`-rad och styr inga parameter-URL:er                                                                  |
+| sitemap.xml                   | **Nej**  | Ingen route, ingen controller, inget paket installerat                                                                                                |
+| RSS/Atom                      | Ja       | `spatie/laravel-feed` via `Route::feeds()`, inkluderas i layout rad 18                                                                                |
+| Mobile viewport               | Ja       | `layouts/web.blade.php:12`                                                                                                                            |
+| `lang="sv"`                   | Ja       | `layouts/web.blade.php:7`                                                                                                                             |
+| `max-image-preview:large`     | Ja       | `layouts/web.blade.php:26`                                                                                                                            |
+| Noindex-strategi              | Delvis   | `$robotsNoindex`-flagga finns, men ingen duplicate-hantering för datum-URL:er                                                                         |
+| Dubbel `<meta name="robots">` | Ja (bug) | Layout skriver två separata taggar när noindex sätts (rad 26 + 71)                                                                                    |
+| Core Web Vitals (LCP/INP/CLS) | Ej mätt  | Gör via PageSpeed Insights mot `brottsplatskartan.se` efter Hetzner-cutover                                                                           |
 
 ### On-page
 
-| Punkt | Status | Fil / anmärkning |
-|---|---|---|
-| Breadcrumbs (visuellt) | Ja | `parts/breadcrumb.blade.php` + `$breadcrumbs`-objekt |
-| Breadcrumb Schema.org | Nej | Saknas — quick win |
-| Alt-text på kartbilder | Ja | `parts/crimeevent.blade.php:57,61,66` + `crimeevent_v2` + `events-box` använder `$crimeEvent->getMapAltText()` |
-| Alt-text på thumbnails | Delvis | `crimeevent-small.blade.php:13,25` och `crimeevent-helicopter.blade.php:27`, `crimeevent-previousPartners.blade.php:17` — verifiera att alla har meningsfull alt |
-| Alt-text på `page.blade.php` illustrationer | Delvis | `page.blade.php:155, 161` saknar synlig alt — bara `loading`/`width`/`height` |
-| Intern länkning | Ja | `eventsNearby`, `lan-and-cities`, `related-links`, `widget-blog-entries`, `latestEvents`, `mostViewed` |
-| Mobilt layout | Antas ok | Ej verifierat i denna audit — kör Lighthouse mobile |
+| Punkt                                       | Status   | Fil / anmärkning                                                                                                                                                 |
+| ------------------------------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Breadcrumbs (visuellt)                      | Ja       | `parts/breadcrumb.blade.php` + `$breadcrumbs`-objekt                                                                                                             |
+| Breadcrumb Schema.org                       | Nej      | Saknas — quick win                                                                                                                                               |
+| Alt-text på kartbilder                      | Ja       | `parts/crimeevent.blade.php:57,61,66` + `crimeevent_v2` + `events-box` använder `$crimeEvent->getMapAltText()`                                                   |
+| Alt-text på thumbnails                      | Delvis   | `crimeevent-small.blade.php:13,25` och `crimeevent-helicopter.blade.php:27`, `crimeevent-previousPartners.blade.php:17` — verifiera att alla har meningsfull alt |
+| Alt-text på `page.blade.php` illustrationer | Delvis   | `page.blade.php:155, 161` saknar synlig alt — bara `loading`/`width`/`height`                                                                                    |
+| Intern länkning                             | Ja       | `eventsNearby`, `lan-and-cities`, `related-links`, `widget-blog-entries`, `latestEvents`, `mostViewed`                                                           |
+| Mobilt layout                               | Antas ok | Ej verifierat i denna audit — kör Lighthouse mobile                                                                                                              |
 
 ### Innehåll / analytics
 
-| Punkt | Status |
-|---|---|
-| Titel-kvalitet (se todo #10) | Delvis — "sammanfattning-natt-…-presstalesperson"-mönster urvattnar |
-| Evergreen-content | Nej — allt är datumbaserat |
-| /statistik-sida (#6) | Planerat, ej byggt |
-| Google Search Console | Kopplat men ej granskat i denna audit |
-| GA4 | Ja, `G-L1WVBJ39GH` i `layouts/web.blade.php:106` |
-| GA4 MCP för datadriven prioritering | Planerat (#8) |
+| Punkt                               | Status                                                              |
+| ----------------------------------- | ------------------------------------------------------------------- |
+| Titel-kvalitet (se todo #10)        | Delvis — "sammanfattning-natt-…-presstalesperson"-mönster urvattnar |
+| Evergreen-content                   | Nej — allt är datumbaserat                                          |
+| /statistik-sida (#6)                | Planerat, ej byggt                                                  |
+| Google Search Console               | Kopplat men ej granskat i denna audit                               |
+| GA4                                 | Ja, `G-L1WVBJ39GH` i `layouts/web.blade.php:106`                    |
+| GA4 MCP för datadriven prioritering | Planerat (#8)                                                       |
 
 ---
 
@@ -184,58 +201,54 @@ förstärkas:
 
 ```json
 {
-  "@context": "https://schema.org",
-  "@type": "NewsArticle",
-  "mainEntityOfPage": { "@type": "WebPage", "@id": "<permalink>" },
-  "headline": "<titel max 110 chars>",
-  "image": [
-    "<1x1 640x640>",
-    "<4x3 800x600>",
-    "<16x9 1200x675>"
-  ],
-  "datePublished": "<ISO8601>",
-  "dateModified": "<ISO8601 senaste uppdatering>",
-  "author": {
-    "@type": "Organization",
-    "name": "Brottsplatskartan",
-    "url": "https://brottsplatskartan.se/"
-  },
-  "publisher": {
-    "@type": "Organization",
-    "name": "Brottsplatskartan",
-    "url": "https://brottsplatskartan.se/",
-    "logo": {
-      "@type": "ImageObject",
-      "url": "https://brottsplatskartan.se/img/brottsplatskartan-logotyp.png",
-      "width": 600,
-      "height": 60
-    }
-  },
-  "description": "<160 chars plaintext>",
-  "articleSection": "<brottstyp>",
-  "keywords": ["<typ>", "<plats>", "<län>"],
-  "isAccessibleForFree": true,
-  "inLanguage": "sv-SE",
-  "contentLocation": {
-    "@type": "Place",
-    "name": "<ort>, <län>",
-    "address": {
-      "@type": "PostalAddress",
-      "addressLocality": "<ort>",
-      "addressRegion": "<län>",
-      "addressCountry": "SE"
+    "@context": "https://schema.org",
+    "@type": "NewsArticle",
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "<permalink>" },
+    "headline": "<titel max 110 chars>",
+    "image": ["<1x1 640x640>", "<4x3 800x600>", "<16x9 1200x675>"],
+    "datePublished": "<ISO8601>",
+    "dateModified": "<ISO8601 senaste uppdatering>",
+    "author": {
+        "@type": "Organization",
+        "name": "Brottsplatskartan",
+        "url": "https://brottsplatskartan.se/"
     },
-    "geo": {
-      "@type": "GeoCoordinates",
-      "latitude": "<lat>",
-      "longitude": "<lng>"
+    "publisher": {
+        "@type": "Organization",
+        "name": "Brottsplatskartan",
+        "url": "https://brottsplatskartan.se/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://brottsplatskartan.se/img/brottsplatskartan-logotyp.png",
+            "width": 600,
+            "height": 60
+        }
+    },
+    "description": "<160 chars plaintext>",
+    "articleSection": "<brottstyp>",
+    "keywords": ["<typ>", "<plats>", "<län>"],
+    "isAccessibleForFree": true,
+    "inLanguage": "sv-SE",
+    "contentLocation": {
+        "@type": "Place",
+        "name": "<ort>, <län>",
+        "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "<ort>",
+            "addressRegion": "<län>",
+            "addressCountry": "SE"
+        },
+        "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": "<lat>",
+            "longitude": "<lng>"
+        }
+    },
+    "about": {
+        "@type": "Thing",
+        "name": "<brottstyp>",
+        "url": "https://brottsplatskartan.se/typ/<slug>"
     }
-  },
-  "about": {
-    "@type": "Thing",
-    "name": "<brottstyp>",
-    "url": "https://brottsplatskartan.se/typ/<slug>"
-  }
 }
 ```
 
@@ -243,11 +256,11 @@ förstärkas:
 
 - `https://schema.org` istället för `http://` (mindre issue men
   modernare).
-- Flera bildformat — Google vill ha 1x1, 4x3 *och* 16x9.
+- Flera bildformat — Google vill ha 1x1, 4x3 _och_ 16x9.
 - `articleSection`, `inLanguage`, `isAccessibleForFree`, `keywords`.
 - `contentLocation` som `Place` med `PostalAddress` (bättre än
   nuvarande `GeoCircle` för SEO — `GeoCircle` används främst för
-  *service areas*).
+  _service areas_).
 - `about` pekar på brottstyps-sidan → intern länkning semantiskt.
 - `dateModified` från faktisk updated_at, inte = published.
 

@@ -5,6 +5,16 @@ Undersökning av best practice 2026 för att göra sajten LLM-vänlig
 
 Research gjord 2026-04-21.
 
+## Status
+
+**Quick wins KLAR 2026-04-21** (commit `83b3b19`):
+
+- Utökad `public/robots.txt` (CCBot, Meta-ExternalAgent, Applebot-Extended, Bytespider m.fl. blockade; OAI-SearchBot, PerplexityBot, ChatGPT-User, Claude-SearchBot, Claude-User explicit tillåtna)
+- Statisk `public/llms.txt` med sajtbeskrivning + primära sektioner
+- `<link rel="alternate" type="text/markdown">` i layout pekar på `url.md` per sida (varianten är inte implementerad än — bara länken)
+
+Parkerat: faktisk markdown-rendering per URL. Avvaktar GA4-data (todo #8) om retrieval-trafik motiverar 2-4 dagars arbete.
+
 ---
 
 ## Sammanfattning och rekommendation

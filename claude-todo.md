@@ -22,8 +22,8 @@ Senast uppdaterad: 2026-04-21 (efter djupdykning per todo via sub-agenter).
 | 8   | Google Analytics MCP + ev. Search Console MCP       | Redo för setup                                   | [claude-todos/08-ga-mcp.md](claude-todos/08-ga-mcp.md)                                   |
 | 9   | ~~Extern DB-backup~~                                | Avfärdad — Hetzner-snapshots räcker (2026-04-21) | —                                                                                        |
 | 10  | AI-omskriva vaga titlar                             | Plan klar, kostnad ~$27 för full backfill        | [claude-todos/10-ai-omskriva-titlar.md](claude-todos/10-ai-omskriva-titlar.md)           |
-| 11  | SEO-audit enligt best practice 2026                 | Fas 1 (sitemap, canonical, schema) ~1 dag        | [claude-todos/11-seo-audit-2026.md](claude-todos/11-seo-audit-2026.md)                   |
-| 12  | LLM/AI-optimering (llms.txt, markdown/URL, AI-botar)| Quick wins ~2h; markdown parkeras                | [claude-todos/12-llm-optimering.md](claude-todos/12-llm-optimering.md)                   |
+| 11  | SEO-audit enligt best practice 2026                 | **Fas 1 klar 2026-04-21** (sitemap, JSON-LD, canonical) | [claude-todos/11-seo-audit-2026.md](claude-todos/11-seo-audit-2026.md)            |
+| 12  | LLM/AI-optimering (llms.txt, markdown/URL, AI-botar)| **Quick wins klar 2026-04-21** (robots.txt, llms.txt, alternate-markdown); markdown-rendering parkerad | [claude-todos/12-llm-optimering.md](claude-todos/12-llm-optimering.md) |
 
 ---
 
