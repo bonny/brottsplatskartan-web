@@ -98,15 +98,14 @@ done
 
 export MYSQL_PWD="$DB_ROOT_PASSWORD"
 
-# Filtrera EXCLUDED till bara de tabeller som faktiskt finns i
-# prod-DB:n. Alla listade finns inte alltid (t.ex. sessions när
-# SESSION_DRIVER=redis). mariadb-dump kraschar annars i pass 2.
+# Hämta alla tabeller som finns i prod-DB och filtrera EXCLUDED till
+# bara de som faktiskt existerar. Annars kraschar pass 2 på t.ex.
+# "sessions" när SESSION_DRIVER=redis (ingen sessions-tabell finns).
+ALL_TABLES=$(docker compose exec -T -e MYSQL_PWD mariadb mariadb -N -B -u root \
+    -e "SHOW TABLES FROM \`$DB_DATABASE\`" 2>/dev/null < /dev/null)
 EXISTING_EXCLUDED=""
 for t in $EXCLUDED; do
-    exists=$(docker compose exec -T -e MYSQL_PWD mariadb mariadb -N -B -u root \
-        -e "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='$DB_DATABASE' AND table_name='$t'" \
-        2>/dev/null | tr -d '[:space:]')
-    if [ "$exists" = "1" ]; then
+    if echo "$ALL_TABLES" | grep -qxF "$t"; then
         EXISTING_EXCLUDED="$EXISTING_EXCLUDED $t"
     fi
 done
