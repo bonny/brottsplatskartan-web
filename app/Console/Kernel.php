@@ -47,6 +47,15 @@ class Kernel extends ConsoleKernel
         $schedule->command('summary:generate stockholm')
             ->everyThirtyMinutes()
             ->withoutOverlapping();
+
+        // Pre-warma response cache på populära sidor var 15:e minut så
+        // användare aldrig träffar kall cache. Låg kostnad: ~25 HTTP-
+        // requests/15 min mot oss själva. Viktigt tills responsecache
+        // 8.x (SWR) är i produktion.
+        $schedule->command('cache:warm')
+            ->everyFifteenMinutes()
+            ->withoutOverlapping()
+            ->name('warm-cache');
     }
 
     /**
