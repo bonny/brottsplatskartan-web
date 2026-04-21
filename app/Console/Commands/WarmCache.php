@@ -34,6 +34,7 @@ class WarmCache extends Command
             '/stockholm',
             '/vma',
             '/handelser',
+            '/lan',
         ];
 
         // Lägg till alla län om inte --only-hot
