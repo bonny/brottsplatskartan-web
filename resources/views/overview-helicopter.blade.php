@@ -24,11 +24,35 @@
         <p>
             Hittar du inte rätt händelse här så testa
             <a href="https://twitter.com/search?q=helikopter">sök på Twitter efter helikopter</a>,
-            eller se om aktuellt helikopter finns med på som t.ex.
-            <a href="https://www.flightradar24.com/">flightradar24.com</a>
-            eller
-            <a href="https://planefinder.net/">planefinder.net</a>.
+            eller se aktuella luftfarkoster på kartan nedan (data från
+            <a href="https://www.adsbexchange.com/">ADS-B Exchange</a>).
         </p>
+
+        <div class="widget" style="margin-top: 2em;">
+            <h2 class="widget__title">Luftfarkoster över Sverige just nu</h2>
+            <p>
+                Visar alla luftfarkoster (inklusive helikoptrar) som rapporterar
+                position via ADS-B. Klicka på en ikon för att se typ, höjd och
+                flygbana. Helikoptrar syns oftast som rundade ikoner.
+            </p>
+            <div style="aspect-ratio: 16/10; width: 100%; margin-top: 1em;">
+                <iframe
+                    src="https://globe.adsbexchange.com/?lat=62.5&lon=16.5&zoom=5"
+                    style="border: 0; width: 100%; height: 100%;"
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"
+                    title="Luftfarkoster över Sverige, live från ADS-B Exchange"
+                    allow="geolocation"
+                ></iframe>
+            </div>
+            <p class="text-sm u-color-gray-1 u-margin-top-half">
+                Kartan visar inte alla militära helikoptrar då de kan ha stängt
+                av sin ADS-B-transponder.
+                <a href="https://globe.adsbexchange.com/?lat=62.5&lon=16.5&zoom=5" target="_blank" rel="noopener">
+                    Öppna kartan i nytt fönster &rarr;
+                </a>
+            </p>
+        </div>
 
         <p>
             Den svenska polisen har nio helikoptrar och de finns
