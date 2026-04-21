@@ -34,11 +34,7 @@
         @include('parts.atoms.event-date')
 
         <div class="{{ $isLarge ? '' : 'text-sm' }}">
-            @if ($isLarge)
-                {!! $event->getParsedContentTeaser() !!}
-            @else
-                {!! $event->getParsedContentTeaser(80) !!}
-            @endif
+            {!! $event->getParsedContentTeaser($isLarge ? 160 : 80) !!}
         </div>
     </a>
 </article>

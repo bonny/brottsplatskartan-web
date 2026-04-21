@@ -57,7 +57,12 @@
         <a href="{{ $event->getPermalink() }}">
     @endif
     <span class="Event__type">{{ $event->parsed_title }}</span>
-    <h1 class="Event__teaser">{{ $event->getHeadline() }}</h1>
+    {{-- h1 bara i single-vy — overview renderas i loop så h2 hindrar multiple h1. --}}
+    @if ($overview)
+        <h2 class="Event__teaser">{{ $event->getHeadline() }}</h2>
+    @else
+        <h1 class="Event__teaser">{{ $event->getHeadline() }}</h1>
+    @endif
     @if ($overview)
         </a>
     @endif
@@ -132,7 +137,7 @@
                         </a>
                     </h3>
                     <p class="Event__dictionaryWordDescription">
-                        – {!! str_limit(strip_tags(\Illuminate\Support\Str::markdown($dictionaryWord->description ?? '')), 100, '…') !!}
+                        – {!! \Illuminate\Support\Str::limit(strip_tags(\Illuminate\Support\Str::markdown($dictionaryWord->description ?? '')), 100, '…') !!}
                     </p>
                 </div>
             @endforeach
