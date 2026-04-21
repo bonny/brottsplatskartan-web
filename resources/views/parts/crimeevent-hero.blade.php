@@ -1,12 +1,13 @@
 @php
     $_size = $size ?? 'large';
     $_isLarge = $_size === 'large';
+    $_isFirst = isset($loop) && $loop->first;
 @endphp
-<article class="@if ($_isLarge && !$loop->first) u-margin-top-double @endif">
+<article class="@if ($_isLarge && !$_isFirst) u-margin-top-double @endif">
     <a href="{{ $event->getPermalink() }}"
         class="u-color-black {{ $_isLarge ? 'block hover:no-underline group' : '' }}">
 
-        @include('parts.atoms.event-map-far', ['eager' => $_isLarge && $loop->first])
+        @include('parts.atoms.event-map-far', ['eager' => $_isLarge && $_isFirst])
 
         <p class="u-margin-0 u-margin-bottom-third">
             <span class="Event__parsedTitle Event__type">{{ $event->parsed_title }}</span>

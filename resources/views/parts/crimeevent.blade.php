@@ -2,17 +2,22 @@
 
 Template part for single crime event, part of loop or single
 
-if $overview is set then adds link etc
-if $single is set then larger image
+if $overview is true then adds link etc
+if $single is true then larger image
 
 --}}
 
-@if (isset($overview))
+@php
+    $_overview = $overview ?? false;
+    $_single = $single ?? false;
+@endphp
+
+@if ($_overview)
     <li
         class="
             Event
-            @if (isset($overview)) Event--overview @endif
-            @if (isset($single)) Event--single @endif
+            @if ($_overview) Event--overview @endif
+            @if ($_single) Event--single @endif
             @if (isset($event->location_geometry_type)) Event--distance_{{ $event->getViewPortSizeAsString() }} @endif
         ">
         <article>
@@ -20,8 +25,8 @@ if $single is set then larger image
             <article
                 class="
             Event
-            @if (isset($overview)) Event--overview @endif
-            @if (isset($single)) Event--single @endif
+            @if ($_overview) Event--overview @endif
+            @if ($_single) Event--single @endif
             @if (isset($event->location_geometry_type)) Event--distance_{{ $event->getViewPortSizeAsString() }} @endif
         ">
 @endif
@@ -49,11 +54,11 @@ if $single is set then larger image
 
 @if ($event->geocoded)
     <p class="Event__map">
-        @if (isset($overview))
+        @if ($_overview)
             <a href="{{ $event->getPermalink() }}">
         @endif
 
-        @if (isset($overview))
+        @if ($_overview)
             <img loading="lazy" alt="{{ $event->getMapAltText() }}" class="Event__mapImage"
                 src="{{ $event->getStaticImageSrc(640, 320) }}" width="640" height="320"></img>
         @else
@@ -70,19 +75,19 @@ if $single is set then larger image
             </span>
         @endif
 
-        @if (isset($overview))
+        @if ($_overview)
             </a>
         @endif
     </p>
 @endif
 
 <div class="Event__title">
-    @if (isset($overview))
+    @if ($_overview)
         <a href="{{ $event->getPermalink() }}">
     @endif
     <span class="Event__type">{{ $event->parsed_title }}</span>
     <h1 class="Event__teaser">{{ $event->getHeadline() }}</h1>
-    @if (isset($overview))
+    @if ($_overview)
         </a>
     @endif
 </div>
@@ -103,27 +108,27 @@ if $single is set then larger image
         </time></span>
 </p>
 
-@if (isset($overview))
+@if ($_overview)
     <a class="Event__contentLink" href="{{ $event->getPermalink() }}">
 @endif
 
 <div class="Event__content">
-    @if (isset($overview))
+    @if ($_overview)
         {!! $event->getParsedContentTeaser() !!}
     @else
         {!! $event->getParsedContent() !!}
     @endif
 </div>
 
-@if (isset($overview))
+@if ($_overview)
     </a>
 @endif
 
-@if (isset($single) && $event->shouldShowSourceLink())
+@if ($_single && $event->shouldShowSourceLink())
     <p class="Event__source">Källa: {{ $event->permalink }}</p>
 @endif
 
-@if (isset($overview))
+@if ($_overview)
 @else
     @include('parts.crimeevent.newsarticles', ['newsarticles' => $newsarticles ?? collect()])
 
@@ -167,7 +172,7 @@ if $single is set then larger image
     </aside>
 @endif
 
-@if (isset($overview))
+@if ($_overview)
     </article>
     </li>
 @else

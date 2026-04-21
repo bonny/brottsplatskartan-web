@@ -1,5 +1,7 @@
 @php
     $_showMap = $showMap ?? true;
+    $_detailed = $detailed ?? false;
+    $_mapDistance = $mapDistance ?? null;
 @endphp
 <li
     class="
@@ -11,7 +13,7 @@
 
     @if (!$_showMap || !$event->hasMapImage())
         {{-- Ingen karta. --}}
-    @elseif (isset($mapDistance) && $mapDistance === 'near')
+    @elseif ($_mapDistance === 'near')
         <a class="ListEvent__imageLink " href="{{ $event->getPermalink() }}">
             <img
                 loading="lazy"
@@ -39,7 +41,7 @@
 
     <div class="ListEvent__title">
         <a class="ListEvent__titleLink " href="{{ $event->getPermalink() }}">
-            @if (isset($detailed) && $detailed)
+            @if ($_detailed)
                 <span class="Event__parsedTitle Event__type">{{ $event->parsed_title }}</span>
             @endif
             <span class="ListEvent__teaser widget__listItem__title">{!! $event->getHeadline() !!}</span>

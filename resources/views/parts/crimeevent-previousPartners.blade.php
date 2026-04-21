@@ -1,14 +1,15 @@
 @php
-$eventLink = $event->getPermalink();
-$eventLink = $eventLink . "?utm_source=previousPartners";
+    $_overview = $overview ?? false;
+    $_single = $single ?? false;
+    $eventLink = $event->getPermalink() . "?utm_source=previousPartners";
 @endphp
 
 <article
     class="
         Event
-        @if(isset($overview)) Event--overview @endif
-        @if(isset($single)) Event--single @endif
-        @if(isset($event->location_geometry_type)) Event--distance_{{ $event->getViewPortSizeAsString() }} @endif
+        @if ($_overview) Event--overview @endif
+        @if ($_single) Event--single @endif
+        @if (isset($event->location_geometry_type)) Event--distance_{{ $event->getViewPortSizeAsString() }} @endif
     ">
 
     @if ($event->geocoded)
@@ -26,12 +27,12 @@ $eventLink = $eventLink . "?utm_source=previousPartners";
     @endif
 
     <h2 class="Event__title">
-        @if ( isset($overview) )
+        @if ( $_overview )
         <a href="{{ $eventLink }}">
         @endif
             {{ $event->parsed_title }}
             <span class="Event__teaser"> – {{ $event->getDescriptionAsPlainText() }}</span>
-        @if ( isset($overview) )
+        @if ( $_overview )
         </a>
         @endif
     </h2>
@@ -56,23 +57,23 @@ $eventLink = $eventLink . "?utm_source=previousPartners";
         </span>
     </p>
 
-    @if ( isset($overview) )
+    @if ( $_overview )
     <a class="Event__contentLink" href="{{ $eventLink }}">
     @endif
 
     <div class="Event__content">
-        @if ( isset($overview) )
+        @if ( $_overview )
             {!! $event->getParsedContentTeaser() !!}
         @else
             {!! $event->getParsedContent() !!}
         @endif
     </div>
 
-    @if ( isset($overview) )
+    @if ( $_overview )
     </a>
     @endif
 
-    @if(isset($single) && $event->shouldShowSourceLink())
+    @if($_single && $event->shouldShowSourceLink())
         <p class="Event__source">Källa: <a rel="nofollow" href="{{ $event->permalink }}">{{ $event->permalink }}</a></p>
     @endif
 
