@@ -19,11 +19,18 @@ _Skapad: 2026-04-21. Ersätter och inkluderar tidigare todo #2 (legacy SEO-revie
 - Place/City/AdministrativeArea JSON-LD på `single-plats`, `city`, `single-lan`
   via delad partial `parts/place-jsonld.blade.php`.
 
+**H1-audit KLAR 2026-04-21** (commit `793287d`):
+
+- Startsidan hade 9 `<h1>` från hero-partials → ner till 0 (acceptabelt,
+  startsidan har inget eget h1-mål).
+- Nyckelsidor (handelser, lan, plats, city, single-event) har nu exakt 1 h1.
+- `previousPartners.blade.php` fixad samtidigt.
+
 Kvar i Fas 2 (kräver beslut / GA4-data / post-cutover):
 - Beslut: `noindex`+canonical eller borttagning av `/plats/*/handelser/{date}`
   och `/lan/*/handelser/{date}` (synkas med todo #1, behöver GA4)
-- Noindex-strategi för gamla/thin events (`crimeevents:mark-thin`)
-- H1-audit via script
+- Noindex-strategi för gamla/thin events (`crimeevents:mark-thin`) —
+  parkerat tills GA4 MCP (#8) ger trafikdata
 - Core Web Vitals efter Hetzner-cutover
 
 Fas 3 kvarstår enligt plan nedan.
