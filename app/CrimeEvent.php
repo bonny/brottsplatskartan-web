@@ -1175,27 +1175,34 @@ class CrimeEvent extends Model implements Feedable {
     public function getLdJson() {
         $permalink = $this->getPermalink(true);
         $title = $this->getSingleEventTitleShort();
-        $image = $this->getStaticImageSrc(696, 420);
         $datePublished = $this->getPubDateISO8601();
-        $dateModified = $datePublished;
+        $dateModified = $this->updated_at
+            ? Carbon::parse($this->updated_at)->toIso8601String()
+            : $datePublished;
         $description = $this->getDescriptionAsPlainText();
-        $locationLat = $this->location_lat;
-        $locationLng = $this->location_lng;
 
-        // $title = json_encode($title . '"hej<h1></h1>' . '"hopp</>');
-        // $description = json_encode($description);
+        // Google rekommenderar flera bildformat för NewsArticle
+        $images = [
+            $this->getStaticImageSrc(1200, 675), // 16:9
+            $this->getStaticImageSrc(800, 600),  // 4:3
+            $this->getStaticImageSrc(640, 640),  // 1:1
+        ];
+
+        $keywords = array_filter([
+            $this->parsed_title,
+            $this->parsed_title_location,
+            $this->administrative_area_level_1,
+        ]);
 
         $jsonData = [
-            "@context" => "http://schema.org",
+            "@context" => "https://schema.org",
             "@type" => "NewsArticle",
             "mainEntityOfPage" => [
                 "@type" => "WebPage",
-                "@id" => "{$permalink}"
+                "@id" => $permalink,
             ],
             "headline" => $title,
-            "image" => [
-                "$image"
-            ],
+            "image" => $images,
             "datePublished" => $datePublished,
             "dateModified" => $dateModified,
             "author" => [
@@ -1209,22 +1216,53 @@ class CrimeEvent extends Model implements Feedable {
                 "url" => "https://brottsplatskartan.se/",
                 "logo" => [
                     "@type" => "ImageObject",
-                    "url" => "https://brottsplatskartan.se/img/brottsplatskartan-logotyp.png"
-                ]
+                    "url" => "https://brottsplatskartan.se/img/brottsplatskartan-logotyp.png",
+                    "width" => 600,
+                    "height" => 60,
+                ],
             ],
             "description" => $description,
-            "geo" => [
-                "@type" => "GeoCircle",
-                "geoMidpoint" => [
-                    "@type" => "GeoCoordinates",
-                    "latitude" => $locationLat,
-                    "longitude" => $locationLng
-                ],
-                "geoRadius" => '500'
-            ]
+            "inLanguage" => "sv-SE",
+            "isAccessibleForFree" => true,
+            "articleSection" => $this->parsed_title,
+            "keywords" => array_values($keywords),
         ];
 
-        $str = '<script type="application/ld+json">' . json_encode($jsonData, JSON_PRETTY_PRINT) . '</script>';
+        if ($this->parsed_title) {
+            $jsonData["about"] = [
+                "@type" => "Thing",
+                "name" => $this->parsed_title,
+                "url" => route("typeSingle", ["typ" => $this->parsed_title]),
+            ];
+        }
+
+        if ($this->location_lat && $this->location_lng) {
+            $jsonData["contentLocation"] = array_filter([
+                "@type" => "Place",
+                "name" => trim(($this->parsed_title_location ?? '') .
+                    ($this->administrative_area_level_1
+                        ? ', ' . $this->administrative_area_level_1
+                        : '')) ?: null,
+                "address" => array_filter([
+                    "@type" => "PostalAddress",
+                    "addressCountry" => "SE",
+                    "addressLocality" => $this->parsed_title_location ?: null,
+                    "addressRegion" => $this->administrative_area_level_1 ?: null,
+                ]),
+                "geo" => [
+                    "@type" => "GeoCoordinates",
+                    "latitude" => (float) $this->location_lat,
+                    "longitude" => (float) $this->location_lng,
+                ],
+            ]);
+        }
+
+        $str = '<script type="application/ld+json">' .
+            json_encode(
+                $jsonData,
+                JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
+            ) .
+            '</script>';
 
         return $str;
     }
