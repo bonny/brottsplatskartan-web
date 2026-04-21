@@ -118,12 +118,20 @@ class GenerateSitemap extends Command
                     if (! $permalink) {
                         continue;
                     }
-                    $sitemap->add(
-                        Url::create($permalink)
-                            ->setLastModificationDate($event->updated_at ?? $event->created_at)
-                            ->setChangeFrequency(Url::CHANGE_FREQUENCY_MONTHLY)
-                            ->setPriority(0.5)
-                    );
+                    $url = Url::create($permalink)
+                        ->setLastModificationDate($event->updated_at ?? $event->created_at)
+                        ->setChangeFrequency(Url::CHANGE_FREQUENCY_MONTHLY)
+                        ->setPriority(0.5);
+
+                    if ($event->geocoded) {
+                        $url->addImage(
+                            url: $event->getStaticImageSrc(800, 600),
+                            caption: $event->getMapAltText(),
+                            title: $event->getSingleEventTitleShort(),
+                        );
+                    }
+
+                    $sitemap->add($url);
                     $count++;
                 }
             });

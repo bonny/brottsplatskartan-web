@@ -61,12 +61,20 @@ class GenerateHistoricalSitemaps extends Command
                         if (!$permalink) {
                             continue;
                         }
-                        $sitemap->add(
-                            Url::create($permalink)
-                                ->setLastModificationDate($event->updated_at ?? $event->created_at)
-                                ->setChangeFrequency(Url::CHANGE_FREQUENCY_YEARLY)
-                                ->setPriority(0.4)
-                        );
+                        $url = Url::create($permalink)
+                            ->setLastModificationDate($event->updated_at ?? $event->created_at)
+                            ->setChangeFrequency(Url::CHANGE_FREQUENCY_YEARLY)
+                            ->setPriority(0.4);
+
+                        if ($event->geocoded) {
+                            $url->addImage(
+                                url: $event->getStaticImageSrc(800, 600),
+                                caption: $event->getMapAltText(),
+                                title: $event->getSingleEventTitleShort(),
+                            );
+                        }
+
+                        $sitemap->add($url);
                         $count++;
                     }
                 });
