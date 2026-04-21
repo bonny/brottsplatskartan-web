@@ -9,9 +9,9 @@
             <span class="Event__parsedTitle Event__type">{{ $event->parsed_title }}</span>
         </p>
 
-        <h1 class="text-2xl font-bold break-hyphens u-margin-0 tracking-tight u-color-link group-hover:underline">
+        <h2 class="text-2xl font-bold break-hyphens u-margin-0 tracking-tight u-color-link group-hover:underline">
             {{ $event->getHeadline() }}
-        </h1>
+        </h2>
 
         @include('parts.atoms.event-date')
 

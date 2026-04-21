@@ -25,7 +25,7 @@ $eventLink = $eventLink . "?utm_source=previousPartners";
         </p>
     @endif
 
-    <h1 class="Event__title">
+    <h2 class="Event__title">
         @if ( isset($overview) )
         <a href="{{ $eventLink }}">
         @endif
@@ -34,7 +34,7 @@ $eventLink = $eventLink . "?utm_source=previousPartners";
         @if ( isset($overview) )
         </a>
         @endif
-    </h1>
+    </h2>
     {{--
     Om bara vill visa när skillnad är mer än nn dagar/timmar osv.
     http://stackoverflow.com/questions/23336261/laravel-carbon-display-date-difference-only-in-days
