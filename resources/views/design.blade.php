@@ -123,22 +123,22 @@ Template för ordlista/dictionary
     </section>
 
 
-    {{-- 3. crimeevent-hero --}}
+    {{-- 3. crimeevent-hero (size=large) --}}
     <section class="u-margin-top-double u-padding u-border u-bg-gray-light">
-        <h3><code>parts.crimeevent-hero</code></h3>
+        <h3><code>parts.crimeevent-hero</code> (size=large)</h3>
         <p class="text-sm u-color-gray-1">Används på: Startsidan (topp 3 mest lästa). Stor hero med Sverigekartan och teaser-text.</p>
         <div class="u-margin-top u-bg-white u-padding">
             @php $loop = (object)['first' => true]; @endphp
-            @include('parts.crimeevent-hero')
+            @include('parts.crimeevent-hero', ['size' => 'large'])
         </div>
     </section>
 
-    {{-- 4. crimeevent-hero-second --}}
+    {{-- 4. crimeevent-hero (size=small) --}}
     <section class="u-margin-top-double u-padding u-border u-bg-gray-light">
-        <h3><code>parts.crimeevent-hero-second</code></h3>
+        <h3><code>parts.crimeevent-hero</code> (size=small)</h3>
         <p class="text-sm u-color-gray-1">Används på: Startsidan (rad 2, 6 st i 2x3 rutnät). Medium hero med kortare text.</p>
         <div class="u-margin-top u-bg-white u-padding" style="max-width: 47%;">
-            @include('parts.crimeevent-hero-second')
+            @include('parts.crimeevent-hero', ['size' => 'small'])
         </div>
     </section>
 
@@ -164,13 +164,13 @@ Template för ordlista/dictionary
     </section>
 
 
-    {{-- 7. crimeevent-mapless --}}
+    {{-- 7. crimeevent-small (showMap=false) --}}
     <section class="u-margin-top-double u-padding u-border u-bg-gray-light">
-        <h3><code>parts.crimeevent-mapless</code></h3>
-        <p class="text-sm u-color-gray-1">Används på: Kompakta listor där karta inte behövs. Minimal textversion.</p>
+        <h3><code>parts.crimeevent-small</code> (showMap=false)</h3>
+        <p class="text-sm u-color-gray-1">Används på: Kompakta listor där karta inte behövs (t.ex. 404-sidan). Minimal textversion.</p>
         <div class="u-margin-top u-bg-white u-padding">
             <ul class="widget__listItems">
-                @include('parts.crimeevent-mapless')
+                @include('parts.crimeevent-small', ['showMap' => false])
             </ul>
         </div>
     </section>

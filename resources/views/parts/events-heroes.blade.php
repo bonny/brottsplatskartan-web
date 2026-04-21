@@ -32,16 +32,17 @@ $normalEventsToShow = $eventsMostViewedRecentlyCrimeEvents->slice($numHeroEvents
 @endphp
 
 @foreach ($heroEventsToShow as $event)
-    @include('parts.crimeevent-hero', ['event' => $event])
+    @include('parts.crimeevent-hero', ['event' => $event, 'size' => 'large'])
 @endforeach
 
 @foreach ($smallHeroEventsToShow->chunk(2) as $chunk)
     <div class="flex justify-between u-margin-top-double">
         @foreach ($chunk as $event)
             <div class="w-47">
-                @include('parts.crimeevent-hero-second', [
-                    'event' => $event
-                ])    
+                @include('parts.crimeevent-hero', [
+                    'event' => $event,
+                    'size' => 'small',
+                ])
             </div>
         @endforeach
     </div>

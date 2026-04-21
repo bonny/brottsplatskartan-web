@@ -1,3 +1,6 @@
+@php
+    $_showMap = $showMap ?? true;
+@endphp
 <li
     class="
         ListEvent
@@ -6,8 +9,8 @@
     "
 >
 
-    @if (!$event->hasMapImage())
-        {{-- Ingen karta finns. --}}
+    @if (!$_showMap || !$event->hasMapImage())
+        {{-- Ingen karta. --}}
     @elseif (isset($mapDistance) && $mapDistance === 'near')
         <a class="ListEvent__imageLink " href="{{ $event->getPermalink() }}">
             <img

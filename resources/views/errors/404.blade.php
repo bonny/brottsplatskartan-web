@@ -23,7 +23,7 @@
 
         <ul class="widget__listItems">
             @foreach ($events as $event)
-                @include('parts.crimeevent-mapless')
+                @include('parts.crimeevent-small', ['showMap' => false])
             @endforeach
         </ul>
 
@@ -35,7 +35,7 @@
 
         <ul class="widget__listItems">
             @foreach ($most_read_events as $oneMostViewed)
-                @include('parts.crimeevent-mapless', ['event' => $oneMostViewed->crimeEvent,])
+                @include('parts.crimeevent-small', ['event' => $oneMostViewed->crimeEvent, 'showMap' => false])
             @endforeach
         </ul>
 
