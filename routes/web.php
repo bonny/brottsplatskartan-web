@@ -69,14 +69,16 @@ Route::match(['get', 'post'], '/', [StartController::class, 'start'])->name('sta
 
 Route::get('/statistik', [\App\Http\Controllers\StatisticsController::class, 'index'])->name('statistik');
 
-// Serverar sitemap.xml från storage/ (containern kan inte skriva till public/).
-// Regenereras var 30:e min av sitemap:generate-schemat.
+// Sitemap serveras från Redis (fylld av sitemap:generate-schemat var
+// 30:e min). Om cachen skulle vara tom genererar routen on-the-fly
+// som fallback.
 Route::get('/sitemap.xml', function () {
-    $path = storage_path('app/sitemap.xml');
-    if (!file_exists($path)) {
-        abort(404, 'Sitemap har inte genererats än.');
+    $xml = \Cache::get(\App\Console\Commands\GenerateSitemap::CACHE_KEY);
+    if (!$xml) {
+        \Illuminate\Support\Facades\Artisan::call('sitemap:generate');
+        $xml = \Cache::get(\App\Console\Commands\GenerateSitemap::CACHE_KEY);
     }
-    return response(file_get_contents($path), 200, [
+    return response($xml, 200, [
         'Content-Type' => 'application/xml; charset=UTF-8',
     ]);
 });

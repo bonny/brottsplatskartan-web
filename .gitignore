@@ -27,8 +27,5 @@ CLAUDE.local.md
 *.dump.gz
 bpk*.gz
 
-# Sitemap genereras per miljö av sitemap:generate till storage/app/
-/storage/app/sitemap.xml
-
 # Laravel Pail dev-logger
 /storage/pail/

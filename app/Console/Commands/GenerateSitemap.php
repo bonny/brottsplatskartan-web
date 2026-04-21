@@ -6,30 +6,32 @@ use App\CrimeEvent;
 use App\Helper;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Spatie\Sitemap\Sitemap;
 use Spatie\Sitemap\Tags\Url;
 
 /**
- * Genererar public/sitemap.xml nattligen.
+ * Bygger sitemap.xml och sparar i Redis under `sitemap.xml`.
+ * Routen `/sitemap.xml` läser från cachen och serverar direkt.
  *
- * Scope (april 2026): startsidan, län-översikt + alla 21 län,
- * plats-översikt, typ-översikt, blog/static-sidor + händelser de
- * senaste 90 dagarna. Äldre händelser (miljoner URL:er) utelämnas
- * medvetet — de är fortfarande länkade via interna navigering och
- * indexeras organiskt, men belastar inte sitemap:en.
+ * Tidigare skrevs filen till disk (public/ eller storage/app/) men
+ * containern har inte skrivrättigheter till public/ och storage-
+ * varianten krävde extra fil-I/O för varje request. Redis är redan
+ * igång och ger snabbare respons.
  */
 class GenerateSitemap extends Command
 {
+    public const CACHE_KEY = 'sitemap.xml';
+
     protected $signature = 'sitemap:generate {--events-days=90 : Antal dagar bakåt av events att inkludera}';
-    protected $description = 'Genererar public/sitemap.xml';
+    protected $description = 'Bygger sitemap.xml och cachar i Redis';
 
     public function handle(): int
     {
         $sitemap = Sitemap::create();
         $now = now();
 
-        // Top-level statiska sidor
         $static = [
             '/' => ['freq' => Url::CHANGE_FREQUENCY_HOURLY, 'priority' => 1.0],
             '/handelser' => ['freq' => Url::CHANGE_FREQUENCY_HOURLY, 'priority' => 0.9],
@@ -50,7 +52,6 @@ class GenerateSitemap extends Command
             );
         }
 
-        // Län — alla 21
         foreach (Helper::getAllLan() as $lanName) {
             $slug = Str::slug($lanName);
             $sitemap->add(
@@ -61,7 +62,6 @@ class GenerateSitemap extends Command
             );
         }
 
-        // Händelser senaste N dagar
         $daysBack = (int) $this->option('events-days');
         $since = Carbon::now()->subDays($daysBack);
 
@@ -84,15 +84,14 @@ class GenerateSitemap extends Command
                 }
             });
 
-        // Skriver till storage/ eftersom containern inte har skrivrätt
-        // till public/. Serveras via route /sitemap.xml.
-        $path = storage_path('app/sitemap.xml');
-        $sitemap->writeToFile($path);
+        $xml = $sitemap->render();
+        Cache::forever(self::CACHE_KEY, $xml);
 
-        $this->info("Sitemap skriven till {$path}");
-        $this->line("  Statiska sidor: " . count($static));
-        $this->line("  Län: " . count(Helper::getAllLan()));
+        $this->info('Sitemap cachad i Redis under nyckel "' . self::CACHE_KEY . '"');
+        $this->line('  Statiska sidor: ' . count($static));
+        $this->line('  Län: ' . count(Helper::getAllLan()));
         $this->line("  Händelser (senaste {$daysBack} dagar): {$eventsAdded}");
+        $this->line('  XML-storlek: ' . number_format(strlen($xml) / 1024, 1) . ' KB');
 
         return self::SUCCESS;
     }
