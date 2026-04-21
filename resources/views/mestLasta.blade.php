@@ -30,6 +30,15 @@ Sidmall för sidan med de mest lästa händelserna
     @if (isset($linkRelNext))
         <link rel="next" href="{{ $linkRelNext }}" />
     @endif
+    @include('parts.itemlist-jsonld', [
+        'itemListName' => 'Mest lästa polishändelser',
+        'itemListItems' => collect($mestLastaNyligen['events'] ?? [])
+            ->take(20)
+            ->map(fn ($v) => [
+                'name' => $v->crimeEvent->getHeadline(),
+                'url' => $v->crimeEvent->getPermalink(),
+            ])->all(),
+    ])
 @endsection
 
 @section('content')

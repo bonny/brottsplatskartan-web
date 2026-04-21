@@ -11,6 +11,16 @@ Template för ort-översikt
 @section('metaDescription', e("Se var brott sker på en mängd olika orter och platser i Sverige. Brottsplatskartan visar alla brott på en karta - direkt från Polisen."))
 @section('canonicalLink', '/plats')
 
+@section('metaContent')
+    @include('parts.itemlist-jsonld', [
+        'itemListName' => 'Platser och orter',
+        'itemListItems' => collect($orter)->map(fn ($o) => [
+            'name' => $o->parsed_title_location,
+            'url' => route('platsSingle', ['plats' => $o->parsed_title_location, 'date' => null]),
+        ])->all(),
+    ])
+@endsection
+
 @section('content')
 
     <div class="widget">

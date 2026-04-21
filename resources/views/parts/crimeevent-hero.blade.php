@@ -3,7 +3,7 @@
     ">
     <a href="{{ $event->getPermalink() }}" class="u-color-black block hover:no-underline group">
 
-        @include('parts.atoms.event-map-far')
+        @include('parts.atoms.event-map-far', ['eager' => $loop->first])
 
         <p class="u-margin-0 u-margin-bottom-third">
             <span class="Event__parsedTitle Event__type">{{ $event->parsed_title }}</span>

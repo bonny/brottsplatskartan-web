@@ -15,6 +15,16 @@ Template för län-översikt
 @section('metaImageWidth', 600)
 @section('metaImageHeight', 315)
 
+@section('metaContent')
+    @include('parts.itemlist-jsonld', [
+        'itemListName' => 'Län i Sverige',
+        'itemListItems' => collect($lan)->map(fn ($l) => [
+            'name' => $l->administrative_area_level_1,
+            'url' => route('lanSingle', ['lan' => $l->administrative_area_level_1]),
+        ])->all(),
+    ])
+@endsection
+
 @section('content')
 
     <div class="widget">

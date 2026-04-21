@@ -11,6 +11,16 @@ Template för typer-översikt
 @section('metaDescription', e('På Brottsplatskartan kan du se alla typer av brott som rapporterats till Polisen.'))
 @section('canonicalLink', '/typ')
 
+@section('metaContent')
+    @include('parts.itemlist-jsonld', [
+        'itemListName' => 'Brottstyper',
+        'itemListItems' => collect($types)->map(fn ($t) => [
+            'name' => $t->parsed_title,
+            'url' => route('typeSingle', ['typ' => $t->parsed_title]),
+        ])->all(),
+    ])
+@endsection
+
 @section('content')
 
     <div class="widget">

@@ -11,6 +11,19 @@ Layout template for web
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
     <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+
+    {{-- Preconnect till tredjepart som laddas tidigt (LCP/TBT) --}}
+    @php
+        $_tileHost = parse_url((string) config('services.tileserver.url'), PHP_URL_HOST);
+    @endphp
+    @if ($_tileHost)
+        <link rel="preconnect" href="//{{ $_tileHost }}" crossorigin>
+        <link rel="dns-prefetch" href="//{{ $_tileHost }}">
+    @endif
+    <link rel="preconnect" href="https://www.googletagmanager.com">
+    <link rel="preconnect" href="https://www.google-analytics.com" crossorigin>
+    <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com">
+
     {{-- Canonical: använd explicit sektion om satt, annars aktuell URL utan querystring --}}
     @hasSection('canonicalLink')
         <link rel="canonical" href="@yield('canonicalLink')">

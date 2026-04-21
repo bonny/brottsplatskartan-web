@@ -6,6 +6,41 @@
 @section('metaDescription', $pageMetaDescription)
 @section('showTitleTagline', true)
 
+@section('metaContent')
+    @php
+        $_datasetLd = [
+            '@context' => 'https://schema.org',
+            '@type' => 'Dataset',
+            'name' => 'Polishändelser i Sverige – öppen statistik',
+            'description' => 'Sammanställd statistik över polishändelser i Sverige: antal per dag, vanligaste brottstyper, län-topplista och rekord-dagar. Data hämtas automatiskt från Polisens officiella RSS-flöden.',
+            'url' => $canonicalLink,
+            'creator' => [
+                '@type' => 'Organization',
+                'name' => 'Brottsplatskartan',
+                'url' => config('app.url'),
+            ],
+            'isBasedOn' => [
+                '@type' => 'CreativeWork',
+                'name' => 'Polisens RSS-flöden',
+                'url' => 'https://polisen.se/Aktuellt/RSS/Lokala-RSS-floden/',
+                'publisher' => ['@type' => 'Organization', 'name' => 'Polismyndigheten'],
+            ],
+            'license' => 'https://creativecommons.org/publicdomain/zero/1.0/',
+            'inLanguage' => 'sv-SE',
+            'spatialCoverage' => [
+                '@type' => 'Place',
+                'name' => 'Sverige',
+                'address' => ['@type' => 'PostalAddress', 'addressCountry' => 'SE'],
+            ],
+            'keywords' => ['brottsstatistik', 'polishändelser', 'Sverige', 'brott', 'blåljus'],
+            'isAccessibleForFree' => true,
+        ];
+    @endphp
+    <script type="application/ld+json">
+    {!! json_encode($_datasetLd, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+    </script>
+@endsection
+
 @section('content')
     <article class="StatisticsPage">
 
