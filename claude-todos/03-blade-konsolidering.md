@@ -1,5 +1,20 @@
 # Todo #3 – Konsolidering av crimeevent-kort (Blade-templates)
 
+**Status: Klar 2026-04-21** (commits `f3f525a`, `9252c33`).
+
+Gjort:
+- Raderat `crimeevent_v2` + `crimeevent-city` (dött, bara /design).
+- Fixat `</li>/</article>`-nesting-bugg i `crimeevent.blade.php`.
+- Slagit ihop `crimeevent-hero` + `crimeevent-hero-second` till en partial med `$size = 'large'|'small'`. LCP eager bevarat.
+- Slagit ihop `crimeevent-mapless` med `crimeevent-small` via `$showMap = false`. 404-sidan uppdaterad.
+
+Ej gjort (avprioriterat):
+- Atom-extraktion (event-map, event-title, event-meta). Merges lyckades
+  utan detta. Öppen fråga om BEM vs Tailwind behöver lösas först.
+
+Netto: 9 event-kort-partials → 5, ~130 rader borta, en tyst bugg fixad.
+
+
 ## Sammanfattning
 
 Repot innehåller 8 olika "crimeevent-kort"-partials (+ ett i undermappen
