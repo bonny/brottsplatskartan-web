@@ -505,4 +505,93 @@ det är ett verkligt skydd mot människliga fel.
 
 ---
 
+## 10. AI-generera bättre titlar för vaga event-rubriker
+
+**Problem:** Polisens RSS-feeds producerar ibland meningslösa titlar som
+`sammanfattning-natt-...-dagens-presstalesperson-ar-pa-plats` eller
+`...har-foljer-en-sammanfattning-av-nattens-handelser`. Dessa blir
+title-taggar + H1 + URL:er på sajten → dålig SEO, förvirrande för
+besökare, ingen semantisk info om vad händelsen faktiskt innehåller.
+
+**Exempel:**
+- https://brottsplatskartan.se/vastra-gotalands-lan/sammanfattning-natt-vastra-gotalands-lan-dagens-presstalesperson-ar-pa-plats-500653
+- https://brottsplatskartan.se/jonkopings-lan/sammanfattning-natt-jonkopings-lan-har-foljer-en-sammanfattning-av-nattens-handelser-500658
+
+**Lösning:** när titeln matchar ett mönster av "presstalesperson på plats"
+eller "här följer sammanfattning" → använd Claude/GPT för att generera
+ny titel baserat på **body-texten** (som innehåller faktiska händelser).
+
+**Tekniskt:**
+- Ny scheduled command `crimeevents:rewrite-vague-titles` som kör nattligt
+- Lista av kända "dåliga" mönster (regex eller fuzzy match)
+- Använd befintlig `AISummaryService` som fallback
+- Spara ny titel i separat fält (`parsed_title_ai` t.ex.) så vi kan A/B-testa
+  eller rulla tillbaka utan att förlora original
+- Uppdatera slug + sitemap när titel ändras (301-redirect från gammal slug)
+- Hantera bakåtkatalog: kör en-gång-kommando över alla gamla händelser
+
+**Risk:** AI hallucinerar → konstiga/felaktiga titlar. Minimera med:
+- Strikt prompt som bara tillåter omformulering av innehåll i bodyn
+- Längd-limit (max 100 chars)
+- Manuell spot-check innan breddad utrullning
+
+**Status:**
+- [ ] Inventera vilka mönster som är "dåliga" (kör SQL-query)
+- [ ] Lägg till `parsed_title_ai`-kolumn i migrations
+- [ ] Implementera rewrite-command
+- [ ] Testa på 10 events → granska resultat
+- [ ] Scala upp till alla matchande
+- [ ] Uppdatera sitemap + 301 från gamla slugs
+
+---
+
+## 11. SEO-audit enligt best practice 2026
+
+**Bakgrund:** sajten tjänar pengar på annonser → Google-trafik är
+kritisk. Inget systematiskt SEO-arbete har gjorts senaste tiden.
+
+**Att granska (i prioritetsordning):**
+
+### Tekniskt
+- [ ] `<title>`-taggar unika per sida, max 60 chars, innehåller nyckelord
+- [ ] Meta description (120-160 chars) unika per sida
+- [ ] Canonical URL på alla sidor (hindra duplicate content)
+- [ ] H1 unik och relevant (bara en per sida)
+- [ ] Schema.org JSON-LD för NewsArticle / Event / Place
+- [ ] `robots.txt` — tillåt viktigt, blockera parametrar/filter-URL:er
+- [ ] `sitemap.xml` — uppdaterad, inkludera lastmod, priority
+- [ ] Core Web Vitals (LCP, CLS, INP) — mät via PageSpeed Insights
+- [ ] Mobile-first — testa layout på smala skärmar
+
+### On-page
+- [ ] Intern länkning mellan relaterade händelser / platser / län
+- [ ] Breadcrumbs med Schema.org markup
+- [ ] Alt-text på bilder (inkl. event-thumbnails)
+- [ ] Strukturerad data för events (datum, plats, typ)
+
+### Innehåll
+- [ ] Titel-kvalitet (se todo #10)
+- [ ] Möjlighet för evergreen-content som rankar över tid
+- [ ] Ranka in på "brottsstatistik Sverige", "polishändelser [stad]" etc.
+- [ ] /statistik-sida (se todo #6) kan ranka på stat-queries
+
+### Analytics & uppföljning
+- [ ] Google Search Console — koppla + granska top queries / pages
+- [ ] Fixa 404-länkar som är indexerade
+- [ ] GA4 MCP (se todo #8) för datadriven prioritering
+
+**Verktyg att använda:**
+- Google Search Console (free)
+- PageSpeed Insights (free)
+- Lighthouse (Chrome DevTools)
+- Screaming Frog (paid, men kör gratis 500 URL:er)
+
+**Status:**
+- [ ] Initial audit — notera top-issues
+- [ ] Fixa low-hanging fruit (canonical, meta-descriptions, alt-text)
+- [ ] Implementera Schema.org NewsArticle
+- [ ] Följ upp via Search Console över 30 dagar
+
+---
+
 *Senast uppdaterad: 2026-04-21*
