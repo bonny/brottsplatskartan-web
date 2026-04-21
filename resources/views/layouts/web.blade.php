@@ -20,9 +20,6 @@ Layout template for web
 
     @include('feed::links')
 
-    {{-- Alternativ: markdown-variant för AI-retrieval (se todo #12) --}}
-    <link rel="alternate" type="text/markdown" href="{{ url()->current() }}.md">
-
     {{-- Meta description: fallback till kort sajtbeskrivning om sidan inte definierar egen --}}
     @php
         $_metaDescription = View::hasSection('metaDescription')

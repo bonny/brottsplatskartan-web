@@ -734,7 +734,11 @@ Route::get('/sociala-medier', [DebugController::class, 'socialaMedier'])->name('
 
 // Add routes for RSS feeds.
 // https://github.com/spatie/laravel-feed
-Route::feeds();
+// Exkludera från Response Cache — RSS ska alltid vara färsk så att
+// nya prenumeranter inte läser 30 min gamla svar.
+Route::middleware('doNotCacheResponse')->group(function () {
+    Route::feeds();
+});
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
