@@ -37,7 +37,7 @@
             </p>
             <div style="width: 100%; height: min(80vh, 700px); margin-top: 1em;">
                 <iframe
-                    src="https://globe.adsbexchange.com/?lat=62.5&lon=16.5&zoom=5&altFiltLow=0&altFiltHigh=3000"
+                    src="https://globe.adsbexchange.com/?lat=62.5&lon=16.5&zoom=5"
                     style="border: 0; width: 100%; height: 100%;"
                     loading="lazy"
                     referrerpolicy="no-referrer-when-downgrade"
