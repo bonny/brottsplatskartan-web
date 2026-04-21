@@ -132,15 +132,15 @@ class Helper {
      *
      * @return array med datum => antal.
      */
-    public static function getHomeStats($lan) {
+    public static function getHomeStats($lan, $days = 14) {
         $stats = [
             "numEventsPerDay" => null
         ];
 
-        $cacheKey = "lan-homestats-" . $lan;
+        $cacheKey = "lan-homestats-{$lan}-{$days}d";
         $cacheTTL = 2 * HOUR_IN_SECONDS;
         $dateDaysBack = Carbon::now()
-            ->subDays(13)
+            ->subDays($days - 1)
             ->format('Y-m-d');
 
         $stats["numEventsPerDay"] = Cache::remember(
@@ -162,6 +162,62 @@ class Helper {
         );
 
         return $stats;
+    }
+
+    /**
+     * Topp brottstyper (parsed_title) senaste $days dagar.
+     * Returnerar array: [ ['type' => 'Trafikolycka', 'count' => 42], ... ]
+     */
+    public static function getTopCrimeTypes($days = 7, $limit = 10) {
+        $cacheKey = "topCrimeTypes:{$days}d:{$limit}";
+        return Cache::remember($cacheKey, HOUR_IN_SECONDS, function () use ($days, $limit) {
+            $since = Carbon::now()->subDays($days)->format('Y-m-d H:i:s');
+            return DB::table('crime_events')
+                ->select('parsed_title', DB::raw('count(*) AS count'))
+                ->where('created_at', '>', $since)
+                ->whereNotNull('parsed_title')
+                ->where('parsed_title', '!=', '')
+                ->groupBy('parsed_title')
+                ->orderBy('count', 'desc')
+                ->limit($limit)
+                ->get()
+                ->map(fn($r) => ['type' => $r->parsed_title, 'count' => (int) $r->count])
+                ->toArray();
+        });
+    }
+
+    /**
+     * Topp dagar genom tiderna — dagar med flest rapporterade händelser.
+     * Returnerar array: [ ['date' => '2024-09-12', 'count' => 312], ... ]
+     */
+    public static function getTopDays($limit = 5) {
+        $cacheKey = "topDays:{$limit}";
+        return Cache::remember($cacheKey, DAY_IN_SECONDS, function () use ($limit) {
+            return DB::table('crime_events')
+                ->select(
+                    DB::raw('date_format(created_at, "%Y-%m-%d") as YMD'),
+                    DB::raw('count(*) AS count')
+                )
+                ->groupBy('YMD')
+                ->orderBy('count', 'desc')
+                ->limit($limit)
+                ->get()
+                ->map(fn($r) => ['date' => $r->YMD, 'count' => (int) $r->count])
+                ->toArray();
+        });
+    }
+
+    /**
+     * Topplista län sorterad på händelser senaste 7 dagar.
+     * Bygger på getAllLanWithStats() men sorterar om.
+     */
+    public static function getLanTopList($limit = 21) {
+        $all = self::getAllLanWithStats();
+        return collect($all)
+            ->sortByDesc(fn($lan) => $lan->numEvents['last7days'] ?? 0)
+            ->take($limit)
+            ->values()
+            ->all();
     }
 
     public static function getSingleLanWithStats($lanName = null) {

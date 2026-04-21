@@ -33,6 +33,7 @@ class GenerateSitemap extends Command
         $static = [
             '/' => ['freq' => Url::CHANGE_FREQUENCY_HOURLY, 'priority' => 1.0],
             '/handelser' => ['freq' => Url::CHANGE_FREQUENCY_HOURLY, 'priority' => 0.9],
+            '/statistik' => ['freq' => Url::CHANGE_FREQUENCY_DAILY, 'priority' => 0.7],
             '/lan' => ['freq' => Url::CHANGE_FREQUENCY_DAILY, 'priority' => 0.8],
             '/plats' => ['freq' => Url::CHANGE_FREQUENCY_DAILY, 'priority' => 0.7],
             '/typ' => ['freq' => Url::CHANGE_FREQUENCY_DAILY, 'priority' => 0.6],

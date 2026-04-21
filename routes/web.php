@@ -67,6 +67,8 @@ Route::get('/polisstationer', [PolisstationerController::class, 'index'])->name(
  */
 Route::match(['get', 'post'], '/', [StartController::class, 'start'])->name('start');
 
+Route::get('/statistik', [\App\Http\Controllers\StatisticsController::class, 'index'])->name('statistik');
+
 Route::get('/handelser/{date}', [StartController::class, 'day'])->name('startDatum');
 Route::get('/handelser/', [StartController::class, 'day'])->name('handelser');
 // Route::redirect('/handelser/', '/');
