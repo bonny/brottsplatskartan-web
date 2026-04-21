@@ -368,31 +368,26 @@ class FeedController extends Controller
      * Hämtar RSS-feeden från Polisen
      * och lägger till händelser i DB
      *
-     * Uses https://github.com/willvincent/feeds
+     * Använder SimplePie direkt (tidigare via willvincent/feeds-wrappern).
      */
     public function updateFeedsFromPolisen()
     {
-        $options = [
-            'curl.options' => [
-                CURLOPT_SSL_VERIFYPEER => false,
-            ]
-        ];
+        $cacheDir = storage_path('framework/cache/simplepie');
+        if (!is_dir($cacheDir)) {
+            mkdir($cacheDir, 0755, true);
+        }
 
-        /** @var SimplePie\SimplePie */
-        $feed = \Feeds::make(
-            $this->RssURL, 
-            0, // Limit
-            true, // forceFeed
-            $options
-        );
-        
-        /*
-                 if (isset($options) && is_array($options)) {
-            if (isset($options['curl.options']) && is_array($options['curl.options'])) {
-                $this->simplePie->set_curl_options($this->simplePie->curl_options + $options['curl.options']);
-            }
-
-        */
+        $feed = new \SimplePie\SimplePie();
+        $feed->set_feed_url($this->RssURL);
+        $feed->force_feed(true);
+        $feed->set_curl_options([
+            CURLOPT_SSL_VERIFYPEER => false,
+        ]);
+        $feed->enable_cache(true);
+        $feed->set_cache_location($cacheDir);
+        $feed->set_cache_duration(60);
+        $feed->init();
+        $feed->handle_content_type();
 
         $feed_items = $feed->get_items();
 

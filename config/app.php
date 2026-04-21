@@ -183,12 +183,10 @@ return [
 
         // installed
         // Sofa\Eloquence\ServiceProvider::class,
-        willvincent\Feeds\FeedsServiceProvider::class,
         // 'Kozz\Laravel\Providers\Guzzle',
         // 'Creitive\Breadcrumbs\BreadcrumbsServiceProvider',
         // 'Atymic\Twitter\TwitterServiceProvider',
         Unisharp\Setting\SettingServiceProvider::class,
-        Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class,
         // TeamTNT\Scout\TNTSearchScoutServiceProvider::class,
         #AlfredoRamos\ParsedownExtra\ParsedownExtraServiceProvider::class,
         #Laravel\Tinker\TinkerServiceProvider::class, // after upgrade not available by default
@@ -239,7 +237,6 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-        'Feeds'  => willvincent\Feeds\Facades\FeedsFacade::class,
         'Guzzle' => 'Kozz\Laravel\Facades\Guzzle',
         'Breadcrumbs' => 'Creitive\Breadcrumbs\Facades\Breadcrumbs',
         'Twitter' => 'Atymic\Twitter\Facades\Twitter',

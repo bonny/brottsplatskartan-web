@@ -2,62 +2,55 @@
 
 namespace App\CacheProfiles;
 
-use DateTime;
 use Illuminate\Http\Request;
 use Spatie\ResponseCache\CacheProfiles\CacheAllSuccessfulGetRequests;
 
 class BrottsplatskartanCacheProfile extends CacheAllSuccessfulGetRequests
 {
     /**
-     * Bestäm cache-livstid baserat på URL/route
+     * Returnera cache-livstid i sekunder baserat på URL/route.
      *
-     * Parent-klassen hanterar: enabled(), shouldCacheResponse()
+     * Uppdaterad till Spatie Response Cache 8.x: `cacheRequestUntil(): DateTime`
+     * ersattes av `cacheLifetimeInSeconds(): int`.
      */
-    public function cacheRequestUntil(Request $request): DateTime
+    public function cacheLifetimeInSeconds(Request $request): int
     {
         // Startsida: kort cache.
         if ($request->is('/') || $request->is('')) {
-            return now()->addMinutes(2);
+            return 2 * MINUTE_IN_SECONDS;
         }
 
         // VMA alerts: mycket kort cache.
         if ($request->is('vma') || $request->is('api/vma')) {
-            return now()->addMinutes(2);
+            return 2 * MINUTE_IN_SECONDS;
         }
 
-        // Historiska datum-sidor: mycket lång cache (7 dagar)
-        // Gammal data ändras aldrig, så kan cachas länge
+        // Historiska datum-sidor: mycket lång cache (7 dagar).
+        // Gammal data ändras aldrig.
         if ($request->is('handelser/*')) {
             $date = $this->extractDateFromUrl($request->path());
             if ($date && $date->diffInDays(now()) > 7) {
-                return now()->addDays(7);
+                return 7 * DAY_IN_SECONDS;
             }
         }
 
         // API endpoints: varierad cache
         if ($request->is('api/events')) {
-            return now()->addMinutes(10);
+            return 10 * MINUTE_IN_SECONDS;
         }
 
         // Standard: 30 minuter
-        return now()->addMinutes(30);
+        return 30 * MINUTE_IN_SECONDS;
     }
 
-    /**
-     * Hjälpmetod för att extrahera datum från URL
-     *
-     * Används för att ge historiska datum-sidor längre cache-tid
-     */
     private function extractDateFromUrl(string $path): ?\Carbon\Carbon
     {
-        // Extrahera datum från URL som "handelser/15-januari-2024"
         if (preg_match('/(\d{1,2})-([a-zåäö]+)-(\d{4})/i', $path, $matches)) {
             try {
                 $day = $matches[1];
                 $month = $matches[2];
                 $year = $matches[3];
 
-                // Konvertera svensk månad till Carbon
                 $monthMap = [
                     'januari' => 'January',
                     'februari' => 'February',

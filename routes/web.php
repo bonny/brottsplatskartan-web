@@ -730,13 +730,6 @@ Route::get('logout', function () {
 
 Route::get('/sociala-medier', [DebugController::class, 'socialaMedier'])->name('socialaMedier');
 
-// Add route for log viewer
-// https://github.com/rap2hpoutre/laravel-log-viewer
-Route::get(
-    'logs',
-    '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index'
-)->middleware('auth');
-
 // Add routes for RSS feeds.
 // https://github.com/spatie/laravel-feed
 Route::feeds();
