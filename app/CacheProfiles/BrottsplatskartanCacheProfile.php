@@ -3,10 +3,25 @@
 namespace App\CacheProfiles;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Spatie\ResponseCache\CacheProfiles\CacheAllSuccessfulGetRequests;
+use Symfony\Component\HttpFoundation\Response;
 
 class BrottsplatskartanCacheProfile extends CacheAllSuccessfulGetRequests
 {
+    /**
+     * Utökar förälderns filter med application/xml + application/atom+xml
+     * så att RSS/Atom-feeds också cachas. Förälderns logik täcker bara
+     * text/* och *json.
+     */
+    public function hasCacheableContentType(Response $response): bool
+    {
+        $contentType = $response->headers->get('Content-Type', '');
+        if (Str::contains($contentType, ['xml'])) {
+            return true;
+        }
+        return parent::hasCacheableContentType($response);
+    }
     /**
      * Returnera cache-livstid i sekunder baserat på URL/route.
      *
@@ -22,6 +37,11 @@ class BrottsplatskartanCacheProfile extends CacheAllSuccessfulGetRequests
 
         // VMA alerts: mycket kort cache.
         if ($request->is('vma') || $request->is('api/vma')) {
+            return 2 * MINUTE_IN_SECONDS;
+        }
+
+        // RSS/Atom-feeds — RSS-läsare poll:ar aggressivt.
+        if ($request->is('rss') || $request->is('feed*')) {
             return 2 * MINUTE_IN_SECONDS;
         }
 
@@ -56,6 +76,11 @@ class BrottsplatskartanCacheProfile extends CacheAllSuccessfulGetRequests
         // VMA: prioritera färsk data, ingen SWR.
         if ($request->is('vma') || $request->is('api/vma')) {
             return 0;
+        }
+
+        // RSS — kort grace så läsare får färsk feed relativt snabbt.
+        if ($request->is('rss') || $request->is('feed*')) {
+            return 5 * MINUTE_IN_SECONDS;
         }
 
         // Startsida: kort fresh -> längre grace för att slippa köbildning.
