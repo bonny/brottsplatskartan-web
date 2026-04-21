@@ -14,17 +14,22 @@ _Skapad: 2026-04-21. Ersätter och inkluderar tidigare todo #2 (legacy SEO-revie
 - Dubbel `<meta name="robots">` sammanslagen
 - Alt-text: verifierat att alla `<img>` har alt-attribut (inga saknas)
 
-**Fas 2 påbörjad 2026-04-21** (commit `ece48de`):
+**Fas 2 KLAR (stor del) 2026-04-21** (commits `ece48de`, `793287d`, `0cf7e1d`):
 
 - Place/City/AdministrativeArea JSON-LD på `single-plats`, `city`, `single-lan`
   via delad partial `parts/place-jsonld.blade.php`.
+- H1-audit: startsidans 9 h1 från hero-partials → 0 (acceptabelt), nyckelsidor
+  har exakt 1 h1 per sida (`previousPartners` fixad samtidigt).
+- ItemList JSON-LD på `/lan` (21), `/typ` (120), `/plats` (330), `/mest-last`
+  via delad partial `parts/itemlist-jsonld.blade.php`.
+- Dataset JSON-LD på `/statistik` (creator, isBasedOn, license,
+  spatialCoverage, keywords).
+- Preconnect + dns-prefetch till tileserver, GA4, AdSense i layout head.
+- LCP-fix: första hero-bilden `loading="eager"` + `fetchpriority="high"`.
 
-**H1-audit KLAR 2026-04-21** (commit `793287d`):
-
-- Startsidan hade 9 `<h1>` från hero-partials → ner till 0 (acceptabelt,
-  startsidan har inget eget h1-mål).
-- Nyckelsidor (handelser, lan, plats, city, single-event) har nu exakt 1 h1.
-- `previousPartners.blade.php` fixad samtidigt.
+Skippat (motiverat):
+- FAQPage på `/sida/om` — prosa, inte Q&A → schema-spam.
+- Per-län RSS-feeds — 21 endpoints för marginell SEO-vinst.
 
 Kvar i Fas 2 (kräver beslut / GA4-data / post-cutover):
 - Beslut: `noindex`+canonical eller borttagning av `/plats/*/handelser/{date}`
@@ -32,6 +37,12 @@ Kvar i Fas 2 (kräver beslut / GA4-data / post-cutover):
 - Noindex-strategi för gamla/thin events (`crimeevents:mark-thin`) —
   parkerat tills GA4 MCP (#8) ger trafikdata
 - Core Web Vitals efter Hetzner-cutover
+- Internal anchor text-audit (grep efter "läs mer", "klicka här")
+- Auto-genererad OG-image per event (typ + plats-overlay)
+- Image sitemap (kartbilder per event) — Google Images-trafik
+- Utökad NewsArticle-markup (fler bildformat 1x1/4x3/16x9, articleSection,
+  inLanguage, dateModified från faktisk updated_at, contentLocation som
+  Place istället för GeoCircle) — se skiss nedan i dokumentet
 
 Fas 3 kvarstår enligt plan nedan.
 
