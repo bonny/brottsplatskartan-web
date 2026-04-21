@@ -27,6 +27,16 @@ https://brottsplatskartan.localhost/plats/nacka
     @if ($linkRelNext)
         <link rel="next" href="{{ $linkRelNext }}" />
     @endif
+    @include('parts.place-jsonld', [
+        'placeType' => 'Place',
+        'placeName' => $plats,
+        'placeLat' => $place->lat ?? null,
+        'placeLng' => $place->lng ?? null,
+        'placeAddressLocality' => $plats,
+        'placeAddressRegion' => $place->lan ?? null,
+        'placeContainedIn' => $place->lan ?? null,
+        'placeUrl' => $canonicalLink,
+    ])
 @endsection
 
 @section('content')

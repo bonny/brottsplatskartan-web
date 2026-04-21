@@ -3,6 +3,18 @@
 @section('title', $city['pageTitle'])
 @section('metaDescription', $city['description'])
 
+@section('metaContent')
+    @include('parts.place-jsonld', [
+        'placeType' => 'City',
+        'placeName' => $city['name'],
+        'placeLat' => $city['lat'] ?? null,
+        'placeLng' => $city['lng'] ?? null,
+        'placeAddressRegion' => $lan,
+        'placeContainedIn' => $lan,
+        'placeUrl' => url()->current(),
+    ])
+@endsection
+
 @section('content')
 
     <div class="container">

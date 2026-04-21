@@ -26,6 +26,13 @@ https://brottsplatskartan.localhost/lan/Stockholms%20l%C3%A4n
     @if ($linkRelNext)
         <link rel="next" href="{{ $linkRelNext }}" />
     @endif
+    @include('parts.place-jsonld', [
+        'placeType' => 'AdministrativeArea',
+        'placeName' => $lan,
+        'placeAddressRegion' => $lan,
+        'placeContainedIn' => 'Sverige',
+        'placeUrl' => $canonicalLink,
+    ])
 @endsection
 
 @section('content')
