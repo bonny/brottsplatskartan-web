@@ -583,11 +583,19 @@ Route::get('/brand/{undersida?}', function (
 })->name('brand');
 
 /**
+ * Markdown-variant av enskild händelse för LLM/agent-konsumtion.
+ * URL: /{lan}/{eventName}.md — samma som HTML-URL:en + .md-suffix.
+ * Standardiserat format 2026 (Anthropic, Vercel, Stripe, Mintlify m.fl.).
+ * Måste ligga före HTML-routen för att .md-suffixet ska fångas.
+ */
+Route::get('/{lan}/{eventName}.md', [\App\Http\Controllers\MarkdownController::class, 'event'])
+    ->name('singleEventMarkdown');
+
+/**
  * single event page/en händelse/ett crimeevent
  * ca. såhär:
  *
  * http://brottsplatskartan.se/vastra-gotalands-lan/rattfylleri-2331
- *
  */
 Route::get('/{lan}/{eventName}', function ($lan, $eventName, Request $request) {
     // Event måste innehålla siffra sist = crime event id.

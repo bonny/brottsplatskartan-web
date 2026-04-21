@@ -22,6 +22,18 @@ uppdateras var 12:e minut.
 - JSON API: https://brottsplatskartan.se/api/events
 - Se även /api-docs för komplett API-referens.
 
+## Markdown-variant per händelse
+
+Varje enskild händelse serveras även som ren markdown genom att
+lägga till `.md` i URL:en. Exempel:
+
+- HTML: https://brottsplatskartan.se/stockholms-lan/rattfylleri-2331
+- Markdown: https://brottsplatskartan.se/stockholms-lan/rattfylleri-2331.md
+
+Markdown-varianten har ingen navigation eller reklam och är ~98% mindre
+än HTML-versionen. Content-Type: `text/markdown; charset=utf-8`. En
+`Link: rel=canonical`-header pekar på HTML-versionen.
+
 ## Sitemap
 
 - https://brottsplatskartan.se/sitemap.xml
