@@ -234,9 +234,6 @@ class LanController extends Controller
         $introtext_key = "introtext-lan-$lan";
         $data["introtext"] = Str::markdown(\Setting::get($introtext_key, '') );
 
-        // Hämta statistik för ett län
-        $data['chartHtml'] = \App\Helper::getStatsChartHtml($lan);
-
         $data["lanInfo"] = \App\Helper::getSingleLanWithStats($lan);
 
         $mostCommonCrimeTypesMetaDescString = '';

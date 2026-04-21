@@ -104,7 +104,6 @@ class CityController extends Controller
             'mapZoom' => $city['mapZoom'] ?? 12,
             'policeStations' => $policeStations,
             'lan' => $city_lan,
-            'chartHtml' => \App\Helper::getStatsChartHtml($city_lan),
             'lanInfo' => \App\Helper::getSingleLanWithStats($city_lan),
             'todaysSummary' => $todaysSummary,
             'yesterdaysSummary' => $yesterdaysSummary

@@ -62,11 +62,13 @@
 
 @section('sidebar')
 
-    <div class="widget Stats Stats--lan" id="brottsstatistik">
-        <h2 class="widget__title Stats__title">Brottsstatistik</h2>
+    <div class="widget">
+        <h2 class="widget__title"><a href="{{ route('statistik') }}">Brottsstatistik</a></h2>
         <div class="widget__listItem__text">
-            <p class="pb-6">Antal Polisiära händelser per dag för {{ $lan }}, 14 dagar tillbaka.</p>
-            {!! $chartHtml !!}
+            <p>
+                Se alla händelser per dag, topp 10 brottstyper och länstopplistan på
+                <a href="{{ route('statistik') }}">statistik-sidan</a>.
+            </p>
         </div>
     </div>
 
