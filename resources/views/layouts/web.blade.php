@@ -11,23 +11,77 @@ Layout template for web
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
     <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+    {{-- Canonical: använd explicit sektion om satt, annars aktuell URL utan querystring --}}
     @hasSection('canonicalLink')
-        <link rel="canonical" href="@yield('canonicalLink', '/')">
+        <link rel="canonical" href="@yield('canonicalLink')">
+    @else
+        <link rel="canonical" href="{{ url()->current() }}">
     @endif
 
     @include('feed::links')
 
-    @hasSection('metaDescription')
-        <meta name="description" content="@yield('metaDescription')">
-        <meta property="og:description" content="@yield('metaDescription')">
-        <meta name="twitter:description" content="@yield('metaDescription')">
-    @endif
+    {{-- Alternativ: markdown-variant för AI-retrieval (se todo #12) --}}
+    <link rel="alternate" type="text/markdown" href="{{ url()->current() }}.md">
 
-    <meta name="robots" content="max-image-preview:large" />
+    {{-- Meta description: fallback till kort sajtbeskrivning om sidan inte definierar egen --}}
+    @php
+        $_metaDescription = View::hasSection('metaDescription')
+            ? trim($__env->yieldContent('metaDescription'))
+            : 'Brottsplatskartan visar aktuella polishändelser från hela Sverige på karta. Sök efter brott i ditt län, din kommun eller på en specifik plats.';
+    @endphp
+    <meta name="description" content="{{ $_metaDescription }}">
+    <meta property="og:description" content="{{ $_metaDescription }}">
+    <meta name="twitter:description" content="{{ $_metaDescription }}">
+
+    {{-- Kombinerad robots-meta (tidigare dubbel) --}}
+    @php
+        $_robots = ['max-image-preview:large'];
+        if (isset($robotsNoindex) && $robotsNoindex) {
+            $_robots = ['noindex', 'follow', 'max-image-preview:large'];
+        }
+    @endphp
+    <meta name="robots" content="{{ implode(', ', $_robots) }}">
 
     @hasSection('ldJson')
         @yield('ldJson')
     @endif
+
+    {{-- Global Organization + WebSite JSON-LD (en gång per sida) --}}
+    @php
+        $_siteLd = [
+            '@context' => 'https://schema.org',
+            '@graph' => [
+                [
+                    '@type' => 'Organization',
+                    '@id' => url('/#organization'),
+                    'name' => 'Brottsplatskartan',
+                    'url' => url('/'),
+                    'logo' => url('/apple-touch-icon-152x152.png'),
+                    'sameAs' => ['https://twitter.com/brottsplatser'],
+                ],
+                [
+                    '@type' => 'WebSite',
+                    '@id' => url('/#website'),
+                    'url' => url('/'),
+                    'name' => 'Brottsplatskartan',
+                    'description' => 'Polishändelser på karta över Sverige',
+                    'inLanguage' => 'sv-SE',
+                    'publisher' => ['@id' => url('/#organization')],
+                    'potentialAction' => [
+                        '@type' => 'SearchAction',
+                        'target' => [
+                            '@type' => 'EntryPoint',
+                            'urlTemplate' => url('/sok') . '?q={search_term_string}',
+                        ],
+                        'query-input' => 'required name=search_term_string',
+                    ],
+                ],
+            ],
+        ];
+    @endphp
+    <script type="application/ld+json">
+    {!! json_encode($_siteLd, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+    </script>
 
     @hasSection('metaImage')
         <meta property="og:image" content="@yield('metaImage')" />
@@ -65,11 +119,6 @@ Layout template for web
             → Brottsplatskartan
         @endif
     </title>
-
-    {{-- Don't index some pages --}}
-    @if (isset($robotsNoindex) && $robotsNoindex)
-        <meta name="robots" content="noindex, follow">
-    @endif
 
     @hasSection('metaContent')
         @yield('metaContent', '')

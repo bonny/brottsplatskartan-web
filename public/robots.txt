@@ -1,5 +1,14 @@
+# Brottsplatskartan robots.txt
+# Se även /llms.txt för LLM-specifik sajtguide.
+
+# Generellt
 User-agent: *
 Disallow: /pixel?
+
+# -----------------------------------------------------------------
+# AI-träningsbotar — inte tillåtna (vi vill inte bli träningsdata
+# utan kompensation).
+# -----------------------------------------------------------------
 
 User-agent: ClaudeBot
 Disallow: /
@@ -9,3 +18,66 @@ Disallow: /
 
 User-agent: Google-Extended
 Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: Meta-ExternalAgent
+Disallow: /
+
+User-agent: Meta-ExternalFetcher
+Disallow: /
+
+User-agent: Applebot-Extended
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+User-agent: cohere-ai
+Disallow: /
+
+User-agent: Diffbot
+Disallow: /
+
+User-agent: Omgili
+Disallow: /
+
+# -----------------------------------------------------------------
+# AI-retrievalbotar (sök/svar i realtid) — tillåtna. De skickar
+# trafik tillbaka när användare klickar, vilket är värdefullt.
+# -----------------------------------------------------------------
+
+User-agent: OAI-SearchBot
+Disallow: /pixel?
+Allow: /
+
+User-agent: ChatGPT-User
+Disallow: /pixel?
+Allow: /
+
+User-agent: PerplexityBot
+Disallow: /pixel?
+Allow: /
+
+User-agent: Perplexity-User
+Disallow: /pixel?
+Allow: /
+
+User-agent: Claude-SearchBot
+Disallow: /pixel?
+Allow: /
+
+User-agent: Claude-User
+Disallow: /pixel?
+Allow: /
+
+User-agent: Applebot
+Disallow: /pixel?
+Allow: /
+
+# -----------------------------------------------------------------
+# Sitemap
+# -----------------------------------------------------------------
+
+Sitemap: https://brottsplatskartan.se/sitemap.xml

@@ -1,0 +1,41 @@
+# Brottsplatskartan
+
+> Brottsplatskartan visualiserar polishändelser från Polisens officiella
+> RSS-flöden på en karta över Sverige. Sajten aggregerar, geokodar och
+> kategoriserar brottshändelser så att besökare kan utforska vad som
+> hänt i sitt län, sin kommun eller på en specifik plats.
+
+Innehåll på svenska. Data kommer från Polisens öppna RSS-feeds och
+uppdateras var 12:e minut.
+
+## Primära sektioner
+
+- [Startsida](https://brottsplatskartan.se/): Senaste händelser, karta, topplistor.
+- [Län](https://brottsplatskartan.se/lan): Översikt över alla 21 svenska län.
+- [Händelser per datum](https://brottsplatskartan.se/handelser): Kronologiskt arkiv.
+- [VMA](https://brottsplatskartan.se/vma): Nationella varnings- och informationsmeddelanden.
+- [Om sajten](https://brottsplatskartan.se/om): Bakgrund, datakällor, integritet.
+
+## Dataformat
+
+- RSS/Atom-feed: https://brottsplatskartan.se/rss
+- JSON API: https://brottsplatskartan.se/api/events
+- Se även /api-docs för komplett API-referens.
+
+## Sitemap
+
+- https://brottsplatskartan.se/sitemap.xml
+
+## Användning av innehåll
+
+Innehållet är annonsfinansierat. Citera gärna korta utdrag med
+länk-attribuering tillbaka till källartikeln. Fulltexthämtning för
+AI-träning är inte tillåten (se robots.txt).
+
+Retrieval för realtidssök/svar (Perplexity, ChatGPT Search, Claude,
+m.fl.) är tillåten och uppskattad — skicka länkar tillbaka så att
+användare kan klicka vidare.
+
+## Kontakt
+
+Sajten drivs av Pär Thernström. För frågor om dataanvändning, se /om.
