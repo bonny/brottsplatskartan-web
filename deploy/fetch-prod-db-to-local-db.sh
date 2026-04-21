@@ -98,6 +98,19 @@ done
 
 export MYSQL_PWD="$DB_ROOT_PASSWORD"
 
+# Filtrera EXCLUDED till bara de tabeller som faktiskt finns i
+# prod-DB:n. Alla listade finns inte alltid (t.ex. sessions när
+# SESSION_DRIVER=redis). mariadb-dump kraschar annars i pass 2.
+EXISTING_EXCLUDED=""
+for t in $EXCLUDED; do
+    exists=$(docker compose exec -T -e MYSQL_PWD mariadb mariadb -N -B -u root \
+        -e "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='$DB_DATABASE' AND table_name='$t'" \
+        2>/dev/null | tr -d '[:space:]')
+    if [ "$exists" = "1" ]; then
+        EXISTING_EXCLUDED="$EXISTING_EXCLUDED $t"
+    fi
+done
+
 {
     # Pass 1: data + struktur för alla icke-exkluderade tabeller.
     # --quick streamar rad-för-rad (viktigt för stora tabeller).
@@ -111,16 +124,18 @@ export MYSQL_PWD="$DB_ROOT_PASSWORD"
         "$DB_DATABASE" \
         $IGNORE_ARGS
 
-    # Pass 2: bara struktur för PII/session-tabellerna.
-    docker compose exec -T -e MYSQL_PWD mariadb mariadb-dump \
-        --single-transaction \
-        --skip-lock-tables \
-        --no-data \
-        --default-character-set=utf8mb4 \
-        --no-tablespaces \
-        -u root \
-        "$DB_DATABASE" \
-        $EXCLUDED
+    # Pass 2: bara struktur för PII/session-tabellerna som finns.
+    if [ -n "$EXISTING_EXCLUDED" ]; then
+        docker compose exec -T -e MYSQL_PWD mariadb mariadb-dump \
+            --single-transaction \
+            --skip-lock-tables \
+            --no-data \
+            --default-character-set=utf8mb4 \
+            --no-tablespaces \
+            -u root \
+            "$DB_DATABASE" \
+            $EXISTING_EXCLUDED
+    fi
 } | gzip --fast
 REMOTE
 )
