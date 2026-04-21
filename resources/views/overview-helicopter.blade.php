@@ -35,7 +35,7 @@
                 position via ADS-B. Klicka på en ikon för att se typ, höjd och
                 flygbana. Helikoptrar syns oftast som rundade ikoner.
             </p>
-            <div style="width: 100%; height: min(80vh, 700px); margin-top: 1em;">
+            <div style="width: 100%; height: min(80vh, 600px); margin-top: 1em;">
                 <iframe
                     src="https://globe.adsbexchange.com/?lat=62.5&lon=16.5&zoom=5"
                     style="border: 0; width: 100%; height: 100%;"
