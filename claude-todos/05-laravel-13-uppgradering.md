@@ -1,7 +1,31 @@
 # 05 — Uppgradering Laravel 12 → 13 + Spatie Response Cache 7.7 → 8.x (SWR)
 
-**Status:** Planering. Inte påbörjad.
+**Status:** KLAR (2026-04-21). Deployad till Hetzner test.
 **Senast uppdaterad:** 2026-04-21
+
+## Resultat
+
+Genomfört samma dag som planen togs fram. Alla fyra delsteg (A–D)
+plus SWR-aktivering och larastan-byte landade i flytt-till-hetzner-
+branchen:
+
+- `424d267` Uppgradera till Laravel 13 + Spatie Response Cache 8
+- `672a1a5` Aktivera SWR globalt via FlexibleCacheResponse + graceInSeconds
+- `5a3e290` Byt abandoned nunomaduro/larastan mot larastan/larastan
+
+Verifierat i browser + Redis på hetzner.brottsplatskartan.se. Inga
+PHPStan-regressioner (74 errors vs 75 före uppgraderingen).
+
+Kvarvarande uppföljning — flyttad till separata uppgifter:
+
+- Dokumentera `php artisan pail` i AGENTS.md
+- Utvärdera Laravel 13 AI SDK som ersättning för claude-php/claude-php-sdk
+- Ev. bumpa predis/predis 1 → 3, phpunit 11 → 12
+
+---
+
+## Ursprunglig plan (behålls för historik)
+
 
 ## Sammanfattning
 

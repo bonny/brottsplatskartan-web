@@ -16,7 +16,7 @@ Senast uppdaterad: 2026-04-21 (efter djupdykning per todo via sub-agenter).
 | 2   | ~~SEO-review (legacy)~~                             | Sammanslagen med #11 (2026-04-21)                | —                                                                                        |
 | 3   | Konsolidera blade-templates (event-kort)            | Redo att påbörjas                                | [claude-todos/03-blade-konsolidering.md](claude-todos/03-blade-konsolidering.md)         |
 | 4   | Uppdatera mbtiles från 2017                         | Planetiler-pipeline föreslagen                   | [claude-todos/04-mbtiles-uppdatera.md](claude-todos/04-mbtiles-uppdatera.md)             |
-| 5   | Laravel 12 → 13 + Spatie Response Cache 7 → 8 (SWR) | Efter cutover, ~2–3 dagar arbete                 | [claude-todos/05-laravel-13-uppgradering.md](claude-todos/05-laravel-13-uppgradering.md) |
+| 5   | ~~Laravel 12 → 13 + Spatie Response Cache 7 → 8 (SWR)~~ | **Klar 2026-04-21** (inkl. SWR + larastan-byte)  | [claude-todos/05-laravel-13-uppgradering.md](claude-todos/05-laravel-13-uppgradering.md) |
 | 6   | Flytta Brottsstatistik → `/statistik`               | Designförslag klart                              | [claude-todos/06-statistik-sida.md](claude-todos/06-statistik-sida.md)                   |
 | 7   | PHPStan triage + CI                                 | 75 errors (20 troliga buggar)                    | [claude-todos/07-phpstan-ci.md](claude-todos/07-phpstan-ci.md)                           |
 | 8   | Google Analytics MCP + ev. Search Console MCP       | Redo för setup                                   | [claude-todos/08-ga-mcp.md](claude-todos/08-ga-mcp.md)                                   |
@@ -41,5 +41,4 @@ Senast uppdaterad: 2026-04-21 (efter djupdykning per todo via sub-agenter).
 3. **#10** (AI-titlar) – pilot 30 dagar, ~20 kr, kvalitet innan bredd
 4. **#1** (cache-exkludering för datum-routes) – snabb fix med `shouldCacheRequest`
 5. **#7** (PHPStan fix-first → baseline → CI)
-6. **#5** (Laravel 13 + Response Cache 8) – bredare uppgradering när grunden är trygg
-7. **#3** (blade-konsolidering), **#6** (/statistik), **#4** (mbtiles) – när tid finns
+6. **#3** (blade-konsolidering), **#6** (/statistik), **#4** (mbtiles) – när tid finns
