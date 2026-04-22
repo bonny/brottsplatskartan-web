@@ -18,7 +18,7 @@ Senast uppdaterad: 2026-04-21 (efter djupdykning per todo via sub-agenter).
 | 4   | Uppdatera mbtiles från 2017                         | Planetiler-pipeline föreslagen                   | [claude-todos/04-mbtiles-uppdatera.md](claude-todos/04-mbtiles-uppdatera.md)             |
 | 5   | ~~Laravel 12 → 13 + Spatie Response Cache 7 → 8 (SWR)~~ | **Klar 2026-04-21** (inkl. SWR + larastan-byte)  | [claude-todos/05-laravel-13-uppgradering.md](claude-todos/05-laravel-13-uppgradering.md) |
 | 6   | ~~Flytta Brottsstatistik → `/statistik`~~           | **Klar 2026-04-21** (sidan + CTA på start/län/stad/handelser) | [claude-todos/06-statistik-sida.md](claude-todos/06-statistik-sida.md)    |
-| 7   | ~~PHPStan triage + CI~~                             | **Klar 2026-04-22** (konfig + 30 bugfixar + baseline 47 + GitHub Actions CI) | [claude-todos/07-phpstan-ci.md](claude-todos/07-phpstan-ci.md) |
+| 7   | ~~PHPStan triage~~                                  | **Klar 2026-04-22** (alla 77 errors fixade — 0 kvar på level 5, ingen baseline) | [claude-todos/07-phpstan-ci.md](claude-todos/07-phpstan-ci.md) |
 | 8   | Google Analytics MCP + ev. Search Console MCP       | Redo för setup                                   | [claude-todos/08-ga-mcp.md](claude-todos/08-ga-mcp.md)                                   |
 | 9   | ~~Extern DB-backup~~                                | Avfärdad — Hetzner-snapshots räcker (2026-04-21) | —                                                                                        |
 | 10  | AI-omskriva vaga titlar                             | Plan klar, kostnad ~$27 för full backfill        | [claude-todos/10-ai-omskriva-titlar.md](claude-todos/10-ai-omskriva-titlar.md)           |
@@ -33,7 +33,7 @@ Senast uppdaterad: 2026-04-21 (efter djupdykning per todo via sub-agenter).
 - **#10 → #11:** bättre titlar förbättrar SEO. Kör #10 innan eller parallellt med #11.
 - **#11 → #6:** ny `/statistik`-sida bör designas med SEO-basics från dag ett.
 - **#5 → (övrigt):** SWR i Response Cache 8 minskar behovet av `cache:warm`-scheduler och påverkar cache-strategin i #1.
-- **#7 före större refaktor (#3, #5, #6):** baseline + CI ger trygghet vid större ändringar.
+- ~~**#7 före större refaktor (#3, #5, #6):**~~ klar — PHPStan level 5 är grön.
 
 ## Föreslagen ordning (efter Hetzner-cutover)
 
@@ -41,5 +41,4 @@ Senast uppdaterad: 2026-04-21 (efter djupdykning per todo via sub-agenter).
 2. **#8** (GA4 MCP) – ger data för #1 och vidare #11-prioritering
 3. **#10** (AI-titlar) – pilot 30 dagar, ~20 kr, kvalitet innan bredd
 4. **#1** (cache-exkludering för datum-routes) – snabb fix med `shouldCacheRequest`
-5. **#7** (PHPStan fix-first → baseline → CI)
-6. **#3** (blade-konsolidering), **#6** (/statistik), **#4** (mbtiles) – när tid finns
+5. **#4** (mbtiles) – när tid finns
