@@ -179,6 +179,32 @@ Gamla filen i Object Storage kan ligga kvar tills man är säker på den nya.
 - **Möjlighet till återkommande uppdateringar** — t.ex. årligen via
   GitHub Action om man vill
 
+## Att validera före start (från review 2026-04-22)
+
+1. **OpenMapTiles-kostnaden** ($500/år) — hela motivationen vilar på att det
+   faktiskt kostar. Dubbelkolla aktuell prisstruktur innan arbete påbörjas.
+   Om det fortfarande finns gratis-alternativ från OpenMapTiles försvinner
+   en stor del av nyttan.
+
+2. **Protomaps daily builds** som alternativ
+   (https://maps.protomaps.com/builds) — färdiga globala PMTiles, gratis CDN.
+   Kräver serverbyte från `tileserver-gl` till PMTiles-kompatibel server,
+   så inte "enklast" givet nuvarande setup, men värt att nämna.
+
+3. **Attribution** — efter byte från openmaptiles.com-data till egen
+   Planetiler-build måste `layouts/web.blade.php` / `page.blade.php` uppdateras
+   till "© OpenStreetMap contributors" (ODbL-krav).
+
+4. **maxzoom-beslut låst** — z=15 behövs (`CrimeEvent.php` använder zoom 5–15
+   för statiska bilder). Inte något att öppna med `--maxzoom=14`.
+
+5. **Jämförelse-script** — konkret diff-metod: hämta samma 10 event-URL:er
+   från gammal (backup på port) vs ny tileserver, spara sida vid sida i
+   `/tmp/tiles-compare/` och granska visuellt. Bygg script innan deploy.
+
+6. **Tidsuppskattning på CX33** — om build körs på servern istället för
+   lokalt: räkna med 15–30 min snarare än 5–10 (endast 8 GB RAM).
+
 ## Öppna frågor
 
 1. **Tyskland då?** Gamla tileserver-repot refererar även till tyska OSM-tiles
@@ -205,6 +231,9 @@ Gamla filen i Object Storage kan ligga kvar tills man är säker på den nya.
 
 ## Status / nästa steg
 
+- [ ] **Verifiera OpenMapTiles-kostnaden först** — annars ifrågasätts nyttan
+- [ ] Bestäm attributionstext och plats för uppdatering
+- [ ] Skriv jämförelse-script (10 event-URL:er, sida vid sida)
 - [ ] Testa Planetiler lokalt på senaste Sverige-PBF → generera mbtiles
 - [ ] Spinna upp lokal tileserver med nya filen → jämför kartbilder med produktion
 - [ ] Stämma av att `basic-preview`-stilen renderar korrekt på zoom 5–15
