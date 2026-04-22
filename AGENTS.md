@@ -255,6 +255,18 @@ docker compose logs -f scheduler
 - Prioritera tydlig, välstrukturerad kod
 - Konsekvent svensk terminologi i kommentarer och dokumentation
 
+### Statisk analys efter kodändringar
+
+Efter PHP-ändringar ska `composer analyse` (Larastan/PHPStan level 5) köras
+lokalt innan commit. Baseline på kända fel ligger i `phpstan-baseline.neon`
+— nya fel ska antingen fixas eller (om motiverat) läggas till i baseline.
+
+```bash
+docker compose exec app composer analyse
+```
+
+Ingen CI kör detta — disciplin lokalt gäller.
+
 ## GitHub-projektet
 
 **URL:** https://github.com/bonny/brottsplatskartan-web/
