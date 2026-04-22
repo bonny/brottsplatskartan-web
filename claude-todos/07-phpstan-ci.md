@@ -220,36 +220,41 @@ men inte nödvändigt initialt.
 
 ## Status / nästa steg
 
-Status: **klar 2026-04-22**.
+Status: **klar 2026-04-22 — 0 errors utan baseline**.
 
 Genomfört:
 
 1. **`phpstan.neon` uppdaterad** med best practice: `tmpDir`,
    `treatPhpDocTypesAsCertain: false`, `reportUnmatchedIgnoredErrors: false`,
    `checkModelProperties: false`. Gamla `ignoreErrors: #@var#`-patternen och
-   placeholder-exclude bortagna. Baseline-fil inkluderas.
-2. **~30 errors fixade direkt** (77 → 47): `Blog.php` nullCoalesce,
-   `Authenticate::redirectTo` explicit null-return, `ListEvents` (cast till int,
-   `$events` init), `CreateAISummaries`/`ImportVMAAlerts` return int,
-   `DebugController::debug` return null, `VMAAlertsController::import` rätt
-   return-type, `EventMarkdownRenderer` `@var Newsarticle` för foreach,
-   redundant `?? ''` på `Str::markdown`.
-3. **Baseline genererad** för resterande 47 fel → `phpstan-baseline.neon`
-   (mest `property.phpDocType`-covariance på Kernel/Middleware/Models som
-   kräver större arbete, samt gammal `TweetCrimes.php` med borttaget
-   atymic/twitter-paket).
-4. **CI-workflow tillagd** — `.github/workflows/ci.yml` kör `composer analyse`
-   med `--error-format=github` för inline-annoteringar i PR. PHP 8.4 matchar
-   produktion. Cache för composer och PHPStan.
+   placeholder-exclude bortagna.
+2. **Alla 77 errors fixade** (inga kvar, ingen baseline behövs):
+   - Returns/nulls: `Blog.php`, `Authenticate::redirectTo`, `ListEvents`,
+     `CreateAISummaries`, `ImportVMAAlerts`, `DebugController::debug`.
+   - Return-typer: `VMAAlertsController::import`, `PixelController::pixelSok`,
+     `SearchController::getSearches`.
+   - PHPDoc covariance (list<string>/array<int,string>) i Kernel,
+     EncryptCookies, VerifyCsrfToken, Locations, Models/User, User,
+     Models/VMAAlert, EventServiceProvider.
+   - Relation-generics: `CrimeEvent::locations()` typad `HasMany<Locations, $this>`.
+   - Dead code: `FeedParserController::loadCities` borttagen, gammal dubbel-
+     kontroll i `StockholmRedirectMiddleware` borttagen, array_walk-walk för
+     statisk brand-nav i `Helper` borttagen.
+   - Dött kommando: `TweetCrimes.php` raderad (atymic/twitter-paket borttaget).
+   - Övrigt: `env()` → `config()` i `Helper::signUrl` (+ services.google),
+     `json_decode(..., true)` i `VMAAlertsController`, `@var Distance` i
+     `Place::getClosestPolicestations`, eloquent-collections i
+     `StartController` / `EventsBox` för `->load()`, `getAttribute('words')`
+     i `Dictionary` för DB::raw-alias.
+3. **Ingen CI** — solo-projekt. AGENTS.md uppdaterad med instruktion om att
+   köra `composer analyse` lokalt före commit.
 
 ### Vidare arbete
 
-- Pint kan läggas till senare (separat jobb i `ci.yml` + initial
-  formatting-commit + `.git-blame-ignore-revs`).
-- Krymp baseline över tid: fixa t.ex. `TweetCrimes.php` (återinstallera paket
-  eller ta bort kommandot), `property.phpDocType` i Kernel/Middleware
-  (byt `array` → `array<int, string>` i PHPDoc).
-- Höj level 5 → 6 → 7 när baseline krympt markant.
+- Höj level 5 → 6 → 7 nu när allt är grönt. Varje steg ger nya kategorier
+  att fixa men grunden är lagd.
+- Lägg till `tests/` i paths och fixa/baseline de felen.
+- Pint kan läggas till (preset: laravel) för kodstandard.
 
 Föreslagen ordning för genomförande:
 

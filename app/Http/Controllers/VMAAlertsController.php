@@ -135,7 +135,7 @@ class VMAAlertsController extends Controller {
           }
         ';
 
-    $alerts = json_decode($json_data, JSON_PRETTY_PRINT);
+    $alerts = json_decode($json_data, true);
     return response()->json($alerts);
   }
 

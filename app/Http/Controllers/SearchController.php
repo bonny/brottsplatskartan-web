@@ -26,12 +26,15 @@ class SearchController extends Controller {
 
     /**
      * Hämta sökningar som användare gjort.
-     * 
-     * @param bool $only_with_hits_more_than Om bara sökningar med träffar ska hämtas.
-     * @return array
+     *
+     * @param int $only_with_hits_more_than Filtrera bort sökningar med färre/lika antal träffar.
+     * @param int $only_with_count_more_than Filtrera bort sökningar gjorda färre/lika antal gånger.
+     * @return Collection<string, array{hits: int, count: int, last: string}>
      */
-    public static function getSearches($only_with_hits_more_than = 0, $only_with_count_more_than = 0) {
-        $searches = Collection::make( \Setting::get('searches3', []) );
+    public static function getSearches(int $only_with_hits_more_than = 0, int $only_with_count_more_than = 0) {
+        /** @var array<string, array{hits: int, count: int, last?: string}> $settingData */
+        $settingData = \Setting::get('searches3', []);
+        $searches = Collection::make($settingData);
        
         // Ta bort för korta sökningar.
         $searches = $searches->reject(function ($vals, $key) {

@@ -299,7 +299,7 @@ class FeedParserController extends Controller
 
     public function getHighwaysAddedManually()
     {
-        $added = highways_added::all()->pluck("name")->toArray();
+        $added = highways_added::query()->pluck("name")->toArray();
 
         $added = array_map("trim", $added);
         $added = array_map("mb_strtolower", $added);
@@ -312,33 +312,13 @@ class FeedParserController extends Controller
      */
     public function getHighwaysStopwords()
     {
-        $ignoredHighways = highways_ignored::all()->pluck("name")->toArray();
+        $ignoredHighways = highways_ignored::query()->pluck("name")->toArray();
 
         $ignoredHighways = array_map("trim", $ignoredHighways);
         $ignoredHighways = array_map("mb_strtolower", $ignoredHighways);
 
         return $ignoredHighways;
     }
-
-    private function loadCities()
-    {
-
-        if (isset($this->citiesItems)) {
-            return $this->citiesItems;
-        }
-
-        // Find locations in content
-        $citiesFile   = resource_path() . "/openstreetmap/swedish-cities-sorted-unique.txt";
-        $citiesItems  = file($citiesFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-
-        $citiesItems = array_map("trim", $citiesItems);
-        $citiesItems = array_map("mb_strtolower", $citiesItems);
-
-        $this->citiesItems = $citiesItems;
-
-        return $citiesItems;
-    }
-
 
     /**
      * Check if item teaser or content contains street names

@@ -39,6 +39,7 @@ class Place extends Model
                 $locationGps = $policeStation->location->gps;
                 $locationLatlng = explode(',', $locationGps);
                 $coordPoliceStation = new \League\Geotools\Coordinate\Coordinate([$locationLatlng[0], $locationLatlng[1]]);
+                /** @var \League\Geotools\Distance\Distance $distance */
                 $distance = $geotools->distance()->setFrom($coordPlace)->setTo($coordPoliceStation);
                 $policeStation->distance = $distance->flat();
             });

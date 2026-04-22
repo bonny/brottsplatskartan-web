@@ -53,6 +53,8 @@ class CrimeEvent extends Model implements Feedable {
 
     /**
      * Get the locations for the event post.
+     *
+     * @return HasMany<Locations, $this>
      */
     public function locations(): HasMany {
         return $this->hasMany(Locations::class);

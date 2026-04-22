@@ -421,7 +421,7 @@ class Helper {
     // Sign a URL with a given crypto key
     // Note that this URL must be properly URL-encoded
     public static function signUrl($myUrlToSign) {
-        $privateKey = env("GOOGLE_SIGNING_SECRET");
+        $privateKey = config('services.google.signing_secret');
 
         // parse the url
         $url = parse_url($myUrlToSign);
@@ -1263,12 +1263,6 @@ class Helper {
                 'url' => '/brand/'
             ]
         ];
-
-        array_walk($undersidor, function (&$val, $key) {
-            if (empty($val['url'])) {
-                $val['url'] = "/brand/{$key}";
-            }
-        });
 
         return $undersidor;
     }

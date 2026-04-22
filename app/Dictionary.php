@@ -33,7 +33,7 @@ class Dictionary extends Model
                 foreach ($wordsAndSynonyms as $oneWordAndSynonyms) {
                     $arrWords = array_merge(
                         $arrWords,
-                        explode(',', $oneWordAndSynonyms->words)
+                        explode(',', $oneWordAndSynonyms->getAttribute('words'))
                     );
                 }
 

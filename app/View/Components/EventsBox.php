@@ -34,10 +34,10 @@ class EventsBox extends Component {
                 $title = 'Mest lästa händelserna';
                 $containerId = 'mest-last';
                 $moreEventsLink = route('mostRead');
-                $events = Helper::getMostViewedEventsRecently();
-                $events = $events->map(function (CrimeView $crimeView) {
-                    return $crimeView->crimeEvent;
-                });
+                $crimeViews = Helper::getMostViewedEventsRecently();
+                $events = new \Illuminate\Database\Eloquent\Collection(
+                    $crimeViews->map(fn (CrimeView $crimeView) => $crimeView->crimeEvent)->filter()->all()
+                );
 
                 // Eager-loada locations för att undvika N+1 queries
                 // Efter mappning försvinner eager-loaded relationer

@@ -15,7 +15,7 @@ class PixelController extends Controller {
      *
      * @param Request $req Request.
      *
-     * @return array
+     * @return array|\Illuminate\Http\JsonResponse
      */
     public function pixelSok(Request $req) {
         $query = urldecode($req->input('q'));
@@ -30,7 +30,7 @@ class PixelController extends Controller {
         // Exempel: https://brottsplatskartan.se/pixel-sok?show-setting
         if ($req->has('show-setting')) {
             $searches = \Setting::get($settingsKey, []);
-            return $searches;
+            return is_array($searches) ? $searches : [];
         }
 
         // Bail on query är tom.

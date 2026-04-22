@@ -53,9 +53,9 @@ class StartController extends Controller
         // Mappar CrimeView-objekt till CrimeEvent-objekt.
         // Vi cachar inte resultatet här eftersom getMostViewedEventsRecently() redan cachar,
         // och dubbel-cachning kan förstöra eager-loadade relationer (locations).
-        $eventsMostViewedRecentlyCrimeEvents = $eventsMostViewedRecently->map(function ($item) {
-            return $item->crimeEvent;
-        });
+        $eventsMostViewedRecentlyCrimeEvents = new \Illuminate\Database\Eloquent\Collection(
+            $eventsMostViewedRecently->map(fn ($item) => $item->crimeEvent)->filter()->all()
+        );
 
         // Eager-loada locations för att undvika N+1 queries
         // Efter deserialisering från cache försvinner eager-loaded relationer,

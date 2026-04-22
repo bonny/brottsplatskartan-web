@@ -33,15 +33,8 @@ class StockholmRedirectMiddleware
             'lan/Stockholm%20County'
         ];
 
-        // Check if the current path matches any of our patterns
         foreach ($patterns as $pattern) {
-            // Match direct paths
             if (stripos($path, $pattern) === 0) {
-                return redirect()->route('city', ['city' => 'stockholm'], 301);
-            }
-            
-            // Match pagination paths by checking if the path starts with our pattern and contains /handelser/
-            if (stripos($path, $pattern) === 0 && strpos($path, '/handelser/') !== false) {
                 return redirect()->route('city', ['city' => 'stockholm'], 301);
             }
         }

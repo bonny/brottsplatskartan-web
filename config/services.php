@@ -35,6 +35,10 @@ return [
         'secret' => env('STRIPE_SECRET'),
     ],
 
+    'google' => [
+        'signing_secret' => env('GOOGLE_SIGNING_SECRET'),
+    ],
+
     'claude' => [
         'api_key' => env('CLAUDE_API_KEY'),
         'model' => env('CLAUDE_MODEL', 'claude-sonnet-4-5-20250929'),
