@@ -220,7 +220,36 @@ men inte nödvändigt initialt.
 
 ## Status / nästa steg
 
-Status: **utredning klar, ej påbörjat implementation**.
+Status: **klar 2026-04-22**.
+
+Genomfört:
+
+1. **`phpstan.neon` uppdaterad** med best practice: `tmpDir`,
+   `treatPhpDocTypesAsCertain: false`, `reportUnmatchedIgnoredErrors: false`,
+   `checkModelProperties: false`. Gamla `ignoreErrors: #@var#`-patternen och
+   placeholder-exclude bortagna. Baseline-fil inkluderas.
+2. **~30 errors fixade direkt** (77 → 47): `Blog.php` nullCoalesce,
+   `Authenticate::redirectTo` explicit null-return, `ListEvents` (cast till int,
+   `$events` init), `CreateAISummaries`/`ImportVMAAlerts` return int,
+   `DebugController::debug` return null, `VMAAlertsController::import` rätt
+   return-type, `EventMarkdownRenderer` `@var Newsarticle` för foreach,
+   redundant `?? ''` på `Str::markdown`.
+3. **Baseline genererad** för resterande 47 fel → `phpstan-baseline.neon`
+   (mest `property.phpDocType`-covariance på Kernel/Middleware/Models som
+   kräver större arbete, samt gammal `TweetCrimes.php` med borttaget
+   atymic/twitter-paket).
+4. **CI-workflow tillagd** — `.github/workflows/ci.yml` kör `composer analyse`
+   med `--error-format=github` för inline-annoteringar i PR. PHP 8.4 matchar
+   produktion. Cache för composer och PHPStan.
+
+### Vidare arbete
+
+- Pint kan läggas till senare (separat jobb i `ci.yml` + initial
+  formatting-commit + `.git-blame-ignore-revs`).
+- Krymp baseline över tid: fixa t.ex. `TweetCrimes.php` (återinstallera paket
+  eller ta bort kommandot), `property.phpDocType` i Kernel/Middleware
+  (byt `array` → `array<int, string>` i PHPDoc).
+- Höj level 5 → 6 → 7 när baseline krympt markant.
 
 Föreslagen ordning för genomförande:
 

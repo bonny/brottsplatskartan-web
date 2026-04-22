@@ -32,5 +32,7 @@ class ImportVMAAlerts extends Command
         ['importedAlerts' => $importedAlerts] = VMAAlertsController::import();
         $this->line(sprintf('%d meddelanden importerades eller uppdaterades.', count($importedAlerts)));
         $this->line('Import klar.');
+
+        return Command::SUCCESS;
     }
 }

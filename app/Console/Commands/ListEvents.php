@@ -30,14 +30,16 @@ class ListEvents extends Command {
     public function handle() {
         $this->line('Senaste händelserna:');
 
-        $order = $this->option('order');
-        $count = $this->option('count');
+        $order = (string) $this->option('order');
+        $count = (int) $this->option('count');
 
         $valid_orders = ['parsed_date', 'id', 'most_viewed', 'most_viewed_recently'];
         if (!in_array($order, $valid_orders)) {
             $this->error('Invalid order option. Valid options are: ' . implode(', ', $valid_orders));
             return Command::FAILURE;
         }
+
+        $events = collect();
 
         if ( in_array($order, ['parsed_date', 'id']) ) {
             $events = CrimeEvent::select(['id', 'parsed_date', 'title'])

@@ -41,8 +41,9 @@ class EventMarkdownRenderer
         $md .= "\n## Händelsetext\n\n";
         $md .= $body . "\n\n";
 
-        if ($event->newsarticles && $event->newsarticles->count()) {
+        if ($event->newsarticles->count()) {
             $md .= "## Relaterade nyhetsartiklar\n\n";
+            /** @var \App\Newsarticle $article */
             foreach ($event->newsarticles as $article) {
                 $title = $article->title ?? $article->url;
                 $md .= "- [{$title}]({$article->url})\n";

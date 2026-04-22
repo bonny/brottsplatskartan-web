@@ -111,6 +111,8 @@ class DebugController extends Controller
             // \Debugbar::info($events);
 
         }
+
+        return null;
     }
 
     private function getEventsForTodayMaybeCached($date, $daysBack, $useCache)

@@ -141,8 +141,8 @@ class VMAAlertsController extends Controller {
 
   /**
    * Importera VMA från SR:s API.
-   * 
-   * @return void 
+   *
+   * @return array{importedAlerts: \Illuminate\Support\Collection<int, VMAAlert>}
    */
   public static function import() {
     $response = Http::get(config('app.vma_alerts_url'));
@@ -341,7 +341,7 @@ Hos Krisinformation och MSB kan du läsa fler vanliga frågor och svar:
         $text = '';
     }
 
-    $text = Str::markdown($text ?? '');
+    $text = Str::markdown($text);
 
     return view(
       'vma-text',

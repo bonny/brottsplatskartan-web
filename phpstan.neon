@@ -1,16 +1,27 @@
 includes:
     - ./vendor/larastan/larastan/extension.neon
+    - ./phpstan-baseline.neon
 
 parameters:
-
-    paths:
-        - app
 
     # Level 9 är högsta. 5 är rimligt för äldre Laravel-kodbas.
     level: 5
 
-    ignoreErrors:
-        - '#PHPDoc tag @var#'
+    paths:
+        - app
 
-    excludePaths:
-        - ./*/*/FileToBeExcluded.php
+    # Cache-katalog för snabbare efterföljande körningar.
+    tmpDir: storage/framework/cache/phpstan
+
+    # Minskar brus från Eloquent-accessors och PHPDoc som inte helt matchar
+    # faktisk runtime-typ — typiskt i Laravel-projekt.
+    treatPhpDocTypesAsCertain: false
+
+    # Eloquent-modeller har dynamiska properties via magic __get.
+    # Larastan tolkar de flesta korrekt men vissa relationer/kolumner
+    # kräver @property-annoteringar. Accepterar detta i baseline.
+    checkModelProperties: false
+
+    # Avbryt inte körningen när ignoreErrors-mönster inte matchar
+    # (t.ex. efter att en bugg fixats men mönstret glömts bort).
+    reportUnmatchedIgnoredErrors: false

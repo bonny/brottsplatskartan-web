@@ -51,6 +51,8 @@ class CreateAISummaries extends Command {
         $events_in_area->each(function ($event) {
             $this->generateSummary($event);
         });
+
+        return Command::SUCCESS;
     }
 
     protected function generateSummary($event) {
