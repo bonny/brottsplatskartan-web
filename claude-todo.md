@@ -23,7 +23,7 @@ Senast uppdaterad: 2026-04-21 (efter djupdykning per todo via sub-agenter).
 | 9   | ~~Extern DB-backup~~                                | Avfärdad — Hetzner-snapshots räcker (2026-04-21) | —                                                                                        |
 | 10  | AI-omskriva vaga titlar                             | Plan klar, kostnad ~$27 för full backfill        | [claude-todos/10-ai-omskriva-titlar.md](claude-todos/10-ai-omskriva-titlar.md)           |
 | 11  | SEO-audit enligt best practice 2026                 | **Fas 1 + mest av Fas 2 klar 2026-04-21** (sitemap+image, JSON-LD NewsArticle/Place/ItemList/Dataset, H1-audit, preconnect, LCP) | [claude-todos/11-seo-audit-2026.md](claude-todos/11-seo-audit-2026.md) |
-| 12  | LLM/AI-optimering (llms.txt, markdown/URL, AI-botar)| **Quick wins klar 2026-04-21** (robots.txt, llms.txt, alternate-markdown); markdown-rendering parkerad | [claude-todos/12-llm-optimering.md](claude-todos/12-llm-optimering.md) |
+| 12  | ~~LLM/AI-optimering (llms.txt, markdown/URL, AI-botar)~~ | **Klar 2026-04-22** (robots.txt, llms.txt, markdown per event via .md-suffix, 99.7% payload-reduktion) | [claude-todos/12-llm-optimering.md](claude-todos/12-llm-optimering.md) |
 
 ---
 
