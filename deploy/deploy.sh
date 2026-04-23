@@ -41,6 +41,26 @@ else
 	echo "→ Inga nya migrationer"
 fi
 
+# Starta nya/ändrade services och hämta nya images. Idempotent — gör
+# inget om compose.yaml inte ändrats.
+if ! git diff "$PREV_SHA" "$NEW_SHA" --quiet -- compose.yaml; then
+	echo "→ docker compose up -d (compose.yaml ändrades)"
+	$DC up -d --remove-orphans
+fi
+
+# Reload Caddy om Caddyfile ändrats (bind-mount → container-restart
+# krävs inte, bara config-reload).
+if ! git diff "$PREV_SHA" "$NEW_SHA" --quiet -- deploy/Caddyfile; then
+	echo "→ caddy reload (Caddyfile ändrades)"
+	$DC exec -T caddy caddy reload --config /etc/caddy/Caddyfile
+fi
+
+# Reload nginx-tiles om dess config ändrats.
+if ! git diff "$PREV_SHA" "$NEW_SHA" --quiet -- deploy/nginx-tiles.conf; then
+	echo "→ nginx-tiles reload (nginx-tiles.conf ändrades)"
+	$DC exec -T nginx-tiles nginx -s reload
+fi
+
 # AUTORUN fixar config/route/view cache vid restart
 echo "→ docker compose restart app scheduler"
 $DC restart app scheduler
