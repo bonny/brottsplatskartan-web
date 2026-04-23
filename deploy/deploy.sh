@@ -18,11 +18,6 @@ git fetch origin --prune
 git checkout -B main origin/main
 NEW_SHA=$(git rev-parse HEAD)
 
-if [ "$PREV_SHA" = "$NEW_SHA" ]; then
-	echo "→ Inga nya commits, inget att göra"
-	exit 0
-fi
-
 echo "→ Deploy $PREV_SHA → $NEW_SHA"
 
 # Kör composer install bara om composer.lock ändrats.
@@ -44,16 +39,13 @@ else
 	echo "→ Inga nya migrationer"
 fi
 
-# Uppdatera mbtiles om download-tiles.sh pekar på ny fil.
-# Idempotent — skippar om filen redan finns lokalt.
-# Om ny fil hämtas → starta om tileserver + rensa responsecache (event-kort
-# har cachade HTML med gamla tileserver-URL:er om filnamnet ändrats).
+# Kör download-tiles.sh (idempotent — hoppar över om filen redan finns).
+# Om ny fil hämtades: restart tileserver längre ner.
 TILES_CHANGED=0
-if ! git diff "$PREV_SHA" "$NEW_SHA" --quiet -- deploy/download-tiles.sh; then
-	echo "→ download-tiles.sh ändrades — kör nedladdning"
-	if ./deploy/download-tiles.sh | tee /tmp/download-tiles.log && grep -q "Laddar ner" /tmp/download-tiles.log; then
-		TILES_CHANGED=1
-	fi
+echo "→ download-tiles.sh"
+./deploy/download-tiles.sh | tee /tmp/download-tiles.log
+if grep -q "Laddar ner" /tmp/download-tiles.log; then
+	TILES_CHANGED=1
 fi
 
 # Starta nya/ändrade services. Idempotent — skapar bara containers som
