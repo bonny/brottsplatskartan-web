@@ -66,6 +66,12 @@ Route::get('/polisstationer', [PolisstationerController::class, 'index'])->name(
  */
 Route::match(['get', 'post'], '/', [StartController::class, 'start'])->name('start');
 
+// Alias för markdown-rotsidan. Spatie strippar .md → /index,
+// som här routas till samma controller som /. Används av
+// rel="alternate"-länken i layouten eftersom /.md blockas av nginx
+// (ser ut som dold fil) och root behöver en explicit URL.
+Route::get('/index', [StartController::class, 'start']);
+
 Route::get('/statistik', [\App\Http\Controllers\StatisticsController::class, 'index'])->name('statistik');
 
 // Sitemap-suite. Index + main + aktuellt år från Redis (regen var 30 min

@@ -33,8 +33,12 @@ Layout template for web
 
     {{-- Markdown-alternativ för LLM/AI-agenter. Samma URL + .md-suffix serverar
          ren markdown (via spatie/laravel-markdown-response för generiska sidor,
-         custom renderer för event-sidor). --}}
-    <link rel="alternate" type="text/markdown" href="{{ url()->current() }}.md">
+         custom renderer för event-sidor). Root-sidan pekar på /index.md
+         eftersom /.md blockas av nginx. --}}
+    @php
+        $_mdHref = request()->path() === '/' ? url('/index.md') : url()->current() . '.md';
+    @endphp
+    <link rel="alternate" type="text/markdown" href="{{ $_mdHref }}">
 
     @include('feed::links')
 
