@@ -4,13 +4,29 @@
 
 Nuvarande kartdata kommer från en färdig mbtiles-fil från **openmaptiles.com**
 (datumstämpel 2017-07-03) som används av `maptiler/tileserver-gl` för att generera
-statiska kartbilder åt händelsesidor. OpenMapTiles tar idag ~500 USD/år för
-prenumeration på färdiga extracts. För Sverige räcker det långt att generera
-en egen mbtiles från Geofabrik-extract med **Planetiler** — det tar ~5–15 min
+statiska kartbilder åt händelsesidor. **Filen laddades ned gratis av Pär 2017**
+— ingen prenumeration har betalats. Motivationen för uppdatering är alltså
+**inte** kostnad, utan att datan är 9 år gammal och saknar nya områden.
+För Sverige räcker det långt att generera en egen mbtiles från
+Geofabrik-extract med **Planetiler** — det tar ~5–15 min
 och resultatet är schema-kompatibelt med `basic-preview`-stilen som
 tileserver-gl levererar out-of-the-box. Ingen kodändring i Laravel krävs;
 enda filen som uppdateras är själva `.mbtiles` och URL:en i
 `deploy/download-tiles.sh`.
+
+## Tidigare erfarenhet med samma källa
+
+Vi har redan använt **Geofabrik Sweden-extract** (`sweden-latest.osm.pbf`)
+i ett tidigare projekt för att extrahera svenska gatunamn och orter till
+Brottsplatskartans platsmatchning. Pipelinen där var `osmosis` + `grep`/`sed`
+för att få ut `.txt`-listor. Samma input-fil som Planetiler behöver —
+vi är alltså redan bekanta med nedladdning och PBF-hantering.
+
+Se: `nvALT/Brottsplatskartan/svenska gatunamn och adresser från openstreetmap.md`
+(lokal Obsidian/nvALT-anteckning).
+
+Skillnaden i detta arbete är bara att byta `osmosis` mot `planetiler` i
+Docker-kedjan, och få ut `.mbtiles` istället för `.txt`.
 
 ## Nuläge — hur det fungerar idag
 
@@ -22,8 +38,8 @@ enda filen som uppdateras är själva `.mbtiles` och URL:en i
 - Laddas ner via `deploy/download-tiles.sh` (idempotent)
 
 ### Ursprung (från `../brottsplatskartan-tileserver/readme.md`)
-- Filen köptes/laddades ned färdig från **openmaptiles.com**
-  (`downloads/tileset/osm/europe/sweden/`)
+- Filen laddades ned **gratis** från **openmaptiles.com** 2017 av Pär
+  (`downloads/tileset/osm/europe/sweden/`). Ingen betalning involverad.
 - Ingen egen pipeline finns — det fanns alltså aldrig något build-script att återanvända
 - Tidigare körde tileservern på Dokku, nu på Docker Compose på Hetzner
 
@@ -106,6 +122,21 @@ docker run --rm -v /tmp:/data \
 # Resultat: /tmp/sweden-latest.mbtiles (~1.2–1.8 GB)
 ```
 
+**Viktigt att veta första gången (från review 2026-04-23):**
+
+- **Extra data-nedladdningar (~1 GB):** Planetilers `openmaptiles`-profil
+  hämtar water polygons från osmdata.openstreetmap.de, natural earth-data
+  och lake centerlines vid första körningen. Lägg på nedladdningstid
+  utöver Sverige-PBF:en. De cachas mellan körningar.
+
+- **`--force`** skriver över existerande mbtiles utan varning. Ofarligt
+  men värt att känna till.
+
+- **Kör INTE build på prod-servern** (CX33 har bara 8 GB RAM totalt och
+  mariadb+redis+app äter redan). Planetiler vill gärna ha 4–8 GB heap
+  själv. Kör lokalt eller på GitHub Actions-runner istället och ladda
+  bara upp resultatet.
+
 ### 2. Testa lokalt mot tileserver-gl
 ```bash
 # Kopiera in till deploy/tileserver/ och döp om den gamla tillfälligt
@@ -173,25 +204,27 @@ Gamla filen i Object Storage kan ligga kvar tills man är säker på den nya.
 - **Aktuella vägar** — 9 års nya vägar, cykelbanor, kvartersnamn
 - **Nya adresser och bebyggelseområden** — t.ex. Hagastaden, Barkarbystaden,
   nya Slussen i Stockholm m.fl. som inte finns i 2017-datan
-- **Fria från openmaptiles.com-prenumeration** (de tar idag betalt för
-  färdiga extracts — att generera själv är helt gratis)
 - **Reproducerbar pipeline** — kan köras igen när som helst
 - **Möjlighet till återkommande uppdateringar** — t.ex. årligen via
   GitHub Action om man vill
 
 ## Att validera före start (från review 2026-04-22)
 
-1. **OpenMapTiles-kostnaden** ($500/år) — hela motivationen vilar på att det
-   faktiskt kostar. Dubbelkolla aktuell prisstruktur innan arbete påbörjas.
-   Om det fortfarande finns gratis-alternativ från OpenMapTiles försvinner
-   en stor del av nyttan.
+1. ~~**OpenMapTiles-kostnaden**~~ — utgår. Filen laddades ned gratis av Pär
+   2017 och vi har aldrig betalat. Motivationen är datans ålder, inte kostnad.
 
-2. **Protomaps daily builds** som alternativ
+2. **Varför egen tileserver över huvud taget:** Google Maps Static Images
+   har blivit väldigt dyrt — det är en huvudanledning till att vi kör egen
+   tileserver-gl istället för Google/Mapbox Static. Bra att ha i åtanke
+   om någon senare föreslår "byt bara till Google/Mapbox" — det är precis
+   det vi aktivt undviker.
+
+4. **Protomaps daily builds** som alternativ
    (https://maps.protomaps.com/builds) — färdiga globala PMTiles, gratis CDN.
    Kräver serverbyte från `tileserver-gl` till PMTiles-kompatibel server,
    så inte "enklast" givet nuvarande setup, men värt att nämna.
 
-3. **Attribution** — efter byte från openmaptiles.com-data till egen
+5. **Attribution** — efter byte från openmaptiles.com-data till egen
    Planetiler-build måste `layouts/web.blade.php` / `page.blade.php` uppdateras
    till "© OpenStreetMap contributors" (ODbL-krav).
 

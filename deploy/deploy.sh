@@ -44,12 +44,29 @@ else
 	echo "→ Inga nya migrationer"
 fi
 
+# Uppdatera mbtiles om download-tiles.sh pekar på ny fil.
+# Idempotent — skippar om filen redan finns lokalt.
+# Om ny fil hämtas → starta om tileserver + rensa responsecache (event-kort
+# har cachade HTML med gamla tileserver-URL:er om filnamnet ändrats).
+TILES_CHANGED=0
+if ! git diff "$PREV_SHA" "$NEW_SHA" --quiet -- deploy/download-tiles.sh; then
+	echo "→ download-tiles.sh ändrades — kör nedladdning"
+	if ./deploy/download-tiles.sh | tee /tmp/download-tiles.log && grep -q "Laddar ner" /tmp/download-tiles.log; then
+		TILES_CHANGED=1
+	fi
+fi
+
 # Starta nya/ändrade services. Idempotent — skapar bara containers som
 # saknas eller har ändrad config, rör inte resten. Fångar upp fallet
 # där deploy.sh själv uppdateras men nya services i compose.yaml
 # redan är committade.
 echo "→ docker compose up -d"
 $DC up -d --remove-orphans
+
+if [ "$TILES_CHANGED" = "1" ]; then
+	echo "→ docker compose restart tileserver (ny mbtiles)"
+	$DC restart tileserver
+fi
 
 # Restart Caddy (Caddyfile är bind-mount → up -d recreatar inte
 # containern när filen ändrats, och 'caddy reload' har visat sig

@@ -209,6 +209,11 @@ docker compose down && docker compose up -d
 
 Se **[deploy/provision.md](deploy/provision.md)**.
 
+### Uppdatera mbtiles (kartdata)
+
+Se **[deploy/update-tiles.md](deploy/update-tiles.md)** för Planetiler-pipelinen.
+Körs vid behov (~1–2 ggr/år) när kartdatan blir för gammal. Gratis och reproducerbart.
+
 ### Produktions-env
 
 `.env` ligger i `/opt/brottsplatskartan/.env` på servern (chmod 600, ägd av `deploy`).

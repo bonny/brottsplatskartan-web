@@ -29,3 +29,6 @@ bpk*.gz
 
 # Laravel Pail dev-logger
 /storage/pail/
+
+# Arbetskatalog för mbtiles-uppdatering (pbf + planetiler-cache + output)
+/tmp-maps/
