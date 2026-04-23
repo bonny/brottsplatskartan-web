@@ -91,6 +91,15 @@ services:
       - ./deploy/tileserver:/data:ro
     networks: [internal]
 
+  nginx-tiles:
+    image: nginx:alpine
+    restart: unless-stopped
+    volumes:
+      - ./deploy/nginx-tiles.conf:/etc/nginx/nginx.conf:ro
+      - nginx-tiles-cache:/var/cache/nginx/tiles
+    depends_on: [tileserver]
+    networks: [internal]
+
   caddy:
     image: caddy:2-alpine
     restart: unless-stopped
@@ -101,7 +110,7 @@ services:
       - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy-data:/data
       - caddy-config:/config
-    depends_on: [app, tileserver]
+    depends_on: [app, tileserver, nginx-tiles]
     networks: [internal]
 
 volumes:
@@ -109,6 +118,7 @@ volumes:
   redis-data:
   caddy-data:
   caddy-config:
+  nginx-tiles-cache:
 
 networks:
   internal:

@@ -21,7 +21,7 @@ brottsplatskartan.se {
 }
 
 kartbilder.brottsplatskartan.se {
-	reverse_proxy tileserver:8080
+	reverse_proxy nginx-tiles:80
 	encode gzip zstd
 	# Aggressiv cache — tiles ändras sällan
 	header Cache-Control "public, max-age=604800, immutable"
@@ -34,7 +34,7 @@ hetzner.brottsplatskartan.se {
 }
 
 hetzner-kartbilder.brottsplatskartan.se {
-	reverse_proxy tileserver:8080
+	reverse_proxy nginx-tiles:80
 	encode gzip zstd
 	header Cache-Control "public, max-age=604800, immutable"
 }
