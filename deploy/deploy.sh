@@ -55,11 +55,10 @@ $DC up -d --remove-orphans
 echo "→ docker compose restart caddy"
 $DC restart caddy
 
-# Reload nginx-tiles om dess config ändrats.
-if ! git diff "$PREV_SHA" "$NEW_SHA" --quiet -- deploy/nginx-tiles.conf; then
-	echo "→ nginx-tiles reload (nginx-tiles.conf ändrades)"
-	$DC exec -T nginx-tiles nginx -s reload 2>/dev/null || true
-fi
+# Restart nginx-tiles alltid (samma logik som caddy — bind-mount +
+# reload har visat sig opålitligt).
+echo "→ docker compose restart nginx-tiles"
+$DC restart nginx-tiles
 
 # AUTORUN fixar config/route/view cache vid restart
 echo "→ docker compose restart app scheduler"
