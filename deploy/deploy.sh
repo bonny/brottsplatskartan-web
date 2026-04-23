@@ -21,6 +21,7 @@ if [ "$PREV_SHA" = "$NEW_SHA" ]; then
 fi
 
 echo "→ Deploy $PREV_SHA → $NEW_SHA"
+echo "→ (deploy.sh v2: ovillkorlig up -d + caddy reload)"
 
 # Kör composer install bara om composer.lock ändrats.
 # Körs som root pga named volume-perms, AUTORUN av för att slippa
