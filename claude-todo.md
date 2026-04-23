@@ -28,6 +28,8 @@ Senast uppdaterad: 2026-04-21 (efter djupdykning per todo via sub-agenter).
 | 14  | Backup av övriga sajter på gamla DO-servern         | Inventering + dump av Dokku-appar innan avveckling | [claude-todos/14-backup-do-server.md](claude-todos/14-backup-do-server.md) |
 | 15  | ~~Server-side cache för kartbilder (tiles)~~        | **Klar 2026-04-23** (nginx-sidecar med proxy_cache, verifierad i prod) | [claude-todos/15-tiles-cache-caddy.md](claude-todos/15-tiles-cache-caddy.md) |
 | 16  | Rensa / avveckla gamla DO-servern (Dokku)           | Efter #14 + minst 2v stabil Hetzner — tidigast ~2026-05-15 | [claude-todos/16-rensa-do-server.md](claude-todos/16-rensa-do-server.md) |
+| 17  | Ta bort `hetzner.*`-testdomänerna                   | Kan göras direkt — cutover klar                  | [claude-todos/17-ta-bort-hetzner-domaner.md](claude-todos/17-ta-bort-hetzner-domaner.md) |
+| 18  | Attribution vid statiska kartbilder (ODbL)          | Låg prio — gråzon, ingen akut licensrisk         | [claude-todos/18-attribution-vid-kartbilder.md](claude-todos/18-attribution-vid-kartbilder.md) |
 
 ---
 
