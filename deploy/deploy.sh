@@ -41,24 +41,22 @@ else
 	echo "→ Inga nya migrationer"
 fi
 
-# Starta nya/ändrade services och hämta nya images. Idempotent — gör
-# inget om compose.yaml inte ändrats.
-if ! git diff "$PREV_SHA" "$NEW_SHA" --quiet -- compose.yaml; then
-	echo "→ docker compose up -d (compose.yaml ändrades)"
-	$DC up -d --remove-orphans
-fi
+# Starta nya/ändrade services. Idempotent — skapar bara containers som
+# saknas eller har ändrad config, rör inte resten. Fångar upp fallet
+# där deploy.sh själv uppdateras men nya services i compose.yaml
+# redan är committade.
+echo "→ docker compose up -d"
+$DC up -d --remove-orphans
 
-# Reload Caddy om Caddyfile ändrats (bind-mount → container-restart
-# krävs inte, bara config-reload).
-if ! git diff "$PREV_SHA" "$NEW_SHA" --quiet -- deploy/Caddyfile; then
-	echo "→ caddy reload (Caddyfile ändrades)"
-	$DC exec -T caddy caddy reload --config /etc/caddy/Caddyfile
-fi
+# Reload Caddy alltid (Caddyfile är bind-mount → up -d recreatar inte
+# containern när filen ändrats). Reload är cheap och idempotent.
+echo "→ caddy reload"
+$DC exec -T caddy caddy reload --config /etc/caddy/Caddyfile 2>/dev/null || true
 
 # Reload nginx-tiles om dess config ändrats.
 if ! git diff "$PREV_SHA" "$NEW_SHA" --quiet -- deploy/nginx-tiles.conf; then
 	echo "→ nginx-tiles reload (nginx-tiles.conf ändrades)"
-	$DC exec -T nginx-tiles nginx -s reload
+	$DC exec -T nginx-tiles nginx -s reload 2>/dev/null || true
 fi
 
 # AUTORUN fixar config/route/view cache vid restart
