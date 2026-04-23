@@ -43,6 +43,11 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\FlexibleCacheResponse::class,
             \App\Http\Middleware\DebugBarMaybeEnable::class,
+            // Serverar markdown-versioner av HTML-sidor vid Accept: text/markdown,
+            // .md-suffix eller kända AI-user-agents. Event-routen har egen
+            // custom markdown-renderer och exkluderar detta via
+            // DoNotProvideMarkdownResponse-middleware.
+            \Spatie\MarkdownResponse\Middleware\ProvideMarkdownResponse::class,
         ],
 
         'api' => [

@@ -583,21 +583,30 @@ Route::get('/brand/{undersida?}', function (
 })->name('brand');
 
 /**
- * Markdown-variant av enskild händelse för LLM/agent-konsumtion.
- * URL: /{lan}/{eventName}.md — samma som HTML-URL:en + .md-suffix.
- * Standardiserat format 2026 (Anthropic, Vercel, Stripe, Mintlify m.fl.).
- * Måste ligga före HTML-routen för att .md-suffixet ska fångas.
- */
-Route::get('/{lan}/{eventName}.md', [\App\Http\Controllers\MarkdownController::class, 'event'])
-    ->name('singleEventMarkdown');
-
-/**
  * single event page/en händelse/ett crimeevent
- * ca. såhär:
  *
- * http://brottsplatskartan.se/vastra-gotalands-lan/rattfylleri-2331
+ * ca. såhär:
+ *   http://brottsplatskartan.se/vastra-gotalands-lan/rattfylleri-2331
+ *
+ * Samma URL serverar även en kurerad markdown-variant via
+ * MarkdownController när klienten efterfrågar det via:
+ *   - `.md`-suffix (Spatie stripper suffixet i RewriteMarkdownUrls-middleware
+ *     och sätter attributet `markdown-response.suffix`)
+ *   - `Accept: text/markdown`-header
+ *   - känd AI-user-agent (ClaudeBot, PerplexityBot m.fl.)
+ *
+ * Vår custom-renderer ger kortare, kurerad markdown med metadata-lista
+ * och attribution — bättre än Spaties generiska HTML→MD-konvertering.
  */
 Route::get('/{lan}/{eventName}', function ($lan, $eventName, Request $request) {
+    // Om requesten egentligen vill ha markdown — delegera till vår
+    // custom-renderer istället för att returnera HTML (som Spaties
+    // middleware annars skulle konvertera generiskt).
+    $detector = app(\Spatie\MarkdownResponse\Actions\DetectsMarkdownRequest::class);
+    if ($detector($request) !== null) {
+        return app(\App\Http\Controllers\MarkdownController::class)
+            ->event($lan, $eventName, $request);
+    }
     // Event måste innehålla siffra sist = crime event id.
     preg_match('!\d+$!', $eventName, $matches);
     if (!isset($matches[0])) {
@@ -683,7 +692,12 @@ Route::get('/{lan}/{eventName}', function ($lan, $eventName, Request $request) {
     ];
 
     return view('single-event', $data);
-})->name("singleEvent");
+})
+    ->name("singleEvent")
+    // Event-routen har egen custom markdown-renderer via
+    // MarkdownController. Stäng av Spatie-konverteringen för denna route
+    // så att ClaudeBot m.fl. får vår kurerade markdown istället.
+    ->middleware(\Spatie\MarkdownResponse\Middleware\DoNotProvideMarkdownResponse::class);
 
 /**
  * Redirect gamla /sok/ till nya /sok-blåljushändelser.

@@ -22,17 +22,36 @@ uppdateras var 12:e minut.
 - JSON API: https://brottsplatskartan.se/api/events
 - Se även /api-docs för komplett API-referens.
 
-## Markdown-variant per händelse
+## Markdown-variant av alla sidor
 
-Varje enskild händelse serveras även som ren markdown genom att
-lägga till `.md` i URL:en. Exempel:
+Hela sajten serveras även som ren markdown. Agenter får markdown
+automatiskt via tre olika mekanismer:
+
+1. **`.md`-suffix i URL:** `https://brottsplatskartan.se/statistik.md`
+2. **`Accept: text/markdown`-header** (enligt acceptmarkdown.com-standarden)
+3. **Känd AI-user-agent** (ClaudeBot, PerplexityBot, Anthropic, Google-Extended m.fl.)
+
+Exempel:
 
 - HTML: https://brottsplatskartan.se/stockholms-lan/rattfylleri-2331
 - Markdown: https://brottsplatskartan.se/stockholms-lan/rattfylleri-2331.md
+- Eller: `curl -H "Accept: text/markdown" https://brottsplatskartan.se/stockholms-lan/rattfylleri-2331`
 
-Markdown-varianten har ingen navigation eller reklam och är ~98% mindre
-än HTML-versionen. Content-Type: `text/markdown; charset=utf-8`. En
-`Link: rel=canonical`-header pekar på HTML-versionen.
+Response headers:
+- `Content-Type: text/markdown; charset=utf-8`
+- `Vary: Accept`
+- `X-Robots-Tag: noindex` (markdown-varianten ska inte indexeras)
+- `Link: <canonical-url>; rel="canonical"` (för event-sidor)
+- `Content-Signal: ai-train=disallow, ai-input=allow, search=allow`
+
+Event-sidor (enskilda händelser) har en **kurerad markdown-rendering**
+med strukturerad metadata-lista (Typ, Datum, Plats, Län, Koordinater),
+händelsetext och länkar till relaterade nyhetsartiklar. ~99% mindre än
+HTML-versionen.
+
+Övriga sidor (startsida, län, plats, statistik m.fl.) konverteras
+automatiskt från HTML till markdown via
+[spatie/laravel-markdown-response](https://github.com/spatie/laravel-markdown-response).
 
 ## Sitemap
 

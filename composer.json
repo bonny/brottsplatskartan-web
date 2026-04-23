@@ -41,6 +41,7 @@
         "simplepie/simplepie": "^1.9",
         "spatie/laravel-feed": "^4.0",
         "spatie/laravel-ignition": "^2.0",
+        "spatie/laravel-markdown-response": "^1.2",
         "spatie/laravel-responsecache": "^8.0",
         "spatie/laravel-sitemap": "^8.1",
         "stevegrunwell/time-constants": "^1.1",

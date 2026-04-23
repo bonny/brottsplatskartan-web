@@ -22,6 +22,35 @@ class BrottsplatskartanCacheProfile extends CacheAllSuccessfulGetRequests
         }
         return parent::hasCacheableContentType($response);
     }
+
+    /**
+     * Varierar cache-nyckeln så HTML- och markdown-varianter av samma
+     * URL får separata cache-entries. Utan detta skulle första requesten
+     * (t.ex. .md eller ClaudeBot-UA) cacha markdown och servera den
+     * till efterföljande HTML-requests.
+     */
+    public function useCacheNameSuffix(Request $request): string
+    {
+        if ($request->attributes->get('markdown-response.suffix')
+            || str_contains($request->header('Accept', ''), 'text/markdown')
+            || $this->isAiUserAgent($request)
+        ) {
+            return 'md';
+        }
+
+        return '';
+    }
+
+    private function isAiUserAgent(Request $request): bool
+    {
+        $ua = strtolower($request->userAgent() ?? '');
+        foreach (config('markdown-response.detection.detect_via_user_agents', []) as $pattern) {
+            if ($ua !== '' && str_contains($ua, strtolower($pattern))) {
+                return true;
+            }
+        }
+        return false;
+    }
     /**
      * Returnera cache-livstid i sekunder baserat på URL/route.
      *

@@ -24,6 +24,8 @@ Senast uppdaterad: 2026-04-21 (efter djupdykning per todo via sub-agenter).
 | 10  | AI-omskriva vaga titlar                             | Plan klar, kostnad ~$27 för full backfill        | [claude-todos/10-ai-omskriva-titlar.md](claude-todos/10-ai-omskriva-titlar.md)           |
 | 11  | SEO-audit enligt best practice 2026                 | **Fas 1 + mest av Fas 2 klar 2026-04-21** (sitemap+image, JSON-LD NewsArticle/Place/ItemList/Dataset, H1-audit, preconnect, LCP) | [claude-todos/11-seo-audit-2026.md](claude-todos/11-seo-audit-2026.md) |
 | 12  | ~~LLM/AI-optimering (llms.txt, markdown/URL, AI-botar)~~ | **Klar 2026-04-22** (robots.txt, llms.txt, markdown per event via .md-suffix, 99.7% payload-reduktion) | [claude-todos/12-llm-optimering.md](claude-todos/12-llm-optimering.md) |
+| 13  | Kommunicera "Hosted in EU"                          | Idé — footer/om-sida efter cutover-stabilisering | [claude-todos/13-hosted-in-eu.md](claude-todos/13-hosted-in-eu.md) |
+| 14  | Backup av övriga sajter på gamla DO-servern         | Inventering + dump av Dokku-appar innan avveckling | [claude-todos/14-backup-do-server.md](claude-todos/14-backup-do-server.md) |
 
 ---
 
