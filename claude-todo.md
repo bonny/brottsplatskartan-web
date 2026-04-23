@@ -26,7 +26,8 @@ Senast uppdaterad: 2026-04-21 (efter djupdykning per todo via sub-agenter).
 | 12  | ~~LLM/AI-optimering (llms.txt, markdown/URL, AI-botar)~~ | **Klar 2026-04-22** (robots.txt, llms.txt, markdown per event via .md-suffix, 99.7% payload-reduktion) | [claude-todos/12-llm-optimering.md](claude-todos/12-llm-optimering.md) |
 | 13  | Kommunicera "Hosted in EU"                          | Idé — footer/om-sida efter cutover-stabilisering | [claude-todos/13-hosted-in-eu.md](claude-todos/13-hosted-in-eu.md) |
 | 14  | Backup av övriga sajter på gamla DO-servern         | Inventering + dump av Dokku-appar innan avveckling | [claude-todos/14-backup-do-server.md](claude-todos/14-backup-do-server.md) |
-| 15  | Server-side cache för kartbilder (tiles)            | nginx-sidecar med proxy_cache (efter review + storleksberäkning 2026-04-23) | [claude-todos/15-tiles-cache-caddy.md](claude-todos/15-tiles-cache-caddy.md) |
+| 15  | ~~Server-side cache för kartbilder (tiles)~~        | **Klar 2026-04-23** (nginx-sidecar med proxy_cache, verifierad i prod) | [claude-todos/15-tiles-cache-caddy.md](claude-todos/15-tiles-cache-caddy.md) |
+| 16  | Rensa / avveckla gamla DO-servern (Dokku)           | Efter #14 + minst 2v stabil Hetzner — tidigast ~2026-05-15 | [claude-todos/16-rensa-do-server.md](claude-todos/16-rensa-do-server.md) |
 
 ---
 
