@@ -10,9 +10,12 @@ cd /opt/brottsplatskartan
 # laddas automatiskt på servern.
 DC="docker compose -f compose.yaml"
 
-echo "→ git pull ($(git rev-parse --abbrev-ref HEAD))"
-PREV_SHA=$(git rev-parse HEAD)
-git pull --ff-only
+# Prod kör alltid main. Tvinga checkout så driftiga branches eller
+# borttagna remote-branches inte kan paja deployen.
+PREV_SHA=$(git rev-parse HEAD 2>/dev/null || echo "none")
+echo "→ git fetch + checkout main"
+git fetch origin --prune
+git checkout -B main origin/main
 NEW_SHA=$(git rev-parse HEAD)
 
 if [ "$PREV_SHA" = "$NEW_SHA" ]; then
@@ -21,7 +24,6 @@ if [ "$PREV_SHA" = "$NEW_SHA" ]; then
 fi
 
 echo "→ Deploy $PREV_SHA → $NEW_SHA"
-echo "→ (deploy.sh v2: ovillkorlig up -d + caddy reload)"
 
 # Kör composer install bara om composer.lock ändrats.
 # Körs som root pga named volume-perms, AUTORUN av för att slippa
