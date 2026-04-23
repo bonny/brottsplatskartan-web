@@ -15,7 +15,7 @@ Senast uppdaterad: 2026-04-21 (efter djupdykning per todo via sub-agenter).
 | 1   | Minska cache-URL:er (`/plats/*/handelser/*` m.fl.)  | Avvaktar trafikdata (GA, se #8)                  | [claude-todos/01-minska-cache-urls.md](claude-todos/01-minska-cache-urls.md)             |
 | 2   | ~~SEO-review (legacy)~~                             | Sammanslagen med #11 (2026-04-21)                | —                                                                                        |
 | 3   | ~~Konsolidera blade-templates (event-kort)~~        | **Klar 2026-04-21** (9 → 3 Blade components, bugg-fix, partners-borttagning) | [claude-todos/03-blade-konsolidering.md](claude-todos/03-blade-konsolidering.md) |
-| 4   | Uppdatera mbtiles från 2017                         | Planetiler-pipeline föreslagen                   | [claude-todos/04-mbtiles-uppdatera.md](claude-todos/04-mbtiles-uppdatera.md)             |
+| 4   | ~~Uppdatera mbtiles från 2017~~                     | **Klar 2026-04-23** (Planetiler z0-15, 2.4 GB, deploy/update-tiles.md för framtida) | [claude-todos/04-mbtiles-uppdatera.md](claude-todos/04-mbtiles-uppdatera.md) |
 | 5   | ~~Laravel 12 → 13 + Spatie Response Cache 7 → 8 (SWR)~~ | **Klar 2026-04-21** (inkl. SWR + larastan-byte)  | [claude-todos/05-laravel-13-uppgradering.md](claude-todos/05-laravel-13-uppgradering.md) |
 | 6   | ~~Flytta Brottsstatistik → `/statistik`~~           | **Klar 2026-04-21** (sidan + CTA på start/län/stad/handelser) | [claude-todos/06-statistik-sida.md](claude-todos/06-statistik-sida.md)    |
 | 7   | ~~PHPStan triage~~                                  | **Klar 2026-04-22** (alla 77 errors fixade — 0 kvar på level 5, ingen baseline) | [claude-todos/07-phpstan-ci.md](claude-todos/07-phpstan-ci.md) |
