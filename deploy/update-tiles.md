@@ -195,6 +195,15 @@ Planetiler sätter attribution till "© OpenMapTiles © OpenStreetMap
 contributors" i mbtiles-metadata. Nuvarande frontend-attribution i
 `resources/views/page.blade.php` matchar redan.
 
+**Deploy verkar inte ladda ner ny fil (bash self-edit-problem)**
+Om deploy.sh har ändrats i samma commit som download-tiles.sh kan bash
+köra den gamla versionen av scriptet (läses i minnet innan
+`git checkout` uppdaterar filen på disk). Symtom: inget `→ download-tiles.sh`
+i GHA-loggen fast commit:en ändrar deploy.sh.
+
+Fix: trigga en till deploy via `gh workflow run "Deploy to Hetzner" --ref main`.
+Andra körningen har rätt version på disk från början.
+
 ## Referenser
 
 - Planetiler: https://github.com/onthegomap/planetiler
