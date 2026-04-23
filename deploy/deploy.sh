@@ -49,11 +49,11 @@ fi
 echo "→ docker compose up -d"
 $DC up -d --remove-orphans
 
-# Reload Caddy alltid (Caddyfile är bind-mount → up -d recreatar inte
-# containern när filen ändrats). Kör inne i caddy-containern med --adapter caddyfile
-# så formatet tolkas rätt.
-echo "→ caddy reload"
-$DC exec -T caddy caddy reload --config /etc/caddy/Caddyfile --adapter caddyfile
+# Restart Caddy (Caddyfile är bind-mount → up -d recreatar inte
+# containern när filen ändrats, och 'caddy reload' har visat sig
+# opålitligt i vår setup). Hård restart tar <1s och är säker.
+echo "→ docker compose restart caddy"
+$DC restart caddy
 
 # Reload nginx-tiles om dess config ändrats.
 if ! git diff "$PREV_SHA" "$NEW_SHA" --quiet -- deploy/nginx-tiles.conf; then
