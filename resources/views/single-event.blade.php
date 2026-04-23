@@ -20,11 +20,6 @@ Template för ett event/händelse
     {!! $event->getLdJson() !!}
 @endsection
 
-@section('metaContent')
-    {{-- Markdown-variant för LLM-agenter (Claude WebFetch, ChatGPT Search, Perplexity) --}}
-    <link rel="alternate" type="text/markdown" href="{{ $event->getPermalink(true) }}.md">
-@endsection
-
 @section('content')
 
     <x-crimeevent.card

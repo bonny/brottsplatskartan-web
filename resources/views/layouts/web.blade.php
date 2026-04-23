@@ -31,6 +31,11 @@ Layout template for web
         <link rel="canonical" href="{{ url()->current() }}">
     @endif
 
+    {{-- Markdown-alternativ för LLM/AI-agenter. Samma URL + .md-suffix serverar
+         ren markdown (via spatie/laravel-markdown-response för generiska sidor,
+         custom renderer för event-sidor). --}}
+    <link rel="alternate" type="text/markdown" href="{{ url()->current() }}.md">
+
     @include('feed::links')
 
     {{-- Meta description: fallback till kort sajtbeskrivning om sidan inte definierar egen --}}
