@@ -31,6 +31,12 @@
 @endif
 
 @if ($event->geocoded)
+    @php
+        $useCircleStyle = config('services.tileserver.map_style') === 'circle';
+        $nearMapSrc = $useCircleStyle
+            ? $event->getStaticImageSrcCircle(617, 463)
+            : $event->getStaticImageSrc(617, 463);
+    @endphp
     <p class="Event__map">
         @if ($overview)
             <a href="{{ $event->getPermalink() }}">
@@ -40,7 +46,10 @@
         @else
             <span class="Event__mapImageWrap Event__mapImageWrap--near">
                 <img loading="lazy" alt="{{ $event->getMapAltText() }}" class="Event__mapImage Event__mapImage--near"
-                    src="{{ $event->getStaticImageSrc(617, 463) }}" width="426" height="320" />
+                    src="{{ $nearMapSrc }}" width="426" height="320" />
+                @if ($useCircleStyle)
+                    <span class="Event__mapCaption">Ungefärlig plats — markeringen visar området, inte exakt koordinat.</span>
+                @endif
             </span>
             <span class="Event__mapImageWrap Event__mapImageWrap--far">
                 <img loading="lazy"
