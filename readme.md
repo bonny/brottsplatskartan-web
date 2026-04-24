@@ -4,15 +4,34 @@
 
 En sajt som visar [Polisens händelser](https://brottsplatskartan.se) lite finare och bättre. Fokus på karta.
 
+## Förutsättningar
+
+För att få igång projektet lokalt behöver du:
+
+- **Docker + Docker Compose** — [Docker Desktop](https://docker.com) eller [OrbStack](https://orbstack.dev) (rekommenderas på Mac, snabbare filsync).
+- **~5 GB ledigt diskutrymme** — mbtiles (~2.4 GB), databas, Docker-images m.m.
+- **`.test`-domäner** — installera [Valet](https://laravel.com/docs/valet) eller konfigurera `dnsmasq` själv så att `*.test` löser till `127.0.0.1`. Ingen Valet-proxy behövs — bara DNS-delen.
+- **mbtiles för tileservern** — `.mbtiles`-filen är gitignored (för stor för git). Ladda ner den med:
+
+    ```bash
+    ./deploy/download-tiles.sh
+    ```
+
+    Utan denna fil kraschar `tileserver`-containern i loop.
+
 ## Lokal utveckling
 
+Kortversion (när förutsättningarna är uppfyllda):
+
 ```bash
-docker compose up -d
+cp deploy/.env.local.example .env
+./deploy/download-tiles.sh
+docker compose up -d --build
 ```
 
 Sajten finns på <http://brottsplatskartan.test:8350>.
 
-Se [deploy/local-dev.md](deploy/local-dev.md) för full guide.
+Se [deploy/local-dev.md](deploy/local-dev.md) för full guide (composer install, migrationer, produktionsdump m.m.).
 
 ## Importera data
 
@@ -38,10 +57,10 @@ docker compose exec -u root app composer update <paketnamn>
 
 Några exempel på sidor som sajten har. Både län och enskilda platser (gator, städer, osv.) finns.
 
--   [Händelser från Polisen i Stockholm](https://brottsplatskartan.se/plats/stockholm) och i hela [Stockholms län](https://brottsplatskartan.se/lan/Stockholms%20l%C3%A4n).
+- [Händelser från Polisen i Stockholm](https://brottsplatskartan.se/plats/stockholm) och i hela [Stockholms län](https://brottsplatskartan.se/lan/Stockholms%20l%C3%A4n).
 
--   [Händelser från Polisen i Malmö](https://brottsplatskartan.se/plats/Malmö).
--   [Inbrott som hänt nyligen](https://brottsplatskartan.se/inbrott/senaste-inbrotten).
+- [Händelser från Polisen i Malmö](https://brottsplatskartan.se/plats/Malmö).
+- [Inbrott som hänt nyligen](https://brottsplatskartan.se/inbrott/senaste-inbrotten).
 
 ## Om datan
 
@@ -53,7 +72,7 @@ Sidan visar även de senaste och mest lästa text-tv-nyheterna från vår "syste
 
 Populära Text TV-sidor:
 
--   [Sida 100 - Nyheter](https://texttv.nu/100)
--   [Sida 300 - Sport](https://texttv.nu/300)
--   [Sida 377 - Målservice](https://texttv.nu/377)
--   [Sida 700 - Innehåll](https://texttv.nu/700)
+- [Sida 100 - Nyheter](https://texttv.nu/100)
+- [Sida 300 - Sport](https://texttv.nu/300)
+- [Sida 377 - Målservice](https://texttv.nu/377)
+- [Sida 700 - Innehåll](https://texttv.nu/700)
