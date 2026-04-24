@@ -212,8 +212,19 @@ mjukt. Samma radier som ovan.
 - [x] Extrahera URL-byggande till `StaticMapUrlBuilder` (commit b016d52)
 - [x] Implementera `circleUrl` + `edgeFadedCirclePaths` + precision→radie (commit ea47de8)
 - [x] Feature-flag `TILESERVER_MAP_STYLE` + blade-inkoppling + bildtext (commit 8f8c1e0)
-- [ ] Visuellt A/B lokalt (öppna några event-sidor i browser, jämför)
-- [ ] Deploy till prod med `TILESERVER_MAP_STYLE=bbox` (ingen synlig ändring)
+- [x] Täck även overview-vyn, list-item thumbnails och far-grenen (commits 73f91bb, 4e6ec6e)
+- [x] Visuellt verifierat lokalt — cirklar renderas i single-event, overview, mest-läst, thumbnails
+- [ ] Deploy till prod med `TILESERVER_MAP_STYLE=bbox` (default, ingen synlig ändring)
 - [ ] Flippa prod till `circle` i `/opt/brottsplatskartan/.env`, soak ~1 vecka
 - [ ] Om ok: ta bort flaggan + gamla `getStaticImageSrc`/`getStaticImageSrcFar`
 - [ ] OG-image-variant (1200×630) — separat ticket
+
+### Mix av cirklar och bboxar i listor
+
+För event med `far`/`veryfar`-precision (län-nivå och bredare) faller
+`circleUrl` tillbaka på `closeUpUrl` (bbox-rektangel) — en cirkel
+på den zoomnivån är inte meningsfull enligt designtabellen ("Län →
+visa inte alls"). Listvyer som blandar precisions-nivåer kommer
+visuellt blanda cirklar och rektanglar. Acceptabelt som första steg;
+kan adresseras senare genom att t.ex. hoppa över låg-precisions-events
+från listorna helt.
