@@ -84,7 +84,7 @@ services:
     networks: [internal]
 
   tileserver:
-    image: maptiler/tileserver-gl:v4.4.4
+    image: maptiler/tileserver-gl:v5.6.0
     restart: unless-stopped
     command: ["-p", "8080", "--verbose"]
     volumes:

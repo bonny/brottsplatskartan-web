@@ -52,6 +52,7 @@ DATESTAMP=$(date +%Y-%m-%d)
 ```
 
 **Viktigt:**
+
 - `--maxzoom=15` — matchar vad `CrimeEvent.php` begär från tileservern.
   Default är 14 och gör z15-bilder suddiga.
 - Första körningen laddar ner ~1 GB extra (water polygons,
@@ -72,8 +73,8 @@ cp tmp-maps/data/sweden-${DATESTAMP}.mbtiles \
 docker compose restart tileserver
 
 # Vänta tills den svarar och verifiera maxzoom=15
-until curl -sf -o /dev/null http://127.0.0.1:8351/styles.json; do sleep 2; done
-curl -s http://127.0.0.1:8351/data.json | grep -oE '"maxzoom":[0-9]+'
+until curl -sf -o /dev/null http://kartbilder.brottsplatskartan.test:8351/styles.json; do sleep 2; done
+curl -s http://kartbilder.brottsplatskartan.test:8351/data.json | grep -oE '"maxzoom":[0-9]+'
 ```
 
 ### 4. Visuell jämförelse
@@ -84,7 +85,7 @@ från prod (before) och lokal tileserver (after):
 ```bash
 cd tmp-maps
 BASE_URL=https://kartbilder.brottsplatskartan.se OUTDIR=before ./fetch-tiles.sh
-BASE_URL=http://127.0.0.1:8351 OUTDIR=after ./fetch-tiles.sh
+BASE_URL=http://kartbilder.brottsplatskartan.test:8351 OUTDIR=after ./fetch-tiles.sh
 open compare.html
 ```
 
@@ -103,6 +104,7 @@ rclone copy tmp-maps/data/sweden-${DATESTAMP}.mbtiles \
 ```
 
 Verifiera:
+
 ```bash
 rclone lsl "Brottsplatskartan Hetzner:brottsplatskartan/tiles/"
 curl -sI "https://brottsplatskartan.hel1.your-objectstorage.com/tiles/sweden-${DATESTAMP}.mbtiles"
@@ -182,10 +184,12 @@ så att relativ sökväg `data/sources/` är korrekt.
 
 **Tileserver serverar gammal data efter deploy**
 Kör manuellt på servern:
+
 ```bash
 docker compose exec tileserver ls /data
 docker compose restart tileserver
 ```
+
 Om gamla `.mbtiles` ligger kvar: download-tiles.sh ska rensa automatiskt.
 Verifiera `find deploy/tileserver -name '*.mbtiles'` och radera manuellt
 om nödvändigt.
@@ -203,6 +207,41 @@ i GHA-loggen fast commit:en ändrar deploy.sh.
 
 Fix: trigga en till deploy via `gh workflow run "Deploy to Hetzner" --ref main`.
 Andra körningen har rätt version på disk från början.
+
+## Uppgradera tileserver-gl image
+
+Image-versionen är pinnad i `compose.yaml` (`maptiler/tileserver-gl:vX.Y.Z`).
+Separat från mbtiles-datan — bumpa vid behov när nya versioner släpps.
+
+### Kolla senaste version
+
+```bash
+curl -s "https://hub.docker.com/v2/repositories/maptiler/tileserver-gl/tags?page_size=5&ordering=last_updated" \
+  | python3 -c "import json,sys;d=json.load(sys.stdin);[print(t['name'],t['last_updated']) for t in d['results']]"
+```
+
+Release notes: https://github.com/maptiler/tileserver-gl/releases
+
+### Uppgraderingsflöde
+
+1. Ändra tag i `compose.yaml` under `tileserver:`.
+2. Testa lokalt:
+    ```bash
+    docker compose pull tileserver && docker compose up -d tileserver
+    until curl -sf -o /dev/null http://kartbilder.brottsplatskartan.test:8351/styles.json; do sleep 2; done
+    curl -s http://kartbilder.brottsplatskartan.test:8351/data.json | grep -oE '"maxzoom":[0-9]+'
+    ```
+3. Öppna `http://localhost:8350` och bekräfta att event-sidorna renderar kartbilder normalt.
+4. Commit + push → GHA deployer.
+5. Verifiera prod: `curl -sI "https://kartbilder.brottsplatskartan.se/styles/basic-preview/static/18.068,59.330,13/640x340.jpg"`.
+
+### Rollback
+
+Backa tag-en i `compose.yaml`, commit, push. `deploy.sh` kör `docker compose up -d` och drar den gamla imagen igen.
+
+### Historik
+
+- **v4.4.4 → v5.6.0** (2026-04-24): major-hopp. maplibre-native v6 (ny renderer), jemalloc i Docker (bättre minne), fixar för renderer-memory-leaks, host-header-poisoning-säkerhetsfix, native hillshade/color-relief. Inga konfigändringar behövdes.
 
 ## Referenser
 
