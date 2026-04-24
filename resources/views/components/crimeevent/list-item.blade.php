@@ -13,6 +13,7 @@
     "
 >
 
+    @php $useCircleStyle = config('services.tileserver.map_style') === 'circle'; @endphp
     @if (!$showMap || !$event->hasMapImage())
         {{-- Ingen karta. --}}
     @elseif ($mapDistance === 'near')
@@ -21,7 +22,7 @@
                 loading="lazy"
                 alt="{{ $event->getMapAltText() }}"
                 class="ListEvent__image"
-                src="{{ $event->getStaticImageSrc(160, 160) }}"
+                src="{{ $useCircleStyle ? $event->getStaticImageSrcCircle(160, 160) : $event->getStaticImageSrc(160, 160) }}"
                 width="90"
                 height="90"
                 layout="fixed"

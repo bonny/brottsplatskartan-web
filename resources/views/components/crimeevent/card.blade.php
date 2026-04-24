@@ -41,7 +41,8 @@
         @if ($overview)
             <a href="{{ $event->getPermalink() }}">
                 <img loading="lazy" alt="{{ $event->getMapAltText() }}" class="Event__mapImage"
-                    src="{{ $event->getStaticImageSrc(640, 320) }}" width="640" height="320" />
+                    src="{{ $useCircleStyle ? $event->getStaticImageSrcCircle(640, 320) : $event->getStaticImageSrc(640, 320) }}"
+                    width="640" height="320" />
             </a>
         @else
             <span class="Event__mapImageWrap Event__mapImageWrap--near">
