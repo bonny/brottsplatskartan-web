@@ -34,7 +34,7 @@
                 loading="lazy"
                 alt="{{ $event->getMapAltText() }}"
                 class="ListEvent__image"
-                src="{{ $event->getStaticImageSrcFar(160, 160) }}"
+                src="{{ $useCircleStyle ? $event->getStaticImageSrcCircle(160, 160) : $event->getStaticImageSrcFar(160, 160) }}"
                 width="90"
                 height="90"
                 layout="fixed"
