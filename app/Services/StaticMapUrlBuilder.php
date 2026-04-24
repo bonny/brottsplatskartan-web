@@ -14,6 +14,90 @@ use App\CrimeEvent;
  */
 class StaticMapUrlBuilder
 {
+    private const EARTH_RADIUS_METERS = 6378137.0;
+
+    private const CIRCLE_COLOR_RGB = '220,50,50';
+
+    /**
+     * Radie (meter) per geo-precisionsklass från CrimeEvent::getViewPortSizeAsString().
+     * Klasser utan entry (far/veryfar) ritas inte som cirkel — de täcker hela län
+     * eller landet och blir missvisande som "ungefärlig plats".
+     */
+    private const PRECISION_RADIUS = [
+        'closest' => 150,
+        'street'  => 400,
+        'town'    => 1500,
+        'lan'     => 5000,
+    ];
+
+    /**
+     * Cirkel-variant: röd tonad cirkel runt eventets koordinat, radie från precision.
+     * Faller tillbaka på closeUpUrl() om precisionen är för grov (far/veryfar)
+     * eller om eventet saknar location_lat.
+     */
+    public function circleUrl(CrimeEvent $event, int $width = 320, int $height = 320): string
+    {
+        if (!$event->location_lat || !$event->location_lng) {
+            return $this->closeUpUrl($event, $width, $height);
+        }
+
+        $radius = self::PRECISION_RADIUS[$event->getViewPortSizeAsString()] ?? null;
+        if ($radius === null) {
+            return $this->closeUpUrl($event, $width, $height);
+        }
+
+        $base = config('services.tileserver.url')
+            . 'styles/basic-preview/static/auto/'
+            . "{$width}x{$height}.jpg";
+
+        $lat = (float) $event->location_lat;
+        $lng = (float) $event->location_lng;
+
+        $params = ['latlng=1', 'padding=0.35'];
+        foreach ($this->edgeFadedCirclePaths($lat, $lng, $radius) as $path) {
+            $params[] = 'path=' . rawurlencode($path);
+        }
+
+        return $base . '?' . implode('&', $params);
+    }
+
+    /**
+     * Genererar en polygon med N punkter som approximerar en cirkel med
+     * given radie (meter) runt (lat, lng). Output: "lat1,lng1|lat2,lng2|...".
+     */
+    public function circlePath(float $lat, float $lng, float $radiusMeters, int $points = 48): string
+    {
+        $coords = [];
+        $latRad = deg2rad($lat);
+        for ($i = 0; $i <= $points; $i++) {
+            $angle = 2 * M_PI * $i / $points;
+            $dLat  = ($radiusMeters * cos($angle)) / self::EARTH_RADIUS_METERS;
+            $dLng  = ($radiusMeters * sin($angle)) / (self::EARTH_RADIUS_METERS * cos($latRad));
+            $coords[] = sprintf('%.6f,%.6f', $lat + rad2deg($dLat), $lng + rad2deg($dLng));
+        }
+        return implode('|', $coords);
+    }
+
+    /**
+     * Tre staplade cirkelpolygoner: ytterhalo (alpha 0.07) → mellansteg (0.12)
+     * → solid kärna (0.22 med kontur). Ritningsordningen är bakifrån-och-fram,
+     * så kärnan hamnar överst och mitten ser tydligt röd ut.
+     *
+     * @return array<int, string>
+     */
+    public function edgeFadedCirclePaths(float $lat, float $lng, float $rMax, int $points = 48): array
+    {
+        $c = self::CIRCLE_COLOR_RGB;
+        return [
+            "fill:rgba({$c},0.07)|stroke:rgba({$c},0)|width:0|"
+                . $this->circlePath($lat, $lng, $rMax, $points),
+            "fill:rgba({$c},0.12)|stroke:rgba({$c},0)|width:0|"
+                . $this->circlePath($lat, $lng, $rMax * 0.93, $points),
+            "fill:rgba({$c},0.22)|stroke:rgba({$c},0.8)|width:1.2|linejoin:round|"
+                . $this->circlePath($lat, $lng, $rMax * 0.85, $points),
+        ];
+    }
+
     /**
      * Närbild: viewport-bbox som röd polygon ovanpå auto-zoomad karta.
      * Motsvarar tidigare CrimeEvent::getStaticImageSrc().

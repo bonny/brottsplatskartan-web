@@ -87,6 +87,16 @@ class CrimeEvent extends Model implements Feedable {
     }
 
     /**
+     * Ny cirkel-variant: röd tonad cirkel runt eventets koordinat,
+     * radie anpassad efter geo-precision (se todos/20). Faller tillbaka
+     * på bbox-varianten för grov precision (far/veryfar).
+     */
+    public function getStaticImageSrcCircle(int $width = 617, int $height = 463): string
+    {
+        return app(StaticMapUrlBuilder::class)->circleUrl($this, $width, $height);
+    }
+
+    /**
      * The pub date is the date from the RSS-feed,
      * i.e. when the crime is posted by polisen
      * the actual event may have happened much earlier
