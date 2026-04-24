@@ -6,7 +6,7 @@ och föreslagen plan.
 
 Senast uppdaterad: 2026-04-24.
 
-Senaste klara: #17 (hetzner-domäner, 2026-04-24).
+Senaste klara: #13 + #19 + #17 (2026-04-24).
 
 ## Konvention
 
@@ -24,16 +24,14 @@ Klara och avfärdade filer behålls för historik — raderas aldrig.
 
 ## Aktiva
 
-| #   | Titel                                              | Status                                                                                                                                      | Fil                                                                      |
-| --- | -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| 11  | SEO-audit enligt best practice 2026                | **Aktiv 2026-04-24** — Fas 1 + mest av Fas 2 klar; återstår CWV post-cutover, noindex-strategi, OG-image, image sitemap, utökad NewsArticle | [todos/11-seo-audit-2026.md](todos/11-seo-audit-2026.md)                 |
-| 8   | Google Analytics MCP + ev. Search Console MCP      | Redo för setup                                                                                                                              | [todos/08-ga-mcp.md](todos/08-ga-mcp.md)                                 |
-| 10  | AI-omskriva vaga titlar                            | Plan klar, kostnad ~$27 för full backfill                                                                                                   | [todos/10-ai-omskriva-titlar.md](todos/10-ai-omskriva-titlar.md)         |
-| 1   | Minska cache-URL:er (`/plats/*/handelser/*` m.fl.) | Blockerad av #8 (behöver GA-data)                                                                                                           | [todos/01-minska-cache-urls.md](todos/01-minska-cache-urls.md)           |
-| 13  | Kommunicera "Hosted in EU"                         | Idé — footer/om-sida efter cutover-stabilisering                                                                                            | [todos/13-hosted-in-eu.md](todos/13-hosted-in-eu.md)                     |
-| 14  | Backup av övriga sajter på gamla DO-servern        | Inventering + dump av Dokku-appar innan avveckling                                                                                          | [todos/14-backup-do-server.md](todos/14-backup-do-server.md)             |
-| 16  | Rensa / avveckla gamla DO-servern (Dokku)          | Blockerad av #14 + minst 2v stabil Hetzner — tidigast ~2026-05-15                                                                           | [todos/16-rensa-do-server.md](todos/16-rensa-do-server.md)               |
-| 19  | /mest-last: filtrera bort gamla events             | Aktiv 2026-04-24 — listan innehåller arkiv-events; lägg till 3-dagars-filter                                                                | [todos/19-mest-last-bara-nyligen.md](todos/19-mest-last-bara-nyligen.md) |
+| #   | Titel                                              | Status                                                                                                                                      | Fil                                                              |
+| --- | -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| 11  | SEO-audit enligt best practice 2026                | **Aktiv 2026-04-24** — Fas 1 + mest av Fas 2 klar; återstår CWV post-cutover, noindex-strategi, OG-image, image sitemap, utökad NewsArticle | [todos/11-seo-audit-2026.md](todos/11-seo-audit-2026.md)         |
+| 8   | Google Analytics MCP + ev. Search Console MCP      | Redo för setup                                                                                                                              | [todos/08-ga-mcp.md](todos/08-ga-mcp.md)                         |
+| 10  | AI-omskriva vaga titlar                            | Plan klar, kostnad ~$27 för full backfill                                                                                                   | [todos/10-ai-omskriva-titlar.md](todos/10-ai-omskriva-titlar.md) |
+| 1   | Minska cache-URL:er (`/plats/*/handelser/*` m.fl.) | Blockerad av #8 (behöver GA-data)                                                                                                           | [todos/01-minska-cache-urls.md](todos/01-minska-cache-urls.md)   |
+| 14  | Backup av övriga sajter på gamla DO-servern        | Inventering + dump av Dokku-appar innan avveckling                                                                                          | [todos/14-backup-do-server.md](todos/14-backup-do-server.md)     |
+| 16  | Rensa / avveckla gamla DO-servern (Dokku)          | Blockerad av #14 + minst 2v stabil Hetzner — tidigast ~2026-05-15                                                                           | [todos/16-rensa-do-server.md](todos/16-rensa-do-server.md)       |
 
 ### Beroenden
 
@@ -63,6 +61,8 @@ Klara och avfärdade filer behålls för historik — raderas aldrig.
 | 15  | Server-side cache för kartbilder (nginx-sidecar)       | 2026-04-23 | [todos/15-tiles-cache-caddy.md](todos/15-tiles-cache-caddy.md)             |
 | 4   | Uppdatera mbtiles från 2017 (Planetiler z0-15, 2.4 GB) | 2026-04-23 | [todos/04-mbtiles-uppdatera.md](todos/04-mbtiles-uppdatera.md)             |
 | 17  | Ta bort `hetzner.*`-testdomänerna                      | 2026-04-24 | [todos/17-ta-bort-hetzner-domaner.md](todos/17-ta-bort-hetzner-domaner.md) |
+| 19  | /mest-last: filtrera bort gamla events (3-dagars)      | 2026-04-24 | [todos/19-mest-last-bara-nyligen.md](todos/19-mest-last-bara-nyligen.md)   |
+| 13  | Kommunicera "Hosted in EU" (footer + /sida/om)         | 2026-04-24 | [todos/13-hosted-in-eu.md](todos/13-hosted-in-eu.md)                       |
 
 ## Avfärdade / sammanslagna
 

@@ -1,7 +1,15 @@
-**Status:** aktiv (idé — gör efter cutover-stabilisering)
-**Senast uppdaterad:** 2026-04-22
+**Status:** klar 2026-04-24
+**Senast uppdaterad:** 2026-04-24
 
 # Todo #13 — Kommunicera "Hosted in EU"
+
+## Utfört
+
+- Diskret badge i footern (`resources/views/parts/sitefooter.blade.php`)
+  — "Servrar i EU 🇪🇺 (Finland)" bredvid Cookies/Sekretesspolicy,
+  länkad till `/sida/om`.
+- Ny sektion "Servrar i EU 🇪🇺" på `/sida/om` med förklaring att
+  servrarna körs hos Hetzner i Helsingfors under GDPR.
 
 ## Sammanfattning
 

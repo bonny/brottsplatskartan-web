@@ -101,5 +101,7 @@
     <div class="">
         <a href="{{ route('page', ['pagename' => 'cookies']) }}">Cookies</a>
         | <a href="{{ route('page', ['pagename' => 'sekretesspolicy']) }}">Sekretesspolicy</a>
+        | <a href="{{ route('page', ['pagename' => 'om']) }}"
+            title="Servrarna körs hos Hetzner i Helsingfors, Finland">Servrar i EU 🇪🇺 (Finland)</a>
     </div>
 </div>

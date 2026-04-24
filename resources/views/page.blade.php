@@ -101,6 +101,11 @@
             <p>Samma sak gäller händelsetexterna: dessa texter kan vara bearbetade av en dator och tolkningsfel kan
                 förekomma.</p>
 
+            <h2>Servrar i EU 🇪🇺</h2>
+
+            <p>Brottsplatskartan körs på servrar hos <a href="https://www.hetzner.com/">Hetzner</a> i Helsingfors,
+                Finland. All data — både källor och besökstrafik — hanteras alltså inom EU, under GDPR.</p>
+
             <h2>Kontakta brottsplatskartan</h2>
 
             <p>Har du frågor om webbplatsen eller av annan anledning
