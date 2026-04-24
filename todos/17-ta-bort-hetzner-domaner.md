@@ -1,7 +1,13 @@
-**Status:** aktiv (kan göras direkt, ~10 min)
-**Senast uppdaterad:** 2026-04-22
+**Status:** klar 2026-04-24
+**Senast uppdaterad:** 2026-04-24
 
 # Todo #17 — Ta bort `hetzner.*`-testdomänerna
+
+## Utfört
+
+- DNS-record för `hetzner.brottsplatskartan.se` och `hetzner-kartbilder.brottsplatskartan.se` borttagna i Loopia
+- Caddy-blocken borttagna ur `deploy/Caddyfile`
+- Deployat → `docker compose restart caddy` kör automatiskt via `deploy.sh`
 
 ## Sammanfattning
 

@@ -26,15 +26,3 @@ kartbilder.brottsplatskartan.se {
 	# Aggressiv cache — tiles ändras sällan
 	header Cache-Control "public, max-age=604800, immutable"
 }
-
-# Test-domäner (används under flytt, tas bort efter cutover)
-hetzner.brottsplatskartan.se {
-	reverse_proxy app:8080
-	encode gzip zstd
-}
-
-hetzner-kartbilder.brottsplatskartan.se {
-	reverse_proxy nginx-tiles:80
-	encode gzip zstd
-	header Cache-Control "public, max-age=604800, immutable"
-}
