@@ -1,7 +1,18 @@
-**Status:** aktiv
+**Status:** klar 2026-04-24
 **Senast uppdaterad:** 2026-04-24
 
 # Todo #19 — /mest-last: filtrera bort gamla händelser
+
+## Utfört
+
+- `whereHas('crimeEvent')`-filter tillagt i `getMostViewedEvents` och
+  `getMostViewedEventsRecently` i `app/Helper.php` — bara events yngre
+  än 3 dagar räknas.
+- Cache-version bumpad V1 → V2 i båda metoderna så gamla listor
+  invalideras direkt.
+- Tröskeln `$maxEventAgeDays = 3` som lokal variabel per metod, lätt
+  att justera.
+- `composer analyse` grönt, `/mest-last` svarar 200 lokalt.
 
 ## Problem
 

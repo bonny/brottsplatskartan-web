@@ -1070,18 +1070,19 @@ class Helper {
             ->subDays(1)
             ->format('Y-m-d');
 
-        $cacheKey = "getMostViewedEvents:V1:D{$now}:L{$limit}";
+        $cacheKey = "getMostViewedEvents:V2:D{$now}:L{$limit}";
         $cacheTTL = 27 * 60;
+
+        // Filtrera bort arkiv-events som råkar få visningar idag —
+        // "Mest lästa [datum]" ska visa färska händelser, inte gamla.
+        $maxEventAgeDays = 3;
 
         $mostViewed = Cache::remember($cacheKey, $cacheTTL, function () use (
             $tomorrow,
             $yesterday,
-            $limit
+            $limit,
+            $maxEventAgeDays
         ) {
-            /**
-             * explain before fix: no key, 100000 rows
-             * explain after adding index to table
-             */
             $mostViewed = CrimeView::select(
                 DB::raw('count(*) as views'),
                 'crime_event_id',
@@ -1089,6 +1090,13 @@ class Helper {
             )
                 ->where('created_at', '<', $tomorrow)
                 ->where('created_at', '>', $yesterday)
+                ->whereHas('crimeEvent', function ($q) use ($maxEventAgeDays) {
+                    $q->where(
+                        'created_at',
+                        '>=',
+                        Carbon::now()->subDays($maxEventAgeDays)
+                    );
+                })
                 ->groupBy('createdYMD', 'crime_event_id')
                 ->orderBy('views', 'desc')
                 ->limit($limit)
@@ -1113,12 +1121,17 @@ class Helper {
         $minutes = 10,
         $limit = 10
     ) {
-        $cacheKey = "getMostViewedEventsRecently:v1:M{$minutes}:L{$limit}";
+        $cacheKey = "getMostViewedEventsRecently:v2:M{$minutes}:L{$limit}";
         $cacheTTL = 2 * 60;
+
+        // Samma filter som getMostViewedEvents — "nyligen visade" ska
+        // matcha "nyligen publicerade" så arkiv-events inte tar plats.
+        $maxEventAgeDays = 3;
 
         $mostViewed = Cache::remember($cacheKey, $cacheTTL, function () use (
             $minutes,
-            $limit
+            $limit,
+            $maxEventAgeDays
         ) {
             $mostViewed = CrimeView::select(
                 DB::raw('count(*) as views'),
@@ -1130,6 +1143,13 @@ class Helper {
                     [$minutes]
                 )
                 ->where('created_at', '<', Carbon::now())
+                ->whereHas('crimeEvent', function ($q) use ($maxEventAgeDays) {
+                    $q->where(
+                        'created_at',
+                        '>=',
+                        Carbon::now()->subDays($maxEventAgeDays)
+                    );
+                })
                 ->groupBy('createdYMD', 'crime_event_id')
                 ->orderBy('views', 'desc')
                 ->limit($limit)
