@@ -24,14 +24,15 @@ Klara och avfärdade filer behålls för historik — raderas aldrig.
 
 ## Aktiva
 
-| #   | Titel                                              | Status                                                                                                                                      | Fil                                                              |
-| --- | -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
-| 11  | SEO-audit enligt best practice 2026                | **Aktiv 2026-04-24** — Fas 1 + mest av Fas 2 klar; återstår CWV post-cutover, noindex-strategi, OG-image, image sitemap, utökad NewsArticle | [todos/11-seo-audit-2026.md](todos/11-seo-audit-2026.md)         |
-| 8   | Google Analytics MCP + ev. Search Console MCP      | Redo för setup                                                                                                                              | [todos/08-ga-mcp.md](todos/08-ga-mcp.md)                         |
-| 10  | AI-omskriva vaga titlar                            | Plan klar, kostnad ~$27 för full backfill                                                                                                   | [todos/10-ai-omskriva-titlar.md](todos/10-ai-omskriva-titlar.md) |
-| 1   | Minska cache-URL:er (`/plats/*/handelser/*` m.fl.) | Blockerad av #8 (behöver GA-data)                                                                                                           | [todos/01-minska-cache-urls.md](todos/01-minska-cache-urls.md)   |
-| 14  | Backup av övriga sajter på gamla DO-servern        | Inventering + dump av Dokku-appar innan avveckling                                                                                          | [todos/14-backup-do-server.md](todos/14-backup-do-server.md)     |
-| 16  | Rensa / avveckla gamla DO-servern (Dokku)          | Blockerad av #14 + minst 2v stabil Hetzner — tidigast ~2026-05-15                                                                           | [todos/16-rensa-do-server.md](todos/16-rensa-do-server.md)       |
+| #   | Titel                                              | Status                                                                                                                                      | Fil                                                                      |
+| --- | -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| 11  | SEO-audit enligt best practice 2026                | **Aktiv 2026-04-24** — Fas 1 + mest av Fas 2 klar; återstår CWV post-cutover, noindex-strategi, OG-image, image sitemap, utökad NewsArticle | [todos/11-seo-audit-2026.md](todos/11-seo-audit-2026.md)                 |
+| 8   | Google Analytics MCP + ev. Search Console MCP      | Redo för setup                                                                                                                              | [todos/08-ga-mcp.md](todos/08-ga-mcp.md)                                 |
+| 10  | AI-omskriva vaga titlar                            | Plan klar, kostnad ~$27 för full backfill                                                                                                   | [todos/10-ai-omskriva-titlar.md](todos/10-ai-omskriva-titlar.md)         |
+| 1   | Minska cache-URL:er (`/plats/*/handelser/*` m.fl.) | Blockerad av #8 (behöver GA-data)                                                                                                           | [todos/01-minska-cache-urls.md](todos/01-minska-cache-urls.md)           |
+| 14  | Backup av övriga sajter på gamla DO-servern        | Inventering + dump av Dokku-appar innan avveckling                                                                                          | [todos/14-backup-do-server.md](todos/14-backup-do-server.md)             |
+| 16  | Rensa / avveckla gamla DO-servern (Dokku)          | Blockerad av #14 + minst 2v stabil Hetzner — tidigast ~2026-05-15                                                                           | [todos/16-rensa-do-server.md](todos/16-rensa-do-server.md)               |
+| 20  | Kartbilder: rita cirkel/område runt händelsen      | Aktiv 2026-04-24 — implementerad bakom feature-flag, redo för prod-rollout                                                                  | [todos/20-kartbilder-med-cirklar.md](todos/20-kartbilder-med-cirklar.md) |
 
 ### Beroenden
 
