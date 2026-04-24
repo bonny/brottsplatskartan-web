@@ -26,7 +26,6 @@ Kvarvarande uppföljning — flyttad till separata uppgifter:
 
 ## Ursprunglig plan (behålls för historik)
 
-
 ## Sammanfattning
 
 Syftet är två saker:
@@ -38,13 +37,13 @@ Syftet är två saker:
    framtida paketstöd). Kräver PHP 8.3+ (troligen 8.4) — vi kör redan
    `serversideup/php:8.4-fpm-nginx`.
 
-Blockerare från tidigare utredning (`claude-todo.md` rad 251+):
+Blockerare från tidigare utredning (`todo.md` rad 251+):
 
-| Paket | L13-stöd | Åtgärd |
-|---|---|---|
-| `rap2hpoutre/laravel-log-viewer` | Nej | Ersätt med `laravel/pail` + ta bort route |
-| `willvincent/feeds` | Nej | Ersätt med SimplePie direkt (tunn wrapper) |
-| `claude-php/claude-php-sdk` | Oklar | Avvakta — inget akut byte krävs |
+| Paket                            | L13-stöd | Åtgärd                                     |
+| -------------------------------- | -------- | ------------------------------------------ |
+| `rap2hpoutre/laravel-log-viewer` | Nej      | Ersätt med `laravel/pail` + ta bort route  |
+| `willvincent/feeds`              | Nej      | Ersätt med SimplePie direkt (tunn wrapper) |
+| `claude-php/claude-php-sdk`      | Oklar    | Avvakta — inget akut byte krävs            |
 
 ### Prioordning
 
@@ -58,33 +57,33 @@ Blockerare från tidigare utredning (`claude-todo.md` rad 251+):
 
 Baserat på `composer.json` och `composer.lock`:
 
-| Paket | Nuvarande | L13-stöd | Åtgärd |
-|---|---|---|---|
-| `laravel/framework` | ^12.0 | — | Uppgradera till ^13.0 |
-| `laravel/sanctum` | ^4.0 | Ja (kontrollera ^5) | Bumpa om ny major finns |
-| `laravel/tinker` | ^2.7 | Ja | Inget |
-| `laravel/ui` | ^4.0 | Kontrollera ^5 | Ev. bumpa |
-| `laravel/helpers` | ^1.1 | Ja | Inget |
-| `spatie/laravel-responsecache` | ^7.7 | 8.x | Uppgradera, aktivera SWR |
-| `spatie/laravel-feed` | ^4.0 | Kontrollera ^5 | Ev. bumpa |
-| `spatie/laravel-ignition` | ^2.0 | Kontrollera ^3 | Ev. bumpa |
-| `barryvdh/laravel-debugbar` | ^3.2 | Kontrollera | Ev. bumpa |
-| `rap2hpoutre/laravel-log-viewer` | ^2.1 (v2.5.0) | **Nej** | **Ta bort**, använd `laravel/pail` |
-| `willvincent/feeds` | ^2.3.0 (v2.7.0) | **Nej** | **Ta bort**, använd SimplePie direkt |
-| `claude-php/claude-php-sdk` | ^0.5.1 | OK (ramverksfritt) | Behåll, utvärdera senare |
-| `creitive/breadcrumbs` | ^3.0 | Kontrollera | Test |
-| `duzun/hquery` | ^3.0.3 | Ramverksfritt | OK |
-| `ezyang/htmlpurifier` | ^4.17 | Ramverksfritt | OK |
-| `guzzlehttp/guzzle` | ^7.4.2 | Ja | OK |
-| `league/geotools` | ^1.1.0 | Ramverksfritt | OK |
-| `predis/predis` | ^1.1 | Ja (men ^2 finns) | Ev. bumpa |
-| `stevegrunwell/time-constants` | ^1.1 | Ramverksfritt | OK |
-| `symfony/browser-kit` | ^6.3 | — | Ev. bumpa till ^7 matchar övrigt |
-| `symfony/http-client` | ^7.0 | OK | OK |
-| `unisharp/laravel-settings` | ^2.0 | **Kontrollera** | Risk — paket uppdateras sällan |
-| **dev:** `barryvdh/laravel-ide-helper` | ^3.0 | Kontrollera | Ev. bumpa |
-| **dev:** `nunomaduro/larastan` | ^3.0 | Kontrollera ^4 | Bumpa |
-| **dev:** `phpunit/phpunit` | ^11.0 | Kontrollera ^12 | Ev. bumpa |
+| Paket                                  | Nuvarande       | L13-stöd            | Åtgärd                               |
+| -------------------------------------- | --------------- | ------------------- | ------------------------------------ |
+| `laravel/framework`                    | ^12.0           | —                   | Uppgradera till ^13.0                |
+| `laravel/sanctum`                      | ^4.0            | Ja (kontrollera ^5) | Bumpa om ny major finns              |
+| `laravel/tinker`                       | ^2.7            | Ja                  | Inget                                |
+| `laravel/ui`                           | ^4.0            | Kontrollera ^5      | Ev. bumpa                            |
+| `laravel/helpers`                      | ^1.1            | Ja                  | Inget                                |
+| `spatie/laravel-responsecache`         | ^7.7            | 8.x                 | Uppgradera, aktivera SWR             |
+| `spatie/laravel-feed`                  | ^4.0            | Kontrollera ^5      | Ev. bumpa                            |
+| `spatie/laravel-ignition`              | ^2.0            | Kontrollera ^3      | Ev. bumpa                            |
+| `barryvdh/laravel-debugbar`            | ^3.2            | Kontrollera         | Ev. bumpa                            |
+| `rap2hpoutre/laravel-log-viewer`       | ^2.1 (v2.5.0)   | **Nej**             | **Ta bort**, använd `laravel/pail`   |
+| `willvincent/feeds`                    | ^2.3.0 (v2.7.0) | **Nej**             | **Ta bort**, använd SimplePie direkt |
+| `claude-php/claude-php-sdk`            | ^0.5.1          | OK (ramverksfritt)  | Behåll, utvärdera senare             |
+| `creitive/breadcrumbs`                 | ^3.0            | Kontrollera         | Test                                 |
+| `duzun/hquery`                         | ^3.0.3          | Ramverksfritt       | OK                                   |
+| `ezyang/htmlpurifier`                  | ^4.17           | Ramverksfritt       | OK                                   |
+| `guzzlehttp/guzzle`                    | ^7.4.2          | Ja                  | OK                                   |
+| `league/geotools`                      | ^1.1.0          | Ramverksfritt       | OK                                   |
+| `predis/predis`                        | ^1.1            | Ja (men ^2 finns)   | Ev. bumpa                            |
+| `stevegrunwell/time-constants`         | ^1.1            | Ramverksfritt       | OK                                   |
+| `symfony/browser-kit`                  | ^6.3            | —                   | Ev. bumpa till ^7 matchar övrigt     |
+| `symfony/http-client`                  | ^7.0            | OK                  | OK                                   |
+| `unisharp/laravel-settings`            | ^2.0            | **Kontrollera**     | Risk — paket uppdateras sällan       |
+| **dev:** `barryvdh/laravel-ide-helper` | ^3.0            | Kontrollera         | Ev. bumpa                            |
+| **dev:** `nunomaduro/larastan`         | ^3.0            | Kontrollera ^4      | Bumpa                                |
+| **dev:** `phpunit/phpunit`             | ^11.0           | Kontrollera ^12     | Ev. bumpa                            |
 
 Verifiera L13-stöd paket för paket via `composer why-not laravel/framework:^13.0` innan uppgradering körs.
 
@@ -238,15 +237,15 @@ Laravel 13:s officiella AI-SDK (om den släpps tid nog) kan ersätta detta
 
 ## Risker
 
-| Risk | Sannolikhet | Mitigering |
-|---|---|---|
-| Feed-parsing trasig efter SimplePie-byte | Medel | Testa mot live-RSS i staging; behåll backup av gammal kod i git |
-| AI-summaries slutar fungera | Låg | SDK rörs inte i denna uppgradering |
-| Stale cache under Response Cache-switch | Medel | `artisan responsecache:clear` direkt efter deploy; verifiera att hasher-klassen är kompatibel |
-| `unisharp/laravel-settings` saknar L13-stöd | Hög | Utvärdera alternativ (`spatie/laravel-settings`) innan L13-bump |
-| Middleware-registrering flyttad till `bootstrap/app.php` | Hög | Följ upgrade guide steg för steg |
-| Debugbar / Ignition inkompatibla | Låg | Senaste minor-versioner släpps snabbt efter L13 |
-| SWR kräver queue worker som inte finns | Medel | Utöka `compose.yaml` med queue-container innan aktivering |
+| Risk                                                     | Sannolikhet | Mitigering                                                                                    |
+| -------------------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------- |
+| Feed-parsing trasig efter SimplePie-byte                 | Medel       | Testa mot live-RSS i staging; behåll backup av gammal kod i git                               |
+| AI-summaries slutar fungera                              | Låg         | SDK rörs inte i denna uppgradering                                                            |
+| Stale cache under Response Cache-switch                  | Medel       | `artisan responsecache:clear` direkt efter deploy; verifiera att hasher-klassen är kompatibel |
+| `unisharp/laravel-settings` saknar L13-stöd              | Hög         | Utvärdera alternativ (`spatie/laravel-settings`) innan L13-bump                               |
+| Middleware-registrering flyttad till `bootstrap/app.php` | Hög         | Följ upgrade guide steg för steg                                                              |
+| Debugbar / Ignition inkompatibla                         | Låg         | Senaste minor-versioner släpps snabbt efter L13                                               |
+| SWR kräver queue worker som inte finns                   | Medel       | Utöka `compose.yaml` med queue-container innan aktivering                                     |
 
 ## Fördelar
 
@@ -267,14 +266,14 @@ Laravel 13:s officiella AI-SDK (om den släpps tid nog) kan ersätta detta
 
 ## Tidsuppskattning
 
-| Delsteg | Tid |
-|---|---|
-| A. Byt feeds → SimplePie | 1–2 h |
-| B. Byt log-viewer → Pail | 0,5 h |
-| C. Response Cache 8.x + SWR | 3–5 h |
-| D. Laravel 13 core-uppgradering | 4–8 h |
-| Testning + staging-deploy | 2–4 h |
-| **Totalt** | **11–20 h** (≈ 2–3 arbetsdagar) |
+| Delsteg                         | Tid                             |
+| ------------------------------- | ------------------------------- |
+| A. Byt feeds → SimplePie        | 1–2 h                           |
+| B. Byt log-viewer → Pail        | 0,5 h                           |
+| C. Response Cache 8.x + SWR     | 3–5 h                           |
+| D. Laravel 13 core-uppgradering | 4–8 h                           |
+| Testning + staging-deploy       | 2–4 h                           |
+| **Totalt**                      | **11–20 h** (≈ 2–3 arbetsdagar) |
 
 ## Nästa steg
 

@@ -1,3 +1,7 @@
+**Status:** blockerad (väntar på #14 + 2v Hetzner-stabilitet)
+**Senast uppdaterad:** 2026-04-22
+**Blockerad av:** #14
+
 # Todo #16 — Rensa / avveckla gamla DO-servern (Dokku)
 
 ## Sammanfattning

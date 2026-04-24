@@ -1,6 +1,9 @@
+**Status:** aktiv 2026-04-24 (Fas 1 + mest av Fas 2 klar; CWV nu unblocked efter cutover)
+**Senast uppdaterad:** 2026-04-24
+
 # Todo #11 — SEO-audit enligt best practice 2026
 
-_Skapad: 2026-04-21. Ersätter och inkluderar tidigare todo #2 (legacy SEO-review) från 2026-04-21._
+_Skapad: 2026-04-21. Ersätter och inkluderar tidigare todo #2 (legacy SEO-review)._
 
 ## Status
 
@@ -28,10 +31,12 @@ _Skapad: 2026-04-21. Ersätter och inkluderar tidigare todo #2 (legacy SEO-revie
 - LCP-fix: första hero-bilden `loading="eager"` + `fetchpriority="high"`.
 
 Skippat (motiverat):
+
 - FAQPage på `/sida/om` — prosa, inte Q&A → schema-spam.
 - Per-län RSS-feeds — 21 endpoints för marginell SEO-vinst.
 
 Kvar i Fas 2 (kräver beslut / GA4-data / post-cutover):
+
 - Beslut: `noindex`+canonical eller borttagning av `/plats/*/handelser/{date}`
   och `/lan/*/handelser/{date}` (synkas med todo #1, behöver GA4)
 - Noindex-strategi för gamla/thin events (`crimeevents:mark-thin`) —
@@ -45,7 +50,6 @@ Kvar i Fas 2 (kräver beslut / GA4-data / post-cutover):
   Place istället för GeoCircle) — se skiss nedan i dokumentet
 
 Fas 3 kvarstår enligt plan nedan.
-
 
 ## Sammanfattning
 

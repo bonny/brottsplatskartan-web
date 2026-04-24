@@ -1,3 +1,6 @@
+**Status:** aktiv (plan klar, redo för pilot)
+**Senast uppdaterad:** 2026-04-21
+
 # Todo #10 — AI-omskrivning av vaga event-titlar
 
 ## Sammanfattning
@@ -25,9 +28,9 @@ utvärdering.
   var 12:e minut) → `FeedController::updateFeedsFromPolisen()` →
   `FeedParserController::parseTitle($title)`.
 - `FeedParserController.php:67-136`: RSS-titeln splittas på `,`.
-  - Första delen = datum (eller "Uppdaterad …")
-  - Sista delen = `parsed_title_location`
-  - Resten (mitten) = `parsed_title`
+    - Första delen = datum (eller "Uppdaterad …")
+    - Sista delen = `parsed_title_location`
+    - Resten (mitten) = `parsed_title`
 - Resultatet skrivs till kolumnerna `parsed_title`, `parsed_title_location`,
   `parsed_date`, `parsed_updated_date` direkt i `crime_events`.
 
@@ -77,14 +80,14 @@ ORDER BY c DESC;
 
 Konkreta mönster (observerade i slug-exemplet från uppgiften):
 
-| Mönster | Regex | Exempel |
-|---|---|---|
-| Sammanfattning natt/dygn | `^(?i)sammanfattning[ -]?(natt|dygn|morgon|kväll)` | "Sammanfattning natt, region Nord" |
-| Pressnummer-info | `information om polisens pressnummer` | "Information om polisens pressnummer" |
-| Presstalesperson | `(dagens )?presstalesperson` | "Dagens presstalesperson är på plats" |
-| Generiskt "Övrigt" | `^(övrigt|annat|händelse)$` | "Övrigt" |
-| Trunkerad/tom | `CHAR_LENGTH < 6` eller NULL | "Brand", "Stöld" utan kontext |
-| Regionstämpel utan plats | `region (nord|syd|väst|öst|mitt|bergslagen|stockholm)` som suffix utan specifik ort | |
+| Mönster                  | Regex                                 | Exempel                               |
+| ------------------------ | ------------------------------------- | ------------------------------------- | ----------- | -------- | ---------------------------------- | ---------- | ---------------------------------------- | --- |
+| Sammanfattning natt/dygn | `^(?i)sammanfattning[ -]?(natt        | dygn                                  | morgon      | kväll)`  | "Sammanfattning natt, region Nord" |
+| Pressnummer-info         | `information om polisens pressnummer` | "Information om polisens pressnummer" |
+| Presstalesperson         | `(dagens )?presstalesperson`          | "Dagens presstalesperson är på plats" |
+| Generiskt "Övrigt"       | `^(övrigt                             | annat                                 | händelse)$` | "Övrigt" |
+| Trunkerad/tom            | `CHAR_LENGTH < 6` eller NULL          | "Brand", "Stöld" utan kontext         |
+| Regionstämpel utan plats | `region (nord                         | syd                                   | väst        | öst      | mitt                               | bergslagen | stockholm)` som suffix utan specifik ort |     |
 
 Rekommenderat: börja med `sammanfattning` — det är det största SEO-
 bortfallet (långa body-texter, generisk titel, återkommande flera
@@ -118,6 +121,7 @@ public function getDisplayTitleAttribute(): string
 ```
 
 Byt ut `$event->parsed_title` → `$event->display_title` i:
+
 - `resources/views/parts/crimeevent*.blade.php`
 - `resources/views/single-*.blade.php`
 - Meta-title/OG-title i layouts
@@ -130,6 +134,7 @@ att befintliga länkar i Google och externa sajter bryts. Se punkt 5.
 ### 3. Service + Kommando
 
 `app/Services/TitleRewriteService.php`:
+
 - Metod `rewriteTitle(CrimeEvent $event): ?string`
 - Claude Haiku (billigt, snabbt).
 - Prompt se nedan.
@@ -140,6 +145,7 @@ att befintliga länkar i Google och externa sajter bryts. Se punkt 5.
 - Fallback: returnera `null` → behåll `parsed_title`.
 
 `app/Console/Commands/RewriteTitles.php` (`crimeevents:rewrite-titles`):
+
 ```
 --since=<days>          default 1
 --pattern=<bucket>      sammanfattning|pressnummer|all
@@ -156,6 +162,7 @@ Wrap i try/catch + timeout — får aldrig blockera en fetch-cykel.
 Redis-låst per event-ID för idempotens.
 
 Scheduler-entry i `app/Console/Kernel.php`:
+
 ```php
 $schedule->command('crimeevents:rewrite-titles --since=1')
     ->hourly()
@@ -219,6 +226,7 @@ original.
 ## Kostnadsuppskattning (Claude Haiku)
 
 Antaganden per event:
+
 - Input: prompt ~150 tokens + `parsed_content` ~400 tokens = **~550 tokens**
 - Output: **~25 tokens**
 - Haiku 4.5-prissättning (kolla aktuella siffror på anthropic.com):
@@ -259,7 +267,7 @@ system-prompten för att halvera input-kostnaden ytterligare.
    nyktra stil. Prompten tryckter på "saklig, ingen sensationalism".
    Stickprov + dashboard för manuell granskning rekommenderas i pilot.
 7. **Kategoriserings-heuristik bryter** — `Str::contains($parsed_title,
-   'inbrott')` på rad 1252/1274 används för att välja ikon/kategori.
+'inbrott')` på rad 1252/1274 används för att välja ikon/kategori.
    Om vi ersätter `parsed_title` i UI men inte i heuristiken kan
    kategoriseringen bli inkonsekvent. Lösning: kör heuristik mot
    `parsed_title` (rå källa), visa `display_title`.
@@ -278,6 +286,7 @@ system-prompten för att halvera input-kostnaden ytterligare.
 ## Bakåtkatalog (200k+ events)
 
 Strategi:
+
 1. **Fas 1** — bara nya events + sammanfattning-events från senaste 30
    dagarna. ~3 000 events, ~20 kr, 1 körning.
 2. **Fas 2** (efter manuell stickprovsgranskning av fas 1): utvidga
@@ -313,6 +322,7 @@ mönster = "behöver bearbetas". Queryn är indexerad via
 **Status:** ej påbörjat — plan/RFC.
 
 **Nästa konkreta steg:**
+
 1. Kör SQL-analysen ovan mot produktion för att verifiera volymer per
    bucket. Uppdatera kostnadsberäkningen med faktiska siffror.
 2. Beslut: bara `parsed_title_ai` (lågrisk) eller även slug-byte

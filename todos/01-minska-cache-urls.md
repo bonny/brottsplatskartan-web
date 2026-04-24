@@ -1,6 +1,10 @@
+**Status:** blockerad (väntar på GA-data från #8)
+**Senast uppdaterad:** 2026-04-21
+**Blockerad av:** #8
+
 # Todo 1 — Minska URLer och response-cache-påverkan
 
-Statusdokument: analys och beslutsunderlag inför åtgärd.
+Analys och beslutsunderlag inför åtgärd.
 
 ## Sammanfattning
 
@@ -256,4 +260,4 @@ Relativt säkert alternativ om vi vill undvika (A):s fulla eliminering.
 
 ---
 
-*Skapad: 2026-04-21*
+_Skapad: 2026-04-21_

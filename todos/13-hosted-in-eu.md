@@ -1,3 +1,6 @@
+**Status:** aktiv (idé — gör efter cutover-stabilisering)
+**Senast uppdaterad:** 2026-04-22
+
 # Todo #13 — Kommunicera "Hosted in EU"
 
 ## Sammanfattning

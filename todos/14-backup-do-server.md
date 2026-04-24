@@ -1,3 +1,6 @@
+**Status:** aktiv
+**Senast uppdaterad:** 2026-04-22
+
 # Todo #14 — Backup av övriga sajter på gamla DO-servern
 
 ## Sammanfattning
@@ -10,6 +13,7 @@ bör en backup tas av de kvarvarande apparna.
 ## Innehåll att backa upp
 
 Kräver inventering. Troliga kandidater nämnda tidigare:
+
 - antonblomqvist.se
 - simple-fields
 - eventuella fler Dokku-appar + DBs
@@ -17,6 +21,7 @@ Kräver inventering. Troliga kandidater nämnda tidigare:
 ## Föreslagen plan
 
 ### 1. Inventering
+
 ```bash
 ssh dokku.eskapism.se
 dokku apps:list
@@ -28,12 +33,14 @@ du -sh /var/lib/dokku/data/storage/*
 ```
 
 ### 2. Script som backar upp allt
+
 - Dumpar alla DBs (gzip:ade)
 - tar.gz:ar persistent storage per app
 - Metadata: `dokku config:export <app>` för env-vars
 - Samlar i en mapp per app
 
 ### 3. Backup-destinationer att välja mellan
+
 - Lokal extern disk (enklast, engångs)
 - Hetzner Object Storage (samma som BPK använder)
 - Alternativt iCloud/Dropbox-syncad mapp

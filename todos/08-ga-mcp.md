@@ -1,3 +1,6 @@
+**Status:** aktiv (redo för setup)
+**Senast uppdaterad:** 2026-04-21
+
 # Todo #8 – Google Analytics MCP-server i Claude Code
 
 ## Sammanfattning
@@ -28,8 +31,8 @@ MCP-standard.
 
 1. Python 3.10+ och `pipx` installerat (macOS: `brew install pipx && pipx ensurepath`).
 2. Google Cloud-projekt med följande API:er aktiverade:
-   - Google Analytics Admin API (`analyticsadmin.googleapis.com`)
-   - Google Analytics Data API (`analyticsdata.googleapis.com`)
+    - Google Analytics Admin API (`analyticsadmin.googleapis.com`)
+    - Google Analytics Data API (`analyticsdata.googleapis.com`)
 3. ADC-credentials (Application Default Credentials) med scope
    `https://www.googleapis.com/auth/analytics.readonly`.
 4. Googlekontot/servicekontot måste ha läsbehörighet till Brottsplatskartans
@@ -47,6 +50,7 @@ pipx ensurepath
 ### 2. Aktivera API:er i GCP
 
 Gå in på Google Cloud Console för ditt projekt och aktivera:
+
 - https://console.cloud.google.com/apis/library/analyticsadmin.googleapis.com
 - https://console.cloud.google.com/apis/library/analyticsdata.googleapis.com
 
@@ -93,6 +97,7 @@ claude mcp add analytics-mcp \
 ```
 
 Scope-val:
+
 - `--scope user` – tillgängligt i alla projekt (lämpligt här eftersom
   credentials är personliga).
 - `--scope local` (default) – bara detta projekt, för dig.
@@ -197,12 +202,14 @@ Nackdel: statiskt, manuellt, inga realtidsfrågor.
 ### B. Search Console MCP
 
 Flera community-MCP:er finns, t.ex.:
+
 - `AminForou/mcp-gsc` (Python, 714 stars)
 - `ahonn/mcp-server-gsc` (TypeScript, 208 stars)
 - `Shin-sibainu/google-search-console-mcp-server` (nämner Claude Code-stöd)
 
 GSC-data (impressions, CTR, position, query) är **mer direkt SEO-relevant**
 än GA4 för Brottsplatskartan eftersom:
+
 - Visar vilka sökfraser som leder in till vilka sidor.
 - Visar indexeringsstatus, Core Web Vitals, mobilvänlighet.
 - Ingen PII-risk.
@@ -242,8 +249,8 @@ Brottsplatskartans volym/komplexitet.
 4. Skapa OAuth desktop-klient, ladda ner JSON.
 5. Kör `gcloud auth application-default login` med scopes.
 6. Kör `claude mcp add analytics-mcp --scope user --transport stdio
-   --env GOOGLE_APPLICATION_CREDENTIALS=… --env GOOGLE_PROJECT_ID=… --
-   pipx run analytics-mcp`.
+--env GOOGLE_APPLICATION_CREDENTIALS=… --env GOOGLE_PROJECT_ID=… --
+pipx run analytics-mcp`.
 7. Starta om Claude Code, testa med `what can analytics-mcp do?`.
 8. Kör en första konkret nytta: "top 50 populäraste sidorna senaste 30
    dagarna" → underlag för cache pre-warm-justering.
@@ -252,4 +259,4 @@ Brottsplatskartans volym/komplexitet.
 
 **Loggförslag (CLAUDE.local.md / nvALT-log):**
 "Research gjord för GA4 MCP-server. Installation väntar på beslut om
-GCP-projekt och OAuth-klient. Se `claude-todos/08-ga-mcp.md`."
+GCP-projekt och OAuth-klient. Se `todos/08-ga-mcp.md`."

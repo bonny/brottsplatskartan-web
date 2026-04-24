@@ -1,3 +1,6 @@
+**Status:** aktiv (kan göras direkt, ~10 min)
+**Senast uppdaterad:** 2026-04-22
+
 # Todo #17 — Ta bort `hetzner.*`-testdomänerna
 
 ## Sammanfattning
