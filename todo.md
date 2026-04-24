@@ -18,8 +18,8 @@ Varje todo-fil börjar med:
 **Blockerad av:** #N (om relevant)
 ```
 
-Aktiva todos ligger direkt i `todos/`. Klara flyttas till `todos/klara/`
-och avfärdade/sammanslagna till `todos/avfardade/`. Filer behålls för
+Aktiva todos ligger direkt i `todos/`. Klara flyttas till `todos/done/`
+och avfärdade/sammanslagna till `todos/rejected/`. Filer behålls för
 historik — raderas aldrig.
 
 ---
@@ -54,23 +54,23 @@ historik — raderas aldrig.
 
 ## Klara
 
-| #   | Titel                                                  | Klar       | Fil                                                                                    |
-| --- | ------------------------------------------------------ | ---------- | -------------------------------------------------------------------------------------- |
-| 3   | Konsolidera blade-templates (event-kort)               | 2026-04-21 | [todos/klara/03-blade-konsolidering.md](todos/klara/03-blade-konsolidering.md)         |
-| 5   | Laravel 12 → 13 + Spatie Response Cache 7 → 8 (SWR)    | 2026-04-21 | [todos/klara/05-laravel-13-uppgradering.md](todos/klara/05-laravel-13-uppgradering.md) |
-| 6   | Flytta Brottsstatistik → `/statistik`                  | 2026-04-21 | [todos/klara/06-statistik-sida.md](todos/klara/06-statistik-sida.md)                   |
-| 7   | PHPStan triage (alla 77 errors fixade, 0 på level 5)   | 2026-04-22 | [todos/klara/07-phpstan-ci.md](todos/klara/07-phpstan-ci.md)                           |
-| 12  | LLM/AI-optimering (llms.txt, markdown per event)       | 2026-04-22 | [todos/klara/12-llm-optimering.md](todos/klara/12-llm-optimering.md)                   |
-| 15  | Server-side cache för kartbilder (nginx-sidecar)       | 2026-04-23 | [todos/klara/15-tiles-cache-caddy.md](todos/klara/15-tiles-cache-caddy.md)             |
-| 4   | Uppdatera mbtiles från 2017 (Planetiler z0-15, 2.4 GB) | 2026-04-23 | [todos/klara/04-mbtiles-uppdatera.md](todos/klara/04-mbtiles-uppdatera.md)             |
-| 17  | Ta bort `hetzner.*`-testdomänerna                      | 2026-04-24 | [todos/klara/17-ta-bort-hetzner-domaner.md](todos/klara/17-ta-bort-hetzner-domaner.md) |
-| 19  | /mest-last: filtrera bort gamla events (3-dagars)      | 2026-04-24 | [todos/klara/19-mest-last-bara-nyligen.md](todos/klara/19-mest-last-bara-nyligen.md)   |
-| 13  | Kommunicera "Hosted in EU" (footer + /sida/om)         | 2026-04-24 | [todos/klara/13-hosted-in-eu.md](todos/klara/13-hosted-in-eu.md)                       |
+| #   | Titel                                                  | Klar       | Fil                                                                                  |
+| --- | ------------------------------------------------------ | ---------- | ------------------------------------------------------------------------------------ |
+| 3   | Konsolidera blade-templates (event-kort)               | 2026-04-21 | [todos/done/03-blade-konsolidering.md](todos/done/03-blade-konsolidering.md)         |
+| 5   | Laravel 12 → 13 + Spatie Response Cache 7 → 8 (SWR)    | 2026-04-21 | [todos/done/05-laravel-13-uppgradering.md](todos/done/05-laravel-13-uppgradering.md) |
+| 6   | Flytta Brottsstatistik → `/statistik`                  | 2026-04-21 | [todos/done/06-statistik-sida.md](todos/done/06-statistik-sida.md)                   |
+| 7   | PHPStan triage (alla 77 errors fixade, 0 på level 5)   | 2026-04-22 | [todos/done/07-phpstan-ci.md](todos/done/07-phpstan-ci.md)                           |
+| 12  | LLM/AI-optimering (llms.txt, markdown per event)       | 2026-04-22 | [todos/done/12-llm-optimering.md](todos/done/12-llm-optimering.md)                   |
+| 15  | Server-side cache för kartbilder (nginx-sidecar)       | 2026-04-23 | [todos/done/15-tiles-cache-caddy.md](todos/done/15-tiles-cache-caddy.md)             |
+| 4   | Uppdatera mbtiles från 2017 (Planetiler z0-15, 2.4 GB) | 2026-04-23 | [todos/done/04-mbtiles-uppdatera.md](todos/done/04-mbtiles-uppdatera.md)             |
+| 17  | Ta bort `hetzner.*`-testdomänerna                      | 2026-04-24 | [todos/done/17-ta-bort-hetzner-domaner.md](todos/done/17-ta-bort-hetzner-domaner.md) |
+| 19  | /mest-last: filtrera bort gamla events (3-dagars)      | 2026-04-24 | [todos/done/19-mest-last-bara-nyligen.md](todos/done/19-mest-last-bara-nyligen.md)   |
+| 13  | Kommunicera "Hosted in EU" (footer + /sida/om)         | 2026-04-24 | [todos/done/13-hosted-in-eu.md](todos/done/13-hosted-in-eu.md)                       |
 
 ## Avfärdade / sammanslagna
 
-| #   | Titel                                      | Beslut                                         | Fil                                                                                                  |
-| --- | ------------------------------------------ | ---------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| 2   | SEO-review (legacy)                        | Sammanslagen med #11 (2026-04-21)              | [todos/avfardade/02-seo-review.md](todos/avfardade/02-seo-review.md)                                 |
-| 9   | Extern DB-backup                           | Avfärdad 2026-04-21 — Hetzner-snapshots räcker | [todos/avfardade/09-extern-db-backup.md](todos/avfardade/09-extern-db-backup.md)                     |
-| 18  | Attribution vid statiska kartbilder (ODbL) | Avfärdad 2026-04-24 — gråzon, om-sidan räcker  | [todos/avfardade/18-attribution-vid-kartbilder.md](todos/avfardade/18-attribution-vid-kartbilder.md) |
+| #   | Titel                                      | Beslut                                         | Fil                                                                                                |
+| --- | ------------------------------------------ | ---------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| 2   | SEO-review (legacy)                        | Sammanslagen med #11 (2026-04-21)              | [todos/rejected/02-seo-review.md](todos/rejected/02-seo-review.md)                                 |
+| 9   | Extern DB-backup                           | Avfärdad 2026-04-21 — Hetzner-snapshots räcker | [todos/rejected/09-extern-db-backup.md](todos/rejected/09-extern-db-backup.md)                     |
+| 18  | Attribution vid statiska kartbilder (ODbL) | Avfärdad 2026-04-24 — gråzon, om-sidan räcker  | [todos/rejected/18-attribution-vid-kartbilder.md](todos/rejected/18-attribution-vid-kartbilder.md) |
