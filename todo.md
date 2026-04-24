@@ -1,50 +1,72 @@
 # Claude TODO – Brottsplatskartan
 
 Index över pågående förbättringsarbete. Varje todo har en egen fil i
-`claude-todos/` med fullständig analys, risker, fördelar, öppna frågor
+`todos/` med fullständig analys, risker, fördelar, öppna frågor
 och föreslagen plan.
 
-Senast uppdaterad: 2026-04-21 (efter djupdykning per todo via sub-agenter).
+Senast uppdaterad: 2026-04-24.
+
+## Konvention
+
+Varje todo-fil börjar med:
+
+```
+**Status:** aktiv | pausad | blockerad | klar YYYY-MM-DD | avfärdad YYYY-MM-DD
+**Senast uppdaterad:** YYYY-MM-DD
+**Blockerad av:** #N (om relevant)
+```
+
+Klara och avfärdade filer behålls för historik — raderas aldrig.
 
 ---
 
-## Todos
+## Aktiva
 
-| #   | Titel                                               | Status                                           | Fil                                                                                      |
-| --- | --------------------------------------------------- | ------------------------------------------------ | ---------------------------------------------------------------------------------------- |
-| 1   | Minska cache-URL:er (`/plats/*/handelser/*` m.fl.)  | Avvaktar trafikdata (GA, se #8)                  | [claude-todos/01-minska-cache-urls.md](claude-todos/01-minska-cache-urls.md)             |
-| 2   | ~~SEO-review (legacy)~~                             | Sammanslagen med #11 (2026-04-21)                | —                                                                                        |
-| 3   | ~~Konsolidera blade-templates (event-kort)~~        | **Klar 2026-04-21** (9 → 3 Blade components, bugg-fix, partners-borttagning) | [claude-todos/03-blade-konsolidering.md](claude-todos/03-blade-konsolidering.md) |
-| 4   | ~~Uppdatera mbtiles från 2017~~                     | **Klar 2026-04-23** (Planetiler z0-15, 2.4 GB, deploy/update-tiles.md för framtida) | [claude-todos/04-mbtiles-uppdatera.md](claude-todos/04-mbtiles-uppdatera.md) |
-| 5   | ~~Laravel 12 → 13 + Spatie Response Cache 7 → 8 (SWR)~~ | **Klar 2026-04-21** (inkl. SWR + larastan-byte)  | [claude-todos/05-laravel-13-uppgradering.md](claude-todos/05-laravel-13-uppgradering.md) |
-| 6   | ~~Flytta Brottsstatistik → `/statistik`~~           | **Klar 2026-04-21** (sidan + CTA på start/län/stad/handelser) | [claude-todos/06-statistik-sida.md](claude-todos/06-statistik-sida.md)    |
-| 7   | ~~PHPStan triage~~                                  | **Klar 2026-04-22** (alla 77 errors fixade — 0 kvar på level 5, ingen baseline) | [claude-todos/07-phpstan-ci.md](claude-todos/07-phpstan-ci.md) |
-| 8   | Google Analytics MCP + ev. Search Console MCP       | Redo för setup                                   | [claude-todos/08-ga-mcp.md](claude-todos/08-ga-mcp.md)                                   |
-| 9   | ~~Extern DB-backup~~                                | Avfärdad — Hetzner-snapshots räcker (2026-04-21) | —                                                                                        |
-| 10  | AI-omskriva vaga titlar                             | Plan klar, kostnad ~$27 för full backfill        | [claude-todos/10-ai-omskriva-titlar.md](claude-todos/10-ai-omskriva-titlar.md)           |
-| 11  | SEO-audit enligt best practice 2026                 | **Fas 1 + mest av Fas 2 klar 2026-04-21** (sitemap+image, JSON-LD NewsArticle/Place/ItemList/Dataset, H1-audit, preconnect, LCP) | [claude-todos/11-seo-audit-2026.md](claude-todos/11-seo-audit-2026.md) |
-| 12  | ~~LLM/AI-optimering (llms.txt, markdown/URL, AI-botar)~~ | **Klar 2026-04-22** (robots.txt, llms.txt, markdown per event via .md-suffix, 99.7% payload-reduktion) | [claude-todos/12-llm-optimering.md](claude-todos/12-llm-optimering.md) |
-| 13  | Kommunicera "Hosted in EU"                          | Idé — footer/om-sida efter cutover-stabilisering | [claude-todos/13-hosted-in-eu.md](claude-todos/13-hosted-in-eu.md) |
-| 14  | Backup av övriga sajter på gamla DO-servern         | Inventering + dump av Dokku-appar innan avveckling | [claude-todos/14-backup-do-server.md](claude-todos/14-backup-do-server.md) |
-| 15  | ~~Server-side cache för kartbilder (tiles)~~        | **Klar 2026-04-23** (nginx-sidecar med proxy_cache, verifierad i prod) | [claude-todos/15-tiles-cache-caddy.md](claude-todos/15-tiles-cache-caddy.md) |
-| 16  | Rensa / avveckla gamla DO-servern (Dokku)           | Efter #14 + minst 2v stabil Hetzner — tidigast ~2026-05-15 | [claude-todos/16-rensa-do-server.md](claude-todos/16-rensa-do-server.md) |
-| 17  | Ta bort `hetzner.*`-testdomänerna                   | Kan göras direkt — cutover klar                  | [claude-todos/17-ta-bort-hetzner-domaner.md](claude-todos/17-ta-bort-hetzner-domaner.md) |
-| 18  | Attribution vid statiska kartbilder (ODbL)          | Låg prio — gråzon, ingen akut licensrisk         | [claude-todos/18-attribution-vid-kartbilder.md](claude-todos/18-attribution-vid-kartbilder.md) |
+| #   | Titel                                              | Status                                                                                                                                      | Fil                                                                        |
+| --- | -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| 11  | SEO-audit enligt best practice 2026                | **Aktiv 2026-04-24** — Fas 1 + mest av Fas 2 klar; återstår CWV post-cutover, noindex-strategi, OG-image, image sitemap, utökad NewsArticle | [todos/11-seo-audit-2026.md](todos/11-seo-audit-2026.md)                   |
+| 17  | Ta bort `hetzner.*`-testdomänerna                  | Kan göras direkt — cutover klar                                                                                                             | [todos/17-ta-bort-hetzner-domaner.md](todos/17-ta-bort-hetzner-domaner.md) |
+| 8   | Google Analytics MCP + ev. Search Console MCP      | Redo för setup                                                                                                                              | [todos/08-ga-mcp.md](todos/08-ga-mcp.md)                                   |
+| 10  | AI-omskriva vaga titlar                            | Plan klar, kostnad ~$27 för full backfill                                                                                                   | [todos/10-ai-omskriva-titlar.md](todos/10-ai-omskriva-titlar.md)           |
+| 1   | Minska cache-URL:er (`/plats/*/handelser/*` m.fl.) | Blockerad av #8 (behöver GA-data)                                                                                                           | [todos/01-minska-cache-urls.md](todos/01-minska-cache-urls.md)             |
+| 13  | Kommunicera "Hosted in EU"                         | Idé — footer/om-sida efter cutover-stabilisering                                                                                            | [todos/13-hosted-in-eu.md](todos/13-hosted-in-eu.md)                       |
+| 14  | Backup av övriga sajter på gamla DO-servern        | Inventering + dump av Dokku-appar innan avveckling                                                                                          | [todos/14-backup-do-server.md](todos/14-backup-do-server.md)               |
+| 16  | Rensa / avveckla gamla DO-servern (Dokku)          | Blockerad av #14 + minst 2v stabil Hetzner — tidigast ~2026-05-15                                                                           | [todos/16-rensa-do-server.md](todos/16-rensa-do-server.md)                 |
+| 19  | /mest-last: filtrera bort gamla events             | Aktiv 2026-04-24 — listan innehåller arkiv-events; lägg till 3-dagars-filter                                                                | [todos/19-mest-last-bara-nyligen.md](todos/19-mest-last-bara-nyligen.md)   |
 
----
-
-## Beroenden och koppling
+### Beroenden
 
 - **#1 ↔ #8:** beslutet om vilka routes som ska tas bort kräver trafikdata från GA4.
 - **#10 → #11:** bättre titlar förbättrar SEO. Kör #10 innan eller parallellt med #11.
-- **#11 → #6:** ny `/statistik`-sida bör designas med SEO-basics från dag ett.
-- **#5 → (övrigt):** SWR i Response Cache 8 minskar behovet av `cache:warm`-scheduler och påverkar cache-strategin i #1.
-- ~~**#7 före större refaktor (#3, #5, #6):**~~ klar — PHPStan level 5 är grön.
+- **#14 → #16:** DO-servern får inte avvecklas innan backup är verifierad.
 
-## Föreslagen ordning (efter Hetzner-cutover)
+### Föreslagen ordning
 
-1. **#11 Fas 1** (sitemap, canonical-fallback, BreadcrumbList, robots.txt-fix) – 1 dag, hög SEO-vinst
-2. **#8** (GA4 MCP) – ger data för #1 och vidare #11-prioritering
-3. **#10** (AI-titlar) – pilot 30 dagar, ~20 kr, kvalitet innan bredd
-4. **#1** (cache-exkludering för datum-routes) – snabb fix med `shouldCacheRequest`
-5. **#4** (mbtiles) – när tid finns
+1. **#11 CWV-mätning** (post-cutover, nu unblocked) — ger underlag för övriga Fas 2/3-beslut
+2. **#17** (hetzner-domäner) — 10 min, trivialt
+3. **#8** (GA4 MCP) — unblockar #1 och resten av #11
+4. **#10** (AI-titlar) — pilot 30 dagar, ~20 kr
+5. **#1** (cache-exkludering) — snabb fix när GA-data finns
+6. **#14 + #16** (DO-avveckling) — efter ~2026-05-15
+
+---
+
+## Klara
+
+| #   | Titel                                                  | Klar       | Fil                                                                        |
+| --- | ------------------------------------------------------ | ---------- | -------------------------------------------------------------------------- |
+| 3   | Konsolidera blade-templates (event-kort)               | 2026-04-21 | [todos/03-blade-konsolidering.md](todos/03-blade-konsolidering.md)         |
+| 5   | Laravel 12 → 13 + Spatie Response Cache 7 → 8 (SWR)    | 2026-04-21 | [todos/05-laravel-13-uppgradering.md](todos/05-laravel-13-uppgradering.md) |
+| 6   | Flytta Brottsstatistik → `/statistik`                  | 2026-04-21 | [todos/06-statistik-sida.md](todos/06-statistik-sida.md)                   |
+| 7   | PHPStan triage (alla 77 errors fixade, 0 på level 5)   | 2026-04-22 | [todos/07-phpstan-ci.md](todos/07-phpstan-ci.md)                           |
+| 12  | LLM/AI-optimering (llms.txt, markdown per event)       | 2026-04-22 | [todos/12-llm-optimering.md](todos/12-llm-optimering.md)                   |
+| 15  | Server-side cache för kartbilder (nginx-sidecar)       | 2026-04-23 | [todos/15-tiles-cache-caddy.md](todos/15-tiles-cache-caddy.md)             |
+| 4   | Uppdatera mbtiles från 2017 (Planetiler z0-15, 2.4 GB) | 2026-04-23 | [todos/04-mbtiles-uppdatera.md](todos/04-mbtiles-uppdatera.md)             |
+
+## Avfärdade / sammanslagna
+
+| #   | Titel                                      | Beslut                                         | Fil                                                                              |
+| --- | ------------------------------------------ | ---------------------------------------------- | -------------------------------------------------------------------------------- |
+| 2   | SEO-review (legacy)                        | Sammanslagen med #11 (2026-04-21)              | [todos/02-seo-review.md](todos/02-seo-review.md)                                 |
+| 9   | Extern DB-backup                           | Avfärdad 2026-04-21 — Hetzner-snapshots räcker | [todos/09-extern-db-backup.md](todos/09-extern-db-backup.md)                     |
+| 18  | Attribution vid statiska kartbilder (ODbL) | Avfärdad 2026-04-24 — gråzon, om-sidan räcker  | [todos/18-attribution-vid-kartbilder.md](todos/18-attribution-vid-kartbilder.md) |
