@@ -9,8 +9,8 @@ utan kodändringar. Nuvarande prod kör CX33 i Helsinki.
 
 - Location: **Helsinki (HEL1)** (alternativ: Falkenstein/Nuremberg — alla EU)
 - Type: **CX33** (x86 AMD, 4 vCPU / 8 GB / 80 GB, ~€6.49/mån)
-  - Uppgradera senare till CX43 vid behov (kräver ~3 min downtime)
-  - CAX-serien (ARM) fungerar också om du föredrar det
+    - Uppgradera senare till CX43 vid behov (kräver ~3 min downtime)
+    - CAX-serien (ARM) fungerar också om du föredrar det
 - Image: **Debian 13** (Trixie)
 - SSH key: lägg till din publika nyckel (`~/.ssh/id_ed25519.pub`)
 - Backups: **aktivera** (+20% kostnad)
@@ -138,6 +138,7 @@ nano .env
 ```
 
 Generera `APP_KEY`:
+
 ```bash
 docker run --rm -v $PWD:/app serversideup/php:8.4-cli php -r "echo 'base64:'.base64_encode(random_bytes(32));"
 ```
@@ -201,13 +202,13 @@ i steg 1) räcker för katastrofåterställning och vi vill undvika extra
 backup-infrastruktur lokalt.
 
 **Planerad förbättring:** SQL-dumps till extern Object Storage i stället
-för lokala filer (se `claude-todo.md` sektion 9). Då får vi både
+för lokala filer (se `todo.md` sektion 9). Då får vi både
 granularitet och off-site redundans — bättre än lokala dumpar.
 
 <details>
 <summary>Tidigare instruktioner (för referens)</summary>
 
-```bash
+````bash
 sudo mkdir -p /opt/backups
 sudo chown deploy:deploy /opt/backups
 
@@ -235,7 +236,7 @@ sudo chmod +x /usr/local/bin/bpk-db-backup.sh
 echo "0 4 * * * deploy /usr/local/bin/bpk-db-backup.sh >> /var/log/bpk-db-backup.log 2>&1" | \
   sudo tee /etc/cron.d/bpk-db-backup > /dev/null
 sudo chmod 644 /etc/cron.d/bpk-db-backup
-```
+````
 
 - `--single-transaction` = konsistent snapshot av InnoDB utan table locks
   (läsningar och skrivningar fortsätter obehindrat under dumpen).
@@ -268,6 +269,7 @@ Ingen host-cron behövs. En dedikerad `scheduler`-container i
 Laravel Scheduler varje minut internt.
 
 Verifiera att den kör:
+
 ```bash
 docker compose ps scheduler
 docker compose logs -f scheduler

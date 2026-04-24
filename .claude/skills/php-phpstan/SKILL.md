@@ -22,20 +22,20 @@ Kör **inte** skillen för:
 
 1. Kör i den lokala Docker-stacken:
 
-   ```bash
-   docker compose -f compose.yaml exec -T app composer analyse
-   ```
+    ```bash
+    docker compose -f compose.yaml exec -T app composer analyse
+    ```
 
 2. Om kommandot misslyckas med exit-kod > 0:
-   - Jämför med `git stash && composer analyse && git stash pop` eller
-     mot `main` för att avgöra om felet är nytt eller pre-existerande.
-   - Pre-existerande fel: nämn i sammanfattningen men blockera inte.
-   - **Nya fel från din ändring:** åtgärda före du markerar arbetet som klart.
+    - Jämför med `git stash && composer analyse && git stash pop` eller
+      mot `main` för att avgöra om felet är nytt eller pre-existerande.
+    - Pre-existerande fel: nämn i sammanfattningen men blockera inte.
+    - **Nya fel från din ändring:** åtgärda före du markerar arbetet som klart.
 
 3. Om ny error är falsk-positiv (genuint ramverks-magi som PHPStan inte förstår):
-   - Överväg baseline: `composer analyse:baseline` — men bara om användaren
-     godkänner, eftersom baseline är en sopmatta.
-   - Alternativt: PHPDoc-annotering (`@var`, `@phpstan-ignore-next-line` med motivering).
+    - Överväg baseline: `composer analyse:baseline` — men bara om användaren
+      godkänner, eftersom baseline är en sopmatta.
+    - Alternativt: PHPDoc-annotering (`@var`, `@phpstan-ignore-next-line` med motivering).
 
 ## Varför
 
@@ -49,4 +49,4 @@ Kör **inte** skillen för:
 - Composer-script: `analyse` = `phpstan analyse --memory-limit=2G`.
 - Baseline: `analyse:baseline`.
 - Nuläge (2026-04-21): ~75 errors varav ~20 troliga buggar, ingen CI än.
-  Se `claude-todos/07-phpstan-ci.md` för triage-plan.
+  Se `todos/07-phpstan-ci.md` för triage-plan.

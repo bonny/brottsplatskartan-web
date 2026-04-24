@@ -1,6 +1,6 @@
 ---
 name: prettier-md
-description: "Use after editing any Markdown (.md) file in this repo. Kör `prettier --write` på de ändrade filerna så formatering (radbrytning, tabeller, listor) blir konsekvent. Gäller README, AGENTS.md, CLAUDE.md, docs/, claude-todos/ och allt annat .md."
+description: "Use after editing any Markdown (.md) file in this repo. Kör `prettier --write` på de ändrade filerna så formatering (radbrytning, tabeller, listor) blir konsekvent. Gäller README, AGENTS.md, CLAUDE.md, docs/, todos/ och allt annat .md."
 ---
 
 # Prettier på Markdown
@@ -53,4 +53,4 @@ undviker ovidkommande diffar i andra dokument.
 - Prettier finns globalt installerat (via nvm/npm på hosten, v3.7+).
 - Repo saknar egen `.prettierrc*` → defaults används. Om vi senare
   lägger till config plockas den upp automatiskt.
-- Skillen gäller även filer i `claude-todos/` (djupdykningarna per todo).
+- Skillen gäller även filer i `todos/` (djupdykningarna per todo).
