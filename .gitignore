@@ -17,8 +17,10 @@ Homestead.yaml
 .claude/settings.local.json
 CLAUDE.local.md
 
-# Tileserver mbtiles (laddas ner vid provisionering, ~1.2 GB)
-/deploy/tileserver/*.mbtiles
+# Tileserver-data (mbtiles laddas ner vid provisionering, ~2.4 GB).
+# Hela mappen är genererat state — inget där ska committas.
+/deploy/tileserver/*
+!/deploy/tileserver/.gitkeep
 
 # DB-dumpar ska aldrig committas
 *.sql
