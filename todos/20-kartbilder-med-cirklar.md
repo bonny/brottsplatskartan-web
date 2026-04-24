@@ -209,8 +209,11 @@ mjukt. Samma radier som ovan.
 
 ## Status / nästa steg
 
-1. Beslut: var visas cirkeln (enskild händelse? OG? listvyer?)
-2. Implementera `StaticMapHelper` med `edgeFadedCirclePaths` (se utkast ovan)
-3. Mappa geo-precision → radie (adress / gata / stadsdel / kommun)
-4. A/B jämför visuellt mot nuvarande punktmarkör
-5. Verifiera cache-hit-rate efter utrullning
+- [x] Extrahera URL-byggande till `StaticMapUrlBuilder` (commit b016d52)
+- [x] Implementera `circleUrl` + `edgeFadedCirclePaths` + precision→radie (commit ea47de8)
+- [x] Feature-flag `TILESERVER_MAP_STYLE` + blade-inkoppling + bildtext (commit 8f8c1e0)
+- [ ] Visuellt A/B lokalt (öppna några event-sidor i browser, jämför)
+- [ ] Deploy till prod med `TILESERVER_MAP_STYLE=bbox` (ingen synlig ändring)
+- [ ] Flippa prod till `circle` i `/opt/brottsplatskartan/.env`, soak ~1 vecka
+- [ ] Om ok: ta bort flaggan + gamla `getStaticImageSrc`/`getStaticImageSrcFar`
+- [ ] OG-image-variant (1200×630) — separat ticket
