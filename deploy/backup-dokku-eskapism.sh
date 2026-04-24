@@ -17,7 +17,7 @@ set -euo pipefail
 
 SSH_HOST="dokku.eskapism.se"
 DATESTAMP=$(date +%Y-%m-%d)
-DEST="$HOME/Backups/dokku-eskapism-$DATESTAMP"
+DEST="${BACKUP_DIR:-$HOME/Projects/Personal/digital-ocean-backup-dokku-server}/$DATESTAMP"
 
 mkdir -p "$DEST"
 echo "→ Backup-destination: $DEST"
@@ -40,8 +40,8 @@ echo ""
 echo "→ Verifiering:"
 echo ""
 echo "   DB-dump (första rader):"
-zcat "$DEST/mariadb-brottsplatskartan.sql.gz" | head -3 | sed 's/^/     /'
-INSERTS=$(zcat "$DEST/mariadb-brottsplatskartan.sql.gz" | grep -c "^INSERT INTO" || true)
+gunzip -c "$DEST/mariadb-brottsplatskartan.sql.gz" | head -3 | sed 's/^/     /'
+INSERTS=$(gunzip -c "$DEST/mariadb-brottsplatskartan.sql.gz" | grep -c "^INSERT INTO" || true)
 echo "   INSERT-statements i dumpen: $INSERTS"
 echo ""
 echo "   Storage-arkiv (första filerna):"
