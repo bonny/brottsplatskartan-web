@@ -34,7 +34,7 @@ historik — raderas aldrig.
 | 1   | Minska cache-URL:er (`/plats/*/handelser/*` m.fl.) | Blockerad av #8 (behöver GA-data)                                                                                                           | [todos/01-minska-cache-urls.md](todos/01-minska-cache-urls.md)             |
 | 16  | Rensa / avveckla gamla DO-servern (Dokku)          | Aktiv 2026-04-25 — appar stoppade, väntar på soak innan radering                                                                            | [todos/16-rensa-do-server.md](todos/16-rensa-do-server.md)                 |
 | 20  | Kartbilder: rita cirkel/område runt händelsen      | Aktiv 2026-04-24 — implementerad bakom feature-flag, redo för prod-rollout                                                                  | [todos/20-kartbilder-med-cirklar.md](todos/20-kartbilder-med-cirklar.md)   |
-| 21  | Migrera antonblomqvist.se + simple-fields.com      | Aktiv 2026-04-25 — co-hostning-infra på plats; återstår sajt-repo-ändringar + DNS                                                           | [todos/21-migrera-statiska-sajter.md](todos/21-migrera-statiska-sajter.md) |
+| 21  | Migrera antonblomqvist.se + simple-fields.com      | Aktiv 2026-04-25 — kod + deploy klart, sajterna ligger på servern; återstår DNS-byte hos Loopia                                             | [todos/21-migrera-statiska-sajter.md](todos/21-migrera-statiska-sajter.md) |
 
 ### Beroenden
 

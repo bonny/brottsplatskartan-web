@@ -1,4 +1,4 @@
-**Status:** aktiv
+**Status:** aktiv — kod + deploy klart, väntar på DNS-byte
 **Senast uppdaterad:** 2026-04-25
 
 # Todo #21 — Migrera antonblomqvist.se + simple-fields.com till BPK Hetzner
@@ -113,9 +113,11 @@ curl -I https://antonblomqvist.se # ska ge 200 OK med valid cert
 
 ## Status / nästa steg
 
-- [ ] Skapa `/opt/static-sites/` + `/opt/caddy-sites.d/` på servern
-- [ ] simple-fields.com: skapa `caddy/simple-fields.com.caddy` + GHA + push
-- [ ] antonblomqvist.se: skapa `caddy/antonblomqvist.se.caddy` + GHA + push
-- [ ] DNS hos Loopia: peka apex + www för båda mot Hetzner-IP:n
-- [ ] Verifiera TLS-cert + att sajterna fungerar
+- [x] Skapa `/opt/static-sites/` + `/opt/caddy-sites.d/` på servern (2026-04-25)
+- [x] simple-fields.com: byt master→main, lägg till `caddy/*.caddy` + GHA, push (2026-04-25)
+- [x] antonblomqvist.se: byt master→main, lägg till `caddy/*.caddy` + GHA, push (2026-04-25)
+- [x] `HETZNER_SSH_KEY` repo-secret satt i båda repona (2026-04-25, samma deploy-nyckel som BPK)
+- [x] Workflows kör framgångsrikt — `public_html/` rsync:ad till `/opt/static-sites/<sajt>/`, `<sajt>.caddy` till `/opt/caddy-sites.d/`, Caddy reloadat (2026-04-25)
+- [ ] DNS hos Loopia: peka apex + www för båda mot Hetzner-IP `62.238.25.254` (A) + `2a01:4f9:c014:a8b1::1` (AAAA)
+- [ ] Verifiera TLS-cert utfärdas + sajterna svarar med 200 OK
 - [ ] Stäng todo, signalera att #16 kan gå vidare med radering av DO-droppleten
