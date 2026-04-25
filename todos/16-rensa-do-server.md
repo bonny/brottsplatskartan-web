@@ -17,10 +17,8 @@ servern avvecklas.
 
 ## Avvecklingssteg
 
-1. **Flytta kvarvarande appar** (om några ska leva vidare) till ny host
-   — eller bekräfta att de ska läggas ned permanent — _antonblomqvist.se
-   och simple-fields är statiska sajter med källkod på GitHub; läggs ner
-   på DO och hostas vid behov någon annanstans_
+1. **Flytta kvarvarande appar** — _antonblomqvist.se och simple-fields.com
+   migreras till BPK-Hetzner som co-hostade statiska sajter (todo #21)._
 2. **DNS:** ta bort/uppdatera records som pekar på DO-IP:n `138.68.89.224`
    (Loopia). _Bekräftat 2026-04-25: inga BPK-domäner pekar dit längre.
    Kvar: `antonblomqvist.se`, `simple-fields.com` (+ www.\*) — flyttas
