@@ -110,8 +110,11 @@ services:
       - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy-data:/data
       - caddy-config:/config
-      # Co-hostade statiska sajter — fylls av GitHub Actions per repo
+      # Drop-in för externa co-hostade sajter — varje sajt levererar
+      # innehåll till /opt/static-sites/ och en *.caddy-snippet till
+      # /opt/caddy-sites.d/ via egen GitHub Action.
       - /opt/static-sites:/srv/static-sites:ro
+      - /opt/caddy-sites.d:/etc/caddy/sites.d:ro
     depends_on: [app, tileserver, nginx-tiles]
     networks: [internal]
 

@@ -1,52 +1,58 @@
-# Co-hostade statiska sajter
+# Co-hostade externa sajter
 
-BPK-servern på Hetzner co-hostar några statiska sajter som ägs av samma
-person men ligger i egna GitHub-repon. Den här dokumentationen förklarar
-upplägget och hur man lägger till en ny.
+BPK-servern på Hetzner kan co-hosta statiska sajter som ägs av samma
+person men ligger i egna GitHub-repon. Det här dokumentet beskriver
+arkitekturen.
+
+**Viktig egenskap:** BPK-repot vet **inte** vilka sajter som co-hostas.
+Varje sajt levererar sitt eget Caddy-block och sitt eget innehåll från
+sitt eget repo. Att lägga till eller ta bort en co-hostad sajt kräver
+ingen ändring i BPK-repot.
 
 ## Arkitektur
 
 ```
-GitHub repo (statisk sajt)            Hetzner-servern
-    │                                       │
-    │ git push main                         │
-    │                                       │
-    ▼                                       │
-GitHub Actions ─── rsync över SSH ─────────►│   /opt/static-sites/<sajt>/
-                                            │              │
-                                            │              │ read-only mount
-                                            │              ▼
-                                            │   Caddy-container (BPK compose)
-                                            │              │
-                                            │              │ file_server
-                                            │              ▼
-                                            └──── https://<sajt>/  (TLS via Let's Encrypt)
+GitHub repo (sajt X)                       Hetzner-servern
+    │                                            │
+    │ git push main                              │
+    │                                            │
+    ▼                                            │
+GitHub Actions ─── rsync över SSH ─────────────► │   /opt/static-sites/<sajt>/
+                              ─── rsync ───────► │   /opt/caddy-sites.d/<sajt>.caddy
+                              ─── caddy reload ► │              │
+                                                 │              │ (read-only mounts)
+                                                 │              ▼
+                                                 │   Caddy-container (BPK compose)
+                                                 │   `import /etc/caddy/sites.d/*.caddy`
+                                                 │              │
+                                                 │              ▼
+                                                 └── https://<sajt>/ (TLS via Let's Encrypt)
 ```
 
-- Innehållet bor kvar i sitt eget repo
-- BPK-repot innehåller bara två konfig-rader per sajt (Caddyfile-block + compose-mount)
-- Push till statiska repots `main` deployar automatiskt
-- Caddy plockar upp filerna utan reload (read-only volume, file_server cachear inte)
+**Vad BPK-repot bidrar med:**
 
-## Initial server-setup (engångs, redan gjord 2026-XX-XX)
+- En `import /etc/caddy/sites.d/*.caddy` rad i `deploy/Caddyfile`
+- Två bind-mounts i `compose.yaml` (`/opt/static-sites` och
+  `/opt/caddy-sites.d`)
+
+Inget mer. Inga sajt-namn nämns i BPK.
+
+## Initial server-setup (engångs)
 
 ```bash
-ssh deploy@brottsplatskartan.se
-sudo mkdir -p /opt/static-sites
-sudo chown deploy:deploy /opt/static-sites
+ssh deploy@brottsplatskartan.se '
+    sudo mkdir -p /opt/static-sites /opt/caddy-sites.d
+    sudo chown -R deploy:deploy /opt/static-sites /opt/caddy-sites.d
+'
 ```
 
-Compose-mounten i `compose.yaml` (caddy-tjänsten) bind:ar in den read-only.
+Mounten i BPK:s `compose.yaml` (caddy-tjänsten) bind:ar in dem read-only.
 
-## Lägga till en ny statisk sajt
+## Lägga till en ny co-hostad sajt
 
-### 1. Skapa katalogen på servern
+Allt görs i den **statiska sajtens eget repo**. Inget i BPK-repot.
 
-```bash
-ssh deploy@brottsplatskartan.se 'mkdir -p /opt/static-sites/<dom.tld>'
-```
-
-### 2. Lägg till site-block i `deploy/Caddyfile`
+### 1. Skapa `caddy/<dom.tld>.caddy` i sajtens repo
 
 ```caddy
 www.<dom.tld> {
@@ -60,11 +66,7 @@ www.<dom.tld> {
 }
 ```
 
-Pusha → BPK-deploy startar om Caddy → ny domän börjar prova ACME mot Let's Encrypt.
-
-### 3. Sätt upp GitHub Action i den statiska sajtens repo
-
-Skapa `.github/workflows/deploy.yml`:
+### 2. Skapa `.github/workflows/deploy.yml` i sajtens repo
 
 ```yaml
 name: Deploy to Hetzner
@@ -77,6 +79,8 @@ on:
 jobs:
     deploy:
         runs-on: ubuntu-latest
+        env:
+            SITE: <dom.tld>
         steps:
             - uses: actions/checkout@v4
 
@@ -87,58 +91,90 @@ jobs:
                   chmod 600 ~/.ssh/id_ed25519
                   ssh-keyscan -H brottsplatskartan.se >> ~/.ssh/known_hosts
 
-            - name: Rsync public_html to server
+            - name: Sync content
               run: |
                   rsync -avz --delete \
                       public_html/ \
-                      deploy@brottsplatskartan.se:/opt/static-sites/<dom.tld>/
+                      deploy@brottsplatskartan.se:/opt/static-sites/$SITE/
+
+            - name: Sync Caddy snippet
+              run: |
+                  rsync -avz \
+                      caddy/$SITE.caddy \
+                      deploy@brottsplatskartan.se:/opt/caddy-sites.d/$SITE.caddy
+
+            - name: Reload Caddy
+              run: |
+                  ssh deploy@brottsplatskartan.se '
+                      cd /opt/brottsplatskartan
+                      docker compose exec -T caddy \
+                          caddy reload --config /etc/caddy/Caddyfile
+                  '
 ```
 
 Lägg till repo-secret `HETZNER_SSH_KEY` (samma deploy-nyckel som BPK
-använder, eller separat — se nedan).
+eller en separat — se Säkerhet nedan).
 
-### 4. DNS
+### 3. DNS
 
-Hos Loopia (eller där domänen ligger): peka A-record (apex + www) på
+Hos Loopia (eller där domänen ligger): peka apex + www mot
 Hetzner-IP:n för BPK-servern. Caddy fixar TLS automatiskt vid första
 träff.
+
+### 4. Pusha
+
+`git push origin main` triggar deploy. GitHub Action skickar
+innehållet, snippet:en och triggar Caddy-reload.
+
+## Ta bort en co-hostad sajt
+
+På servern:
+
+```bash
+ssh deploy@brottsplatskartan.se '
+    rm /opt/caddy-sites.d/<dom.tld>.caddy
+    rm -rf /opt/static-sites/<dom.tld>
+    cd /opt/brottsplatskartan
+    docker compose exec -T caddy caddy reload --config /etc/caddy/Caddyfile
+'
+```
+
+DNS:en hos Loopia kan peka om eller raderas separat. Inget i BPK-repot
+behöver röras.
 
 ## Säkerhet
 
 ### SSH-nyckel-strategi
 
-Du kan välja:
-
-- **Återanvänd BPK:s deploy-nyckel** — enklast, samma nyckel funkar för
-  alla repon
-- **Separata deploy-nycklar per sajt** — striktare blast radius om en
-  GitHub-org skulle komprometteras. Läggs som `~/.ssh/authorized_keys`
-  rad på `deploy@brottsplatskartan.se` med `command="rsync …"` för att
-  begränsa till bara den ena katalogen
+För minimerad blast radius — separat deploy-nyckel per sajt, med
+`command="…"` i `~/.ssh/authorized_keys` som låser sessionen till de
+rsync- och caddy-reload-anrop som workflow:n behöver.
 
 För dessa två sajter (antonblomqvist.se, simple-fields.com) räcker
-återanvändning — låg risk, samma ägare.
+återanvändning av BPK:s deploy-nyckel — låg risk, samma ägare.
 
-### Rsync-katalog-isolering
+### Ingen sajt kan kapa en annan
 
-GitHub Actions behöver bara skrivrättigheter till `/opt/static-sites/<sajt>/`.
-För hård isolering: använd `command=` i `authorized_keys` som låser
-SSH-sessionen till just det rsync-anropet.
+Caddy-snippet:en pekar på `/srv/static-sites/<dom.tld>` med samma
+sajt-namn som filen — så ingen kan via en pull request ändra var
+content hämtas från.
 
 ## Felsökning
 
 ### Sajten visar "Can't find a site"
 
-- Kolla att A-record pekar på rätt IP: `dig <dom.tld>`
+- Kolla att A-record pekar rätt: `dig <dom.tld>`
 - Kolla att Caddy plockat upp config: `docker compose logs caddy | grep <dom.tld>`
-- Kolla att filerna finns på servern: `ssh deploy@brottsplatskartan.se 'ls /opt/static-sites/<dom.tld>/'`
+- Kolla snippet och innehåll på servern:
+  `ssh deploy@brottsplatskartan.se 'ls /opt/caddy-sites.d/ /opt/static-sites/'`
+
+### Caddy reload misslyckas
+
+Om snippet:en har syntaxfel refuserar Caddy ny config men fortsätter
+köra den gamla — så live-trafik bryts inte. Kolla
+`docker compose logs caddy` för felmeddelandet.
 
 ### TLS-cert misslyckas
 
-Caddy försöker ACME automatiskt. Om DNS inte propagerat än får man
-404 från Let's Encrypt. Vänta 5–10 min, kolla logg: `docker compose logs caddy`.
-
-### Deploy-action failar med "Permission denied"
-
-`HETZNER_SSH_KEY`-secret saknas eller är fel. Lägg in nyckeln på
-servern: `ssh deploy@brottsplatskartan.se 'cat >> ~/.ssh/authorized_keys' < deploy-key.pub`.
+Om DNS inte propagerat får man ACME-fel. Vänta 5–10 min, kolla logg:
+`docker compose logs caddy | grep -i acme`.

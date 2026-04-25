@@ -27,25 +27,8 @@ kartbilder.brottsplatskartan.se {
 	header Cache-Control "public, max-age=604800, immutable"
 }
 
-# Co-hostade statiska sajter (innehåll kommer från sina egna repon via
-# GitHub Actions → /opt/static-sites/<sajt>/, mountat read-only nedan).
-
-www.antonblomqvist.se {
-	redir https://antonblomqvist.se{uri} permanent
-}
-
-antonblomqvist.se {
-	root * /srv/static-sites/antonblomqvist.se
-	encode gzip zstd
-	file_server
-}
-
-www.simple-fields.com {
-	redir https://simple-fields.com{uri} permanent
-}
-
-simple-fields.com {
-	root * /srv/static-sites/simple-fields.com
-	encode gzip zstd
-	file_server
-}
+# Drop-in för co-hostade externa sajter — varje sajt levererar sin egen
+# *.caddy från sitt repo via GitHub Actions till /opt/caddy-sites.d/ på
+# servern. BPK-repot vet inget om vilka sajter som finns.
+# Se deploy/co-hosted-static-sites.md.
+import /etc/caddy/sites.d/*.caddy
