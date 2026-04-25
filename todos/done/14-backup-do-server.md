@@ -1,5 +1,5 @@
-**Status:** aktiv — inventering klar, redo för backup-körning
-**Senast uppdaterad:** 2026-04-24
+**Status:** klar 2026-04-25
+**Senast uppdaterad:** 2026-04-25
 
 # Todo #14 — Backup av övriga sajter på gamla DO-servern
 
@@ -92,5 +92,6 @@ Koppla ihop med todo #16 (DO-avveckling).
 - [x] Bekräftat att källkoden för båda statiska sajterna finns på GitHub
 - [x] Kör backup-skriptet — resultat i `~/Projects/Personal/digital-ocean-backup-dokku-server/2026-04-24/` (2026-04-24)
 - [x] Verifiera artefakterna — 112 MB DB (18 tabeller, 562 INSERTs) + 60 MB storage (1736 entries, WP uploads)
-- [ ] Flytta till långtidsarkiv (extern disk / Hetzner Object Storage)
-- [ ] Signalera att #16 kan påbörjas
+- [x] README-filer skrivna i backup-mappen (översikt + snapshot-detaljer + restore-instruktioner)
+- [x] Flyttat till långtidsarkiv (2026-04-25)
+- [x] #16 kan påbörjas — Pär körde `dokku apps:stop --all` 2026-04-25

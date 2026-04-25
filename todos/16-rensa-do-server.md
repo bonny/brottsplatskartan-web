@@ -1,6 +1,5 @@
-**Status:** blockerad (väntar på #14 + 2v Hetzner-stabilitet)
-**Senast uppdaterad:** 2026-04-22
-**Blockerad av:** #14
+**Status:** aktiv — apparna stoppade, väntar på soak innan radering
+**Senast uppdaterad:** 2026-04-25
 
 # Todo #16 — Rensa / avveckla gamla DO-servern (Dokku)
 
@@ -19,14 +18,17 @@ servern avvecklas.
 ## Avvecklingssteg
 
 1. **Flytta kvarvarande appar** (om några ska leva vidare) till ny host
-   — eller bekräfta att de ska läggas ned permanent
-2. **DNS:** ta bort/uppdatera records som pekar på DO-IP:n
-   (Loopia eller där de nu ligger)
-3. **Stoppa Dokku-apparna** (redan gjort för brottsplatskartan-app
-   och brottsplatskartan-tileserver enligt cutover-planen)
+   — eller bekräfta att de ska läggas ned permanent — _antonblomqvist.se
+   och simple-fields är statiska sajter med källkod på GitHub; läggs ner
+   på DO och hostas vid behov någon annanstans_
+2. **DNS:** ta bort/uppdatera records som pekar på DO-IP:n `138.68.89.224`
+   (Loopia)
+3. ✅ **Stoppa Dokku-apparna** — `dokku apps:stop --all` kört 2026-04-25
 4. **Verifiera att inget trafikerar servern** — tail access-loggar
    någon dag för att upptäcka glömda sub-domäner eller externa
-   beroenden
+   beroenden. _Direkt efter stop-kommandot 2026-04-25: bara förväntade
+   sajter slutade fungera (antonblomqvist.se, simple-fields.com).
+   Inga okända beroenden upptäckta._
 5. **Radera droppleten** via DO-konsolen (eller snapshot först som
    sista utväg, kan raderas efter några veckor)
 6. **Avsluta/nedgradera eventuella DO-tillägg** (block storage,

@@ -32,15 +32,14 @@ historik — raderas aldrig.
 | 8   | Google Analytics MCP + ev. Search Console MCP      | Redo för setup                                                                                                                              | [todos/08-ga-mcp.md](todos/08-ga-mcp.md)                                 |
 | 10  | AI-omskriva vaga titlar                            | Plan klar, kostnad ~$27 för full backfill                                                                                                   | [todos/10-ai-omskriva-titlar.md](todos/10-ai-omskriva-titlar.md)         |
 | 1   | Minska cache-URL:er (`/plats/*/handelser/*` m.fl.) | Blockerad av #8 (behöver GA-data)                                                                                                           | [todos/01-minska-cache-urls.md](todos/01-minska-cache-urls.md)           |
-| 14  | Backup av övriga sajter på gamla DO-servern        | Inventering + dump av Dokku-appar innan avveckling                                                                                          | [todos/14-backup-do-server.md](todos/14-backup-do-server.md)             |
-| 16  | Rensa / avveckla gamla DO-servern (Dokku)          | Blockerad av #14 + minst 2v stabil Hetzner — tidigast ~2026-05-15                                                                           | [todos/16-rensa-do-server.md](todos/16-rensa-do-server.md)               |
+| 16  | Rensa / avveckla gamla DO-servern (Dokku)          | Aktiv 2026-04-25 — appar stoppade, väntar på soak innan radering                                                                            | [todos/16-rensa-do-server.md](todos/16-rensa-do-server.md)               |
 | 20  | Kartbilder: rita cirkel/område runt händelsen      | Aktiv 2026-04-24 — implementerad bakom feature-flag, redo för prod-rollout                                                                  | [todos/20-kartbilder-med-cirklar.md](todos/20-kartbilder-med-cirklar.md) |
 
 ### Beroenden
 
 - **#1 ↔ #8:** beslutet om vilka routes som ska tas bort kräver trafikdata från GA4.
 - **#10 → #11:** bättre titlar förbättrar SEO. Kör #10 innan eller parallellt med #11.
-- **#14 → #16:** DO-servern får inte avvecklas innan backup är verifierad.
+- ~~**#14 → #16:** DO-servern får inte avvecklas innan backup är verifierad.~~ (#14 klar 2026-04-25)
 
 ### Föreslagen ordning
 
@@ -66,6 +65,7 @@ historik — raderas aldrig.
 | 17  | Ta bort `hetzner.*`-testdomänerna                      | 2026-04-24 | [todos/done/17-ta-bort-hetzner-domaner.md](todos/done/17-ta-bort-hetzner-domaner.md) |
 | 19  | /mest-last: filtrera bort gamla events (3-dagars)      | 2026-04-24 | [todos/done/19-mest-last-bara-nyligen.md](todos/done/19-mest-last-bara-nyligen.md)   |
 | 13  | Kommunicera "Hosted in EU" (footer + /sida/om)         | 2026-04-24 | [todos/done/13-hosted-in-eu.md](todos/done/13-hosted-in-eu.md)                       |
+| 14  | Backup av övriga sajter på gamla DO-servern            | 2026-04-25 | [todos/done/14-backup-do-server.md](todos/done/14-backup-do-server.md)               |
 
 ## Avfärdade / sammanslagna
 
