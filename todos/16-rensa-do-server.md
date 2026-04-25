@@ -23,8 +23,10 @@ servern avvecklas.
    på DO och hostas vid behov någon annanstans_
 2. **DNS:** ta bort/uppdatera records som pekar på DO-IP:n `138.68.89.224`
    (Loopia). _Bekräftat 2026-04-25: inga BPK-domäner pekar dit längre.
-   Kvar att rensa: `antonblomqvist.se`, `simple-fields.com` (+ www.\*) —
-   de sajterna slogs ut när apparna stoppades = DNS pekar dit än._
+   Kvar: `antonblomqvist.se`, `simple-fields.com` (+ www.\*) — flyttas
+   till BPK:s Hetzner-server som co-hostade statiska sajter (se
+   `deploy/co-hosted-static-sites.md`). DNS-byte = peka apex/www mot
+   Hetzner-IP:n istället för bara att radera._
 3. ✅ **Stoppa Dokku-apparna** — `dokku apps:stop --all` kört 2026-04-25
 4. **Verifiera att inget trafikerar servern** — tail access-loggar
    någon dag för att upptäcka glömda sub-domäner eller externa
