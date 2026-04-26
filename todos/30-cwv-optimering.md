@@ -4,15 +4,15 @@
 
 # Todo #30 — CWV-optimering Fas 1
 
-## Resultat på prod efter Fas A+B+C (2026-04-26)
+## Resultat på prod efter Fas A+B+C + self-host (2026-04-26)
 
 | Metric          | Baseline | Efter | Δ          |
 | --------------- | -------: | ----: | ---------- |
-| Perf-poäng      |       51 |    79 | +28        |
-| LCP             |     9.6s |  2.0s | -79 %      |
-| FCP             |     4.1s |  2.0s | -51 %      |
+| Perf-poäng      |       51 |    80 | +29        |
+| LCP             |     9.6s | 1.57s | -84 %      |
+| FCP             |     4.1s | 1.57s | -62 %      |
 | CLS             |    0.243 | 0.236 | oförändrat |
-| Render-blocking |       12 |     3 | -9         |
+| Render-blocking |       12 |     0 | -12        |
 
 CLS är fortfarande POOR — orsakas av AdSense Auto Ads, kräver
 config-ändring i AdSense-dashboard (se Fas A nedan), inte kod.
@@ -23,6 +23,7 @@ Kommitar:
 - `aaee7d4` Fas B: defer Leaflet-bundle + page-specifik charts.css
 - `79b45b5` Fas C: byta interaktiv map-tilelayer från OSM till
   egna tileservern (WebP, ~70 % mindre/tile)
+- `e0b6195` Self-hosta Leaflet + plugins (eliminerar 2 externa DNS)
 
 ## Varför
 
