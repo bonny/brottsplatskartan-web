@@ -295,24 +295,45 @@ genom att avmarkera 301-logiken om rollback krävs.
 Strikt sekventiell — gå inte vidare till nästa steg innan föregående
 verifieras.
 
-1. **URL-format-beslut** + dokumentation i denna todo
-2. **Mobil-prototyp** (HTML-only, utan backend) — verifiera
-   landningsupplevelse + scroll-to-anchor på iOS/Android
-3. **Backend-route + controller-metod + Blade-vy** för EN plats
-   (Uppsala). Inkl. paginering, tomhantering, AdSense-villkor.
-4. **301-redirect-logik** för Uppsala dagsvyer → månadsvy.
+1. ✅ **URL-format-beslut** — `/plats/{plats}/handelser/{year}/{month}` (2026-04-26).
+2. ⏭ **Mobil-prototyp** — skippad. Vyn renderas direkt med befintlig
+   Blade-arkitektur. Anchor-scroll-test får göras post-deploy med
+   verklig sticky-header-höjd.
+3. ✅ **Backend-route + controller-metod + Blade-vy** (commit `cc6bc3c`).
+   - PlatsController::month() + LanController::month()
+   - Routes platsMonth + lanMonth (med where-constraints på year/month)
+   - Helper::getMonthRangeFromYearMonth() validerar input
+   - `single-plats-month.blade.php` med Snabba fakta + dag-anchors
+   - Schema.org JSON-LD (Dataset + FAQPage + BreadcrumbList) inline
+   - Tomma månader 301:as, 1–2-event-månader noindex,follow
+   - PHPStan grön
+   - Smoke-testat lokalt: Uppsala, Västerås, Uppsala län → 200 OK
+4. ☐ **301-redirect-logik** för gamla dagsvyer → månadsvy med dag-anchor.
    Verifiera ETT hopp via `curl -ILv`.
-5. **Performance-test** — månadsquery på `crime_events`. Indextest
-   för `(plats, parsed_date)`-kombination.
-6. **Sitemap-uppdatering** för Uppsala — månadsvyer in, dagsvyer
-   ut. Submit till GSC.
-7. **Schema.org JSON-LD** — Dataset + Place + BreadcrumbList +
-   FAQPage. Validera i Google Rich Results-test + Google Dataset
-   Search test.
-8. **Pilot-deploy + baseline-mätning** dag 0
-9. **30 dagars soak.** Daglig KPI-koll. Rollback om tröskel triggas.
-10. **Full rollout** — alla platser + län. Behåll Uppsala som
-    benchmark om något oroväckande dyker upp.
+5. ☐ **Performance-test** — Lighthouse mobile på Stockholm/Uppsala/
+   Hofors-månadsvy. CWV-budget per platsstorlek (LCP <1.8s,
+   INP <120ms, CLS <0.05).
+6. ☐ **Sitemap-uppdatering** — månadsvyer in, dagsvyer noindex/ut.
+   Submit till GSC.
+7. ☐ **Översiktskarta överst** — Leaflet med alla månadens events
+   klustrade. Lazy-load tills viewport (CWV-budget).
+8. ☐ **Day-nav på event-pages** — uppdatera prev/next-länkar i
+   Helper.php så att de pekar på månadsvyn med dag-anchor istället
+   för dagsvyn.
+9. ☐ **CSS** för MonthNav, MonthToc, MonthDay-klasser.
+10. ☐ **Feature-flag MONTHLY_VIEWS_ENABLED** för rollback-mekanism.
+11. ☐ **Pilot-deploy + baseline-mätning** dag 0 — Västerås/Uppsala
+    + Linköping/Stockholm/Hofors som referenspunkter.
+12. ☐ **30 dagars soak.** Daglig KPI-koll. Rollback om tröskel triggas.
+13. ☐ **Full rollout** — när pilot-data validerar hypotesen.
+
+## Status (2026-04-26)
+
+**MVP byggt och kör lokalt.** Routerna, controllers, vyerna och
+schema är klara. Återstår: 301-redirect från gamla dagsvyer,
+sitemap-uppdatering, översiktskarta, CSS, feature-flag, performance-
+test, deploy + mätning. Routerna fungerar för alla platser inkl.
+Tier 1 (uppsala/stockholm) sedan CityRedirectMiddleware-fixen.
 
 ---
 
