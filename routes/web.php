@@ -126,6 +126,9 @@ Route::get('vma/sida/{slug}', [VMAAlertsController::class, 'text'])->name('vma-t
 Route::get('/lan/', [LanController::class, 'listLan'])->name("lanOverview");
 Route::get('/lan/{lan}', [LanController::class, 'day'])->name("lanSingle");
 Route::get('/lan/{lan}/handelser/{date}', [LanController::class, 'day'])->name('lanDate');
+Route::get('/lan/{lan}/handelser/{year}/{month}', [LanController::class, 'month'])
+    ->where(['year' => '[0-9]{4}', 'month' => '[0-9]{2}'])
+    ->name('lanMonth');
 Route::get('/lan/{lan}/handelser', function ($lan) {
     return redirect()->route('lanSingle', ['lan' => $lan]);
 });
@@ -256,6 +259,9 @@ Route::get('/plats/{plats}/handelser', function ($plats) {
 Route::get('/plats/{plats}/handelser/{date}', [PlatsController::class, 'day'])->name(
     'platsDatum'
 );
+Route::get('/plats/{plats}/handelser/{year}/{month}', [PlatsController::class, 'month'])
+    ->where(['year' => '[0-9]{4}', 'month' => '[0-9]{2}'])
+    ->name('platsMonth');
 
 /**
  * Sida, med text typ, t.ex. "om brottsplatskartan" eller "api"

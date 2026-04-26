@@ -507,6 +507,41 @@ class Helper {
         return $resolvedDate->diffInDays(now()) > $maxAgeDays;
     }
 
+    /**
+     * Parse year + month parameters from the monthly URL pattern
+     * (`/plats/{plats}/handelser/{year}/{month}`, todo #25).
+     *
+     * @return array{date: Carbon, start: Carbon, end: Carbon, year: int, month: int}|false
+     */
+    public static function getMonthRangeFromYearMonth($year, $month)
+    {
+        if (!ctype_digit((string) $year) || !ctype_digit((string) $month)) {
+            return false;
+        }
+
+        $year = (int) $year;
+        $month = (int) $month;
+
+        if ($year < 2014 || $year > (int) now()->format('Y')) {
+            return false;
+        }
+
+        if ($month < 1 || $month > 12) {
+            return false;
+        }
+
+        $start = Carbon::create($year, $month, 1, 0, 0, 0);
+        $end = (clone $start)->endOfMonth();
+
+        return [
+            'date' => $start,
+            'start' => $start,
+            'end' => $end,
+            'year' => $year,
+            'month' => $month,
+        ];
+    }
+
     public static function getdateFromDateSlug($monthAndYear) {
         $monthAndYear = strtolower($monthAndYear);
         $monthAndYear = str_replace('-', ' ', $monthAndYear);
