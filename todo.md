@@ -37,18 +37,20 @@ historik — raderas aldrig.
 
 ### Beroenden
 
+- **#28 → #10:** AI-titlar bygger på `laravel/ai`. Migrera först.
+- **#28 → #27 Lager 3:** AI-månadssammanfattningar bygger på `laravel/ai`.
 - **#10 → #11:** bättre titlar förbättrar SEO. Kör #10 innan eller parallellt med #11.
 - ~~**#14 → #16:** DO-servern får inte avvecklas innan backup är verifierad.~~ (#14 klar 2026-04-25)
 - **#21 → #16:** DO-servern bör inte raderas förrän statiska sajterna flyttats till BPK-Hetzner.
 
 ### Föreslagen ordning
 
-1. **#27 + #25** synkroniseras — innehållsplan + URL-struktur ska
-   designas tillsammans innan kod skrivs
-2. **#11 CWV-mätning** (post-cutover, unblocked) — baseline innan #25/#27
-3. **#10** (AI-titlar) — pilot 30 dagar, ~20 kr
-4. **#21 → #16** (DNS-byte + DO-avveckling) — efter ~2026-05-15
-5. **#20** (kartbilder cirklar) — flippa flagga i prod-env
+1. **#11 CWV-mätning** (2 timmar) — baseline innan stora ändringar
+2. **#28 + #29 parallellt** — #28 låser upp #10/#27. #29 ren SEO-impact, ingen AI
+3. **#10 AI-titlar** (efter #28) — bygg på `laravel/ai`
+4. **#27 + #25** synkas — innehållsplan + URL-struktur designas tillsammans
+5. **#21 → #16** (DNS-byte + DO-avveckling) — efter ~2026-05-15
+6. **#20** (kartbilder cirklar) — flippa flagga i prod-env
 
 ---
 
