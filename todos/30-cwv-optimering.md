@@ -1,4 +1,4 @@
-**Status:** aktiv (Fas A+B+C deployade 2026-04-26 — kvar: AdSense-config + Fas D)
+**Status:** aktiv (Fas A+B+C + self-host deployade 2026-04-26 — kvar: CrUX-mätning 28d. Fas D avfärdad, AdSense-CLS skippad per användarbeslut)
 **Senast uppdaterad:** 2026-04-26
 **Härledd från:** #11 SEO-audit (CWV-baseline 2026-04-26)
 
@@ -170,15 +170,16 @@ intäkterna sjunker > 10 %, gå till (b) på topp-trafikerade sidtyper
 
 **Acceptanskriterium:** LCP < 4.0s på alla sidor.
 
-### Fas D: JS-bundle-reduktion (2-3 dagar)
+### Fas D: JS-bundle-reduktion ~~(2-3 dagar)~~ — **avfärdad 2026-04-26**
 
-Sista och svåraste — kräver mer arbete.
+Skippat. Efter Fas A+B+C + self-host nådde vi perf 80 / LCP 1,57s
+redan utan code-splitting. Acceptanskriteriet (perf ≥ 70) är uppfyllt
+på alla mätta sidor. Tree-shake av Leaflet skulle ge marginell
+ytterligare vinst men kräva en bundler-pipeline (Vite/webpack) som
+projektet annars inte har.
 
-10. Code-split Leaflet
-11. Tree-shake övriga bibliotek
-12. Mät bundle size före/efter
-
-**Acceptanskriterium:** Performance ≥ 70 på alla sidor.
+Om CrUX-data efter 28d visar att vi inte når "Good"-tröskel kan
+ämnet återöppnas i ny todo.
 
 ## Risker
 

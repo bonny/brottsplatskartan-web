@@ -37,7 +37,7 @@ historik — raderas aldrig.
 | 27  | Berika ort- och månadssidor med rikare innehåll | Designfas 2026-04-26 — Lager 1-3 (egen data, externt + AI), research klar                                                                   | [todos/27-rikare-innehall.md](todos/27-rikare-innehall.md)                 |
 | 28  | Migrera AI-stack till `laravel/ai`              | Designfas 2026-04-26 — pre-1.0 claude-php → officiell laravel/ai. Blocker för #10 + #27 Lager 3                                              | [todos/28-migrera-laravel-ai.md](todos/28-migrera-laravel-ai.md)           |
 | 29  | Audit + reducera indexerade pages               | **Aktiv 2026-04-26** — datum-routes + thin singles deployat, ~22k pages noindex:as. Mätperiod 30-90d i GSC innan plats/typ-sidor angrips     | [todos/29-audit-indexerade-pages.md](todos/29-audit-indexerade-pages.md)   |
-| 30  | CWV-optimering Fas 1 (CLS, JS, images)          | **Aktiv 2026-04-26** — Fas A+B+C + self-host deployade. LCP 9.6s→1.6s (-84 %), perf 51→80. CLS kvar (AdSense). Kvar: AdSense-config + Fas D | [todos/30-cwv-optimering.md](todos/30-cwv-optimering.md)                   |
+| 30  | CWV-optimering Fas 1 (CLS, JS, images)          | **Aktiv 2026-04-26** — Fas A+B+C + self-host deployade. LCP 9.6s→1.6s (-84 %), perf 51→80. Fas D avfärdad. Kvar: CrUX-mätning 28d           | [todos/30-cwv-optimering.md](todos/30-cwv-optimering.md)                   |
 
 ### Beroenden
 
