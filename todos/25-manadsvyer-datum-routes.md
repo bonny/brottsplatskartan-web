@@ -329,11 +329,47 @@ verifieras.
 
 ## Status (2026-04-26)
 
-**MVP byggt och kör lokalt.** Routerna, controllers, vyerna och
-schema är klara. Återstår: 301-redirect från gamla dagsvyer,
-sitemap-uppdatering, översiktskarta, CSS, feature-flag, performance-
-test, deploy + mätning. Routerna fungerar för alla platser inkl.
-Tier 1 (uppsala/stockholm) sedan CityRedirectMiddleware-fixen.
+**Pilot-redo.** Allt utom översiktskartan + Lighthouse-mätning är
+implementerat lokalt. Aktivering kräver bara `MONTHLY_VIEWS_PILOT`-
+flaggan på prod.
+
+Klart:
+- ✅ Routes (`platsMonth`, `lanMonth`) + Helper-validering
+- ✅ Controllers (`PlatsController::month`, `LanController::month`)
+  + range-query mot `(plats, parsed_date)`-index
+- ✅ Blade-vy med dag-anchors + Snabba fakta-block
+- ✅ Schema.org JSON-LD: Dataset + FAQPage + BreadcrumbList
+- ✅ CSS för MonthNav/MonthToc/MonthDay/Introtext--monthFacts
+- ✅ Månads-arkiv-block på plats/lan/city-sidor (sidopanel)
+- ✅ Pilot-flagga `MONTHLY_VIEWS_PILOT` (`''`/`all`/`list:a,b,c`)
+- ✅ 301 från dagsvyer → månadsvy med dag-anchor (bakom flagga)
+- ✅ Sitemap: 21 län × 12 mån + 5 Tier 1-städer × 12 mån = 312 URL:er
+- ✅ CityRedirectMiddleware släpper igenom Tier 1-handelser-URL:er
+- ✅ PHPStan grön
+- ✅ Smoke-tester: Uppsala/Västerås/Uppsala län/Stockholm = 200,
+  Hofors (0 events) = 301 till plats-startsida
+
+Kvar (ej blocking för pilot):
+- ☐ Översiktskarta överst i månadsvyn (Leaflet, lazy-loaded) —
+  designkrav, MVP utan
+- ☐ Day-nav på enskilda event-pages → månadsvyer (301 löser det
+  när flaggan är på)
+- ☐ Lighthouse-test per platsstorlek (Stockholm/Uppsala/Hofors) —
+  CWV-budget från designfas
+- ☐ Baseline-mätning av RPM/PV/session per URL-typ innan pilot
+- ☐ Pilot-aktivering: flippa MONTHLY_VIEWS_PILOT på Hetzner
+- ☐ 30 dagars mätning + utvärdering
+
+### Hur aktivera pilot
+
+På Hetzner:
+```bash
+echo "MONTHLY_VIEWS_PILOT='list:uppsala,västerås'" >> /opt/brottsplatskartan/.env
+docker compose exec app php artisan config:clear
+```
+
+Lägg till fler slugs (kommaseparerat) eller byt till `all` för full
+rollout. Ta bort/sätt till `''` för rollback.
 
 ---
 
