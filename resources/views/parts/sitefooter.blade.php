@@ -108,7 +108,7 @@
         @php($deploy = \App\DeployInfo::current())
         @if ($deploy)
             | <span class="SiteFooter-deploy" title="{{ $deploy['subject'] }}">
-                Deploy {{ $deploy['deployed_at']->isoFormat('dddd D MMMM YYYY') }} ({{ $deploy['short_sha'] }})
+                Deploy {{ $deploy['deployed_at']->isoFormat('dddd D MMMM YYYY HH:mm') }} ({{ $deploy['short_sha'] }})
             </span>
         @endif
     </div>

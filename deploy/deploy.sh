@@ -75,6 +75,27 @@ $DC restart nginx-tiles
 echo "→ docker compose restart app scheduler"
 $DC restart app scheduler
 
+# Skriv deploy-info som sidfoten läser. Körs i app-containern så fil-
+# ägarskap blir www-data, samma som resten av storage/app/. Tiden sätts
+# till Europe/Stockholm för att matcha app-timezone.
+echo "→ skriver storage/app/deploy.json"
+SUBJECT=$(git log -1 --format='%s')
+SHORT=$(git rev-parse --short HEAD)
+NOW=$(TZ=Europe/Stockholm date -Iseconds)
+$DC exec -T \
+	-e DEPLOY_SHA="$NEW_SHA" \
+	-e DEPLOY_SHORT="$SHORT" \
+	-e DEPLOY_SUBJECT="$SUBJECT" \
+	-e DEPLOY_AT="$NOW" \
+	app php -r '
+		file_put_contents("storage/app/deploy.json", json_encode([
+			"sha"         => getenv("DEPLOY_SHA"),
+			"short_sha"   => getenv("DEPLOY_SHORT"),
+			"subject"     => getenv("DEPLOY_SUBJECT"),
+			"deployed_at" => getenv("DEPLOY_AT"),
+		], JSON_UNESCAPED_UNICODE));
+	'
+
 # Rensa Spatie response cache (Redis). Annars serveras gamla cachade
 # svar tills TTL (2–30 min) löper ut — irriterande när man just deployat
 # en Blade-fix.
