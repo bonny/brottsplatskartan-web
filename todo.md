@@ -32,7 +32,6 @@ historik — raderas aldrig.
 | 16  | Rensa / avveckla gamla DO-servern (Dokku)       | Aktiv 2026-04-25 — appar stoppade, väntar på soak innan radering                                                                            | [todos/16-rensa-do-server.md](todos/16-rensa-do-server.md)                 |
 | 25  | Månadsvyer istället för dagsvyer (datum-routes) | Designfas 2026-04-26 — confidence medel, kräver Uppsala-pilot 30d innan rollout                                                             | [todos/25-manadsvyer-datum-routes.md](todos/25-manadsvyer-datum-routes.md) |
 | 27  | Berika ort- och månadssidor med rikare innehåll | Designfas 2026-04-26 — Lager 1-3 (egen data, externt + AI), research klar                                                                   | [todos/27-rikare-innehall.md](todos/27-rikare-innehall.md)                 |
-| ~~28~~  | ~~Migrera AI-stack till `laravel/ai`~~      | **Klar 2026-04-26** — Sonnet 4.6 + v2-prompt + agent-klasser. Lyfter blocker för #10 + #27                                                  | [todos/28-migrera-laravel-ai.md](todos/28-migrera-laravel-ai.md)           |
 | 29  | Audit + reducera indexerade pages               | **Aktiv 2026-04-26** — datum-routes + thin singles deployat, ~22k pages noindex:as. Mätperiod 30-90d i GSC innan plats/typ-sidor angrips     | [todos/29-audit-indexerade-pages.md](todos/29-audit-indexerade-pages.md)   |
 | 30  | CWV-optimering Fas 1 (CLS, JS, images)          | **Aktiv 2026-04-26** — Fas A+B+C + self-host deployade. LCP 9.6s→1.6s (-84 %), perf 51→80. Fas D avfärdad. Kvar: CrUX-mätning 28d           | [todos/30-cwv-optimering.md](todos/30-cwv-optimering.md)                   |
 
@@ -77,6 +76,7 @@ historik — raderas aldrig.
 | 11  | SEO-audit 2026 (Fas 1+2; CWV→#30, OG-image avfärdat)   | 2026-04-26 | [todos/done/11-seo-audit-2026.md](todos/done/11-seo-audit-2026.md)                     |
 | 20  | Kartbilder med cirklar (default circle, soak ok)       | 2026-04-26 | [todos/done/20-kartbilder-med-cirklar.md](todos/done/20-kartbilder-med-cirklar.md)     |
 | 21  | Migrera antonblomqvist.se + simple-fields.com (DNS ok) | 2026-04-26 | [todos/done/21-migrera-statiska-sajter.md](todos/done/21-migrera-statiska-sajter.md)   |
+| 28  | Migrera AI-stack till `laravel/ai` (Sonnet 4.6 + v2)   | 2026-04-26 | [todos/done/28-migrera-laravel-ai.md](todos/done/28-migrera-laravel-ai.md)             |
 
 ## Avfärdade / sammanslagna
 
