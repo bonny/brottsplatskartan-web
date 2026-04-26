@@ -43,8 +43,9 @@ historik — raderas aldrig.
 
 ### Föreslagen ordning
 
-1. **#25 månadsvyer** — designbeslut + prototyp (stort grepp, prio enligt ägare)
-2. **#11 CWV-mätning** (post-cutover, unblocked) — ger underlag för övriga Fas 2/3-beslut
+1. **#27 + #25** synkroniseras — innehållsplan + URL-struktur ska
+   designas tillsammans innan kod skrivs
+2. **#11 CWV-mätning** (post-cutover, unblocked) — baseline innan #25/#27
 3. **#10** (AI-titlar) — pilot 30 dagar, ~20 kr
 4. **#21 → #16** (DNS-byte + DO-avveckling) — efter ~2026-05-15
 5. **#20** (kartbilder cirklar) — flippa flagga i prod-env
