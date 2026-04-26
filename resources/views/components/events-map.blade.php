@@ -1,22 +1,24 @@
 @once
     @push('scripts')
-        {{-- Leaflet + plugins. defer på alla scripts: laddar parallellt med
-             HTML-parsing, körs i ordning före DOMContentLoaded. events-map.js
-             initialiserar på DOMContentLoaded så ordningen är säkrad. --}}
-        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-            integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-        <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-        <link rel="stylesheet" href="//unpkg.com/leaflet-gesture-handling/dist/leaflet-gesture-handling.min.css" type="text/css">
-        <script defer src="//unpkg.com/leaflet-gesture-handling"></script>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.81.0/dist/L.Control.Locate.min.css" />
-        <script defer src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.81.0/dist/L.Control.Locate.min.js" charset="utf-8">
-        </script>
+        {{-- Leaflet + plugins, self-hostade i public/vendor/leaflet/. defer
+             på alla scripts: laddar parallellt med HTML-parsing, körs i
+             ordning före DOMContentLoaded. events-map.js initialiserar på
+             DOMContentLoaded så ordningen är säkrad.
 
-        <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" type="text/css">
-        <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css"
-            type="text/css">
-        <script defer src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js" charset="utf-8"></script>
+             Källa: leaflet@1.9.4, leaflet-gesture-handling@1.2.2,
+             leaflet.locatecontrol@0.81.0, leaflet.markercluster@1.4.1. --}}
+        <link rel="stylesheet" href="{{ URL::asset('vendor/leaflet/leaflet.min.css') }}">
+        <script defer src="{{ URL::asset('vendor/leaflet/leaflet.min.js') }}"></script>
+
+        <link rel="stylesheet" href="{{ URL::asset('vendor/leaflet/gesture-handling/leaflet-gesture-handling.min.css') }}">
+        <script defer src="{{ URL::asset('vendor/leaflet/gesture-handling/leaflet-gesture-handling.min.js') }}"></script>
+
+        <link rel="stylesheet" href="{{ URL::asset('vendor/leaflet/locatecontrol/L.Control.Locate.min.css') }}">
+        <script defer src="{{ URL::asset('vendor/leaflet/locatecontrol/L.Control.Locate.min.js') }}"></script>
+
+        <link rel="stylesheet" href="{{ URL::asset('vendor/leaflet/markercluster/MarkerCluster.min.css') }}">
+        <link rel="stylesheet" href="{{ URL::asset('vendor/leaflet/markercluster/MarkerCluster.Default.min.css') }}">
+        <script defer src="{{ URL::asset('vendor/leaflet/markercluster/leaflet.markercluster.min.js') }}"></script>
 
         <script defer src="{{ URL::asset('js/leaflet-loader.js') }}"></script>
         <script defer src="{{ URL::asset('js/events-map.js') }}"></script>

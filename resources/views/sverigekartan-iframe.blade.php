@@ -3,18 +3,14 @@
 
 <head>
     <title>Sverigekartan – karta med polisens händelser i hela Sverige</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.3/dist/leaflet.css"
-        integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
-        crossorigin="" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.css" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.Default.css" />
-    <script src="https://unpkg.com/leaflet@1.3.3/dist/leaflet.js"
-        integrity="sha512-tAGcCfR4Sc5ZP5ZoVz0quoZDYX5aCtEm/eu1KhSLj2c9eFrylXZknQYmxUssFaVJKvvc0dJQixhGjG2yXWiV9Q=="
-        crossorigin=""></script>
-    <link rel="stylesheet" href="//unpkg.com/leaflet-gesture-handling/dist/leaflet-gesture-handling.min.css"
-        type="text/css">
-    <script src="//unpkg.com/leaflet-gesture-handling"></script>
-    <script src="https://unpkg.com/leaflet.markercluster@1.3.0/dist/leaflet.markercluster.js"></script>
+    {{-- Self-hostade Leaflet 1.9.4 + plugins (samma som events-map.blade.php). --}}
+    <link rel="stylesheet" href="{{ URL::asset('vendor/leaflet/leaflet.min.css') }}">
+    <link rel="stylesheet" href="{{ URL::asset('vendor/leaflet/markercluster/MarkerCluster.min.css') }}">
+    <link rel="stylesheet" href="{{ URL::asset('vendor/leaflet/markercluster/MarkerCluster.Default.min.css') }}">
+    <link rel="stylesheet" href="{{ URL::asset('vendor/leaflet/gesture-handling/leaflet-gesture-handling.min.css') }}">
+    <script src="{{ URL::asset('vendor/leaflet/leaflet.min.js') }}"></script>
+    <script src="{{ URL::asset('vendor/leaflet/gesture-handling/leaflet-gesture-handling.min.js') }}"></script>
+    <script src="{{ URL::asset('vendor/leaflet/markercluster/leaflet.markercluster.min.js') }}"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <link rel="stylesheet" href="/css/styles.css" />
     <style>
