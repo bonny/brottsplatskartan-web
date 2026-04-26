@@ -1,6 +1,29 @@
-**Status:** aktiv (designfas — plan klar 2026-04-26, nästa: kör Fas 0 baseline)
+**Status:** klar 2026-04-26 (Fas 0-4 + 6 körda; Fas 5 tester skippad — projektet saknar testsuite)
 **Senast uppdaterad:** 2026-04-26
-**Blocker för:** #10 (AI-titlar), #27 Lager 3 (AI-månadssammanfattningar)
+**Blocker för:** ~~#10 (AI-titlar)~~ upplyft, ~~#27 Lager 3 (AI-månadssammanfattningar)~~ upplyft
+
+## Resultat (2026-04-26)
+
+- **Migrerat från `claude-php/claude-php-sdk` ^0.5.1 → `laravel/ai` ^0.6.3**
+- **Modell: `claude-sonnet-4-5-20250929` → `claude-sonnet-4-6`** (gratis-uppgradering inom Anthropic, samma pris)
+- **Prompt v1 → v2** (XML-rules, system/user-separation, svenskspråk-regel)
+- **Två nya agent-klasser**:
+  - `App\Ai\Agents\DailySummaryAgent` (text-output)
+  - `App\Ai\Agents\EventTitleRewriter` (structured output: title + description)
+- **Prompts lever i Blade-filer** under `resources/views/ai/prompts/` för enkel iteration
+- **Regression-test (30 cases): 0 språkfel, 0 sensationsord, ~5 % snabbare än baseline**
+
+### Beslut som togs under genomgången
+
+- **Haiku 4.5 testades men förkastades** — har systematiskt språkfel ("misshandling" istället för "misshandel"). Reducerades med 78 % efter prompt-fix men eliminerades inte. Sonnet 4.6 har 0 fall.
+- **Fas 5 (tester) skippad** — projektet har ingen levande testsuite (ExampleTest.php är trasig sedan Laravel 5). Validering via PHPStan grön + end-to-end smoke + 30-cases regression mot baseline räcker.
+
+### Rapporter
+- `tmp-ai-baseline/fas1-summary.md` — modellutvärdering
+- `tmp-ai-baseline/fas2-summary.md` — prompt-iteration
+- `tmp-ai-baseline/fas4-summary.md` — regression-test
+
+---
 
 # Todo #28 — Migrera AI-stack till `laravel/ai` (officiell SDK)
 

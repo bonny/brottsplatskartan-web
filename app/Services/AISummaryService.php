@@ -2,25 +2,14 @@
 
 namespace App\Services;
 
+use App\Ai\Agents\DailySummaryAgent;
 use App\CrimeEvent;
 use App\Models\DailySummary;
-use ClaudePhp\ClaudePhp;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 
 class AISummaryService
 {
-    private $claude;
-
-    /**
-     * Initialiserar Claude API-klienten med konfiguration
-     */
-    public function __construct()
-    {
-        $this->claude = new ClaudePhp(
-            apiKey: config('services.claude.api_key')
-        );
-    }
 
     /**
      * Genererar en AI-sammanfattning av dagens händelser för ett specifikt område
@@ -97,30 +86,22 @@ class AISummaryService
     }
 
     /**
-     * Genererar sammanfattningstext genom att skicka händelser till Claude AI
-     * 
-     * @param $events Samling av händelser
-     * @param string $area Område
-     * @param Carbon $date Datum
-     * @return string|null AI-genererad sammanfattning eller null vid fel
+     * Genererar sammanfattningstext via laravel/ai DailySummaryAgent.
+     * Modell + max_tokens + temperature definieras som attribut på agenten.
      */
     private function generateSummaryText($events, string $area, Carbon $date): ?string
     {
         $eventsText = $this->formatEventsForAI($events);
-        
-        $prompt = $this->buildPrompt($eventsText, $area, $date);
+        $swedishDate = $date->locale('sv')->isoFormat('dddd D MMMM YYYY');
+
+        $userPrompt = "<task>\n  <area>{$area}</area>\n  <date>{$swedishDate}</date>\n</task>\n\n{$eventsText}";
 
         try {
-            $response = $this->claude->messages()->create([
-                'model' => config('services.claude.model', 'claude-sonnet-4-5-20250929'),
-                'max_tokens' => 8192,
-                'messages' => [
-                    ['role' => 'user', 'content' => $prompt]
-                ]
-            ]);
-            return $response->content[0]['text'] ?? null;
+            $response = (new DailySummaryAgent)->prompt($userPrompt);
+            $text = (string) $response;
+            return $text !== '' ? $text : null;
         } catch (\Exception $e) {
-            Log::error("Claude API fel: " . $e->getMessage());
+            Log::error("DailySummaryAgent fel: " . $e->getMessage());
             return null;
         }
     }
@@ -141,7 +122,7 @@ class AISummaryService
             $location = $event->administrative_area_level_2 ?: $event->administrative_area_level_1;
             $type = $event->title ?: 'Händelse';
             
-            $eventUrl = $event->getPermalink();
+            $eventUrl = $event->getPermalink(true);
             
             $formatted[] = '<event>';
             $formatted[] = "  <id>{$event->id}</id>";
@@ -158,47 +139,6 @@ class AISummaryService
         return implode("\n", $formatted);
     }
 
-    /**
-     * Bygger den svenska AI-prompten för att skapa en journalistisk sammanfattning
-     * 
-     * @param string $eventsText Formaterad text med händelser
-     * @param string $area Område
-     * @param Carbon $date Datum
-     * @return string Komplett prompt för Claude AI
-     */
-    private function buildPrompt(string $eventsText, string $area, Carbon $date): string
-    {
-        $swedishDate = $date->locale('sv')->isoFormat('dddd D MMMM YYYY');
-        
-        return "Du är en svensk nyhetsredaktör som skriver sammanfattningar av brottshändelser för webbplatsen Brottsplatskartan.se.
-
-Skriv en engagerande sammanfattning av dagens polishändelser i {$area} för {$swedishDate}.
-
-INSTRUKTIONER:
-- Skriv på svenska
-- Börja med de allvarligaste brotten (våld, skottlossning, rån, etc.)
-- Använd en journalistisk ton som är informativ men inte sensationalistisk
-- Håll sammanfattningen mellan 2-4 stycken (100-200 ord)
-- Inkludera specifika platser när det är relevant
-- Nämn tidsperioder (t.ex. \"under förmiddagen\", \"sent på kvällen\") 
-- Sluta med mindre allvarliga händelser som trafikolyckor
-- Undvik att hitta på detaljer som inte finns i källmaterialet
-- Gör texten SEO-vänlig för sökningar relaterade till brott i {$area}
-- VIKTIGT: Inkludera INGEN rubrik eller titel - skriv bara brödtexten direkt
-- VIKTIGT: Alla händelser som nämns i sammanfattningen MÅSTE få en klickbar länk
-- Använd MARKDOWN-format för länkar: [beskrivande text](URL_från_XML)
-- Exempel: \"Ett [rån skedde på Drottninggatan](URL) under eftermiddagen\"
-- Exempel: \"[Trafikolycka på E4](URL) orsakade stora trafikstörningar\"
-- Gör länktexten naturlig och beskrivande (inte bara \"händelse\" eller \"brott\")
-
-HÄNDELSER ATT SAMMANFATTA:
-Händelserna nedan är strukturerade med XML-taggar. Använd informationen från <id>, <time>, <type>, <location>, <description> och <url> för varje <event>:
-
-{$eventsText}
-
-Skriv sammanfattningen:";
-    }
-    
     /**
      * Kontrollerar om händelserna har ändrats sedan senaste sammanfattning
      * 

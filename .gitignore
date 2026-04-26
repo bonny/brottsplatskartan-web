@@ -41,3 +41,4 @@ bpk*.gz
 /tmp-cwv/*
 !/tmp-cwv/README.md
 /tmp-research/
+tmp-ai-baseline
