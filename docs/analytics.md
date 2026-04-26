@@ -1,6 +1,11 @@
-# Analytics-data (GA4)
+# Analytics-data (GA4 + Search Console)
 
-Hur Claude (och människor) kommer åt Brottsplatskartans Google Analytics-data via `analytics-mcp` MCP-server. Använd detta för datadrivna SEO/cache/UX-beslut istället för att gissa.
+Hur Claude (och människor) kommer åt Brottsplatskartans GA4- och Search Console-data via två MCP-servrar:
+
+- **`analytics-mcp`** — beteende på sajten (sessions, landingPages, deviceCategory, …)
+- **`mcp-gsc`** — hur Google ser sajten (queries, indexeringsstatus, sitemap, position)
+
+Använd kombinationen för datadrivna SEO/cache/UX-beslut istället för att gissa.
 
 ## Snabbreferens
 
@@ -8,27 +13,35 @@ Hur Claude (och människor) kommer åt Brottsplatskartans Google Analytics-data 
 | ----------------------------- | ------------------------------------------------------------------------------------------------- |
 | **GA4 property-ID**           | `305258979`                                                                                       |
 | **GA4 property-namn**         | `http://brottsplatskartan.se - GA4`                                                               |
-| **GA4-konto**                 | `Pär privat` (181460)                                                                             |
 | **Measurement ID (frontend)** | `G-L1WVBJ39GH` (i `layouts/web.blade.php`)                                                        |
+| **Search Console site_url**   | `https://brottsplatskartan.se/` (URL-prefix property, siteOwner)                                  |
 | **GCP-projekt**               | `brottsplatskarta-1476012766238`                                                                  |
-| **MCP-paket**                 | [`analytics-mcp`](https://github.com/googleanalytics/google-analytics-mcp) (PyPI, experimentellt) |
+| **GA4 MCP-paket**             | [`analytics-mcp`](https://github.com/googleanalytics/google-analytics-mcp) (PyPI, experimentellt) |
+| **GSC MCP-paket**             | [`mcp-gsc`](https://github.com/AminForou/mcp-gsc) (PyPI, v0.3.2 april 2026)                       |
 | **Scope i Claude Code**       | `user` (per dator, inte i repo)                                                                   |
 
 Property-ID är vad alla MCP-anrop tar som `property_id`. Measurement ID `G-…` är för JS-trackern på sajten — **inte** samma sak.
 
 ## Setup på ny dator
 
-`analytics-mcp` är registrerad per dator (Claude Code `--scope user`). På en ny dator: följ [todos/done/08-ga-mcp.md](../todos/done/08-ga-mcp.md) — alla install-steg + OAuth-flow ligger där.
+Båda MCP är registrerade per dator (Claude Code `--scope user`). Setup-guider:
 
-Verifiera att det funkar:
+- **GA4 (`analytics-mcp`):** [todos/done/08-ga-mcp.md](../todos/done/08-ga-mcp.md)
+- **Search Console (`mcp-gsc`):** [todos/done/26-gsc-mcp.md](../todos/done/26-gsc-mcp.md)
+
+Båda återanvänder samma GCP-projekt + OAuth-klient. Search Console kräver bara extra scope (`webmasters.readonly`) och separat API-aktivering.
+
+Verifiera att de funkar:
 
 ```bash
-claude mcp list | grep analytics-mcp   # ska visa "✓ Connected"
+claude mcp list | grep -E "analytics-mcp|mcp-gsc"   # båda ska visa "✓ Connected"
 ```
 
-Om disconnected: troligen utgången OAuth-token. Kör om login-kommandot från todo:n.
+Om disconnected: troligen utgången OAuth-token. Kör om login-kommandot från respektive todo.
 
 ## MCP-verktyg som finns
+
+### `analytics-mcp` (GA4)
 
 Alla anropas som `mcp__analytics-mcp__<name>`:
 
@@ -41,6 +54,25 @@ Alla anropas som `mcp__analytics-mcp__<name>`:
 | `list_google_ads_links`             | Google Ads-kopplingar (vi har inga)                                        |
 | `run_report`                        | **Huvudverktyget** — kör en GA4 Data API-rapport                           |
 | `run_realtime_report`               | Realtidsrapport (senaste 30 min)                                           |
+
+### `mcp-gsc` (Search Console)
+
+Alla anropas som `mcp__mcp-gsc__<name>`. För brottsplatskartan: `site_url = "https://brottsplatskartan.se/"`.
+
+| Tool                                | Användning                                                          |
+| ----------------------------------- | ------------------------------------------------------------------- |
+| `list_properties`                   | Lista alla properties användaren har access till                    |
+| `get_site_details`                  | Metadata för en property                                            |
+| `get_search_analytics`              | Enkel rapport — top queries/pages senaste 28 dagar                  |
+| `get_advanced_search_analytics`     | **Huvudverktyget** — fullständig query med filter, sort, pagination |
+| `inspect_url_enhanced`              | Indexeringsstatus + rich results för en URL                         |
+| `batch_url_inspection`              | Inspektera flera URL:er samtidigt (rate-limited)                    |
+| `check_indexing_issues`             | Bulk-kontroll av indexerings-/CWV-problem                           |
+| `list_sitemaps_enhanced`            | Lista submitted sitemaps + status                                   |
+| `submit_sitemap` / `delete_sitemap` | Hantera sitemap-registrering                                        |
+| `get_sitemap_details`               | Per-sitemap: submitted vs indexed page-count                        |
+| `get_performance_overview`          | Sammanfattning över hela property:n                                 |
+| `compare_search_periods`            | Period-jämförelse                                                   |
 
 ## Exempel-queries
 
@@ -140,6 +172,44 @@ Verifierade anrop som har körts mot Brottsplatskartans property. Kopiera och ju
 
 Använder `run_realtime_report` (inte `run_report`).
 
+### GSC: Top sökfraser för en route-grupp
+
+```json
+{
+    "site_url": "https://brottsplatskartan.se/",
+    "dimensions": "query,page",
+    "filter_dimension": "page",
+    "filter_operator": "contains",
+    "filter_expression": "/plats/",
+    "sort_by": "clicks",
+    "row_limit": 50
+}
+```
+
+Använder `get_advanced_search_analytics`.
+
+### GSC: Är en URL indexerad?
+
+```json
+{
+    "site_url": "https://brottsplatskartan.se/",
+    "page_url": "https://brottsplatskartan.se/plats/uppsala/handelser/25-april-2026"
+}
+```
+
+Använder `inspect_url_enhanced`. För flera URL:er samtidigt: `batch_url_inspection` med `urls` som newline-separerad sträng.
+
+### GSC: Submitta sitemap
+
+```json
+{
+    "site_url": "https://brottsplatskartan.se/",
+    "sitemap_url": "https://brottsplatskartan.se/sitemap.xml"
+}
+```
+
+Använder `submit_sitemap`. Gjordes 2026-04-26 — sitemap.xml är nu inskickad.
+
 ## Tips för anrop
 
 - **Dimensioner och metrics i `snake_case`** i protobuf-formatet, men i parameter-värden är fältnamnen `camelCase` (`sessionSource`, `landingPage`, `deviceCategory`). Det är förvirrande men följ docs på <https://developers.google.com/analytics/devguides/reporting/data/v1/api-schema>.
@@ -152,11 +222,15 @@ Använder `run_realtime_report` (inte `run_report`).
 Konkreta insikter från 2026-04-26 (uppdatera när nya analyser görs):
 
 - **Mobile dominerar:** ~80 % mobile, ~20 % desktop, <2 % tablet på `/handelser`-prefixet. Optimera CWV och OG-bilder för mobil först.
-- **`/stockholm` är största enskilda landningssidan** från Google organisk: ~6 300 sessions/30d. Mer än startsidan (~4 600).
+- **`/stockholm` är största enskilda landningssidan** från Google organisk: ~6 300 sessions/30d (8 493 om man räknar all trafik). Mer än startsidan (~4 600).
 - **Län-sidor (`/lan/*`) dominerar topp-listor** — 11 av top 20 landningssidor från Google organisk är län. Cache pre-warm bör fokusera där.
-- **`/handelser/{date}`-mönstret syns inte i top landningssidor** — bekräftar att datum-paginering kan slopas/noindexas utan SEO-tapp (relevant för todo #1 + #11 P1 punkt 6).
 - **Pageviews/session ~1.3** — användare landar, klickar in på _ett_ event, lämnar. Lågt djup. Listvyer som drar trafik bouncar i hög grad.
-- **`(not set)` på plats 7** i top landningssidor med 3 % engagement — bot-trafik eller borttagna sidor. Värt en separat undersökning.
+- **Indexerade pages: minst ~53 670** (proxy: unika URL:er med ≥1 impression senaste 30d). Stor långsvans — 4876 unika `/plats/*/handelser/{date}`-URL:er + 1677 `/lan/*/handelser/{date}` + 7632 single events.
+- **Datum-URL:er rankar long-tail i Google (top 1-3)** trots att ingen söker proaktivt på datum. De får trafik på "[brott] [plats] [år]"-queries där datum är kontextuellt. Räddade oss från att 410:a dem (todo #1 sluthantering).
+- **Stora städer rankar sämre än de borde** på `/plats/{stad}` (pos 7-10) — drev beslutet att ge dem dedikerade `/{stad}`-sidor (todo #24).
+- **Sitemap inte submitted till GSC innan 2026-04-26** — Google upptäckte URL:er bara via interna länkar. Submission gjord, kommer förbättra crawl-effektivitet.
+- **Case-duplikat:** `/plats/Malmö` + `/plats/malmö` rankades separat. Fottern länkade capitalized vilket spred problemet via crawl. Fixat i todo #23.
+- **`(not set)`-rad i landingPage-rapporten** med 3 % engagement — bot-trafik eller borttagna sidor. Värt en separat undersökning.
 
 Lägg till nya insikter här istället för att göra om analyserna i framtida sessioner.
 
@@ -177,8 +251,16 @@ Lägg till nya insikter här istället för att göra om analyserna i framtida s
 
 ## Referenser
 
+### GA4
+
 - analytics-mcp: <https://github.com/googleanalytics/google-analytics-mcp>
 - GA4 Data API schema: <https://developers.google.com/analytics/devguides/reporting/data/v1/api-schema>
 - GA4 Data API quotas: <https://developers.google.com/analytics/devguides/reporting/data/v1/quotas>
 - FilterExpression-syntax: <https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/FilterExpression>
 - OrderBy-syntax: <https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/OrderBy>
+
+### Search Console
+
+- mcp-gsc: <https://github.com/AminForou/mcp-gsc>
+- Search Console API: <https://developers.google.com/webmaster-tools/v1/api_reference_index>
+- Search Analytics filter-syntax: <https://developers.google.com/webmaster-tools/v1/searchanalytics/query>

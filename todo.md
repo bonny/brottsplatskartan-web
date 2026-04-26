@@ -6,7 +6,7 @@ och föreslagen plan.
 
 Senast uppdaterad: 2026-04-26.
 
-Senaste klara: #22 + #23 + #24 (Tier 1-städer + case-redirect, 2026-04-26).
+Senaste klara: #26 (GSC-MCP + sitemap submission, 2026-04-26) + #22+#23+#24 (Tier 1-städer, 2026-04-26).
 
 ## Konvention
 
@@ -71,6 +71,7 @@ historik — raderas aldrig.
 | 22  | Fixa intern länk till /plats/stockholm                 | 2026-04-26 | [todos/done/22-stockholm-intern-lank.md](todos/done/22-stockholm-intern-lank.md)       |
 | 23  | Case-redirect på /plats/{plats} + footer-städning      | 2026-04-26 | [todos/done/23-platssidor-case-duplikat.md](todos/done/23-platssidor-case-duplikat.md) |
 | 24  | Tier 1-städer (malmo/goteborg/helsingborg/uppsala)     | 2026-04-26 | [todos/done/24-stadcontroller-tier1.md](todos/done/24-stadcontroller-tier1.md)         |
+| 26  | Search Console MCP (mcp-gsc) + sitemap submission      | 2026-04-26 | [todos/done/26-gsc-mcp.md](todos/done/26-gsc-mcp.md)                                   |
 
 ## Avfärdade / sammanslagna
 

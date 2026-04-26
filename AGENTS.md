@@ -23,17 +23,20 @@ Snabbreferens:
 - `/api/eventsNearby` — Händelser nära koordinat
 - `/api/areas` — Lista över län
 
-## Analytics (GA4)
+## Analytics (GA4 + Search Console)
 
-Brottsplatskartans GA4-data nås via `analytics-mcp` MCP-server registrerad
-per dator (`--scope user`, inte i repo). Använd för datadrivna SEO-, cache-
-och UX-beslut.
+Brottsplatskartans data nås via två MCP-servrar registrerade per dator
+(`--scope user`, inte i repo). Använd för datadrivna SEO-, cache- och
+UX-beslut.
 
+- **`analytics-mcp`** — GA4-data (sessions, landingPages, deviceCategory)
+- **`mcp-gsc`** — Search Console-data (queries, indexering, sitemap, position)
 - **GA4 property-ID:** `305258979`
-- **Setup på ny dator:** [todos/done/08-ga-mcp.md](todos/done/08-ga-mcp.md)
+- **GSC site_url:** `https://brottsplatskartan.se/`
+- **Setup på ny dator:** [todos/done/08-ga-mcp.md](todos/done/08-ga-mcp.md) (GA4) + [todos/done/26-gsc-mcp.md](todos/done/26-gsc-mcp.md) (GSC)
 - **Exempel-queries + insikter:** **[docs/analytics.md](docs/analytics.md)**
 
-Verifiera anslutning: `claude mcp list | grep analytics-mcp`.
+Verifiera anslutning: `claude mcp list | grep -E "analytics-mcp|mcp-gsc"`.
 
 ## Teknisk stack
 
