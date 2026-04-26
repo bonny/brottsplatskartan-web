@@ -1,7 +1,47 @@
-**Status:** aktiv (designfas)
+**Status:** aktiv (Fas 1+2 deployade 2026-04-26 — mätperiod 30-90d innan plats/typ-sidor angrips)
 **Senast uppdaterad:** 2026-04-26
 
 # Todo #29 — Audit + reducera indexerade pages
+
+## Progress (2026-04-26)
+
+### Klart
+
+| Fas                                            | Resultat                                                                                                         | Commit    |
+| ---------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | --------- |
+| Fas 1: GSC-mätning + DB-korsreferens           | 64 % av topp 25k pages = 0 clicks/28d. Kategorisering: single_event 73 % dead, lan_datum 81 %, plats_datum 66 %. | (analys)  |
+| Quick win: noindex datum-routes >30d           | ~7 600 sidor noindex,follow. Helper::shouldNoindexForDateRoute() i Plats/Lan/StartController.                    | `a0046a2` |
+| Fas 2: noindex tunna gamla single events       | ~14 000 sidor noindex + ut ur sitemap. CrimeEvent::isThinForSeo() default ≥365d + <10 ord.                       | `73e926c` |
+| Fas 5: sitemap exkluderar noindex-events       | GenerateSitemap + GenerateHistoricalSitemaps hoppar över thin events.                                            | `73e926c` |
+
+**Totalt: ~21 600 dead-weight-pages markerade noindex.**
+
+### Tröskelbeslut (motiverat med 16-mån click-data)
+
+Initialt föreslag var ≥365d + <30 ord, men korsreferens mot 16-mån
+GSC-clickdata visade 3,9 % click-förlust. Justerat till ≥365d + <10 ord:
+
+| Tröskel             | Events markerade |  Click-förlust |
+| ------------------- | ---------------: | -------------: |
+| ≥365d + <10 ord ✅  |   13 733  (4 %)  |    818 (0,8 %) |
+| ≥365d + <15 ord     |   24 816  (8 %)  |  1 255 (1,2 %) |
+| ≥365d + <20 ord     |   38 085 (12 %)  |  1 690 (1,6 %) |
+| ≥365d + <30 ord     |   75 839 (23 %)  |  4 121 (3,9 %) |
+
+Justera tröskeln senare om pilot ser bra ut → kan ta ner till <15 eller <20.
+
+### Kvarvarande arbete
+
+- **Plats-sidor med <5 events historiskt** (50-150 sidor) — kräver DB-query för kandidatlista
+- **Typ-sidor för obskyra brottstyper** (5-15 sidor)
+- **4xx-pages som är indexerade** — kräver `mcp__mcp-gsc__check_indexing_issues`-rapport
+- **Fas 3 mätning:** kör samma analys i GSC om 14 + 30 dagar för att verifiera trafik-impact
+
+### Skipade beslut
+
+- Ingen DB-flagga `is_thin` — beräknas on-the-fly (trivial cost, response-cache täcker varma sidor)
+- Inget Artisan-kommando `crimeevents:mark-thin` — överflödigt utan DB-flagga
+- Datum-route-tröskel 30d (matchar #1:s cache-policy), inte 7d (för aggressivt)
 
 ## Varför
 
