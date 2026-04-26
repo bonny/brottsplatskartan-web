@@ -6,7 +6,7 @@ och föreslagen plan.
 
 Senast uppdaterad: 2026-04-26.
 
-Senaste klara: #11 (SEO-audit Fas 1+2 klar, CWV utbrutet till #30, OG-image avfärdat — låg delningstrafik, 2026-04-26).
+Senaste klara: #20 (kartbilder med cirklar — circle default i prod, soak godkänd, 2026-04-26).
 
 ## Konvention
 
@@ -30,7 +30,6 @@ historik — raderas aldrig.
 | --- | ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
 | 10  | AI-omskriva vaga titlar                         | Plan klar, kostnad ~$27 för full backfill                                                                                                   | [todos/10-ai-omskriva-titlar.md](todos/10-ai-omskriva-titlar.md)           |
 | 16  | Rensa / avveckla gamla DO-servern (Dokku)       | Aktiv 2026-04-25 — appar stoppade, väntar på soak innan radering                                                                            | [todos/16-rensa-do-server.md](todos/16-rensa-do-server.md)                 |
-| 20  | Kartbilder: rita cirkel/område runt händelsen   | Aktiv 2026-04-26 — circle default i prod, soak ~1 vecka innan flagga tas bort                                                               | [todos/20-kartbilder-med-cirklar.md](todos/20-kartbilder-med-cirklar.md)   |
 | 21  | Migrera antonblomqvist.se + simple-fields.com   | Aktiv 2026-04-25 — kod + deploy klart, sajterna ligger på servern; återstår DNS-byte hos Loopia                                             | [todos/21-migrera-statiska-sajter.md](todos/21-migrera-statiska-sajter.md) |
 | 25  | Månadsvyer istället för dagsvyer (datum-routes) | Designfas 2026-04-26 — confidence medel, kräver Uppsala-pilot 30d innan rollout                                                             | [todos/25-manadsvyer-datum-routes.md](todos/25-manadsvyer-datum-routes.md) |
 | 27  | Berika ort- och månadssidor med rikare innehåll | Designfas 2026-04-26 — Lager 1-3 (egen data, externt + AI), research klar                                                                   | [todos/27-rikare-innehall.md](todos/27-rikare-innehall.md)                 |
@@ -50,8 +49,7 @@ historik — raderas aldrig.
 1. **#10 AI-titlar** — bygg på `laravel/ai` (#28 klar)
 2. **#27 + #25** synkas — innehållsplan + URL-struktur designas tillsammans
 3. **#21 → #16** (DNS-byte + DO-avveckling) — efter ~2026-05-15
-4. **#20** (kartbilder cirklar) — soak pågår, flagga tas bort efter ~vecka
-5. **#29 + #30** — passiv mätperiod, åtgärder efter data
+4. **#29 + #30** — passiv mätperiod, åtgärder efter data
 
 ---
 
@@ -78,6 +76,7 @@ historik — raderas aldrig.
 | 26  | Search Console MCP (mcp-gsc) + sitemap submission      | 2026-04-26 | [todos/done/26-gsc-mcp.md](todos/done/26-gsc-mcp.md)                                   |
 | 31  | TTFB-anomali på /lan/{lan} (löst av cache-warmup)      | 2026-04-26 | [todos/done/31-ttfb-anomali.md](todos/done/31-ttfb-anomali.md)                         |
 | 11  | SEO-audit 2026 (Fas 1+2; CWV→#30, OG-image avfärdat)   | 2026-04-26 | [todos/done/11-seo-audit-2026.md](todos/done/11-seo-audit-2026.md)                     |
+| 20  | Kartbilder med cirklar (default circle, soak ok)       | 2026-04-26 | [todos/done/20-kartbilder-med-cirklar.md](todos/done/20-kartbilder-med-cirklar.md)     |
 
 ## Avfärdade / sammanslagna
 

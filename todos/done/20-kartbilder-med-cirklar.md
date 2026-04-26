@@ -1,4 +1,4 @@
-**Status:** aktiv — circle är default i prod sedan 2026-04-26 (soak-period)
+**Status:** klar 2026-04-26
 **Senast uppdaterad:** 2026-04-26
 
 # Todo #20 — Kartbilder: rita cirkel/område runt händelsen
@@ -215,8 +215,8 @@ mjukt. Samma radier som ovan.
 - [x] Täck även overview-vyn, list-item thumbnails och far-grenen (commits 73f91bb, 4e6ec6e)
 - [x] Visuellt verifierat lokalt — cirklar renderas i single-event, overview, mest-läst, thumbnails
 - [x] Bytt config-default från `bbox` till `circle` (2026-04-26) — aktiveras på prod utan env-ändring
-- [ ] Soak ~1 vecka i prod, mät RPM/AdSense + bouncerate via GA4
-- [ ] Om ok: ta bort flaggan + gamla `getStaticImageSrc`/`getStaticImageSrcFar` (notera: `getStaticImageSrc` används fortfarande för OG-image, sitemap och API — kvarstår)
+- [x] Soak i prod — godkänd 2026-04-26
+- [ ] Städ-uppföljning: ta bort `TILESERVER_MAP_STYLE`-flaggan (kvar i `config/services.php` + `card.blade.php` + `list-item.blade.php`) + gamla `getStaticImageSrc`/`getStaticImageSrcFar` (notera: `getStaticImageSrc` används fortfarande för OG-image, sitemap och API — kvarstår)
 - [ ] OG-image-variant (1200×630) — separat ticket
 
 ### Mix av cirklar och bboxar i listor
