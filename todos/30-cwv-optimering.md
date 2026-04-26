@@ -1,4 +1,4 @@
-**Status:** aktiv (designfas)
+**Status:** aktiv (Fas A pågår)
 **Senast uppdaterad:** 2026-04-26
 **Härledd från:** #11 SEO-audit (CWV-baseline 2026-04-26)
 
@@ -89,16 +89,50 @@ Layout shift orsakas av:
 Strikt sekventiell — mät efter varje fas så vi kan rollback om något
 gör värre.
 
-### Fas A: CLS-fix (1-2 dagar, lägst risk, snabbast vinst)
+### Fas A: CLS-fix (KRÄVER AdSense-config-ändring, inte kod)
 
-CLS är lättast att fixa och mest synligt. Börja här.
+**Diagnos 2026-04-26 (startsidan):**
 
-1. Audit alla `<img>` i blade-templates → lägg till `width`/`height`
-2. Audit ad-slots → lägg till `min-height` på containers
-3. Verifiera fonts med `font-display: swap`
-4. Mät CLS post-fix på alla 8 baseline-URL:er
+| Miljö                | CLS       | LCP   | FCP   | Perf |
+| -------------------- | --------- | ----- | ----- | ---- |
+| Prod (med AdSense)   | **0.243** | 9.6 s | 4.1 s | 51   |
+| Lokalt (utan AdSense) | **0**     | 5.9 s | 2.4 s | 72   |
 
-**Acceptanskriterium:** CLS < 0.10 på alla sidor.
+Lighthouse-tracen visar EN enda layout-shift: `<article>` (3:e
+hero-eventet) flyttas ~590 px under render. Lokalt utan AdSense är CLS
+exakt 0 — alltså ingen kod-fix räcker. Hela CLS kommer från AdSense
+Auto Ads som injicerar in-page-annonser mellan map-widgeten och hero-
+eventen.
+
+**Verifierat kod-side OK:**
+
+- Alla `<img>` har explicit `width`/`height` (90×90 list, 50×50
+  timeline, 640×340 hero) ✓
+- `.fill { width: 100%; height: auto }` funkar tillsammans med HTML-
+  attributen — moderna browsers räknar `aspect-ratio` från attributen ✓
+- `.EventsMap { height: 70dvh }` reserverar plats ✓
+- `.NotificationBar` är `display: none` om inget innehåll ✓
+- Font-stack är 100 % systemfonts (`-apple-system, BlinkMacSystemFont,
+  ...`) — inga `@font-face`, ingen FOIT/FOUT ✓
+
+**Två vägar för faktisk fix:**
+
+a. **Stäng av in-page Auto Ads i AdSense-dashboard** (rekommenderas).
+   Logga in på AdSense → Sites → brottsplatskartan.se → Auto ads →
+   slå av "In-page ads", behåll "Anchor" + "Vignette". Anchor-ads är
+   `position: fixed` och skapar inte CLS. Förlust: kan vara mindre
+   ad-impressions, men CLS-straffet är värre för ranking.
+
+b. **Manuell ad-placement** (mer kontroll, mer jobb). Skapa
+   `<ins class="adsbygoogle">`-slots i Blade med fast `min-height`-
+   container. Inaktivera Auto ads helt. Gör att vi kan välja position
+   ovanför fold för viewability men reservera höjd så ingen CLS sker.
+
+Default-väg: börja med (a). Mät RPM före/efter via AdSense+GA4. Om
+intäkterna sjunker > 10 %, gå till (b) på topp-trafikerade sidtyper
+(`/`, `/handelser`, `/lan/*`, `/<stad>`).
+
+**Acceptanskriterium:** CLS < 0.10 på prod (alla sidor).
 
 ### Fas B: Render-blocking + JS-defer (2-3 dagar)
 

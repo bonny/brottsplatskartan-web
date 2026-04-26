@@ -167,7 +167,7 @@ Layout template for web
 
     @stack('styles')
 
-    <script src="/js/scroll-snap-slider.iife.js"></script>
+    <script defer src="/js/scroll-snap-slider.iife.js"></script>
 
     @if (env('APP_ENV') != 'local')
         <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -244,11 +244,16 @@ Layout template for web
     </script>
 
     <script>
-        new ScrollSnapSlider.ScrollSnapSlider({
-            element: document.querySelector('.sitebar__EventsItems'),
-        }).with([
-            new ScrollSnapSlider.ScrollSnapAutoplay(4000),
-        ]);
+        // Vänta på DOMContentLoaded eftersom scroll-snap-slider laddas med defer.
+        document.addEventListener('DOMContentLoaded', function() {
+            const el = document.querySelector('.sitebar__EventsItems');
+            if (!el) return;
+            new ScrollSnapSlider.ScrollSnapSlider({
+                element: el,
+            }).with([
+                new ScrollSnapSlider.ScrollSnapAutoplay(4000),
+            ]);
+        });
     </script>
 
     @stack('footerscripts')
