@@ -1,8 +1,28 @@
-**Status:** aktiv (Fas A pågår)
+**Status:** aktiv (Fas A+B+C deployade 2026-04-26 — kvar: AdSense-config + Fas D)
 **Senast uppdaterad:** 2026-04-26
 **Härledd från:** #11 SEO-audit (CWV-baseline 2026-04-26)
 
 # Todo #30 — CWV-optimering Fas 1
+
+## Resultat på prod efter Fas A+B+C (2026-04-26)
+
+| Metric          | Baseline | Efter | Δ          |
+| --------------- | -------: | ----: | ---------- |
+| Perf-poäng      |       51 |    79 | +28        |
+| LCP             |     9.6s |  2.0s | -79 %      |
+| FCP             |     4.1s |  2.0s | -51 %      |
+| CLS             |    0.243 | 0.236 | oförändrat |
+| Render-blocking |       12 |     3 | -9         |
+
+CLS är fortfarande POOR — orsakas av AdSense Auto Ads, kräver
+config-ändring i AdSense-dashboard (se Fas A nedan), inte kod.
+
+Kommitar:
+
+- `4fc169e` Fas A: defer scroll-snap-slider + DOMContentLoaded-wrapper
+- `aaee7d4` Fas B: defer Leaflet-bundle + page-specifik charts.css
+- `79b45b5` Fas C: byta interaktiv map-tilelayer från OSM till
+  egna tileservern (WebP, ~70 % mindre/tile)
 
 ## Varför
 
