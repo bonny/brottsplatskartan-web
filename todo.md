@@ -6,7 +6,7 @@ och föreslagen plan.
 
 Senast uppdaterad: 2026-04-26.
 
-Senaste klara: #20 (kartbilder med cirklar — circle default i prod, soak godkänd, 2026-04-26).
+Senaste klara: #21 (DNS hos Loopia satt, statiska sajter live på BPK-Hetzner, 2026-04-26).
 
 ## Konvention
 
@@ -30,7 +30,6 @@ historik — raderas aldrig.
 | --- | ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
 | 10  | AI-omskriva vaga titlar                         | Plan klar, kostnad ~$27 för full backfill                                                                                                   | [todos/10-ai-omskriva-titlar.md](todos/10-ai-omskriva-titlar.md)           |
 | 16  | Rensa / avveckla gamla DO-servern (Dokku)       | Aktiv 2026-04-25 — appar stoppade, väntar på soak innan radering                                                                            | [todos/16-rensa-do-server.md](todos/16-rensa-do-server.md)                 |
-| 21  | Migrera antonblomqvist.se + simple-fields.com   | Aktiv 2026-04-25 — kod + deploy klart, sajterna ligger på servern; återstår DNS-byte hos Loopia                                             | [todos/21-migrera-statiska-sajter.md](todos/21-migrera-statiska-sajter.md) |
 | 25  | Månadsvyer istället för dagsvyer (datum-routes) | Designfas 2026-04-26 — confidence medel, kräver Uppsala-pilot 30d innan rollout                                                             | [todos/25-manadsvyer-datum-routes.md](todos/25-manadsvyer-datum-routes.md) |
 | 27  | Berika ort- och månadssidor med rikare innehåll | Designfas 2026-04-26 — Lager 1-3 (egen data, externt + AI), research klar                                                                   | [todos/27-rikare-innehall.md](todos/27-rikare-innehall.md)                 |
 | ~~28~~  | ~~Migrera AI-stack till `laravel/ai`~~      | **Klar 2026-04-26** — Sonnet 4.6 + v2-prompt + agent-klasser. Lyfter blocker för #10 + #27                                                  | [todos/28-migrera-laravel-ai.md](todos/28-migrera-laravel-ai.md)           |
@@ -42,13 +41,13 @@ historik — raderas aldrig.
 - **#28 → #10:** AI-titlar bygger på `laravel/ai`. Migrera först.
 - **#28 → #27 Lager 3:** AI-månadssammanfattningar bygger på `laravel/ai`.
 - ~~**#14 → #16:** DO-servern får inte avvecklas innan backup är verifierad.~~ (#14 klar 2026-04-25)
-- **#21 → #16:** DO-servern bör inte raderas förrän statiska sajterna flyttats till BPK-Hetzner.
+- ~~**#21 → #16:** DO-servern bör inte raderas förrän statiska sajterna flyttats till BPK-Hetzner.~~ (#21 klar 2026-04-26 — DNS hos Loopia på plats)
 
 ### Föreslagen ordning
 
 1. **#10 AI-titlar** — bygg på `laravel/ai` (#28 klar)
 2. **#27 + #25** synkas — innehållsplan + URL-struktur designas tillsammans
-3. **#21 → #16** (DNS-byte + DO-avveckling) — efter ~2026-05-15
+3. **#16** (DO-avveckling) — efter ~2026-05-15 när soak på statiska sajterna är klar
 4. **#29 + #30** — passiv mätperiod, åtgärder efter data
 
 ---
@@ -77,6 +76,7 @@ historik — raderas aldrig.
 | 31  | TTFB-anomali på /lan/{lan} (löst av cache-warmup)      | 2026-04-26 | [todos/done/31-ttfb-anomali.md](todos/done/31-ttfb-anomali.md)                         |
 | 11  | SEO-audit 2026 (Fas 1+2; CWV→#30, OG-image avfärdat)   | 2026-04-26 | [todos/done/11-seo-audit-2026.md](todos/done/11-seo-audit-2026.md)                     |
 | 20  | Kartbilder med cirklar (default circle, soak ok)       | 2026-04-26 | [todos/done/20-kartbilder-med-cirklar.md](todos/done/20-kartbilder-med-cirklar.md)     |
+| 21  | Migrera antonblomqvist.se + simple-fields.com (DNS ok) | 2026-04-26 | [todos/done/21-migrera-statiska-sajter.md](todos/done/21-migrera-statiska-sajter.md)   |
 
 ## Avfärdade / sammanslagna
 
