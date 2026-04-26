@@ -49,26 +49,28 @@
 
         <ul class="SiteFooter__navlinks">
             <li>
+                {{-- Tier 1-städer (CityController, dedikerade /<stad>-sidor) --}}
                 <a title="Händelser från Polisen i Stockholm"
-                    href="{{ route('platsSingle', ['plats' => 'Stockholm']) }}">Stockholm</a>
+                    href="{{ route('city', ['city' => 'stockholm']) }}">Stockholm</a>
                 <a title="Händelser från Polisen i Göteborg"
-                    href="{{ route('platsSingle', ['plats' => 'Göteborg']) }}">Göteborg</a>
+                    href="{{ route('city', ['city' => 'goteborg']) }}">Göteborg</a>
                 <a title="Händelser från Polisen i Malmö"
-                    href="{{ route('platsSingle', ['plats' => 'Malmö']) }}">Malmö</a>
+                    href="{{ route('city', ['city' => 'malmo']) }}">Malmö</a>
                 <a title="Händelser från Polisen i Uppsala"
-                    href="{{ route('platsSingle', ['plats' => 'Uppsala']) }}">Uppsala</a>
-                <a title="Händelser från Polisen i Västerås"
-                    href="{{ route('platsSingle', ['plats' => 'Västerås']) }}">Västerås</a>
-                <a title="Händelser från Polisen i Örebro"
-                    href="{{ route('platsSingle', ['plats' => 'Örebro']) }}">Örebro</a>
-                <a title="Händelser från Polisen i Linköping"
-                    href="{{ route('platsSingle', ['plats' => 'Linköping']) }}">Linköping</a>
+                    href="{{ route('city', ['city' => 'uppsala']) }}">Uppsala</a>
                 <a title="Händelser från Polisen i Helsingborg"
-                    href="{{ route('platsSingle', ['plats' => 'Helsingborg']) }}">Helsingborg</a>
+                    href="{{ route('city', ['city' => 'helsingborg']) }}">Helsingborg</a>
+                {{-- Övriga (PlatsController, lowercase-slugs) --}}
+                <a title="Händelser från Polisen i Västerås"
+                    href="{{ route('platsSingle', ['plats' => 'västerås']) }}">Västerås</a>
+                <a title="Händelser från Polisen i Örebro"
+                    href="{{ route('platsSingle', ['plats' => 'örebro']) }}">Örebro</a>
+                <a title="Händelser från Polisen i Linköping"
+                    href="{{ route('platsSingle', ['plats' => 'linköping']) }}">Linköping</a>
                 <a title="Händelser från Polisen i Jönköping"
-                    href="{{ route('platsSingle', ['plats' => 'Jönköping']) }}">Jönköping</a>
+                    href="{{ route('platsSingle', ['plats' => 'jönköping']) }}">Jönköping</a>
                 <a title="Händelser från Polisen i Norrköping"
-                    href="{{ route('platsSingle', ['plats' => 'Norrköping']) }}">Norrköping</a>
+                    href="{{ route('platsSingle', ['plats' => 'norrköping']) }}">Norrköping</a>
             </li>
         </ul>
 
@@ -103,5 +105,11 @@
         | <a href="{{ route('page', ['pagename' => 'sekretesspolicy']) }}">Sekretesspolicy</a>
         | <a href="{{ route('page', ['pagename' => 'om']) }}"
             title="Servrarna körs hos Hetzner i Helsingfors, Finland">Servrar i EU 🇪🇺 (Finland)</a>
+        @php($deploy = \App\DeployInfo::current())
+        @if ($deploy)
+            | <span class="SiteFooter-deploy" title="{{ $deploy['subject'] }}">
+                Deploy {{ $deploy['deployed_at']->isoFormat('dddd D MMMM YYYY') }} ({{ $deploy['short_sha'] }})
+            </span>
+        @endif
     </div>
 </div>

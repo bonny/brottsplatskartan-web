@@ -56,8 +56,11 @@
 
         <p>
             Den svenska polisen har nio helikoptrar och de finns
-            i <a href="/plats/stockholm">Stockholm</a>, <a href="/plats/göteborg">Göteborg</a>, <a
-                href="/plats/malmö">Malmö</a>, <a href="/plats/östersund">Östersund</a> och <a href="/plats/boden">Boden</a>.
+            i <a href="{{ route('city', ['city' => 'stockholm']) }}">Stockholm</a>,
+            <a href="{{ route('city', ['city' => 'goteborg']) }}">Göteborg</a>,
+            <a href="{{ route('city', ['city' => 'malmo']) }}">Malmö</a>,
+            <a href="/plats/östersund">Östersund</a>
+            och <a href="/plats/boden">Boden</a>.
         </p>
 
         <p>

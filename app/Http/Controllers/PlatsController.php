@@ -53,6 +53,18 @@ class PlatsController extends Controller
         $dateOriginalFromArg = $date;
         $platsOriginalFromSlug = $plats;
 
+        // Konsolidera SEO-värde: 301:a versaler → gemener.
+        // Före: /plats/Malmö och /plats/malmö rankades separat i Google.
+        $platsLowercase = mb_strtolower($plats);
+        if ($plats !== $platsLowercase) {
+            $params = ['plats' => $platsLowercase];
+            if ($date !== null) {
+                $params['date'] = $date;
+                return redirect()->route('platsDatum', $params, 301);
+            }
+            return redirect()->route('platsSingle', $params, 301);
+        }
+
         $date = \App\Helper::getdateFromDateSlug($date);
 
         if (!$date) {

@@ -24,7 +24,7 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\RedirectOldPages::class,
         \App\Http\Middleware\RedirectBytSida::class,
         \App\Http\Middleware\DebugBarMaybeEnable::class,
-        \App\Http\Middleware\StockholmRedirectMiddleware::class,
+        \App\Http\Middleware\CityRedirectMiddleware::class,
         RedirectIndexPhp::class
     ];
 
