@@ -6,7 +6,7 @@ och föreslagen plan.
 
 Senast uppdaterad: 2026-04-26.
 
-Senaste klara: #31 (TTFB-anomali — löst av cache-warmup, 2026-04-26) + #26 (GSC-MCP + sitemap submission, 2026-04-26).
+Senaste klara: #11 (SEO-audit Fas 1+2 klar, CWV utbrutet till #30, OG-image avfärdat — låg delningstrafik, 2026-04-26).
 
 ## Konvention
 
@@ -28,7 +28,6 @@ historik — raderas aldrig.
 
 | #   | Titel                                           | Status                                                                                                                                      | Fil                                                                        |
 | --- | ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| 11  | SEO-audit enligt best practice 2026             | **Aktiv 2026-04-24** — Fas 1 + mest av Fas 2 klar; återstår CWV post-cutover, noindex-strategi, OG-image, image sitemap, utökad NewsArticle | [todos/11-seo-audit-2026.md](todos/11-seo-audit-2026.md)                   |
 | 10  | AI-omskriva vaga titlar                         | Plan klar, kostnad ~$27 för full backfill                                                                                                   | [todos/10-ai-omskriva-titlar.md](todos/10-ai-omskriva-titlar.md)           |
 | 16  | Rensa / avveckla gamla DO-servern (Dokku)       | Aktiv 2026-04-25 — appar stoppade, väntar på soak innan radering                                                                            | [todos/16-rensa-do-server.md](todos/16-rensa-do-server.md)                 |
 | 20  | Kartbilder: rita cirkel/område runt händelsen   | Aktiv 2026-04-26 — circle default i prod, soak ~1 vecka innan flagga tas bort                                                               | [todos/20-kartbilder-med-cirklar.md](todos/20-kartbilder-med-cirklar.md)   |
@@ -43,18 +42,16 @@ historik — raderas aldrig.
 
 - **#28 → #10:** AI-titlar bygger på `laravel/ai`. Migrera först.
 - **#28 → #27 Lager 3:** AI-månadssammanfattningar bygger på `laravel/ai`.
-- **#10 → #11:** bättre titlar förbättrar SEO. Kör #10 innan eller parallellt med #11.
 - ~~**#14 → #16:** DO-servern får inte avvecklas innan backup är verifierad.~~ (#14 klar 2026-04-25)
 - **#21 → #16:** DO-servern bör inte raderas förrän statiska sajterna flyttats till BPK-Hetzner.
 
 ### Föreslagen ordning
 
-1. **#11 CWV-mätning** (2 timmar) — baseline innan stora ändringar
-2. **#28 + #29 parallellt** — #28 låser upp #10/#27. #29 ren SEO-impact, ingen AI
-3. **#10 AI-titlar** (efter #28) — bygg på `laravel/ai`
-4. **#27 + #25** synkas — innehållsplan + URL-struktur designas tillsammans
-5. **#21 → #16** (DNS-byte + DO-avveckling) — efter ~2026-05-15
-6. **#20** (kartbilder cirklar) — flippa flagga i prod-env
+1. **#10 AI-titlar** — bygg på `laravel/ai` (#28 klar)
+2. **#27 + #25** synkas — innehållsplan + URL-struktur designas tillsammans
+3. **#21 → #16** (DNS-byte + DO-avveckling) — efter ~2026-05-15
+4. **#20** (kartbilder cirklar) — soak pågår, flagga tas bort efter ~vecka
+5. **#29 + #30** — passiv mätperiod, åtgärder efter data
 
 ---
 
@@ -80,6 +77,7 @@ historik — raderas aldrig.
 | 24  | Tier 1-städer (malmo/goteborg/helsingborg/uppsala)     | 2026-04-26 | [todos/done/24-stadcontroller-tier1.md](todos/done/24-stadcontroller-tier1.md)         |
 | 26  | Search Console MCP (mcp-gsc) + sitemap submission      | 2026-04-26 | [todos/done/26-gsc-mcp.md](todos/done/26-gsc-mcp.md)                                   |
 | 31  | TTFB-anomali på /lan/{lan} (löst av cache-warmup)      | 2026-04-26 | [todos/done/31-ttfb-anomali.md](todos/done/31-ttfb-anomali.md)                         |
+| 11  | SEO-audit 2026 (Fas 1+2; CWV→#30, OG-image avfärdat)   | 2026-04-26 | [todos/done/11-seo-audit-2026.md](todos/done/11-seo-audit-2026.md)                     |
 
 ## Avfärdade / sammanslagna
 

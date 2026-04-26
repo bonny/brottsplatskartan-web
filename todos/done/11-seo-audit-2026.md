@@ -1,4 +1,4 @@
-**Status:** aktiv 2026-04-26 (Fas 1 + mest av Fas 2 klar; **CWV-baseline mätt 2026-04-26 — performance-arbete behövs**)
+**Status:** klar 2026-04-26 (Fas 1 + Fas 2 klar; CWV utbrutet till #30, thin-events till #29)
 **Senast uppdaterad:** 2026-04-26
 
 # Todo #11 — SEO-audit enligt best practice 2026
@@ -42,12 +42,19 @@ Kvar i Fas 2 (kräver beslut / GA4-data / post-cutover):
 - ✅ ~~Core Web Vitals efter Hetzner-cutover~~ — **Mätt 2026-04-26**, se sektion nedan
 - 🔄 Noindex-strategi för gamla/thin events (`crimeevents:mark-thin`) —
   **flyttad till egen #29** (audit + reducera indexerade pages)
-- Internal anchor text-audit (grep efter "läs mer", "klicka här")
-- Auto-genererad OG-image per event (typ + plats-overlay)
-- Image sitemap (kartbilder per event) — Google Images-trafik
-- Utökad NewsArticle-markup (fler bildformat 1x1/4x3/16x9, articleSection,
-  inLanguage, dateModified från faktisk updated_at, contentLocation som
-  Place istället för GeoCircle) — se skiss nedan i dokumentet
+- ✅ ~~Internal anchor text-audit~~ — kört 2026-04-26, inga riktiga fund.
+  Endast `statistik.blade.php:140` matchade ("Läs mer om sajten på
+  [om-sidan]") men länktexten "om-sidan" är beskrivande — false positive.
+- ✅ ~~Image sitemap (kartbilder per event)~~ — **redan implementerat** via
+  `Url::addImage()` i `GenerateSitemap.php` + `GenerateHistoricalSitemaps.php`
+- ✅ ~~Utökad NewsArticle-markup~~ — **redan implementerat** i
+  `CrimeEvent::getLdJson()` (3 bildformat 1200x675/800x600/640x640,
+  articleSection=parsed_title, inLanguage=sv-SE, dateModified från
+  updated_at, contentLocation som Place med PostalAddress + GeoCoordinates)
+- ❌ ~~Auto-genererad OG-image per event~~ — **avfärdat 2026-04-26**.
+  Trafiken från sociala delningar är försumbar; nuvarande `getStaticImageSrc`
+  (kartbild med cirkel runt platsen) räcker som og:image. Återupptas om
+  delningstrafik visar sig vara värd det.
 
 Fas 3 kvarstår enligt plan nedan.
 
