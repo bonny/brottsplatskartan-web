@@ -1,4 +1,4 @@
-**Status:** aktiv (Fas A+B+C + self-host deployade 2026-04-26 — kvar: CrUX-mätning 28d. Fas D avfärdad, AdSense-CLS skippad per användarbeslut)
+**Status:** klar 2026-04-26 (Fas A+B+C + self-host deployade. Fas D avfärdad, AdSense-CLS skippad. CrUX-verifiering 28d är passiv mätning — arkiveras som klar.)
 **Senast uppdaterad:** 2026-04-26
 **Härledd från:** #11 SEO-audit (CWV-baseline 2026-04-26)
 
