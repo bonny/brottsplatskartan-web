@@ -107,6 +107,7 @@ class StartController extends Controller
      */
     public function day(Request $request, $date = null)
     {
+        $rawDateArg = $date;
         $date = \App\Helper::getdateFromDateSlug($date);
 
         if (!$date) {
@@ -280,7 +281,8 @@ class StartController extends Controller
             'mostCommonCrimeTypes' => $mostCommonCrimeTypes,
             'dateFormattedForMostCommonCrimeTypes' => trim(
                 $date['date']->isoFormat('D MMMM')
-            )
+            ),
+            'robotsNoindex' => \App\Helper::shouldNoindexForDateRoute($rawDateArg, $date['date']),
         ];
 
         return view('handelser', $data);

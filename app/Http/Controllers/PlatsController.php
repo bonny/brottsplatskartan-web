@@ -311,6 +311,7 @@ class PlatsController extends Controller
             'nextDayLink' => $nextDayLink,
             'dateForTitle' => $date['date']->isoFormat('D MMMM YYYY'),
             'mapDistance' => 'near',
+            'robotsNoindex' => \App\Helper::shouldNoindexForDateRoute($dateOriginalFromArg, $date['date']),
         ];
 
         return view('single-plats', $data);

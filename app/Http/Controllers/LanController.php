@@ -55,6 +55,7 @@ class LanController extends Controller
      */
     public function day(Request $request, $lan, $date = null)
     {
+        $rawDateArg = $date;
         $date = \App\Helper::getdateFromDateSlug($date);
         if (!$date) {
             abort(500, 'Knas med datum hörru');
@@ -261,6 +262,8 @@ class LanController extends Controller
         $relatedLinks = \App\Helper::getRelatedLinks(null, $lan);
 
         $data['relatedLinks'] = $relatedLinks;
+
+        $data['robotsNoindex'] = \App\Helper::shouldNoindexForDateRoute($rawDateArg, $date['date']);
 
         return view('single-lan', $data);
     }

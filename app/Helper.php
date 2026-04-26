@@ -484,6 +484,29 @@ class Helper {
      *
      * @return mixed array on success, false on error
      */
+    /**
+     * Avgör om en datum-route ska sättas till noindex,follow.
+     *
+     * Why: 64 % av indexerade datum-URL:er drar 0 clicks/28d (GSC 2026-04-26).
+     * Datum-routes äldre än 30 dagar är cold archive — drar marginell trafik
+     * och späder ut sajtens kvalitetssignal hos Google.
+     *
+     * @param string|null $rawDateArg Råparametern från URL (null = ingen
+     *                                datum-segment, dvs platsSingle/lanSingle)
+     * @param Carbon $resolvedDate    Det parsade datumet
+     * @param int $maxAgeDays         Tröskel — matchar #1:s cache-policy (30d)
+     */
+    public static function shouldNoindexForDateRoute(?string $rawDateArg, Carbon $resolvedDate, int $maxAgeDays = 30): bool
+    {
+        if ($rawDateArg === null) {
+            return false;
+        }
+        if ($resolvedDate->isToday()) {
+            return false;
+        }
+        return $resolvedDate->diffInDays(now()) > $maxAgeDays;
+    }
+
     public static function getdateFromDateSlug($monthAndYear) {
         $monthAndYear = strtolower($monthAndYear);
         $monthAndYear = str_replace('-', ' ', $monthAndYear);
