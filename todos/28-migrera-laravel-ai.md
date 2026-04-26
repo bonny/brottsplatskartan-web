@@ -99,35 +99,68 @@ beroende ändras.
 Gemini/GPT/DeepSeek-experiment. Failover till andra leverantörer
 skippas i Fas 3 och tas bara om Anthropic visar instabilitet i prod.
 
-**Kandidater inom Anthropic:**
+**Kandidater inom Anthropic (priser per 2026-04-26):**
 
-| Modell                        | Input / Output ($/M tok) | Vår use case-passning |
-| ----------------------------- | -----------------------: | --------------------- |
-| Claude Sonnet 4.5 (idag)      |             $3 / $15     | Overkill för titel + sammanfattning |
-| **Claude Haiku 4.5**          |             $1 / $5      | Sweet spot — 3× billigare, samma svenska kvalitet |
-| Claude Opus 4.7               |            $15 / $75     | Bara om kvalitet brister i Haiku |
+| Modell                            | Input / Output ($/M tok) | Vår use case-passning |
+| --------------------------------- | -----------------------: | --------------------- |
+| Sonnet 4.5 (`claude-sonnet-4-5-20250929`, vad vi kör nu) | $3 / $15 | Föråldrad — Sonnet 4.6 finns sedan flera mån |
+| **Sonnet 4.6** (senaste i Sonnet-linjen) | $3 / $15 | Default-kandidat om Haiku visar regression |
+| **Haiku 4.5**                     |             $1 / $5      | Sweet spot — 3× billigare, samma svenska kvalitet |
+| Opus 4.6                          |             $5 / $25     | För månadssammanfattningar (#27 Lager 3) |
+| **Opus 4.7** (släpptes 2026-04-16) |            $5 / $25     | Samma pris som 4.6 men markant bättre på svåra uppgifter; ny tokenizer ger ~35 % fler tokens för samma input → effektiv kostnad ngt högre än rate-card |
 
-**Föreslaget beslut:** byt till **Haiku 4.5** som default för båda
-use case. Sonnet kvar som opt-in via `CLAUDE_MODEL`-env om kvalitets-
-genomgången i Fas 4 visar regression. Opus reserverat för specialfall
-(t.ex. långa månadssammanfattningar i #27 Lager 3).
+**Föreslaget beslut för #28:**
 
-**Kostnadsestimat per månad (Sonnet → Haiku):**
+- **Daglig sammanfattning + titel-omskrivning:** byt till **Haiku 4.5**
+  som default. Sonnet 4.6 som env-opt-in om Fas 4 visar regression.
+- **Månadssammanfattning (kommer i #27 Lager 3):** överväg **Opus 4.7**
+  — bara $5/$25, dvs 1.7× Sonnet, för markant bättre kvalitet på en
+  uppgift som körs 1×/månad/område (≈ 10-50 calls/mån). Total kostnad
+  försumbar.
+- **Sluta använda gamla `claude-sonnet-4-5-20250929`-strängen** — uppdatera
+  `config/services.php` default till `claude-haiku-4-5` när Fas 3 körs.
 
-| Use case          | Calls/mån | Tokens in/ut | Kostnad Sonnet | Kostnad Haiku |
-| ----------------- | --------: | -----------: | -------------: | ------------: |
-| Daglig samman-Stockholm   |  ~1500   | ~5k / 0.4k   |  ~$30          |  ~$10         |
-| Titel-omskrivning |   ~3000  |  ~0.4k / 0.2k |  ~$13          |   ~$4         |
-| **Totalt**        |          |              |  **~$43/mån**  |  **~$14/mån** |
+### Optimerings-möjligheter (gratis vinst utan modellbyte)
 
-≈ $30/mån besparing. Skalar mer när #10 backfillar 50k titlar (#10 är
-~$27 engångskostnad med Sonnet → $8 med Haiku).
+Anthropic API har två kostnadsknep som passar oss bra:
+
+- **Prompt caching** — samma system-prompt återanvänds → cache hit kostar
+  10 % av input-priset. Vår system-prompt är ~500 tokens, varierande
+  user-prompt är ~3000 tokens (events). Med caching: 95 % av varje
+  payload blir 10× billigare → totalkostnad ner ytterligare ~30-50 %.
+- **Batch API** — 50 % rabatt på både input och output. Inte naturligt
+  fit för scheduler-jobben (var 30 min), men **perfekt för #10:s
+  50k-titel-backfill** och #27:s historiska månadsbaksläng.
+
+Båda stöds av `laravel/ai` via prism-konfiguration.
+
+**Kostnadsestimat per månad (utan caching, för enkel jämförelse):**
+
+| Use case          | Calls/mån | Tokens in/ut | Sonnet 4.6 | Haiku 4.5 |
+| ----------------- | --------: | -----------: | ---------: | --------: |
+| Daglig samman-Stockholm   |  ~1500   | ~5k / 0.4k   |  ~$30      |  ~$10     |
+| Titel-omskrivning |   ~3000  |  ~0.4k / 0.2k |  ~$13      |   ~$4     |
+| **Totalt**        |          |              |  **~$43/mån** |  **~$14/mån** |
+
+≈ $30/mån besparing från modellbyte ensam. Med **prompt caching**
+ovanpå Haiku: ytterligare ~$5-7/mån ner → ~$8/mån total.
+
+Skalar mer för engångsjobb:
+
+- **#10 50k-titel-backfill:** $27 (Sonnet) → $8 (Haiku) → $4 (Haiku + Batch API)
+- **#27 historisk månadsbaksläng** (10 år × 12 mån × 21 län ≈ 2500 calls): med Opus 4.7: ~$15 engångskostnad. Med Sonnet 4.6: ~$9. Försumbart i båda fall.
 
 **Verifierings-procedur:**
 
 1. Skriv en throwaway-script `tmp-ai-baseline/compare_models.php`:
    ```php
-   $models = ['claude-sonnet-4-5-20250929', 'claude-haiku-4-5-20251001'];
+   $models = [
+       'claude-sonnet-4-5-20250929',  // baseline (vad vi kör nu)
+       'claude-sonnet-4-6',            // gratis-uppgradering inom Sonnet
+       'claude-haiku-4-5',             // huvudkandidat
+       // Lägg till 'claude-opus-4-7' bara om Haiku-output känns tunn —
+       // overkill för dessa use cases men billigare än vi trodde ($5/$25).
+   ];
    foreach ($models as $model) {
        foreach ($referenceCases as $case) {
            $output = callClaude($case->input, $model, $currentPrompt);
@@ -243,7 +276,7 @@ use Laravel\Ai\Attributes\{Provider, Model, MaxTokens, Temperature};
 use Laravel\Ai\Enums\Lab;
 
 #[Provider(Lab::Anthropic)]
-#[Model('claude-haiku-4-5-20251001')]   // Fas 1-beslut
+#[Model('claude-haiku-4-5')]            // Fas 1-beslut (Anthropic-only)
 #[MaxTokens(1500)]
 #[Temperature(0.5)]                     // ner från 0.7 — saklig text behöver inte mycket variation
 class DailySummaryAgent implements Agent
@@ -263,7 +296,7 @@ så den är versionshanterad och lätt att diffa.
 #### 3b. Skapa `App\Ai\Agents\EventTitleRewriter` med structured output
 
 ```php
-#[Model('claude-haiku-4-5-20251001')]
+#[Model('claude-haiku-4-5')]
 #[MaxTokens(800)]
 class EventTitleRewriter implements Agent, HasStructuredOutput {
     public function schema(JsonSchema $s): array {
