@@ -19,6 +19,58 @@ SEO/UX-problem:
 - **Indexerbar yta är gigantisk** — Google måste välja vilka av
   ~120 000 datum-URL:er per plats som är värda
 
+## SEO-bekräftelse: månad slår dag (verifierat 2026-04-26)
+
+Hypotesen att månadsformat är bättre än dagsformat är bekräftad mot
+faktisk GA + GSC-data:
+
+### Datapunkter som stöder månadsvyer
+
+1. **Ingen söker proaktivt på datum.** Top datum-query "misshandel
+   gällivare 2026" fick 2 klick/månad. "20 apr 2026" fick 1 klick.
+   Användare hamnar på datum-sidor som biprodukt av "[brott] [plats]
+   [år]"-queries där datum är _kontextuellt_, inte primärt.
+
+2. **Mindre URL-yta = mer PageRank per URL.** 1.3M dagsvyer →
+   42 000 månadsvyer. Google koncentrerar crawl-budget på färre,
+   rikare sidor. Indexeringssnabbhet förbättras.
+
+3. **Rikare sidor rankar bättre.** En månadssida med översiktskarta,
+   statistik och 10–30 events undviker Googles "thin content"-straff
+   som drabbat sidor med 0–3 events. Fler signaler för algoritmen
+   att förstå sidans tema och relevans.
+
+4. **Page authority ackumuleras.** Samma URL får upprepade klick
+   över tid istället för att splittras över 30 olika dagsvyer per
+   månad. PageRank kompounds.
+
+### Vecka vs månad — månad vinner klart
+
+- **Månad:** 12 URL:er per plats per år. Naturligt sökformat
+  ("händelser uppsala april 2026"). Får både svensk månadssökning
+  och nyhetsbevakning som ofta sammanfattas månadsvis.
+- **Vecka:** 52 URL:er per plats per år. Få söker "händelser uppsala
+  vecka 17" — vecka-syntax är ovanlig i konsumentsökningar.
+- **Bästa kompromissen:** månadssidor med vecko-sektioner (anchor-
+  strategi nedan) — ger båda granulariteten utan URL-yta.
+
+### Förväntade ranking-rörelser vid migration
+
+- **Vecka 1–4:** Google avindexerar dagsvyer, månadsvyer rampar upp.
+  Total long-tail-trafik kan dippa 10–20%. Acceptabelt.
+- **Vecka 4–12:** månadsvyer ärver PageRank via 301:er, börjar ranka
+  starkare än dagsvyerna gjorde individuellt.
+- **Vecka 12+:** total trafik förväntat **högre** än innan eftersom
+  rikare sidor ger fler features (rich results, sitelinks, anchor
+  deeplinks i SERP).
+
+### Confidence-nivå
+
+**Hög.** Detta är ett standardmönster i SEO sedan ~2020 (post-Panda,
+post-helpful-content-update). Inte experimentellt. Risken ligger i
+implementering (broken 301:er, missade anchor-länkar) snarare än i
+strategin själv.
+
 ## Förslag — månadsvyer
 
 Ersätt dagsvyer med månadsvyer för plats/län-kombinationer:
