@@ -1,5 +1,5 @@
-**Status:** aktiv — kod + deploy klart, väntar på DNS-byte
-**Senast uppdaterad:** 2026-04-25
+**Status:** klar 2026-04-26
+**Senast uppdaterad:** 2026-04-26
 
 # Todo #21 — Migrera antonblomqvist.se + simple-fields.com till BPK Hetzner
 
@@ -118,6 +118,6 @@ curl -I https://antonblomqvist.se # ska ge 200 OK med valid cert
 - [x] antonblomqvist.se: byt master→main, lägg till `caddy/*.caddy` + GHA, push (2026-04-25)
 - [x] `HETZNER_SSH_KEY` repo-secret satt i båda repona (2026-04-25, samma deploy-nyckel som BPK)
 - [x] Workflows kör framgångsrikt — `public_html/` rsync:ad till `/opt/static-sites/<sajt>/`, `<sajt>.caddy` till `/opt/caddy-sites.d/`, Caddy reloadat (2026-04-25)
-- [ ] DNS hos Loopia: peka apex + www för båda mot Hetzner-IP `62.238.25.254` (A) + `2a01:4f9:c014:a8b1::1` (AAAA)
-- [ ] Verifiera TLS-cert utfärdas + sajterna svarar med 200 OK
-- [ ] Stäng todo, signalera att #16 kan gå vidare med radering av DO-droppleten
+- [x] DNS hos Loopia: A-records satta på `62.238.25.254` för apex + www för båda domänerna (2026-04-26). AAAA-records skippade — IPv4 räcker.
+- [x] Verifiera TLS + 200 OK (2026-04-26): båda svarar HTTP/2 200 med valid Let's Encrypt-cert via Caddy
+- [x] #16 unblockad — DO-droppleten kan raderas när soak-perioden är slut

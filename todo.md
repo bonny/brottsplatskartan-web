@@ -30,9 +30,8 @@ historik — raderas aldrig.
 | --- | ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
 | 11  | SEO-audit enligt best practice 2026             | **Aktiv 2026-04-24** — Fas 1 + mest av Fas 2 klar; återstår CWV post-cutover, noindex-strategi, OG-image, image sitemap, utökad NewsArticle | [todos/11-seo-audit-2026.md](todos/11-seo-audit-2026.md)                   |
 | 10  | AI-omskriva vaga titlar                         | Plan klar, kostnad ~$27 för full backfill                                                                                                   | [todos/10-ai-omskriva-titlar.md](todos/10-ai-omskriva-titlar.md)           |
-| 16  | Rensa / avveckla gamla DO-servern (Dokku)       | Aktiv 2026-04-25 — appar stoppade, väntar på soak innan radering                                                                            | [todos/16-rensa-do-server.md](todos/16-rensa-do-server.md)                 |
+| 16  | Rensa / avveckla gamla DO-servern (Dokku)       | Aktiv 2026-04-25 — appar stoppade, statiska sajter migrerade, väntar på soak innan radering                                                 | [todos/16-rensa-do-server.md](todos/16-rensa-do-server.md)                 |
 | 20  | Kartbilder: rita cirkel/område runt händelsen   | Aktiv 2026-04-24 — implementerad bakom feature-flag, redo för prod-rollout                                                                  | [todos/20-kartbilder-med-cirklar.md](todos/20-kartbilder-med-cirklar.md)   |
-| 21  | Migrera antonblomqvist.se + simple-fields.com   | Aktiv 2026-04-25 — kod + deploy klart, sajterna ligger på servern; återstår DNS-byte hos Loopia                                             | [todos/21-migrera-statiska-sajter.md](todos/21-migrera-statiska-sajter.md) |
 | 25  | Månadsvyer istället för dagsvyer (datum-routes) | Designfas 2026-04-26 — stort grepp, kräver URL-strategi-beslut + 301-migrering + sitemap-uppdatering                                        | [todos/25-manadsvyer-datum-routes.md](todos/25-manadsvyer-datum-routes.md) |
 
 ### Beroenden
@@ -41,7 +40,7 @@ historik — raderas aldrig.
 - **#28 → #27 Lager 3:** AI-månadssammanfattningar bygger på `laravel/ai`.
 - **#10 → #11:** bättre titlar förbättrar SEO. Kör #10 innan eller parallellt med #11.
 - ~~**#14 → #16:** DO-servern får inte avvecklas innan backup är verifierad.~~ (#14 klar 2026-04-25)
-- **#21 → #16:** DO-servern bör inte raderas förrän statiska sajterna flyttats till BPK-Hetzner.
+- ~~**#21 → #16:** DO-servern bör inte raderas förrän statiska sajterna flyttats till BPK-Hetzner.~~ (#21 klar 2026-04-26)
 
 ### Föreslagen ordning
 
@@ -75,6 +74,7 @@ historik — raderas aldrig.
 | 23  | Case-redirect på /plats/{plats} + footer-städning      | 2026-04-26 | [todos/done/23-platssidor-case-duplikat.md](todos/done/23-platssidor-case-duplikat.md) |
 | 24  | Tier 1-städer (malmo/goteborg/helsingborg/uppsala)     | 2026-04-26 | [todos/done/24-stadcontroller-tier1.md](todos/done/24-stadcontroller-tier1.md)         |
 | 26  | Search Console MCP (mcp-gsc) + sitemap submission      | 2026-04-26 | [todos/done/26-gsc-mcp.md](todos/done/26-gsc-mcp.md)                                   |
+| 21  | Migrera antonblomqvist.se + simple-fields.com          | 2026-04-26 | [todos/done/21-migrera-statiska-sajter.md](todos/done/21-migrera-statiska-sajter.md)   |
 
 ## Avfärdade / sammanslagna
 
