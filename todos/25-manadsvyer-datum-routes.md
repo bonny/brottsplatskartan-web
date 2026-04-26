@@ -1,6 +1,6 @@
-**Status:** aktiv (designfas — kräver pilot innan full rollout)
-**Senast uppdaterad:** 2026-04-26 (efter design-review — vecko-strukturen borttagen, öppna frågor tillagda)
-**Confidence:** Medel
+**Status:** aktiv (designfas → implementation, Uppsala-pilot)
+**Senast uppdaterad:** 2026-04-26 (efter SEO 2026-review — pagination, CWV-budget, 301-default, schema-uppgradering)
+**Confidence:** Medel-Hög (efter scope-klargörande: enskilda event-URL:er rörs inte, bara aggregeringssidor)
 
 # Todo #25 — Månadsvyer istället för dagsvyer (plats/län-routes)
 
@@ -63,7 +63,8 @@ Ordning uppifrån (alla synliga från start, inga kollapsade element):
    — anchor-lista över dagar med events, alltid synlig (inte hopfällbar)
 5. **Dag-sektioner** med `<h2 id="2026-04-15">`, alltid expanderade
 6. **Föregående/nästa månad-nav** + "Hoppa till år"-dropdown längst ner
-7. **Schema.org `WebPage` + `BreadcrumbList`**
+7. **Schema.org JSON-LD** — `Dataset` + `Place` + `FAQPage` + `BreadcrumbList` (skiss längre ner)
+8. **Synlig FAQ-sektion** ("Snabba fakta") mellan karta och statistik — frågorna i synlig text för AI-Overview-citation
 
 ### Anchor-strategi
 
@@ -116,9 +117,13 @@ varningar för "low-value content".
 
 | Antal events i månad | Action                                                     |
 | -------------------- | ---------------------------------------------------------- |
-| 0                    | **410 Gone** (eller 301 till plats-sidan utan datum)       |
+| 0                    | **301 till plats-sidan utan datum**                        |
 | 1–2                  | `<meta robots="noindex,follow">` + ingen AdSense-rendering |
 | 3+                   | Full rendering, indexerbar, AdSense aktiverad              |
+
+**301 (inte 410) som default** för 0-event-månader: småorter kan
+plötsligt få events år senare och då har vi bränt URL:en med 410.
+410 reserveras för URL-mönster som vi vet aldrig återuppstår.
 
 Tröskeln "≥ 3" är hypotes. Validera mot CPM-data efter pilot. Möjlig
 justering till "≥ 5" om tomma sidor visar sig vara skadliga.
@@ -170,23 +175,55 @@ Day-nav på plats/län-sidor (i `Helper.php`, `PlatsController`,
 80% av trafiken är mobil. Storstadssidor (Stockholm/Göteborg/Malmö)
 får 500–2000 events per månad — initial render måste vara hanterbar.
 
-**Server-side paginering inom månadsvyn:**
+**Pagineringsstrategi enligt 2026-best-practice (Google Search Central):**
 
 - 50 events per sida, querystring `?p=2`
-- Sida 1 är canonical (utan param eller `?p=1`)
-- Sida 2+ får `<meta robots="noindex,follow">` (paginering är UX-
-  feature, inte ranking-yta)
-- Dag-anchors finns på alla sidor — om en användare landar på
+- **Self-referencing canonical per sida.** Sida 2+ canonicaliserar
+  till sig själva, inte till sida 1. (Tidigare plan med
+  `noindex,follow` på sida 2+ avfärdad — Google's docs säger
+  uttryckligen "Don't add noindex to paginated pages" eftersom
+  följ-länkar dör efter ett tag → internlink-blackhole.)
+- **Indexerbara på alla sidor.** Page-titel inkluderar sid-nummer:
+  "Polishändelser i Uppsala, april 2026 — sida 2".
+- **Dag-anchors med smart routing.** Om en användare landar på
   `#2026-04-15` och dagen ligger på sida 2, redirectar routern till
-  rätt sida (`?p=2#2026-04-15`)
-- Översiktskartan visar **alla** månadens events oavsett sida —
-  pagineringen gäller bara dag-listorna under
-- Föregående/nästa-länkar mellan sidor med `rel="prev"` / `rel="next"`
-  (deprecated av Google men respekteras av Bing och AI-crawlers)
+  `?p=2#2026-04-15`.
+- **Översiktskartan visar alla månadens events** oavsett sida —
+  pagineringen gäller bara dag-listorna under.
+- **`rel="prev"`/`rel="next"` skippas** — deprecated av Google sedan
+  2019, ingen ranking-vinst. Vanliga `<a>`-länkar mellan sidorna
+  räcker.
+
+**Storstad-edge-case:** Stockholm med 1000+ events/månad får 20+
+sidor av paginering. Övervägt alternativ: server-renderad load-more
+så hela månaden alltid finns på en URL. Avfärdat — bryter CWV-
+budget (LCP, INP) och DOM-storlek på mobil. Sticka med paginering.
 
 **Mobil-prototyp INNAN implementation.** Verifiera scroll-to-anchor
 beteende på iOS Safari + Android Chrome med faktisk sticky-header-
 höjd inkl. cookiebanner och ad-units.
+
+## CWV-budget (designkrav, inte mätning efteråt)
+
+Mars 2026-uppdateringen sänkte LCP-tröskeln för "Good" till 2.0s,
+INP <150ms krävs för rank-stabilitet. Stockholm-månadsvyn med
+500+ events + Leaflet-karta + AdSense + sticky-banner hamnar
+trivialt i POOR-zonen om vi inte designar arkitekturen från start.
+
+| Metric | Budget       | Strategi                                       |
+| ------ | ------------ | ---------------------------------------------- |
+| LCP    | <1.8s mobile | Lazy-load Leaflet tills viewport, hero är ren  |
+|        |              | server-renderad statistikbild + H1             |
+| INP    | <120ms       | Defer all JS utom critical-path, undvik long   |
+|        |              | tasks vid filter-klick                         |
+| CLS    | <0.05        | Pre-allocate space för karta + ad-slots,       |
+|        |              | inga sena layout-shifts från lazy-loaded       |
+|        |              | element                                        |
+| TTFB   | <600ms       | Response-cache via Spatie + Redis, 30 min TTL  |
+
+**Mätning per device + per platsstorlek.** Lighthouse mobile på
+Stockholm-sidan + Uppsala-sidan + Hofors-sidan i pilot. Failande
+sida = inte deploy-redo.
 
 ---
 
@@ -256,8 +293,9 @@ verifieras.
    för `(plats, parsed_date)`-kombination.
 6. **Sitemap-uppdatering** för Uppsala — månadsvyer in, dagsvyer
    ut. Submit till GSC.
-7. **Schema.org JSON-LD** — WebPage + BreadcrumbList.
-   Validera i Google Rich Results-test.
+7. **Schema.org JSON-LD** — Dataset + Place + BreadcrumbList +
+   FAQPage. Validera i Google Rich Results-test + Google Dataset
+   Search test.
 8. **Pilot-deploy + baseline-mätning** dag 0
 9. **30 dagars soak.** Daglig KPI-koll. Rollback om tröskel triggas.
 10. **Full rollout** — alla platser + län. Behåll Uppsala som
@@ -265,42 +303,120 @@ verifieras.
 
 ---
 
-## Schema.org-skiss
+## Schema.org-strategi
+
+`WebPage + BreadcrumbList` räcker inte 2026 — AI Overviews och rich
+results parsear strukturerad data hårt och nyhetssajter som kapar
+citationer vinner. Månadsvyn är **dataset-territorium**: en
+strukturerad samling av brottshändelser med plats, tid och typ.
+
+Schema-typer per månadsvy:
+
+- **`Dataset`** — kvantifierbara observationer. Google Dataset
+  Search indexerar detta separat och ingen konkurrent gör det.
+- **`Place`** med `geo` (`GeoCoordinates`) + `sameAs` Wikidata-Q-id
+  för platsen — knyter sidan till entity-grafen.
+- **`BreadcrumbList`** (Hem › Uppsala › April 2026).
+- **`FAQPage`** med 3 svar i format Google AI Overviews extraherar
+  ordagrant: "Hur många brott i Uppsala april 2026? **142.**" /
+  "Vanligast? **Stöld (47 fall).**" / "Trend mot mars? **+12 %.**"
+
+Skiss:
 
 ```json
 {
     "@context": "https://schema.org",
-    "@type": "WebPage",
-    "name": "Polishändelser i Uppsala, april 2026",
-    "url": "https://brottsplatskartan.se/plats/uppsala/handelser/2026/04",
-    "description": "...",
-    "isPartOf": {
-        "@type": "WebSite",
-        "url": "https://brottsplatskartan.se/"
-    }
+    "@graph": [
+        {
+            "@type": "Dataset",
+            "name": "Polishändelser i Uppsala, april 2026",
+            "description": "142 polishändelser registrerade i Uppsala under april 2026, fördelat på 8 brottstyper.",
+            "url": "https://brottsplatskartan.se/plats/uppsala/handelser/2026/04",
+            "spatialCoverage": {
+                "@type": "Place",
+                "name": "Uppsala",
+                "geo": {
+                    "@type": "GeoCoordinates",
+                    "latitude": 59.8586,
+                    "longitude": 17.6389
+                },
+                "sameAs": "https://www.wikidata.org/wiki/Q25347"
+            },
+            "temporalCoverage": "2026-04-01/2026-04-30",
+            "variableMeasured": [
+                { "@type": "PropertyValue", "name": "Antal händelser", "value": 142 },
+                { "@type": "PropertyValue", "name": "Brottstyper", "value": 8 }
+            ],
+            "creator": {
+                "@type": "Organization",
+                "name": "Polismyndigheten",
+                "url": "https://polisen.se/"
+            },
+            "license": "https://creativecommons.org/publicdomain/zero/1.0/"
+        },
+        {
+            "@type": "FAQPage",
+            "mainEntity": [
+                {
+                    "@type": "Question",
+                    "name": "Hur många brott registrerades i Uppsala april 2026?",
+                    "acceptedAnswer": { "@type": "Answer", "text": "142 polishändelser." }
+                },
+                {
+                    "@type": "Question",
+                    "name": "Vilken brottstyp var vanligast i Uppsala april 2026?",
+                    "acceptedAnswer": { "@type": "Answer", "text": "Stöld, med 47 registrerade fall." }
+                }
+            ]
+        },
+        {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                { "@type": "ListItem", "position": 1, "name": "Hem", "item": "https://brottsplatskartan.se/" },
+                { "@type": "ListItem", "position": 2, "name": "Uppsala", "item": "https://brottsplatskartan.se/plats/uppsala" },
+                { "@type": "ListItem", "position": 3, "name": "April 2026" }
+            ]
+        }
+    ]
 }
 ```
 
-Plus `BreadcrumbList` (Hem › Uppsala › April 2026).
+`NewsArticle` per dag-sektion avfärdat — dag-sektionerna är
+listpresentationer, inte editorial nyhetsartiklar. `NewsArticle`
+hör till enskilda event-pages och hanteras i todo #32.
 
 `hasPart` med `WebPageElement` per dag övervägdes och avfärdades —
 Google har aldrig visat schema-equity för dag-nivå-sektioner i SERP.
-Inert markup, bara ballast.
+
+### Synlig FAQ-sektion på sidan
+
+För att FAQPage-schemat ska vara konsistent med synligt innehåll
+(Google's krav) renderas frågorna också som synlig sektion högst upp
+på sidan, mellan översiktskartan och dag-listorna:
+
+> **Snabba fakta**
+> Antal brott: 142 · Vanligast: Stöld (47) · Trend mot föregående
+> månad: +12 %.
+
+Format optimerat för AI Overview-citation: korta meningar med
+nyckeltal i fetstil, frågorna i synlig text inte bara i schema.
 
 ---
 
 ## Risker — sammanfattning
 
-| Risk                                  | Mitigering                                         |
-| ------------------------------------- | -------------------------------------------------- |
-| Soft-404 på tomma månader             | 410/noindex policy enligt event-tröskel            |
-| AdSense policy-violation              | Villkorlig ad-rendering på event-tröskel           |
-| 301-kedjor                            | Verifiera ETT hopp för alla legacy-format          |
-| Mobil scroll-to-anchor-buggar         | Prototyp-test innan implementation                 |
-| Storstadssidor med 1000+ events       | Server-side paginering, sida 2+ noindex            |
-| Färre PV/session → ad-impression-tapp | Mätplan + rollback-tröskel + ad-placement-strategi |
-| Ranking-rörelser (2–8 veckor)         | Behåll dagsvys-route 6 månader för rollback        |
-| Fel URL-format                        | CTR-dataanalys innan beslut                        |
+| Risk                                  | Mitigering                                                       |
+| ------------------------------------- | ---------------------------------------------------------------- |
+| Soft-404 på tomma månader             | 301 till plats-sidan (default) + noindex på 1–2-event-sidor      |
+| AdSense policy-violation              | Villkorlig ad-rendering på event-tröskel                         |
+| 301-kedjor                            | Verifiera ETT hopp för alla legacy-format via `curl -ILv`        |
+| Mobil scroll-to-anchor-buggar         | Prototyp-test innan implementation                               |
+| Storstadssidor med 1000+ events       | Server-side paginering, self-canonical, indexerbar               |
+| CWV-budget-överträdelse på Stockholm  | Lazy-load karta, defer JS, design-fas-mätning per platsstorlek   |
+| Färre PV/session → ad-impression-tapp | Mätplan + rollback-tröskel + ad-placement-strategi               |
+| Ranking-rörelser (2–8 veckor)         | Behåll dagsvys-route 6 månader för rollback                      |
+| Fel URL-format                        | Beslut baserat på best-practice + uppföljning via GSC efter pilot |
+| Schema.org-fel i Dataset/FAQPage      | Google Rich Results-test + Dataset Search-test innan deploy      |
 
 ---
 
