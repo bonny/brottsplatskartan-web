@@ -5,9 +5,9 @@
 
 ## Utfört
 
-- `analytics-mcp` 0.2.0 installerad via `pipx install analytics-mcp` lokalt på ny dator (Pär:s mac, 2026-04-26).
+- `analytics-mcp` 0.2.0 installerad via `pipx install analytics-mcp` lokalt på ny dator (2026-04-26).
 - GCP-projekt `brottsplatskarta-1476012766238` skapad, `analyticsadmin.googleapis.com` + `analyticsdata.googleapis.com` aktiverade.
-- OAuth Desktop-klient skapad i GCP, `par.thernstrom@gmail.com` tillagd som test user på consent-skärmen.
+- OAuth Desktop-klient skapad i GCP, det egna Googlekontot tillagt som test user på consent-skärmen.
 - ADC-token genererad med scopes `analytics.readonly` + `cloud-platform`, quota project satt.
 - Registrerad i Claude Code: `claude mcp add analytics-mcp --scope user --transport stdio --env GOOGLE_APPLICATION_CREDENTIALS=… --env GOOGLE_PROJECT_ID=… -- analytics-mcp`.
 - Verifierat via `get_account_summaries` (20 properties syns, brottsplatskartan = `305258979`) och två faktiska `run_report`-anrop (top landningssidor från Google organisk + mobile/desktop-trend för `/handelser`).
