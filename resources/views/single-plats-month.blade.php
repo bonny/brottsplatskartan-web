@@ -222,6 +222,11 @@ Designprinciper (#25):
 @section('sidebar')
     @include('parts.sokruta')
 
+    @include('parts.month-archive', [
+        'monthArchiveType' => ($isLan ?? false) ? 'lan' : 'plats',
+        'monthArchiveSlug' => $platsSlug,
+    ])
+
     {{-- Plats-meta-block — länk till plats-startsidan om vi har Place-data. --}}
     @if ($place)
         <section class="widget">

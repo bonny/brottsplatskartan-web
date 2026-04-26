@@ -104,6 +104,11 @@ https://brottsplatskartan.localhost/lan/Stockholms%20l%C3%A4n
 @section('sidebar')
     @include('parts.sokruta')
 
+    @include('parts.month-archive', [
+        'monthArchiveType' => 'lan',
+        'monthArchiveSlug' => $lan,
+    ])
+
     <div class="widget">
         <h2 class="widget__title"><a href="{{ route('statistik') }}">Brottsstatistik</a></h2>
         <div class="widget__listItem__text">

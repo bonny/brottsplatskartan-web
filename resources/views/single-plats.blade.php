@@ -95,6 +95,10 @@ https://brottsplatskartan.localhost/plats/nacka
 
 @section('sidebar')
     @include('parts.sokruta')
+    @include('parts.month-archive', [
+        'monthArchiveType' => 'plats',
+        'monthArchiveSlug' => mb_strtolower(request()->route('plats')),
+    ])
     @include('parts.related-links')
 
     {{-- Lista närmaste polisstationerna --}}

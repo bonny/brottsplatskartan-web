@@ -3939,3 +3939,70 @@ h2.widget__title {
     padding: var(--default-margin-double);
     text-align: center;
 }
+
+/*
+ * Månadsvyer för plats/län — todo #25.
+ *
+ * Sidan har Snabba fakta-block, prev/next månad-nav, hopp-till-dag-
+ * innehållsförteckning, och dag-sektioner med id-anchors.
+ */
+
+.Introtext--monthFacts {
+    background-color: var(--color-gray-1);
+    border-left: 3px solid var(--color-link);
+    padding: var(--default-margin) var(--default-margin-double);
+    margin-bottom: var(--default-margin-double);
+}
+
+.MonthNav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--default-margin);
+    margin: var(--default-margin-double) 0;
+    flex-wrap: wrap;
+}
+
+.MonthNav--top {
+    border-top: 1px solid var(--color-grey-light);
+    border-bottom: 1px solid var(--color-grey-light);
+    padding: var(--default-margin) 0;
+}
+
+.MonthNav__link {
+    flex: 1;
+}
+
+.MonthNav__link--prev {
+    text-align: left;
+}
+
+.MonthNav__link--next {
+    text-align: right;
+    margin-left: auto;
+}
+
+.MonthToc {
+    background-color: var(--color-gray-1);
+    padding: var(--default-margin) var(--default-margin-double);
+    margin-bottom: var(--default-margin-double);
+    border-radius: 4px;
+    line-height: 1.8;
+    font-size: var(--font-size-small);
+}
+
+.MonthToc strong {
+    margin-right: var(--default-margin);
+}
+
+.MonthToc a {
+    white-space: nowrap;
+}
+
+.MonthDay {
+    /* scroll-margin-top kompenserar för sticky nav + cookie-banner +
+     * ad-units när användaren landar via dag-anchor. Mäts i devtools
+     * och justeras innan rollout. */
+    scroll-margin-top: 80px;
+    margin-bottom: var(--default-margin-double);
+}
