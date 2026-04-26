@@ -141,13 +141,26 @@ i GSC. Om alternativt format visar tydligt högre CTR i SERP — byt.
 
 | Format                                       | För                               | Mot                           |
 | -------------------------------------------- | --------------------------------- | ----------------------------- |
-| `/plats/uppsala/handelser/2026/04` (förslag) | Hierarkiskt, lätt att parsea      | Inga sökord i URL-segmentet   |
-| `/plats/uppsala/handelser/april-2026`        | Månadens namn syns i SERP-snippet | Behöver slug-parsning         |
+| `/plats/uppsala/handelser/2026/04` ✅ valt   | Hierarkiskt, lätt att parsea, framtida `/handelser/{year}` möjlig  | Inga sökord i URL-segmentet   |
+| `/plats/uppsala/handelser/april-2026`        | Månadens namn syns i SERP-snippet | Behöver slug-parsning, kollision med dag-format `15-april-2026` |
 | `/plats/uppsala/april-2026`                  | Kortast, ren                      | Bryter `/handelser/`-struktur |
 | `/handelser-uppsala-april-2026`              | Maximalt sökord-rikt              | Helt ny URL-rotnivå           |
 
-Format-beslutet **dokumenteras med motivering** i todo-filen innan
-kod skrivs. Beslut: \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ (fyll i).
+**Beslut: `/plats/{plats}/handelser/{year}/{month}` (2026-04-26).**
+
+Motivering:
+- **Hierarkisk struktur** matchar dagens `/handelser/{datum}` mönster
+  och möjliggör framtida `/handelser/{year}` (års-vy) utan ny URL-
+  rot.
+- **Maskinläsbart format** — 4-siffrigt år + 2-siffrigt månad är
+  trivialt att parsa, validera och cacha. Kollisioner med
+  dagformatet `15-april-2026` undviks helt.
+- **SEO-vinst för "april" i URL är försumbar** — användare söker
+  "brott uppsala", inte "brott uppsala april". Månadens namn
+  exponeras i page-title + H1 + breadcrumb, vilket är var Google
+  faktiskt läser.
+- **Dataset/Place-schema** är mycket viktigare för SEO 2026 än
+  URL-segmentet. Lägg energin där.
 
 ---
 

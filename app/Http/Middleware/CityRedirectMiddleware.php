@@ -63,6 +63,13 @@ class CityRedirectMiddleware
     {
         $path = urldecode($request->path());
 
+        // Datum- och månads-routes behåller `/plats/{tier1}/handelser/...`-
+        // strukturen och ska INTE redirectas till stadsstartsidan. De
+        // renderas av PlatsController::day()/month() (todo #25 + #29).
+        if (preg_match('#^plats/[^/]+/handelser/#i', $path)) {
+            return $next($request);
+        }
+
         foreach (self::REDIRECTS as $pattern => $citySlug) {
             if (stripos($path, $pattern) === 0) {
                 return redirect()->route('city', ['city' => $citySlug], 301);

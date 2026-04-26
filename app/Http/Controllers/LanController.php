@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\CrimeEvent;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 
@@ -266,5 +267,149 @@ class LanController extends Controller
         $data['robotsNoindex'] = \App\Helper::shouldNoindexForDateRoute($rawDateArg, $date['date']);
 
         return view('single-lan', $data);
+    }
+
+    /**
+     * Månadsvy för län — todo #25.
+     *
+     * Aggregerad månadsvy med statistik, dag-sektioner med anchors, och
+     * Dataset/FAQPage-schema. Tomma månader 301:as till län-startsidan.
+     *
+     * URL: /lan/{lan}/handelser/{year}/{month}
+     */
+    public function month(Request $request, $lan, $year, $month)
+    {
+        $monthRange = \App\Helper::getMonthRangeFromYearMonth($year, $month);
+        if (!$monthRange) {
+            abort(404);
+        }
+
+        // Län lagras med mellanslag (icke-slug'at).
+        $lan = str_replace('-', ' ', $lan);
+
+        $events = $this->getEventsInLanForMonth($lan, $monthRange['start'], $monthRange['end']);
+
+        // Tomma månader: 301 till län-startsidan.
+        if ($events->isEmpty()) {
+            return redirect()->route('lanSingle', ['lan' => $lan], 301);
+        }
+
+        $totalEvents = $events->count();
+        $robotsNoindex = $totalEvents < 3;
+
+        $eventsByDay = $events->groupBy(function ($item) {
+            return date('Y-m-d', strtotime($item->created_at));
+        })->sortKeys();
+
+        $crimeTypeCounts = $events->groupBy('parsed_title')
+            ->map->count()
+            ->sortDesc();
+        $mostCommonCrimeType = $crimeTypeCounts->keys()->first();
+        $mostCommonCrimeTypeCount = $crimeTypeCounts->first();
+        $crimeTypeDistinctCount = $crimeTypeCounts->count();
+
+        // Trend mot föregående månad.
+        $prevMonthStart = (clone $monthRange['start'])->subMonth();
+        $prevMonthEnd = (clone $prevMonthStart)->endOfMonth();
+        $prevMonthEvents = $this->getEventsInLanForMonth($lan, $prevMonthStart, $prevMonthEnd);
+        $prevMonthCount = $prevMonthEvents->count();
+        $trendVsPrev = null;
+        if ($prevMonthCount > 0) {
+            $trendVsPrev = (int) round((($totalEvents - $prevMonthCount) / $prevMonthCount) * 100);
+        }
+
+        // Prev/next månad-länkar.
+        $prevMonth = (clone $monthRange['start'])->subMonth();
+        $nextMonth = (clone $monthRange['start'])->addMonth();
+        $prevMonthLink = [
+            'title' => sprintf('‹ %s', title_case($prevMonth->isoFormat('MMMM YYYY'))),
+            'link' => route('lanMonth', [
+                'lan' => $lan,
+                'year' => $prevMonth->format('Y'),
+                'month' => $prevMonth->format('m'),
+            ]),
+        ];
+        $nextMonthLink = $nextMonth->isFuture() ? null : [
+            'title' => sprintf('%s ›', title_case($nextMonth->isoFormat('MMMM YYYY'))),
+            'link' => route('lanMonth', [
+                'lan' => $lan,
+                'year' => $nextMonth->format('Y'),
+                'month' => $nextMonth->format('m'),
+            ]),
+        ];
+
+        $monthYearTitle = title_case($monthRange['start']->isoFormat('MMMM YYYY'));
+
+        $canonicalLink = route('lanMonth', [
+            'lan' => $lan,
+            'year' => $monthRange['start']->format('Y'),
+            'month' => $monthRange['start']->format('m'),
+        ]);
+
+        $breadcrumbs = new \Creitive\Breadcrumbs\Breadcrumbs;
+        $breadcrumbs->setDivider('›');
+        $breadcrumbs->addCrumb('Hem', '/');
+        $breadcrumbs->addCrumb('Län', route('lanOverview'));
+        $breadcrumbs->addCrumb(e($lan), route('lanSingle', ['lan' => $lan]));
+        $breadcrumbs->addCrumb($monthYearTitle);
+
+        $metaDescription = sprintf(
+            'Polishändelser i %s under %s. %d händelser registrerade%s.',
+            $lan,
+            $monthYearTitle,
+            $totalEvents,
+            $mostCommonCrimeType
+                ? sprintf(', vanligast: %s', mb_strtolower($mostCommonCrimeType))
+                : ''
+        );
+
+        $pageTitle = sprintf('Polishändelser i %s, %s', $lan, $monthYearTitle);
+
+        $data = [
+            'lan' => $lan,
+            'place' => null,
+            'plats' => $lan,
+            'platsSlug' => $lan,
+            'events' => $events,
+            'eventsByDay' => $eventsByDay,
+            'monthRange' => $monthRange,
+            'monthYearTitle' => $monthYearTitle,
+            'totalEvents' => $totalEvents,
+            'mostCommonCrimeType' => $mostCommonCrimeType,
+            'mostCommonCrimeTypeCount' => $mostCommonCrimeTypeCount,
+            'crimeTypeDistinctCount' => $crimeTypeDistinctCount,
+            'crimeTypeCounts' => $crimeTypeCounts,
+            'prevMonthCount' => $prevMonthCount,
+            'trendVsPrev' => $trendVsPrev,
+            'prevMonthLink' => $prevMonthLink,
+            'nextMonthLink' => $nextMonthLink,
+            'breadcrumbs' => $breadcrumbs,
+            'metaDescription' => $metaDescription,
+            'pageTitle' => $pageTitle,
+            'canonicalLink' => $canonicalLink,
+            'mapDistance' => 'far',
+            'robotsNoindex' => $robotsNoindex,
+            'showAdSense' => $totalEvents >= 3,
+            'isLan' => true,
+        ];
+
+        return view('single-plats-month', $data);
+    }
+
+    /**
+     * Hämta events för län över ett månad-range (todo #25).
+     */
+    public function getEventsInLanForMonth($lan, Carbon $start, Carbon $end)
+    {
+        $cacheKey = sprintf('getEventsInLanForMonth:%s:%s', $lan, $start->format('Y-m'));
+        $cacheTTL = 30 * 60;
+
+        return Cache::remember($cacheKey, $cacheTTL, function () use ($lan, $start, $end) {
+            return CrimeEvent::orderBy('created_at', 'desc')
+                ->whereBetween('created_at', [$start, $end])
+                ->where('administrative_area_level_1', $lan)
+                ->with('locations')
+                ->get();
+        });
     }
 }

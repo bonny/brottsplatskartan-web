@@ -317,6 +317,217 @@ class PlatsController extends Controller
         return view('single-plats', $data);
     }
 
+    /**
+     * Månadsvy för plats — todo #25.
+     *
+     * Ersätter dagsvyer på plats-nivå med en aggregerad månadsvy som
+     * innehåller statistik, dag-sektioner med anchors, och
+     * Dataset/FAQPage-schema. Tomma månader 301:as till plats-startsidan.
+     *
+     * URL: /plats/{plats}/handelser/{year}/{month}
+     */
+    public function month(Request $request, $plats, $year, $month)
+    {
+        $platsOriginalFromSlug = $plats;
+
+        // 301:a versaler → gemener (samma som day()).
+        $platsLowercase = mb_strtolower($plats);
+        if ($plats !== $platsLowercase) {
+            return redirect()->route('platsMonth', [
+                'plats' => $platsLowercase,
+                'year' => $year,
+                'month' => $month,
+            ], 301);
+        }
+
+        $monthRange = \App\Helper::getMonthRangeFromYearMonth($year, $month);
+        if (!$monthRange) {
+            abort(404);
+        }
+
+        // Trimma trailing-dash på plats (samma som day()).
+        if (ends_with($plats, '-')) {
+            $plats = trim($plats, '-');
+            return redirect()->route('platsSingle', ['plats' => $plats], 301);
+        }
+
+        // Plats med matchande län-suffix.
+        $allLansNames = \App\Helper::getAllLan();
+        $foundMatchingLan = false;
+        $matchingLanName = null;
+        $platsWithoutLan = null;
+        $platsSluggified = \App\Helper::toAscii($plats);
+
+        foreach ($allLansNames as $oneLanName) {
+            $lanSlug = \App\Helper::toAscii($oneLanName);
+            if (ends_with($platsSluggified, "-" . $lanSlug)) {
+                $foundMatchingLan = true;
+                $matchingLanName = $oneLanName;
+                $lanStrLen = mb_strlen($oneLanName);
+                $platsStrLen = mb_strlen($plats);
+                $platsWithoutLan = mb_substr($plats, 0, $platsStrLen - $lanStrLen);
+                $platsWithoutLan = str_replace("-", " ", $platsWithoutLan);
+                $platsWithoutLan = trim($platsWithoutLan);
+                break;
+            }
+        }
+
+        if ($foundMatchingLan) {
+            $events = $this->getEventsInPlatsWithLanForMonth(
+                $platsWithoutLan,
+                $matchingLanName,
+                $monthRange['start'],
+                $monthRange['end']
+            );
+            $platsDisplay = sprintf(
+                '%1$s i %2$s',
+                title_case($platsWithoutLan),
+                title_case($matchingLanName)
+            );
+        } else {
+            $events = $this->getEventsInPlatsForMonth(
+                $plats,
+                $monthRange['start'],
+                $monthRange['end']
+            );
+
+            // Om inga events i månaden — kolla om platsen finns alls.
+            if (!$events->count()) {
+                $eventsExists = CrimeEvent::where(function ($query) use ($plats) {
+                    $query->where("parsed_title_location", $plats);
+                    $query->orWhere("administrative_area_level_2", $plats);
+                    $query->orWhereHas('locations', function ($query) use ($plats) {
+                        $query->where('name', '=', $plats);
+                    });
+                })->exists();
+
+                if (!$eventsExists) {
+                    abort(404);
+                }
+            }
+
+            $platsDisplay = title_case($plats);
+        }
+
+        // Tomma månader: 301 till plats-startsidan (#25-policy).
+        if ($events->isEmpty()) {
+            return redirect()->route('platsSingle', [
+                'plats' => $platsOriginalFromSlug,
+            ], 301);
+        }
+
+        // Magra månader (1–2 events): noindex,follow + ingen AdSense.
+        $totalEvents = $events->count();
+        $robotsNoindex = $totalEvents < 3;
+
+        $eventsByDay = $events->groupBy(function ($item) {
+            return date('Y-m-d', strtotime($item->created_at));
+        })->sortKeys();
+
+        // Statistik för "Snabba fakta" + Dataset/FAQPage-schema.
+        $crimeTypeCounts = $events->groupBy('parsed_title')
+            ->map->count()
+            ->sortDesc();
+        $mostCommonCrimeType = $crimeTypeCounts->keys()->first();
+        $mostCommonCrimeTypeCount = $crimeTypeCounts->first();
+        $crimeTypeDistinctCount = $crimeTypeCounts->count();
+
+        // Trend mot föregående månad (samma plats-filter, föregående range).
+        $prevMonthStart = (clone $monthRange['start'])->subMonth();
+        $prevMonthEnd = (clone $prevMonthStart)->endOfMonth();
+        $prevMonthEvents = $foundMatchingLan
+            ? $this->getEventsInPlatsWithLanForMonth($platsWithoutLan, $matchingLanName, $prevMonthStart, $prevMonthEnd)
+            : $this->getEventsInPlatsForMonth($plats, $prevMonthStart, $prevMonthEnd);
+        $prevMonthCount = $prevMonthEvents->count();
+        $trendVsPrev = null;
+        if ($prevMonthCount > 0) {
+            $trendVsPrev = (int) round((($totalEvents - $prevMonthCount) / $prevMonthCount) * 100);
+        }
+
+        // Prev/next månad-länkar.
+        $prevMonth = (clone $monthRange['start'])->subMonth();
+        $nextMonth = (clone $monthRange['start'])->addMonth();
+        $prevMonthLink = [
+            'title' => sprintf('‹ %s', title_case($prevMonth->isoFormat('MMMM YYYY'))),
+            'link' => route('platsMonth', [
+                'plats' => $platsOriginalFromSlug,
+                'year' => $prevMonth->format('Y'),
+                'month' => $prevMonth->format('m'),
+            ]),
+        ];
+        $nextMonthLink = $nextMonth->isFuture() ? null : [
+            'title' => sprintf('%s ›', title_case($nextMonth->isoFormat('MMMM YYYY'))),
+            'link' => route('platsMonth', [
+                'plats' => $platsOriginalFromSlug,
+                'year' => $nextMonth->format('Y'),
+                'month' => $nextMonth->format('m'),
+            ]),
+        ];
+
+        $monthYearTitle = title_case($monthRange['start']->isoFormat('MMMM YYYY'));
+
+        $canonicalLink = route('platsMonth', [
+            'plats' => mb_strtolower($platsOriginalFromSlug),
+            'year' => $monthRange['start']->format('Y'),
+            'month' => $monthRange['start']->format('m'),
+        ]);
+
+        $place = Place::where('name', $platsDisplay)->first();
+
+        $breadcrumbs = new \Creitive\Breadcrumbs\Breadcrumbs;
+        $breadcrumbs->setDivider('›');
+        $breadcrumbs->addCrumb('Hem', '/');
+        $breadcrumbs->addCrumb('Platser', route('platserOverview'));
+        if ($place) {
+            $breadcrumbs->addCrumb($place->lan, route('lanSingle', ['lan' => $place->lan]));
+        }
+        $breadcrumbs->addCrumb(
+            e($platsDisplay),
+            route('platsSingle', ['plats' => mb_strtolower($platsOriginalFromSlug)])
+        );
+        $breadcrumbs->addCrumb($monthYearTitle);
+
+        $metaDescription = sprintf(
+            'Polishändelser i %s under %s. %d händelser registrerade%s.',
+            $platsDisplay,
+            $monthYearTitle,
+            $totalEvents,
+            $mostCommonCrimeType
+                ? sprintf(', vanligast: %s', mb_strtolower($mostCommonCrimeType))
+                : ''
+        );
+
+        $pageTitle = sprintf('Polishändelser i %s, %s', $platsDisplay, $monthYearTitle);
+
+        $data = [
+            'plats' => $platsDisplay,
+            'platsSlug' => $platsOriginalFromSlug,
+            'place' => $place,
+            'events' => $events,
+            'eventsByDay' => $eventsByDay,
+            'monthRange' => $monthRange,
+            'monthYearTitle' => $monthYearTitle,
+            'totalEvents' => $totalEvents,
+            'mostCommonCrimeType' => $mostCommonCrimeType,
+            'mostCommonCrimeTypeCount' => $mostCommonCrimeTypeCount,
+            'crimeTypeDistinctCount' => $crimeTypeDistinctCount,
+            'crimeTypeCounts' => $crimeTypeCounts,
+            'prevMonthCount' => $prevMonthCount,
+            'trendVsPrev' => $trendVsPrev,
+            'prevMonthLink' => $prevMonthLink,
+            'nextMonthLink' => $nextMonthLink,
+            'breadcrumbs' => $breadcrumbs,
+            'metaDescription' => $metaDescription,
+            'pageTitle' => $pageTitle,
+            'canonicalLink' => $canonicalLink,
+            'mapDistance' => 'near',
+            'robotsNoindex' => $robotsNoindex,
+            'showAdSense' => $totalEvents >= 3,
+        ];
+
+        return view('single-plats-month', $data);
+    }
+
     protected function dieAfterTryCount() {
         static $tryCount = 0;
 
@@ -779,6 +990,62 @@ class PlatsController extends Controller
             ->with('locations')
             ->get();
         return $events;
+    }
+
+    /**
+     * Hämta events för plats över ett månad-range (todo #25).
+     *
+     * Range-query mot composite-index `(plats, parsed_date)` — undvik
+     * MONTH()/YEAR()-funktioner som triggar full scan.
+     */
+    public function getEventsInPlatsForMonth($plats, Carbon $start, Carbon $end)
+    {
+        $cacheKey = sprintf('getEventsInPlatsForMonth:%s:%s', $plats, $start->format('Y-m'));
+        $cacheTTL = 30 * 60;
+
+        return Cache::remember($cacheKey, $cacheTTL, function () use ($plats, $start, $end) {
+            return CrimeEvent::orderBy('created_at', 'desc')
+                ->whereBetween('created_at', [$start, $end])
+                ->where(function ($query) use ($plats) {
+                    $query->where('parsed_title_location', $plats);
+                    $query->orWhere('administrative_area_level_2', $plats);
+                    $query->orWhereHas('locations', function ($query) use ($plats) {
+                        $query->where('name', '=', $plats);
+                    });
+                })
+                ->with('locations')
+                ->get();
+        });
+    }
+
+    /**
+     * Hämta events för plats inom ett specifikt län över ett månad-range
+     * (todo #25). Range-query, samma cache-strategi som månads-platsen.
+     */
+    public function getEventsInPlatsWithLanForMonth($platsWithoutLan, $oneLanName, Carbon $start, Carbon $end)
+    {
+        $cacheKey = sprintf(
+            'getEventsInPlatsWithLanForMonth:%s:%s:%s',
+            $platsWithoutLan,
+            $oneLanName,
+            $start->format('Y-m')
+        );
+        $cacheTTL = 30 * 60;
+
+        return Cache::remember($cacheKey, $cacheTTL, function () use ($platsWithoutLan, $oneLanName, $start, $end) {
+            return CrimeEvent::orderBy('created_at', 'desc')
+                ->whereBetween('created_at', [$start, $end])
+                ->where('administrative_area_level_1', $oneLanName)
+                ->where(function ($query) use ($platsWithoutLan) {
+                    $query->where('parsed_title_location', $platsWithoutLan);
+                    $query->orWhere('administrative_area_level_2', $platsWithoutLan);
+                    $query->orWhereHas('locations', function ($query) use ($platsWithoutLan) {
+                        $query->where('name', '=', $platsWithoutLan);
+                    });
+                })
+                ->with('locations')
+                ->get();
+        });
     }
 
     /**
