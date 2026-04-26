@@ -68,8 +68,8 @@ på alla.
 - **Cache-pre-warm kan trigga API-rate-limits** mot polisens RSS om vi
   förvärmer för aggressivt
 - **Index-tillägg på stor tabell** (`crime_events` har troligen
-  miljontals rader) kan ta tid att skapa — kör med `ALGORITHM=INPLACE`
-    - `LOCK=NONE` om InnoDB
+  miljontals rader) kan ta tid att skapa — kör med
+  `ALGORITHM=INPLACE, LOCK=NONE` om InnoDB
 - **Query-rewrite kan bryta delade helpers** som används av
   `PlatsController` också. Mät prestanda där också efter fix.
 
