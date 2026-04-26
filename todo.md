@@ -6,7 +6,7 @@ och föreslagen plan.
 
 Senast uppdaterad: 2026-04-26.
 
-Senaste klara: #8 (GA4-MCP + docs/analytics.md, 2026-04-26).
+Senaste klara: #1 (cache-exkludering hybrid 30d, 2026-04-26).
 
 ## Konvention
 
@@ -26,14 +26,13 @@ historik — raderas aldrig.
 
 ## Aktiva
 
-| #   | Titel                                              | Status                                                                                                                                      | Fil                                                                        |
-| --- | -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| 11  | SEO-audit enligt best practice 2026                | **Aktiv 2026-04-24** — Fas 1 + mest av Fas 2 klar; återstår CWV post-cutover, noindex-strategi, OG-image, image sitemap, utökad NewsArticle | [todos/11-seo-audit-2026.md](todos/11-seo-audit-2026.md)                   |
-| 10  | AI-omskriva vaga titlar                            | Plan klar, kostnad ~$27 för full backfill                                                                                                   | [todos/10-ai-omskriva-titlar.md](todos/10-ai-omskriva-titlar.md)           |
-| 1   | Minska cache-URL:er (`/plats/*/handelser/*` m.fl.) | Aktiv — GA-data finns nu (#8 klar), redo för konkret beslut                                                                                 | [todos/01-minska-cache-urls.md](todos/01-minska-cache-urls.md)             |
-| 16  | Rensa / avveckla gamla DO-servern (Dokku)          | Aktiv 2026-04-25 — appar stoppade, väntar på soak innan radering                                                                            | [todos/16-rensa-do-server.md](todos/16-rensa-do-server.md)                 |
-| 20  | Kartbilder: rita cirkel/område runt händelsen      | Aktiv 2026-04-24 — implementerad bakom feature-flag, redo för prod-rollout                                                                  | [todos/20-kartbilder-med-cirklar.md](todos/20-kartbilder-med-cirklar.md)   |
-| 21  | Migrera antonblomqvist.se + simple-fields.com      | Aktiv 2026-04-25 — kod + deploy klart, sajterna ligger på servern; återstår DNS-byte hos Loopia                                             | [todos/21-migrera-statiska-sajter.md](todos/21-migrera-statiska-sajter.md) |
+| #   | Titel                                         | Status                                                                                                                                      | Fil                                                                        |
+| --- | --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| 11  | SEO-audit enligt best practice 2026           | **Aktiv 2026-04-24** — Fas 1 + mest av Fas 2 klar; återstår CWV post-cutover, noindex-strategi, OG-image, image sitemap, utökad NewsArticle | [todos/11-seo-audit-2026.md](todos/11-seo-audit-2026.md)                   |
+| 10  | AI-omskriva vaga titlar                       | Plan klar, kostnad ~$27 för full backfill                                                                                                   | [todos/10-ai-omskriva-titlar.md](todos/10-ai-omskriva-titlar.md)           |
+| 16  | Rensa / avveckla gamla DO-servern (Dokku)     | Aktiv 2026-04-25 — appar stoppade, väntar på soak innan radering                                                                            | [todos/16-rensa-do-server.md](todos/16-rensa-do-server.md)                 |
+| 20  | Kartbilder: rita cirkel/område runt händelsen | Aktiv 2026-04-24 — implementerad bakom feature-flag, redo för prod-rollout                                                                  | [todos/20-kartbilder-med-cirklar.md](todos/20-kartbilder-med-cirklar.md)   |
+| 21  | Migrera antonblomqvist.se + simple-fields.com | Aktiv 2026-04-25 — kod + deploy klart, sajterna ligger på servern; återstår DNS-byte hos Loopia                                             | [todos/21-migrera-statiska-sajter.md](todos/21-migrera-statiska-sajter.md) |
 
 ### Beroenden
 
@@ -43,10 +42,10 @@ historik — raderas aldrig.
 
 ### Föreslagen ordning
 
-1. **#1** (cache-exkludering) — GA-data finns nu, snabb fix
-2. **#11 CWV-mätning** (post-cutover, unblocked) — ger underlag för övriga Fas 2/3-beslut
-3. **#10** (AI-titlar) — pilot 30 dagar, ~20 kr
-4. **#21 → #16** (DNS-byte + DO-avveckling) — efter ~2026-05-15
+1. **#11 CWV-mätning** (post-cutover, unblocked) — ger underlag för övriga Fas 2/3-beslut
+2. **#10** (AI-titlar) — pilot 30 dagar, ~20 kr
+3. **#21 → #16** (DNS-byte + DO-avveckling) — efter ~2026-05-15
+4. **#20** (kartbilder cirklar) — flippa flagga i prod-env
 
 ---
 
@@ -66,6 +65,7 @@ historik — raderas aldrig.
 | 13  | Kommunicera "Hosted in EU" (footer + /sida/om)         | 2026-04-24 | [todos/done/13-hosted-in-eu.md](todos/done/13-hosted-in-eu.md)                       |
 | 14  | Backup av övriga sajter på gamla DO-servern            | 2026-04-25 | [todos/done/14-backup-do-server.md](todos/done/14-backup-do-server.md)               |
 | 8   | GA4 MCP (analytics-mcp + docs/analytics.md)            | 2026-04-26 | [todos/done/08-ga-mcp.md](todos/done/08-ga-mcp.md)                                   |
+| 1   | Cache-exkludering datum-routes (hybrid 30d)            | 2026-04-26 | [todos/done/01-minska-cache-urls.md](todos/done/01-minska-cache-urls.md)             |
 
 ## Avfärdade / sammanslagna
 

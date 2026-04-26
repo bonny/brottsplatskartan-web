@@ -1,8 +1,36 @@
-**Status:** blockerad (väntar på GA-data från #8)
-**Senast uppdaterad:** 2026-04-21
-**Blockerad av:** #8
+**Status:** klar 2026-04-26
+**Senast uppdaterad:** 2026-04-26
 
 # Todo 1 — Minska URLer och response-cache-påverkan
+
+## Utfört
+
+`shouldCacheRequest()` tillagd i `BrottsplatskartanCacheProfile` —
+hybrid-strategi (E): `plats/*/handelser/*` och `lan/*/handelser/*`
+cachas bara om datum är inom senaste 30 dagar. Arkivdatum servas live
+från DB (queryn är snabb pga datum-index).
+
+### Beslutsunderlag
+
+GA + GSC-analys (2026-04-26) visade:
+
+- **6 553 unika datum-URL:er** (4876 plats + 1677 län) hade trafik
+  senaste 30 dagarna
+- Varje URL drar 1–13 sessioner — **långa svansen, låg cache-hit-rate**
+- Många rankar **top 1–3 i Google** på long-tail-queries
+  (t.ex. `/lan/Örebro län/handelser/18-mars-2026` på position 1.6)
+- Top 100 drar tillsammans ~700 klick + 7000 impressions/28d
+
+### Slutsats
+
+- Routerna **inte** borttagna (E över D) — har reellt SEO-värde
+- `noindex` skippat — skulle döda ~700 klick/månad
+- Hybrid-cache: senaste 30 dagar = cache, äldre = live
+    - Cap från ~1M potentiella entries till ~10k (351 platser/län × 30 dagar)
+    - Arkiv-URL:er servas fortfarande, bara utan cache
+
+Verifierad med PHPStan level 5 (0 errors) + sanity-check att
+`/plats/uppsala/handelser/{nytt|arkiv}` båda svarar 200.
 
 Analys och beslutsunderlag inför åtgärd.
 

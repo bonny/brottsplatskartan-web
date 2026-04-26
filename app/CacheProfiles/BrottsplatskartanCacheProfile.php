@@ -24,6 +24,27 @@ class BrottsplatskartanCacheProfile extends CacheAllSuccessfulGetRequests
     }
 
     /**
+     * Begränsa caching av plats × datum + län × datum-routerna till de
+     * senaste 30 dagarna. Routerna exponerar potentiellt 1M+ unika URL:er
+     * (330 platser × 21 län × ~3000 datum) men GA + GSC visar att i stort
+     * sett alla återbesök ligger på datum inom senaste månaden. Arkiv-
+     * datum får organisk Google-trafik (vi rankar long-tail) men så
+     * utspridd att cache-hit-rate är ~0. Vi behåller URL:erna för SEO
+     * men servar dem live från DB istället för att låta Redis svälla.
+     */
+    public function shouldCacheRequest(Request $request): bool
+    {
+        if ($request->is('plats/*/handelser/*') || $request->is('lan/*/handelser/*')) {
+            $date = $this->extractDateFromUrl($request->path());
+            if (!$date || $date->diffInDays(now()) > 30) {
+                return false;
+            }
+        }
+
+        return parent::shouldCacheRequest($request);
+    }
+
+    /**
      * Varierar cache-nyckeln så HTML- och markdown-varianter av samma
      * URL får separata cache-entries. Utan detta skulle första requesten
      * (t.ex. .md eller ClaudeBot-UA) cacha markdown och servera den
