@@ -40,18 +40,39 @@ Mer värdefullt innehåll = bättre SEO + UX:
 
 1. **Översiktskarta** överst — Leaflet med alla event för månaden klustrade
 2. **Statistik** — "Vanligaste brottstyperna denna månad i Uppsala"
-3. **Händelser-list** — som idag men för hela månaden, paginerad
-4. **Tidslinje** — datum-grouped i kollapsbara dagblock
+3. **Vecko-sektioner med anchor-id:n** (`<h2 id="vecka-17">`) — Google plockar ofta upp som "Jump to" deeplinks i SERP, dubblar CTR utan extra URL-yta
+4. **Dag-sektioner inom vecka** (`<h3 id="2026-04-15">`) — så att 301:er från gamla dagsvyer kan landa direkt på rätt sektion via fragment
 5. **Föregående/nästa månad-nav** + "Hoppa till år"-dropdown
-6. **Schema.org Dataset/CollectionPage** — fler rich-result-möjligheter
+6. **Schema.org `hasPart` + `WebPageElement`** per vecka — låter Google förstå sektionshierarkin
+
+### Anchor-strategi
+
+```
+/plats/uppsala/handelser/2026/04
+├─ #vecka-15  (h2)
+│   ├─ #2026-04-13  (h3)
+│   ├─ #2026-04-14
+│   └─ ...
+├─ #vecka-16
+└─ #vecka-17
+```
+
+Anchors indexeras **inte** som separata URL:er — bara månadssidan rankas, men kan visas med deeplinks i SERP. Best of both worlds.
+
+### CSS / JS-detaljer
+
+- `scroll-margin-top: 80px` (eller motsvarande sticky-header-höjd) på alla `[id]` så anchors inte hamnar bakom sticky nav
+- Om vi gör veckor kollapsbara via `<details>`: JS som auto-öppnar rätt `<details>` när `location.hash` matchar barn-id
 
 ## Migration / 301-strategi
 
-- `/plats/uppsala/handelser/2026-04-25` → 301 till
-  `/plats/uppsala/handelser/2026/04` (månaden datumet ligger i)
-- Bevarar inkommande länkar + indexerade URL:er
+- `/plats/uppsala/handelser/25-april-2026` → 301 till
+  `/plats/uppsala/handelser/2026/04#2026-04-25` (månaden + dag-anchor)
+- Webbläsaren följer redirect med fragment och scrollar till rätt
+  dag-sektion. Användaren upplever ingen brott i kontinuiteten.
 - Google avindexerar dagsvyer över ~3 månader, månadsvyer ärver
   PageRank via 301
+- Anchors indexeras inte separat så ingen risk för dubbel-indexering
 
 ## Risker
 
