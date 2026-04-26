@@ -118,6 +118,11 @@ class GenerateSitemap extends Command
                     if (! $permalink) {
                         continue;
                     }
+                    // Tunna events sätts till noindex i routen — exkludera ur
+                    // sitemap också så Google inte återupptäcker dem (#29).
+                    if ($event->isThinForSeo()) {
+                        continue;
+                    }
                     $url = Url::create($permalink)
                         ->setLastModificationDate($event->updated_at ?? $event->created_at)
                         ->setChangeFrequency(Url::CHANGE_FREQUENCY_MONTHLY)

@@ -484,6 +484,34 @@ class CrimeEvent extends Model implements Feedable {
     }
 
     /**
+     * Avgör om denna single-event-sida ska sättas till noindex,follow.
+     *
+     * Why: GSC 16-mån click-data 2026-04-26 visade att tröskeln måste
+     * vara försiktig — många gamla events drar 1-3 clicks per 16 månader
+     * (long-tail). Default ≥365d + <10 ord markerar 13 733 events (4 %
+     * av 328 065 totala) och förlorar bara ~1 % click-trafik på single
+     * events. Mer aggressiva trösklar (<30 ord) tar bort ~76k events
+     * men förlorar ~4 % klick-trafik.
+     *
+     * Beräknas on-the-fly vid varje sidladdning. Trivial cost; respons-
+     * cachen täcker varma sidor ändå. Ingen DB-flagga behövs.
+     */
+    public function isThinForSeo(int $minAgeDays = 365, int $minWords = 10): bool
+    {
+        $created = $this->created_at;
+        if (!$created) {
+            return false;
+        }
+        $created = $created instanceof Carbon ? $created : Carbon::parse($created);
+        if ($created->diffInDays(now()) < $minAgeDays) {
+            return false;
+        }
+        $body = $this->getParsedContentAsPlainText();
+        $words = str_word_count($body);
+        return $words < $minWords;
+    }
+
+    /**
      * Hämtar textalternativ 1 (skapad av Claude AI) för en händelse, om det finns.
      * Annars hämtas vanliga texten.
      *

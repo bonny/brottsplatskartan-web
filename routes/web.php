@@ -694,7 +694,8 @@ Route::get('/{lan}/{eventName}', function ($lan, $eventName, Request $request) {
         'debugData' => $debugData,
         'dictionaryWordsInText' => $dictionaryWordsInText,
         'newsarticles' => $newsarticles,
-        'mostViewed' => \App\Helper::getMostViewedEvents(Carbon::now(), 5)
+        'mostViewed' => \App\Helper::getMostViewedEvents(Carbon::now(), 5),
+        'robotsNoindex' => $event->isThinForSeo(),
     ];
 
     return view('single-event', $data);

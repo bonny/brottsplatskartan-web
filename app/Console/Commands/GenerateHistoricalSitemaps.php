@@ -61,6 +61,10 @@ class GenerateHistoricalSitemaps extends Command
                         if (!$permalink) {
                             continue;
                         }
+                        // Tunna events sätts till noindex — exkludera ur sitemap (#29).
+                        if ($event->isThinForSeo()) {
+                            continue;
+                        }
                         $url = Url::create($permalink)
                             ->setLastModificationDate($event->updated_at ?? $event->created_at)
                             ->setChangeFrequency(Url::CHANGE_FREQUENCY_YEARLY)
