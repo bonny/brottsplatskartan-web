@@ -32,7 +32,7 @@ satsning än egen tredjepartsintegration.
 | --------------------------------------- | ------------------------------------------------------------------- |
 | **Structured output** via JSON schema   | Garanterat formaterad titel-output för #10 (slipper "Rubrik: "/"Text: "-parsing) |
 | **Agents** (instructions + tools)       | Naturlig form för #27 Lager 3 (månadssammanfattningar)              |
-| **Provider-failover**                   | Auto-fallback om Anthropic är nere                                  |
+| ~~Provider-failover~~                   | ~~Auto-fallback om Anthropic är nere~~ — ej aktuellt, vi kör Anthropic-only |
 | **`#[UseCheapestModel]` / `Smartest`**  | Per use case — billig för titel-omskrivning, dyr för sammanfattning |
 | **Embeddings + SimilaritySearch**       | Framtidsfeature: "Liknande events"-funktion via pgvector            |
 | **Streaming + queueing**                | Bakgrundsjobb för bulk-omskrivning av 53k titlar                    |
@@ -94,31 +94,25 @@ Innan vi byter SDK avgör vi om vi ska byta modell. Görs via direkt
 API-anrop med samma prompt mot olika modeller. Inget produktions-
 beroende ändras.
 
-**Kandidater:**
+**Vi kör Anthropic — beslutat.** Användaren betalar redan Anthropic
+(Claude Code-prenumeration), så provider-byte är inte aktuellt. Inga
+Gemini/GPT/DeepSeek-experiment. Failover till andra leverantörer
+skippas i Fas 3 och tas bara om Anthropic visar instabilitet i prod.
 
-| Modell                        | Input / Output ($/M tok) | Svenska kvalitet | Vår use case-passning |
-| ----------------------------- | -----------------------: | ---------------: | --------------------- |
-| Claude Sonnet 4.5 (idag)      |             $3 / $15     |        Excellent | Overkill för titel + sammanfattning |
-| **Claude Haiku 4.5**          |             $1 / $5      |        Excellent | Sweet spot för båda use case |
-| Claude Opus 4.7               |            $15 / $75     |        Excellent | Bara om kvalitet brister i Haiku |
-| Gemini 2.5 Flash              |       $0.30 / $2.50      |             Good | Mycket billigt, ngn risk för Sv-kvalitet |
-| GPT-4o-mini                   |            $0.15 / $0.60 |        Adequate  | Billigt men sämre Sv än Anthropic |
+**Kandidater inom Anthropic:**
 
-**Beslut-rationale:**
-
-- Sonnet är overkill för en formaterings-/sammanfattningsuppgift med
-  fast struktur. Haiku 4.5 är 3× billigare på input, 3× på output, med
-  i princip lika bra svenska för standard-prosa.
-- Anthropic-modeller har tonen vi vill ha (saklig, neutral, inte
-  sensationalistisk). GPT-modeller är ofta för "amerikanska" i ton.
-- För en svensk nyhetssajt vill vi inte byta till Gemini/GPT som
-  default — risk för subtila tonskift som lockar ut hallucinationer
-  eller pratigare output. Använd dem max som **failover**.
+| Modell                        | Input / Output ($/M tok) | Vår use case-passning |
+| ----------------------------- | -----------------------: | --------------------- |
+| Claude Sonnet 4.5 (idag)      |             $3 / $15     | Overkill för titel + sammanfattning |
+| **Claude Haiku 4.5**          |             $1 / $5      | Sweet spot — 3× billigare, samma svenska kvalitet |
+| Claude Opus 4.7               |            $15 / $75     | Bara om kvalitet brister i Haiku |
 
 **Föreslaget beslut:** byt till **Haiku 4.5** som default för båda
-use case. Sonnet kvar som opt-in via `CLAUDE_MODEL` om kvalitet brister.
+use case. Sonnet kvar som opt-in via `CLAUDE_MODEL`-env om kvalitets-
+genomgången i Fas 4 visar regression. Opus reserverat för specialfall
+(t.ex. långa månadssammanfattningar i #27 Lager 3).
 
-**Kostnadsestimat per månad (vid Haiku):**
+**Kostnadsestimat per månad (Sonnet → Haiku):**
 
 | Use case          | Calls/mån | Tokens in/ut | Kostnad Sonnet | Kostnad Haiku |
 | ----------------- | --------: | -----------: | -------------: | ------------: |
@@ -133,6 +127,7 @@ use case. Sonnet kvar som opt-in via `CLAUDE_MODEL` om kvalitet brister.
 
 1. Skriv en throwaway-script `tmp-ai-baseline/compare_models.php`:
    ```php
+   $models = ['claude-sonnet-4-5-20250929', 'claude-haiku-4-5-20251001'];
    foreach ($models as $model) {
        foreach ($referenceCases as $case) {
            $output = callClaude($case->input, $model, $currentPrompt);
@@ -331,10 +326,13 @@ Verifiera ingen kvarstående referens:
 git grep -n 'ClaudePhp\|claude-php-sdk'
 ```
 
-#### 3f. Konfigurera failover (skip i Fas 3 — överväg senare)
+#### 3f. Failover — skippas
 
-Standardiserat på Anthropic. Lägg till `OPENAI_API_KEY` om/när
-Anthropic-incidenter blir vanliga.
+Vi kör Anthropic-only (användarens beslut, betalar redan). Ingen
+`OPENAI_API_KEY` eller multi-provider-setup. Om Anthropic är nere
+fallar daglig sammanfattning tillbaka på senaste cachade rad
+(`existsAndUnchanged`-vägen) — användaren får igår-sammanfattningen
+istället för fel.
 
 ### Fas 4 — Verifiera samma resultat (2 timmar)
 
