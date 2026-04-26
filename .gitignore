@@ -34,3 +34,10 @@ bpk*.gz
 
 # Arbetskatalog för mbtiles-uppdatering (pbf + planetiler-cache + output)
 /tmp-maps/
+
+# Lokal dump-mapp för research/diagnostics (CWV-mätningar, GSC-rapporter,
+# m.fl.) — behålls så länge disk räcker så vi kan jämföra mot framtida data.
+# README behålls i git så mappens syfte är dokumenterat.
+/tmp-cwv/*
+!/tmp-cwv/README.md
+/tmp-research/

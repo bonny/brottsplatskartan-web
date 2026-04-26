@@ -123,9 +123,10 @@ en egen #30-todo så #11 inte blir en mega-todo. Beslut före kod:
 
 ### Detaljerad data
 
-Lighthouse-rapporter som JSON sparade i `/tmp/psi/*_mobile.json`
-(lokalt). Inte committade i repo (för stora). Kör om mätningen
-om data är ≥7 dagar gammal.
+Lighthouse-rapporter som JSON sparade i `tmp-cwv/*_mobile.json`
+(gitignored, lokalt i projekt-roten). Behålls så länge disk räcker
+så vi kan jämföra mot framtida mätningar. Kör om mätningen om
+data är ≥7 dagar gammal — se `tmp-cwv/README.md` för kommando.
 
 ## Sammanfattning
 
