@@ -6,7 +6,7 @@
 
 - **Migrerat från `claude-php/claude-php-sdk` ^0.5.1 → `laravel/ai` ^0.6.3**
 - **Modell: `claude-sonnet-4-5-20250929` → `claude-sonnet-4-6`** (gratis-uppgradering inom Anthropic, samma pris)
-- **Prompt v1 → v2** (XML-rules, system/user-separation, svenskspråk-regel)
+- **Prompt v1 → v3** (XML-rules + system/user-separation + svenskspråk-regel + few-shot examples + proportionerlig längd)
 - **Två nya agent-klasser**:
   - `App\Ai\Agents\DailySummaryAgent` (text-output)
   - `App\Ai\Agents\EventTitleRewriter` (structured output: title + description)
@@ -17,6 +17,9 @@
 
 - **Haiku 4.5 testades men förkastades** — har systematiskt språkfel ("misshandling" istället för "misshandel"). Reducerades med 78 % efter prompt-fix men eliminerades inte. Sonnet 4.6 har 0 fall.
 - **Fas 5 (tester) skippad** — projektet har ingen levande testsuite (ExampleTest.php är trasig sedan Laravel 5). Validering via PHPStan grön + end-to-end smoke + 30-cases regression mot baseline räcker.
+- **Prompt v3 lades till i samma migration** efter expert-review (subagent-granskning av best-practice 2026): proportionerlig längd ersatte rigid "2-4 stycken"-regel, two-shot examples i båda prompts, hård övre gräns 250 ord på daily summary, 5-7 allvarligaste-regel vid hög event-volym.
+- **Bonus-fix: APP_URL** — pre-existerande bug där `APP_URL=https://hetzner.brottsplatskartan.se` var kvar i prod-`.env` sedan migration-perioden. Exponerad av `getPermalink(true)` som börjat användas i AI-prompten. Användaren ändrade `.env` + `docker compose up -d app scheduler`.
+- **Scope kvar Stockholm** — schedulade AI-jobb körs fortfarande bara för Stockholm. Utökning till alla 21 län är medvetet uppskjutet (~$50-80/mån mot dagens ~$15/mån). Avvakta soak.
 
 ### Rapporter
 - `tmp-ai-baseline/fas1-summary.md` — modellutvärdering
