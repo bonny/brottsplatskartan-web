@@ -1,5 +1,5 @@
-**Status:** aktiv 2026-04-24 (Fas 1 + mest av Fas 2 klar; CWV nu unblocked efter cutover)
-**Senast uppdaterad:** 2026-04-24
+**Status:** aktiv 2026-04-26 (Fas 1 + mest av Fas 2 klar; **CWV-baseline mätt 2026-04-26 — performance-arbete behövs**)
+**Senast uppdaterad:** 2026-04-26
 
 # Todo #11 — SEO-audit enligt best practice 2026
 
@@ -37,11 +37,11 @@ Skippat (motiverat):
 
 Kvar i Fas 2 (kräver beslut / GA4-data / post-cutover):
 
-- Beslut: `noindex`+canonical eller borttagning av `/plats/*/handelser/{date}`
-  och `/lan/*/handelser/{date}` (synkas med todo #1, behöver GA4)
-- Noindex-strategi för gamla/thin events (`crimeevents:mark-thin`) —
-  parkerat tills GA4 MCP (#8) ger trafikdata
-- Core Web Vitals efter Hetzner-cutover
+- ✅ ~~Beslut: `noindex`+canonical eller borttagning av `/plats/*/handelser/{date}`~~
+  — **Klart via #1** (cache-exkludering 30d, behåller routerna pga GSC-data)
+- ✅ ~~Core Web Vitals efter Hetzner-cutover~~ — **Mätt 2026-04-26**, se sektion nedan
+- 🔄 Noindex-strategi för gamla/thin events (`crimeevents:mark-thin`) —
+  **flyttad till egen #29** (audit + reducera indexerade pages)
 - Internal anchor text-audit (grep efter "läs mer", "klicka här")
 - Auto-genererad OG-image per event (typ + plats-overlay)
 - Image sitemap (kartbilder per event) — Google Images-trafik
@@ -50,6 +50,82 @@ Kvar i Fas 2 (kräver beslut / GA4-data / post-cutover):
   Place istället för GeoCircle) — se skiss nedan i dokumentet
 
 Fas 3 kvarstår enligt plan nedan.
+
+## CWV-baseline (Lighthouse mobile, 2026-04-26)
+
+Mätt via Lighthouse CLI på 8 representativa URL:er (mobile, simulated
+throttling). Sortera efter performance-poäng:
+
+| URL                                     |   Perf |     LCP |  FCP |  TBT |      CLS |   SI |
+| --------------------------------------- | -----: | ------: | ---: | ---: | -------: | ---: |
+| /helikopter                             | **80** |    2.7s | 1.0s | 30ms | 0.323 ❌ | 3.1s |
+| /goteborg                               | **79** | 3.2s ⚠️ | 2.1s | 23ms | 0.248 ❌ | 2.5s |
+| /handelser/10-april-2026                |     65 | 6.8s ❌ | 4.1s | 28ms | 0.000 ✅ | 5.3s |
+| /skane-lan/brand-staffanstorp-...500640 |     62 | 8.5s ❌ | 4.7s | 22ms | 0.000 ✅ | 5.8s |
+| /stockholm                              |     60 | 7.4s ❌ | 2.3s | 16ms | 0.240 ❌ | 3.7s |
+| /lan/Värmlands län                      |     55 | 6.7s ❌ | 1.0s | 35ms | 0.284 ❌ | 7.1s |
+| /malmo                                  |     55 | 8.2s ❌ | 4.6s | 25ms | 0.196 ⚠️ | 4.6s |
+| /                                       | **51** | 9.6s ❌ | 4.7s | 20ms | 0.243 ❌ | 4.7s |
+
+**Google CWV-trösklar:** ✅ good · ⚠️ needs improvement · ❌ poor
+
+### Övergripande bedömning
+
+- **6 av 8 URL:er har POOR LCP** (>4.0s). Bara `/goteborg` och
+  `/helikopter` är inom acceptabel range.
+- **5 av 8 har POOR CLS** (>0.25). Främst `/helikopter` (0.323) och
+  `/lan/Värmlands län` (0.284) sticker ut.
+- **TBT är utmärkt på alla** (<50ms). Inga JS-blockerings-problem.
+- **Startsidan `/` är värst** med performance 51 — vår mest trafikerade
+  landningssida (4 619 sessions/30d från Google organisk).
+- **Single-event-sidor** har LCP 8.5s — sannolikt kartan eller event-bilden.
+
+### Topp-flaskhalsar (saving potential >500ms)
+
+Fixar listade i ordning av frekvens + impact:
+
+1. **Reduce unused JavaScript** — på 6 av 8 URL:er, ~1600-2180ms saving
+   per sida. Sannolikt: AdSense + GA4 + Leaflet + andra bibliotek som
+   laddar oanvänd kod. Action: tree-shake, defer, code-split.
+2. **Eliminate render-blocking resources** — på 5 av 8 URL:er,
+   ~600-1300ms saving. Action: `defer`/`async` på `<script>`, inline
+   kritisk CSS, ladda resten asynkront.
+3. **Reduce initial server response time** — på `/lan/Värmlands län`,
+   **3562ms saving** (TTFB är dålig på vissa sidor). Action: cache check
+   eller query-optimering.
+4. **Serve images in next-gen formats** — på `/` och `/stockholm`,
+   ~780-870ms saving. Action: AVIF/WebP istället för JPG/PNG på
+   thumbnails och hero-bilder.
+5. **CLS från images utan width/height** eller dynamiskt injicerade
+   ad-units. Action: explicit aspect-ratio på bilder + reservera plats
+   för ads (`min-height` på ad-container).
+
+### Fas 2 CWV-leverans — ny todo eller sub-tasks?
+
+CWV-fixar är arbete för veckor, inte timmar. Föreslag att bryta ut till
+en egen #30-todo så #11 inte blir en mega-todo. Beslut före kod:
+
+- **#30 (förslag): CWV-optimering Fas 1**
+    - JS-bundle-reduktion (defer ads, code-split, tree-shake)
+    - Render-blocking CSS → kritisk CSS inline + rest async
+    - WebP/AVIF för thumbnails
+    - CLS-fix: explicit dimensions på bilder + ad-reservation
+    - Mål: alla URL:er till performance ≥70, LCP <4s
+
+    Tid: 1-2 veckor
+
+- **#31 (förslag): TTFB-optimering**
+    - `/lan/Värmlands län` har 3.5s TTFB — abnormt högt
+    - Audit query-prestanda för länsspecifika vyer
+    - Cache check + ev. eager loading
+
+    Tid: 2-3 dagar (efter mätning)
+
+### Detaljerad data
+
+Lighthouse-rapporter som JSON sparade i `/tmp/psi/*_mobile.json`
+(lokalt). Inte committade i repo (för stora). Kör om mätningen
+om data är ≥7 dagar gammal.
 
 ## Sammanfattning
 
