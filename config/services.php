@@ -46,10 +46,11 @@ return [
 
     'tileserver' => [
         'url' => env('TILESERVER_URL', 'https://kartbilder.brottsplatskartan.se/'),
-        // Kartbild-stil för enskilda händelser: 'bbox' (gammal viewport-rektangel)
-        // eller 'circle' (röd tonad cirkel med radie efter geo-precision).
+        // Kartbild-stil för enskilda händelser: 'circle' (röd tonad cirkel
+        // med radie efter geo-precision, default) eller 'bbox' (gammal
+        // viewport-rektangel, finns kvar som emergency-rollback).
         // Se todos/20-kartbilder-med-cirklar.md.
-        'map_style' => env('TILESERVER_MAP_STYLE', 'bbox'),
+        'map_style' => env('TILESERVER_MAP_STYLE', 'circle'),
     ],
 
 ];

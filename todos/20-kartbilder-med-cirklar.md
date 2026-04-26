@@ -1,5 +1,5 @@
-**Status:** aktiv — designbeslut: röd cirkel med tonad kant
-**Senast uppdaterad:** 2026-04-24
+**Status:** aktiv — circle är default i prod sedan 2026-04-26 (soak-period)
+**Senast uppdaterad:** 2026-04-26
 
 # Todo #20 — Kartbilder: rita cirkel/område runt händelsen
 
@@ -214,9 +214,9 @@ mjukt. Samma radier som ovan.
 - [x] Feature-flag `TILESERVER_MAP_STYLE` + blade-inkoppling + bildtext (commit 8f8c1e0)
 - [x] Täck även overview-vyn, list-item thumbnails och far-grenen (commits 73f91bb, 4e6ec6e)
 - [x] Visuellt verifierat lokalt — cirklar renderas i single-event, overview, mest-läst, thumbnails
-- [ ] Deploy till prod med `TILESERVER_MAP_STYLE=bbox` (default, ingen synlig ändring)
-- [ ] Flippa prod till `circle` i `/opt/brottsplatskartan/.env`, soak ~1 vecka
-- [ ] Om ok: ta bort flaggan + gamla `getStaticImageSrc`/`getStaticImageSrcFar`
+- [x] Bytt config-default från `bbox` till `circle` (2026-04-26) — aktiveras på prod utan env-ändring
+- [ ] Soak ~1 vecka i prod, mät RPM/AdSense + bouncerate via GA4
+- [ ] Om ok: ta bort flaggan + gamla `getStaticImageSrc`/`getStaticImageSrcFar` (notera: `getStaticImageSrc` används fortfarande för OG-image, sitemap och API — kvarstår)
 - [ ] OG-image-variant (1200×630) — separat ticket
 
 ### Mix av cirklar och bboxar i listor
