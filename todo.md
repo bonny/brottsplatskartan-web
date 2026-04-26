@@ -6,7 +6,7 @@ och föreslagen plan.
 
 Senast uppdaterad: 2026-04-26.
 
-Senaste klara: #26 (GSC-MCP + sitemap submission, 2026-04-26) + #22+#23+#24 (Tier 1-städer, 2026-04-26).
+Senaste klara: #31 (TTFB-anomali — löst av cache-warmup, 2026-04-26) + #26 (GSC-MCP + sitemap submission, 2026-04-26).
 
 ## Konvention
 
@@ -37,8 +37,7 @@ historik — raderas aldrig.
 | 27  | Berika ort- och månadssidor med rikare innehåll | Designfas 2026-04-26 — Lager 1-3 (egen data, externt + AI), research klar                                                                   | [todos/27-rikare-innehall.md](todos/27-rikare-innehall.md)                 |
 | 28  | Migrera AI-stack till `laravel/ai`              | Designfas 2026-04-26 — pre-1.0 claude-php → officiell laravel/ai. Blocker för #10 + #27 Lager 3                                              | [todos/28-migrera-laravel-ai.md](todos/28-migrera-laravel-ai.md)           |
 | 29  | Audit + reducera indexerade pages               | Designfas 2026-04-26 — direkt SEO-impact, ingen AI-beroende, parallellt med #28                                                             | [todos/29-audit-indexerade-pages.md](todos/29-audit-indexerade-pages.md)   |
-| 30  | CWV-optimering Fas 1 (CLS, JS, images)          | Designfas 2026-04-26 — 6/8 sidor POOR LCP, 5/8 POOR CLS. Startsidan värst (perf 51)                                                         | [todos/30-cwv-optimering.md](todos/30-cwv-optimering.md)                   |
-| 31  | TTFB-anomali på /lan/{lan}                      | Designfas 2026-04-26 — Värmland har 3.5s TTFB-saving, behöver diagnos                                                                       | [todos/31-ttfb-anomali.md](todos/31-ttfb-anomali.md)                       |
+| 30  | CWV-optimering Fas 1 (CLS, JS, images)          | **Aktiv 2026-04-26** — Fas A+B+C + self-host deployade. LCP 9.6s→1.6s (-84 %), perf 51→80. CLS kvar (AdSense). Kvar: AdSense-config + Fas D | [todos/30-cwv-optimering.md](todos/30-cwv-optimering.md)                   |
 
 ### Beroenden
 
@@ -80,6 +79,7 @@ historik — raderas aldrig.
 | 23  | Case-redirect på /plats/{plats} + footer-städning      | 2026-04-26 | [todos/done/23-platssidor-case-duplikat.md](todos/done/23-platssidor-case-duplikat.md) |
 | 24  | Tier 1-städer (malmo/goteborg/helsingborg/uppsala)     | 2026-04-26 | [todos/done/24-stadcontroller-tier1.md](todos/done/24-stadcontroller-tier1.md)         |
 | 26  | Search Console MCP (mcp-gsc) + sitemap submission      | 2026-04-26 | [todos/done/26-gsc-mcp.md](todos/done/26-gsc-mcp.md)                                   |
+| 31  | TTFB-anomali på /lan/{lan} (löst av cache-warmup)      | 2026-04-26 | [todos/done/31-ttfb-anomali.md](todos/done/31-ttfb-anomali.md)                         |
 
 ## Avfärdade / sammanslagna
 

@@ -1,10 +1,21 @@
-**Status:** aktiv (designfas)
+**Status:** klar 2026-04-26 (löst av cache-warmup, ej persistent)
 **Senast uppdaterad:** 2026-04-26
 **Härledd från:** #11 SEO-audit (CWV-baseline 2026-04-26)
 
 # Todo #31 — TTFB-anomali på `/lan/{lan}`
 
-## Varför
+## Lösning (2026-04-26)
+
+Re-mätning efter #30 Fas A+B+C + self-host: **TTFB Värmlands län gick
+från 3 661 ms → 80 ms** utan att vi gjorde någon specifik fix för
+TTFB. Baseline-mätningen 2026-04-26 träffade en cold cache och
+representerade alltså ett worst-case-scenario, inte normal drift.
+
+Svaret var inte en DB-query-flaskhals utan helt enkelt cache-miss.
+Spatie Response Cache + Redis fungerar som det ska. Inget kod-arbete
+krävdes.
+
+## Varför (originalanalys)
 
 CWV-baseline 2026-04-26 visade att `/lan/Värmlands län` har **3 562 ms
 saving potential** på "Reduce initial server response time" — alltså
