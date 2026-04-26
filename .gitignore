@@ -42,3 +42,4 @@ bpk*.gz
 !/tmp-cwv/README.md
 /tmp-research/
 tmp-ai-baseline
+.claude/scheduled_tasks.lock
