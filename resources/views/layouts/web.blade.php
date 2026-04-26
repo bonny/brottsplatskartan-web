@@ -163,7 +163,6 @@ Layout template for web
     <meta name="apple-itunes-app" content="app-id=1174082309">
     <link rel="manifest" href="/manifest.webmanifest">
     <link rel="stylesheet" type="text/css" href="/css/styles.css" />
-    <link rel="stylesheet" type="text/css" href="/css/charts.min.css" />
 
     @stack('styles')
 

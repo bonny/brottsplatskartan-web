@@ -1,5 +1,9 @@
 @extends('layouts.web')
 
+@push('styles')
+    <link rel="stylesheet" type="text/css" href="/css/charts.min.css" />
+@endpush
+
 @section('canonicalLink', $canonicalLink)
 @section('ogUrl', $canonicalLink)
 @section('title', $pageTitle)
