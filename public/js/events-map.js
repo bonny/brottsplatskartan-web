@@ -382,10 +382,16 @@ class EventsMap {
             this.options.zoom
         );
 
-        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-            attribution:
-                '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>',
-        }).addTo(this.map);
+        // Vår egen tileserver levererar WebP (~8 KB/tile vs OSM:s PNG ~27 KB)
+        // och håller alla tile-requests på samma host (HTTP/2-multiplexing).
+        L.tileLayer(
+            "https://kartbilder.brottsplatskartan.se/styles/basic-preview/{z}/{x}/{y}.webp",
+            {
+                maxZoom: 18,
+                attribution:
+                    '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            }
+        ).addTo(this.map);
 
         this.map.setView(this.options.latLng, this.options.zoom);
 

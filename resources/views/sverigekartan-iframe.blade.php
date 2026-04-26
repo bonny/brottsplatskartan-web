@@ -177,9 +177,9 @@
 
         var markers = [];
 
-        var OpenStreetMapTileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        var OpenStreetMapTileLayer = L.tileLayer('https://kartbilder.brottsplatskartan.se/styles/basic-preview/{z}/{x}/{y}.webp', {
+            maxZoom: 18,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         });
 
         OpenStreetMapTileLayer.addTo(mymap);
