@@ -1,7 +1,19 @@
-**Status:** aktiv (redo för setup)
-**Senast uppdaterad:** 2026-04-21
+**Status:** klar 2026-04-26
+**Senast uppdaterad:** 2026-04-26
 
 # Todo #8 – Google Analytics MCP-server i Claude Code
+
+## Utfört
+
+- `analytics-mcp` 0.2.0 installerad via `pipx install analytics-mcp` lokalt på ny dator (Pär:s mac, 2026-04-26).
+- GCP-projekt `brottsplatskarta-1476012766238` skapad, `analyticsadmin.googleapis.com` + `analyticsdata.googleapis.com` aktiverade.
+- OAuth Desktop-klient skapad i GCP, `par.thernstrom@gmail.com` tillagd som test user på consent-skärmen.
+- ADC-token genererad med scopes `analytics.readonly` + `cloud-platform`, quota project satt.
+- Registrerad i Claude Code: `claude mcp add analytics-mcp --scope user --transport stdio --env GOOGLE_APPLICATION_CREDENTIALS=… --env GOOGLE_PROJECT_ID=… -- analytics-mcp`.
+- Verifierat via `get_account_summaries` (20 properties syns, brottsplatskartan = `305258979`) och två faktiska `run_report`-anrop (top landningssidor från Google organisk + mobile/desktop-trend för `/handelser`).
+- Dokumentation i [docs/analytics.md](../../docs/analytics.md) + pekare i AGENTS.md. Hela run-booken nedan behålls för framtida ny-dator-setup.
+
+Stegen nedan är guiden för att sätta upp på ytterligare en dator.
 
 ## Sammanfattning
 

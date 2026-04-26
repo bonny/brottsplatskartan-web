@@ -23,6 +23,18 @@ Snabbreferens:
 - `/api/eventsNearby` — Händelser nära koordinat
 - `/api/areas` — Lista över län
 
+## Analytics (GA4)
+
+Brottsplatskartans GA4-data nås via `analytics-mcp` MCP-server registrerad
+per dator (`--scope user`, inte i repo). Använd för datadrivna SEO-, cache-
+och UX-beslut.
+
+- **GA4 property-ID:** `305258979`
+- **Setup på ny dator:** [todos/done/08-ga-mcp.md](todos/done/08-ga-mcp.md)
+- **Exempel-queries + insikter:** **[docs/analytics.md](docs/analytics.md)**
+
+Verifiera anslutning: `claude mcp list | grep analytics-mcp`.
+
 ## Teknisk stack
 
 - **Ramverk:** Laravel 12 (PHP 8.2+)
@@ -126,23 +138,23 @@ public/js/events-map.js                              (karta)
 
 ### Brottskategorier
 
-| Svenska | Engelska | Beskrivning |
-|---|---|---|
-| Inbrott | Burglary | Olagligt intrång i byggnad eller fordon |
-| Stöld | Theft | Olovligt tillgrepp av egendom |
-| Rån | Robbery | Stöld med våld eller hot |
-| Misshandel | Assault | Fysiskt våld mot person |
-| Trafikolycka | Traffic accident | Olycka med personskada |
-| Narkotikabrott | Drug offense | Brott relaterat till narkotika |
+| Svenska        | Engelska         | Beskrivning                             |
+| -------------- | ---------------- | --------------------------------------- |
+| Inbrott        | Burglary         | Olagligt intrång i byggnad eller fordon |
+| Stöld          | Theft            | Olovligt tillgrepp av egendom           |
+| Rån            | Robbery          | Stöld med våld eller hot                |
+| Misshandel     | Assault          | Fysiskt våld mot person                 |
+| Trafikolycka   | Traffic accident | Olycka med personskada                  |
+| Narkotikabrott | Drug offense     | Brott relaterat till narkotika          |
 
 ### Geografisk nomenklatur
 
-| Svenska | Engelska | Nivå |
-|---|---|---|
-| Län | County | Regional |
-| Kommun | Municipality | Kommunal |
-| Stad | City | Urban |
-| Plats | Location/Place | Specifik punkt |
+| Svenska | Engelska       | Nivå           |
+| ------- | -------------- | -------------- |
+| Län     | County         | Regional       |
+| Kommun  | Municipality   | Kommunal       |
+| Stad    | City           | Urban          |
+| Plats   | Location/Place | Specifik punkt |
 
 ## Produktionsmiljö (Hetzner)
 
@@ -249,6 +261,7 @@ host-cron behövs.
 Se `app/Console/Kernel.php` för aktiva jobb.
 
 Kontrollera att schedulern lever:
+
 ```bash
 docker compose ps scheduler
 docker compose logs -f scheduler
@@ -256,7 +269,7 @@ docker compose logs -f scheduler
 
 ## Utvecklingsriktlinjer
 
-- Kortfattade funktionskommentarer när *varför* inte är uppenbart
+- Kortfattade funktionskommentarer när _varför_ inte är uppenbart
 - Prioritera tydlig, välstrukturerad kod
 - Konsekvent svensk terminologi i kommentarer och dokumentation
 
