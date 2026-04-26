@@ -1,101 +1,70 @@
-**Status:** aktiv (designfas)
+**Status:** aktiv (designfas — kräver pilot innan full rollout)
 **Senast uppdaterad:** 2026-04-26
+**Confidence:** Medel
 
-# Todo #25 — Månadsvyer istället för dagsvyer
+# Todo #25 — Månadsvyer istället för dagsvyer (plats/län-routes)
+
+## TL;DR
+
+Migrera `/plats/{plats}/handelser/{datum}` och `/lan/{lan}/handelser/{datum}`
+från dagsvyer (~1.3M potentiella URL:er) till månadsvyer (~42 000) med
+synliga vecko-sektioner och dag-anchors. Behåll top-level
+`/handelser/{datum}` som dagsvy. Pilota mot Uppsala i 30 dagar innan
+full rollout — strategin är inte självklar, har reella risker för
+AdSense-intäkter och soft-404 på småorter.
+
+---
 
 ## Problem
 
-Datum-routerna (`/handelser/{date}`, `/plats/*/handelser/{date}`,
-`/lan/*/handelser/{date}`) genererar ~1M potentiella URL:er. Cache
-har redan begränsats (todo #1) men URL-explosionen i sig är ett
-SEO/UX-problem:
+Datum-routerna för plats × datum och län × datum genererar URL-
+explosion:
 
-- **GSC visar att ingen söker proaktivt på specifika datum**
-  ("misshandel gällivare 2026" toppade datum-queries med 2 klick)
+- 350 platser × 365 dagar × ~10 års data ≈ **1.3M potentiella URL:er**
+- 21 län × samma = ~76 000 potentiella URL:er
+
+Faktisk situation idag (2026-04-26, från GA + GSC):
+
 - **Pageviews/session ~1.3** på `/handelser`-prefixet — folk landar,
-  klickar in på ETT event, lämnar
-- **Sidor är magra** — bara en lista av dagens händelser, ingen
-  översiktskarta eller statistik
-- **Indexerbar yta är gigantisk** — Google måste välja vilka av
-  ~120 000 datum-URL:er per plats som är värda
+  klickar in på _ett_ event, lämnar
+- **Sidor är magra** — bara en datumsorterad lista, ingen översiktskarta,
+  ingen statistik, inget kontextualiserande innehåll
+- **GSC**: ingen söker proaktivt på specifika datum — top datum-query
+  fick 2 klick/månad. Datum-URL:er rankar via "[brott] [plats] [år]"-
+  queries där datum är _kontextuellt_, inte primärt
+- **6 553 unika datum-URL:er** har faktiskt trafik senaste 30 dagar.
+  Den långa svansen är gigantisk.
 
-## SEO-bekräftelse: månad slår dag (verifierat 2026-04-26)
+---
 
-Hypotesen att månadsformat är bättre än dagsformat är bekräftad mot
-faktisk GA + GSC-data:
+## Beslut: vad vi gör
 
-### Datapunkter som stöder månadsvyer
+### URL-struktur
 
-1. **Ingen söker proaktivt på datum.** Top datum-query "misshandel
-   gällivare 2026" fick 2 klick/månad. "20 apr 2026" fick 1 klick.
-   Användare hamnar på datum-sidor som biprodukt av "[brott] [plats]
-   [år]"-queries där datum är _kontextuellt_, inte primärt.
+```
+/plats/{plats}/handelser/{år}/{månad}    (4-siffrigt år, 2-siffrigt månad)
+/lan/{lan}/handelser/{år}/{månad}
+```
 
-2. **Mindre URL-yta = mer PageRank per URL.** 1.3M dagsvyer →
-   42 000 månadsvyer. Google koncentrerar crawl-budget på färre,
-   rikare sidor. Indexeringssnabbhet förbättras.
+Exempel: `/plats/uppsala/handelser/2026/04`
 
-3. **Rikare sidor rankar bättre.** En månadssida med översiktskarta,
-   statistik och 10–30 events undviker Googles "thin content"-straff
-   som drabbat sidor med 0–3 events. Fler signaler för algoritmen
-   att förstå sidans tema och relevans.
+Top-level `/handelser/{datum}` (utan plats/län-prefix) **behålls** —
+99% av "dagens händelser"-trafiken landar där och fungerar bra.
 
-4. **Page authority ackumuleras.** Samma URL får upprepade klick
-   över tid istället för att splittras över 30 olika dagsvyer per
-   månad. PageRank kompounds.
+### Innehåll på månadssidan
 
-### Vecka vs månad — månad vinner klart
+Ordning uppifrån (alla synliga från start, inga kollapsade element):
 
-- **Månad:** 12 URL:er per plats per år. Naturligt sökformat
-  ("händelser uppsala april 2026"). Får både svensk månadssökning
-  och nyhetsbevakning som ofta sammanfattas månadsvis.
-- **Vecka:** 52 URL:er per plats per år. Få söker "händelser uppsala
-  vecka 17" — vecka-syntax är ovanlig i konsumentsökningar.
-- **Bästa kompromissen:** månadssidor med vecko-sektioner (anchor-
-  strategi nedan) — ger båda granulariteten utan URL-yta.
-
-### Förväntade ranking-rörelser vid migration
-
-- **Vecka 1–4:** Google avindexerar dagsvyer, månadsvyer rampar upp.
-  Total long-tail-trafik kan dippa 10–20%. Acceptabelt.
-- **Vecka 4–12:** månadsvyer ärver PageRank via 301:er, börjar ranka
-  starkare än dagsvyerna gjorde individuellt.
-- **Vecka 12+:** total trafik förväntat **högre** än innan eftersom
-  rikare sidor ger fler features (rich results, sitelinks, anchor
-  deeplinks i SERP).
-
-### Confidence-nivå
-
-**Hög.** Detta är ett standardmönster i SEO sedan ~2020 (post-Panda,
-post-helpful-content-update). Inte experimentellt. Risken ligger i
-implementering (broken 301:er, missade anchor-länkar) snarare än i
-strategin själv.
-
-## Förslag — månadsvyer
-
-Ersätt dagsvyer med månadsvyer för plats/län-kombinationer:
-
-| Format  | URL-mönster                             | Antal URL:er           |
-| ------- | --------------------------------------- | ---------------------- |
-| Idag    | `/plats/{plats}/handelser/{date}`       | 350 × 365 × 10 = ~1.3M |
-| Förslag | `/plats/{plats}/handelser/{år}/{månad}` | 350 × 12 × 10 ≈ 42 000 |
-
-### Top-level `/handelser/{date}` behålls
-
-Top-level är där 99% av datum-trafiken ligger ("polisen händelser idag"
-och liknande). Behåll dagsvyer på `/handelser/{date}`. Endast plats/län-
-kombinationerna flyttar till månads-format.
-
-## Innehåll på månadssida
-
-Mer värdefullt innehåll = bättre SEO + UX:
-
-1. **Översiktskarta** överst — Leaflet med alla event för månaden klustrade
-2. **Statistik** — "Vanligaste brottstyperna denna månad i Uppsala"
-3. **Vecko-sektioner med anchor-id:n** (`<h2 id="vecka-17">`) — Google plockar ofta upp som "Jump to" deeplinks i SERP, dubblar CTR utan extra URL-yta
-4. **Dag-sektioner inom vecka** (`<h3 id="2026-04-15">`) — så att 301:er från gamla dagsvyer kan landa direkt på rätt sektion via fragment
-5. **Föregående/nästa månad-nav** + "Hoppa till år"-dropdown
-6. **Schema.org `hasPart` + `WebPageElement`** per vecka — låter Google förstå sektionshierarkin
+1. **H1**: "Polishändelser i {Plats}, {månad} {år}"
+2. **Översiktskarta** — Leaflet med alla event för månaden klustrade
+3. **Statistik-block** — "Vanligaste brottstyperna denna månad" + ev.
+   jämförelse med föregående månad
+4. **Innehållsförteckning** ("Hoppa till vecka")
+   — anchor-lista, alltid synlig (inte hopfällbar)
+5. **Vecko-sektioner** med `<h2 id="vecka-N">`, alltid expanderade
+6. **Dag-sektioner** inom vecka med `<h3 id="2026-04-15">`
+7. **Föregående/nästa månad-nav** + "Hoppa till år"-dropdown längst ner
+8. **Schema.org `WebPage` + `hasPart` + `WebPageElement`** per vecka
 
 ### Anchor-strategi
 
@@ -109,56 +78,241 @@ Mer värdefullt innehåll = bättre SEO + UX:
 └─ #vecka-17
 ```
 
-Anchors indexeras **inte** som separata URL:er — bara månadssidan rankas, men kan visas med deeplinks i SERP. Best of both worlds.
+Anchors indexeras inte som separata URL:er. Värdet är **inte** SERP-
+deeplinks (Google har dragit ner på dem sedan 2023 — räkna 0–5% CTR-
+lyft, inte dubblat). Värdet är:
 
-### CSS / JS-detaljer
+- **301-kontinuitet** — gamla dagsvys-URL:er kan landa direkt på rätt
+  dag-sektion
+- **UX för innehållsförteckning** — användaren scrollar inte i blindo
+- **Strukturerad SEO** — Google förstår sektionshierarkin
 
-- `scroll-margin-top: 80px` (eller motsvarande sticky-header-höjd) på alla `[id]` så anchors inte hamnar bakom sticky nav
-- Om vi gör veckor kollapsbara via `<details>`: JS som auto-öppnar rätt `<details>` när `location.hash` matchar barn-id
+`scroll-margin-top` måste matcha **summa** av sticky-element: nav
+(~60px) + cookiebanner (~80px) + sticky ad-unit (~100px) = ~240px.
+Mät i devtools innan deploy.
 
-## Migration / 301-strategi
+---
 
-- `/plats/uppsala/handelser/25-april-2026` → 301 till
-  `/plats/uppsala/handelser/2026/04#2026-04-25` (månaden + dag-anchor)
-- Webbläsaren följer redirect med fragment och scrollar till rätt
-  dag-sektion. Användaren upplever ingen brott i kontinuiteten.
-- Google avindexerar dagsvyer över ~3 månader, månadsvyer ärver
-  PageRank via 301
-- Anchors indexeras inte separat så ingen risk för dubbel-indexering
+## Beslut: vad vi INTE gör
 
-## Risker
+- **Inga `<details>`/kollapsade sektioner.** Google devalverar dolt
+  innehåll. AdSense räknar inte annonser inuti stängt `<details>`
+  som viewable. iOS Safari har scroll-buggar med dynamiskt expanderat
+  innehåll.
+- **Inga vecko-vyer som egna URL:er.** Granulariteten i URL-form ger
+  marginellt SEO-värde mot kostnaden i URL-yta. Vecko-anchors räcker.
+- **Ingen migration av top-level `/handelser/{datum}`.** Den fungerar.
+  Bara plats/län-routerna flyttas.
 
-- **Stort grepp.** Ny route + controller-metod + ny Blade-vy + 301-
-  logik + sitemap-uppdatering + cache-invalidering. Inte 1 commit.
-- **Ranking-rörelser:** kortsiktigt (2-8 veckor) kan rankings dippa
-  medan Google omindexerar. Långsiktigt vinst förväntad.
-- **Day-nav på plats/län-sidor:** måste skrivas om till månadshopp
-  istället för dagshopp.
-- **Cache-strategi:** månadsvyer är värda att cacha aggressivt
-  (innehållet ändras inte efter månadens slut). Senaste månad bör
-  ha kort TTL.
+---
 
-## Plan / nästa steg
+## Tomma och magra månader (kritisk policy)
 
-1. **Bekräfta URL-strategi** med ägare (Pär) — `/plats/{plats}/handelser/{år}/{månad}` eller annat format?
-2. **Prototype** — bygg månadsvyn för EN plats lokalt, testa UX
-3. **Performance-test** — månadsquery på `crime_events` (kräver
-   indextest, datum + plats är vanlig kombination)
-4. **Implementera 301-redirect** från dagsvy → månadsvy
-5. **Uppdatera sitemap** för att lista månader istället för dagar
-6. **Day-nav-redesign** — föregående/nästa månad istället för dag
-7. **Soak ~30 dagar** på prod, mät SEO-effekt
+Småorter (Hofors, Härjedalen, Dals-Ed) har 0–2 events per månad även
+historiskt. Med ~42 000 månadsvyer är ett konservativt estimat att
+**5–15% är 0-event eller 1-event-sidor**. Behandlade fel drar de ner
+hela domänens kvalitetssignal i Google + triggar AdSense policy-
+varningar för "low-value content".
 
-## Risk-mitigering
+| Antal events i månad | Action                                                     |
+| -------------------- | ---------------------------------------------------------- |
+| 0                    | **410 Gone** (eller 301 till plats-sidan utan datum)       |
+| 1–2                  | `<meta robots="noindex,follow">` + ingen AdSense-rendering |
+| 3+                   | Full rendering, indexerbar, AdSense aktiverad              |
 
-- Behåll dagsvys-route i kod (bara 301:ar till månad) i 6 månader
-  innan den tas bort helt — back-compat för bokmärken/externa länkar
-- Schema.org Markup — använd både CollectionPage + ItemList för
-  månadsvyn
-- Lägg `<meta name="robots" content="noindex">` på dagsvyn under
-  övergångsperioden om vi vill snabbare avindexering
+Tröskeln "≥ 3" är hypotes. Validera mot CPM-data efter pilot. Möjlig
+justering till "≥ 5" om tomma sidor visar sig vara skadliga.
 
-## Status
+AdSense-rendering ska alltid villkorlig: `@if($events->count() >= 3)`
+runt ad-slots, inte bara på sidan generellt.
 
-Designfas. Implementation kräver dedikerad session — för stort för
-att rusha. Flagga: prio 1 enligt ägare (SEO + UX är affärskritiskt).
+---
+
+## URL-format: beslut + alternativ
+
+Förslaget är `/plats/{plats}/handelser/{år}/{månad}` (hierarkiskt).
+Innan implementation **utvärdera mot CTR-data** för existerande URL:er
+i GSC. Om alternativt format visar tydligt högre CTR i SERP — byt.
+
+| Format                                       | För                               | Mot                           |
+| -------------------------------------------- | --------------------------------- | ----------------------------- |
+| `/plats/uppsala/handelser/2026/04` (förslag) | Hierarkiskt, lätt att parsea      | Inga sökord i URL-segmentet   |
+| `/plats/uppsala/handelser/april-2026`        | Månadens namn syns i SERP-snippet | Behöver slug-parsning         |
+| `/plats/uppsala/april-2026`                  | Kortast, ren                      | Bryter `/handelser/`-struktur |
+| `/handelser-uppsala-april-2026`              | Maximalt sökord-rikt              | Helt ny URL-rotnivå           |
+
+Format-beslutet **dokumenteras med motivering** i todo-filen innan
+kod skrivs. Beslut: \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ (fyll i).
+
+---
+
+## 301-strategi (ETT hopp, inte kedja)
+
+Befintliga svenska datum-URL:er som `/plats/uppsala/handelser/15-april-2026`
+ska 301:as direkt till månadsvyn med dag-anchor:
+
+```
+/plats/uppsala/handelser/15-april-2026
+  → 301 → /plats/uppsala/handelser/2026/04#2026-04-15
+```
+
+**Krav:** verifiera att inga befintliga middleware (RedirectOldPages
+m.fl.) lägger på extra hopp. Allt ska gå i ETT 301. Google förkortar
+ofta kedjor men ibland ignorerar dem — riskera inte det.
+
+Day-nav på plats/län-sidor (i `Helper.php`, `PlatsController`,
+`LanController`) skrivs om från dagshopp till månadshopp.
+
+---
+
+## Mobil + paginering
+
+80% av trafiken är mobil. Storstadssidor (Stockholm/Göteborg/Malmö)
+får 500–2000 events per månad — initial render måste vara hanterbar.
+
+**Server-side paginering inom månadsvyn:**
+
+- 50 events per sida, querystring `?p=2`
+- Sida 1 är canonical (utan param eller `?p=1`)
+- Sida 2+ får `<meta robots="noindex,follow">` (paginering är UX-
+  feature, inte ranking-yta)
+- Vecko-anchors finns bara på sida 1
+- Föregående/nästa-länkar mellan sidor med `rel="prev"` / `rel="next"`
+  (deprecated av Google men respekteras av Bing och AI-crawlers)
+
+**Mobil-prototyp INNAN implementation.** Verifiera scroll-to-anchor
+beteende på iOS Safari + Android Chrome med faktisk sticky-header-
+höjd inkl. cookiebanner och ad-units.
+
+---
+
+## AdSense-strategi
+
+Brottsplatskartan har AdSense som intäktskälla. Månadsvy-migrationen
+har **icke-trivial risk** för intäktssänkning som måste mätas.
+
+### Risker
+
+- **Färre pageviews/session.** Om månadsvyn är "färdig" (allt
+  innehåll på en sida) klickar användaren inte vidare → färre ad-
+  impressions per session. Kompenseras kanske av högre dwell-time
+  → högre RPM, men det är inte garanterat.
+- **0-event-sidor får inte servera annonser** (policy-risk, se ovan).
+- **Viewability** av annonser placerade nere på sidan är låg på mobil.
+
+### Strategi
+
+- **Ad-slots placeras strategiskt:** mellan översiktskarta och vecko-
+  ToC, mellan vecko-sektioner (max var 2:e), inte längst ner
+- **Inga annonser på 0-event eller 1–2-event-sidor**
+- **Mät RPM/session före och efter pilot.** Om månads-RPM <
+  dags-RPM × 1.3 (kompensationsfaktor för färre PV): rulla tillbaka
+
+---
+
+## Pilot + KPI:er för rollback
+
+Implementera först bara för **EN plats** (förslag: Uppsala — medelstad,
+inte for liten, inte gigantisk). Mät 30 dagar innan rollout till alla.
+
+### KPI:er och rollback-tröskel
+
+| Metric                       | Baseline (mät innan) | Tröskel för rollback          |
+| ---------------------------- | -------------------- | ----------------------------- |
+| Total clicks från Google     | (mät dag 0)          | < 90% av baseline             |
+| Indexerade pages för platsen | (via GSC)            | < 80% av baseline             |
+| PV/session på platsens sidor | ~1.3                 | < 1.0                         |
+| RPM per session (AdSense)    | (mät dag 0)          | < dags-RPM × 1.3              |
+| Mobile bounce rate           | (mät dag 0)          | > +10 percentage points       |
+| Soft-404-rapport i GSC       | 0                    | > 5 nya soft-404 från piloten |
+
+Om någon tröskel triggas: rulla tillbaka piloten. Investigera. Iterera.
+
+### Rollback-mekanism
+
+Behåll dagsvys-routen i kod i 6 månader efter migration. Den
+301:ar bara till månadsvy under normal drift, men kan reaktiveras
+genom att avmarkera 301-logiken om rollback krävs.
+
+---
+
+## Implementation-ordning
+
+Strikt sekventiell — gå inte vidare till nästa steg innan föregående
+verifieras.
+
+1. **URL-format-beslut** + dokumentation i denna todo
+2. **Mobil-prototyp** (HTML-only, utan backend) — verifiera
+   landningsupplevelse + scroll-to-anchor på iOS/Android
+3. **Backend-route + controller-metod + Blade-vy** för EN plats
+   (Uppsala). Inkl. paginering, tomhantering, AdSense-villkor.
+4. **301-redirect-logik** för Uppsala dagsvyer → månadsvy.
+   Verifiera ETT hopp via `curl -ILv`.
+5. **Performance-test** — månadsquery på `crime_events`. Indextest
+   för `(plats, parsed_date)`-kombination.
+6. **Sitemap-uppdatering** för Uppsala — månadsvyer in, dagsvyer
+   ut. Submit till GSC.
+7. **Schema.org JSON-LD** — WebPage + hasPart + WebPageElement.
+   Validera i Google Rich Results-test.
+8. **Pilot-deploy + baseline-mätning** dag 0
+9. **30 dagars soak.** Daglig KPI-koll. Rollback om tröskel triggas.
+10. **Full rollout** — alla platser + län. Behåll Uppsala som
+    benchmark om något oroväckande dyker upp.
+
+---
+
+## Schema.org-skiss
+
+```json
+{
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Polishändelser i Uppsala, april 2026",
+    "url": "https://brottsplatskartan.se/plats/uppsala/handelser/2026/04",
+    "description": "...",
+    "isPartOf": {
+        "@type": "WebSite",
+        "url": "https://brottsplatskartan.se/"
+    },
+    "hasPart": [
+        {
+            "@type": "WebPageElement",
+            "@id": "#vecka-17",
+            "name": "Vecka 17 (20–26 april 2026)"
+        },
+        {
+            "@type": "WebPageElement",
+            "@id": "#vecka-16",
+            "name": "Vecka 16 (13–19 april 2026)"
+        }
+    ]
+}
+```
+
+Plus `BreadcrumbList` (Hem › Uppsala › April 2026).
+
+---
+
+## Risker — sammanfattning
+
+| Risk                                  | Mitigering                                         |
+| ------------------------------------- | -------------------------------------------------- |
+| Soft-404 på tomma månader             | 410/noindex policy enligt event-tröskel            |
+| AdSense policy-violation              | Villkorlig ad-rendering på event-tröskel           |
+| 301-kedjor                            | Verifiera ETT hopp för alla legacy-format          |
+| Mobil scroll-to-anchor-buggar         | Prototyp-test innan implementation                 |
+| Storstadssidor med 1000+ events       | Server-side paginering, sida 2+ noindex            |
+| Färre PV/session → ad-impression-tapp | Mätplan + rollback-tröskel + ad-placement-strategi |
+| Ranking-rörelser (2–8 veckor)         | Behåll dagsvys-route 6 månader för rollback        |
+| Fel URL-format                        | CTR-dataanalys innan beslut                        |
+
+---
+
+## Confidence-nivå
+
+**Medel.** Strategin är troligt rätt men inte självklart. Underliggande
+SEO-principen (rikare sidor > tunna, färre URL:er > URL-explosion) är
+välbeprövad sedan ~2020. Risken ligger i implementering, inte strategi.
+
+Pilot-mätningen avgör om hypotesen håller mot Brottsplatskartans
+specifika trafikmönster och AdSense-baserade affärsmodell.
