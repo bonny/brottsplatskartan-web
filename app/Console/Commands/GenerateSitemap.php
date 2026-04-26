@@ -69,6 +69,32 @@ class GenerateSitemap extends Command
                     ->setChangeFrequency(Url::CHANGE_FREQUENCY_DAILY)
                     ->setPriority(0.7)
             );
+
+            // Månadsvyer för länet — 12 senaste månader (todo #25).
+            // Tomma månader 301:as till länets startsida i kontrollern,
+            // så Google rensar dem naturligt.
+            foreach ($this->recentMonths(12) as $m) {
+                $main->add(
+                    Url::create(sprintf('/lan/%s/handelser/%s/%s', rawurlencode($lanName), $m['year'], $m['month']))
+                        ->setLastModificationDate($m['lastmod'])
+                        ->setChangeFrequency(Url::CHANGE_FREQUENCY_MONTHLY)
+                        ->setPriority(0.6)
+                );
+            }
+        }
+
+        // Tier 1-städer: månadsvyer via /plats/{slug}/handelser/{year}/{month}.
+        // Slug-listan matchar CityRedirectMiddleware (todo #24).
+        $tier1Cities = ['uppsala', 'stockholm', 'malmo', 'goteborg', 'helsingborg'];
+        foreach ($tier1Cities as $cityCity) {
+            foreach ($this->recentMonths(12) as $m) {
+                $main->add(
+                    Url::create(sprintf('/plats/%s/handelser/%s/%s', $cityCity, $m['year'], $m['month']))
+                        ->setLastModificationDate($m['lastmod'])
+                        ->setChangeFrequency(Url::CHANGE_FREQUENCY_MONTHLY)
+                        ->setPriority(0.6)
+                );
+            }
         }
 
         Cache::forever(self::CACHE_PREFIX . 'main', $main->render());
@@ -147,6 +173,30 @@ class GenerateSitemap extends Command
     public static function historicalPath(int $year): string
     {
         return storage_path("app/sitemaps/sitemap-events-{$year}.xml");
+    }
+
+    /**
+     * Bygg en lista över de N senaste månaderna (inkl. aktuell), för
+     * sitemap-URL:er till månadsvyer (todo #25).
+     *
+     * @return list<array{year: string, month: string, lastmod: Carbon}>
+     */
+    private function recentMonths(int $count): array
+    {
+        $months = [];
+        $start = now()->startOfMonth();
+        for ($i = 0; $i < $count; $i++) {
+            $m = (clone $start)->subMonths($i);
+            // lastmod: aktuell månad använder now() (uppdateras dagligen),
+            // historiska månader använder månadens slut (statiskt).
+            $lastmod = $i === 0 ? now() : (clone $m)->endOfMonth();
+            $months[] = [
+                'year' => $m->format('Y'),
+                'month' => $m->format('m'),
+                'lastmod' => $lastmod,
+            ];
+        }
+        return $months;
     }
 
     /**
