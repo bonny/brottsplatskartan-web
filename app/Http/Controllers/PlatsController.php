@@ -71,6 +71,22 @@ class PlatsController extends Controller
             abort(500, 'Knas med datum hörru');
         }
 
+        // todo #25: 301-redirect från dagsvy → månadsvy med dag-anchor.
+        // Aktiveras per plats via MONTHLY_VIEWS_PILOT-flaggan. Idag-vyer
+        // 301:as inte (de är likvärdiga med plats-startsidan).
+        if (
+            $dateOriginalFromArg
+            && !$date['date']->isToday()
+            && \App\Helper::isInMonthlyViewsPilot($platsOriginalFromSlug)
+        ) {
+            $monthUrl = route('platsMonth', [
+                'plats' => $platsOriginalFromSlug,
+                'year' => $date['date']->format('Y'),
+                'month' => $date['date']->format('m'),
+            ]) . '#' . $date['date']->format('Y-m-d');
+            return redirect($monthUrl, 301);
+        }
+
         // Om page finns så är det en gammal URL,
         // skriv om till ny (eller hänvisa canonical iaf och använd dagens datum)
         $page = (int) $request->input("page", 0);

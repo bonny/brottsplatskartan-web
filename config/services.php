@@ -53,4 +53,15 @@ return [
         'map_style' => env('TILESERVER_MAP_STYLE', 'circle'),
     ],
 
+    'monthly_views' => [
+        // todo #25: aktivera 301-redirect från dagsvyer till månadsvy med
+        // dag-anchor för specifika platser/län (pilot-fas).
+        // Värden:
+        //   ''           — flaggan av (default), inga 301-redirects.
+        //   'all'        — alla platser och län 301:as från dagsvy → månadsvy.
+        //   'list:a,b,c' — bara dessa platser/län (komma-separerad slug-lista).
+        // Slug:ar matchas case-insensitive mot URL-segmentet i dagsvy-routen.
+        'pilot' => env('MONTHLY_VIEWS_PILOT', ''),
+    ],
+
 ];

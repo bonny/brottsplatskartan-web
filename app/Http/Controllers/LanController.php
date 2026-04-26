@@ -63,6 +63,20 @@ class LanController extends Controller
         }
 
         $isToday = $date['date']->isToday();
+
+        // todo #25: 301-redirect från dagsvy → månadsvy med dag-anchor.
+        if (
+            $rawDateArg
+            && !$isToday
+            && \App\Helper::isInMonthlyViewsPilot($lan)
+        ) {
+            $monthUrl = route('lanMonth', [
+                'lan' => $lan,
+                'year' => $date['date']->format('Y'),
+                'month' => $date['date']->format('m'),
+            ]) . '#' . $date['date']->format('Y-m-d');
+            return redirect($monthUrl, 301);
+        }
         $isYesterday = $date['date']->isYesterday();
         $isCurrentYear = $date['date']->isCurrentYear();
 

@@ -508,6 +508,40 @@ class Helper {
     }
 
     /**
+     * Avgör om ett pilot-slug är aktiverat för månadsvys-redirect (#25).
+     *
+     * Konfigureras via env `MONTHLY_VIEWS_PILOT`:
+     *   '' → av, 'all' → alla, 'list:a,b,c' → bara dessa slugs.
+     *
+     * Slug-jämförelse är case-insensitive och normaliserar bort accenter
+     * via `toAscii()` — så "Uppsala län" matchar "uppsala-lan".
+     */
+    public static function isInMonthlyViewsPilot(string $slug): bool
+    {
+        $config = (string) config('services.monthly_views.pilot', '');
+
+        if ($config === '') {
+            return false;
+        }
+
+        if ($config === 'all') {
+            return true;
+        }
+
+        if (str_starts_with($config, 'list:')) {
+            $allowed = array_map('trim', explode(',', substr($config, 5)));
+            $needle = self::toAscii(mb_strtolower($slug));
+            foreach ($allowed as $allowedSlug) {
+                if (self::toAscii(mb_strtolower($allowedSlug)) === $needle) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Parse year + month parameters from the monthly URL pattern
      * (`/plats/{plats}/handelser/{year}/{month}`, todo #25).
      *
