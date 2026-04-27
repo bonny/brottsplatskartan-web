@@ -63,6 +63,48 @@ class CrimeEvent extends Model implements Feedable {
         return $this->description_alt_1 ?: ($this->parsed_content ?: '');
     }
 
+    /**
+     * Klassificerar `parsed_title` som vag enligt mönster vi vet ger
+     * dålig SEO ("Sammanfattning natt", "Övrigt", brottstyper utan kontext).
+     * Returnerar bucket-namnet eller null om titeln är OK. Se todo #10.
+     */
+    public static function isVagueTitle(?string $title): ?string
+    {
+        if ($title === null) {
+            return 'tom';
+        }
+        $t = trim($title);
+        // u-flagga krävs för att case-insensitive (i) ska funka på åäö —
+        // utan den matchar "övrigt" men inte "Övrigt".
+        return match (true) {
+            preg_match('/sammanfattning ?(natt|dygn|morgon|kväll|dag)/iu', $t) === 1 => 'sammanfattning',
+            preg_match('/information om polisens pressnummer/iu', $t) === 1 => 'pressnummer',
+            preg_match('/(dagens )?presstalesperson/iu', $t) === 1 => 'presstalesperson',
+            preg_match('/^(övrigt|annat|händelse)$/iu', $t) === 1 => 'generisk',
+            mb_strlen($t) < 6 => 'för-kort',
+            default => null,
+        };
+    }
+
+    private const MIN_BODY_FOR_AI_REWRITE = 100;
+
+    /**
+     * Avgör om event:et är värt en AI-rewrite. Kräver vag titel
+     * (`isVagueTitle`) + tillräckligt med body-text för att AI:n ska
+     * kunna skapa en meningsfull rubrik. Returnerar bucket-namnet eller null.
+     */
+    public static function shouldRewriteTitle(self $event): ?string
+    {
+        $bucket = self::isVagueTitle($event->parsed_title);
+        if ($bucket === null) {
+            return null;
+        }
+        if (mb_strlen(trim($event->parsed_content ?? '')) < self::MIN_BODY_FOR_AI_REWRITE) {
+            return null;
+        }
+        return $bucket;
+    }
+
     private const EARTH_RADIUS_KM = 6371;
 
     protected static function booted(): void

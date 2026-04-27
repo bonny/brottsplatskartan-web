@@ -1,4 +1,4 @@
-**Status:** aktiv — plan reviewad 2026-04-27, prod-volymanalys verifierad, scope: bara nya events framåt
+**Status:** klar 2026-04-27 — rendering aktiverad på 4596 prod-events (Schema headline + `<title>` + OG + meta), auto-trigger för hela Sverige via scheduler (var 15 min, --vague-only), transparens-rad på /sida/om. Mätning hänvisas till #36.
 **Senast uppdaterad:** 2026-04-27
 
 # Todo #10 — AI-omskrivning av vaga event-titlar

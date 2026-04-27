@@ -40,6 +40,15 @@ class Kernel extends ConsoleKernel
             ->everyFiveMinutes()
             ->withoutOverlapping();
 
+        // Auto-trigger för AI-titlar på vaga events i hela Sverige (todo #10
+        // fas 2). Stockholm-jobbet ovan körs utan vague-filter — det här
+        // täcker övriga län men bara på events vars titel matchar vagt
+        // mönster (sammanfattning natt / brand / stöld / övrigt / mfl).
+        // Rate-limit-säkert: ~20-30 nya vaga events/dag i hela landet.
+        $schedule->command('crimeevents:create-summaries --vague-only --limit=100')
+            ->everyFifteenMinutes()
+            ->withoutOverlapping();
+
         // Generera gårdagens sammanfattning tidigt på morgonen (klar för dagen)
         $schedule->command('summary:generate stockholm --yesterday')->dailyAt('06:00');
 

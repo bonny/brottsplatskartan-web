@@ -101,6 +101,17 @@
             <p>Samma sak gäller händelsetexterna: dessa texter kan vara bearbetade av en dator och tolkningsfel kan
                 förekomma.</p>
 
+            <h2>AI-bearbetade rubriker och texter</h2>
+
+            <p>För att göra händelser lättare att hitta och förstå skriver vi om vissa rubriker och brödtexter
+                med AI (Claude från Anthropic). Det gäller framför allt händelser där Polisens originalrubrik
+                är generisk — exempelvis "Sammanfattning natt", "Brand" eller "Övrigt" — som inte säger något
+                om vad som faktiskt har inträffat.</p>
+
+            <p>Originalet från Polisen bevaras alltid och visas i sin helhet under varje händelse. Den
+                AI-bearbetade rubriken är ett komplement, inte en ersättning, och är tänkt att fungera som
+                en mer beskrivande sammanfattning för sökmotorer och sociala medier.</p>
+
             <h2>Servrar i EU 🇪🇺</h2>
 
             <p>Brottsplatskartan körs på servrar hos <a href="https://www.hetzner.com/">Hetzner</a> i Helsingfors,
