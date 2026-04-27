@@ -29,6 +29,26 @@ Senast uppdaterad: 2026-04-27 (+#10 klar — fas 1+2 deployat, +#36 GSC-mätning
 4. **#29** — passiv mätperiod, åtgärder efter data
 5. **#36** — passiv GSC-mätning, första check 2026-05-25 (eventuell fas 3 backfill om vinst)
 
+## Uppföljningar — datum att komma ihåg
+
+Datum-bundna manuella åtgärder som inte går att autoschemalägga (kräver lokala
+MCP:s som `mcp-gsc`, SSH-nycklar till prod, eller mänsklig bedömning).
+Granska veckovis. När en åtgärd är gjord, flytta raden till "Avklarade" nedan
+eller markera todon som klar.
+
+| Datum      | Åtgärd                                                       | Todo                                       |
+| ---------- | ------------------------------------------------------------ | ------------------------------------------ |
+| 2026-05-15 | DO-server: radera efter soak (statiska sajter migrerade)     | [#16](todos/16-rensa-do-server.md)         |
+| 2026-05-25 | GSC-mätning AI-titlar — första check (4v post-deploy)        | [#36](todos/36-gsc-matning-ai-titlar.md)   |
+| 2026-05-27 | Månadsvyer-pilot — 30d-mätning Uppsala/Västerås              | [#25](todos/25-manadsvyer-datum-routes.md) |
+| 2026-06-22 | GSC-mätning AI-titlar — andra check (8v)                     | [#36](todos/36-gsc-matning-ai-titlar.md)   |
+| 2026-07-27 | GSC-mätning AI-titlar — tredje check (12v) + beslut om fas 3 | [#36](todos/36-gsc-matning-ai-titlar.md)   |
+| 2026-07-27 | Indexerade pages — slutmätning (90d post-noindex)            | [#29](todos/29-audit-indexerade-pages.md)  |
+
+### Avklarade uppföljningar
+
+(flytta hit med faktiskt utfallsdatum när en check-in är gjord)
+
 ## Klara
 
 Sorterade nyast först.

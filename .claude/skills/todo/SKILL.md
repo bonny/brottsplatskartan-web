@@ -7,13 +7,20 @@ description: "Hantera projektets todos i `todo.md` + `todos/`. Använd när anv�
 
 Todos finns på två platser och måste hållas synkade:
 
-- `todo.md` (repo-roten) — index med tre tabeller: **Aktiva**, **Klara**, **Avfärdade / sammanslagna**.
+- `todo.md` (repo-roten) — index med tabellerna: **Aktiva**, **Uppföljningar**
+  (datum-bundna manuella check-ins), **Klara**, **Avfärdade / sammanslagna**.
   Rad 7 har `Senast uppdaterad: YYYY-MM-DD (+#NN <hint>)` — uppdatera vid varje ändring.
 - `todos/<NN>-<slug>.md` — en fil per todo med full analys.
     - `todos/done/` — klara
     - `todos/rejected/` — avfärdade / sammanslagna
 
 Konventionsdokument: `todos/README.md`.
+
+**Uppföljningar-sektionen** är en kronologisk lista över datum-bundna
+manuella åtgärder som inte går att autoschemalägga (kräver lokala MCP:s,
+SSH-nycklar, eller mänsklig bedömning). Lägg till en rad här när du
+upptäcker ett framtida datum att komma ihåg — t.ex. mätperiod-slut, soak-
+end, ramp-up av feature flag. Format: `| YYYY-MM-DD | <åtgärd> | [#NN](...)|`.
 
 ## Tolka argumentet
 
@@ -35,7 +42,11 @@ Numret matchas mot filnamnets prefix (`<NN>-...`).
 1. Read `todo.md`.
 2. Visa **Aktiva**-tabellen som en kort lista — `#NN — Titel — Status`.
 3. Om "Beroenden" är icke-tom, nämn de relevanta i en mening.
-4. Inga filer öppnas — bara index.
+4. **Kolla "Uppföljningar"-sektionen:** om någon rad har datum inom 14 dagar
+   från `currentDate`, nämn den/dem ("Nästa uppföljning: YYYY-MM-DD — <åtgärd>").
+   Om en uppföljning är **förfallen** (datum < currentDate), flagga det
+   tydligt med ⚠ — det betyder en check-in är glömd.
+5. Inga andra filer öppnas — bara index.
 
 ## next
 
@@ -47,6 +58,9 @@ Numret matchas mot filnamnets prefix (`<NN>-...`).
     - "Blockerad av: #N" där #N inte är klar
 3. Rekommendera den första aktionerbara. Motivera kort (2–3 meningar): vad det är, varför den är logisk nu, eventuell synergi med nyligen klar todo.
 4. Om alla är blockerade: säg det, lista närmaste avblockning (datum) per blockerad rad.
+5. **Kolla "Uppföljningar"-sektionen:** om en uppföljning är förfallen
+   (datum < currentDate), nämn den separat — det är sannolikt vad
+   användaren bör göra istället för en aktiv todo.
 
 ## show <nr>
 
