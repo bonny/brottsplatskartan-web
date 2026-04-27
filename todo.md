@@ -4,7 +4,7 @@ Index över förbättringsarbete. Varje todo har en egen fil under
 [`todos/`](todos/) med fullständig analys. Konvention och
 mappstruktur: [`todos/README.md`](todos/README.md).
 
-Senast uppdaterad: 2026-04-27 (+#38 BRÅ research klar — CSV-källa verifierad, ~3-4h implementation kvar).
+Senast uppdaterad: 2026-04-27 (+#39 MSB + #40 Trafikverket STRADA — skissade idé-todos parallella till #38-mönstret).
 
 ## Aktiva
 
@@ -16,6 +16,8 @@ Senast uppdaterad: 2026-04-27 (+#38 BRÅ research klar — CSV-källa verifierad
 | 29  | Audit + reducera indexerade pages               | Datum-routes + thin singles deployat, ~22k pages noindex:as. Mätperiod 30–90d i GSC   | [todos/29-audit-indexerade-pages.md](todos/29-audit-indexerade-pages.md)   |
 | 36  | GSC-mätning av AI-titlars CTR-effekt            | Mätperiod startad 2026-04-27, första check 2026-05-25                                 | [todos/36-gsc-matning-ai-titlar.md](todos/36-gsc-matning-ai-titlar.md)     |
 | 38  | Integrera BRÅ-data för riktig brottsstatistik   | Research klar 2026-04-27 — CSV-källa identifierad, redo för implementation (~3-4h)    | [todos/38-bra-data-integration.md](todos/38-bra-data-integration.md)       |
+| 39  | MSB brand- och räddningsstatistik per kommun    | Skissad — research-fas saknas (parallell till #38)                                    | [todos/39-msb-brand-rakning-statistik.md](todos/39-msb-brand-rakning-statistik.md) |
+| 40  | Trafikverket STRADA olycksstatistik per kommun  | Skissad — research-fas saknas (parallell till #38)                                    | [todos/40-trafikverket-strada-olyckor.md](todos/40-trafikverket-strada-olyckor.md) |
 
 ### Beroenden
 
