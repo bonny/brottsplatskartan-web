@@ -1,4 +1,4 @@
-**Status:** aktiv (implementeras 2026-04-27)
+**Status:** klar 2026-04-27
 **Senast uppdaterad:** 2026-04-27
 **Härledd från:** SEO-review av #25 — Tier 1-URL-namespace-split
 
