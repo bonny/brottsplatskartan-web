@@ -28,14 +28,7 @@
                 </h1>
 
                 {{-- Karta med händelser --}}
-                @if(request()->query('page', 1) == 1)
-                    <x-events-map :show-map-title="false" :lat-lng=$mapStartLatLng :map-zoom=$mapZoom />
-                @endif
-
-                {{-- Paginering högst upp om inte sida 1 --}}
-                @if(request()->query('page', 1) > 1)
-                    {{ $events->links('vendor.pagination.default') }}
-                @endif
+                <x-events-map :show-map-title="false" :lat-lng=$mapStartLatLng :map-zoom=$mapZoom />
 
                 {{-- AI-sammanfattningar --}}
                 @if($todaysSummary)
@@ -65,7 +58,24 @@
                     </div>
                 </div>
 
-                {{ $events->links('vendor.pagination.default') }}
+                {{-- Bakåtnavigering via månadsvyer (ersätter ?page=-paginering, todo #25/#33).
+                     CityController hämtar bara senaste 25 — för äldre händelser
+                     länkar vi till föregående månads kalender-vy. Sidopanelen
+                     har det fulla månads-arkivet. --}}
+                @php
+                    $prevMonth = \Carbon\Carbon::now()->startOfMonth()->subMonth();
+                    $cityRouteSlug = request()->route('city');
+                @endphp
+                <nav class="MonthNav MonthNav--bottom" aria-label="Bläddra äldre händelser">
+                    <a href="{{ route('cityMonth', [
+                            'city' => $cityRouteSlug,
+                            'year' => $prevMonth->format('Y'),
+                            'month' => $prevMonth->format('m'),
+                        ]) }}"
+                       class="MonthNav__link MonthNav__link--prev">
+                        ‹ Tidigare händelser från {{ title_case($prevMonth->isoFormat('MMMM YYYY')) }}
+                    </a>
+                </nav>
             </div>
         </div>
     </div>

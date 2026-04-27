@@ -139,7 +139,7 @@ class CityController extends Controller
     public function show($citySlug, Request $request)
     {
         $normalizedSlug = $this->normalizeCitySlug($citySlug);
-        
+
         // If original slug doesn't match normalized, redirect to normalized version
         if ($citySlug !== $normalizedSlug) {
             return redirect()->route('city', ['city' => $normalizedSlug], 301);
@@ -147,6 +147,14 @@ class CityController extends Controller
 
         if (!isset($this->cities[$normalizedSlug])) {
             abort(404);
+        }
+
+        // todo #25/#33: ?page=N-paginering ersatt av månadsvyer. 301:a
+        // sida 2+ till stadens startsida så Google rensar äldre indexerade
+        // pagineringssidor. Användare som vill bläddra äldre händelser
+        // navigerar via månads-arkivet i sidopanelen eller botten-navet.
+        if ((int) $request->query('page', 1) > 1) {
+            return redirect()->route('city', ['city' => $normalizedSlug], 301);
         }
 
         $city = $this->cities[$normalizedSlug];
