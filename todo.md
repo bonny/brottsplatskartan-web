@@ -4,7 +4,7 @@ Index över förbättringsarbete. Varje todo har en egen fil under
 [`todos/`](todos/) med fullständig analys. Konvention och
 mappstruktur: [`todos/README.md`](todos/README.md).
 
-Senast uppdaterad: 2026-04-27 (+#38 BRÅ-data — "brott/1000" på Polisen-data avfärdat, kräver riktig BRÅ-statistik).
+Senast uppdaterad: 2026-04-27 (+#38 BRÅ research klar — CSV-källa verifierad, ~3-4h implementation kvar).
 
 ## Aktiva
 
@@ -15,7 +15,7 @@ Senast uppdaterad: 2026-04-27 (+#38 BRÅ-data — "brott/1000" på Polisen-data 
 | 27  | Berika ort- och månadssidor med rikare innehåll | Designfas — Lager 1–3 (egen data, externt + AI), research klar                        | [todos/27-rikare-innehall.md](todos/27-rikare-innehall.md)                 |
 | 29  | Audit + reducera indexerade pages               | Datum-routes + thin singles deployat, ~22k pages noindex:as. Mätperiod 30–90d i GSC   | [todos/29-audit-indexerade-pages.md](todos/29-audit-indexerade-pages.md)   |
 | 36  | GSC-mätning av AI-titlars CTR-effekt            | Mätperiod startad 2026-04-27, första check 2026-05-25                                 | [todos/36-gsc-matning-ai-titlar.md](todos/36-gsc-matning-ai-titlar.md)     |
-| 38  | Integrera BRÅ-data för riktig brottsstatistik   | Aktionerbar — research-fas saknas, blockerar #27 Lager 2 "brott per 1000 inv."        | [todos/38-bra-data-integration.md](todos/38-bra-data-integration.md)       |
+| 38  | Integrera BRÅ-data för riktig brottsstatistik   | Research klar 2026-04-27 — CSV-källa identifierad, redo för implementation (~3-4h)    | [todos/38-bra-data-integration.md](todos/38-bra-data-integration.md)       |
 
 ### Beroenden
 
