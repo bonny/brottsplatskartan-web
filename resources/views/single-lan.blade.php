@@ -32,6 +32,14 @@ https://brottsplatskartan.localhost/lan/Stockholms%20l%C3%A4n
         'placeAddressRegion' => $lan,
         'placeContainedIn' => 'Sverige',
         'placeUrl' => $canonicalLink,
+        'placeWikidataQid' => \App\Helper::getLanWikidataQid($lan),
+    ])
+    @include('parts.collectionpage-jsonld', [
+        'cpName' => $lan . ' – polishändelser och brott',
+        'cpUrl' => $canonicalLink,
+        'cpAboutType' => 'AdministrativeArea',
+        'cpAboutName' => $lan,
+        'cpDescription' => $metaDescription ?? null,
     ])
 @endsection
 

@@ -1060,13 +1060,28 @@ class CrimeEvent extends Model implements Feedable {
      * Return ld+json for an article
      */
     public function getLdJson() {
+        // Cache schema-output i Redis (todo #32). Nyckeln innehåller
+        // updated_at-timestamp så cachen invalideras automatiskt vid
+        // uppdatering av event:et — ingen explicit `forget` behövs.
+        $cacheKey = "ldjson:{$this->id}:" . (
+            $this->updated_at instanceof Carbon
+                ? $this->updated_at->timestamp
+                : ($this->updated_at ? strtotime($this->updated_at) : 'null')
+        );
+
+        return Cache::remember($cacheKey, 60 * 60 * 24 * 7, function () {
+            return $this->buildLdJson();
+        });
+    }
+
+    private function buildLdJson() {
         $permalink = $this->getPermalink(true);
         $title = $this->getSingleEventTitleShort();
         $datePublished = $this->getPubDateISO8601();
         $dateModified = $this->updated_at
             ? Carbon::parse($this->updated_at)->toIso8601String()
             : $datePublished;
-        $description = $this->getDescriptionAsPlainText();
+        $bodyText = $this->getDescriptionAsPlainText();
 
         // Google rekommenderar flera bildformat för NewsArticle
         $images = [
@@ -1088,7 +1103,8 @@ class CrimeEvent extends Model implements Feedable {
                 "@type" => "WebPage",
                 "@id" => $permalink,
             ],
-            "headline" => $title,
+            // Google's NewsArticle-spec: max 110 tecken (todo #32).
+            "headline" => mb_substr($title, 0, 110),
             "image" => $images,
             "datePublished" => $datePublished,
             "dateModified" => $dateModified,
@@ -1096,6 +1112,14 @@ class CrimeEvent extends Model implements Feedable {
                 "@type" => "Organization",
                 "name" => "Brottsplatskartan",
                 "url" => "https://brottsplatskartan.se/",
+            ],
+            // Polismyndigheten är källan; sourceOrganization är Schema.org-fältet
+            // för aggregerat innehåll och ger E-E-A-T-trust utan att förfalska
+            // författarskapet (todo #32).
+            "sourceOrganization" => [
+                "@type" => "GovernmentOrganization",
+                "name" => "Polismyndigheten",
+                "url" => "https://polisen.se/",
             ],
             "publisher" => [
                 "@type" => "Organization",
@@ -1108,11 +1132,20 @@ class CrimeEvent extends Model implements Feedable {
                     "height" => 60,
                 ],
             ],
-            "description" => $description,
+            // description = kort sammanfattning för SERP, articleBody = full
+            // text för AI Overviews-extrahering (todo #32).
+            "description" => mb_substr($bodyText, 0, 200),
+            "articleBody" => $bodyText,
+            "wordCount" => str_word_count($bodyText),
             "inLanguage" => "sv-SE",
             "isAccessibleForFree" => true,
             "articleSection" => $this->parsed_title,
             "keywords" => array_values($keywords),
+            // Voice search / Google Assistant / Bing Read Aloud (todo #32).
+            "speakable" => [
+                "@type" => "SpeakableSpecification",
+                "cssSelector" => [".Event__teaser", ".Event__content"],
+            ],
         ];
 
         if ($this->parsed_title) {
@@ -1144,6 +1177,17 @@ class CrimeEvent extends Model implements Feedable {
             ]);
         }
 
+        // isPartOf — koppla event till sin månadsvy så AI Overviews förstår
+        // entity-graph-relationer (todo #32). Tier 1-städer pekar på
+        // cityMonth, övriga på platsMonth.
+        $monthCollectionUrl = $this->getMonthCollectionPageUrl();
+        if ($monthCollectionUrl) {
+            $jsonData["isPartOf"] = [
+                "@type" => "CollectionPage",
+                "@id" => $monthCollectionUrl,
+            ];
+        }
+
         $str = '<script type="application/ld+json">' .
             json_encode(
                 $jsonData,
@@ -1152,6 +1196,40 @@ class CrimeEvent extends Model implements Feedable {
             '</script>';
 
         return $str;
+    }
+
+    /**
+     * Bygg URL till månadsvyn som detta event tillhör — används som
+     * `isPartOf.@id` i NewsArticle-schemat (todo #32).
+     *
+     * Tier 1-städer (#33) pekar på cityMonth-routen; övriga på platsMonth.
+     * Returnerar null om vi saknar location eller parsed_date.
+     */
+    public function getMonthCollectionPageUrl(): ?string {
+        if (empty($this->parsed_title_location) || empty($this->parsed_date)) {
+            return null;
+        }
+
+        $carbonDate = $this->getParsedDateAsCarbon();
+        $year = $carbonDate->format('Y');
+        $month = $carbonDate->format('m');
+
+        $platsAscii = Helper::toAscii(mb_strtolower($this->parsed_title_location));
+        $tier1 = \App\Http\Controllers\CityController::tier1Slugs();
+
+        if (in_array($platsAscii, $tier1, true)) {
+            return route('cityMonth', [
+                'city' => $platsAscii,
+                'year' => $year,
+                'month' => $month,
+            ], true);
+        }
+
+        return route('platsMonth', [
+            'plats' => mb_strtolower($this->parsed_title_location),
+            'year' => $year,
+            'month' => $month,
+        ], true);
     }
 
     /**

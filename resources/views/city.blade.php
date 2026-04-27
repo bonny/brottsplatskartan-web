@@ -12,6 +12,7 @@
         'placeAddressRegion' => $lan,
         'placeContainedIn' => $lan,
         'placeUrl' => url()->current(),
+        'placeWikidataQid' => $city['wikidataQid'] ?? null,
     ])
 @endsection
 

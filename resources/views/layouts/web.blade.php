@@ -76,7 +76,15 @@ Layout template for web
                     'name' => 'Brottsplatskartan',
                     'url' => url('/'),
                     'logo' => url('/apple-touch-icon-152x152.png'),
-                    'sameAs' => ['https://twitter.com/brottsplatser'],
+                    'description' => 'Polishändelser och brott visualiserade på karta över Sverige. Aktuell data direkt från Polismyndigheten.',
+                    'address' => [
+                        '@type' => 'PostalAddress',
+                        'addressCountry' => 'SE',
+                    ],
+                    'sameAs' => [
+                        'https://twitter.com/brottsplatser',
+                        'https://github.com/bonny/brottsplatskartan-web',
+                    ],
                 ],
                 [
                     '@type' => 'WebSite',

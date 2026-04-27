@@ -4,7 +4,7 @@ Index över förbättringsarbete. Varje todo har en egen fil under
 [`todos/`](todos/) med fullständig analys. Konvention och
 mappstruktur: [`todos/README.md`](todos/README.md).
 
-Senast uppdaterad: 2026-04-27.
+Senast uppdaterad: 2026-04-27 (#32 schema-sweep klar).
 
 
 
@@ -17,7 +17,6 @@ Senast uppdaterad: 2026-04-27.
 | 25  | Månadsvyer istället för dagsvyer (datum-routes) | Pilot live 2026-04-27 (uppsala + västerås + uppsala-lan). 30d-mätning till 2026-05-27               | [todos/25-manadsvyer-datum-routes.md](todos/25-manadsvyer-datum-routes.md) |
 | 27  | Berika ort- och månadssidor med rikare innehåll | Designfas — Lager 1–3 (egen data, externt + AI), research klar                                      | [todos/27-rikare-innehall.md](todos/27-rikare-innehall.md)                 |
 | 29  | Audit + reducera indexerade pages               | Datum-routes + thin singles deployat, ~22k pages noindex:as. Mätperiod 30–90d i GSC                  | [todos/29-audit-indexerade-pages.md](todos/29-audit-indexerade-pages.md)   |
-| 32  | Schema.org-sweep (NewsArticle/Dataset/FAQPage)  | Designfas — härledd från SEO 2026-review. Hög ROI, kan köras parallellt med #25                      | [todos/32-schema-sweep.md](todos/32-schema-sweep.md)                       |
 
 ### Beroenden
 
@@ -27,11 +26,10 @@ Senast uppdaterad: 2026-04-27.
 ### Föreslagen ordning
 
 1. **#25 Månadsvyer** — Uppsala-pilot pågår
-2. **#32 Schema-sweep** — kör parallellt, hög ROI för AI Overviews
-3. **#10 AI-titlar** — bygg på `laravel/ai` (#28 klar)
-4. **#27** — innehållsberikning efter #25-piloten
-5. **#16** (DO-avveckling) — efter ~2026-05-15 när soak på statiska sajterna är klar
-6. **#29** — passiv mätperiod, åtgärder efter data
+2. **#10 AI-titlar** — bygg på `laravel/ai` (#28 klar)
+3. **#27** — innehållsberikning efter #25-piloten
+4. **#16** (DO-avveckling) — efter ~2026-05-15 när soak på statiska sajterna är klar
+5. **#29** — passiv mätperiod, åtgärder efter data
 
 ## Klara
 
@@ -39,6 +37,7 @@ Sorterade nyast först.
 
 | #   | Titel                                                  | Klar       | Fil                                                                                    |
 | --- | ------------------------------------------------------ | ---------- | -------------------------------------------------------------------------------------- |
+| 32  | Schema.org-sweep (NewsArticle+Place+sameAs+CollectionPage+cache) | 2026-04-27 | [todos/done/32-schema-sweep.md](todos/done/32-schema-sweep.md)                |
 | 34  | Långa event-slugs — kort URL för events från 2026-04-28 | 2026-04-27 | [todos/done/34-langa-event-slugs.md](todos/done/34-langa-event-slugs.md)               |
 | 33  | Tier 1-städer på `/{city}/handelser/{year}/{month}`    | 2026-04-27 | [todos/done/33-tier1-month-routes.md](todos/done/33-tier1-month-routes.md)             |
 | 30  | CWV-optimering Fas 1 (LCP -84 %, perf 51→80)           | 2026-04-26 | [todos/done/30-cwv-optimering.md](todos/done/30-cwv-optimering.md)                     |

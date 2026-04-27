@@ -36,6 +36,14 @@ https://brottsplatskartan.localhost/plats/nacka
         'placeAddressRegion' => $place->lan ?? null,
         'placeContainedIn' => $place->lan ?? null,
         'placeUrl' => $canonicalLink,
+        'placeWikidataQid' => (isset($place) && !$place->wikidata_review_needed) ? $place->wikidata_qid : null,
+    ])
+    @include('parts.collectionpage-jsonld', [
+        'cpName' => $plats . ' – polishändelser och brott',
+        'cpUrl' => $canonicalLink,
+        'cpAboutType' => 'Place',
+        'cpAboutName' => $plats,
+        'cpDescription' => $metaDescription ?? null,
     ])
 @endsection
 

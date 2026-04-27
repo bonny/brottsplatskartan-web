@@ -39,6 +39,7 @@ class CityController extends Controller
             'pageTitle' => 'Stockholm: Polishändelser och blåljus',
             'title' => 'Senaste blåljusen och händelser från Polisen.',
             'description' => 'Se aktuella polishändelser och blåljuslarm från räddningstjänsten i Stockholm',
+            'wikidataQid' => 'Q1754',
         ],
         'malmo' => [
             'name' => 'Malmö och Skåne län',
@@ -50,6 +51,7 @@ class CityController extends Controller
             'pageTitle' => 'Malmö: Polishändelser och blåljus',
             'title' => 'Senaste blåljusen och händelser från Polisen i Malmö med omnejd.',
             'description' => 'Se aktuella polishändelser och blåljuslarm från räddningstjänsten i Malmö och Skåne län.',
+            'wikidataQid' => 'Q2211',
         ],
         'goteborg' => [
             'name' => 'Göteborg och Västra Götalands län',
@@ -61,6 +63,7 @@ class CityController extends Controller
             'pageTitle' => 'Göteborg: Polishändelser och blåljus',
             'title' => 'Senaste blåljusen och händelser från Polisen i Göteborg med omnejd.',
             'description' => 'Se aktuella polishändelser och blåljuslarm från räddningstjänsten i Göteborg och Västra Götalands län.',
+            'wikidataQid' => 'Q25287',
         ],
         'helsingborg' => [
             'name' => 'Helsingborg och Skåne län',
@@ -72,6 +75,7 @@ class CityController extends Controller
             'pageTitle' => 'Helsingborg: Polishändelser och blåljus',
             'title' => 'Senaste blåljusen och händelser från Polisen i Helsingborg med omnejd.',
             'description' => 'Se aktuella polishändelser och blåljuslarm från räddningstjänsten i Helsingborg och Skåne län.',
+            'wikidataQid' => 'Q26793',
         ],
         'uppsala' => [
             'name' => 'Uppsala och Uppsala län',
@@ -83,6 +87,7 @@ class CityController extends Controller
             'pageTitle' => 'Uppsala: Polishändelser och blåljus',
             'title' => 'Senaste blåljusen och händelser från Polisen i Uppsala med omnejd.',
             'description' => 'Se aktuella polishändelser och blåljuslarm från räddningstjänsten i Uppsala och Uppsala län.',
+            'wikidataQid' => 'Q25286',
         ],
     ];
 

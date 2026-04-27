@@ -348,6 +348,45 @@ class Helper {
     }
 
     /**
+     * Wikidata Q-id-mapping för Sveriges 21 län (todo #32).
+     * Används som `sameAs` i Place-schema för entity-graph-koppling
+     * mot AI Overviews. Hämtad via wbsearchentities 2026-04-27.
+     *
+     * @return array<string, string>
+     */
+    public static function getLanWikidataQids(): array
+    {
+        return [
+            'Blekinge län' => 'Q102377',
+            'Dalarnas län' => 'Q103732',
+            'Gotlands län' => 'Q103738',
+            'Gävleborgs län' => 'Q103699',
+            'Hallands län' => 'Q103691',
+            'Jämtlands län' => 'Q103679',
+            'Jönköpings län' => 'Q103672',
+            'Kalmar län' => 'Q103707',
+            'Kronobergs län' => 'Q104746',
+            'Norrbottens län' => 'Q103686',
+            'Skåne län' => 'Q103659',
+            'Stockholms län' => 'Q104231',
+            'Södermanlands län' => 'Q106915',
+            'Uppsala län' => 'Q104926',
+            'Värmlands län' => 'Q106789',
+            'Västerbottens län' => 'Q104877',
+            'Västernorrlands län' => 'Q104891',
+            'Västmanlands län' => 'Q105075',
+            'Västra Götalands län' => 'Q103093',
+            'Örebro län' => 'Q104257',
+            'Östergötlands län' => 'Q104940',
+        ];
+    }
+
+    public static function getLanWikidataQid(string $lan): ?string
+    {
+        return self::getLanWikidataQids()[$lan] ?? null;
+    }
+
+    /**
      * @param string $string
      * @param string|null $allowable_tags
      * @return string

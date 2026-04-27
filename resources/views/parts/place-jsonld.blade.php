@@ -29,6 +29,14 @@
             'name' => $placeContainedIn,
         ];
     }
+
+    // Wikidata sameAs (todo #32) — entity-graph-koppling för AI Overviews.
+    // Q-id backfilld via `php artisan wikidata:backfill`. Bara
+    // auto-accepterade matches används; review-flaggade ignoreras tills
+    // manuellt godkända.
+    if (!empty($placeWikidataQid)) {
+        $_placeLd['sameAs'] = "https://www.wikidata.org/wiki/{$placeWikidataQid}";
+    }
 @endphp
 <script type="application/ld+json">
 {!! json_encode($_placeLd, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
