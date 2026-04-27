@@ -1,4 +1,4 @@
-@if (!isset($overview) && Auth::check())
+@if (empty($overview) && Auth::check())
 
     @if ($event->title_alt_1 || $event->description_alt_1)
         <details class="mt-6">
