@@ -4,17 +4,18 @@ Index över förbättringsarbete. Varje todo har en egen fil under
 [`todos/`](todos/) med fullständig analys. Konvention och
 mappstruktur: [`todos/README.md`](todos/README.md).
 
-Senast uppdaterad: 2026-04-27 (+#10 review/scope-uppdatering).
+Senast uppdaterad: 2026-04-27 (+#10 deployat, +#36 GSC-mätning startad).
 
 ## Aktiva
 
 | #   | Titel                                           | Status                                                                                | Fil                                                                        |
 | --- | ----------------------------------------------- | ------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| 10  | AI-omskriva vaga titlar                         | Plan reviewad 2026-04-27 — bara nya events (~$0.07/dag), ingen backfill               | [todos/10-ai-omskriva-titlar.md](todos/10-ai-omskriva-titlar.md)           |
+| 10  | AI-omskriva vaga titlar                         | Rendering deployat 2026-04-27 (4596 events). Auto-trigger i fetch-pipeline kvarstår   | [todos/10-ai-omskriva-titlar.md](todos/10-ai-omskriva-titlar.md)           |
 | 16  | Rensa / avveckla gamla DO-servern (Dokku)       | Appar stoppade, väntar på soak innan radering                                         | [todos/16-rensa-do-server.md](todos/16-rensa-do-server.md)                 |
 | 25  | Månadsvyer istället för dagsvyer (datum-routes) | Pilot live 2026-04-27 (uppsala + västerås + uppsala-lan). 30d-mätning till 2026-05-27 | [todos/25-manadsvyer-datum-routes.md](todos/25-manadsvyer-datum-routes.md) |
 | 27  | Berika ort- och månadssidor med rikare innehåll | Designfas — Lager 1–3 (egen data, externt + AI), research klar                        | [todos/27-rikare-innehall.md](todos/27-rikare-innehall.md)                 |
 | 29  | Audit + reducera indexerade pages               | Datum-routes + thin singles deployat, ~22k pages noindex:as. Mätperiod 30–90d i GSC   | [todos/29-audit-indexerade-pages.md](todos/29-audit-indexerade-pages.md)   |
+| 36  | GSC-mätning av AI-titlars CTR-effekt            | Mätperiod startad 2026-04-27, första check 2026-05-25                                 | [todos/36-gsc-matning-ai-titlar.md](todos/36-gsc-matning-ai-titlar.md)     |
 
 ### Beroenden
 
@@ -24,10 +25,11 @@ Senast uppdaterad: 2026-04-27 (+#10 review/scope-uppdatering).
 ### Föreslagen ordning
 
 1. **#25 Månadsvyer** — Uppsala-pilot pågår
-2. **#10 AI-titlar** — bygg på `laravel/ai` (#28 klar)
+2. **#10 AI-titlar fas 2** — auto-trigger i fetch-pipeline (rendering klart, beslut om backfill efter #36)
 3. **#27** — innehållsberikning efter #25-piloten
 4. **#16** (DO-avveckling) — efter ~2026-05-15 när soak på statiska sajterna är klar
 5. **#29** — passiv mätperiod, åtgärder efter data
+6. **#36** — passiv GSC-mätning, första check 2026-05-25
 
 ## Klara
 
