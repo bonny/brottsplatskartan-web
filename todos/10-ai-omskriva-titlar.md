@@ -1,24 +1,34 @@
-**Status:** aktiv (plan klar, redo för pilot)
-**Senast uppdaterad:** 2026-04-21
+**Status:** aktiv — plan reviewad 2026-04-27, prod-volymanalys verifierad, scope: bara nya events framåt
+**Senast uppdaterad:** 2026-04-27
 
 # Todo #10 — AI-omskrivning av vaga event-titlar
 
 ## Sammanfattning
 
-Polisens RSS-flöden producerar ibland generiska/tomma rubriker som
+Polisens RSS-flöden producerar ibland generiska rubriker som
 "Sammanfattning natt, region Nord" eller "Information om polisens
-pressnummer" — texter med noll SEO-värde och dålig klickbenägenhet.
-`parsed_title` härleds direkt ur RSS-titeln (mellan komma 1 och sista
-kommat) och blir därför lika tom. Förslaget: kör en AI-rewrite
-(Claude Haiku) på body-texten (`parsed_content`) och spara resultatet
-i en **ny** kolumn `parsed_title_ai` — **utan** att förstöra nuvarande
-`parsed_title` eller existerande permalinks. Slug-generering används
-bara för nya rewrites eller bakom en feature-flag med 301-redirect
-från gamla slugs.
+pressnummer" — texter med noll SEO-värde och dålig CTR. `parsed_title`
+härleds direkt ur RSS-titeln (mellan komma 1 och sista kommat) och blir
+därför lika tom.
 
-Rekommenderad scope i fas 1: **bara nya händelser + senaste 30
-dagarna** som pilot. Bakåtkatalog (200k+ events) i fas 2 efter
-utvärdering.
+**Förslag:** kör en AI-rewrite (Claude Haiku via `laravel/ai`, klart
+sedan #28) på body-texten (`parsed_content`) och spara resultatet i en
+**ny** kolumn `parsed_title_ai` — utan att röra `parsed_title` eller
+existerande permalinks. Slug-generering rör vi inte; detta är en
+rendering-uppgradering, inte URL-byte.
+
+## Scope
+
+**Geografi:** Alla orter. Filter är på _titel-kvalitet_ (regex), inte
+stad/län. Vaga titlar är lika SEO-skadliga i Sundsvall som i Uppsala.
+
+**Tidsfönster:** Bara nya events från och med deploy. Bakåtkatalog
+(~200k events) skippad i denna iteration — vi mäter värdet på nya
+events först. Om GSC visar CTR-vinst efter 4-8 veckor återöppnas
+backfill som separat todo.
+
+**Modeller:** Bara `CrimeEvent`. `VMAAlert` har egen titelparsing och
+rörs inte.
 
 ## Nulägesanalys — hur parsas titel idag
 
@@ -34,66 +44,130 @@ utvärdering.
 - Resultatet skrivs till kolumnerna `parsed_title`, `parsed_title_location`,
   `parsed_date`, `parsed_updated_date` direkt i `crime_events`.
 
-### Användning av `parsed_title`
+### Användning av `parsed_title` (alla ställen som måste hanteras)
 
-- **Slug/permalink** (`CrimeEvent::getPermalink()` rad 419-470) — ingår i URL.
-- **`<title>`/`<h1>`** på event-sidan (rad 953, 984).
-- **Sök** (rad 613-615, LIKE på `parsed_title`).
-- **Tweet-generering** (`app/Console/Commands/TweetCrimes.php`).
-- **Feeds/RSS-output** (`FeedController`).
-- **API-svar** (`ApiController`, `ApiEventsMapController`).
-- **Kategoriseringshjälpare** (rad 1252, 1274 — matchar "inbrott",
-  "brand" osv. via `Str::contains`).
+- **Slug/permalink** (`CrimeEvent::getPermalink()`) — **rör inte**.
+- **`<title>`/`<h1>`** på event-sidan — byt till `display_title`.
+- **Schema.org `headline`** i `CrimeEvent::buildLdJson()` — byt till
+  `display_title` (synergi med #32, se "Teknisk plan #7").
+- **Sökning** (LIKE) — utöka till **båda** kolumnerna.
+- **Tweet-generering** (`TweetCrimes.php`) — byt till `display_title`.
+- **Feeds/RSS-output** (`FeedController`) — byt till `display_title`.
+- **Markdown-output** (#12) — byt till `display_title`.
+- **API-svar** (`ApiController`, `ApiEventsMapController`) — **behåll
+  `parsed_title` bakåtkompat**, lägg till `display_title` som nytt fält.
+- **Kategoriserings-heuristik** (rad 1252, 1274 — `Str::contains`) —
+  **rör inte** (kör mot rå källa, se risk #7).
 
 ### ContentFilter — relaterad men inte samma sak
 
 `app/Services/ContentFilterService.php` markerar presstalesperson- och
-pressnummer-rena händelser som `is_public = false` (dvs. helt
-dolda). Presstalesperson-filtret är f.n. **avaktiverat** (rad 23-29)
-eftersom det råkade blockera `sammanfattning natt`-poster som faktiskt
-innehåller riktig händelsedata. Det är precis de här som
-AI-omskrivning ska rädda SEO-mässigt — de ska **visas**, men med
-bättre titel.
+pressnummer-rena händelser som `is_public = false` (helt dolda).
+Presstalesperson-filtret är f.n. avaktiverat (rad 23-29) eftersom det
+råkade blockera `sammanfattning natt`-poster med riktig händelsedata.
+Det är precis de här som AI-omskrivning ska rädda — de **visas**, men
+med bättre titel.
 
 ## Mönster — vaga titlar att fånga
 
-SQL-utkast (kör som EXPLAIN/dry-run först):
+SQL för att kontrollera volym (kör som dry-run mot prod):
 
 ```sql
--- Totalt antal "vaga" events (grov uppskattning)
 SELECT
   CASE
     WHEN parsed_title REGEXP '(?i)sammanfattning ?(natt|dygn|morgon|kväll|dag)' THEN 'sammanfattning'
     WHEN parsed_title REGEXP '(?i)information om polisens pressnummer' THEN 'pressnummer'
     WHEN parsed_title REGEXP '(?i)presstalesperson' THEN 'presstalesperson'
-    WHEN parsed_title REGEXP '(?i)dagens presstalesperson' THEN 'dagens-presstalesperson'
     WHEN parsed_title REGEXP '(?i)^(övrigt|annat|händelse)$' THEN 'generisk'
     WHEN CHAR_LENGTH(parsed_title) < 6 THEN 'för-kort'
     ELSE NULL
   END AS bucket,
   COUNT(*) c
 FROM crime_events
-WHERE is_public = 1
+WHERE is_public = 1 AND parsed_date > NOW() - INTERVAL 30 DAY
 GROUP BY bucket
 ORDER BY c DESC;
 ```
 
-Konkreta mönster (observerade i slug-exemplet från uppgiften):
+Mönster:
 
-| Mönster                  | Regex                                 | Exempel                               |
-| ------------------------ | ------------------------------------- | ------------------------------------- | ----------- | -------- | ---------------------------------- | ---------- | ---------------------------------------- | --- |
-| Sammanfattning natt/dygn | `^(?i)sammanfattning[ -]?(natt        | dygn                                  | morgon      | kväll)`  | "Sammanfattning natt, region Nord" |
-| Pressnummer-info         | `information om polisens pressnummer` | "Information om polisens pressnummer" |
-| Presstalesperson         | `(dagens )?presstalesperson`          | "Dagens presstalesperson är på plats" |
-| Generiskt "Övrigt"       | `^(övrigt                             | annat                                 | händelse)$` | "Övrigt" |
-| Trunkerad/tom            | `CHAR_LENGTH < 6` eller NULL          | "Brand", "Stöld" utan kontext         |
-| Regionstämpel utan plats | `region (nord                         | syd                                   | väst        | öst      | mitt                               | bergslagen | stockholm)` som suffix utan specifik ort |     |
+| Bucket           | Regex                                                         | Volym 30d (2026-04-27)         | Andel  |
+| ---------------- | ------------------------------------------------------------- | ------------------------------ | ------ |
+| sammanfattning   | `(?i)sammanfattning ?(natt\|dygn\|morgon\|kväll\|dag)`        | 358                            | 18.3 % |
+| för-kort         | `CHAR_LENGTH < 6` (typ "Brand", "Stöld" — legit men SEO-svag) | 255                            | 13.1 % |
+| generisk         | `(?i)^(övrigt\|annat\|händelse)$`                             | 113                            | 5.8 %  |
+| pressnummer      | `(?i)information om polisens pressnummer`                     | 0 (filtreras av ContentFilter) | —      |
+| presstalesperson | `(?i)(dagens )?presstalesperson`                              | 0 (filtreras av ContentFilter) | —      |
 
-Rekommenderat: börja med `sammanfattning` — det är det största SEO-
-bortfallet (långa body-texter, generisk titel, återkommande flera
-gånger om dagen, indexerade i Google).
+**Total vag = 37.2 % av events** (726 av 1954 senaste 30d). Pressnummer/presstalesperson markeras som
+`is_public = 0` av `ContentFilterService` och dyker aldrig upp — kan tas bort som bucket men behålls
+i regex för defensivt skydd.
+
+**Stickprovs-findings (5-10 ex per bucket, 2026-04-27):**
+
+- **`sammanfattning`** — alla är identiska ("Sammanfattning natt" / "Sammanfattning kväll och natt"),
+  lokation = "X län", body 0-1861 tecken. Identiska titlar = max SEO-skada, max AI-vinst.
+- **`för-kort`** — alla är legit korta brottstyper ("Brand", "Stöld") med rikt body-innehåll
+  (88-558 tecken) och specifika orter ("Stockholm", "Uppsala", "Göteborg"). **Detta är guldgruvan** —
+  det finns innehåll att skriva en bra rubrik från, och AI-rewrite ger dramatiskt bättre SERP.
+- **`generisk`** — alla "Övrigt", body varierar (0-302 tecken). Vissa går att rewrite:a, andra inte.
 
 ## Teknisk plan
+
+### 0. Pre-filter — billig regex-check innan AI-anrop
+
+AI:n körs **bara** på events där `parsed_title` matchar ett vagt
+mönster. Allt annat skippas helt — ingen API-kostnad, ingen latens.
+
+Två steg: (1) klassificera titel, (2) verifiera att body är användbar.
+
+```php
+private const MIN_BODY_LENGTH = 100;
+
+public static function isVagueTitle(?string $title): ?string
+{
+    if ($title === null) return 'tom';
+    $t = trim($title);
+    return match (true) {
+        preg_match('/(?i)sammanfattning ?(natt|dygn|morgon|kväll|dag)/', $t) === 1 => 'sammanfattning',
+        preg_match('/(?i)information om polisens pressnummer/', $t) === 1 => 'pressnummer',
+        preg_match('/(?i)(dagens )?presstalesperson/', $t) === 1 => 'presstalesperson',
+        preg_match('/(?i)^(övrigt|annat|händelse)$/', $t) === 1 => 'generisk',
+        mb_strlen($t) < 6 => 'för-kort',
+        default => null,
+    };
+}
+
+public static function shouldRewrite(CrimeEvent $event): ?string
+{
+    $bucket = self::isVagueTitle($event->parsed_title);
+    if ($bucket === null) return null;
+    if (mb_strlen(trim($event->parsed_content ?? '')) < self::MIN_BODY_LENGTH) {
+        // Ingen text att basera ny rubrik på — AI skulle bara svara
+        // RUBRIK_OMÖJLIG. Spara anropet.
+        return null;
+    }
+    return $bucket;
+}
+```
+
+Anrop i fetch-pipelinen:
+
+```php
+$bucket = TitleRewriteService::shouldRewrite($event);
+if ($bucket === null) {
+    return; // titeln OK eller body för tunn — skippa AI helt
+}
+$ai = $rewriter->rewriteTitle($event, $bucket);
+```
+
+Effekt (verifierat mot prod 2026-04-27):
+
+- ~63 % av nya events har redan OK titel — skippas direkt.
+- ~37 % matchar vagt mönster, varav en del faller på body < 100 tecken
+  (verifierat: vissa "Sammanfattning natt" och "Övrigt"-events har body=0).
+- Faktisk AI-anropsvolym: ~20 events/dag. `bucket`-värdet skickas vidare
+  till prompten så modellen vet _varför_ titeln är vag.
 
 ### 1. Migration
 
@@ -102,14 +176,12 @@ Schema::table('crime_events', function (Blueprint $table) {
     $table->string('parsed_title_ai', 255)->nullable()->after('parsed_title');
     $table->timestamp('parsed_title_ai_at')->nullable();
     $table->string('parsed_title_ai_model', 64)->nullable();
-    // För SEO och QA: spara originalet så vi kan göra diff/rollback
-    // även om någon råkar skriva över parsed_title senare.
-    $table->index('parsed_title_ai_at'); // för backfill-progress
+    $table->index('parsed_title_ai_at');
 });
 ```
 
-Ingen ändring av existerande `parsed_title` — den är läskälla för
-alla gamla permalinks och fallback.
+Ingen ändring av `parsed_title` — den är läskälla för alla gamla
+permalinks och fallback.
 
 ### 2. Accessor i `CrimeEvent`
 
@@ -120,77 +192,97 @@ public function getDisplayTitleAttribute(): string
 }
 ```
 
-Byt ut `$event->parsed_title` → `$event->display_title` i:
-
-- `resources/views/parts/crimeevent*.blade.php`
-- `resources/views/single-*.blade.php`
-- Meta-title/OG-title i layouts
-- `getLdJson()` (Schema.org headline)
-- Tweet-texten (`TweetCrimes.php`)
-
-**Behåll `parsed_title` i URL-slug** (`getPermalink()`) för att undvika
-att befintliga länkar i Google och externa sajter bryts. Se punkt 5.
+Använd `$event->display_title` i alla ställen i listan ovan utom de
+som explicit ska röra rå källan.
 
 ### 3. Service + Kommando
 
 `app/Services/TitleRewriteService.php`:
 
-- Metod `rewriteTitle(CrimeEvent $event): ?string`
-- Claude Haiku (billigt, snabbt).
-- Prompt se nedan.
-- Validering: 5-80 tecken, ingen trailing punkt, ingen ", region X"-
-  suffix, inga citationstecken runt, inga emojis, startar med
-  versal. Hallu-skydd: kräv att minst ett ortsnamn eller
-  brottskategori från `parsed_content` finns i resultatet.
-- Fallback: returnera `null` → behåll `parsed_title`.
+- Använder `laravel/ai` (samma stack som migrerades i #28).
+- Modell: `claude-haiku-4-5` (snabb, billig, klarar uppgiften).
+- **Prompt caching aktiverad** på system-prompten — halverar
+  input-kostnad. Kräver att system-prompt är samma sträng över alla
+  anrop, så håll den statisk i en konstant.
+- Validering (efter modellsvar):
+    - 5–110 tecken (matchar Schema.org `headline`-cap från #32)
+    - Inga newlines, inga citattecken, inga emojis
+    - Börjar med versal
+    - Ingen ", region X"-suffix
+    - **Hallu-skydd:** rubriken måste innehålla minst ett ord ≥4
+      tecken från ENDERA `parsed_content`, `parsed_title_location`
+      eller `Dictionary`-tabellen (brottskategorier)
+- Misslyckad validering eller `RUBRIK_OMÖJLIG` → returnera `null`
+  → `display_title` faller transparent tillbaka till `parsed_title`.
 
 `app/Console/Commands/RewriteTitles.php` (`crimeevents:rewrite-titles`):
 
 ```
---since=<days>          default 1
---pattern=<bucket>      sammanfattning|pressnummer|all
---limit=<n>             default 500
---dry-run
---force                 (kör även om parsed_title_ai redan finns)
+--limit=<n>           default 100 (för manuell körning vid behov)
+--pattern=<bucket>    sammanfattning|pressnummer|all (default: all)
+--dry-run             skriv inte till DB, visa diff
+--force               kör om även events där parsed_title_ai redan satt
 ```
+
+**Ingen scheduler-entry för backfill** — bara on-demand vid behov.
 
 ### 4. Integration i fetch-pipeline
 
-I `FetchEvents::handle()`, **efter** content-filtret, kör
-`TitleRewriteService` på nya events som matchar ett vagt mönster.
-Wrap i try/catch + timeout — får aldrig blockera en fetch-cykel.
-Redis-låst per event-ID för idempotens.
+I `FetchEvents::handle()`, **efter** `ContentFilterService`, kör
+`TitleRewriteService` på nya events vars `parsed_title` matchar ett
+vagt mönster.
 
-Scheduler-entry i `app/Console/Kernel.php`:
-
-```php
-$schedule->command('crimeevents:rewrite-titles --since=1')
-    ->hourly()
-    ->withoutOverlapping();
-```
+- Wrap i try/catch + 10s timeout — får aldrig blockera fetch-cykeln.
+- Misslyckas: logga + behåll `parsed_title_ai = null`, fallback funkar
+  transparent.
+- Idempotens: skip om `parsed_title_ai` redan satt (om inte `--force`).
+- Rate limit: Anthropic Tier 1 = 50 RPM Haiku. Med ~100 vaga events
+  per dygn ligger vi tre storleksordningar under taket.
 
 ### 5. Slug & 301-redirect
 
 **Default: rör inte sluggen.** `parsed_title_ai` påverkar bara
 rendering. Zero-risk för gamla länkar.
 
-**Om** slug-byte ändå önskas (bättre SEO på nya events):
+Slug-byte för nya events är möjligt i en framtida fas men inte
+inkluderat här — det kräver redirect-infrastruktur som inte ger
+proportional vinst i fas 1.
 
-- Endast för events som ännu inte indexerats (< 24h gamla) — i
-  `getPermalink()` välj `parsed_title_ai` om satt **och**
-  `created_at > NOW() - 24h`.
-- För äldre: lägg ny kolumn `slug_history` (JSON) och ny route som
-  matchar gamla slugs → 301 till nuvarande. Alternativt generisk
-  catch-all: matcha på trailing `-{id}` (det numeriska ID:et är sista
-  delen av sluggen redan, rad 455) och redirecta till kanonisk URL om
-  sluggen skiljer sig.
-- Canonical-taggen i `<head>` måste peka på nya URL:en direkt.
+### 6. ~~Sitemap~~
 
-### 6. Sitemap
+Sitemap finns sedan #11 / SEO-audit 2026. När `display_title` används
+i Blade-vyerna kommer den automatiskt med — inget extra arbete.
 
-`sitemap.xml` saknas idag (se `02-seo-review.md`). När den byggs:
-använd `display_title` i `<image:title>`/`<news:title>` — AI-titlarna
-får då effekt i Google News/Discover.
+### 7. Synergi med #32 (Schema.org NewsArticle)
+
+`app/CrimeEvent.php::buildLdJson()` skriver idag `headline` från
+`parsed_title`. **Måste byta till `display_title`** annars läcker halva
+SEO-vinsten — Schema headline är en stark signal till Google.
+
+```php
+// Före:
+"headline" => mb_substr($title, 0, 110),
+
+// Efter:
+"headline" => mb_substr($this->display_title, 0, 110),
+```
+
+`getLdJson()` cachas sedan #32 — cache-nyckeln inkluderar `updated_at`.
+När `parsed_title_ai` sätts måste vi antingen touch-a `updated_at`
+eller lägga `parsed_title_ai_at` i cache-nyckeln. **Rekommendation:**
+lägg till `parsed_title_ai_at` i `getLdJson()`-cache-nyckeln så är det
+deterministiskt.
+
+### 8. Transparens på /sida/om
+
+Lägg en kort mening:
+
+> Titlar på vissa polishändelser har förbättrats med AI för läsbarhet.
+> Originaltexten från Polisens RSS bevaras alltid och visas under
+> varje händelse.
+
+Inget per-event-attribution behövs — det är en system-egenskap, inte
+redaktionellt innehåll.
 
 ## Prompt-design
 
@@ -200,10 +292,12 @@ saklig och SEO-vänlig rubrik för följande polishändelse.
 
 KRAV:
 - Svenska.
-- 40-70 tecken.
+- 80-100 tecken (max 110, för Schema.org headline).
 - Börja med brottstyp/händelsetyp (t.ex. "Misshandel", "Trafikolycka",
   "Brand").
 - Inkludera ort om den nämns i texten.
+- Inkludera ett konkret detaljelement om utrymmet räcker (plats,
+  tidpunkt, omfattning) — utan att hitta på.
 - Ingen sensationalism, inga utropstecken, inga emojis, inga citattecken.
 - Hitta INTE på detaljer som inte står i texten. Om texten är för vag,
   svara exakt: RUBRIK_OMÖJLIG
@@ -217,121 +311,108 @@ HÄNDELSETEXT:
 {parsed_content}
 ```
 
-Model: `claude-haiku-4-5` (eller motsvarande senaste Haiku).
-`max_tokens: 60`, `temperature: 0.2`.
+- Modell: `claude-haiku-4-5` via `laravel/ai`.
+- `max_tokens: 60`, `temperature: 0.2`.
+- Prompt caching aktiverad på system-instruktionerna.
 
-Post-check: om svaret === `RUBRIK_OMÖJLIG` → skriv `null`, behåll
-original.
+## Kostnad
 
-## Kostnadsuppskattning (Claude Haiku)
+Per event ~$0.00068 (Haiku 4.5, ~550 input + 25 output tokens). Med
+prompt caching halveras input-kostnaden.
 
-Antaganden per event:
+Volymdata från prod 2026-04-27 (senaste 30d):
 
-- Input: prompt ~150 tokens + `parsed_content` ~400 tokens = **~550 tokens**
-- Output: **~25 tokens**
-- Haiku 4.5-prissättning (kolla aktuella siffror på anthropic.com):
-  ~$1/M input, ~$5/M output.
-- Cost/event ≈ (550 × $1 + 25 × $5) / 1M ≈ **$0.00068** ≈ 0.007 SEK.
+| Volym                                                                          | Kostnad   |
+| ------------------------------------------------------------------------------ | --------- |
+| Nya events ~65/dag, ~37 % vaga, ~80 % har body ≥ 100 tecken → ~20 AI-anrop/dag | ~60 kr/år |
+| Med prompt caching aktiverad (~50 % rabatt på input)                           | ~30 kr/år |
 
-Scenarier:
-| Volym | Kostnad USD | Kostnad SEK (10 kr/USD) |
-|---|---|---|
-| Nya events (~500/dag, 20% vaga = 100/dag) | $0.07/dag ≈ $25/år | ~250 kr/år |
-| Senaste 30 dagar backfill (~3 000 vaga) | $2 | ~20 kr |
-| Full bakåtkatalog 200k events, 20% vaga = 40k | $27 | ~270 kr |
-| Full bakåtkatalog ALLA 200k (om man vill testa) | $136 | ~1 400 kr |
+Försumbar. Flaskhals är inte pengar utan API rate-limits — och med
+~20 anrop per dygn ligger vi fyra storleksordningar under taket.
 
-Slutsats: **kostnaden är försumbar även för full backfill**. Flaskhalsen
-är API rate-limits, inte pengar. Kör med prompt caching på
-system-prompten för att halvera input-kostnaden ytterligare.
+## Mätning (post-deploy)
+
+Använd `mcp-gsc` (klar sedan #26) — `compare_search_periods`:
+
+- 30d före deploy vs 30d efter
+- Filter: URL-mönster som matchar event-sidor med vaga
+  originaltitlar (sökbara via `parsed_title_ai IS NOT NULL`)
+- Mätvärden: impressions, clicks, CTR, position
+- Förväntad signal: ↑ CTR på events som fått AI-titel
+
+Tröskel för att överväga backfill (fas 2): tydlig CTR-vinst (>20 %)
+inom 8 veckor.
 
 ## Risker
 
-1. **AI-hallucination** — modellen hittar på platser/detaljer som inte
-   finns. Mitigering: validera att >=1 ord i rubriken finns i
-   `parsed_content`/`parsed_title_location`. `RUBRIK_OMÖJLIG`-utgång för
-   för vaga texter. Behåll alltid original för fallback.
-2. **Slug-drift & 404** — om sluggen byts utan 301 tappas alla
-   existerande Google-rankings. Mitigering: default är att inte
-   ändra slug.
-3. **Duplicerat innehåll** — om AI genererar väldigt lika rubriker för
-   liknande händelser kan canonicalization bli problematisk. Mindre
-   problem eftersom body-texten fortfarande varierar.
-4. **Kostnadsrusning vid bugg** — loop som retrier kan spränga budget.
-   Mitigering: `->withoutOverlapping()`, hard cap per körning,
-   rate-limit middleware runt service.
-5. **Polisen-text copyright** — vi skickar deras text till Anthropic.
-   Texten är redan offentlig och vi replikerar inte i prompten mer än
-   vi redan gör internt, men nämn i villkorstexten om nödvändigt.
-6. **Tonalitets-drift** — AI kan bli mer "klickbete"-aktig än Polisens
-   nyktra stil. Prompten tryckter på "saklig, ingen sensationalism".
-   Stickprov + dashboard för manuell granskning rekommenderas i pilot.
-7. **Kategoriserings-heuristik bryter** — `Str::contains($parsed_title,
-'inbrott')` på rad 1252/1274 används för att välja ikon/kategori.
-   Om vi ersätter `parsed_title` i UI men inte i heuristiken kan
-   kategoriseringen bli inkonsekvent. Lösning: kör heuristik mot
-   `parsed_title` (rå källa), visa `display_title`.
+1. **AI-hallucination** — modellen hittar på platser/detaljer.
+   _Mitigering:_ hallu-skydd ovan + `RUBRIK_OMÖJLIG` + behåll original.
+2. **Slug-drift & 404** — _N/A:_ sluggen rörs inte i denna fas.
+3. **Duplicerat innehåll** — likadana AI-titlar för liknande händelser.
+   _Mitigering:_ `temperature: 0.2` + body-texten varierar ändå +
+   prompt instruerar att inkludera ett detaljelement.
+4. **Kostnadsrusning vid bugg** — _Mitigering:_ `withoutOverlapping`,
+   hard cap per körning, ingen backfill-loop.
+5. **Polisen-text copyright** — texten är offentlig, vi replikerar
+   ingenting mer än vad vi redan gör. Dokumentation på `/sida/om`.
+6. **Tonalitets-drift** — AI mer "klickbete" än Polisens nyktra stil.
+   _Mitigering:_ prompt trycker på "saklig, ingen sensationalism" +
+   manuell stickprovsgranskning första veckan.
+7. **Heuristik-konflikt** — `Str::contains($parsed_title, 'inbrott')`
+   på rad 1252/1274 används för kategori-ikon. _Lösning:_ heuristiken
+   körs mot **`parsed_title` (rå källa)**, rendering visar
+   **`display_title`**. Får aldrig blandas.
+8. **VMA-events** — `VMAAlert` har egen titelparsing. _Mitigering:_
+   trigger körs **bara** i `CrimeEvent`-pipeline, `VMAAlert` rörs inte.
+9. **`getLdJson()`-cache stale efter rewrite** — cache-nyckeln
+   inkluderar `updated_at`. _Lösning:_ lägg till `parsed_title_ai_at`
+   i cache-nyckeln (en-rads-ändring i `CrimeEvent::getLdJson()`).
+10. **Sökning missar ena kolumnen** — om vi bara LIKE:ar mot
+    `parsed_title` hittar användaren inte event via AI-titel.
+    _Lösning:_ utöka sök-WHERE till båda kolumnerna.
 
 ## Fördelar
 
-- **SEO**: klickbara titlar i SERP, högre CTR, bättre ranking på
-  "trafikolycka göteborg" etc.
-- **Sociala medier**: Twitter/OG-kort blir läsbara istället för
-  "Sammanfattning natt".
-- **Tillgänglighet**: skärmläsare får meningsfulla länktexter.
-- **Intern sökning**: bättre LIKE-träffar på `parsed_title_ai`.
-- **Backward-compatible**: ingen migrering av historiska URL:er krävs
-  om vi låter slug vara ifred.
-
-## Bakåtkatalog (200k+ events)
-
-Strategi:
-
-1. **Fas 1** — bara nya events + sammanfattning-events från senaste 30
-   dagarna. ~3 000 events, ~20 kr, 1 körning.
-2. **Fas 2** (efter manuell stickprovsgranskning av fas 1): utvidga
-   till alla vaga titlar senaste 12 månaderna. ~20k events, ~130 kr.
-3. **Fas 3** (optionell): full bakåtkatalog — bara om SEO-vinsten
-   bevisas. Kör i chunks om 1000 i nattsatser, `--sleep=1` mellan
-   batch för att inte överbelasta API.
-
-Progress-tracking: `parsed_title_ai_at IS NULL` + matchar vagt
-mönster = "behöver bearbetas". Queryn är indexerad via
-`parsed_title_ai_at`.
+- **SEO:** klickbara titlar i SERP, högre CTR, bättre Schema.org
+  `headline` (synergi med #32).
+- **Sociala medier:** Twitter/OG-kort blir läsbara.
+- **Tillgänglighet:** skärmläsare får meningsfulla länktexter.
+- **Markdown/LLM-output (#12):** AI-titel automatiskt med.
+- **Backward-compatible:** ingen URL-migrering, API behåller
+  `parsed_title`.
 
 ## Öppna frågor
 
-1. Ska `display_title` också användas i slug för **helt nya** events
-   (där ingen extern länk existerar ännu)? Risk/vinst?
-2. Ska vi mellanlagra hela AI-svaret (JSON med confidence, alternativ
-   etc.) eller bara strängen? Bara strängen räcker initialt.
-3. Vill vi ha manuell override-kolumn (`parsed_title_manual`) för
-   redaktörsingrepp på enskilda events? Låg prio.
-4. Ska AI-titeln synas i RSS-feeden också, eller bara på sajten?
-   Rekommendation: bara sajten initialt (RSS-konsumenter kan vara
-   känsliga för plötsliga titelbyten).
-5. Claude Haiku vs GPT-4.1-mini — lika billiga, lika kapabla. Vi har
-   redan Claude-integration (`AISummaryService`, `ClaudePhp`), så
-   Claude är default.
-6. Hur upptäcker vi när Polisen börjar leverera **bra** titlar igen?
-   Regelbundet re-sampling + dashboard med "% events med AI-titel
-   senaste 7 dagarna".
+1. ~~Slug för nya events?~~ — Skippat i fas 1, evaluera fas 2.
+2. ~~Spara hela AI-svaret eller bara strängen?~~ — Bara strängen.
+3. Manuell override-kolumn (`parsed_title_manual`)? — Låg prio, bara
+   om vi ser konkreta hallu-fall efter pilot.
+4. RSS-feed: använda AI-titel eller behålla `parsed_title`?
+   _Rekommendation:_ använd `display_title` också i RSS — RSS-
+   konsumenter förväntar sig inte stabila titlar mellan polls.
 
 ## Status / nästa steg
 
-**Status:** ej påbörjat — plan/RFC.
+**Status:** plan reviewad 2026-04-27, redo för implementation.
 
 **Nästa konkreta steg:**
 
-1. Kör SQL-analysen ovan mot produktion för att verifiera volymer per
-   bucket. Uppdatera kostnadsberäkningen med faktiska siffror.
-2. Beslut: bara `parsed_title_ai` (lågrisk) eller även slug-byte
-   (högrisk, kräver redirect-infra)?
-3. Skapa migration + `TitleRewriteService` + kommando med
-   `--dry-run`, kör på 20 handplockade events, manuell granskning.
-4. Pilot på senaste 30 dagars "sammanfattning"-events.
-5. Utvärdera i Search Console efter 2-4 veckor.
-6. Bestäm fas 2/3 baserat på data.
+1. SQL-volymanalys mot prod (bekräfta vagheter per bucket).
+2. Migration: `parsed_title_ai`, `parsed_title_ai_at`,
+   `parsed_title_ai_model` + index.
+3. `CrimeEvent::display_title`-accessor + uppdatera Blade/Schema/Tweet/
+   Markdown/sökning. **Behåll `parsed_title` i slug + heuristik + API.**
+4. `TitleRewriteService` (med `laravel/ai`, prompt caching, hallu-skydd)
+    - `crimeevents:rewrite-titles`-kommando med `--dry-run`.
+5. Manuell granskning på 20 handplockade events (dry-run).
+6. Aktivera i `FetchEvents`-pipeline (efter ContentFilter).
+7. Lägg transparens-rad på `/sida/om`.
+8. Mät i GSC efter 4 veckor (`compare_search_periods` via mcp-gsc).
 
-**Relaterade todos:** #2 (SEO-review, sitemap saknas — behöver
-`display_title`), eventuellt #11 (större SEO-audit).
+**Synergi med klara todos:**
+
+- **#28** (`laravel/ai`) — service-stacken är redan migrerad.
+- **#32** (Schema-sweep) — `headline` i NewsArticle byter till
+  `display_title` (fångar halva SEO-vinsten).
+- **#26** (mcp-gsc) — automatiserad CTR-mätning.
+- **#12** (LLM-optimering) — Markdown-output följer med automatiskt.

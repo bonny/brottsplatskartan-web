@@ -43,6 +43,26 @@ class CrimeEvent extends Model implements Feedable {
         'is_public',
     ];
 
+    /**
+     * Render-titel: AI-omskriven (`title_alt_1`) om sådan finns, annars
+     * Polisens rå titel. Slug, sök och kategoriserings-heuristik ska INTE
+     * använda denna — de måste mot rå källa (`parsed_title`) för stabilitet
+     * och bakåtkompat. Se todo #10.
+     */
+    public function getDisplayTitleAttribute(): string
+    {
+        return $this->title_alt_1 ?: ($this->parsed_title ?: 'Polishändelse');
+    }
+
+    /**
+     * Render-brödtext: AI-omskriven (`description_alt_1`) om sådan finns,
+     * annars rå `parsed_content`. Samma princip som `display_title`.
+     */
+    public function getDisplayDescriptionAttribute(): string
+    {
+        return $this->description_alt_1 ?: ($this->parsed_content ?: '');
+    }
+
     private const EARTH_RADIUS_KM = 6371;
 
     protected static function booted(): void
@@ -450,9 +470,9 @@ class CrimeEvent extends Model implements Feedable {
      * @return string
      */
     public function getMetaDescription($length = 250) {
-        $text = "";
-
-        $text .= trim($this->parsed_content);
+        // AI-omskriven brödtext om sådan finns (description_alt_1), annars rå parsed_content.
+        // Se todo #10.
+        $text = trim($this->description_alt_1 ?: $this->parsed_content ?: '');
 
         $text = strip_tags(str_replace('<', ' <', $text));
         $text = str_limit($text, $length, '');
@@ -832,13 +852,22 @@ class CrimeEvent extends Model implements Feedable {
      * @return string
      */
     public function getSingleEventTitle() {
-        $cacheKey = __METHOD__ . ':' . $this->getKey();
+        // Cache-nyckeln inkluderar title_alt_1-närvaron så den invalideras
+        // när AI-titel sätts/tas bort. Se todo #10.
+        $cacheKey = __METHOD__ . ':' . $this->getKey() . ':' . ($this->title_alt_1 ? 'ai' : 'raw');
         $seconds = 5 * 60;
         $title = Cache::remember($cacheKey, $seconds, function () {
             $titleParts = [];
 
-            $titleParts[] = $this->parsed_title;
-            $titleParts[] = $this->getDescriptionAsPlainText();
+            // AI-titeln är redan en komplett rubrik ("Brand i flerbostadshus i Eknäs")
+            // — använd den ensam istället för parsed_title + description-preview.
+            // Behåll plats + datum för disambiguation och SEO.
+            if ($this->title_alt_1) {
+                $titleParts[] = $this->title_alt_1;
+            } else {
+                $titleParts[] = $this->parsed_title;
+                $titleParts[] = $this->getDescriptionAsPlainText();
+            }
 
             $prioOneLocations = $this->locations->where("prio", 1);
 
@@ -866,8 +895,12 @@ class CrimeEvent extends Model implements Feedable {
      * @return string
      */
     public function getSingleEventTitleShort() {
-        $titleParts = [];
+        // Samma logik som getSingleEventTitle: AI-titel är komplett rubrik.
+        if ($this->title_alt_1) {
+            return $this->title_alt_1;
+        }
 
+        $titleParts = [];
         $titleParts[] = $this->parsed_title;
         $titleParts[] = $this->getDescriptionAsPlainText();
 
@@ -1076,12 +1109,16 @@ class CrimeEvent extends Model implements Feedable {
 
     private function buildLdJson() {
         $permalink = $this->getPermalink(true);
+        // getSingleEventTitleShort() returnerar AI-titel om sådan finns (todo #10).
         $title = $this->getSingleEventTitleShort();
         $datePublished = $this->getPubDateISO8601();
         $dateModified = $this->updated_at
             ? Carbon::parse($this->updated_at)->toIso8601String()
             : $datePublished;
-        $bodyText = $this->getDescriptionAsPlainText();
+        // articleBody = full brödtext (parsed_content eller AI-omskriven
+        // description_alt_1 om sådan finns). getDescriptionAsPlainText
+        // läser parsed_teaser som är för kort för Schema articleBody.
+        $bodyText = trim(Helper::stripTagsWithWhitespace($this->display_description));
 
         // Google rekommenderar flera bildformat för NewsArticle
         $images = [
@@ -1497,10 +1534,17 @@ class CrimeEvent extends Model implements Feedable {
     }
 
     /**
-     * Hämta rubrik för sidtitel,
-     * som används för <title> och liknande.
+     * Hämta rubrik för sidtitel, som används för <title> och liknande.
+     *
+     * När AI-titel finns (`title_alt_1`) är den redan en komplett rubrik —
+     * undvik parantes-disambiguator. Annars: original-logik (headline +
+     * description-preview för att skilja events med samma typ åt). Se todo #10.
      */
     public function getPageTitle(): string {
+        if ($this->title_alt_1) {
+            return trim($this->title_alt_1);
+        }
+
         $title = $this->getHeadline();
         $short_title = $this->getSingleEventTitleEvenShorter();
 
