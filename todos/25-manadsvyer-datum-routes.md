@@ -1,5 +1,5 @@
-**Status:** aktiv (designfas → implementation, Uppsala-pilot)
-**Senast uppdaterad:** 2026-04-26 (efter SEO 2026-review — pagination, CWV-budget, 301-default, schema-uppgradering)
+**Status:** aktiv (pilot live på prod 2026-04-27 — uppsala + västerås + uppsala-lan)
+**Senast uppdaterad:** 2026-04-27 (pilot deployat, översiktskarta + sitemap klara, 30d-mätning pågår)
 **Confidence:** Medel-Hög (efter scope-klargörande: enskilda event-URL:er rörs inte, bara aggregeringssidor)
 
 # Todo #25 — Månadsvyer istället för dagsvyer (plats/län-routes)
@@ -292,84 +292,66 @@ genom att avmarkera 301-logiken om rollback krävs.
 
 ## Implementation-ordning
 
-Strikt sekventiell — gå inte vidare till nästa steg innan föregående
-verifieras.
-
 1. ✅ **URL-format-beslut** — `/plats/{plats}/handelser/{year}/{month}` (2026-04-26).
-2. ⏭ **Mobil-prototyp** — skippad. Vyn renderas direkt med befintlig
-   Blade-arkitektur. Anchor-scroll-test får göras post-deploy med
-   verklig sticky-header-höjd.
-3. ✅ **Backend-route + controller-metod + Blade-vy** (commit `cc6bc3c`).
-   - PlatsController::month() + LanController::month()
-   - Routes platsMonth + lanMonth (med where-constraints på year/month)
-   - Helper::getMonthRangeFromYearMonth() validerar input
-   - `single-plats-month.blade.php` med Snabba fakta + dag-anchors
-   - Schema.org JSON-LD (Dataset + FAQPage + BreadcrumbList) inline
-   - Tomma månader 301:as, 1–2-event-månader noindex,follow
-   - PHPStan grön
-   - Smoke-testat lokalt: Uppsala, Västerås, Uppsala län → 200 OK
-4. ☐ **301-redirect-logik** för gamla dagsvyer → månadsvy med dag-anchor.
-   Verifiera ETT hopp via `curl -ILv`.
-5. ☐ **Performance-test** — Lighthouse mobile på Stockholm/Uppsala/
-   Hofors-månadsvy. CWV-budget per platsstorlek (LCP <1.8s,
-   INP <120ms, CLS <0.05).
-6. ☐ **Sitemap-uppdatering** — månadsvyer in, dagsvyer noindex/ut.
-   Submit till GSC.
-7. ☐ **Översiktskarta överst** — Leaflet med alla månadens events
-   klustrade. Lazy-load tills viewport (CWV-budget).
-8. ☐ **Day-nav på event-pages** — uppdatera prev/next-länkar i
-   Helper.php så att de pekar på månadsvyn med dag-anchor istället
-   för dagsvyn.
-9. ☐ **CSS** för MonthNav, MonthToc, MonthDay-klasser.
-10. ☐ **Feature-flag MONTHLY_VIEWS_ENABLED** för rollback-mekanism.
-11. ☐ **Pilot-deploy + baseline-mätning** dag 0 — Västerås/Uppsala
-    + Linköping/Stockholm/Hofors som referenspunkter.
-12. ☐ **30 dagars soak.** Daglig KPI-koll. Rollback om tröskel triggas.
-13. ☐ **Full rollout** — när pilot-data validerar hypotesen.
+2. ⏭ **Mobil-prototyp** — skippad. Anchor-scroll-test post-deploy.
+3. ✅ **Backend + Blade-vy** (commit `cc6bc3c`) — controllers, routes, Helper-validering, JSON-LD, tomhantering.
+4. ✅ **CSS** för MonthNav/MonthToc/MonthDay/Introtext--monthFacts (commit `ba4cd1f`).
+5. ✅ **Månads-arkiv** i sidopanelen på plats/lan/city-sidor (commit `ba4cd1f`).
+6. ✅ **Pilot-flagga** `MONTHLY_VIEWS_PILOT` + 301 från dagsvyer (commit `917fef7`).
+7. ✅ **Sitemap-uppdatering** — 21 län × 12 mån + 5 Tier 1 × 12 mån = 312 nya URL:er (commit `b4f3bf3`).
+8. ✅ **Översiktskarta** — Leaflet lazy-loaded via IntersectionObserver, pre-allocated CLS-höjd, egen tileserver (commit `1f486fa`).
+9. ✅ **Pilot-deploy** — uppsala + västerås + uppsala-lan aktiva på prod 2026-04-27.
+10. ☐ **Lighthouse-test** per platsstorlek (Stockholm/Uppsala/Hofors) — CWV-budget LCP <1.8s, INP <120ms, CLS <0.05.
+11. ☐ **Day-nav på enskilda event-pages** — prev/next i `Helper.php` pekar på månadsvy med dag-anchor istället för dagsvy. (Inte blocking — 301 sköter befintliga dagsvys-länkar.)
+12. ☐ **30 dagars soak** — daglig KPI-koll, rollback vid tröskel.
+13. ☐ **Full rollout** — `MONTHLY_VIEWS_PILOT='all'` när data validerar hypotesen.
 
-## Status (2026-04-26)
+## Pilot-status (2026-04-27)
 
-**Pilot-redo.** Allt utom översiktskartan + Lighthouse-mätning är
-implementerat lokalt. Aktivering kräver bara `MONTHLY_VIEWS_PILOT`-
-flaggan på prod.
+**Live på prod sedan 2026-04-27.** Tre slugs aktiva i flaggan:
+- `uppsala` (Tier 1, ~165k inv)
+- `västerås` (icke-Tier 1, ~155k inv)
+- `uppsala-lan` (län-nivå)
 
-Klart:
-- ✅ Routes (`platsMonth`, `lanMonth`) + Helper-validering
-- ✅ Controllers (`PlatsController::month`, `LanController::month`)
-  + range-query mot `(plats, parsed_date)`-index
-- ✅ Blade-vy med dag-anchors + Snabba fakta-block
-- ✅ Schema.org JSON-LD: Dataset + FAQPage + BreadcrumbList
-- ✅ CSS för MonthNav/MonthToc/MonthDay/Introtext--monthFacts
-- ✅ Månads-arkiv-block på plats/lan/city-sidor (sidopanel)
-- ✅ Pilot-flagga `MONTHLY_VIEWS_PILOT` (`''`/`all`/`list:a,b,c`)
-- ✅ 301 från dagsvyer → månadsvy med dag-anchor (bakom flagga)
-- ✅ Sitemap: 21 län × 12 mån + 5 Tier 1-städer × 12 mån = 312 URL:er
-- ✅ CityRedirectMiddleware släpper igenom Tier 1-handelser-URL:er
-- ✅ PHPStan grön
-- ✅ Smoke-tester: Uppsala/Västerås/Uppsala län/Stockholm = 200,
-  Hofors (0 events) = 301 till plats-startsida
+Stockholm/Göteborg/Malmö/Helsingborg medvetet utanför pilot tills
+Lighthouse-test bekräftat CWV-budget för storstadssidor (1000+
+events/månad).
 
-Kvar (ej blocking för pilot):
-- ☐ Översiktskarta överst i månadsvyn (Leaflet, lazy-loaded) —
-  designkrav, MVP utan
-- ☐ Day-nav på enskilda event-pages → månadsvyer (301 löser det
-  när flaggan är på)
-- ☐ Lighthouse-test per platsstorlek (Stockholm/Uppsala/Hofors) —
-  CWV-budget från designfas
-- ☐ Baseline-mätning av RPM/PV/session per URL-typ innan pilot
-- ☐ Pilot-aktivering: flippa MONTHLY_VIEWS_PILOT på Hetzner
-- ☐ 30 dagars mätning + utvärdering
+### Verifierat live (2026-04-27)
 
-### Hur aktivera pilot
+| URL                                                      | Förväntat                                          | Resultat |
+| -------------------------------------------------------- | -------------------------------------------------- | :------: |
+| `/plats/uppsala/handelser/15-april-2026`                 | 301 → `/plats/uppsala/handelser/2026/04#2026-04-15` | ✅       |
+| `/plats/västerås/handelser/15-april-2026`                | 301 → månadsvy med dag-anchor                      | ✅       |
+| `/lan/Uppsala län/handelser/15-april-2026`               | 301 → månadsvy med dag-anchor                      | ✅       |
+| `/plats/stockholm/handelser/15-april-2026`               | 200 (ej i pilot — orörd)                           | ✅       |
+| `/plats/uppsala/handelser/2026/04`                       | 200 + Snabba fakta + MonthOverviewMap + JSON-LD    | ✅       |
 
-På Hetzner:
+### Aktivera/rollback pilot
+
+På Hetzner — modifiera `MONTHLY_VIEWS_PILOT` i `/opt/brottsplatskartan/.env`:
+
 ```bash
-echo "MONTHLY_VIEWS_PILOT='list:uppsala,västerås'" >> /opt/brottsplatskartan/.env
-docker compose exec app php artisan config:clear
+# Lägg till plats:
+MONTHLY_VIEWS_PILOT="list:uppsala,västerås,uppsala-lan,linkoping"
+
+# Full rollout:
+MONTHLY_VIEWS_PILOT="all"
+
+# Rollback (instant):
+MONTHLY_VIEWS_PILOT=""
 ```
 
-Lägg till fler slugs (kommaseparerat) eller byt till `all` för full
-rollout. Ta bort/sätt till `''` för rollback.
+Sedan: `docker compose exec app php artisan config:cache` för att
+applicera.
+
+### Mätplan 30d (2026-04-27 → 2026-05-27)
+
+- **GSC:** clicks + impressions för pilot-platserna före/efter
+- **AdSense:** RPM/session för `/plats/uppsala/*` och `/plats/västerås/*`
+- **PageSpeed Insights:** mobile på Uppsala-månadsvyn — CrUX-data
+- **Soft-404:** GSC-rapport för pilot-platser
+- **Internal:** klick på "Hoppa till dag"-anchors (om analytics fångar)
 
 ---
 

@@ -4,7 +4,7 @@ Index över förbättringsarbete. Varje todo har en egen fil under
 [`todos/`](todos/) med fullständig analys. Konvention och
 mappstruktur: [`todos/README.md`](todos/README.md).
 
-Senast uppdaterad: 2026-04-26.
+Senast uppdaterad: 2026-04-27.
 
 ## Aktiva
 
@@ -12,7 +12,7 @@ Senast uppdaterad: 2026-04-26.
 | --- | ----------------------------------------------- | --------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
 | 10  | AI-omskriva vaga titlar                         | Plan klar — kostnad ~$27 för full backfill                                                          | [todos/10-ai-omskriva-titlar.md](todos/10-ai-omskriva-titlar.md)           |
 | 16  | Rensa / avveckla gamla DO-servern (Dokku)       | Appar stoppade, väntar på soak innan radering                                                       | [todos/16-rensa-do-server.md](todos/16-rensa-do-server.md)                 |
-| 25  | Månadsvyer istället för dagsvyer (datum-routes) | Designfas — confidence medel, kräver Uppsala-pilot 30d innan rollout                                | [todos/25-manadsvyer-datum-routes.md](todos/25-manadsvyer-datum-routes.md) |
+| 25  | Månadsvyer istället för dagsvyer (datum-routes) | Pilot live 2026-04-27 (uppsala + västerås + uppsala-lan). 30d-mätning till 2026-05-27               | [todos/25-manadsvyer-datum-routes.md](todos/25-manadsvyer-datum-routes.md) |
 | 27  | Berika ort- och månadssidor med rikare innehåll | Designfas — Lager 1–3 (egen data, externt + AI), research klar                                      | [todos/27-rikare-innehall.md](todos/27-rikare-innehall.md)                 |
 | 29  | Audit + reducera indexerade pages               | Datum-routes + thin singles deployat, ~22k pages noindex:as. Mätperiod 30–90d i GSC                  | [todos/29-audit-indexerade-pages.md](todos/29-audit-indexerade-pages.md)   |
 | 32  | Schema.org-sweep (NewsArticle/Dataset/FAQPage)  | Designfas — härledd från SEO 2026-review. Hög ROI, kan köras parallellt med #25                      | [todos/32-schema-sweep.md](todos/32-schema-sweep.md)                       |
