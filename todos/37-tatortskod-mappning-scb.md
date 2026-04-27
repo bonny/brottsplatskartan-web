@@ -1,4 +1,4 @@
-**Status:** aktiv (förberedande blocker för #27 Lager 2)
+**Status:** aktiv — kod klar lokalt (steg 1–5), kvar prod-deploy + manuell import
 **Senast uppdaterad:** 2026-04-27
 **Relaterad till:** #27 (rikare innehåll), #25 (månadsvyer)
 
@@ -127,12 +127,87 @@ Bör mätas tidigt med en `SELECT location, COUNT(*)`-query.
 
 ## Implementationsordning
 
-1. Mät storlek: `SELECT location_string, COUNT(*) FROM crime_events GROUP BY 1 ORDER BY 2 DESC LIMIT 500`
-2. Skapa tabeller + import-kommando
-3. Auto-match top 100 platser
-4. Manuell granskning av nästa 200
-5. Lägg till `getPopulation()` på `Place`
-6. Avblockera #27 Lager 2
+1. ~~Mät storlek~~ ✓ (2026-04-27, prod): 331 unika platsnamn, 296 kommuner, 26 län, 328k events
+2. ~~Skapa tabeller + import-kommando~~ ✓ — migration `2026_04_27_220147` + 3 artisan-cmd
+3. ~~Auto-match~~ ✓ — 99.1% (327/330) lokalt. Strict-then-fuzzy match-strategi
+4. ~~Manuell granskning av longtail~~ ✓ — bara 3 omappade och alla är 1-event-skräp
+5. ~~Lägg till `getPopulation()` på `Place`~~ ✓ — `App\PlacePopulation::lookup()` + `crimesPerThousand()` med 24h Redis-cache
+6. **Kvar:** prod-deploy + manuell import (en gång)
+7. Avblockera #27 Lager 2
+
+## Implementation 2026-04-27
+
+### Tabeller (migration `2026_04_27_220147_create_scb_population_tables`)
+
+- `scb_tatorter` — 2017 rader från SCB Geopackage (CC0, 2023)
+- `scb_kommuner` — 290 rader från SCB-API (CC0, 2024)
+- `place_population` — bpk-namn → tätort/kommun/län-koder. `bpk_place_name` har `utf8mb4_bin`-collation för att särskilja accent-känsliga dubletter ("Habo" vs "Håbo")
+
+### Artisan-kommandon
+
+```bash
+docker compose exec app php artisan scb:import-tatorter           # 49 MB Geopackage
+docker compose exec app php artisan scb:import-kommuner --year=2024
+docker compose exec app php artisan place-population:auto-map     # auto-mappa
+```
+
+### Match-prioritet
+
+1. Strikt tätort (case-foldat, accent-bevarat)
+2. Strikt kommun
+3. Fuzzy tätort (accent-okänsligt) — får `notes='Fuzzy-match'`
+4. Fuzzy kommun
+5. Län-fallback (för "Västerbottens län"-fall)
+
+### Lokal verifiering
+
+| Plats               | Källa      | Befolkning     |
+| ------------------- | ---------- | -------------- |
+| Stockholm           | scb_tatort | 1 652 895      |
+| Uppsala             | scb_tatort | 174 982        |
+| Habo                | scb_tatort | 9 499          |
+| Håbo                | scb_kommun | 22 973         |
+| Solna               | scb_kommun | 85 789         |
+| Västerbottens län   | scb_lan    | 281 138        |
+
+Brott per 1000 inv. (Uppsala): 5571 events / 174982 = 31.84
+
+## Prod-import (kvar att göra)
+
+Efter deploy, kör en gång på prod-servern:
+
+```bash
+ssh deploy@brottsplatskartan.se
+cd /opt/brottsplatskartan
+docker compose exec app php artisan scb:import-tatorter
+docker compose exec app php artisan scb:import-kommuner --year=2024
+docker compose exec app php artisan place-population:auto-map
+```
+
+Kommandona är idempotenta — säkra att köra om vid behov.
+
+## Mätning 2026-04-27 (prod)
+
+**Distribution av `parsed_title_location`:**
+
+| Antal events | Antal platser |
+| ------------ | ------------- |
+| ≥1000        | 76            |
+| 500–999      | 73            |
+| 100–499      | 161           |
+| 10–99        | 17            |
+| <10          | 3             |
+| **Totalt**   | **331**       |
+
+**Topp-30** är blandning av städer (Stockholm, Malmö, Umeå, Göteborg, ...)
+och län-namn ("Västerbottens län", "Norrbottens län" m.fl.) där Polisen
+inte specificerat ort. Län-fall mappas till hela länets befolkning.
+
+**Duplikater att hantera:** "Västernorrland län" + "Västernorrlands län"
+finns båda i datan (typo från Polisens RSS).
+
+**Konsekvens:** scopen är mycket mindre än ursprungligen tänkt
+(331 platser, inte 2000+). Manuellt arbete bör kunna göras på en halvdag.
 
 ## Synergi
 
