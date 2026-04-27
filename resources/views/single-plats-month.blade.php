@@ -156,6 +156,12 @@ Designprinciper (#25):
             </p>
         </div>
 
+        {{-- Översiktskarta — lazy-loaded vid IntersectionObserver. --}}
+        @include('parts.month-overview-map', [
+            'events' => $events,
+            'monthYearTitle' => $monthYearTitle,
+        ])
+
         {{-- Föregående/nästa månad-nav överst. --}}
         <nav class="MonthNav MonthNav--top" aria-label="Månads-navigation">
             @if ($prevMonthLink)

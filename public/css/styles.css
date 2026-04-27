@@ -4006,3 +4006,34 @@ h2.widget__title {
     scroll-margin-top: 80px;
     margin-bottom: var(--default-margin-double);
 }
+
+.MonthOverviewMap {
+    margin: var(--default-margin) 0 var(--default-margin-double);
+}
+
+.MonthOverviewMap__container {
+    position: relative;
+    width: 100%;
+    /* Pre-allocate height så CLS = 0 även innan kartan är initad.
+     * Minskar layout-shift när Leaflet renderar. */
+    min-height: 320px;
+    background: var(--color-gray-1);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.MonthOverviewMap__placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-gray-3, #888);
+    font-size: var(--font-size-small);
+    font-style: italic;
+}
+
+.MonthOverviewMap__leaflet {
+    width: 100%;
+    height: 320px;
+}
