@@ -57,6 +57,13 @@ class CityRedirectMiddleware
         'plats/uppsala' => 'uppsala',
         'plats/uppsala-uppsala-län' => 'uppsala',
         'plats/uppsala-uppsala-lan' => 'uppsala',
+        // Uppsala län (todo #35) — län-sidan dominaras av Uppsala stad
+        // (~43 % av läns-invånare). Konsolidera SEO-equity till /uppsala
+        // efter samma mönster som Stockholm.
+        'lan/uppsala' => 'uppsala',
+        'lan/uppsala-lan' => 'uppsala',
+        'lan/Uppsala län' => 'uppsala',
+        'lan/uppsala%20lan' => 'uppsala',
     ];
 
     public function handle(Request $request, Closure $next): Response

@@ -4,7 +4,7 @@ Index över förbättringsarbete. Varje todo har en egen fil under
 [`todos/`](todos/) med fullständig analys. Konvention och
 mappstruktur: [`todos/README.md`](todos/README.md).
 
-Senast uppdaterad: 2026-04-27 (#32 schema-sweep klar).
+Senast uppdaterad: 2026-04-27 (+#35 lan-redirect Uppsala).
 
 
 
@@ -37,6 +37,7 @@ Sorterade nyast först.
 
 | #   | Titel                                                  | Klar       | Fil                                                                                    |
 | --- | ------------------------------------------------------ | ---------- | -------------------------------------------------------------------------------------- |
+| 35  | Redirect `/lan/Uppsala län` → `/uppsala` (Stockholm-mönstret) | 2026-04-27 | [todos/done/35-lan-redirect-uppsala.md](todos/done/35-lan-redirect-uppsala.md) |
 | 32  | Schema.org-sweep (NewsArticle+Place+sameAs+CollectionPage+cache) | 2026-04-27 | [todos/done/32-schema-sweep.md](todos/done/32-schema-sweep.md)                |
 | 34  | Långa event-slugs — kort URL för events från 2026-04-28 | 2026-04-27 | [todos/done/34-langa-event-slugs.md](todos/done/34-langa-event-slugs.md)               |
 | 33  | Tier 1-städer på `/{city}/handelser/{year}/{month}`    | 2026-04-27 | [todos/done/33-tier1-month-routes.md](todos/done/33-tier1-month-routes.md)             |
