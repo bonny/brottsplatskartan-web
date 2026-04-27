@@ -91,8 +91,19 @@ Om vi behåller description i sluggen men begränsar:
 **Strategi B (gradvis fas-out)** vald — beslut bekräftat 2026-04-27.
 
 Cutoff: `parsed_date >= 2026-04-28` → ny kort slug-formel (utan
-description). Events från och med 2026-04-28 får URL:er som
-`/stockholm/stold-stockholm-sodermalm-500777` (~30 tecken).
+description + med dedupering). Events från och med 2026-04-28 får
+URL:er som `/stockholm/stold-stockholm-sodermalm-500777` (~30 tecken).
+
+### Dedupering tillagd 2026-04-27 efter SEO-subagent-review
+
+Subagent verifierade att slug-format A (`{type}-{location}-{id}` utan
+keyword-extrahering) är 2026-best-practice — AI Overviews/SGE läser
+schema.org-markup, inte slug-tokens. Keyword-snippets från headline
+är cargo-cult; krutet ska ligga på #32 (NewsArticle/Place/Dataset).
+
+Tillägg: dedupera ord-segment så `stold-stockholm-sodermalm-sodermalm`
+blir `stold-stockholm-sodermalm`. Bara post-cutoff-events — historiska
+URL:er förblir oförändrade.
 
 Tidigare events (2022-02-11 → 2026-04-27) behåller sina långa URL:er
 oförändrat — ingen 301-migration. Lång-URL-problemet fasas ut

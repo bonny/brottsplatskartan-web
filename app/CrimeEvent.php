@@ -290,6 +290,26 @@ class CrimeEvent extends Model implements Feedable {
         $eventName = implode("-", $slugParts);
         $eventName = $this->toAscii($eventName);
 
+        // Dedupera ord-segment för nya events (todo #34, cutoff 2026-04-28).
+        // parsed_title_location ("Stockholm Södermalm") och prio1-locations
+        // ("Södermalm") överlappar ofta — utan dedup blir slug:n
+        // "stold-stockholm-sodermalm-sodermalm-500777". Vi behåller
+        // första förekomsten av varje ord och hoppar över dubletter.
+        // Existerande events ramlar inte hit — deras URL:er är oförändrade.
+        if ($eventDate >= "2026-04-28") {
+            $segments = explode('-', $eventName);
+            $seen = [];
+            $dedup = [];
+            foreach ($segments as $seg) {
+                if ($seg === '' || in_array($seg, $seen, true)) {
+                    continue;
+                }
+                $dedup[] = $seg;
+                $seen[] = $seg;
+            }
+            $eventName = implode('-', $dedup);
+        }
+
         $permalink = route(
             "singleEvent",
             [
