@@ -83,13 +83,12 @@ class GenerateSitemap extends Command
             }
         }
 
-        // Tier 1-städer: månadsvyer via /plats/{slug}/handelser/{year}/{month}.
-        // Slug-listan matchar CityRedirectMiddleware (todo #24).
-        $tier1Cities = ['uppsala', 'stockholm', 'malmo', 'goteborg', 'helsingborg'];
-        foreach ($tier1Cities as $cityCity) {
+        // Tier 1-städer: månadsvyer via /{slug}/handelser/{year}/{month}
+        // (todo #33). /plats/{slug}/handelser/... 301:as till denna URL.
+        foreach (\App\Http\Controllers\CityController::tier1Slugs() as $cityCity) {
             foreach ($this->recentMonths(12) as $m) {
                 $main->add(
-                    Url::create(sprintf('/plats/%s/handelser/%s/%s', $cityCity, $m['year'], $m['month']))
+                    Url::create(sprintf('/%s/handelser/%s/%s', $cityCity, $m['year'], $m['month']))
                         ->setLastModificationDate($m['lastmod'])
                         ->setChangeFrequency(Url::CHANGE_FREQUENCY_MONTHLY)
                         ->setPriority(0.6)

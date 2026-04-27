@@ -63,9 +63,27 @@ class CityRedirectMiddleware
     {
         $path = urldecode($request->path());
 
-        // Datum- och månads-routes behåller `/plats/{tier1}/handelser/...`-
-        // strukturen och ska INTE redirectas till stadsstartsidan. De
-        // renderas av PlatsController::day()/month() (todo #25 + #29).
+        // todo #33: Tier 1-månadsvyer 301:as från /plats/{tier1}/handelser/{year}/{month}
+        // till /{tier1}/handelser/{year}/{month} så URL-equity konsolideras
+        // under stadens primära namespace.
+        if (preg_match('#^plats/([^/]+)/handelser/(\d{4})/(\d{2})$#i', $path, $matches)) {
+            $platsSlug = mb_strtolower($matches[1]);
+            foreach (self::REDIRECTS as $pattern => $citySlug) {
+                $platsPattern = preg_replace('#^plats/#i', '', $pattern);
+                if ($platsPattern === $platsSlug) {
+                    return redirect()->route('cityMonth', [
+                        'city' => $citySlug,
+                        'year' => $matches[2],
+                        'month' => $matches[3],
+                    ], 301);
+                }
+            }
+            // Inte Tier 1 — släpp igenom till PlatsController::month().
+            return $next($request);
+        }
+
+        // Övriga datum-routes (dagsvyer, gamla format) släpps igenom utan
+        // redirect. Renderas av PlatsController::day() (todo #25/#29).
         if (preg_match('#^plats/[^/]+/handelser/#i', $path)) {
             return $next($request);
         }

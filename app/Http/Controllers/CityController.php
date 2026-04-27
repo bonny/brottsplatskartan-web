@@ -96,6 +96,46 @@ class CityController extends Controller
         return \App\Helper::toAscii($lowercase);
     }
 
+    /**
+     * Returnera array med Tier 1-städernas slugs (`['uppsala',
+     * 'stockholm', ...]`). Används för URL-namespace-routing
+     * (todo #33).
+     *
+     * @return list<string>
+     */
+    public static function tier1Slugs(): array
+    {
+        // Hårdkodad lista — matchar self::$cities-nycklar och
+        // CityRedirectMiddleware::REDIRECTS-targets.
+        return ['stockholm', 'malmo', 'goteborg', 'helsingborg', 'uppsala'];
+    }
+
+    /**
+     * Månadsvy för Tier 1-stad (todo #33).
+     * URL: /{city}/handelser/{year}/{month}
+     *
+     * Delegerar till PlatsController::month()-logiken — Tier 1-checken
+     * där byter prev/next/canonical till cityMonth-routerna.
+     */
+    public function month(Request $request, $city, $year, $month)
+    {
+        $normalizedSlug = $this->normalizeCitySlug($city);
+
+        if ($city !== $normalizedSlug) {
+            return redirect()->route('cityMonth', [
+                'city' => $normalizedSlug,
+                'year' => $year,
+                'month' => $month,
+            ], 301);
+        }
+
+        if (!isset($this->cities[$normalizedSlug])) {
+            abort(404);
+        }
+
+        return app(PlatsController::class)->month($request, $normalizedSlug, $year, $month);
+    }
+
     public function show($citySlug, Request $request)
     {
         $normalizedSlug = $this->normalizeCitySlug($citySlug);

@@ -22,6 +22,22 @@ Required vars:
             'label' => title_case($m->isoFormat('MMMM YYYY')),
         ];
     }
+
+    // todo #33: Tier 1-städer länkar till /{city}/handelser/-namespace.
+    $tier1 = \App\Http\Controllers\CityController::tier1Slugs();
+    $isTier1 = $monthArchiveType === 'plats'
+        && in_array(mb_strtolower($monthArchiveSlug), $tier1, true);
+
+    if ($monthArchiveType === 'lan') {
+        $route = 'lanMonth';
+        $param = 'lan';
+    } elseif ($isTier1) {
+        $route = 'cityMonth';
+        $param = 'city';
+    } else {
+        $route = 'platsMonth';
+        $param = 'plats';
+    }
 @endphp
 
 <section class="widget MonthArchive">
@@ -29,10 +45,7 @@ Required vars:
     <ul class="widget__listItems MonthArchive__list">
         @foreach ($months as $m)
             <li class="widget__listItem MonthArchive__item">
-                <a href="{{ $monthArchiveType === 'lan'
-                    ? route('lanMonth', ['lan' => $monthArchiveSlug, 'year' => $m['year'], 'month' => $m['month']])
-                    : route('platsMonth', ['plats' => $monthArchiveSlug, 'year' => $m['year'], 'month' => $m['month']])
-                }}">
+                <a href="{{ route($route, [$param => $monthArchiveSlug, 'year' => $m['year'], 'month' => $m['month']]) }}">
                     {{ $m['label'] }}
                 </a>
             </li>

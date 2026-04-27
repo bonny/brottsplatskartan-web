@@ -74,16 +74,25 @@ class PlatsController extends Controller
         // todo #25: 301-redirect från dagsvy → månadsvy med dag-anchor.
         // Aktiveras per plats via MONTHLY_VIEWS_PILOT-flaggan. Idag-vyer
         // 301:as inte (de är likvärdiga med plats-startsidan).
+        // todo #33: Tier 1-städer 301:as till /{city}/handelser/{year}/{month}.
         if (
             $dateOriginalFromArg
             && !$date['date']->isToday()
             && \App\Helper::isInMonthlyViewsPilot($platsOriginalFromSlug)
         ) {
-            $monthUrl = route('platsMonth', [
-                'plats' => $platsOriginalFromSlug,
-                'year' => $date['date']->format('Y'),
-                'month' => $date['date']->format('m'),
-            ]) . '#' . $date['date']->format('Y-m-d');
+            $isTier1 = in_array(
+                mb_strtolower($platsOriginalFromSlug),
+                \App\Http\Controllers\CityController::tier1Slugs(),
+                true
+            );
+            $monthUrl = route(
+                $isTier1 ? 'cityMonth' : 'platsMonth',
+                [
+                    $isTier1 ? 'city' : 'plats' => $platsOriginalFromSlug,
+                    'year' => $date['date']->format('Y'),
+                    'month' => $date['date']->format('m'),
+                ]
+            ) . '#' . $date['date']->format('Y-m-d');
             return redirect($monthUrl, 301);
         }
 
@@ -460,21 +469,32 @@ class PlatsController extends Controller
             $trendVsPrev = (int) round((($totalEvents - $prevMonthCount) / $prevMonthCount) * 100);
         }
 
+        // todo #33: Tier 1-städer rankar via /{city}/handelser/-namespace
+        // (CityController::month). prev/next/canonical pekar på cityMonth
+        // istället för platsMonth så URL-equity konsolideras.
+        $isTier1 = in_array(
+            mb_strtolower($platsOriginalFromSlug),
+            \App\Http\Controllers\CityController::tier1Slugs(),
+            true
+        );
+        $monthRouteName = $isTier1 ? 'cityMonth' : 'platsMonth';
+        $monthRouteParam = $isTier1 ? 'city' : 'plats';
+
         // Prev/next månad-länkar.
         $prevMonth = (clone $monthRange['start'])->subMonth();
         $nextMonth = (clone $monthRange['start'])->addMonth();
         $prevMonthLink = [
             'title' => sprintf('‹ %s', title_case($prevMonth->isoFormat('MMMM YYYY'))),
-            'link' => route('platsMonth', [
-                'plats' => $platsOriginalFromSlug,
+            'link' => route($monthRouteName, [
+                $monthRouteParam => $platsOriginalFromSlug,
                 'year' => $prevMonth->format('Y'),
                 'month' => $prevMonth->format('m'),
             ]),
         ];
         $nextMonthLink = $nextMonth->isFuture() ? null : [
             'title' => sprintf('%s ›', title_case($nextMonth->isoFormat('MMMM YYYY'))),
-            'link' => route('platsMonth', [
-                'plats' => $platsOriginalFromSlug,
+            'link' => route($monthRouteName, [
+                $monthRouteParam => $platsOriginalFromSlug,
                 'year' => $nextMonth->format('Y'),
                 'month' => $nextMonth->format('m'),
             ]),
@@ -482,8 +502,8 @@ class PlatsController extends Controller
 
         $monthYearTitle = title_case($monthRange['start']->isoFormat('MMMM YYYY'));
 
-        $canonicalLink = route('platsMonth', [
-            'plats' => mb_strtolower($platsOriginalFromSlug),
+        $canonicalLink = route($monthRouteName, [
+            $monthRouteParam => mb_strtolower($platsOriginalFromSlug),
             'year' => $monthRange['start']->format('Y'),
             'month' => $monthRange['start']->format('m'),
         ]);

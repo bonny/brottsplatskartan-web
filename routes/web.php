@@ -810,5 +810,8 @@ Route::get('/debug-response-cache', function () {
  * City specific events
  * Example URL: /stockholm
  */
+Route::get('/{city}/handelser/{year}/{month}', [CityController::class, 'month'])
+    ->where(['year' => '[0-9]{4}', 'month' => '[0-9]{2}'])
+    ->name('cityMonth');
 Route::get('/{city}', [CityController::class, 'show'])
     ->name('city');
