@@ -1,6 +1,29 @@
-**Status:** aktiv (designfas — research klar, väntar på #25-synk)
-**Senast uppdaterad:** 2026-04-26
-**Relaterad till:** #24 (Tier 1-städer), #25 (månadsvyer)
+**Status:** aktiv (designfas — Lager 2 behöver omdesign efter 2026-04-27)
+**Senast uppdaterad:** 2026-04-27 — "brott per 1000 inv." kräver BRÅ-data, inte Polisen-data
+**Relaterad till:** #24 (Tier 1-städer), #25 (månadsvyer), #37 (SCB-befolkning), #38 (BRÅ-data)
+
+> ## ⚠ Korrigering 2026-04-27 — Lager 2 behöver BRÅ-data
+>
+> "Brott per 1000 invånare" (CrimeGrade-modellen) går **inte** att
+> räkna på Polisens publicerade händelser — det är inte heltäckande
+> brottsstatistik utan ett urval (kanske <5 % av faktiskt anmälda
+> brott) med ojämn täckning mellan regioner. Att räkna metriken på
+> vår data skulle vara desinformation.
+>
+> **Konsekvens:**
+>
+> - **Lager 2:s primära vinnar-metrik är blockerad** tills BRÅ-data
+>   integrerats (se nya todo #38).
+> - **#37 är fortfarande klar och användbar** för befolkningsfakta
+>   ("Uppsala, 174 982 inv.") och storlekssortering — men inte för
+>   brottsstatistik.
+> - **Lager 1 (trend-graf, donut, mest lästa) är opåverkat** — det
+>   visar bara våra publicerade händelser och är ärligt så.
+> - **Lager 3 (AI-månadssammanfattning) är opåverkat** — det baseras
+>   också på vår egen data.
+>
+> Lager 2:s donut/heatmap kan eventuellt visas baserat på vår data
+> men måste märkas tydligt: "publicerade polishändelser" inte "brott".
 
 # Todo #27 — Berika ort- och månadssidor med rikare innehåll
 

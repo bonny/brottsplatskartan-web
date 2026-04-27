@@ -9,8 +9,12 @@ use Illuminate\Support\Facades\DB;
 /**
  * Mappning bpk-platsnamn → SCB tätortskod/kommunkod (todo #37).
  *
- * Källan för "brott per 1000 invånare" på ortssidor (#27 Lager 2).
- * Befolkningsdatan slås upp via JOIN mot scb_tatorter eller scb_kommuner.
+ * Används för befolkningsfakta på ortssidor (t.ex. "Uppsala, 174 982 inv.").
+ *
+ * OBS: använd INTE för "brott per 1000 invånare". Polisens publicerade
+ * händelser är inte heltäckande brottsstatistik — det är ett urval av
+ * vad de väljer att redovisa, och täckningsgraden varierar mellan
+ * regioner. För riktig brottsstatistik krävs BRÅ-data (todo #38).
  */
 class PlacePopulation extends Model
 {
@@ -89,16 +93,4 @@ class PlacePopulation extends Model
         });
     }
 
-    /**
-     * "Brott per 1000 invånare" för en plats. Returnerar null om vi inte
-     * har befolkningsdata.
-     */
-    public static function crimesPerThousand(string $bpkPlaceName, int $crimeCount): ?float
-    {
-        $pop = self::lookup($bpkPlaceName);
-        if (!$pop || $pop->befolkning === 0) {
-            return null;
-        }
-        return round($crimeCount / $pop->befolkning * 1000, 2);
-    }
 }

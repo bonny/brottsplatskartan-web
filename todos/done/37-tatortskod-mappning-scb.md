@@ -1,8 +1,30 @@
-**Status:** klar 2026-04-27 — deploy + prod-import gjort, 327/330 platser auto-mappade. Avblockerar #27 Lager 2.
-**Senast uppdaterad:** 2026-04-27
-**Relaterad till:** #27 (rikare innehåll), #25 (månadsvyer)
+**Status:** klar 2026-04-27 — befolkningsdata + auto-mappning klar. **OBS:** "brott per 1000"-bruket avfärdat, se varning nedan
+**Senast uppdaterad:** 2026-04-27 — `crimesPerThousand()`-helper borttagen
+**Relaterad till:** #27 (rikare innehåll), #25 (månadsvyer), #38 (BRÅ-data)
 
-# Todo #37 — Tätortskod-mappning (SCB) för "brott per 1000 invånare"
+# Todo #37 — SCB-befolkningsdata för ortssidor
+
+> ## ⚠ Korrigering 2026-04-27 — använd INTE för "brott per 1000 inv."
+>
+> Polisens publicerade händelser är **inte** heltäckande brottsstatistik.
+> Det är ett urval — kanske <5 % av faktiskt anmälda brott — och
+> täckningsgraden varierar kraftigt mellan regioner. Uppsala har t.ex.
+> en aktiv pressavdelning, Stockholm publicerar mindre andel av sin
+> trafik. Att räkna `events / befolkning * 1000` på vår data ger
+> missvisande siffror i båda riktningar och vore desinformation.
+>
+> **Vad infrastrukturen FÅR användas till:**
+>
+> - `PlacePopulation::lookup()` → befolkningsfakta ("Uppsala, 174 982 inv.")
+> - Storlekssortering av städer (för "5 grannstäder"-tabellen i #27)
+>
+> **Vad infrastrukturen INTE får användas till:**
+>
+> - Beräkna eller visa "brott per 1000 invånare" — kräver BRÅ-data (#38)
+> - Jämföra "brottsnivå" mellan orter — kräver BRÅ-data
+>
+> `crimesPerThousand()`-helpern togs bort i samma commit som detta
+> noterades, för att förhindra felanvändning.
 
 ## Sammanfattning
 
