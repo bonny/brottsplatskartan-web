@@ -4,7 +4,7 @@ Index över förbättringsarbete. Varje todo har en egen fil under
 [`todos/`](todos/) med fullständig analys. Konvention och
 mappstruktur: [`todos/README.md`](todos/README.md).
 
-Senast uppdaterad: 2026-04-27 (+#37 tätortskod-mappning för SCB — förberedande för #27 Lager 2).
+Senast uppdaterad: 2026-04-27 (+#37 klar — SCB-befolkningsdata + auto-mappning, 327/330 platser, avblockerar #27 Lager 2).
 
 ## Aktiva
 
@@ -15,22 +15,20 @@ Senast uppdaterad: 2026-04-27 (+#37 tätortskod-mappning för SCB — förbereda
 | 27  | Berika ort- och månadssidor med rikare innehåll | Designfas — Lager 1–3 (egen data, externt + AI), research klar                        | [todos/27-rikare-innehall.md](todos/27-rikare-innehall.md)                 |
 | 29  | Audit + reducera indexerade pages               | Datum-routes + thin singles deployat, ~22k pages noindex:as. Mätperiod 30–90d i GSC   | [todos/29-audit-indexerade-pages.md](todos/29-audit-indexerade-pages.md)   |
 | 36  | GSC-mätning av AI-titlars CTR-effekt            | Mätperiod startad 2026-04-27, första check 2026-05-25                                 | [todos/36-gsc-matning-ai-titlar.md](todos/36-gsc-matning-ai-titlar.md)     |
-| 37  | Tätortskod-mappning (SCB) för "brott/1000 inv." | Aktionerbar nu — förberedande blocker för #27 Lager 2                                 | [todos/37-tatortskod-mappning-scb.md](todos/37-tatortskod-mappning-scb.md) |
 
 ### Beroenden
 
 - **#28 → #27 Lager 3:** AI-månadssammanfattningar bygger på `laravel/ai`. _(#28 klar 2026-04-26 — beroendet löst, listas tills #27 startat.)_
 - **#10 → #36:** GSC-mätning bygger på #10:s rendering-deploy. _(#10 klar 2026-04-27 — #36 mätperiod startad samma dag.)_
-- **#37 → #27 Lager 2:** "Brott per 1000 inv." kräver SCB-tätortskod-mappning. Aktiv blocker.
+- **#37 → #27 Lager 2:** "Brott per 1000 inv." kräver SCB-tätortskod-mappning. _(#37 klar 2026-04-27 — beroendet löst, listas tills #27 startat.)_
 
 ### Föreslagen ordning
 
 1. **#25 Månadsvyer** — Uppsala-pilot pågår
-2. **#37 Tätortskod-mappning** — aktionerbar nu, avblockerar #27 Lager 2
-3. **#27** — innehållsberikning efter #25-piloten + #37
-4. **#16** (DO-avveckling) — efter ~2026-05-15 när soak på statiska sajterna är klar
-5. **#29** — passiv mätperiod, åtgärder efter data
-6. **#36** — passiv GSC-mätning, första check 2026-05-25 (eventuell fas 3 backfill om vinst)
+2. **#27** — innehållsberikning efter #25-piloten (Lager 2 avblockerat av #37)
+3. **#16** (DO-avveckling) — efter ~2026-05-15 när soak på statiska sajterna är klar
+4. **#29** — passiv mätperiod, åtgärder efter data
+5. **#36** — passiv GSC-mätning, första check 2026-05-25 (eventuell fas 3 backfill om vinst)
 
 ## Uppföljningar — datum att komma ihåg
 
@@ -58,6 +56,7 @@ Sorterade nyast först.
 
 | #   | Titel                                                               | Klar       | Fil                                                                                    |
 | --- | ------------------------------------------------------------------- | ---------- | -------------------------------------------------------------------------------------- |
+| 37  | Tätortskod-mappning (SCB) för "brott/1000 inv."                     | 2026-04-27 | [todos/done/37-tatortskod-mappning-scb.md](todos/done/37-tatortskod-mappning-scb.md)   |
 | 10  | AI-omskriva vaga titlar (rendering + auto-trigger för hela Sverige) | 2026-04-27 | [todos/done/10-ai-omskriva-titlar.md](todos/done/10-ai-omskriva-titlar.md)             |
 | 35  | Redirect `/lan/Uppsala län` → `/uppsala` (Stockholm-mönstret)       | 2026-04-27 | [todos/done/35-lan-redirect-uppsala.md](todos/done/35-lan-redirect-uppsala.md)         |
 | 32  | Schema.org-sweep (NewsArticle+Place+sameAs+CollectionPage+cache)    | 2026-04-27 | [todos/done/32-schema-sweep.md](todos/done/32-schema-sweep.md)                         |

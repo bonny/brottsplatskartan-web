@@ -1,4 +1,4 @@
-**Status:** aktiv — kod klar lokalt (steg 1–5), kvar prod-deploy + manuell import
+**Status:** klar 2026-04-27 — deploy + prod-import gjort, 327/330 platser auto-mappade. Avblockerar #27 Lager 2.
 **Senast uppdaterad:** 2026-04-27
 **Relaterad till:** #27 (rikare innehåll), #25 (månadsvyer)
 
