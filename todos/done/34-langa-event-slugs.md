@@ -1,4 +1,4 @@
-**Status:** aktiv (designfas)
+**Status:** klar 2026-04-27 — implementerat (cutoff 2026-04-28)
 **Senast uppdaterad:** 2026-04-27
 
 # Todo #34 — Långa event-slugs (URL:er som innehåller hela brödtexten)
@@ -86,17 +86,28 @@ Om vi behåller description i sluggen men begränsar:
 - Truncate på ord-gräns (inte mitt i ett ord)?
 - Vad händer med edge cases där location är lång (t.ex. "norra-storstockholm-norrtaljekommun")?
 
-## Förslag på plan
+## Beslut + implementation (2026-04-27)
 
-1. **Mät påverkan först.** Hur många events har URL längre än 80 tecken?
-   Genomsnittlig längd före och efter 2022-02-11?
-2. **Designa nytt slug-format** baserat på data — sannolikt
-   `{type}-{location}-{id}` med kort version av location.
-3. **Implementera bara för nya events** — `getPermalink()` checkar om
-   datum >= migrationsdatum → ny formel.
-4. **Verifiera SEO-stabilitet** efter 30 dagar via GSC.
-5. **Vid behov:** 301-migration för historiska events (om data visar
-   att gamla URL:er förlorar trafik).
+**Strategi B (gradvis fas-out)** vald — beslut bekräftat 2026-04-27.
+
+Cutoff: `parsed_date >= 2026-04-28` → ny kort slug-formel (utan
+description). Events från och med 2026-04-28 får URL:er som
+`/stockholm/stold-stockholm-sodermalm-500777` (~30 tecken).
+
+Tidigare events (2022-02-11 → 2026-04-27) behåller sina långa URL:er
+oförändrat — ingen 301-migration. Lång-URL-problemet fasas ut
+naturligt över tid när dessa events åldras och #29 markerar dem
+noindex.
+
+Verifierat via tinker (samma event, två datum):
+
+| parsed_date | URL                                                                                                          | Tecken |
+| ----------- | ------------------------------------------------------------------------------------------------------------ | -----: |
+| 2026-04-23  | `/stockholm/stold-stockholm-sodermalm-en-man-pa-sodermalm-greps-misstankt-for-stold-efter-att-ha-tillgripit-en-cykel-500777` |    110 |
+| 2026-04-28  | `/stockholm/stold-stockholm-sodermalm-500777`                                                                |     30 |
+
+Implementation: `CrimeEvent::getPermalink()` (rad 269-281) — bara
+description-block:et körs när datum är i mellandatum-fönstret.
 
 ## Risker
 

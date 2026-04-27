@@ -18,7 +18,6 @@ Senast uppdaterad: 2026-04-27.
 | 27  | Berika ort- och månadssidor med rikare innehåll | Designfas — Lager 1–3 (egen data, externt + AI), research klar                                      | [todos/27-rikare-innehall.md](todos/27-rikare-innehall.md)                 |
 | 29  | Audit + reducera indexerade pages               | Datum-routes + thin singles deployat, ~22k pages noindex:as. Mätperiod 30–90d i GSC                  | [todos/29-audit-indexerade-pages.md](todos/29-audit-indexerade-pages.md)   |
 | 32  | Schema.org-sweep (NewsArticle/Dataset/FAQPage)  | Designfas — härledd från SEO 2026-review. Hög ROI, kan köras parallellt med #25                      | [todos/32-schema-sweep.md](todos/32-schema-sweep.md)                       |
-| 34  | Långa event-slugs (URL:er med hela brödtexten)  | Designfas — events efter 2022-02-11 har 100+ teckens slugs pga description bakas in                  | [todos/34-langa-event-slugs.md](todos/34-langa-event-slugs.md)             |
 
 ### Beroenden
 
@@ -40,6 +39,7 @@ Sorterade nyast först.
 
 | #   | Titel                                                  | Klar       | Fil                                                                                    |
 | --- | ------------------------------------------------------ | ---------- | -------------------------------------------------------------------------------------- |
+| 34  | Långa event-slugs — kort URL för events från 2026-04-28 | 2026-04-27 | [todos/done/34-langa-event-slugs.md](todos/done/34-langa-event-slugs.md)               |
 | 33  | Tier 1-städer på `/{city}/handelser/{year}/{month}`    | 2026-04-27 | [todos/done/33-tier1-month-routes.md](todos/done/33-tier1-month-routes.md)             |
 | 30  | CWV-optimering Fas 1 (LCP -84 %, perf 51→80)           | 2026-04-26 | [todos/done/30-cwv-optimering.md](todos/done/30-cwv-optimering.md)                     |
 | 28  | Migrera AI-stack till `laravel/ai` (Sonnet 4.6 + v2)   | 2026-04-26 | [todos/done/28-migrera-laravel-ai.md](todos/done/28-migrera-laravel-ai.md)             |

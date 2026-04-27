@@ -263,10 +263,20 @@ class CrimeEvent extends Model implements Feedable {
             $slugParts[] = $location->name;
         }
 
-        // Lägg till description till URL också.
-        // Description är ca "Polisen kontaktas om avvikande beteende vid en skola.".
-        // Endast för länkar skapade efter 2022-02-11 så inte gamla länkar påverkas.
-        if ($this->getParsedDateInFormat('YYYY-MM-DD') > "2022-02-10") {
+        // Description i URL — historiskt fönster.
+        //
+        // 2022-02-11: lade till description i slugen för SEO-keyword-rikedom.
+        // 2026-04-28 (todo #34): tar bort igen — slugs blev 100+ tecken
+        //   vilket trunkeras i SERP-snippets, bryts i SMS/Twitter, och
+        //   triggar phishing-känsla hos användare. Schema.org NewsArticle
+        //   (todo #32) bär nu keyword-värdet utanför URL.
+        //
+        // Events i mellandatum-fönstret behåller sina långa URL:er av
+        // migrations-säkerhet — historiska permalinks ändras inte.
+        // #29 noindex:ar gradvis de tunna gamla events, så lång-URL-
+        // problemet fasas ut naturligt över tid.
+        $eventDate = $this->getParsedDateInFormat('YYYY-MM-DD');
+        if ($eventDate > "2022-02-10" && $eventDate < "2026-04-28") {
             $slugParts[] = $this->getDescriptionAsPlainText();
         }
 
