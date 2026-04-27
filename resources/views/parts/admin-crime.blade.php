@@ -17,6 +17,76 @@
         </details>
     @endif
 
+    @php
+        $vagueBucket = \App\CrimeEvent::isVagueTitle($event->parsed_title);
+        $rewriteBucket = \App\CrimeEvent::shouldRewriteTitle($event);
+        $bodyLen = mb_strlen(trim($event->parsed_content ?? ''));
+        $titleAltLen = $event->title_alt_1 ? mb_strlen($event->title_alt_1) : 0;
+        $descAltLen = $event->description_alt_1 ? mb_strlen($event->description_alt_1) : 0;
+        $parsedTitleLen = mb_strlen($event->parsed_title ?? '');
+    @endphp
+
+    <details class="mt-6">
+        <summary>AI-info</summary>
+
+        <table class="text-sm">
+            <tr>
+                <td><strong>AI-titel:</strong></td>
+                <td>
+                    @if ($event->title_alt_1)
+                        ✓ ja ({{ $titleAltLen }} tecken)
+                    @else
+                        – nej
+                    @endif
+                </td>
+            </tr>
+            <tr>
+                <td><strong>AI-brödtext:</strong></td>
+                <td>
+                    @if ($event->description_alt_1)
+                        ✓ ja ({{ $descAltLen }} tecken)
+                    @else
+                        – nej
+                    @endif
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Originaltitel:</strong></td>
+                <td>"{{ $event->parsed_title }}" ({{ $parsedTitleLen }} tecken)</td>
+            </tr>
+            <tr>
+                <td><strong>Vag-bucket:</strong></td>
+                <td>
+                    @if ($vagueBucket)
+                        <code>{{ $vagueBucket }}</code>
+                    @else
+                        – OK (inte vag)
+                    @endif
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Brödtext-längd:</strong></td>
+                <td>
+                    {{ $bodyLen }} tecken
+                    @if ($bodyLen < 100)
+                        (för kort för AI-rewrite, kräver ≥100)
+                    @endif
+                </td>
+            </tr>
+            <tr>
+                <td><strong>AI-rewrite-kandidat:</strong></td>
+                <td>
+                    @if ($event->title_alt_1)
+                        – redan omskrivet
+                    @elseif ($rewriteBucket)
+                        ✓ ja (<code>{{ $rewriteBucket }}</code>) — auto-trigger plockar upp inom 15 min
+                    @else
+                        – nej
+                    @endif
+                </td>
+            </tr>
+        </table>
+    </details>
 
     @php
         $open = $errors->any() || session('status');
