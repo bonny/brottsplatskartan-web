@@ -276,7 +276,8 @@ class CrimeEvent extends Model implements Feedable {
         // #29 noindex:ar gradvis de tunna gamla events, så lång-URL-
         // problemet fasas ut naturligt över tid.
         $eventDate = $this->getParsedDateInFormat('YYYY-MM-DD');
-        if ($eventDate > "2022-02-10" && $eventDate < "2026-04-28") {
+        $descriptionInSlug = $eventDate > "2022-02-10" && $eventDate < "2026-04-28";
+        if ($descriptionInSlug) {
             $slugParts[] = $this->getDescriptionAsPlainText();
         }
 
@@ -290,13 +291,18 @@ class CrimeEvent extends Model implements Feedable {
         $eventName = implode("-", $slugParts);
         $eventName = $this->toAscii($eventName);
 
-        // Dedupera ord-segment för nya events (todo #34, cutoff 2026-04-28).
+        // Dedupera ord-segment (todo #34).
         // parsed_title_location ("Stockholm Södermalm") och prio1-locations
         // ("Södermalm") överlappar ofta — utan dedup blir slug:n
-        // "stold-stockholm-sodermalm-sodermalm-500777". Vi behåller
-        // första förekomsten av varje ord och hoppar över dubletter.
-        // Existerande events ramlar inte hit — deras URL:er är oförändrade.
-        if ($eventDate >= "2026-04-28") {
+        // "stold-stockholm-sodermalm-sodermalm-500777". Behåll första
+        // förekomsten av varje ord, hoppa över dubletter.
+        //
+        // Tillämpas BARA om description inte är i sluggen (pre-2022 +
+        // post-cutoff). Mellandatum-fönstret bevaras intakt — annars
+        // skulle stoppord ("en", "på") och upprepade verb i description
+        // strykas och slug:n bli stympad. Routen extraherar bara
+        // trailing-id, så ändringen påverkar inte event-lookup.
+        if (!$descriptionInSlug) {
             $segments = explode('-', $eventName);
             $seen = [];
             $dedup = [];
