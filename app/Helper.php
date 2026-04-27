@@ -542,6 +542,56 @@ class Helper {
     }
 
     /**
+     * URL-hackability: bygg en redirect-URL från ett year-only-URL till
+     * relevant månad (todo #33).
+     *
+     * Aktuellt år → nuvarande månad. Tidigare år → december det året.
+     * Framtida år eller invalida värden → null (caller får hantera 301
+     * till plats-startsidan).
+     *
+     * Type:
+     *   'plats'  — Tier 1-platser routas till cityMonth, övriga till platsMonth
+     *   'city'   — alltid cityMonth
+     *   'lan'    — alltid lanMonth
+     */
+    public static function buildYearToMonthRedirectUrl(string $type, string $slug, string $year): ?string
+    {
+        if (!ctype_digit($year) || strlen($year) !== 4) {
+            return null;
+        }
+
+        $yearInt = (int) $year;
+        $currentYear = (int) now()->format('Y');
+
+        if ($yearInt < 2014 || $yearInt > $currentYear) {
+            return null;
+        }
+
+        $month = $yearInt === $currentYear
+            ? (int) now()->format('m')
+            : 12;
+        $monthStr = sprintf('%02d', $month);
+
+        if ($type === 'lan') {
+            return route('lanMonth', ['lan' => $slug, 'year' => $year, 'month' => $monthStr]);
+        }
+
+        if ($type === 'city') {
+            return route('cityMonth', ['city' => $slug, 'year' => $year, 'month' => $monthStr]);
+        }
+
+        // type === 'plats': Tier 1 → cityMonth, övriga → platsMonth.
+        $isTier1 = in_array(
+            mb_strtolower($slug),
+            \App\Http\Controllers\CityController::tier1Slugs(),
+            true
+        );
+        return $isTier1
+            ? route('cityMonth', ['city' => $slug, 'year' => $year, 'month' => $monthStr])
+            : route('platsMonth', ['plats' => $slug, 'year' => $year, 'month' => $monthStr]);
+    }
+
+    /**
      * Parse year + month parameters from the monthly URL pattern
      * (`/plats/{plats}/handelser/{year}/{month}`, todo #25).
      *

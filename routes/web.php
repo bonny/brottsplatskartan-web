@@ -125,10 +125,17 @@ Route::get('vma/sida/{slug}', [VMAAlertsController::class, 'text'])->name('vma-t
  */
 Route::get('/lan/', [LanController::class, 'listLan'])->name("lanOverview");
 Route::get('/lan/{lan}', [LanController::class, 'day'])->name("lanSingle");
-Route::get('/lan/{lan}/handelser/{date}', [LanController::class, 'day'])->name('lanDate');
 Route::get('/lan/{lan}/handelser/{year}/{month}', [LanController::class, 'month'])
     ->where(['year' => '[0-9]{4}', 'month' => '[0-9]{2}'])
     ->name('lanMonth');
+// URL-hackability (todo #33): year-only → 301 till relevant månad.
+Route::get('/lan/{lan}/handelser/{year}', function ($lan, $year) {
+    $url = \App\Helper::buildYearToMonthRedirectUrl('lan', $lan, $year);
+    return $url
+        ? redirect($url, 301)
+        : redirect()->route('lanSingle', ['lan' => $lan], 301);
+})->where('year', '[0-9]{4}');
+Route::get('/lan/{lan}/handelser/{date}', [LanController::class, 'day'])->name('lanDate');
 Route::get('/lan/{lan}/handelser', function ($lan) {
     return redirect()->route('lanSingle', ['lan' => $lan]);
 });
@@ -256,12 +263,19 @@ Route::get('/plats-debug/{plats}', function($plats) {
 Route::get('/plats/{plats}/handelser', function ($plats) {
     return redirect()->route('platsSingle', ['plats' => $plats]);
 });
-Route::get('/plats/{plats}/handelser/{date}', [PlatsController::class, 'day'])->name(
-    'platsDatum'
-);
 Route::get('/plats/{plats}/handelser/{year}/{month}', [PlatsController::class, 'month'])
     ->where(['year' => '[0-9]{4}', 'month' => '[0-9]{2}'])
     ->name('platsMonth');
+// URL-hackability (todo #33): year-only → 301 till relevant månad.
+Route::get('/plats/{plats}/handelser/{year}', function ($plats, $year) {
+    $url = \App\Helper::buildYearToMonthRedirectUrl('plats', $plats, $year);
+    return $url
+        ? redirect($url, 301)
+        : redirect()->route('platsSingle', ['plats' => $plats], 301);
+})->where('year', '[0-9]{4}');
+Route::get('/plats/{plats}/handelser/{date}', [PlatsController::class, 'day'])->name(
+    'platsDatum'
+);
 
 /**
  * Sida, med text typ, t.ex. "om brottsplatskartan" eller "api"
@@ -395,7 +409,7 @@ Route::post('/{lan}/{eventName}', function (
     ]);
 
     return back()->with('status', 'Lade till media.');
-});
+})->where('eventName', '.*-[0-9]+$');
 
 /**
  * Routes för blogg
@@ -707,6 +721,9 @@ Route::get('/{lan}/{eventName}', function ($lan, $eventName, Request $request) {
     return view('single-event', $data);
 })
     ->name("singleEvent")
+    // Constraint: event-slugs slutar alltid med -{id}. Förhindrar att
+    // routen fångar URL:er som /{city}/handelser, /lan/{lan}/handelser etc.
+    ->where('eventName', '.*-[0-9]+$')
     // Event-routen har egen custom markdown-renderer via
     // MarkdownController. Stäng av Spatie-konverteringen för denna route
     // så att ClaudeBot m.fl. får vår kurerade markdown istället.
@@ -813,5 +830,16 @@ Route::get('/debug-response-cache', function () {
 Route::get('/{city}/handelser/{year}/{month}', [CityController::class, 'month'])
     ->where(['year' => '[0-9]{4}', 'month' => '[0-9]{2}'])
     ->name('cityMonth');
+// URL-hackability (todo #33): year-only → 301 till relevant månad.
+Route::get('/{city}/handelser/{year}', function ($city, $year) {
+    $url = \App\Helper::buildYearToMonthRedirectUrl('city', $city, $year);
+    return $url
+        ? redirect($url, 301)
+        : redirect('/' . $city, 301);
+})->where('year', '[0-9]{4}');
+// /uppsala/handelser → /uppsala
+Route::get('/{city}/handelser', function ($city) {
+    return redirect('/' . $city, 301);
+});
 Route::get('/{city}', [CityController::class, 'show'])
     ->name('city');
