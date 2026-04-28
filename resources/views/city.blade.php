@@ -59,6 +59,11 @@
                     </div>
                 </div>
 
+                {{-- Trend-sparkline över egen data (todo #27 Lager 1).
+                     Inline SVG, 0 KB JS. Ärlig om att det är publicerade
+                     händelser, inte officiell statistik. --}}
+                <x-trend-sparkline :counts="$trendCounts" :days="90" />
+
                 {{-- BRÅ:s officiella anmälda brott per kommun (todo #38). Visas
                      EFTER händelselistan — händelser är primary content, BRÅ
                      är fördjupande kontext. Mobil-mätning visade att sektionen

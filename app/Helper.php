@@ -31,6 +31,46 @@ class Helper {
         });
     }
 
+    /**
+     * Antal events per dag senaste N dagarna inom en bounding box.
+     *
+     * Använder samma bounding-box-approach som CrimeEvent::getEventsForCity
+     * (snabb, ungefärlig). Returnerar Collection av {YMD, count} sorterad
+     * stigande. Tomma dagar är inte i resultatet — kallaren får fylla på
+     * nollor om den vill ha en kontinuerlig serie.
+     *
+     * Cachat 60 min — trend-data ändras bara med 1 dag i taget.
+     */
+    public static function getDailyEventCountsNearby(
+        float $lat,
+        float $lng,
+        int $distanceKm,
+        int $days = 90
+    ) {
+        $cacheKey = "trend-counts:lat{$lat}:lng{$lng}:r{$distanceKm}:d{$days}";
+
+        return Cache::remember($cacheKey, 60 * MINUTE_IN_SECONDS, function () use ($lat, $lng, $distanceKm, $days) {
+            $distanceInDegrees = $distanceKm / 111;
+            $latMin = $lat - $distanceInDegrees;
+            $latMax = $lat + $distanceInDegrees;
+            $lngMin = $lng - $distanceInDegrees / cos(deg2rad($lat));
+            $lngMax = $lng + $distanceInDegrees / cos(deg2rad($lat));
+
+            return DB::table('crime_events')
+                ->select(
+                    DB::raw('DATE(created_at) as YMD'),
+                    DB::raw('COUNT(*) as count')
+                )
+                ->whereBetween('location_lat', [$latMin, $latMax])
+                ->whereBetween('location_lng', [$lngMin, $lngMax])
+                ->where('created_at', '>=', now()->subDays($days))
+                ->where('is_public', 1)
+                ->groupBy('YMD')
+                ->orderBy('YMD')
+                ->get();
+        });
+    }
+
     private static function buildStatsChartHtml($lan) {
         if ($lan == "home") {
             $stats = self::getHomeStats($lan);

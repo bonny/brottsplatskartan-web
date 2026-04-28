@@ -219,6 +219,14 @@ class CityController extends Controller
             }
         }
 
+        // Trend-sparkline: events/dag senaste 90 dagarna (todo #27 Lager 1).
+        $trendCounts = \App\Helper::getDailyEventCountsNearby(
+            $city['lat'],
+            $city['lng'],
+            $city['distance'],
+            90
+        );
+
         return view('city', [
             'city' => $city,
             'events' => $events,
@@ -234,6 +242,7 @@ class CityController extends Controller
             'bra' => $bra,
             'braLanGrannar' => $braLanGrannar,
             'braRikssnitt' => $braRikssnitt,
+            'trendCounts' => $trendCounts,
         ]);
     }
 }
