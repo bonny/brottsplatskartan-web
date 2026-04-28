@@ -1,7 +1,47 @@
-**Status:** aktiv (Lager 1 + Lager 2 BRÅ + Wikidata + Lager 3 AI-månadssamm./trend deployat 2026-04-28. Heatmap + AI-säkerhetstips avfärdade. Återstår bara: Wikidata-utökning till plats-sidor utanför Tier 1.)
-**Senast uppdaterad:** 2026-04-28 (kväll 3) — Lager 3 AI-månadssammanfattning + trendanalys + Wikidata-fakta live på Tier 1; pre-existing Tier 1-månadsvy-bugg för Malmö/Göteborg åäö-slug fixad i samma svep
-**Relaterad till:** #24 (Tier 1-städer), #25 (månadsvyer), #37 (SCB-befolkning), #38 (BRÅ-data)
+**Status:** klar 2026-04-28 — Lager 1 (trend-sparkline + brottstyp + mest-lästa) + Lager 2 (BRÅ-data + Wikidata-intro-paragraf) + Lager 3 (AI-månadssammanfattning + trendanalys) live på alla 5 Tier 1-städer + alla månadsvyer. Heatmap + AI-säkerhetstips avfärdade. Wikidata-utökning till plats-sidor utanför Tier 1 hänvisas till framtida todo.
+**Senast uppdaterad:** 2026-04-28
 
+> ## ✓ Update 2026-04-28 (kväll 4) — slutleverans
+>
+> Tre extra leveranser efter kväll 3:
+>
+> 1. **Wikidata utökad till proper intro-paragraf.** Tidigare bara "yta
+>    187 km²" — användaren flaggade att det var snålt. Nu en sammanhållen
+>    mening: *"Stockholm är Sveriges huvudstad. Kommunen har omkring
+>    995 574 invånare. Stadens yta är 187 km² och det första kända
+>    omnämnandet är från år 1187."* Två datakällor: Wikidata description
+>    (sv) + grundat-år + yta, kombinerat med SCB-befolkning från
+>    `scb_kommuner` via ny `BraStatistik::kommunInfo()`-helper. Skriver
+>    "Kommunen har..." (inte "{namn} kommun") för att slippa genitiv-
+>    fallgropen.
+>
+> 2. **Månadssumma flyttad från startsida till månadsvy.** Användaren
+>    påpekade att `/uppsala` är en "live"-sida (dagsfärsk info), inte
+>    rätt plats för förra månadens sammanfattning. Renderingen togs bort
+>    från `city.blade.php` och visas nu bara på
+>    `/<stad>/handelser/{år}/{månad}` där hela kontexten är en månad.
+>
+> 3. **Schemaläggning för pågående månad.** Pågående månad är "live" —
+>    nya events tillkommer dagligen så summan måste uppdateras. Två
+>    schedule-jobb i Kernel:
+>    - Snapshot av föregående månad: `monthlyOn(1, '02:00')` (engångs)
+>    - Innevarande månad: `cron 0 */6 * * *` (var 6:e timme)
+>    Change-detection skip:ar AI-anrop när events oförändrade så cost
+>    blir trivial när inget hänt.
+>
+> Status efter dagens session: alla 5 Tier 1-städer har april-2026-summor
+> live på prod (Stockholm 61, Malmö 76, Göteborg 47, Helsingborg 24,
+> Uppsala 32 events). Mars-summor genererade tidigare. Schedule kommer
+> hålla dem aktuella.
+>
+> Filer: `app/Services/WikidataService.php` (utökat med description),
+> `app/BraStatistik.php` (ny `kommunInfo()`-method),
+> `app/Http/Controllers/CityController.php` (städat),
+> `app/Console/Commands/GenerateMonthlySummary.php` (nya `--current`-flag),
+> `app/Console/Kernel.php` (två schedule-jobb),
+> `resources/views/parts/city-facts.blade.php` (ombyggd till paragraf),
+> `resources/views/city.blade.php` (städat).
+>
 > ## ✓ Update 2026-04-28 (kväll 3) — Lager 3 AI-månadssamm. + Wikidata
 >
 > **AI-månadssammanfattning** (`MonthlySummaryAgent`, claude-sonnet-4-6,
