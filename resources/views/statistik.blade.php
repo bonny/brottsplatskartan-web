@@ -115,7 +115,7 @@
 
         <section class="widget">
             <h2 class="widget__title">Rekord – dagar med flest rapporterade händelser</h2>
-            <ol class="Statistics__topDays">
+            <ol class="RankedList Statistics__topDays">
                 @foreach ($topDays as $day)
                     <li>
                         <a href="{{ route('startDatum', ['date' => \Illuminate\Support\Carbon::parse($day['date'])->locale('sv_SE')->translatedFormat('j-F-Y')]) }}">

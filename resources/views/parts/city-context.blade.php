@@ -48,9 +48,9 @@
 @if ($hasMostRead)
     <section class="widget">
         <h2 class="widget__title">Mest lästa händelser senaste 30 dagarna</h2>
-        <ol class="MostRead">
+        <ol class="RankedList MostRead">
             @foreach ($mostReadEvents as $event)
-                <li class="MostRead__item">
+                <li>
                     <a class="MostRead__link" href="{{ $event->getPermalink() }}">
                         {{ $event->getHeadline() }}
                     </a>

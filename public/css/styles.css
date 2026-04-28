@@ -4140,36 +4140,37 @@ h2.widget__title {
     border-radius: 4px;
 }
 
-/* MostRead — numrerad lista med tydliga bullets och tydlig meta-rad. */
-.MostRead {
+/* RankedList — generisk numrerad lista med blå cirkel-bullets.
+   Används av MostRead (event-lista) och Statistics__topDays (rekord-dagar). */
+.RankedList {
     margin: 0;
     padding: 0;
     list-style: none;
-    counter-reset: mostread;
+    counter-reset: rankedlist;
 }
 
-.MostRead__item {
-    counter-increment: mostread;
+.RankedList > li {
+    counter-increment: rankedlist;
     padding: 0.7rem 0 0.7rem 2.4rem;
     border-bottom: 1px solid var(--color-gray-2);
     position: relative;
 }
 
-.MostRead__item:first-child {
+.RankedList > li:first-child {
     padding-top: 0;
 }
 
-.MostRead__item:first-child::before {
+.RankedList > li:first-child::before {
     top: 0;
 }
 
-.MostRead__item:last-child {
+.RankedList > li:last-child {
     border-bottom: none;
     padding-bottom: 0;
 }
 
-.MostRead__item::before {
-    content: counter(mostread);
+.RankedList > li::before {
+    content: counter(rankedlist);
     position: absolute;
     left: 0;
     top: 0.7rem;
