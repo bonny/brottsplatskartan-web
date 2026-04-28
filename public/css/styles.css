@@ -4037,3 +4037,128 @@ h2.widget__title {
     width: 100%;
     height: 320px;
 }
+
+/* ===========================================================
+   #27 Lager 1 — TrendSparkline + CityContext widgets
+   =========================================================== */
+
+/* Trend-sparkline (events/dag senaste 90d) */
+.TrendSparkline__lead {
+    margin: 0 0 var(--default-margin-half);
+    color: var(--color-gray-3);
+    font-size: var(--font-size-normal);
+}
+
+.TrendSparkline__chart {
+    width: 100%;
+    height: auto;
+    max-height: 110px;
+    display: block;
+    margin: var(--default-margin-half) 0;
+}
+
+.TrendSparkline__bar {
+    fill: var(--color-blue-police);
+    opacity: 0.85;
+    transition: opacity 0.15s;
+}
+
+.TrendSparkline__bar:hover {
+    opacity: 1;
+    fill: var(--color-blue-police-active);
+}
+
+.TrendSparkline__baseline {
+    stroke: var(--color-gray-2);
+    stroke-width: 1;
+}
+
+.TrendSparkline__axisLabels {
+    display: flex;
+    justify-content: space-between;
+    margin: 0;
+    color: var(--color-gray-1);
+    font-size: var(--font-size-small);
+}
+
+/* City-context — vanligaste typer + mest lästa */
+.CityContext__caption {
+    margin: var(--default-margin-half) 0 0;
+    color: var(--color-gray-1);
+    font-size: var(--font-size-small);
+    line-height: 1.5;
+}
+
+.CityContext__typesChart {
+    margin: 0;
+    /* Charts-css overrides — gör staplarna tydligare */
+    --color: var(--color-blue-police);
+}
+
+.CityContext__typesChart th[scope="row"] {
+    font-weight: normal;
+    color: var(--color-gray-3);
+    font-size: var(--font-size-normal);
+    padding-right: var(--default-margin-half);
+}
+
+.CityContext__typesChart .data {
+    font-weight: 600;
+    margin-left: 0.5em;
+    color: var(--color-gray-3);
+}
+
+.CityContext__mostRead {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: mostread;
+}
+
+.CityContext__mostReadItem {
+    counter-increment: mostread;
+    padding: var(--default-margin-half) 0;
+    border-bottom: 1px solid var(--color-gray-2);
+    position: relative;
+    padding-left: 2.25rem;
+}
+
+.CityContext__mostReadItem:last-child {
+    border-bottom: none;
+}
+
+.CityContext__mostReadItem::before {
+    content: counter(mostread);
+    position: absolute;
+    left: 0;
+    top: var(--default-margin-half);
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: 50%;
+    background: var(--color-blue-police);
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.CityContext__mostReadLink {
+    display: block;
+    color: var(--color-link);
+    font-weight: 600;
+    line-height: 1.35;
+    margin-bottom: 0.15rem;
+    text-decoration: none;
+}
+
+.CityContext__mostReadLink:hover {
+    text-decoration: underline;
+}
+
+.CityContext__mostReadMeta {
+    display: block;
+    color: var(--color-gray-1);
+    font-size: var(--font-size-small);
+}

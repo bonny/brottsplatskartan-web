@@ -1,14 +1,12 @@
 {{--
     Inline SVG-sparkline över events/dag senaste N dagarna (todo #27 Lager 1).
-
-    0 KB JS, 0 externa beroenden. Renderar bar-graf eftersom event-volymen
-    per ort är gles (~1-4 per dag) och linjegraf skulle förvirra med många
-    nolldagar mitt i serien.
+    0 KB JS, 0 externa beroenden. Bar-graf eftersom event-volymen per ort
+    är gles — linjegraf skulle förvirra med många nolldagar mitt i serien.
 
     Props:
         $counts (Collection|array)  — objekt med {YMD, count}, från Helper::getDailyEventCountsNearby
-        $days (int)                  — fönstret som querydes (för ärlig "senaste N dagar"-rubrik)
-        $heading (string|null)       — h3-rubrik, default "Aktivitet senaste N dagarna"
+        $days (int)                  — fönstret som querydes
+        $heading (string|null)       — h2-rubrik, default "Aktivitet senaste N dagarna"
 --}}
 @props([
     'counts' => collect(),
@@ -21,8 +19,7 @@
     $totalEvents = $countsCollection->sum('count');
     $heading = $heading ?? "Aktivitet senaste {$days} dagarna";
 
-    // Bygg en kontinuerlig array av {date, count} för hela fönstret —
-    // queryresultatet hoppar över dagar utan events.
+    // Bygg en kontinuerlig array av {date, count} för hela fönstret.
     $countsByDate = $countsCollection->keyBy('YMD');
     $series = [];
     for ($i = $days - 1; $i >= 0; $i--) {
@@ -34,26 +31,31 @@
     }
 
     $maxCount = max(array_column($series, 'count'));
-    $svgWidth = 320;
-    $svgHeight = 64;
-    $padTop = 4;
-    $padBottom = 12;
+    $svgWidth = 600;
+    $svgHeight = 90;
+    $padTop = 6;
+    $padBottom = 14;
     $usableHeight = $svgHeight - $padTop - $padBottom;
     $barWidth = $svgWidth / count($series);
-    $barGap = max(1, $barWidth * 0.15);
+    $barGap = max(1, $barWidth * 0.18);
     $barRenderWidth = $barWidth - $barGap;
+
+    $firstDate = \Carbon\Carbon::parse($series[0]['date'])->locale('sv')->isoFormat('D MMM');
+    $lastDate = \Carbon\Carbon::parse(end($series)['date'])->locale('sv')->isoFormat('D MMM');
 @endphp
 
 @if ($totalEvents > 0)
-    <section class="trend-sparkline mt-6">
-        <h3 class="text-base font-semibold mb-1">{{ $heading }}</h3>
-        <p class="text-sm text-slate-600 mb-2">
+    <section class="widget TrendSparkline">
+        <h2 class="widget__title">{{ $heading }}</h2>
+        <p class="TrendSparkline__lead">
             <strong>{{ number_format($totalEvents, 0, ',', ' ') }}</strong>
-            publicerade händelser från Polisen.
+            publicerade händelser från Polisen — i snitt
+            {{ number_format($totalEvents / $days, 1, ',', ' ') }} per dag.
         </p>
         <svg viewBox="0 0 {{ $svgWidth }} {{ $svgHeight }}"
-             class="w-full max-w-md h-auto"
+             class="TrendSparkline__chart"
              role="img"
+             preserveAspectRatio="none"
              aria-label="Bar-graf över antal publicerade händelser per dag senaste {{ $days }} dagarna. Totalt {{ $totalEvents }} händelser."
              xmlns="http://www.w3.org/2000/svg">
             @foreach ($series as $i => $point)
@@ -67,36 +69,21 @@
                           y="{{ number_format($y, 2, '.', '') }}"
                           width="{{ number_format($barRenderWidth, 2, '.', '') }}"
                           height="{{ number_format($barHeight, 2, '.', '') }}"
-                          fill="currentColor"
-                          opacity="0.7">
+                          rx="1"
+                          class="TrendSparkline__bar">
                         <title>{{ $point['date'] }}: {{ $point['count'] }}</title>
                     </rect>
                 @endif
             @endforeach
-            {{-- X-axel-baseline --}}
             <line x1="0"
                   y1="{{ $svgHeight - $padBottom }}"
                   x2="{{ $svgWidth }}"
                   y2="{{ $svgHeight - $padBottom }}"
-                  stroke="currentColor"
-                  opacity="0.2"
-                  stroke-width="1" />
-            {{-- Datumlabels längst ner --}}
-            <text x="2"
-                  y="{{ $svgHeight - 2 }}"
-                  font-size="9"
-                  fill="currentColor"
-                  opacity="0.5">{{ $series[0]['date'] }}</text>
-            <text x="{{ $svgWidth - 2 }}"
-                  y="{{ $svgHeight - 2 }}"
-                  font-size="9"
-                  fill="currentColor"
-                  opacity="0.5"
-                  text-anchor="end">{{ end($series)['date'] }}</text>
+                  class="TrendSparkline__baseline" />
         </svg>
-        <p class="text-xs text-slate-500 mt-1">
-            Polisens publicerade händelser — inte heltäckande brottsstatistik.
-            Se BRÅ-sektionen nedan för officiell anmäld statistik.
+        <p class="TrendSparkline__axisLabels">
+            <span>{{ $firstDate }}</span>
+            <span>{{ $lastDate }}</span>
         </p>
     </section>
 @endif
