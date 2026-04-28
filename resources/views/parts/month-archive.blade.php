@@ -21,26 +21,53 @@ Required vars:
     ];
 
     // Bygg lista över past months grupperat per år. Året används som
-    // subtil avdelare i listan när den ändras.
-    $pastMonths = [];
-    for ($i = 1; $i < 12; $i++) {
-        $m = (clone $startMonth)->subMonths($i);
-        $pastMonths[] = [
+    // subtil avdelare i listan när den ändras. Default-synliga = 11
+    // senaste månader; äldre månader (12–36 mån bakåt) ligger i ett
+    // <details>-block som användaren kan expandera.
+    $buildMonth = function (Carbon $m): array {
+        return [
             'year' => $m->format('Y'),
             'month' => $m->format('m'),
             'ym' => $m->format('Y-m'),
             'label' => title_case($m->isoFormat('MMMM')),
             'fullLabel' => title_case($m->isoFormat('MMMM YYYY')),
         ];
+    };
+
+    $pastMonths = [];
+    for ($i = 1; $i < 12; $i++) {
+        $pastMonths[] = $buildMonth((clone $startMonth)->subMonths($i));
+    }
+
+    $extraMonths = [];
+    for ($i = 12; $i <= 36; $i++) {
+        $extraMonths[] = $buildMonth((clone $startMonth)->subMonths($i));
     }
 
     // Antal events per månad — badge per rad. Cachas 24h. Inkluderar
-    // innevarande månad så "Just nu"-CTA också får ett antal.
+    // innevarande månad så "Just nu"-CTA också får ett antal. 36 mån
+    // bakåt så hela <details>-blocket fylls i en query.
     $monthCounts = \App\Helper::getMonthlyEventCounts(
         $monthArchiveType === 'lan' ? 'lan' : 'plats',
         $monthArchiveSlug,
-        12
+        36
     );
+
+    // "You are here"-detektering — om vi tittar på en månadsvy ska
+    // motsvarande månad markeras i listan. Route-parametrar finns på
+    // /<scope>/<slug>/handelser/{year}/{month}-vyn.
+    $viewingYear = (string) (Route::current()?->parameter('year') ?? '');
+    $viewingMonth = $viewingYear !== ''
+        ? str_pad((string) Route::current()->parameter('month'), 2, '0', STR_PAD_LEFT)
+        : '';
+
+    // Om "you are here"-månaden ligger i extra-blocket → öppna det
+    // default, så markeringen syns utan att användaren måste klicka.
+    $viewingYM = ($viewingYear !== '' && $viewingMonth !== '')
+        ? $viewingYear . '-' . $viewingMonth
+        : '';
+    $extraOpenByDefault = $viewingYM !== ''
+        && in_array($viewingYM, array_column($extraMonths, 'ym'), true);
 
     $formatCount = function (?int $n): string {
         if (!$n) {
@@ -71,14 +98,6 @@ Required vars:
         $liveRoute = 'platsSingle';
     }
 
-    // "You are here"-detektering — om vi tittar på en månadsvy ska
-    // motsvarande månad markeras i listan. Route-parametrar finns på
-    // /<scope>/<slug>/handelser/{year}/{month}-vyn.
-    $viewingYear = (string) (Route::current()?->parameter('year') ?? '');
-    $viewingMonth = $viewingYear !== ''
-        ? str_pad((string) Route::current()->parameter('month'), 2, '0', STR_PAD_LEFT)
-        : '';
-
     // CTA pekar på live-startsidan (/stockholm, /lan/uppsala-lan, etc) —
     // "Just nu" = senaste händelserna i realtid, inte aggregerad månadsvy.
     $onLivePage = request()->routeIs($liveRoute);
@@ -102,30 +121,62 @@ Required vars:
         @endif
     </a>
 
-    <ul class="MonthArchive__list">
-        @php $previousYear = $currentMonth['year']; @endphp
-        @foreach ($pastMonths as $m)
-            @php
+    @php
+        // Återanvänd loop-markup för både default- och extra-listan.
+        $renderItems = function (array $months, string $startYear) use (
+            $viewingYear, $viewingMonth, $monthCounts, $route, $param, $monthArchiveSlug, $formatCount
+        ) {
+            $previousYear = $startYear;
+            $html = '';
+            foreach ($months as $m) {
                 $isHere = $viewingYear === $m['year'] && $viewingMonth === $m['month'];
                 $yearChanged = $m['year'] !== $previousYear;
                 $previousYear = $m['year'];
                 $count = $monthCounts[$m['ym']] ?? 0;
                 $isEmpty = $count === 0;
-            @endphp
-            @if ($yearChanged)
-                <li class="MonthArchive__yearLabel" aria-hidden="true">{{ $m['year'] }}</li>
-            @endif
-            <li class="MonthArchive__item{{ $isHere ? ' MonthArchive__item--here' : '' }}{{ $isEmpty ? ' MonthArchive__item--empty' : '' }}">
-                <a
-                    class="MonthArchive__link"
-                    href="{{ route($route, [$param => $monthArchiveSlug, 'year' => $m['year'], 'month' => $m['month']]) }}"
-                    @if ($isHere) aria-current="page" @endif
-                    aria-label="{{ $m['fullLabel'] }}, {{ $count }} händelser"
-                >
-                    <span class="MonthArchive__linkLabel">{{ $m['label'] }}</span>
-                    <span class="MonthArchive__count" aria-hidden="true">{{ $formatCount($count) }}</span>
-                </a>
-            </li>
-        @endforeach
+
+                $itemClasses = 'MonthArchive__item'
+                    . ($isHere ? ' MonthArchive__item--here' : '')
+                    . ($isEmpty ? ' MonthArchive__item--empty' : '');
+
+                $href = route($route, [$param => $monthArchiveSlug, 'year' => $m['year'], 'month' => $m['month']]);
+                $ariaCurrent = $isHere ? ' aria-current="page"' : '';
+
+                if ($yearChanged) {
+                    $html .= sprintf(
+                        '<li class="MonthArchive__yearLabel" aria-hidden="true">%s</li>',
+                        e($m['year'])
+                    );
+                }
+                $html .= sprintf(
+                    '<li class="%s"><a class="MonthArchive__link" href="%s"%s aria-label="%s, %d händelser">'
+                        . '<span class="MonthArchive__linkLabel">%s</span>'
+                        . '<span class="MonthArchive__count" aria-hidden="true">%s</span>'
+                        . '</a></li>',
+                    e($itemClasses),
+                    e($href),
+                    $ariaCurrent,
+                    e($m['fullLabel']),
+                    $count,
+                    e($m['label']),
+                    e($formatCount($count))
+                );
+            }
+            return $html;
+        };
+    @endphp
+
+    <ul class="MonthArchive__list">
+        {!! $renderItems($pastMonths, $currentMonth['year']) !!}
     </ul>
+
+    @if (!empty($extraMonths))
+        @php $extraStartYear = end($pastMonths)['year']; @endphp
+        <details class="MonthArchive__extra"@if ($extraOpenByDefault) open @endif>
+            <summary class="MonthArchive__extraToggle">Visa äldre månader</summary>
+            <ul class="MonthArchive__list MonthArchive__list--extra">
+                {!! $renderItems($extraMonths, $extraStartYear) !!}
+            </ul>
+        </details>
+    @endif
 </section>
