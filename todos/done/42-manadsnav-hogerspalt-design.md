@@ -1,4 +1,4 @@
-**Status:** aktiv
+**Status:** klar 2026-04-28 — månadsnav polerad: titel "Månader", listraderna i widget-stil med år-rubrik mellan grupper, "Just nu"-CTA tonad ned till svag gul accent
 **Senast uppdaterad:** 2026-04-28
 
 # Todo #42 — Designa om månadsnav i högerspalten
