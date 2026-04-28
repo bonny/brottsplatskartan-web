@@ -39,7 +39,7 @@
     display: flex;
     align-items: center;
     place-content: center;
-    height: 70dvh;
+    height: calc(70dvh + 50px);
     background-color: antiquewhite;
     background-image: url("/img/share-img-blur.jpg");
     background-size: cover;
