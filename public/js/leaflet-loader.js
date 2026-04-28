@@ -32,4 +32,21 @@
     L.control.loader = function (options) {
         return new L.Control.Loader(options);
     };
+
+    // Override L.Icon.Default — vi serverar inte Leaflets default PNG-
+    // markers (public/vendor/leaflet/images/ saknas medvetet — vi
+    // använder CSS-styled divIcons överallt). Utan detta får vi 404
+    // på marker-icon-2x.png m.fl. så fort något plugin (markercluster,
+    // locatecontrol) eller annan kod skapar ett default-marker-objekt.
+    var DefaultDivIcon = L.DivIcon.extend({
+        options: {
+            className: "Leaflet-default-marker",
+            iconSize: [14, 14],
+            iconAnchor: [7, 7],
+            popupAnchor: [0, -7],
+            html: '<span class="Leaflet-default-marker__dot"></span>',
+        },
+    });
+    L.Icon.Default = DefaultDivIcon;
+    L.Marker.prototype.options.icon = new DefaultDivIcon();
 }).call(this);

@@ -4048,7 +4048,8 @@ h2.widget__title {
     border: 0;
 }
 
-.MonthOverviewMap__markerDot {
+.MonthOverviewMap__markerDot,
+.Leaflet-default-marker__dot {
     display: block;
     width: 14px;
     height: 14px;
@@ -4056,6 +4057,73 @@ h2.widget__title {
     background: var(--color-blue-police);
     border: 2px solid #fff;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+/* Fallback för L.marker() utan explicit icon — vi serverar inga
+ * PNG-default-markers, så leaflet-loader.js byter L.Icon.Default
+ * mot en divIcon med .Leaflet-default-marker__dot. */
+.Leaflet-default-marker {
+    background: transparent;
+    border: 0;
+}
+
+/* Tidigare månader-widget — "Just nu"-CTA + you-are-here (todo #44).
+ * CTA-rutan separerar live-månaden från arkivet under och funkar
+ * som genväg från en historisk månadsvy tillbaka till nuet. */
+.MonthArchive__current {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: var(--default-margin) var(--default-margin-double);
+    margin-bottom: var(--default-margin);
+    background: var(--color-blue-police);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background 0.15s;
+}
+
+.MonthArchive__current:hover,
+.MonthArchive__current:focus {
+    background: var(--color-blue-police-active);
+    color: #fff;
+    text-decoration: none;
+}
+
+.MonthArchive__currentLabel {
+    font-size: var(--font-size-small);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0.85;
+}
+
+.MonthArchive__currentMonth {
+    font-size: var(--font-size-large, 1.5rem);
+    font-weight: 600;
+    line-height: 1.1;
+}
+
+/* När man redan tittar på innevarande månad — CTA:n är "you are here". */
+.MonthArchive__current--here {
+    background: var(--color-yellow);
+    color: var(--color-blue-police-active);
+}
+
+.MonthArchive__current--here:hover,
+.MonthArchive__current--here:focus {
+    background: var(--color-yellow);
+    color: var(--color-blue-police-active);
+    filter: brightness(0.95);
+}
+
+/* Markera vald månad i listan (you-are-here). */
+.MonthArchive__item--here a {
+    font-weight: 600;
+}
+
+.MonthArchive__item--here a::before {
+    content: "▸ ";
+    color: var(--color-blue-police);
 }
 
 /* ===========================================================
