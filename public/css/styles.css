@@ -4154,7 +4154,7 @@ h2.widget__title {
 .MonthArchive__link {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    gap: 0.5em;
     padding: var(--default-margin-half) var(--default-margin-half);
     margin: 0 calc(-1 * var(--default-margin-half));
     color: var(--color-link, var(--color-blue-police));
@@ -4185,6 +4185,42 @@ h2.widget__title {
 
 .MonthArchive__linkLabel {
     font-size: var(--font-size-medium-2);
+    flex: 1;
+}
+
+/* Badge med antal events per månad (todo #41 fas 1). */
+.MonthArchive__count {
+    color: var(--color-gray-3);
+    font-size: var(--font-size-small);
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+/* "Just nu"-CTA-count skjuts till höger om currentMonth. */
+.MonthArchive__current .MonthArchive__count {
+    margin-left: auto;
+    align-self: center;
+}
+
+/* Tomma månader — dimmade, men fortfarande klickbara. */
+.MonthArchive__item--empty .MonthArchive__link {
+    color: var(--color-gray-2);
+}
+
+.MonthArchive__item--empty .MonthArchive__count {
+    color: var(--color-gray-2);
+}
+
+/* You-are-here-state: count i samma aktiva färg, något dämpad. */
+.MonthArchive__item--here .MonthArchive__count {
+    color: var(--color-blue-police-active);
+    opacity: 0.7;
+}
+
+.MonthArchive__current--here .MonthArchive__count {
+    color: var(--color-blue-police-active);
+    opacity: 0.75;
 }
 
 /* Markera vald månad i listan (you-are-here). */

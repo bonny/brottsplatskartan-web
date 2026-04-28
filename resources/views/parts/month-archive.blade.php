@@ -16,6 +16,7 @@ Required vars:
     $currentMonth = [
         'year' => $startMonth->format('Y'),
         'month' => $startMonth->format('m'),
+        'ym' => $startMonth->format('Y-m'),
         'label' => title_case($startMonth->isoFormat('MMMM YYYY')),
     ];
 
@@ -27,10 +28,29 @@ Required vars:
         $pastMonths[] = [
             'year' => $m->format('Y'),
             'month' => $m->format('m'),
+            'ym' => $m->format('Y-m'),
             'label' => title_case($m->isoFormat('MMMM')),
             'fullLabel' => title_case($m->isoFormat('MMMM YYYY')),
         ];
     }
+
+    // Antal events per månad — badge per rad. Cachas 24h. Inkluderar
+    // innevarande månad så "Just nu"-CTA också får ett antal.
+    $monthCounts = \App\Helper::getMonthlyEventCounts(
+        $monthArchiveType === 'lan' ? 'lan' : 'plats',
+        $monthArchiveSlug,
+        12
+    );
+
+    $formatCount = function (?int $n): string {
+        if (!$n) {
+            return '0';
+        }
+        if ($n >= 1000) {
+            return number_format($n / 1000, 1, ',', '') . 'k';
+        }
+        return (string) $n;
+    };
 
     // todo #33: Tier 1-städer länkar till /{city}/handelser/-namespace.
     $tier1 = \App\Http\Controllers\CityController::tier1Slugs();
@@ -69,6 +89,7 @@ Required vars:
 
     {{-- "Just nu"-CTA — pekar på live-startsidan (senaste händelser i
          realtid). Markeras som "you are here" när användaren är där. --}}
+    @php $currentCount = $monthCounts[$currentMonth['ym']] ?? 0; @endphp
     <a
         href="{{ route($liveRoute, [$param => $monthArchiveSlug]) }}"
         class="MonthArchive__current{{ $onLivePage ? ' MonthArchive__current--here' : '' }}"
@@ -76,6 +97,9 @@ Required vars:
     >
         <span class="MonthArchive__currentLabel">Just nu</span>
         <span class="MonthArchive__currentMonth">{{ $currentMonth['label'] }}</span>
+        @if ($currentCount > 0)
+            <span class="MonthArchive__count" aria-label="{{ $currentCount }} händelser">{{ $formatCount($currentCount) }}</span>
+        @endif
     </a>
 
     <ul class="MonthArchive__list">
@@ -85,17 +109,21 @@ Required vars:
                 $isHere = $viewingYear === $m['year'] && $viewingMonth === $m['month'];
                 $yearChanged = $m['year'] !== $previousYear;
                 $previousYear = $m['year'];
+                $count = $monthCounts[$m['ym']] ?? 0;
+                $isEmpty = $count === 0;
             @endphp
             @if ($yearChanged)
                 <li class="MonthArchive__yearLabel" aria-hidden="true">{{ $m['year'] }}</li>
             @endif
-            <li class="MonthArchive__item{{ $isHere ? ' MonthArchive__item--here' : '' }}">
+            <li class="MonthArchive__item{{ $isHere ? ' MonthArchive__item--here' : '' }}{{ $isEmpty ? ' MonthArchive__item--empty' : '' }}">
                 <a
                     class="MonthArchive__link"
                     href="{{ route($route, [$param => $monthArchiveSlug, 'year' => $m['year'], 'month' => $m['month']]) }}"
                     @if ($isHere) aria-current="page" @endif
+                    aria-label="{{ $m['fullLabel'] }}, {{ $count }} händelser"
                 >
                     <span class="MonthArchive__linkLabel">{{ $m['label'] }}</span>
+                    <span class="MonthArchive__count" aria-hidden="true">{{ $formatCount($count) }}</span>
                 </a>
             </li>
         @endforeach

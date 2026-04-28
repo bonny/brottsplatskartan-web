@@ -176,6 +176,89 @@ class Helper {
         });
     }
 
+    /**
+     * Antal events per månad för en plats eller ett län. Returneras som
+     * `['YYYY-MM' => count]`. Tomma månader saknas — kallaren får
+     * fylla på nollor.
+     *
+     * Använd för månadsbadges i `parts/month-archive.blade.php` (fas 1
+     * av todo #41).
+     *
+     * - `$type === 'lan'`: filter på `administrative_area_level_1`. Slug
+     *   normaliseras till display-form ("dalarnas lan" → "Dalarnas län")
+     *   via `getAllLan()`-mappning, eftersom widgeten får slugen efter
+     *   `str_replace('-', ' ', $lan)` men DB lagrar display-form.
+     * - `$type === 'plats'` (inkl. Tier 1-städer): filter på
+     *   `parsed_title_location` ELLER `administrative_area_level_2`.
+     *   Tier 1-slugs översätts via `CityController::tier1DisplayName()`
+     *   så `'malmo'` blir `'Malmö'` etc.
+     *
+     * Cachat 24h — historiska månader är immutabla, innevarande månad
+     * blir lite stale men det är OK för en sidopanels-widget.
+     *
+     * @return array<string, int>
+     */
+    public static function getMonthlyEventCounts(
+        string $type,
+        string $slug,
+        int $monthsBack = 12
+    ): array {
+        $cacheKey = "monthly-counts:{$type}:{$slug}:m{$monthsBack}";
+
+        return Cache::remember($cacheKey, 24 * 60 * 60, function () use ($type, $slug, $monthsBack) {
+            $startDate = Carbon::now()->subMonths($monthsBack)->startOfMonth();
+
+            $query = DB::table('crime_events')
+                ->select(
+                    DB::raw("DATE_FORMAT(created_at, '%Y-%m') as ym"),
+                    DB::raw('COUNT(*) as total')
+                )
+                ->where('created_at', '>=', $startDate)
+                ->where('is_public', 1);
+
+            if ($type === 'lan') {
+                $query->where('administrative_area_level_1', self::resolveLanDisplayName($slug));
+            } else {
+                // 'plats' (Tier 1-städer routar också via plats-pipeline)
+                $needle = \App\Http\Controllers\CityController::tier1DisplayName($slug);
+                $query->where(function ($q) use ($needle) {
+                    $q->where('parsed_title_location', $needle)
+                      ->orWhere('administrative_area_level_2', $needle);
+                });
+            }
+
+            $rows = $query->groupBy('ym')->pluck('total', 'ym')->all();
+
+            return array_map('intval', $rows);
+        });
+    }
+
+    /**
+     * Normaliserings-cache: sluggad form ("dalarnas lan") → display-form
+     * ("Dalarnas län"). Per-request, byggs lazy från `getAllLan()`.
+     *
+     * @var array<string, string>|null
+     */
+    private static ?array $lanSlugToDisplayCache = null;
+
+    /**
+     * Översätt sluggad län-form (gemener, å/ä/ö → a/a/o) till
+     * display-form som DB lagrar. Slug-form "dalarnas lan" → "Dalarnas
+     * län". Returnerar input oförändrat om ingen match — kallande kod
+     * får då tomt resultat och vet att slugen var okänd.
+     */
+    private static function resolveLanDisplayName(string $slug): string
+    {
+        if (self::$lanSlugToDisplayCache === null) {
+            self::$lanSlugToDisplayCache = [];
+            foreach (self::getAllLan() as $lan) {
+                $key = mb_strtolower(strtr($lan, ['ä' => 'a', 'å' => 'a', 'ö' => 'o']));
+                self::$lanSlugToDisplayCache[$key] = $lan;
+            }
+        }
+        return self::$lanSlugToDisplayCache[mb_strtolower($slug)] ?? $slug;
+    }
+
     private static function buildStatsChartHtml($lan) {
         if ($lan == "home") {
             $stats = self::getHomeStats($lan);
