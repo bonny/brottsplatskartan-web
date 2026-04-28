@@ -12,6 +12,7 @@ class GenerateMonthlySummary extends Command
         {area=stockholm : Område-slug (stockholm, malmo, goteborg, helsingborg, uppsala)}
         {--year= : År (YYYY) — default föregående månads år}
         {--month= : Månad (1-12) — default föregående månad}
+        {--current : Sammanfatta innevarande månad i stället för föregående}
         {--all-tier1 : Kör alla 5 Tier 1-städer}';
 
     protected $description = 'Genererar AI-månadssammanfattning för Tier 1-stad (todo #27 Lager 3)';
@@ -20,11 +21,11 @@ class GenerateMonthlySummary extends Command
     {
         $service = new AISummaryService();
 
-        // Default: föregående månad. Vid månadsskifte vill vi sammanfatta
-        // den månad som just slutat, inte den som pågår.
-        $now = Carbon::now()->subMonth();
-        $year = (int) ($this->option('year') ?? $now->year);
-        $month = (int) ($this->option('month') ?? $now->month);
+        // Default: föregående månad (snapshot — månaden är slut).
+        // --current: innevarande månad (uppdateras kontinuerligt).
+        $base = $this->option('current') ? Carbon::now() : Carbon::now()->subMonth();
+        $year = (int) ($this->option('year') ?? $base->year);
+        $month = (int) ($this->option('month') ?? $base->month);
 
         if ($month < 1 || $month > 12) {
             $this->error("Ogiltig månad: {$month}. Använd 1-12.");

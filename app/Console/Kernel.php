@@ -58,14 +58,25 @@ class Kernel extends ConsoleKernel
             ->withoutOverlapping();
 
         // Månads-sammanfattning för Tier 1-städer (todo #27 Lager 3).
-        // Kör 1:a varje månad kl 02:00 (UTC) — sammanfattar föregående
-        // månad. Service har change-detection så omkörning är gratis om
-        // events oförändrade. Stagger-effekten via --all-tier1 är OK
-        // eftersom varje stads AI-anrop tar ~30s.
+        // Två schemalägg:
+        //
+        // 1. Snapshot av föregående månad — körs 1:a varje månad kl 02:00 UTC.
+        //    Engångsjobb per månad, månaden är slut så datan är immutabel.
+        //
+        // 2. Innevarande månad — körs var 6:e timme. Behövs eftersom
+        //    månadsvyn för pågående månad är "live" (nya events tillkommer)
+        //    och sammanfattningen ska reflektera senaste data. Service har
+        //    change-detection så omkörning är gratis om events oförändrade.
+        //    5 städer × 4 körningar/dygn × ~30s = stagger-effekten OK.
         $schedule->command('summary:generate-monthly --all-tier1')
             ->monthlyOn(1, '02:00')
             ->withoutOverlapping()
-            ->name('monthly-summary-tier1');
+            ->name('monthly-summary-tier1-prev');
+
+        $schedule->command('summary:generate-monthly --all-tier1 --current')
+            ->cron('0 */6 * * *')
+            ->withoutOverlapping()
+            ->name('monthly-summary-tier1-current');
 
         // Pre-warma response cache på populära sidor var 15:e minut så
         // användare aldrig träffar kall cache. Låg kostnad: ~25 HTTP-

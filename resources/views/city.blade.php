@@ -43,13 +43,10 @@
                     />
                 @endif
 
-                {{-- AI-månadssammanfattning för förra månaden (todo #27 Lager 3).
-                     Genereras 1:a varje månad av schedulern — visas bara när
-                     den finns. Är primary content-värdig: 300-450 ord unik
-                     prosa per stad/månad. --}}
-                @if (!empty($monthlySummary))
-                    <x-monthly-summary :summary="$monthlySummary" />
-                @endif
+                {{-- Månadssammanfattning visas INTE här — startsidan är "live"
+                     (idag/igår). Förra månadens AI-sammanfattning hör hemma
+                     på månadsvyn /<stad>/handelser/{år}/{månad} där hela
+                     kontexten är en månad. --}}
 
                 {{-- @if($yesterdaysSummary)
                     <x-daily-summary
