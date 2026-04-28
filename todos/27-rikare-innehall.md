@@ -1,7 +1,50 @@
-**Status:** aktiv (Lager 1 komplett + Lager 2 BRÅ live + designsystem konsoliderat 2026-04-28. Heatmap + AI-säkerhetstips avfärdade 2026-04-28. Lager 3 AI-månadssamm. + AI-trendanalys återstår.)
-**Senast uppdaterad:** 2026-04-28 (kväll 2) — AI-säkerhetstips avfärdad (E-E-A-T-risk, hallucinations på handlingsråd); heatmap avfärdad tidigare samma kväll
+**Status:** aktiv (Lager 1 + Lager 2 BRÅ + Wikidata + Lager 3 AI-månadssamm./trend deployat 2026-04-28. Heatmap + AI-säkerhetstips avfärdade. Återstår bara: Wikidata-utökning till plats-sidor utanför Tier 1.)
+**Senast uppdaterad:** 2026-04-28 (kväll 3) — Lager 3 AI-månadssammanfattning + trendanalys + Wikidata-fakta live på Tier 1; pre-existing Tier 1-månadsvy-bugg för Malmö/Göteborg åäö-slug fixad i samma svep
 **Relaterad till:** #24 (Tier 1-städer), #25 (månadsvyer), #37 (SCB-befolkning), #38 (BRÅ-data)
 
+> ## ✓ Update 2026-04-28 (kväll 3) — Lager 3 AI-månadssamm. + Wikidata
+>
+> **AI-månadssammanfattning** (`MonthlySummaryAgent`, claude-sonnet-4-6,
+> 2500 tokens) + AI-trendanalys inbäddad i prompten. Schedule:
+> 1:a varje månad kl 02:00 UTC, alla 5 Tier 1-städer. Change-detection
+> via event-ID-array gör omkörning gratis när events oförändrade.
+>
+> Visas på två platser:
+> - `/<tier1-stad>` (startsida) — förra månadens sammanfattning som
+>   "ingång till arkivet"
+> - `/<tier1-stad>/handelser/{år}/{månad}` — sammanfattning för den
+>   visade månaden
+>
+> Prompt-konstruktion strikt mot hallucinationer: ingen säkerhetsråd-
+> sektion, ingen motiv-spekulation, säg "publicerade händelser" inte
+> "anmälda brott". 300–450 ord, 4–8 markdown-länkar till individuella
+> events. Verifierad live mot uppsala 2026-03 (38 events) — naturligt
+> formulerad trendmening "ökade med femton procent jämfört med februari".
+>
+> **Wikidata-fakta** — `WikidataService::getCityFacts(qid)` hämtar
+> grundat-år (P571) + yta (P2046, normaliserad till km²) från
+> wbgetentities. Cache 30d. Visas som kompakt rad under h1 på Tier 1.
+> Bug-fix: Helsingborgs Q-id var Q26793 = Bergen (Norge!) sen #32.
+> Korrigerat till Q25411.
+>
+> **Bonus-bugfix:** pre-existing `/malmo/handelser/2026/03` visade bara
+> 1 event (slug `malmo` matchade inte `Malmö` i DB). Ny
+> `CityController::tier1DisplayName()` mappar slug→display-form med åäö.
+> Malmö 1→71, Göteborg 16→36. Stockholm/Uppsala/Helsingborg oförändrade.
+>
+> **Återstår i scope:**
+> - Wikidata-fakta för plats-sidor utanför Tier 1 (`/plats/{plats}`) —
+>   kräver Q-id-mappning för fler platser (idag finns bara Tier 1 + 21 län)
+>
+> Filer: `app/Services/WikidataService.php`, `app/Ai/Agents/MonthlySummaryAgent.php`,
+> `app/Models/MonthlySummary.php`, `app/Console/Commands/GenerateMonthlySummary.php`,
+> `app/Services/AISummaryService.php` (utökat),
+> `database/migrations/2026_04_28_110032_create_monthly_summaries_table.php`,
+> `resources/views/ai/prompts/monthly-summary.blade.php`,
+> `resources/views/components/monthly-summary.blade.php`,
+> `resources/views/parts/city-facts.blade.php`,
+> `app/Http/Controllers/{City,Plats}Controller.php`.
+>
 > ## ✓ Update 2026-04-28 — Lager 1 trend-sparkline + Lager 2 BRÅ live
 >
 > #38 + relaterade leveranser i prod:

@@ -4,7 +4,7 @@ Index över förbättringsarbete. Varje todo har en egen fil under
 [`todos/`](todos/) med fullständig analys. Konvention och
 mappstruktur: [`todos/README.md`](todos/README.md).
 
-Senast uppdaterad: 2026-04-28 (#27 AI-säkerhetstips avfärdad — E-E-A-T-risk, hallucinations på handlingsråd. Lager 3 AI-månadssamm. + trendanalys återstår).
+Senast uppdaterad: 2026-04-28 (+#41 årskalender, +#42 månadsnav-design, +#43 månadsvy-designbuggar; #27 Lager 3 AI-månadssammanfattning + trendanalys + Wikidata-fakta deployat).
 
 ## Aktiva
 
@@ -12,11 +12,14 @@ Senast uppdaterad: 2026-04-28 (#27 AI-säkerhetstips avfärdad — E-E-A-T-risk,
 | --- | ----------------------------------------------- | ------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
 | 16  | Rensa / avveckla gamla DO-servern (Dokku)       | Appar stoppade, väntar på soak innan radering                                         | [todos/16-rensa-do-server.md](todos/16-rensa-do-server.md)                 |
 | 25  | Månadsvyer istället för dagsvyer (datum-routes) | Pilot live 2026-04-27 (uppsala + västerås + uppsala-lan). 30d-mätning till 2026-05-27 | [todos/25-manadsvyer-datum-routes.md](todos/25-manadsvyer-datum-routes.md) |
-| 27  | Berika ort- och månadssidor med rikare innehåll | Lager 1 + Lager 2 BRÅ live (2026-04-28). Heatmap + AI-säkerhetstips avfärdade. Återstår: Lager 3 AI-månadssamm. + trendanalys. | [todos/27-rikare-innehall.md](todos/27-rikare-innehall.md)                 |
+| 27  | Berika ort- och månadssidor med rikare innehåll | Lager 1 + Lager 2 BRÅ + Wikidata + Lager 3 AI-månadssamm./trend live (2026-04-28). Återstår bara Wikidata-utökning till plats-sidor. | [todos/27-rikare-innehall.md](todos/27-rikare-innehall.md)                 |
 | 29  | Audit + reducera indexerade pages               | Datum-routes + thin singles deployat, ~22k pages noindex:as. Mätperiod 30–90d i GSC   | [todos/29-audit-indexerade-pages.md](todos/29-audit-indexerade-pages.md)   |
 | 36  | GSC-mätning av AI-titlars CTR-effekt            | Mätperiod startad 2026-04-27, första check 2026-05-25                                 | [todos/36-gsc-matning-ai-titlar.md](todos/36-gsc-matning-ai-titlar.md)     |
 | 39  | MSB brand- och räddningsstatistik per kommun    | Skissad — research-fas saknas (parallell till #38)                                    | [todos/39-msb-brand-rakning-statistik.md](todos/39-msb-brand-rakning-statistik.md) |
 | 40  | Trafikverket STRADA olycksstatistik per kommun  | Skissad — research-fas saknas (parallell till #38)                                    | [todos/40-trafikverket-strada-olyckor.md](todos/40-trafikverket-strada-olyckor.md) |
+| 41  | Datumnavigering som årskalender                 | Idé — ny visuell månadsnav (12 rutor + heatmap-färg)                                  | [todos/41-arskalender-datumnavigering.md](todos/41-arskalender-datumnavigering.md) |
+| 42  | Designa om månadsnav i högerspalten             | Ful design idag — passar inte in i widget-mönstret                                    | [todos/42-manadsnav-hogerspalt-design.md](todos/42-manadsnav-hogerspalt-design.md) |
+| 43  | Designbuggar på Tier 1-månadsvy                 | Grå ruta runt Snabba fakta + brutna kart-ikoner                                       | [todos/43-manadsvy-design-bugs.md](todos/43-manadsvy-design-bugs.md) |
 
 ### Beroenden
 
