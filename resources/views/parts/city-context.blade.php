@@ -52,7 +52,7 @@
             @foreach ($mostReadEvents as $event)
                 <li class="MostRead__item">
                     <a class="MostRead__link" href="{{ $event->getPermalink() }}">
-                        {{ $event->title_alt_1 ?: $event->parsed_title }}
+                        {{ $event->getHeadline() }}
                     </a>
                     <span class="MostRead__meta">
                         @if ($event->parsed_title_location)
