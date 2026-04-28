@@ -4204,3 +4204,99 @@ h2.widget__title {
     color: var(--color-gray-1);
     font-size: var(--font-size-small);
 }
+
+/* BraStatistik — officiell anmäld brottsstatistik (todo #38) */
+.BraStatistik__lead {
+    margin: 0 0 var(--default-margin);
+    font-size: var(--font-size-medium-2);
+    line-height: 1.5;
+    color: var(--color-gray-3);
+}
+
+.BraStatistik__subheading {
+    margin: var(--default-margin) 0 var(--default-margin-half);
+    font-size: 1rem;
+    color: var(--color-gray-3);
+    font-weight: 600;
+}
+
+.BraStatistik__tableWrap {
+    overflow-x: auto;
+    margin: 0 calc(-1 * var(--default-margin-half));
+}
+
+.BraStatistik__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--font-size-small);
+}
+
+.BraStatistik__table th,
+.BraStatistik__table td {
+    padding: 0.55rem 0.6rem;
+    text-align: left;
+    border-bottom: 1px solid var(--color-gray-2);
+    vertical-align: baseline;
+}
+
+.BraStatistik__table th {
+    color: var(--color-gray-1);
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    border-bottom: 2px solid var(--color-gray-2);
+}
+
+.BraStatistik__table .num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+.BraStatistik__table tr:last-child td {
+    border-bottom: none;
+}
+
+.BraStatistik__table tr.is-active {
+    background: rgba(24, 98, 168, 0.08);
+}
+
+.BraStatistik__table tr.is-active td {
+    font-weight: 700;
+    color: var(--color-gray-3);
+}
+
+.BraStatistik__activeTag {
+    display: inline-block;
+    margin-left: 0.4rem;
+    padding: 0.05rem 0.4rem;
+    border-radius: 3px;
+    background: var(--color-blue-police);
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    vertical-align: middle;
+}
+
+.BraStatistik__diff--up {
+    color: var(--color-red-3);
+    font-weight: 600;
+}
+
+.BraStatistik__diff--down {
+    color: #2a8a3f;
+    font-weight: 600;
+}
+
+.BraStatistik__source {
+    margin: var(--default-margin) 0 0;
+    color: var(--color-gray-1);
+    font-size: var(--font-size-small);
+    line-height: 1.55;
+}
+
+.BraStatistik__source a {
+    color: var(--color-link);
+}

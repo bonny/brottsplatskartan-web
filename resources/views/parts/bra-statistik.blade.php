@@ -5,9 +5,6 @@
         $bra            — objekt från BraStatistik::forKommun()
         $braLanGrannar  — Collection från BraStatistik::lanGrannar()
         $braRikssnitt   — int (per_100k, befolkningsviktat)
-
-    Visuell separation från Polisens händelser är medveten — det här är
-    årlig myndighetsstatistik, inte realtidshändelser.
 --}}
 @if(!empty($bra))
     @php
@@ -16,18 +13,15 @@
             ? (int) round((($bra->per_100k - $braRikssnitt) / $braRikssnitt) * 100)
             : null;
         $publiceringsAr = $bra->ar + 1;
-        // BraStatistik::lanLabel ger korrekt possessivform ("Stockholms län",
-        // "Västra Götalands län"). scb_kommuner.lan_namn saknar "län"-suffix.
         $lanLabel = \App\BraStatistik::lanLabel($bra->lan_kod);
     @endphp
 
-    <section class="bra-statistik mt-8 p-4 border border-slate-200 rounded-lg bg-slate-50"
-             aria-labelledby="bra-statistik-heading">
-        <h2 id="bra-statistik-heading" class="text-2xl font-semibold mb-2">
+    <section class="widget BraStatistik" aria-labelledby="bra-statistik-heading">
+        <h2 id="bra-statistik-heading" class="widget__title">
             Anmälda brott i {{ $bra->kommun_namn }} kommun {{ $bra->ar }}
         </h2>
 
-        <p class="text-base mb-4">
+        <p class="BraStatistik__lead">
             <strong>{{ number_format($bra->antal, 0, ',', ' ') }} anmälda brott</strong>
             — {{ number_format($bra->per_100k, 0, ',', ' ') }} per 100 000 invånare.
             @if($procentMotRiket !== null)
@@ -45,17 +39,17 @@
         </p>
 
         @if($braLanGrannar && $braLanGrannar->count() > 1)
-            <h3 class="text-lg font-semibold mt-6 mb-2">
+            <h3 class="BraStatistik__subheading">
                 Jämfört med övriga kommuner i {{ $lanLabel }}
             </h3>
-            <div class="overflow-x-auto">
-                <table class="w-full text-sm">
+            <div class="BraStatistik__tableWrap">
+                <table class="BraStatistik__table">
                     <thead>
-                        <tr class="border-b border-slate-300 text-left">
-                            <th class="py-2 pr-4">Kommun</th>
-                            <th class="py-2 pr-4 text-right">Anmälda brott</th>
-                            <th class="py-2 pr-4 text-right">Per 100 000</th>
-                            <th class="py-2 text-right">vs riket</th>
+                        <tr>
+                            <th scope="col">Kommun</th>
+                            <th scope="col" class="num">Anmälda brott</th>
+                            <th scope="col" class="num">Per 100 000</th>
+                            <th scope="col" class="num">vs riket</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -66,19 +60,21 @@
                                     : null;
                                 $isAktiv = $g->kommun_kod === $aktivKommunKod;
                             @endphp
-                            <tr class="border-b border-slate-200 {{ $isAktiv ? 'font-semibold bg-white' : '' }}">
-                                <td class="py-2 pr-4">
-                                    {{ $g->kommun_namn }}{{ $isAktiv ? ' (denna sida)' : '' }}
+                            <tr class="{{ $isAktiv ? 'is-active' : '' }}">
+                                <td>
+                                    {{ $g->kommun_namn }}@if ($isAktiv) <span class="BraStatistik__activeTag">denna sida</span>@endif
                                 </td>
-                                <td class="py-2 pr-4 text-right">{{ number_format($g->antal, 0, ',', ' ') }}</td>
-                                <td class="py-2 pr-4 text-right">{{ number_format($g->per_100k, 0, ',', ' ') }}</td>
-                                <td class="py-2 text-right">
-                                    @if($diff === null)
+                                <td class="num">{{ number_format($g->antal, 0, ',', ' ') }}</td>
+                                <td class="num">{{ number_format($g->per_100k, 0, ',', ' ') }}</td>
+                                <td class="num">
+                                    @if ($diff === null)
                                         —
-                                    @elseif($diff > 0)
-                                        +{{ $diff }} %
+                                    @elseif ($diff > 0)
+                                        <span class="BraStatistik__diff BraStatistik__diff--up">+{{ $diff }}&nbsp;%</span>
+                                    @elseif ($diff < 0)
+                                        <span class="BraStatistik__diff BraStatistik__diff--down">{{ $diff }}&nbsp;%</span>
                                     @else
-                                        {{ $diff }} %
+                                        0&nbsp;%
                                     @endif
                                 </td>
                             </tr>
@@ -88,7 +84,7 @@
             </div>
         @endif
 
-        <p class="text-xs text-slate-600 mt-4">
+        <p class="BraStatistik__source">
             Källa:
             <a href="https://bra.se/statistik/kriminalstatistik/anmalda-brott.html"
                rel="external noopener"
@@ -96,8 +92,7 @@
             (Brottsförebyggande rådet) — officiell anmäld brottsstatistik, publicerad
             {{ \Carbon\Carbon::create($publiceringsAr, 3, 1)->locale('sv')->isoFormat('MMMM YYYY') }}.
             Anmälda brott är inte samma sak som faktiskt begångna brott — mörkertalet
-            varierar mellan brottstyper. Listan ovan visar inte typ av brott, bara
-            totaler.
+            varierar mellan brottstyper. Listan ovan visar inte typ av brott, bara totaler.
         </p>
     </section>
 @endif
