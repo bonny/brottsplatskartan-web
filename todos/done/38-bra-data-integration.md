@@ -1,5 +1,5 @@
-**Status:** aktiv — research klar 2026-04-27, redo för implementation
-**Senast uppdaterad:** 2026-04-27 — research-fas avslutad, plan uppdaterad mot faktisk BRÅ-data
+**Status:** klar 2026-04-28 — datapipeline + helper-API levererat och importerat i prod (2024+2025, 290/290 kommuner). UI-integration kvar i #27 Lager 2.
+**Senast uppdaterad:** 2026-04-28
 **Relaterad till:** #37 (SCB-befolkning), #27 (rikare innehåll Lager 2)
 
 # Todo #38 — Integrera BRÅ-data för riktig brottsstatistik

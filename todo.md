@@ -4,7 +4,7 @@ Index över förbättringsarbete. Varje todo har en egen fil under
 [`todos/`](todos/) med fullständig analys. Konvention och
 mappstruktur: [`todos/README.md`](todos/README.md).
 
-Senast uppdaterad: 2026-04-27 (+#39 MSB + #40 Trafikverket STRADA — skissade idé-todos parallella till #38-mönstret).
+Senast uppdaterad: 2026-04-28 (#38 BRÅ-data klar — pipeline + helper-API i prod, UI kvar i #27 Lager 2).
 
 ## Aktiva
 
@@ -15,7 +15,6 @@ Senast uppdaterad: 2026-04-27 (+#39 MSB + #40 Trafikverket STRADA — skissade i
 | 27  | Berika ort- och månadssidor med rikare innehåll | Designfas — Lager 1–3 (egen data, externt + AI), research klar                        | [todos/27-rikare-innehall.md](todos/27-rikare-innehall.md)                 |
 | 29  | Audit + reducera indexerade pages               | Datum-routes + thin singles deployat, ~22k pages noindex:as. Mätperiod 30–90d i GSC   | [todos/29-audit-indexerade-pages.md](todos/29-audit-indexerade-pages.md)   |
 | 36  | GSC-mätning av AI-titlars CTR-effekt            | Mätperiod startad 2026-04-27, första check 2026-05-25                                 | [todos/36-gsc-matning-ai-titlar.md](todos/36-gsc-matning-ai-titlar.md)     |
-| 38  | Integrera BRÅ-data för riktig brottsstatistik   | Research klar 2026-04-27 — CSV-källa identifierad, redo för implementation (~3-4h)    | [todos/38-bra-data-integration.md](todos/38-bra-data-integration.md)       |
 | 39  | MSB brand- och räddningsstatistik per kommun    | Skissad — research-fas saknas (parallell till #38)                                    | [todos/39-msb-brand-rakning-statistik.md](todos/39-msb-brand-rakning-statistik.md) |
 | 40  | Trafikverket STRADA olycksstatistik per kommun  | Skissad — research-fas saknas (parallell till #38)                                    | [todos/40-trafikverket-strada-olyckor.md](todos/40-trafikverket-strada-olyckor.md) |
 
@@ -24,16 +23,15 @@ Senast uppdaterad: 2026-04-27 (+#39 MSB + #40 Trafikverket STRADA — skissade i
 - **#28 → #27 Lager 3:** AI-månadssammanfattningar bygger på `laravel/ai`. _(#28 klar 2026-04-26 — beroendet löst, listas tills #27 startat.)_
 - **#10 → #36:** GSC-mätning bygger på #10:s rendering-deploy. _(#10 klar 2026-04-27 — #36 mätperiod startad samma dag.)_
 - **#37 → #27:** SCB-befolkning för befolkningsfakta + storlekssortering. _(#37 klar 2026-04-27 — beroendet löst, listas tills #27 startat.)_
-- **#38 → #27 Lager 2:** "Brott per 1000 inv." kräver riktig BRÅ-statistik (Polisens händelser är inte heltäckande). Aktiv blocker.
+- **#38 → #27 Lager 2:** Riktig brottsstatistik (BRÅ) som komplement till Polisens händelser. _(#38 klar 2026-04-28 — datapipeline + helper-API i prod, UI kvar att bygga i #27 Lager 2.)_
 
 ### Föreslagen ordning
 
 1. **#25 Månadsvyer** — Uppsala-pilot pågår
-2. **#38 BRÅ-data** — research-fas, blockerar #27 Lager 2:s "brott per 1000 inv."
-3. **#27** — innehållsberikning efter #25-piloten + #38 (Lager 1 + Lager 3 är opåverkade och kan startas tidigare)
-4. **#16** (DO-avveckling) — efter ~2026-05-15 när soak på statiska sajterna är klar
-5. **#29** — passiv mätperiod, åtgärder efter data
-6. **#36** — passiv GSC-mätning, första check 2026-05-25 (eventuell fas 3 backfill om vinst)
+2. **#27** — innehållsberikning. BRÅ-data finns nu (#38), så Lager 2 är upplåst. Lager 1+3 var opåverkade och kan också startas
+3. **#16** (DO-avveckling) — efter ~2026-05-15 när soak på statiska sajterna är klar
+4. **#29** — passiv mätperiod, åtgärder efter data
+5. **#36** — passiv GSC-mätning, första check 2026-05-25 (eventuell fas 3 backfill om vinst)
 
 ## Uppföljningar — datum att komma ihåg
 
@@ -61,6 +59,7 @@ Sorterade nyast först.
 
 | #   | Titel                                                               | Klar       | Fil                                                                                    |
 | --- | ------------------------------------------------------------------- | ---------- | -------------------------------------------------------------------------------------- |
+| 38  | BRÅ anmälda brott per kommun (datapipeline + helper)                | 2026-04-28 | [todos/done/38-bra-data-integration.md](todos/done/38-bra-data-integration.md)         |
 | 37  | Tätortskod-mappning (SCB) för "brott/1000 inv."                     | 2026-04-27 | [todos/done/37-tatortskod-mappning-scb.md](todos/done/37-tatortskod-mappning-scb.md)   |
 | 10  | AI-omskriva vaga titlar (rendering + auto-trigger för hela Sverige) | 2026-04-27 | [todos/done/10-ai-omskriva-titlar.md](todos/done/10-ai-omskriva-titlar.md)             |
 | 35  | Redirect `/lan/Uppsala län` → `/uppsala` (Stockholm-mönstret)       | 2026-04-27 | [todos/done/35-lan-redirect-uppsala.md](todos/done/35-lan-redirect-uppsala.md)         |
