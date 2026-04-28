@@ -10,10 +10,14 @@ set -euo pipefail
 cmd=$(jq -r '.tool_input.command // ""')
 
 # Sök efter skriv-keywords i statement-start position. SQL-kommentarer (--) hoppas över.
-# `(^|;)` ger statement-boundary; ordet måste följas av whitespace eller ord-gräns.
+# Statement-boundary = line-start ELLER `;` ELLER quote-tecken (" eller ').
+# Kvot:erna fångar `mariadb -e "DELETE FROM ..."`-fallet där SQL ligger inuti -e
+# och annars skulle slinka förbi line-start-anchorn. Statement-end = whitespace,
+# `;` eller line-end så `SHOW CREATE TABLE` (CREATE preceded by space, inte
+# quote/start/semicolon) fortsatt släpps igenom.
 if printf '%s\n' "$cmd" \
     | grep -vE '^[[:space:]]*--' \
-    | grep -iqE '(^|;)[[:space:]]*(insert|update|delete|drop|alter|truncate|grant|revoke|create|rename|replace)([[:space:]]|$)'; then
+    | grep -iqE '(^|[;"'\''])[[:space:]]*(insert|update|delete|drop|alter|truncate|grant|revoke|create|rename|replace)([[:space:]]|;|$)'; then
     cat <<'EOF'
 {"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":"Skriv-SQL (INSERT/UPDATE/DELETE/DROP/ALTER/TRUNCATE/GRANT/REVOKE/CREATE/RENAME/REPLACE) detekterad — bara läs-queries (SELECT/SHOW/DESCRIBE/EXPLAIN) tillåts via prod-prefixen."}}
 EOF
