@@ -68,19 +68,21 @@
         <section class="widget">
             <h2 class="widget__title">Topp 10 brottstyper – senaste 7 dagarna</h2>
             @if (count($topCrimeTypes) > 0)
-                <table class="charts-css bar show-labels data-spacing-2" style="max-height: 400px;">
-                    <tbody>
-                        @php $_max = max(array_column($topCrimeTypes, 'count')) ?: 1; @endphp
-                        @foreach ($topCrimeTypes as $row)
-                            <tr>
-                                <th scope="row">{{ $row['type'] }}</th>
-                                <td style="--size: {{ $row['count'] / $_max }}">
-                                    <span class="data">{{ $row['count'] }}</span>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                @php $_max = max(array_column($topCrimeTypes, 'count')) ?: 1; @endphp
+                <ol class="TypeBars">
+                    @foreach ($topCrimeTypes as $row)
+                        @php $_pct = max(2, round(($row['count'] / $_max) * 100)); @endphp
+                        <li class="TypeBars__row">
+                            <div class="TypeBars__label">
+                                <span class="TypeBars__name">{{ $row['type'] }}</span>
+                                <span class="TypeBars__count">{{ \App\Helper::number($row['count']) }}</span>
+                            </div>
+                            <div class="TypeBars__track">
+                                <div class="TypeBars__fill" style="width: {{ $_pct }}%"></div>
+                            </div>
+                        </li>
+                    @endforeach
+                </ol>
             @else
                 <p>Ingen data tillgänglig för perioden.</p>
             @endif
