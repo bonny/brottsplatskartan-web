@@ -74,6 +74,16 @@ class Kernel extends ConsoleKernel
             ->everyThirtyMinutes()
             ->withoutOverlapping()
             ->name('sitemap');
+
+        // BRÅ-import (todo #38): kör 15 april årligen, 03:00 UTC. BRÅ
+        // släpper kommunstatistiken runt 31 mars, så 2 veckor failsafe.
+        // OBS: download-id i URL:en ändras varje år — KNOWN_URLS i
+        // ImportBraAnmaldaBrott måste uppdateras manuellt innan jobbet
+        // hittar ny årgång.
+        $schedule->command('bra:import-anmalda-brott --year=' . (date('Y') - 1))
+            ->yearlyOn(4, 15, '03:00')
+            ->withoutOverlapping()
+            ->name('bra-import');
     }
 
     /**
