@@ -4130,17 +4130,6 @@ h2.widget__title {
     padding: 0;
 }
 
-.MonthArchive__yearLabel {
-    margin-top: var(--default-margin-half);
-    padding: var(--default-margin-third) 0;
-    color: var(--color-gray-1);
-    font-size: var(--font-size-xsmall);
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    border-bottom: 1px solid var(--color-gray-2);
-}
-
 .MonthArchive__item {
     margin: 0;
     padding: 0;
@@ -4223,52 +4212,68 @@ h2.widget__title {
     opacity: 0.75;
 }
 
-/* Expanderbara äldre månader (12–36 mån bakåt) — todo #41 fas 2. */
-.MonthArchive__extra {
+/* Per-år expanderbart block — todo #41 fas 2. Varje kalenderår är en
+   egen <details>; innevarande + föregående år öppna by default. */
+.MonthArchive__year {
     margin-top: var(--default-margin-half);
 }
 
-.MonthArchive__extraToggle {
+.MonthArchive__year:first-of-type {
+    margin-top: 0;
+}
+
+.MonthArchive__yearToggle {
     list-style: none;
     cursor: pointer;
-    padding: var(--default-margin-half);
+    display: flex;
+    align-items: center;
+    gap: 0.4em;
+    padding: var(--default-margin-third) var(--default-margin-half);
     margin: 0 calc(-1 * var(--default-margin-half));
-    color: var(--color-link, var(--color-blue-police));
-    font-size: var(--font-size-small);
-    font-weight: 600;
-    border-radius: 4px;
+    color: var(--color-gray-1);
+    font-size: var(--font-size-xsmall);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    border-bottom: 1px solid var(--color-gray-2);
+    border-radius: 4px 4px 0 0;
     transition: background 0.15s;
     user-select: none;
 }
 
-.MonthArchive__extraToggle:hover,
-.MonthArchive__extraToggle:focus {
+.MonthArchive__yearToggle:hover,
+.MonthArchive__yearToggle:focus {
     background: rgba(24, 98, 168, 0.06);
     outline: none;
 }
 
-.MonthArchive__extraToggle::-webkit-details-marker {
+.MonthArchive__yearToggle::-webkit-details-marker {
     display: none;
 }
 
-.MonthArchive__extraToggle::before {
+.MonthArchive__yearToggle::before {
     content: "▸";
     display: inline-block;
-    margin-right: 0.4em;
     color: var(--color-gray-1);
+    font-weight: 400;
     transition: transform 0.15s;
 }
 
-.MonthArchive__extra[open] > .MonthArchive__extraToggle::before {
+.MonthArchive__year[open] > .MonthArchive__yearToggle::before {
     transform: rotate(90deg);
 }
 
-.MonthArchive__extra[open] > .MonthArchive__extraToggle {
-    color: var(--color-gray-3);
+.MonthArchive__yearTitle {
+    flex: 1;
 }
 
-.MonthArchive__list--extra {
-    margin-top: var(--default-margin-third);
+.MonthArchive__yearCount {
+    color: var(--color-gray-3);
+    font-size: var(--font-size-xsmall);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0;
+    text-transform: none;
 }
 
 /* Markera vald månad i listan (you-are-here). */
