@@ -267,9 +267,15 @@ class CityController extends Controller
             5
         );
 
-        // Wikidata-fakta (todo #27 Lager 2): grundat-år + yta. Cache 30d.
+        // Wikidata-fakta + SCB-befolkning (todo #27 Lager 2). Två källor:
+        // - Wikidata för description, grundat-år, yta (cache 30d)
+        // - SCB scb_kommuner för befolkning (alltid färskare än Wikidata
+        //   för svenska kommuner, cache 7d)
         $cityFacts = !empty($city['wikidataQid'])
             ? WikidataService::getCityFacts($city['wikidataQid'])
+            : null;
+        $kommunInfo = !empty($city['kommunKod'])
+            ? BraStatistik::kommunInfo($city['kommunKod'])
             : null;
 
         // Förra månadens AI-sammanfattning (todo #27 Lager 3). Visas på
@@ -301,6 +307,7 @@ class CityController extends Controller
             'mostReadEvents' => $mostReadEvents,
             'cityName' => explode(' och ', $city['name'])[0],
             'cityFacts' => $cityFacts,
+            'kommunInfo' => $kommunInfo,
             'monthlySummary' => $monthlySummary,
         ]);
     }

@@ -60,6 +60,33 @@ class BraStatistik
     }
 
     /**
+     * Befolkning + namn för en kommun från SCB. Används av city-facts-
+     * paragrafen (todo #27 Lager 2) — befolkning kommer alltid från SCB
+     * eftersom Wikidata-värden ofta är utdaterade för svenska kommuner.
+     *
+     * @return array{kommun_namn:string, lan_namn:string, befolkning:int}|null
+     */
+    public static function kommunInfo(string $kommunKod): ?array
+    {
+        return Cache::remember("bra:kommun-info:{$kommunKod}", now()->addDays(self::CACHE_TTL_DAYS), function () use ($kommunKod) {
+            $row = DB::table('scb_kommuner')
+                ->where('kommun_kod', $kommunKod)
+                ->select('kommun_namn', 'lan_namn', 'befolkning')
+                ->first();
+
+            if (!$row) {
+                return null;
+            }
+
+            return [
+                'kommun_namn' => $row->kommun_namn,
+                'lan_namn' => $row->lan_namn,
+                'befolkning' => (int) $row->befolkning,
+            ];
+        });
+    }
+
+    /**
      * Län-label i Polisens taxonomi (med possessiv där det behövs).
      * Exempel: '01' → 'Stockholms län', '14' → 'Västra Götalands län'.
      */

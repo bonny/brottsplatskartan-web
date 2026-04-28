@@ -22,7 +22,7 @@ class WikidataService
     private const TIMEOUT_SECONDS = 8;
 
     /**
-     * @return array{qid:string,label:?string,inception_year:?int,area_km2:?float}|null
+     * @return array{qid:string,label:?string,description:?string,inception_year:?int,area_km2:?float}|null
      */
     public static function getCityFacts(string $qid): ?array
     {
@@ -38,7 +38,7 @@ class WikidataService
                         'action' => 'wbgetentities',
                         'ids' => $qid,
                         'languages' => 'sv',
-                        'props' => 'labels|claims',
+                        'props' => 'labels|descriptions|claims',
                         'format' => 'json',
                     ]);
 
@@ -55,6 +55,7 @@ class WikidataService
                 return [
                     'qid' => $qid,
                     'label' => data_get($entity, 'labels.sv.value'),
+                    'description' => data_get($entity, 'descriptions.sv.value'),
                     'inception_year' => self::extractInceptionYear($entity['claims']['P571'] ?? []),
                     'area_km2' => self::extractAreaKm2($entity['claims']['P2046'] ?? []),
                 ];

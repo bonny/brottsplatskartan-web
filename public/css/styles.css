@@ -4349,25 +4349,23 @@ h2.widget__title {
     color: var(--color-link);
 }
 
-/* Wikidata-fakta-rad under city-h1 (todo #27 Lager 2). Kompakt
-   inline-list, mobile-first. */
+/* Wikidata + SCB-fakta-paragraf under city-h1 (todo #27 Lager 2).
+   Intro-text som beskriver staden i ren prosa. */
 .CityFacts {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.25em 1em;
-    margin: 0.5em 0 var(--default-margin);
-    color: var(--color-gray-1);
-    font-size: var(--font-size-small);
-    line-height: 1.55;
+    margin: 0.75em 0 var(--default-margin);
+    line-height: 1.6;
+    color: var(--color-text);
 }
 
-.CityFacts__item strong {
-    color: var(--color-text);
+.CityFacts strong {
     font-weight: 600;
 }
 
 .CityFacts__source {
-    color: var(--color-gray-2);
+    display: block;
+    margin-top: 0.5em;
+    color: var(--color-gray-1);
+    font-size: var(--font-size-small);
 }
 
 .CityFacts__source a {
