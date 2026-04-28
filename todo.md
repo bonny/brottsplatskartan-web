@@ -4,7 +4,7 @@ Index över förbättringsarbete. Varje todo har en egen fil under
 [`todos/`](todos/) med fullständig analys. Konvention och
 mappstruktur: [`todos/README.md`](todos/README.md).
 
-Senast uppdaterad: 2026-04-28 (+#41 årskalender, +#42 månadsnav-design, +#43 månadsvy-designbuggar; #27 Lager 3 AI-månadssammanfattning + trendanalys + Wikidata-fakta deployat).
+Senast uppdaterad: 2026-04-28 (#27 klar — Lager 1+2+3 live på Tier 1 + månadsvyer; +#41/#42/#43 nya).
 
 ## Aktiva
 
@@ -12,7 +12,6 @@ Senast uppdaterad: 2026-04-28 (+#41 årskalender, +#42 månadsnav-design, +#43 m
 | --- | ----------------------------------------------- | ------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
 | 16  | Rensa / avveckla gamla DO-servern (Dokku)       | Appar stoppade, väntar på soak innan radering                                         | [todos/16-rensa-do-server.md](todos/16-rensa-do-server.md)                 |
 | 25  | Månadsvyer istället för dagsvyer (datum-routes) | Pilot live 2026-04-27 (uppsala + västerås + uppsala-lan). 30d-mätning till 2026-05-27 | [todos/25-manadsvyer-datum-routes.md](todos/25-manadsvyer-datum-routes.md) |
-| 27  | Berika ort- och månadssidor med rikare innehåll | Lager 1 + Lager 2 BRÅ + Wikidata + Lager 3 AI-månadssamm./trend live (2026-04-28). Återstår bara Wikidata-utökning till plats-sidor. | [todos/27-rikare-innehall.md](todos/27-rikare-innehall.md)                 |
 | 29  | Audit + reducera indexerade pages               | Datum-routes + thin singles deployat, ~22k pages noindex:as. Mätperiod 30–90d i GSC   | [todos/29-audit-indexerade-pages.md](todos/29-audit-indexerade-pages.md)   |
 | 36  | GSC-mätning av AI-titlars CTR-effekt            | Mätperiod startad 2026-04-27, första check 2026-05-25                                 | [todos/36-gsc-matning-ai-titlar.md](todos/36-gsc-matning-ai-titlar.md)     |
 | 39  | MSB brand- och räddningsstatistik per kommun    | Skissad — research-fas saknas (parallell till #38)                                    | [todos/39-msb-brand-rakning-statistik.md](todos/39-msb-brand-rakning-statistik.md) |
@@ -23,18 +22,17 @@ Senast uppdaterad: 2026-04-28 (+#41 årskalender, +#42 månadsnav-design, +#43 m
 
 ### Beroenden
 
-- **#28 → #27 Lager 3:** AI-månadssammanfattningar bygger på `laravel/ai`. _(#28 klar 2026-04-26 — beroendet löst, listas tills #27 startat.)_
 - **#10 → #36:** GSC-mätning bygger på #10:s rendering-deploy. _(#10 klar 2026-04-27 — #36 mätperiod startad samma dag.)_
-- **#37 → #27:** SCB-befolkning för befolkningsfakta + storlekssortering. _(#37 klar 2026-04-27 — beroendet löst, listas tills #27 startat.)_
-- **#38 → #27 Lager 2:** Riktig brottsstatistik (BRÅ) som komplement till Polisens händelser. _(#38 klar 2026-04-28 — datapipeline + helper-API i prod, UI kvar att bygga i #27 Lager 2.)_
 
 ### Föreslagen ordning
 
-1. **#25 Månadsvyer** — Uppsala-pilot pågår
-2. **#27** — innehållsberikning. BRÅ-data finns nu (#38), så Lager 2 är upplåst. Lager 1+3 var opåverkade och kan också startas
-3. **#16** (DO-avveckling) — efter ~2026-05-15 när soak på statiska sajterna är klar
-4. **#29** — passiv mätperiod, åtgärder efter data
-5. **#36** — passiv GSC-mätning, första check 2026-05-25 (eventuell fas 3 backfill om vinst)
+1. **#25 Månadsvyer** — Uppsala-pilot pågår, 30d-mätning till 2026-05-27
+2. **#43** — designbuggar på Tier 1-månadsvy (grå ruta + brutna kart-ikoner) — kan göras nu, kort jobb
+3. **#42** — designa om månadsnav i högerspalten — synergi med #43
+4. **#41** — datumnavigering som årskalender — bygger på #42-fundament
+5. **#16** (DO-avveckling) — efter ~2026-05-15 när soak är klar
+6. **#29** — passiv GSC-mätperiod, åtgärder efter data
+7. **#36** — passiv GSC-mätning, första check 2026-05-25
 
 ## Uppföljningar — datum att komma ihåg
 
@@ -62,6 +60,7 @@ Sorterade nyast först.
 
 | #   | Titel                                                               | Klar       | Fil                                                                                    |
 | --- | ------------------------------------------------------------------- | ---------- | -------------------------------------------------------------------------------------- |
+| 27  | Berika ort- och månadssidor med rikare innehåll (Lager 1+2+3)       | 2026-04-28 | [todos/done/27-rikare-innehall.md](todos/done/27-rikare-innehall.md)                   |
 | 38  | BRÅ anmälda brott per kommun (datapipeline + helper)                | 2026-04-28 | [todos/done/38-bra-data-integration.md](todos/done/38-bra-data-integration.md)         |
 | 37  | Tätortskod-mappning (SCB) för "brott/1000 inv."                     | 2026-04-27 | [todos/done/37-tatortskod-mappning-scb.md](todos/done/37-tatortskod-mappning-scb.md)   |
 | 10  | AI-omskriva vaga titlar (rendering + auto-trigger för hela Sverige) | 2026-04-27 | [todos/done/10-ai-omskriva-titlar.md](todos/done/10-ai-omskriva-titlar.md)             |
