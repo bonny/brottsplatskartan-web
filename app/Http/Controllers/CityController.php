@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\BraStatistik;
 use App\CrimeEvent;
 use App\Models\DailySummary;
 use Illuminate\Http\Request;
@@ -32,6 +33,7 @@ class CityController extends Controller
         'stockholm' => [
             'name' => 'Stockholm och Stockholms län',
             'lan' => 'Stockholms län',
+            'kommunKod' => '0180',
             'lat' => 59.328930,
             'lng' => 18.064910,
             'mapZoom' => 10,
@@ -44,6 +46,7 @@ class CityController extends Controller
         'malmo' => [
             'name' => 'Malmö och Skåne län',
             'lan' => 'Skåne län',
+            'kommunKod' => '1280',
             'lat' => 55.604981,
             'lng' => 13.003822,
             'mapZoom' => 11,
@@ -56,6 +59,7 @@ class CityController extends Controller
         'goteborg' => [
             'name' => 'Göteborg och Västra Götalands län',
             'lan' => 'Västra Götalands län',
+            'kommunKod' => '1480',
             'lat' => 57.708870,
             'lng' => 11.974560,
             'mapZoom' => 10,
@@ -68,6 +72,7 @@ class CityController extends Controller
         'helsingborg' => [
             'name' => 'Helsingborg och Skåne län',
             'lan' => 'Skåne län',
+            'kommunKod' => '1283',
             'lat' => 56.046467,
             'lng' => 12.694512,
             'mapZoom' => 11,
@@ -80,6 +85,7 @@ class CityController extends Controller
         'uppsala' => [
             'name' => 'Uppsala och Uppsala län',
             'lan' => 'Uppsala län',
+            'kommunKod' => '0380',
             'lat' => 59.858564,
             'lng' => 17.638927,
             'mapZoom' => 11,
@@ -200,6 +206,19 @@ class CityController extends Controller
         $breadcrumbs->addCrumb('Hem', '/');
         $breadcrumbs->addCrumb($city['name'], route('city', ['city' => $normalizedSlug]));
 
+        // BRÅ:s officiella anmälda brott (todo #38). Bara på sidan 1 — Redis-
+        // cachad 7d, så kostnaden är trivial men onödig på paginerade sidor.
+        $bra = null;
+        $braLanGrannar = null;
+        $braRikssnitt = null;
+        if (!empty($city['kommunKod'])) {
+            $bra = BraStatistik::forKommun($city['kommunKod']);
+            if ($bra) {
+                $braLanGrannar = BraStatistik::lanGrannar($city['kommunKod'], $bra->ar);
+                $braRikssnitt = BraStatistik::rikssnitt($bra->ar);
+            }
+        }
+
         return view('city', [
             'city' => $city,
             'events' => $events,
@@ -211,7 +230,10 @@ class CityController extends Controller
             'lan' => $city_lan,
             'lanInfo' => \App\Helper::getSingleLanWithStats($city_lan),
             'todaysSummary' => $todaysSummary,
-            'yesterdaysSummary' => $yesterdaysSummary
+            'yesterdaysSummary' => $yesterdaysSummary,
+            'bra' => $bra,
+            'braLanGrannar' => $braLanGrannar,
+            'braRikssnitt' => $braRikssnitt,
         ]);
     }
 }

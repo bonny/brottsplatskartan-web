@@ -40,11 +40,15 @@
                 @endif
 
                 {{-- @if($yesterdaysSummary)
-                    <x-daily-summary 
-                        :summary="$yesterdaysSummary" 
-                        :title="'Sammanfattning från ' . $yesterdaysSummary->summary_date->locale('sv')->isoFormat('dddd D MMMB')" 
+                    <x-daily-summary
+                        :summary="$yesterdaysSummary"
+                        :title="'Sammanfattning från ' . $yesterdaysSummary->summary_date->locale('sv')->isoFormat('dddd D MMMB')"
                     />
                 @endif --}}
+
+                {{-- BRÅ:s officiella anmälda brott per kommun (todo #38). Renderar
+                     bara på Tier 1-städer — kommunKod sätts i CityController. --}}
+                @include('parts.bra-statistik')
 
                 {{-- Händelselista. --}}
                 <div class="widget">
