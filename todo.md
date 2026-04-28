@@ -4,7 +4,7 @@ Index över förbättringsarbete. Varje todo har en egen fil under
 [`todos/`](todos/) med fullständig analys. Konvention och
 mappstruktur: [`todos/README.md`](todos/README.md).
 
-Senast uppdaterad: 2026-04-28 (#27 Lager 2 startad — BRÅ-sektion live på 5 Tier 1-städer).
+Senast uppdaterad: 2026-04-28 (#27 Lager 1 trend-sparkline + Lager 2 BRÅ utbyggt till plats-sidor + /statistik live).
 
 ## Aktiva
 
@@ -12,7 +12,7 @@ Senast uppdaterad: 2026-04-28 (#27 Lager 2 startad — BRÅ-sektion live på 5 T
 | --- | ----------------------------------------------- | ------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
 | 16  | Rensa / avveckla gamla DO-servern (Dokku)       | Appar stoppade, väntar på soak innan radering                                         | [todos/16-rensa-do-server.md](todos/16-rensa-do-server.md)                 |
 | 25  | Månadsvyer istället för dagsvyer (datum-routes) | Pilot live 2026-04-27 (uppsala + västerås + uppsala-lan). 30d-mätning till 2026-05-27 | [todos/25-manadsvyer-datum-routes.md](todos/25-manadsvyer-datum-routes.md) |
-| 27  | Berika ort- och månadssidor med rikare innehåll | Lager 2 BRÅ-sektion live på 5 Tier 1-städer (2026-04-28). Lager 1 + Lager 3 + plats-sidor återstår. | [todos/27-rikare-innehall.md](todos/27-rikare-innehall.md)                 |
+| 27  | Berika ort- och månadssidor med rikare innehåll | Lager 1 trend-sparkline + Lager 2 BRÅ live på Tier 1, plats-sidor & /statistik (2026-04-28). Återstår: Lager 1 donut/mest-lästa + Lager 3 AI-månadssamm. | [todos/27-rikare-innehall.md](todos/27-rikare-innehall.md)                 |
 | 29  | Audit + reducera indexerade pages               | Datum-routes + thin singles deployat, ~22k pages noindex:as. Mätperiod 30–90d i GSC   | [todos/29-audit-indexerade-pages.md](todos/29-audit-indexerade-pages.md)   |
 | 36  | GSC-mätning av AI-titlars CTR-effekt            | Mätperiod startad 2026-04-27, första check 2026-05-25                                 | [todos/36-gsc-matning-ai-titlar.md](todos/36-gsc-matning-ai-titlar.md)     |
 | 39  | MSB brand- och räddningsstatistik per kommun    | Skissad — research-fas saknas (parallell till #38)                                    | [todos/39-msb-brand-rakning-statistik.md](todos/39-msb-brand-rakning-statistik.md) |

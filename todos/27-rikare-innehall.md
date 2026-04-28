@@ -1,33 +1,50 @@
-**Status:** aktiv (Lager 2 startad 2026-04-28 — BRÅ-sektion live på 5 Tier 1-städer. Lager 1 + Lager 3 + utökning till plats-sidor återstår.)
-**Senast uppdaterad:** 2026-04-28 — Lager 2 BRÅ-sektion deployad i prod
+**Status:** aktiv (Lager 1 trend-sparkline + Lager 2 BRÅ-sektion live 2026-04-28. Lager 1 donut + mest lästa + Lager 3 AI-månadssamm. återstår.)
+**Senast uppdaterad:** 2026-04-28 — Lager 1 trend-sparkline + Lager 2 BRÅ på plats-sidor + /statistik
 **Relaterad till:** #24 (Tier 1-städer), #25 (månadsvyer), #37 (SCB-befolkning), #38 (BRÅ-data)
 
-> ## ✓ Update 2026-04-28 — Lager 2 BRÅ-sektion live
+> ## ✓ Update 2026-04-28 — Lager 1 trend-sparkline + Lager 2 BRÅ live
 >
-> #38 levererat och i prod. BRÅ-sektion deployad på alla 5 Tier 1-
-> stadssidor (Stockholm, Göteborg, Malmö, Helsingborg, Uppsala) med:
+> #38 + relaterade leveranser i prod:
 >
+> **Lager 2 BRÅ-sektion** — på 5 Tier 1-städer + alla plats-sidor som
+> matchar en kommun via PlacePopulation + ny sektion på `/statistik`.
+> Visar:
 > - "Anmälda brott i {kommun} kommun {år}" — antal + per 100k
 > - Procent-jämförelse mot befolkningsviktat rikssnitt
-> - Län-grannar-tabell sorterad per_100k med aktiv kommun framhävd
+> - Län-grannar-tabell (på ortssidor) eller topp/botten 10 (statistik-sidan)
 > - Källhänvisning Brå + mörkertal-disclaimer
 >
-> Filer: `app/Http/Controllers/CityController.php`,
+> **Lager 1 trend-sparkline** — inline SVG bar-chart över events/dag
+> senaste 90d på Tier 1-städer. 0 KB JS. Footer förtydligar att det är
+> publicerade händelser, inte heltäckande statistik.
+>
+> **BRÅ-årgångar** — 2021, 2023, 2024, 2025 importerade. 2022 finns
+> som 404 på bra.se, 2015–2020 finns aldrig som per-kommun-CSV. Det
+> begränsar trend-grafen baserat på BRÅ-data tills vi eventuellt
+> bygger SOL-scraping (egen todo om aktuellt).
+>
+> **Bug-fix #37:** auto-mappingen valde minsta tätorten vid namn-
+> kollision (Lund→Gävle). Vänd ascending order så största vinner.
+> Lund→Skåne, Sandviken→Sandviken, Kil→Kil korrekta nu.
+>
+> Filer: `app/BraStatistik.php`, `app/Helper.php` (getDailyEventCountsNearby),
+> `app/Http/Controllers/{City,Plats,Statistics}Controller.php`,
 > `resources/views/parts/bra-statistik.blade.php`,
-> `resources/views/city.blade.php`. Helper-API: `App\BraStatistik`.
+> `resources/views/components/trend-sparkline.blade.php`,
+> `resources/views/{city,single-plats,statistik}.blade.php`,
+> `app/Console/Commands/{ImportBraAnmaldaBrott,AutoMapPlacePopulation}.php`.
+>
+> **Återstår i Lager 1:**
+> - Donut/bar för brottstyp-fördelning (Chart.js tree-shaked, 14 KB)
+> - Mest lästa events i området (kräver `crime_views`-tabell-check)
 >
 > **Återstår i Lager 2:**
+> - Heatmap (kräver INP-mätning före rollout)
+> - Trend-graf på BRÅ-data 2015–2025 (blockerad av att äldre årgångar
+>   inte är publikt CSV-tillgängliga)
 >
-> - Utökning till plats-sidor (`/plats/{plats}`) som matchar en kommun
->   via PlacePopulation (t.ex. Lund, Norrköping, Linköping)
-> - Trend-graf 2015–2025 när vi importerar fler årgångar (just nu
->   bara 2024+2025)
-> - Heatmap över händelse-koordinater (kräver INP-mätning först)
->
-> **#37 är klar och användbar** för befolkningsfakta separat från
-> BRÅ-sektionen. **Lager 1 (egen data: trend, donut, mest lästa)** och
-> **Lager 3 (AI-månadssammanfattning)** är fortfarande opåverkade —
-> kan startas oberoende.
+> **Lager 3 (AI-månadssammanfattning)** — opåverkad, oberoende, kan
+> startas när som helst.
 
 # Todo #27 — Berika ort- och månadssidor med rikare innehåll
 
