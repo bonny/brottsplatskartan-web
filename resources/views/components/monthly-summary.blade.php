@@ -10,7 +10,10 @@
 <section class="widget MonthlySummary">
     <h2 class="widget__title">{{ $_title }}</h2>
     <div class="MonthlySummary__body">
-        {!! \Illuminate\Support\Str::markdown($summary->summary) !!}
+        {{-- html_input=escape: AI-output kan teoretiskt innehålla HTML
+             (prompt-injection via polisens RSS-content). Escape istället för
+             att rendera, så vi inte släpper igenom script/iframe. --}}
+        {!! \Illuminate\Support\Str::markdown($summary->summary, ['html_input' => 'escape', 'allow_unsafe_links' => false]) !!}
     </div>
     <p class="MonthlySummary__meta">
         Sammanfattning av <strong>{{ \App\Helper::number($summary->events_count) }}</strong>
