@@ -65,7 +65,7 @@ Required vars:
 @endphp
 
 <section class="widget MonthArchive">
-    <h2 class="widget__title">Tidigare månader</h2>
+    <h2 class="widget__title">Månader</h2>
 
     {{-- "Just nu"-CTA — pekar på live-startsidan (senaste händelser i
          realtid). Markeras som "you are here" när användaren är där. --}}

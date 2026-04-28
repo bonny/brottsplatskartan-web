@@ -4072,35 +4072,36 @@ h2.widget__title {
  * som genväg från en historisk månadsvy tillbaka till nuet. */
 .MonthArchive__current {
     display: flex;
-    flex-direction: column;
-    gap: 2px;
-    padding: var(--default-margin) var(--default-margin-double);
-    margin-bottom: var(--default-margin);
-    background: var(--color-blue-police);
-    color: #fff;
+    align-items: baseline;
+    gap: var(--default-margin-half);
+    padding: var(--default-margin-half);
+    margin: 0 calc(-1 * var(--default-margin-half)) var(--default-margin-half);
+    color: var(--color-link, var(--color-blue-police));
     text-decoration: none;
     border-radius: 4px;
+    border-left: 3px solid var(--color-yellow);
+    background: rgba(255, 204, 51, 0.12);
     transition: background 0.15s;
 }
 
 .MonthArchive__current:hover,
 .MonthArchive__current:focus {
-    background: var(--color-blue-police-active);
-    color: #fff;
+    background: rgba(255, 204, 51, 0.22);
     text-decoration: none;
 }
 
 .MonthArchive__currentLabel {
-    font-size: var(--font-size-small);
+    font-size: var(--font-size-xsmall);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    opacity: 0.85;
+    letter-spacing: 0.06em;
+    color: var(--color-gray-1);
+    flex-shrink: 0;
 }
 
 .MonthArchive__currentMonth {
-    font-size: var(--font-size-large, 1.5rem);
+    font-size: var(--font-size-medium-2);
     font-weight: 600;
-    line-height: 1.1;
+    line-height: 1.2;
 }
 
 /* När man redan tittar på innevarande månad — CTA:n är "you are here". */
@@ -4109,11 +4110,16 @@ h2.widget__title {
     color: var(--color-blue-police-active);
 }
 
+.MonthArchive__current--here .MonthArchive__currentLabel {
+    color: var(--color-blue-police-active);
+    opacity: 0.75;
+}
+
 .MonthArchive__current--here:hover,
 .MonthArchive__current--here:focus {
     background: var(--color-yellow);
     color: var(--color-blue-police-active);
-    filter: brightness(0.95);
+    filter: brightness(0.97);
 }
 
 /* Listan över tidigare månader — polerad widget-stil med tightare
