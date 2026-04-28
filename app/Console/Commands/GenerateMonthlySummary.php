@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Services\AISummaryService;
+use App\Tier1;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 
@@ -33,7 +34,7 @@ class GenerateMonthlySummary extends Command
         }
 
         $areas = $this->option('all-tier1')
-            ? \App\Http\Controllers\CityController::tier1Slugs()
+            ? Tier1::slugs()
             : [$this->argument('area')];
 
         $hasError = false;

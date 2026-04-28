@@ -53,15 +53,7 @@
 
                 {{-- Månadssammanfattning visas INTE här — startsidan är "live"
                      (idag/igår). Förra månadens AI-sammanfattning hör hemma
-                     på månadsvyn /<stad>/handelser/{år}/{månad} där hela
-                     kontexten är en månad. --}}
-
-                {{-- @if($yesterdaysSummary)
-                    <x-daily-summary
-                        :summary="$yesterdaysSummary"
-                        :title="'Sammanfattning från ' . $yesterdaysSummary->summary_date->locale('sv')->isoFormat('dddd D MMMB')"
-                    />
-                @endif --}}
+                     på månadsvyn /<stad>/handelser/{år}/{månad}. --}}
 
                 {{-- Händelselista. --}}
                 <div class="widget">

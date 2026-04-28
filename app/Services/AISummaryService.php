@@ -7,6 +7,7 @@ use App\Ai\Agents\MonthlySummaryAgent;
 use App\CrimeEvent;
 use App\Models\DailySummary;
 use App\Models\MonthlySummary;
+use App\Tier1;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 
@@ -73,7 +74,7 @@ class AISummaryService
     private function getEventsForDate(string $area, Carbon $date): \Illuminate\Database\Eloquent\Collection
     {
         $areaSlug = strtolower($area);
-        $areaForDb = \App\Http\Controllers\CityController::tier1DisplayName($areaSlug);
+        $areaForDb = Tier1::displayName($areaSlug);
 
         $query = CrimeEvent::whereDate('date_created_at', $date->format('Y-m-d'));
 
@@ -86,9 +87,9 @@ class AISummaryService
                   ->orWhere('parsed_content', 'like', '%Stockholm%');
             });
         } else {
-            // Speglar AISummaryService::getMonthlyEvents() — slug→display via
-            // tier1DisplayName + locations-relation. Krävs för att Göteborg/
-            // Malmö (slug ≠ display med åäö) ska få träffar alls.
+            // Speglar getMonthlyEvents() — slug→display via Tier1::displayName
+            // + locations-relation. Krävs för att Göteborg/Malmö (slug ≠ display
+            // med åäö) ska få träffar alls.
             $query->where(function ($q) use ($areaSlug, $areaForDb) {
                 $q->where('parsed_title_location', $areaForDb)
                   ->orWhere('administrative_area_level_2', $areaForDb);
@@ -248,7 +249,7 @@ class AISummaryService
         $cacheKey = sprintf('getEventsInPlatsForMonth:%s:%s', $area, $start->format('Y-m'));
 
         // Samma slug→display-mappning som PlatsController::getEventsInPlatsForMonth.
-        $areaForDb = \App\Http\Controllers\CityController::tier1DisplayName($area);
+        $areaForDb = Tier1::displayName($area);
 
         return \Illuminate\Support\Facades\Cache::remember($cacheKey, 30 * 60, function () use ($area, $areaForDb, $start, $end) {
             return CrimeEvent::orderBy('created_at', 'desc')

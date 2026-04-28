@@ -51,10 +51,9 @@ Required vars:
         return \App\Helper::number($n ?? 0);
     };
 
-    // todo #33: Tier 1-städer länkar till /{city}/handelser/-namespace.
-    $tier1 = \App\Http\Controllers\CityController::tier1Slugs();
+    // Tier 1-städer länkar till /{city}/handelser/-namespace.
     $isTier1 = $monthArchiveType === 'plats'
-        && in_array(mb_strtolower($monthArchiveSlug), $tier1, true);
+        && \App\Tier1::isTier1(mb_strtolower($monthArchiveSlug));
 
     if ($monthArchiveType === 'lan') {
         $route = 'lanMonth';

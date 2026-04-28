@@ -13,17 +13,10 @@ Required vars:
 
 --}}
 
+@include('parts.leaflet-vendor')
+
 @once
     @push('scripts')
-        {{-- Self-hostade Leaflet + plugins. defer säkerställer parsing innan
-             execution. Återanvänder samma assets som events-map-componenten. --}}
-        <link rel="stylesheet" href="{{ URL::asset('vendor/leaflet/leaflet.min.css') }}">
-        <script defer src="{{ URL::asset('vendor/leaflet/leaflet.min.js') }}"></script>
-
-        <link rel="stylesheet" href="{{ URL::asset('vendor/leaflet/markercluster/MarkerCluster.min.css') }}">
-        <link rel="stylesheet" href="{{ URL::asset('vendor/leaflet/markercluster/MarkerCluster.Default.min.css') }}">
-        <script defer src="{{ URL::asset('vendor/leaflet/markercluster/leaflet.markercluster.min.js') }}"></script>
-
         <script defer src="{{ URL::asset('js/month-map.js') }}"></script>
     @endpush
 @endonce

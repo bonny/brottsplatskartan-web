@@ -1,33 +1,14 @@
+@include('parts.leaflet-vendor')
+
 @once
     @push('scripts')
-        {{-- Leaflet + plugins, self-hostade i public/vendor/leaflet/. defer
-             på alla scripts: laddar parallellt med HTML-parsing, körs i
-             ordning före DOMContentLoaded. events-map.js initialiserar på
-             DOMContentLoaded så ordningen är säkrad.
-
-             Källa: leaflet@1.9.4, leaflet-gesture-handling@1.2.2,
-             leaflet.locatecontrol@0.81.0, leaflet.markercluster@1.4.1. --}}
-        <link rel="stylesheet" href="{{ URL::asset('vendor/leaflet/leaflet.min.css') }}">
-        <script defer src="{{ URL::asset('vendor/leaflet/leaflet.min.js') }}"></script>
-
-        <link rel="stylesheet" href="{{ URL::asset('vendor/leaflet/gesture-handling/leaflet-gesture-handling.min.css') }}">
-        <script defer src="{{ URL::asset('vendor/leaflet/gesture-handling/leaflet-gesture-handling.min.js') }}"></script>
-
-        <link rel="stylesheet" href="{{ URL::asset('vendor/leaflet/locatecontrol/L.Control.Locate.min.css') }}">
-        <script defer src="{{ URL::asset('vendor/leaflet/locatecontrol/L.Control.Locate.min.js') }}"></script>
-
-        <link rel="stylesheet" href="{{ URL::asset('vendor/leaflet/markercluster/MarkerCluster.min.css') }}">
-        <link rel="stylesheet" href="{{ URL::asset('vendor/leaflet/markercluster/MarkerCluster.Default.min.css') }}">
-        <script defer src="{{ URL::asset('vendor/leaflet/markercluster/leaflet.markercluster.min.js') }}"></script>
-
         @php
-            // Cache-bust events-map.css/js via filemtime — Caddy serverar
-            // statiska assets med immutable max-age=1y, så utan ?v= sitter
-            // gamla kopior kvar i browser-cache i evigheter.
-            $_emJsPath = public_path('js/events-map.js');
-            $_emCssPath = public_path('css/events-map.css');
-            $_emJsVer = file_exists($_emJsPath) ? filemtime($_emJsPath) : 1;
-            $_emCssVer = file_exists($_emCssPath) ? filemtime($_emCssPath) : 1;
+            // Cache-bust via filemtime — Caddy serverar statiska assets med
+            // immutable max-age=1y, så utan ?v= sitter gamla kopior kvar i
+            // browser-cache i evigheter. Memoiserat per request: filemtime
+            // är två stat()-calls och vyn renderas på alla heta sidor.
+            $_emJsVer = \App\Helper::assetVersion('js/events-map.js');
+            $_emCssVer = \App\Helper::assetVersion('css/events-map.css');
         @endphp
         <script defer src="{{ URL::asset('js/leaflet-loader.js') }}"></script>
         <script defer src="/js/events-map.js?v={{ $_emJsVer }}"></script>

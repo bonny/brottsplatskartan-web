@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\CrimeEvent;
 use App\Helper;
+use App\Tier1;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
@@ -85,7 +86,7 @@ class GenerateSitemap extends Command
 
         // Tier 1-städer: månadsvyer via /{slug}/handelser/{year}/{month}
         // (todo #33). /plats/{slug}/handelser/... 301:as till denna URL.
-        foreach (\App\Http\Controllers\CityController::tier1Slugs() as $cityCity) {
+        foreach (Tier1::slugs() as $cityCity) {
             foreach ($this->recentMonths(12) as $m) {
                 $main->add(
                     Url::create(sprintf('/%s/handelser/%s/%s', $cityCity, $m['year'], $m['month']))

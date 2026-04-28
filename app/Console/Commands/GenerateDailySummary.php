@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Services\AISummaryService;
+use App\Tier1;
 use Carbon\Carbon;
 
 class GenerateDailySummary extends Command
@@ -43,7 +44,7 @@ class GenerateDailySummary extends Command
         }
 
         $areas = $this->option('all-tier1')
-            ? \App\Http\Controllers\CityController::tier1Slugs()
+            ? Tier1::slugs()
             : [$this->argument('area')];
 
         $hasError = false;

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\CrimeEvent;
+use App\Tier1;
 use Cache;
 use Illuminate\Http\Request;
 
@@ -24,7 +25,7 @@ class ApiEventsMapController extends Controller {
         $daysBack = $hasFilter ? 30 : 3;
 
         $citySlug = is_string($city) ? strtolower($city) : '';
-        $cityForDb = $citySlug !== '' ? CityController::tier1DisplayName($citySlug) : '';
+        $cityForDb = $citySlug !== '' ? Tier1::displayName($citySlug) : '';
         $lanFilter = is_string($lan) ? trim($lan) : '';
 
         $cacheKey = sprintf(

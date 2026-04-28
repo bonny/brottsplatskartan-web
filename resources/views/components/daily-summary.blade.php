@@ -6,9 +6,7 @@
     </div>
     <div class="widget__content">
         <div class="prose max-w-none">
-            {{-- html_input=escape: AI-output kan teoretiskt innehålla HTML
-                 (prompt-injection via polisens RSS-content). Escape istället för
-                 att rendera, så vi inte släpper igenom script/iframe. --}}
+            {{-- AI-output: escape HTML mot prompt-injection via RSS-content. --}}
             {!! \Illuminate\Support\Str::markdown($summary->summary, ['html_input' => 'escape', 'allow_unsafe_links' => false]) !!}
         </div>
         <p class="text-sm text-gray-600 mt-4">

@@ -325,18 +325,9 @@ class CrimeEvent extends Model implements Feedable {
             $slugParts[] = $location->name;
         }
 
-        // Description i URL — historiskt fönster.
-        //
-        // 2022-02-11: lade till description i slugen för SEO-keyword-rikedom.
-        // 2026-04-28 (todo #34): tar bort igen — slugs blev 100+ tecken
-        //   vilket trunkeras i SERP-snippets, bryts i SMS/Twitter, och
-        //   triggar phishing-känsla hos användare. Schema.org NewsArticle
-        //   (todo #32) bär nu keyword-värdet utanför URL.
-        //
-        // Events i mellandatum-fönstret behåller sina långa URL:er av
-        // migrations-säkerhet — historiska permalinks ändras inte.
-        // #29 noindex:ar gradvis de tunna gamla events, så lång-URL-
-        // problemet fasas ut naturligt över tid.
+        // Description bara i slug:en för det historiska fönstret. Permalinks
+        // ändras aldrig retroaktivt — alla events publicerade i intervallet
+        // behåller sin URL även efter att fältet tagits bort.
         $eventDate = $this->getParsedDateInFormat('YYYY-MM-DD');
         $descriptionInSlug = $eventDate > "2022-02-10" && $eventDate < "2026-04-28";
         if ($descriptionInSlug) {
@@ -353,17 +344,10 @@ class CrimeEvent extends Model implements Feedable {
         $eventName = implode("-", $slugParts);
         $eventName = $this->toAscii($eventName);
 
-        // Dedupera ord-segment (todo #34).
-        // parsed_title_location ("Stockholm Södermalm") och prio1-locations
-        // ("Södermalm") överlappar ofta — utan dedup blir slug:n
-        // "stold-stockholm-sodermalm-sodermalm-500777". Behåll första
-        // förekomsten av varje ord, hoppa över dubletter.
-        //
-        // Tillämpas BARA om description inte är i sluggen (pre-2022 +
-        // post-cutoff). Mellandatum-fönstret bevaras intakt — annars
-        // skulle stoppord ("en", "på") och upprepade verb i description
-        // strykas och slug:n bli stympad. Routen extraherar bara
-        // trailing-id, så ändringen påverkar inte event-lookup.
+        // Dedupera överlappande ord (parsed_title_location "Stockholm
+        // Södermalm" + prio1-location "Södermalm" → annars "…sodermalm-
+        // sodermalm-…"). Skippas i description-fönstret eftersom dedup
+        // skulle stympa stoppord och upprepade verb i description-texten.
         if (!$descriptionInSlug) {
             $segments = explode('-', $eventName);
             $seen = [];
@@ -1294,7 +1278,7 @@ class CrimeEvent extends Model implements Feedable {
         $month = $carbonDate->format('m');
 
         $platsAscii = Helper::toAscii(mb_strtolower($this->parsed_title_location));
-        $tier1 = \App\Http\Controllers\CityController::tier1Slugs();
+        $tier1 = \App\Tier1::slugs();
 
         if (in_array($platsAscii, $tier1, true)) {
             return route('cityMonth', [

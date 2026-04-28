@@ -15,6 +15,24 @@ class Helper {
     /** Per-request memoization för getAllLanWithStats. */
     private static $allLanWithStatsCache = null;
 
+    /** Per-request memoization av filemtime-uppslag. */
+    private static array $assetVersionCache = [];
+
+    /**
+     * Returnera en cache-busting-version (filemtime) för en asset i public/.
+     * Memoiseras per request — anropas från komponenter som renderas på
+     * heta sidor, så två stat()-syscalls per render hade summerats.
+     */
+    public static function assetVersion(string $relativePath): int
+    {
+        if (isset(self::$assetVersionCache[$relativePath])) {
+            return self::$assetVersionCache[$relativePath];
+        }
+        $absPath = public_path($relativePath);
+        $mtime = @filemtime($absPath);
+        return self::$assetVersionCache[$relativePath] = $mtime !== false ? $mtime : 1;
+    }
+
     /**
      * Formattera ett tal med icke-brytande mellanslag (U+00A0) som
      * tusentalsavgränsare, så "11 921" eller "100 000" inte bryts
@@ -47,6 +65,20 @@ class Helper {
     }
 
     /**
+     * Approximativ bounding box (lat/lng-min/max) för en radie i km runt
+     * en punkt. Samma metod som CrimeEvent::getEventsForCity — snabbt och
+     * tillräckligt exakt för stadsskala (ingen jordkurvatur-korrigering).
+     *
+     * @return array{0: float, 1: float, 2: float, 3: float} [latMin, latMax, lngMin, lngMax]
+     */
+    private static function bbox(float $lat, float $lng, int $distanceKm): array
+    {
+        $deg = $distanceKm / 111;
+        $lngStep = $deg / cos(deg2rad($lat));
+        return [$lat - $deg, $lat + $deg, $lng - $lngStep, $lng + $lngStep];
+    }
+
+    /**
      * Topp-brottstyper (parsed_title) inom bounding box senaste N dagarna.
      * Returnerar Collection av {parsed_title, count}. Cachat 30 min.
      */
@@ -60,11 +92,7 @@ class Helper {
         $cacheKey = "trend-types:lat{$lat}:lng{$lng}:r{$distanceKm}:d{$days}:l{$limit}";
 
         return Cache::remember($cacheKey, 30 * MINUTE_IN_SECONDS, function () use ($lat, $lng, $distanceKm, $days, $limit) {
-            $distanceInDegrees = $distanceKm / 111;
-            $latMin = $lat - $distanceInDegrees;
-            $latMax = $lat + $distanceInDegrees;
-            $lngMin = $lng - $distanceInDegrees / cos(deg2rad($lat));
-            $lngMax = $lng + $distanceInDegrees / cos(deg2rad($lat));
+            [$latMin, $latMax, $lngMin, $lngMax] = self::bbox($lat, $lng, $distanceKm);
 
             return DB::table('crime_events')
                 ->select('parsed_title')
@@ -97,11 +125,7 @@ class Helper {
         $cacheKey = "trend-mostread:lat{$lat}:lng{$lng}:r{$distanceKm}:d{$days}:l{$limit}";
 
         return Cache::remember($cacheKey, 30 * MINUTE_IN_SECONDS, function () use ($lat, $lng, $distanceKm, $days, $limit) {
-            $distanceInDegrees = $distanceKm / 111;
-            $latMin = $lat - $distanceInDegrees;
-            $latMax = $lat + $distanceInDegrees;
-            $lngMin = $lng - $distanceInDegrees / cos(deg2rad($lat));
-            $lngMax = $lng + $distanceInDegrees / cos(deg2rad($lat));
+            [$latMin, $latMax, $lngMin, $lngMax] = self::bbox($lat, $lng, $distanceKm);
 
             // Steg 1: hitta {event_id, views} sorterat efter views.
             $idsWithViews = DB::table('crime_views as v')
@@ -155,11 +179,7 @@ class Helper {
         $cacheKey = "trend-counts:lat{$lat}:lng{$lng}:r{$distanceKm}:d{$days}";
 
         return Cache::remember($cacheKey, 60 * MINUTE_IN_SECONDS, function () use ($lat, $lng, $distanceKm, $days) {
-            $distanceInDegrees = $distanceKm / 111;
-            $latMin = $lat - $distanceInDegrees;
-            $latMax = $lat + $distanceInDegrees;
-            $lngMin = $lng - $distanceInDegrees / cos(deg2rad($lat));
-            $lngMax = $lng + $distanceInDegrees / cos(deg2rad($lat));
+            [$latMin, $latMax, $lngMin, $lngMax] = self::bbox($lat, $lng, $distanceKm);
 
             return DB::table('crime_events')
                 ->select(
@@ -190,8 +210,8 @@ class Helper {
      *   `str_replace('-', ' ', $lan)` men DB lagrar display-form.
      * - `$type === 'plats'` (inkl. Tier 1-städer): filter på
      *   `parsed_title_location` ELLER `administrative_area_level_2`.
-     *   Tier 1-slugs översätts via `CityController::tier1DisplayName()`
-     *   så `'malmo'` blir `'Malmö'` etc.
+     *   Tier 1-slugs översätts via `\App\Tier1::displayName()` så
+     *   `'malmo'` blir `'Malmö'` etc.
      *
      * Cachat 24h — historiska månader är immutabla, innevarande månad
      * blir lite stale men det är OK för en sidopanels-widget.
@@ -220,7 +240,7 @@ class Helper {
                 $query->where('administrative_area_level_1', self::resolveLanDisplayName($slug));
             } else {
                 // 'plats' (Tier 1-städer routar också via plats-pipeline)
-                $needle = \App\Http\Controllers\CityController::tier1DisplayName($slug);
+                $needle = \App\Tier1::displayName($slug);
                 $query->where(function ($q) use ($needle) {
                     $q->where('parsed_title_location', $needle)
                       ->orWhere('administrative_area_level_2', $needle);
@@ -850,7 +870,7 @@ class Helper {
         // type === 'plats': Tier 1 → cityMonth, övriga → platsMonth.
         $isTier1 = in_array(
             mb_strtolower($slug),
-            \App\Http\Controllers\CityController::tier1Slugs(),
+            \App\Tier1::slugs(),
             true
         );
         return $isTier1

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\BraStatistik;
 use App\CrimeEvent;
 use App\Place;
+use App\Tier1;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Http\Request;
@@ -83,7 +84,7 @@ class PlatsController extends Controller
         ) {
             $isTier1 = in_array(
                 mb_strtolower($platsOriginalFromSlug),
-                \App\Http\Controllers\CityController::tier1Slugs(),
+                Tier1::slugs(),
                 true
             );
             $monthUrl = route(
@@ -494,7 +495,7 @@ class PlatsController extends Controller
         // istället för platsMonth så URL-equity konsolideras.
         $isTier1 = in_array(
             mb_strtolower($platsOriginalFromSlug),
-            \App\Http\Controllers\CityController::tier1Slugs(),
+            Tier1::slugs(),
             true
         );
         $monthRouteName = $isTier1 ? 'cityMonth' : 'platsMonth';
@@ -1074,7 +1075,7 @@ class PlatsController extends Controller
         // Tier 1-städer kommer in som ASCII-slug (malmo/goteborg) men
         // DB-fälten lagrar display-form (Malmö/Göteborg). Översätt så
         // queryn faktiskt träffar något.
-        $platsForDb = \App\Http\Controllers\CityController::tier1DisplayName($plats);
+        $platsForDb = Tier1::displayName($plats);
 
         return Cache::remember($cacheKey, $cacheTTL, function () use ($plats, $platsForDb, $start, $end) {
             return CrimeEvent::orderBy('created_at', 'desc')

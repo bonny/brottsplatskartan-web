@@ -6,6 +6,7 @@ use App\BraStatistik;
 use App\CrimeEvent;
 use App\Models\DailySummary;
 use App\Services\WikidataService;
+use App\Tier1;
 use Illuminate\Http\Request;
 use Creitive\Breadcrumbs\Breadcrumbs;
 use Carbon\Carbon;
@@ -24,81 +25,6 @@ larm
 class CityController extends Controller
 {
     /**
-     * Tier 1-städer som har dedikerade /<stad>-sidor istället för
-     * att ligga under /plats/{stad}. URL-slug är ASCII-only för
-     * konsistens (malmö → malmo, göteborg → goteborg).
-     *
-     * Lägg till nya städer enligt todo #24 efter SEO-utvärdering.
-     */
-    private $cities = [
-        'stockholm' => [
-            'name' => 'Stockholm och Stockholms län',
-            'lan' => 'Stockholms län',
-            'kommunKod' => '0180',
-            'lat' => 59.328930,
-            'lng' => 18.064910,
-            'mapZoom' => 10,
-            'distance' => 20,
-            'pageTitle' => 'Stockholm: Polishändelser och blåljus',
-            'title' => 'Senaste blåljusen och händelser från Polisen.',
-            'description' => 'Se aktuella polishändelser och blåljuslarm från räddningstjänsten i Stockholm',
-            'wikidataQid' => 'Q1754',
-        ],
-        'malmo' => [
-            'name' => 'Malmö och Skåne län',
-            'lan' => 'Skåne län',
-            'kommunKod' => '1280',
-            'lat' => 55.604981,
-            'lng' => 13.003822,
-            'mapZoom' => 11,
-            'distance' => 15,
-            'pageTitle' => 'Malmö: Polishändelser och blåljus',
-            'title' => 'Senaste blåljusen och händelser från Polisen i Malmö med omnejd.',
-            'description' => 'Se aktuella polishändelser och blåljuslarm från räddningstjänsten i Malmö och Skåne län.',
-            'wikidataQid' => 'Q2211',
-        ],
-        'goteborg' => [
-            'name' => 'Göteborg och Västra Götalands län',
-            'lan' => 'Västra Götalands län',
-            'kommunKod' => '1480',
-            'lat' => 57.708870,
-            'lng' => 11.974560,
-            'mapZoom' => 10,
-            'distance' => 20,
-            'pageTitle' => 'Göteborg: Polishändelser och blåljus',
-            'title' => 'Senaste blåljusen och händelser från Polisen i Göteborg med omnejd.',
-            'description' => 'Se aktuella polishändelser och blåljuslarm från räddningstjänsten i Göteborg och Västra Götalands län.',
-            'wikidataQid' => 'Q25287',
-        ],
-        'helsingborg' => [
-            'name' => 'Helsingborg och Skåne län',
-            'lan' => 'Skåne län',
-            'kommunKod' => '1283',
-            'lat' => 56.046467,
-            'lng' => 12.694512,
-            'mapZoom' => 11,
-            'distance' => 12,
-            'pageTitle' => 'Helsingborg: Polishändelser och blåljus',
-            'title' => 'Senaste blåljusen och händelser från Polisen i Helsingborg med omnejd.',
-            'description' => 'Se aktuella polishändelser och blåljuslarm från räddningstjänsten i Helsingborg och Skåne län.',
-            'wikidataQid' => 'Q25411',
-        ],
-        'uppsala' => [
-            'name' => 'Uppsala och Uppsala län',
-            'lan' => 'Uppsala län',
-            'kommunKod' => '0380',
-            'lat' => 59.858564,
-            'lng' => 17.638927,
-            'mapZoom' => 11,
-            'distance' => 15,
-            'pageTitle' => 'Uppsala: Polishändelser och blåljus',
-            'title' => 'Senaste blåljusen och händelser från Polisen i Uppsala med omnejd.',
-            'description' => 'Se aktuella polishändelser och blåljuslarm från räddningstjänsten i Uppsala och Uppsala län.',
-            'wikidataQid' => 'Q25286',
-        ],
-    ];
-
-    /**
      * Normalisera city-slug: lowercase + ASCII (ö → o, å → a, ä → a).
      * "Malmö" → "malmo", "Göteborg" → "goteborg".
      */
@@ -106,43 +32,6 @@ class CityController extends Controller
     {
         $lowercase = mb_strtolower($citySlug);
         return \App\Helper::toAscii($lowercase);
-    }
-
-    /**
-     * Returnera array med Tier 1-städernas slugs (`['uppsala',
-     * 'stockholm', ...]`). Används för URL-namespace-routing
-     * (todo #33).
-     *
-     * @return list<string>
-     */
-    public static function tier1Slugs(): array
-    {
-        // Hårdkodad lista — matchar self::$cities-nycklar och
-        // CityRedirectMiddleware::REDIRECTS-targets.
-        return ['stockholm', 'malmo', 'goteborg', 'helsingborg', 'uppsala'];
-    }
-
-    /**
-     * Slug → display-form (med åäö) för Tier 1-städer. DB-fälten
-     * `parsed_title_location` och `administrative_area_level_2` lagrar
-     * display-form, så slug 'malmo' träffar inga rader. Används av
-     * PlatsController::getEventsInPlatsForMonth() och
-     * AISummaryService::getMonthlyEvents() för att översätta innan
-     * query.
-     *
-     * Returnerar slug oförändrad för slugs som inte är Tier 1 — så
-     * helpers kan användas oavsett.
-     */
-    public static function tier1DisplayName(string $slug): string
-    {
-        static $map = [
-            'stockholm' => 'Stockholm',
-            'malmo' => 'Malmö',
-            'goteborg' => 'Göteborg',
-            'helsingborg' => 'Helsingborg',
-            'uppsala' => 'Uppsala',
-        ];
-        return $map[$slug] ?? $slug;
     }
 
     /**
@@ -164,7 +53,7 @@ class CityController extends Controller
             ], 301);
         }
 
-        if (!isset($this->cities[$normalizedSlug])) {
+        if (!Tier1::isTier1($normalizedSlug)) {
             abort(404);
         }
 
@@ -180,7 +69,8 @@ class CityController extends Controller
             return redirect()->route('city', ['city' => $normalizedSlug], 301);
         }
 
-        if (!isset($this->cities[$normalizedSlug])) {
+        $city = Tier1::find($normalizedSlug);
+        if ($city === null) {
             abort(404);
         }
 
@@ -191,8 +81,6 @@ class CityController extends Controller
         if ((int) $request->query('page', 1) > 1) {
             return redirect()->route('city', ['city' => $normalizedSlug], 301);
         }
-
-        $city = $this->cities[$normalizedSlug];
         
         $city_lan = $city['lan'];
         $policeStations = \App\Helper::getPoliceStationsCached()->first(function ($val, $key) use ($city_lan) {
