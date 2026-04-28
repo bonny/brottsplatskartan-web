@@ -124,6 +124,29 @@ class CityController extends Controller
     }
 
     /**
+     * Slug → display-form (med åäö) för Tier 1-städer. DB-fälten
+     * `parsed_title_location` och `administrative_area_level_2` lagrar
+     * display-form, så slug 'malmo' träffar inga rader. Används av
+     * PlatsController::getEventsInPlatsForMonth() och
+     * AISummaryService::getMonthlyEvents() för att översätta innan
+     * query.
+     *
+     * Returnerar slug oförändrad för slugs som inte är Tier 1 — så
+     * helpers kan användas oavsett.
+     */
+    public static function tier1DisplayName(string $slug): string
+    {
+        static $map = [
+            'stockholm' => 'Stockholm',
+            'malmo' => 'Malmö',
+            'goteborg' => 'Göteborg',
+            'helsingborg' => 'Helsingborg',
+            'uppsala' => 'Uppsala',
+        ];
+        return $map[$slug] ?? $slug;
+    }
+
+    /**
      * Månadsvy för Tier 1-stad (todo #33).
      * URL: /{city}/handelser/{year}/{month}
      *

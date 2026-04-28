@@ -227,14 +227,21 @@ class AISummaryService
     {
         $cacheKey = sprintf('getEventsInPlatsForMonth:%s:%s', $area, $start->format('Y-m'));
 
-        return \Illuminate\Support\Facades\Cache::remember($cacheKey, 30 * 60, function () use ($area, $start, $end) {
+        // Samma slug→display-mappning som PlatsController::getEventsInPlatsForMonth.
+        $areaForDb = \App\Http\Controllers\CityController::tier1DisplayName($area);
+
+        return \Illuminate\Support\Facades\Cache::remember($cacheKey, 30 * 60, function () use ($area, $areaForDb, $start, $end) {
             return CrimeEvent::orderBy('created_at', 'desc')
                 ->whereBetween('created_at', [$start, $end])
-                ->where(function ($query) use ($area) {
-                    $query->where('parsed_title_location', $area);
-                    $query->orWhere('administrative_area_level_2', $area);
-                    $query->orWhereHas('locations', function ($q) use ($area) {
-                        $q->where('name', '=', $area);
+                ->where(function ($query) use ($area, $areaForDb) {
+                    $query->where('parsed_title_location', $areaForDb);
+                    $query->orWhere('administrative_area_level_2', $areaForDb);
+                    if ($area !== $areaForDb) {
+                        $query->orWhere('parsed_title_location', $area);
+                        $query->orWhere('administrative_area_level_2', $area);
+                    }
+                    $query->orWhereHas('locations', function ($q) use ($areaForDb) {
+                        $q->where('name', '=', $areaForDb);
                     });
                 })
                 ->with('locations')

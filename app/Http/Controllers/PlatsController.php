@@ -1071,14 +1071,23 @@ class PlatsController extends Controller
         $cacheKey = sprintf('getEventsInPlatsForMonth:%s:%s', $plats, $start->format('Y-m'));
         $cacheTTL = 30 * 60;
 
-        return Cache::remember($cacheKey, $cacheTTL, function () use ($plats, $start, $end) {
+        // Tier 1-städer kommer in som ASCII-slug (malmo/goteborg) men
+        // DB-fälten lagrar display-form (Malmö/Göteborg). Översätt så
+        // queryn faktiskt träffar något.
+        $platsForDb = \App\Http\Controllers\CityController::tier1DisplayName($plats);
+
+        return Cache::remember($cacheKey, $cacheTTL, function () use ($plats, $platsForDb, $start, $end) {
             return CrimeEvent::orderBy('created_at', 'desc')
                 ->whereBetween('created_at', [$start, $end])
-                ->where(function ($query) use ($plats) {
-                    $query->where('parsed_title_location', $plats);
-                    $query->orWhere('administrative_area_level_2', $plats);
-                    $query->orWhereHas('locations', function ($query) use ($plats) {
-                        $query->where('name', '=', $plats);
+                ->where(function ($query) use ($plats, $platsForDb) {
+                    $query->where('parsed_title_location', $platsForDb);
+                    $query->orWhere('administrative_area_level_2', $platsForDb);
+                    if ($plats !== $platsForDb) {
+                        $query->orWhere('parsed_title_location', $plats);
+                        $query->orWhere('administrative_area_level_2', $plats);
+                    }
+                    $query->orWhereHas('locations', function ($query) use ($platsForDb) {
+                        $query->where('name', '=', $platsForDb);
                     });
                 })
                 ->with('locations')
