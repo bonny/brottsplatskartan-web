@@ -39,7 +39,7 @@
     display: flex;
     align-items: center;
     place-content: center;
-    height: calc(70dvh + 50px);
+    height: 70dvh;
     background-color: antiquewhite;
     background-image: url("/img/share-img-blur.jpg");
     background-size: cover;
@@ -381,7 +381,7 @@ body.map-is-expanded .SiteHeader {
 
 /* Map customization for city page (i.e. /stockholm) */
 .EventsMap--city {
-    height: 15vh;
+    height: calc(15vh + 50px);
 }
 
 @keyframes markerPulse {
