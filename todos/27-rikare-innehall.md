@@ -1,5 +1,5 @@
-**Status:** aktiv (Lager 1 trend-sparkline + Lager 2 BRÅ-sektion live 2026-04-28. Lager 1 donut + mest lästa + Lager 3 AI-månadssamm. återstår.)
-**Senast uppdaterad:** 2026-04-28 — Lager 1 trend-sparkline + Lager 2 BRÅ på plats-sidor + /statistik
+**Status:** aktiv (Lager 1 komplett (utom heatmap) + Lager 2 BRÅ live 2026-04-28. Lager 3 AI-månadssamm. återstår.)
+**Senast uppdaterad:** 2026-04-28 — Lager 1 brottstyp-fördelning + mest lästa events i prod
 **Relaterad till:** #24 (Tier 1-städer), #25 (månadsvyer), #37 (SCB-befolkning), #38 (BRÅ-data)
 
 > ## ✓ Update 2026-04-28 — Lager 1 trend-sparkline + Lager 2 BRÅ live
@@ -34,17 +34,29 @@
 > `resources/views/{city,single-plats,statistik}.blade.php`,
 > `app/Console/Commands/{ImportBraAnmaldaBrott,AutoMapPlacePopulation}.php`.
 >
-> **Återstår i Lager 1:**
-> - Donut/bar för brottstyp-fördelning (Chart.js tree-shaked, 14 KB)
-> - Mest lästa events i området (kräver `crime_views`-tabell-check)
+> ## ✓ Update 2026-04-28 (kväll) — Lager 1 brottstyp + mest lästa live
 >
-> **Återstår i Lager 2:**
-> - Heatmap (kräver INP-mätning före rollout)
+> Lager 1 är nu komplett (utom heatmap):
+> - **Brottstyp-fördelning** (charts-css bar-graf, 0 KB extra JS) —
+>   topp 8 brottstyper senaste 30 dagarna
+> - **Mest lästa events** (numrerad lista med permalinks + läsningar)
+>   — joinar mot `crime_views`-tabellen
+>
+> Båda visas i 2-kolumns grid (md:grid-cols-2) mellan händelselistan
+> och BRÅ-sektionen. Helpers: `Helper::getTopCrimeTypesNearby` +
+> `getMostReadEventsNearby`. Cache 30min.
+>
+> **Återstår:**
+>
+> **Lager 2:**
+> - Heatmap (kräver INP-mätning före rollout — gles event-volym kanske
+>   inte motiverar Leaflet.heat-laddning)
 > - Trend-graf på BRÅ-data 2015–2025 (blockerad av att äldre årgångar
 >   inte är publikt CSV-tillgängliga)
 >
 > **Lager 3 (AI-månadssammanfattning)** — opåverkad, oberoende, kan
-> startas när som helst.
+> startas när som helst. Bygger på `DailySummary`-modellen som redan
+> finns för dagsummeringar.
 
 # Todo #27 — Berika ort- och månadssidor med rikare innehåll
 
