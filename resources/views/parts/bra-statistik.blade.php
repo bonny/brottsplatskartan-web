@@ -43,7 +43,7 @@
                 Jämfört med övriga kommuner i {{ $lanLabel }}
             </h3>
             <div class="BraStatistik__tableWrap">
-                <table class="BraStatistik__table">
+                <table class="DataTable">
                     <thead>
                         <tr>
                             <th scope="col">Kommun</th>

@@ -4220,26 +4220,28 @@ h2.widget__title {
     font-weight: 600;
 }
 
-.BraStatistik__tableWrap {
+.BraStatistik__tableWrap,
+.DataTable__wrap {
     overflow-x: auto;
     margin: 0 calc(-1 * var(--default-margin-half));
 }
 
-.BraStatistik__table {
+/* Generisk data-tabell — används av BRÅ-sektioner och /statistik. */
+.DataTable {
     width: 100%;
     border-collapse: collapse;
     font-size: var(--font-size-small);
 }
 
-.BraStatistik__table th,
-.BraStatistik__table td {
+.DataTable th,
+.DataTable td {
     padding: 0.55rem 0.6rem;
     text-align: left;
     border-bottom: 1px solid var(--color-gray-2);
     vertical-align: baseline;
 }
 
-.BraStatistik__table th {
+.DataTable th {
     color: var(--color-gray-1);
     font-weight: 600;
     font-size: 0.8rem;
@@ -4248,22 +4250,28 @@ h2.widget__title {
     border-bottom: 2px solid var(--color-gray-2);
 }
 
-.BraStatistik__table .num {
+.DataTable .num,
+.DataTable th.u-text-right,
+.DataTable td.u-text-right {
     text-align: right;
     font-variant-numeric: tabular-nums;
 }
 
-.BraStatistik__table tr:last-child td {
+.DataTable tr:last-child td {
     border-bottom: none;
 }
 
-.BraStatistik__table tr.is-active {
+.DataTable tr.is-active {
     background: rgba(24, 98, 168, 0.08);
 }
 
-.BraStatistik__table tr.is-active td {
+.DataTable tr.is-active td {
     font-weight: 700;
     color: var(--color-gray-3);
+}
+
+.DataTable a {
+    color: var(--color-link);
 }
 
 .BraStatistik__activeTag {

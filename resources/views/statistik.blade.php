@@ -88,7 +88,7 @@
 
         <section class="widget">
             <h2 class="widget__title">Län sorterat på antal händelser – senaste 7 dagarna</h2>
-            <table class="Statistics__lanTable">
+            <table class="DataTable">
                 <thead>
                     <tr>
                         <th>Län</th>
@@ -152,7 +152,7 @@
                 <div class="row u-margin-top">
                     <div class="col-12 col-md-6">
                         <h3 class="u-margin-top">Topp 10 — högst per {{ \App\Helper::number(100000) }} invånare</h3>
-                        <table class="Statistics__lanTable">
+                        <table class="DataTable">
                             <thead>
                                 <tr>
                                     <th>Kommun</th>
@@ -174,7 +174,7 @@
 
                     <div class="col-12 col-md-6">
                         <h3 class="u-margin-top">Botten 10 — lägst per {{ \App\Helper::number(100000) }} invånare</h3>
-                        <table class="Statistics__lanTable">
+                        <table class="DataTable">
                             <thead>
                                 <tr>
                                     <th>Kommun</th>
