@@ -49,13 +49,18 @@ class Kernel extends ConsoleKernel
             ->everyFifteenMinutes()
             ->withoutOverlapping();
 
-        // Generera gårdagens sammanfattning tidigt på morgonen (klar för dagen)
-        $schedule->command('summary:generate stockholm --yesterday')->dailyAt('06:00');
+        // Daily AI-sammanfattning för alla Tier 1-städer. Change-detection
+        // i AISummaryService gör att AI bara körs när events ändrats — så
+        // 5 städer × 48 körningar/dygn ger bara några AI-anrop totalt
+        // (Stockholm dominerar; mindre städer har få nya events/dag).
+        $schedule->command('summary:generate --all-tier1 --yesterday')
+            ->dailyAt('06:00')
+            ->name('daily-summary-tier1-yesterday');
 
-        // Generera AI-sammanfattning för Stockholm var 30:e minut (optimerad för att bara köra AI när händelser ändrats)
-        $schedule->command('summary:generate stockholm')
+        $schedule->command('summary:generate --all-tier1')
             ->everyThirtyMinutes()
-            ->withoutOverlapping();
+            ->withoutOverlapping()
+            ->name('daily-summary-tier1-today');
 
         // Månads-sammanfattning för Tier 1-städer (todo #27 Lager 3).
         // Två schemalägg:

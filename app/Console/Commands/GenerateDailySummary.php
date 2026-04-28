@@ -13,7 +13,11 @@ class GenerateDailySummary extends Command
      *
      * @var string
      */
-    protected $signature = 'summary:generate {area=stockholm} {--date= : Specifikt datum (YYYY-MM-DD format)} {--yesterday}';
+    protected $signature = 'summary:generate
+        {area=stockholm : Område-slug (stockholm, malmo, goteborg, helsingborg, uppsala)}
+        {--date= : Specifikt datum (YYYY-MM-DD format)}
+        {--yesterday}
+        {--all-tier1 : Kör alla 5 Tier 1-städer}';
 
     /**
      * The console command description.
@@ -25,11 +29,10 @@ class GenerateDailySummary extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): int
     {
         $summaryService = new AISummaryService();
-        $area = $this->argument('area');
-        
+
         // Bestäm vilket datum som ska summeras
         if ($this->option('yesterday')) {
             $date = Carbon::yesterday();
@@ -39,27 +42,36 @@ class GenerateDailySummary extends Command
             $date = Carbon::today();
         }
 
-        $this->info("Genererar sammanfattning för {$area} den {$date->format('Y-m-d')}...");
+        $areas = $this->option('all-tier1')
+            ? \App\Http\Controllers\CityController::tier1Slugs()
+            : [$this->argument('area')];
 
-        try {
-            $result = $summaryService->generateDailySummary($area, $date);
-            $summary = $result['summary'];
-            $aiGenerated = $result['ai_generated'];
-            
-            if ($summary) {
-                if ($aiGenerated) {
-                    $this->info("✅ Ny sammanfattning genererad med AI!");
+        $hasError = false;
+
+        foreach ($areas as $area) {
+            $this->info("Genererar sammanfattning för {$area} den {$date->format('Y-m-d')}...");
+
+            try {
+                $result = $summaryService->generateDailySummary($area, $date);
+                $summary = $result['summary'];
+                $aiGenerated = $result['ai_generated'];
+
+                if ($summary) {
+                    if ($aiGenerated) {
+                        $this->info("✅ Ny sammanfattning genererad med AI för {$area}!");
+                    } else {
+                        $this->info("ℹ️  Oförändrad — använder befintlig sammanfattning för {$area}");
+                    }
+                    $this->info("Antal händelser: {$summary->events_count}");
                 } else {
-                    $this->info("ℹ️ Händelserna har inte ändrats - använder befintlig sammanfattning");
+                    $this->warn("⚠️  Ingen sammanfattning kunde genereras för {$area} (inga events?)");
                 }
-                $this->info("Antal händelser: {$summary->events_count}");
-                $this->line("Sammanfattning:");
-                $this->line($summary->summary);
-            } else {
-                $this->warn("⚠️ Ingen sammanfattning kunde genereras. Kontrollera att det finns händelser för det angivna datumet.");
+            } catch (\Throwable $e) {
+                $this->error("❌ Fel för {$area}: " . $e->getMessage());
+                $hasError = true;
             }
-        } catch (\Exception $e) {
-            $this->error("❌ Fel vid generering av sammanfattning: " . $e->getMessage());
         }
+
+        return $hasError ? self::FAILURE : self::SUCCESS;
     }
 }

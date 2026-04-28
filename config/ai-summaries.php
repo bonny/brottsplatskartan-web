@@ -14,11 +14,22 @@ return [
             'enabled' => true,
             'min_events' => 1,
         ],
-        // Lägg till fler områden här när det behövs
-        // 'göteborg' => [
-        //     'enabled' => true,
-        //     'min_events' => 2,
-        // ],
+        'goteborg' => [
+            'enabled' => true,
+            'min_events' => 1,
+        ],
+        'malmo' => [
+            'enabled' => true,
+            'min_events' => 1,
+        ],
+        'uppsala' => [
+            'enabled' => true,
+            'min_events' => 1,
+        ],
+        'helsingborg' => [
+            'enabled' => true,
+            'min_events' => 1,
+        ],
     ],
 
     /**

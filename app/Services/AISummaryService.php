@@ -72,16 +72,36 @@ class AISummaryService
      */
     private function getEventsForDate(string $area, Carbon $date): \Illuminate\Database\Eloquent\Collection
     {
+        $areaSlug = strtolower($area);
+        $areaForDb = \App\Http\Controllers\CityController::tier1DisplayName($areaSlug);
+
         $query = CrimeEvent::whereDate('date_created_at', $date->format('Y-m-d'));
 
-        if (strtolower($area) === 'stockholm') {
+        if ($areaSlug === 'stockholm') {
+            // Stockholm-specialfall: bredare match (inkl. län + parsed_content)
+            // — matchar historiskt beteende sedan summary-funktionen lanserades.
             $query->where(function ($q) {
                 $q->where('administrative_area_level_2', 'like', '%Stockholm%')
                   ->orWhere('administrative_area_level_1', 'like', '%Stockholm%')
                   ->orWhere('parsed_content', 'like', '%Stockholm%');
             });
         } else {
-            $query->where('administrative_area_level_2', 'like', "%{$area}%");
+            // Speglar AISummaryService::getMonthlyEvents() — slug→display via
+            // tier1DisplayName + locations-relation. Krävs för att Göteborg/
+            // Malmö (slug ≠ display med åäö) ska få träffar alls.
+            $query->where(function ($q) use ($areaSlug, $areaForDb) {
+                $q->where('parsed_title_location', $areaForDb)
+                  ->orWhere('administrative_area_level_2', $areaForDb);
+
+                if ($areaSlug !== $areaForDb) {
+                    $q->orWhere('parsed_title_location', $areaSlug)
+                      ->orWhere('administrative_area_level_2', $areaSlug);
+                }
+
+                $q->orWhereHas('locations', function ($q2) use ($areaForDb) {
+                    $q2->where('name', '=', $areaForDb);
+                });
+            });
         }
 
         return $query->orderBy('date_created_at', 'desc')->get();
