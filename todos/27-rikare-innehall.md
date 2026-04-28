@@ -1,5 +1,5 @@
-**Status:** aktiv (Lager 1 komplett + Lager 2 BRÅ live + designsystem konsoliderat 2026-04-28. Heatmap avfärdad 2026-04-28. Lager 3 AI-månadssamm. återstår.)
-**Senast uppdaterad:** 2026-04-28 (kväll 2) — heatmap avfärdad (out of scope); designsystem konsoliderat tidigare samma dag
+**Status:** aktiv (Lager 1 komplett + Lager 2 BRÅ live + designsystem konsoliderat 2026-04-28. Heatmap + AI-säkerhetstips avfärdade 2026-04-28. Lager 3 AI-månadssamm. + AI-trendanalys återstår.)
+**Senast uppdaterad:** 2026-04-28 (kväll 2) — AI-säkerhetstips avfärdad (E-E-A-T-risk, hallucinations på handlingsråd); heatmap avfärdad tidigare samma kväll
 **Relaterad till:** #24 (Tier 1-städer), #25 (månadsvyer), #37 (SCB-befolkning), #38 (BRÅ-data)
 
 > ## ✓ Update 2026-04-28 — Lager 1 trend-sparkline + Lager 2 BRÅ live
@@ -161,7 +161,7 @@ nedanför fold på mobil.
 | Tillägg                                                              | Effort | SEO-värde | Beroende                                  |
 | -------------------------------------------------------------------- | ------ | --------- | ----------------------------------------- |
 | **NY: AI-månadssammanfattning** per ort                              | Medel  | Hög       | Claude API (har redan), DailySummary-jobb |
-| **NY: AI-genererad "säkerhetstips"-sektion**                         | Medel  | Medel     | Datadriven men generativ                  |
+| ~~AI-genererad "säkerhetstips"-sektion~~                             | —      | —         | **Avfärdad 2026-04-28** — E-E-A-T-risk (vi är inte säkerhetsexperter), hallucinations-risk på handlingsråd, helpful-content-straff för generiska tips. Polisen.se är auktoritativ avsändare. |
 | **NY: AI-trend-analys** ("ökat/minskat X jämfört med förra månaden") | Medel  | Hög       | Faktabaserat, undvik hallucinationer      |
 
 ## Inte i scope (fundera senare eller skippa)
