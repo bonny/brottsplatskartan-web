@@ -45,12 +45,9 @@ Required vars:
 
     // Vilka år är öppna by default?
     //  - Innevarande år (alltid)
-    //  - Föregående kalenderår (alltid — minst 12 mån synliga oavsett
-    //    var i året vi är)
-    //  - Året som "you are here"-månaden ligger i
+    //  - Året som "you are here"-månaden ligger i (om annat)
     $thisYear = $startMonth->format('Y');
-    $lastYear = (string) ((int) $thisYear - 1);
-    $openYears = array_unique(array_filter([$thisYear, $lastYear, $viewingYear]));
+    $openYears = array_unique(array_filter([$thisYear, $viewingYear]));
 
     $formatCount = function (?int $n): string {
         if (!$n) {
@@ -88,36 +85,45 @@ Required vars:
 <section class="widget MonthArchive">
     <h2 class="widget__title">Månader</h2>
 
-    {{-- "Just nu"-CTA — live-startsidan (senaste händelser i realtid). --}}
-    <a
-        href="{{ route($liveRoute, [$param => $monthArchiveSlug]) }}"
-        class="MonthArchive__current{{ $onLivePage ? ' MonthArchive__current--here' : '' }}"
-        @if ($onLivePage) aria-current="page" @endif
-    >
-        <span class="MonthArchive__currentLabel">Just nu</span>
-        <span class="MonthArchive__currentMonth">{{ $currentLabel }}</span>
-        @if ($currentCount > 0)
-            <span class="MonthArchive__count" aria-label="{{ $currentCount }} händelser">{{ $formatCount($currentCount) }}</span>
-        @endif
-    </a>
-
-    {{-- Ett <details>-block per kalenderår. Innevarande + föregående år
-         öppnas default; äldre år är collapsed och kan expanderas. --}}
+    {{-- Ett <details>-block per kalenderår. Innevarande år utfällt
+         default; äldre år är collapsed. "Just nu"-CTA ligger inuti
+         innevarande års block, ovanför månadslistan. --}}
     @foreach ($monthsByYear as $year => $months)
         @php
             $yearTotal = 0;
             foreach ($months as $m) {
                 $yearTotal += $monthCounts[$m['ym']] ?? 0;
             }
+            $isCurrentYear = (string) $year === $thisYear;
             $isOpen = in_array((string) $year, $openYears, true);
+            // Innevarande år: räkna med innevarande månads count i totalen.
+            $displayedYearTotal = $isCurrentYear
+                ? $yearTotal + $currentCount
+                : $yearTotal;
         @endphp
-        <details class="MonthArchive__year"@if ($isOpen) open @endif>
+        <details class="MonthArchive__year{{ $isCurrentYear ? ' MonthArchive__year--current' : '' }}"@if ($isOpen) open @endif>
             <summary class="MonthArchive__yearToggle">
                 <span class="MonthArchive__yearTitle">{{ $year }}</span>
-                @if ($yearTotal > 0)
-                    <span class="MonthArchive__yearCount" aria-label="{{ $yearTotal }} händelser">{{ $formatCount($yearTotal) }}</span>
+                @if ($displayedYearTotal > 0)
+                    <span class="MonthArchive__yearCount" aria-label="{{ $displayedYearTotal }} händelser">{{ $formatCount($displayedYearTotal) }}</span>
                 @endif
             </summary>
+
+            @if ($isCurrentYear)
+                {{-- "Just nu"-CTA — live-startsidan (senaste händelser i realtid). --}}
+                <a
+                    href="{{ route($liveRoute, [$param => $monthArchiveSlug]) }}"
+                    class="MonthArchive__current{{ $onLivePage ? ' MonthArchive__current--here' : '' }}"
+                    @if ($onLivePage) aria-current="page" @endif
+                >
+                    <span class="MonthArchive__currentLabel">Just nu</span>
+                    <span class="MonthArchive__currentMonth">{{ $currentLabel }}</span>
+                    @if ($currentCount > 0)
+                        <span class="MonthArchive__count" aria-label="{{ $currentCount }} händelser">{{ $formatCount($currentCount) }}</span>
+                    @endif
+                </a>
+            @endif
+
             <ul class="MonthArchive__list">
                 @foreach ($months as $m)
                     @php

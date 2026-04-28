@@ -4075,7 +4075,7 @@ h2.widget__title {
     align-items: baseline;
     gap: var(--default-margin-half);
     padding: var(--default-margin-half);
-    margin: 0 calc(-1 * var(--default-margin-half)) var(--default-margin-half);
+    margin: var(--default-margin-third) calc(-1 * var(--default-margin-half)) var(--default-margin-half);
     color: var(--color-link, var(--color-blue-police));
     text-decoration: none;
     border-radius: 4px;
