@@ -1,29 +1,33 @@
-**Status:** aktiv (designfas — Lager 2 behöver omdesign efter 2026-04-27)
-**Senast uppdaterad:** 2026-04-27 — "brott per 1000 inv." kräver BRÅ-data, inte Polisen-data
+**Status:** aktiv (Lager 2 startad 2026-04-28 — BRÅ-sektion live på 5 Tier 1-städer. Lager 1 + Lager 3 + utökning till plats-sidor återstår.)
+**Senast uppdaterad:** 2026-04-28 — Lager 2 BRÅ-sektion deployad i prod
 **Relaterad till:** #24 (Tier 1-städer), #25 (månadsvyer), #37 (SCB-befolkning), #38 (BRÅ-data)
 
-> ## ⚠ Korrigering 2026-04-27 — Lager 2 behöver BRÅ-data
+> ## ✓ Update 2026-04-28 — Lager 2 BRÅ-sektion live
 >
-> "Brott per 1000 invånare" (CrimeGrade-modellen) går **inte** att
-> räkna på Polisens publicerade händelser — det är inte heltäckande
-> brottsstatistik utan ett urval (kanske <5 % av faktiskt anmälda
-> brott) med ojämn täckning mellan regioner. Att räkna metriken på
-> vår data skulle vara desinformation.
+> #38 levererat och i prod. BRÅ-sektion deployad på alla 5 Tier 1-
+> stadssidor (Stockholm, Göteborg, Malmö, Helsingborg, Uppsala) med:
 >
-> **Konsekvens:**
+> - "Anmälda brott i {kommun} kommun {år}" — antal + per 100k
+> - Procent-jämförelse mot befolkningsviktat rikssnitt
+> - Län-grannar-tabell sorterad per_100k med aktiv kommun framhävd
+> - Källhänvisning Brå + mörkertal-disclaimer
 >
-> - **Lager 2:s primära vinnar-metrik är blockerad** tills BRÅ-data
->   integrerats (se nya todo #38).
-> - **#37 är fortfarande klar och användbar** för befolkningsfakta
->   ("Uppsala, 174 982 inv.") och storlekssortering — men inte för
->   brottsstatistik.
-> - **Lager 1 (trend-graf, donut, mest lästa) är opåverkat** — det
->   visar bara våra publicerade händelser och är ärligt så.
-> - **Lager 3 (AI-månadssammanfattning) är opåverkat** — det baseras
->   också på vår egen data.
+> Filer: `app/Http/Controllers/CityController.php`,
+> `resources/views/parts/bra-statistik.blade.php`,
+> `resources/views/city.blade.php`. Helper-API: `App\BraStatistik`.
 >
-> Lager 2:s donut/heatmap kan eventuellt visas baserat på vår data
-> men måste märkas tydligt: "publicerade polishändelser" inte "brott".
+> **Återstår i Lager 2:**
+>
+> - Utökning till plats-sidor (`/plats/{plats}`) som matchar en kommun
+>   via PlacePopulation (t.ex. Lund, Norrköping, Linköping)
+> - Trend-graf 2015–2025 när vi importerar fler årgångar (just nu
+>   bara 2024+2025)
+> - Heatmap över händelse-koordinater (kräver INP-mätning först)
+>
+> **#37 är klar och användbar** för befolkningsfakta separat från
+> BRÅ-sektionen. **Lager 1 (egen data: trend, donut, mest lästa)** och
+> **Lager 3 (AI-månadssammanfattning)** är fortfarande opåverkade —
+> kan startas oberoende.
 
 # Todo #27 — Berika ort- och månadssidor med rikare innehåll
 
