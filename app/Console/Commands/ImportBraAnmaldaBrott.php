@@ -24,8 +24,13 @@ class ImportBraAnmaldaBrott extends Command
     /**
      * Kända URL:er per årgång. Uppdatera när BRÅ släpper ny.
      * Senaste publicering: 2025 (släppt 2026-03-27).
+     *
+     * 2022 + 2015–2020 finns inte som per-kommun-CSV på bra.se — bara via
+     * BRÅ:s interaktiva databas. Inte i scope för automatisk import.
      */
     private const KNOWN_URLS = [
+        2021 => 'https://bra.se/download/18.2e6195c8190a64a78d4201c4/1723120294356/anmalda_brott_kommuner_2021.csv',
+        2023 => 'https://bra.se/download/18.349839a519329944199b20/1731934941054/Anmalda%20brott%20i%20kommunerna%202023.csv',
         2024 => 'https://bra.se/download/18.41109aad195b25241f818dbf/1742982579590/Anm%C3%A4lda%20brott%20kommunerna%202024.csv',
         2025 => 'https://bra.se/download/18.3b6b697b19d24d83762a45f/1774625599791/Anm%C3%A4lda%20brott%20kommunerna%202025.csv',
     ];
@@ -71,10 +76,13 @@ class ImportBraAnmaldaBrott extends Command
             return self::FAILURE;
         }
 
-        $header = array_shift($lines);
-        if ($header === null || stripos($header, 'Kommun') === false) {
-            $this->error("Oväntat header-format: {$header}");
-            return self::FAILURE;
+        // 2023+ har header "Kommun;Antal;Per 100 000 inv.". 2021 saknar header
+        // helt och första raden är data ("Ale kommun;2731;8547"). Ta bort
+        // header bara om första raden ser ut som en header (icke-numerisk
+        // andra-kolumn).
+        $firstLine = $lines[0];
+        if ($firstLine && stripos($firstLine, 'Kommun') !== false && !preg_match('/;\s*\d/', $firstLine)) {
+            array_shift($lines);
         }
 
         // Bygg namn→kod-mappning från scb_kommuner (290 rader, joinas på namn).
@@ -108,6 +116,12 @@ class ImportBraAnmaldaBrott extends Command
             [$namn, $antal, $per100k] = $cols;
             $namn = trim($namn);
 
+            // 2021-formatet har " kommun"-suffix på namnet ("Ale kommun" istället
+            // för "Ale"). Strippa konsekvent. Innehåller också stadsdelar
+            // (Spånga-Tensta etc.) som inte finns i scb_kommuner — de hamnar
+            // i $unmatched och skippas, vilket är korrekt.
+            $namn = preg_replace('/\s+kommun$/i', '', $namn);
+
             // BRÅ använder mellanslag som tusentalsavskiljare ("2 537" → 2537).
             $antalInt = (int) preg_replace('/\s+/', '', $antal);
             $per100kInt = (int) preg_replace('/\s+/', '', $per100k);
@@ -119,6 +133,15 @@ class ImportBraAnmaldaBrott extends Command
 
             $key = $this->normalizeName($namn);
             $kommun = $kommunByName->get($key);
+
+            // 2021-formatet använder genitiv ("Arjeplogs kommun" istället för
+            // "Arjeplog kommun"). Om strict match misslyckas och namnet slutar
+            // på "s", testa utan "s". Fungerar för "Arjeplogs" → "Arjeplog",
+            // "Burlövs" → "Burlöv", men inte för legit-s-namn som "Borås"
+            // (matchar redan i strict).
+            if (!$kommun && str_ends_with($key, 's')) {
+                $kommun = $kommunByName->get(substr($key, 0, -1));
+            }
 
             if (!$kommun) {
                 $unmatched[] = $namn;
@@ -151,9 +174,15 @@ class ImportBraAnmaldaBrott extends Command
         $this->info('Klart. Importerade ' . count($batch) . " kommuner för {$year}.");
 
         if (!empty($unmatched)) {
-            $this->warn('Kommunnamn som inte matchade scb_kommuner (' . count($unmatched) . '):');
-            foreach ($unmatched as $name) {
+            // 2021-formatet inkluderar stadsdelar (Spånga-Tensta, Hässelby-Vällingby
+            // etc.) som inte finns i scb_kommuner — det är korrekt att skippa dem.
+            // Visa bara de första 15 så loggen inte sväller.
+            $this->warn('Namn som inte matchade scb_kommuner (' . count($unmatched) . ' st — ofta stadsdelar):');
+            foreach (array_slice($unmatched, 0, 15) as $name) {
                 $this->line("  - {$name}");
+            }
+            if (count($unmatched) > 15) {
+                $this->line('  ... + ' . (count($unmatched) - 15) . ' till.');
             }
         }
 
@@ -165,11 +194,15 @@ class ImportBraAnmaldaBrott extends Command
     }
 
     /**
-     * Normalisera kommunnamn för join: lowercase + trim.
+     * Normalisera kommunnamn för join: lowercase + trim + dash-normalisering.
      * Behåll åäö (utf8mb4_bin-collation kräver exakt match med rätt accenter).
+     *
+     * 2021-CSV:n använder EM-DASH (U+2013) i "Malung–Sälen", scb_kommuner har
+     * vanlig bindestreck. Ersätt alla dash-varianter med ASCII-dash.
      */
     private function normalizeName(string $name): string
     {
-        return mb_strtolower(trim($name));
+        $normalized = mb_strtolower(trim($name));
+        return str_replace(["\u{2013}", "\u{2014}", "\u{2212}"], '-', $normalized);
     }
 }
