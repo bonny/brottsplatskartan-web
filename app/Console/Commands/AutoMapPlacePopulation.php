@@ -45,8 +45,12 @@ class AutoMapPlacePopulation extends Command
         //   strict:     case-folded only (åäö preserveras) — för exakt match
         //   fuzzy:      accent-stripped — fallback när Polisens RSS missar diakritiska tecken
         // Strict före fuzzy hindrar att t.ex. "Håbo" mappas mot tätorten "Habo".
+        //
+        // ORDNING: ascending på befolkning så största kommer SIST. keyBy gör
+        // last-write-wins, så största tätorten med ett delat namn vinner. Utan
+        // detta valdes Lund i Gävle (580 inv) över Lund i Skåne (98 308 inv).
         $tatortRows = DB::table('scb_tatorter')
-            ->orderByDesc('befolkning')
+            ->orderBy('befolkning')
             ->get(['tatortskod', 'tatort']);
         $tatorterStrict = $tatortRows->keyBy(fn($r) => mb_strtolower(trim($r->tatort)));
         $tatorterFuzzy = $tatortRows->keyBy(fn($r) => self::normalize($r->tatort));

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\BraStatistik;
 use App\CrimeEvent;
 use App\Place;
 use Carbon\Carbon;
@@ -314,6 +315,22 @@ class PlatsController extends Controller
             $relatedLinks = \App\Helper::getRelatedLinks($plats);
         }
 
+        // BRÅ:s officiella anmälda brott (todo #38). Renderar bara om platsen
+        // är mappad till en kommun via PlacePopulation (#37). Län-mappade och
+        // omappade platser får ingen sektion. Visa bara på huvudsidan
+        // (idag-vy) — datumvyer skulle förvirra med årlig statistik bredvid
+        // dagsdata.
+        $bra = null;
+        $braLanGrannar = null;
+        $braRikssnitt = null;
+        if ($isToday) {
+            $bra = BraStatistik::forBpkPlaceName($plats);
+            if ($bra) {
+                $braLanGrannar = BraStatistik::lanGrannar($bra->kommun_kod, $bra->ar);
+                $braRikssnitt = BraStatistik::rikssnitt($bra->ar);
+            }
+        }
+
         $data = [
             'plats' => $plats,
             'place' => $place,
@@ -337,6 +354,9 @@ class PlatsController extends Controller
             'dateForTitle' => $date['date']->isoFormat('D MMMM YYYY'),
             'mapDistance' => 'near',
             'robotsNoindex' => \App\Helper::shouldNoindexForDateRoute($dateOriginalFromArg, $date['date']),
+            'bra' => $bra,
+            'braLanGrannar' => $braLanGrannar,
+            'braRikssnitt' => $braRikssnitt,
         ];
 
         return view('single-plats', $data);

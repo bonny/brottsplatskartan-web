@@ -21,6 +21,35 @@ class BraStatistik
     private const CACHE_TTL_DAYS = 7;
 
     /**
+     * Polisens taxonomi har possessiv-form ("Stockholms län") som
+     * scb_kommuner.lan_namn saknar ("Stockholm"). Mappa explicit för
+     * konsekvent UI över hela sajten.
+     */
+    private const LAN_LABELS = [
+        '01' => 'Stockholms län',
+        '03' => 'Uppsala län',
+        '04' => 'Södermanlands län',
+        '05' => 'Östergötlands län',
+        '06' => 'Jönköpings län',
+        '07' => 'Kronobergs län',
+        '08' => 'Kalmar län',
+        '09' => 'Gotlands län',
+        '10' => 'Blekinge län',
+        '12' => 'Skåne län',
+        '13' => 'Hallands län',
+        '14' => 'Västra Götalands län',
+        '17' => 'Värmlands län',
+        '18' => 'Örebro län',
+        '19' => 'Västmanlands län',
+        '20' => 'Dalarnas län',
+        '21' => 'Gävleborgs län',
+        '22' => 'Västernorrlands län',
+        '23' => 'Jämtlands län',
+        '24' => 'Västerbottens län',
+        '25' => 'Norrbottens län',
+    ];
+
+    /**
      * Senaste tillgängliga år i datan. Cachat 7d.
      */
     public static function senasteAr(): ?int
@@ -28,6 +57,85 @@ class BraStatistik
         return Cache::remember('bra:senaste-ar', now()->addDays(self::CACHE_TTL_DAYS), function () {
             return DB::table('bra_anmalda_brott')->max('ar');
         });
+    }
+
+    /**
+     * Län-label i Polisens taxonomi (med possessiv där det behövs).
+     * Exempel: '01' → 'Stockholms län', '14' → 'Västra Götalands län'.
+     */
+    public static function lanLabel(string $lanKod): string
+    {
+        return self::LAN_LABELS[$lanKod] ?? "Län {$lanKod}";
+    }
+
+    /**
+     * Resolver bpk-platsnamn → kommun_kod via place_population (#37).
+     *
+     * - source=scb_kommun → direct mapping
+     * - source=scb_tatort → första 4 tecken i tatortskod är kommun_kod
+     * - source=scb_lan/none/manual → null (kan inte ge specifik kommun)
+     *
+     * Strict match först (utf8mb4_bin-collation kräver exakta åäö). Fallback
+     * till accent-okänslig fuzzy-match — URL-slugs är ofta ASCII ("norrkoping")
+     * men bpk_place_name har åäö ("Norrköping").
+     */
+    public static function kommunKodForBpkPlaceName(string $bpkPlaceName): ?string
+    {
+        $cacheKey = 'bra:kommun-kod-for-bpk:' . md5($bpkPlaceName);
+
+        return Cache::remember($cacheKey, now()->addDays(self::CACHE_TTL_DAYS), function () use ($bpkPlaceName) {
+            $row = DB::table('place_population')
+                ->where('bpk_place_name', $bpkPlaceName)
+                ->first(['source', 'scb_kommun_kod', 'scb_tatortskod']);
+
+            if (!$row) {
+                // ASCII-slug-fall: "Norrkoping" → "Norrköping". Sök accent-okänsligt
+                // genom att normalisera båda sidor i SQL via REPLACE-kedjan.
+                $normalized = self::stripAccents(mb_strtolower($bpkPlaceName));
+                $row = DB::table('place_population')
+                    ->whereRaw(self::accentInsensitiveSqlExpr() . ' = ?', [$normalized])
+                    ->first(['source', 'scb_kommun_kod', 'scb_tatortskod']);
+            }
+
+            if (!$row) {
+                return null;
+            }
+
+            if ($row->source === 'scb_kommun' && $row->scb_kommun_kod) {
+                return $row->scb_kommun_kod;
+            }
+
+            if ($row->source === 'scb_tatort' && $row->scb_tatortskod) {
+                return substr($row->scb_tatortskod, 0, 4);
+            }
+
+            return null;
+        });
+    }
+
+    private static function stripAccents(string $s): string
+    {
+        return strtr($s, ['å' => 'a', 'ä' => 'a', 'ö' => 'o', 'é' => 'e', 'è' => 'e', 'ü' => 'u']);
+    }
+
+    /**
+     * SQL-uttryck som accent-insensitiviserar bpk_place_name (lowercase + åäö→aao).
+     * MariaDB-kompatibel utan att förlita sig på collation-magic.
+     */
+    private static function accentInsensitiveSqlExpr(): string
+    {
+        return "LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE("
+            . "bpk_place_name, 'å','a'), 'ä','a'), 'ö','o'), 'Å','a'), 'Ä','a'), 'Ö','o'))";
+    }
+
+    /**
+     * BRÅ-statistik direkt på bpk-platsnamn (för plats-sidor). Returnerar
+     * null om platsen är län-mappad eller saknar kommun-koppling.
+     */
+    public static function forBpkPlaceName(string $bpkPlaceName, ?int $ar = null): ?object
+    {
+        $kommunKod = self::kommunKodForBpkPlaceName($bpkPlaceName);
+        return $kommunKod ? self::forKommun($kommunKod, $ar) : null;
     }
 
     /**

@@ -16,10 +16,9 @@
             ? (int) round((($bra->per_100k - $braRikssnitt) / $braRikssnitt) * 100)
             : null;
         $publiceringsAr = $bra->ar + 1;
-        // SCB:s lan_namn saknar "län"-suffix ("Uppsala" inte "Uppsala län").
-        // Använd `$lan` från parent-scope om det finns (rätt formaterat med possessiv:
-        // "Stockholms län", "Västra Götalands län"), annars naive append.
-        $lanLabel = $lan ?? ($bra->lan_namn . ' län');
+        // BraStatistik::lanLabel ger korrekt possessivform ("Stockholms län",
+        // "Västra Götalands län"). scb_kommuner.lan_namn saknar "län"-suffix.
+        $lanLabel = \App\BraStatistik::lanLabel($bra->lan_kod);
     @endphp
 
     <section class="bra-statistik mt-8 p-4 border border-slate-200 rounded-lg bg-slate-50"

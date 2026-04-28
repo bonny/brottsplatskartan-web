@@ -96,6 +96,12 @@ https://brottsplatskartan.localhost/plats/nacka
             <p>Inga händelser har rapporterats från Polisen denna dag.</p>
         @endif
 
+        {{-- BRÅ:s officiella anmälda brott per kommun (todo #38). Renderar
+             bara om platsen är mappad till en kommun via PlacePopulation
+             (#37). Visas EFTER händelselistan så det inte trycker ner
+             primary content på mobil. Mirror av city.blade.php-mönstret. --}}
+        @include('parts.bra-statistik')
+
         @include('parts.daynav')
     </div>
 
