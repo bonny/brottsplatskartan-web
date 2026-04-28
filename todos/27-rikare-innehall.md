@@ -1,5 +1,5 @@
-**Status:** aktiv (Lager 1 komplett (utom heatmap) + Lager 2 BRÅ live + designsystem konsoliderat 2026-04-28. Lager 3 AI-månadssamm. återstår.)
-**Senast uppdaterad:** 2026-04-28 (kväll 2) — designsystem konsoliderat: widget-mönster + DataTable + RankedList + TypeBars + NBSP-helper
+**Status:** aktiv (Lager 1 komplett + Lager 2 BRÅ live + designsystem konsoliderat 2026-04-28. Heatmap avfärdad 2026-04-28. Lager 3 AI-månadssamm. återstår.)
+**Senast uppdaterad:** 2026-04-28 (kväll 2) — heatmap avfärdad (out of scope); designsystem konsoliderat tidigare samma dag
 **Relaterad till:** #24 (Tier 1-städer), #25 (månadsvyer), #37 (SCB-befolkning), #38 (BRÅ-data)
 
 > ## ✓ Update 2026-04-28 — Lager 1 trend-sparkline + Lager 2 BRÅ live
@@ -36,7 +36,7 @@
 >
 > ## ✓ Update 2026-04-28 (kväll) — Lager 1 brottstyp + mest lästa live
 >
-> Lager 1 är nu komplett (utom heatmap):
+> Lager 1 är nu komplett:
 > - **Brottstyp-fördelning** (egen TypeBars-layout, 0 KB extra JS) —
 >   topp 8 brottstyper senaste 30 dagarna
 > - **Mest lästa events** (numrerad lista med permalinks + läsningar)
@@ -69,8 +69,9 @@
 > **Återstår:**
 >
 > **Lager 2:**
-> - Heatmap (kräver INP-mätning före rollout — gles event-volym kanske
->   inte motiverar Leaflet.heat-laddning)
+> - ~~Heatmap~~ — avfärdad 2026-04-28. Bygger inte SEO-värde (canvas/SVG
+>   indexeras inte), INP-risk på mobil, och event-volymen utanför Tier 1
+>   är för gles för meningsfull densitet. Markörer + clustering räcker.
 > - Trend-graf på BRÅ-data 2015–2025 (blockerad av att äldre årgångar
 >   inte är publikt CSV-tillgängliga)
 >
@@ -153,7 +154,7 @@ nedanför fold på mobil.
 | **NY: SCB-tätortsbefolkning** (engångsimport)     | Medel  | Medel          | **Geopackage från SCB:s statistiska tätorter** (CC0, ingen attribution). Uppdateras vart 2–3 år.         |
 | **NY: "Brott per 1000 invånare"**                 | Medel  | **Mycket hög** | CrimeGrade-modellen — den enda validerade vinnaren. Kräver tätortskod-mappning (förberedande todo).      |
 | **NY: Jämförelsetabell** mot 5 grannstäder        | Medel  | **Mycket hög** | **Inbäddad i ortssidan**, inte separata `/jamfor/x-vs-y`-URL:er (thin-content-risk).                     |
-| **NY: Heatmap** över händelse-koordinater         | Medel  | Hög            | **Leaflet.heat** (<5 KB). Mät INP innan rollout — kan vara dyrt vid >5 000 punkter.                      |
+| ~~Heatmap över händelse-koordinater~~             | —      | —              | **Avfärdad 2026-04-28** — canvas/SVG indexeras inte (inget SEO-värde), INP-risk på mobil, event-volym för gles utanför Tier 1. Markörer + clustering räcker. |
 
 ## Lager 3 — AI-genererat innehåll (dyrast, rikast)
 
@@ -196,8 +197,9 @@ nedanför fold på mobil.
 5. **AI-månadssammanfattning** för Tier 1-städer (Lager 3) —
    utöka befintlig DailySummary-infrastruktur. Striktig prompt mot
    egen data för att undvika hallucinationer.
-6. **Heatmap** (Lager 2) — efter att man mätt INP på mobil med
-   riktiga datavolymer.
+6. ~~**Heatmap** (Lager 2)~~ — **avfärdad 2026-04-28**. Inget SEO-värde
+   (canvas/SVG indexeras inte), INP-risk på mobil, event-volym för
+   gles utanför Tier 1 för meningsfull densitet.
 7. **Wikidata-fakta** (Lager 2) — sist eller stryk. Lägst marginal-
    värde efter att Wikipedia-trafik fallit.
 
