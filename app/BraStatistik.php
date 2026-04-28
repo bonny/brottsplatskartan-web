@@ -263,6 +263,21 @@ class BraStatistik
     }
 
     /**
+     * Totalt antal anmälda brott i Sverige för ett år.
+     */
+    public static function rikstotalAntal(?int $ar = null): ?int
+    {
+        $ar = $ar ?? self::senasteAr();
+        if (!$ar) {
+            return null;
+        }
+
+        return Cache::remember("bra:rikstotal:{$ar}", now()->addDays(self::CACHE_TTL_DAYS), function () use ($ar) {
+            return DB::table('bra_anmalda_brott')->where('ar', $ar)->sum('antal');
+        });
+    }
+
+    /**
      * Befolkningsviktat rikssnitt per_100k för ett år.
      *
      * (Sum(antal) / Sum(befolkning)) * 100000. Ger ett ärligt nationellt snitt

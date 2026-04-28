@@ -127,6 +127,87 @@
             </ol>
         </section>
 
+        {{-- Officiell brottsstatistik från BRÅ (todo #38). Komplement till
+             vår egen Polisen-data — våra händelser är ett urval, BRÅ är
+             officiella anmälda brott per kommun. --}}
+        @if ($braSenasteAr && $braRikstotal && $braRikssnitt)
+            @php
+                $_braPubliceringsAr = $braSenasteAr + 1;
+            @endphp
+            <section class="widget">
+                <h2 class="widget__title">Officiell brottsstatistik från Brå – {{ $braSenasteAr }}</h2>
+
+                <p class="lead">
+                    <strong>{{ number_format($braRikstotal, 0, ',', ' ') }}</strong>
+                    anmälda brott i Sverige {{ $braSenasteAr }} —
+                    <strong>{{ number_format($braRikssnitt, 0, ',', ' ') }}</strong>
+                    per 100 000 invånare (befolkningsviktat snitt).
+                </p>
+                <p class="u-text-muted u-margin-top-half">
+                    Det här är officiell statistik från Brottsförebyggande rådet — alla brott
+                    som faktiskt anmäldes till Polisen. Mer komplett bild än våra publicerade
+                    händelser, som bara är ett urval av Polisens RSS-flöden.
+                </p>
+
+                <div class="row u-margin-top">
+                    <div class="col-12 col-md-6">
+                        <h3 class="u-margin-top">Topp 10 — högst per 100 000 invånare</h3>
+                        <table class="Statistics__lanTable">
+                            <thead>
+                                <tr>
+                                    <th>Kommun</th>
+                                    <th class="u-text-right">Antal</th>
+                                    <th class="u-text-right">Per 100 000</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($braTopKommuner as $k)
+                                    <tr>
+                                        <td>{{ $k->kommun_namn }}</td>
+                                        <td class="u-text-right">{{ number_format($k->antal, 0, ',', ' ') }}</td>
+                                        <td class="u-text-right">{{ number_format($k->per_100k, 0, ',', ' ') }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <h3 class="u-margin-top">Botten 10 — lägst per 100 000 invånare</h3>
+                        <table class="Statistics__lanTable">
+                            <thead>
+                                <tr>
+                                    <th>Kommun</th>
+                                    <th class="u-text-right">Antal</th>
+                                    <th class="u-text-right">Per 100 000</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($braBottomKommuner as $k)
+                                    <tr>
+                                        <td>{{ $k->kommun_namn }}</td>
+                                        <td class="u-text-right">{{ number_format($k->antal, 0, ',', ' ') }}</td>
+                                        <td class="u-text-right">{{ number_format($k->per_100k, 0, ',', ' ') }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <p class="u-text-muted u-margin-top">
+                    Källa:
+                    <a href="https://bra.se/statistik/kriminalstatistik/anmalda-brott.html"
+                       rel="external noopener"
+                       target="_blank">Brå</a>
+                    (Brottsförebyggande rådet) — officiell anmäld brottsstatistik, publicerad
+                    {{ \Carbon\Carbon::create($_braPubliceringsAr, 3, 1)->locale('sv')->isoFormat('MMMM YYYY') }}.
+                    Anmälda brott är inte samma sak som faktiskt begångna brott — mörkertalet
+                    varierar mellan brottstyper.
+                </p>
+            </section>
+        @endif
+
         <section class="widget">
             <h2 class="widget__title">Källa och metod</h2>
             <p>
