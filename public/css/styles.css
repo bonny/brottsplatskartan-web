@@ -4083,81 +4083,123 @@ h2.widget__title {
 
 /* City-context — vanligaste typer + mest lästa */
 .CityContext__caption {
-    margin: var(--default-margin-half) 0 0;
+    margin: var(--default-margin) 0 0;
     color: var(--color-gray-1);
     font-size: var(--font-size-small);
     line-height: 1.5;
 }
 
-.CityContext__typesChart {
+/* TypeBars — egen layout (charts-css överlappade etiketter på mobil).
+   Stack-layout: namn+antal på en rad, full-bredd-bar under. */
+.TypeBars {
+    list-style: none;
     margin: 0;
-    /* Charts-css overrides — gör staplarna tydligare */
-    --color: var(--color-blue-police);
+    padding: 0;
 }
 
-.CityContext__typesChart th[scope="row"] {
-    font-weight: normal;
-    color: var(--color-gray-3);
+.TypeBars__row {
+    margin-bottom: 0.7rem;
+}
+
+.TypeBars__row:last-child {
+    margin-bottom: 0;
+}
+
+.TypeBars__label {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.5rem;
+    margin-bottom: 0.25rem;
     font-size: var(--font-size-normal);
-    padding-right: var(--default-margin-half);
+    line-height: 1.3;
 }
 
-.CityContext__typesChart .data {
-    font-weight: 600;
-    margin-left: 0.5em;
+.TypeBars__name {
     color: var(--color-gray-3);
+    overflow-wrap: anywhere;
 }
 
-.CityContext__mostRead {
+.TypeBars__count {
+    color: var(--color-gray-3);
+    font-weight: 700;
+    flex-shrink: 0;
+    font-variant-numeric: tabular-nums;
+}
+
+.TypeBars__track {
+    height: 8px;
+    background: var(--color-gray-2);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.TypeBars__fill {
+    height: 100%;
+    background: var(--color-blue-police);
+    border-radius: 4px;
+}
+
+/* MostRead — numrerad lista med tydliga bullets och tydlig meta-rad. */
+.MostRead {
     margin: 0;
     padding: 0;
     list-style: none;
     counter-reset: mostread;
 }
 
-.CityContext__mostReadItem {
+.MostRead__item {
     counter-increment: mostread;
-    padding: var(--default-margin-half) 0;
+    padding: 0.7rem 0 0.7rem 2.4rem;
     border-bottom: 1px solid var(--color-gray-2);
     position: relative;
-    padding-left: 2.25rem;
 }
 
-.CityContext__mostReadItem:last-child {
+.MostRead__item:first-child {
+    padding-top: 0;
+}
+
+.MostRead__item:first-child::before {
+    top: 0;
+}
+
+.MostRead__item:last-child {
     border-bottom: none;
+    padding-bottom: 0;
 }
 
-.CityContext__mostReadItem::before {
+.MostRead__item::before {
     content: counter(mostread);
     position: absolute;
     left: 0;
-    top: var(--default-margin-half);
-    width: 1.6rem;
-    height: 1.6rem;
+    top: 0.7rem;
+    width: 1.7rem;
+    height: 1.7rem;
     border-radius: 50%;
     background: var(--color-blue-police);
     color: #fff;
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     font-weight: 700;
     display: flex;
     align-items: center;
     justify-content: center;
+    line-height: 1;
 }
 
-.CityContext__mostReadLink {
+.MostRead__link {
     display: block;
     color: var(--color-link);
     font-weight: 600;
     line-height: 1.35;
-    margin-bottom: 0.15rem;
+    margin-bottom: 0.2rem;
     text-decoration: none;
 }
 
-.CityContext__mostReadLink:hover {
+.MostRead__link:hover {
     text-decoration: underline;
 }
 
-.CityContext__mostReadMeta {
+.MostRead__meta {
     display: block;
     color: var(--color-gray-1);
     font-size: var(--font-size-small);

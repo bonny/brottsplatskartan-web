@@ -170,7 +170,13 @@ Layout template for web
     <meta name="theme-color" content="#ffcc33">
     <meta name="apple-itunes-app" content="app-id=1174082309">
     <link rel="manifest" href="/manifest.webmanifest">
-    <link rel="stylesheet" type="text/css" href="/css/styles.css" />
+    @php
+        // Cache-bust styles.css via filemtime så browser-cachade kopior
+        // ersätts vid varje deploy. public_path() löser sökvägen i container.
+        $_stylesPath = public_path('css/styles.css');
+        $_stylesVer = file_exists($_stylesPath) ? filemtime($_stylesPath) : 1;
+    @endphp
+    <link rel="stylesheet" type="text/css" href="/css/styles.css?v={{ $_stylesVer }}" />
 
     @stack('styles')
 

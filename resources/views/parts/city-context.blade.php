@@ -1,22 +1,16 @@
 {{--
     Översikts-widgets för Tier 1-städer (todo #27 Lager 1):
-    - Topp brottstyper senaste 30d (server-rendered charts-css bar)
+    - Topp brottstyper senaste 30d (egen stack-layout — etikett över stapel)
     - Mest lästa events senaste 30d (numrerad länkad lista)
 
-    Renderar bara om datan finns. Visas EFTER händelselistan så primary
-    content (events) inte trycks ner på mobil.
+    Visas EFTER händelselistan så primary content (events) inte trycks ner
+    på mobil.
 
     Förutsätter:
-        $topCrimeTypes  — Collection {parsed_title, count} från Helper::getTopCrimeTypesNearby
+        $topCrimeTypes  — Collection {parsed_title, count}
         $mostReadEvents — Collection av CrimeEvent med view_count_window-property
-        $cityName       — visningsnamn för rubriken (t.ex. "Uppsala")
+        $cityName       — visningsnamn för rubriken
 --}}
-@once
-    @push('styles')
-        <link rel="stylesheet" type="text/css" href="/css/charts.min.css" />
-    @endpush
-@endonce
-
 @php
     $hasTypes = !empty($topCrimeTypes) && count($topCrimeTypes) > 0;
     $hasMostRead = !empty($mostReadEvents) && count($mostReadEvents) > 0;
@@ -28,19 +22,22 @@
     @endphp
     <section class="widget">
         <h2 class="widget__title">Vanligaste händelsetyperna senaste 30 dagarna</h2>
-        <table class="charts-css bar show-labels labels-align-start data-spacing-3 CityContext__typesChart"
-               style="max-height: 320px; --color: var(--color-primary, #0a8fdc);">
-            <tbody>
-                @foreach ($topCrimeTypes as $row)
-                    <tr>
-                        <th scope="row">{{ $row->parsed_title }}</th>
-                        <td style="--size: {{ $row->count / $_maxCount }}">
-                            <span class="data">{{ $row->count }}</span>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
+        <ol class="TypeBars">
+            @foreach ($topCrimeTypes as $row)
+                @php
+                    $_pct = max(2, round(($row->count / $_maxCount) * 100));
+                @endphp
+                <li class="TypeBars__row">
+                    <div class="TypeBars__label">
+                        <span class="TypeBars__name">{{ $row->parsed_title }}</span>
+                        <span class="TypeBars__count">{{ $row->count }}</span>
+                    </div>
+                    <div class="TypeBars__track">
+                        <div class="TypeBars__fill" style="width: {{ $_pct }}%"></div>
+                    </div>
+                </li>
+            @endforeach
+        </ol>
         <p class="CityContext__caption">
             Antal publicerade händelser från Polisen per typ — inte heltäckande
             brottsstatistik. Se BRÅ-sektionen nedan för officiell anmäld statistik.
@@ -51,13 +48,13 @@
 @if ($hasMostRead)
     <section class="widget">
         <h2 class="widget__title">Mest lästa händelser senaste 30 dagarna</h2>
-        <ol class="CityContext__mostRead">
+        <ol class="MostRead">
             @foreach ($mostReadEvents as $event)
-                <li class="CityContext__mostReadItem">
-                    <a class="CityContext__mostReadLink" href="{{ $event->getPermalink() }}">
+                <li class="MostRead__item">
+                    <a class="MostRead__link" href="{{ $event->getPermalink() }}">
                         {{ $event->title_alt_1 ?: $event->parsed_title }}
                     </a>
-                    <span class="CityContext__mostReadMeta">
+                    <span class="MostRead__meta">
                         @if ($event->parsed_title_location)
                             {{ $event->parsed_title_location }} ·
                         @endif
