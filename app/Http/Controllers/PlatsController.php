@@ -555,6 +555,17 @@ class PlatsController extends Controller
 
         $pageTitle = sprintf('Polishändelser i %s, %s', $platsDisplay, $monthYearTitle);
 
+        // AI-månadssammanfattning för Tier 1-städer (todo #27 Lager 3).
+        // Lookup på en redan-genererad rad — ingen on-the-fly AI-generering
+        // (det är schedulerns jobb 1:a varje månad). Tomt visas inget.
+        $monthlySummary = null;
+        if ($isTier1) {
+            $monthlySummary = \App\Models\MonthlySummary::where('area', $platsOriginalFromSlug)
+                ->where('year', (int) $monthRange['start']->format('Y'))
+                ->where('month', (int) $monthRange['start']->format('m'))
+                ->first();
+        }
+
         $data = [
             'plats' => $platsDisplay,
             'platsSlug' => $platsOriginalFromSlug,
@@ -579,6 +590,7 @@ class PlatsController extends Controller
             'mapDistance' => 'near',
             'robotsNoindex' => $robotsNoindex,
             'showAdSense' => $totalEvents >= 3,
+            'monthlySummary' => $monthlySummary,
         ];
 
         return view('single-plats-month', $data);

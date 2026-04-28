@@ -162,6 +162,13 @@ Designprinciper (#25):
             'monthYearTitle' => $monthYearTitle,
         ])
 
+        {{-- AI-månadssammanfattning för Tier 1-städer (todo #27 Lager 3).
+             Visas bara om en pre-genererad rad finns — schedulerns jobb
+             körs 1:a varje månad så aktuella månader visar inget. --}}
+        @if (!empty($monthlySummary))
+            <x-monthly-summary :summary="$monthlySummary" />
+        @endif
+
         {{-- Föregående/nästa månad-nav överst. --}}
         <nav class="MonthNav MonthNav--top" aria-label="Månads-navigation">
             @if ($prevMonthLink)

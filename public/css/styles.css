@@ -4310,6 +4310,45 @@ h2.widget__title {
     color: var(--color-link);
 }
 
+/* AI-månadssammanfattning (todo #27 Lager 3). Widget med generös
+   typografi för läsning av 300-450 ord prosa. */
+.MonthlySummary__body {
+    font-size: 1.05em;
+    line-height: 1.65;
+}
+
+.MonthlySummary__body p {
+    margin: 0 0 1em;
+}
+
+.MonthlySummary__body p:last-child {
+    margin-bottom: 0;
+}
+
+.MonthlySummary__body a {
+    color: var(--color-link);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+}
+
+.MonthlySummary__body a:hover {
+    text-decoration-thickness: 2px;
+}
+
+.MonthlySummary__meta {
+    margin: var(--default-margin) 0 0;
+    padding-top: 0.75em;
+    border-top: 1px solid var(--color-gray-3, #e5e5e5);
+    color: var(--color-gray-1);
+    font-size: var(--font-size-small);
+    line-height: 1.55;
+}
+
+.MonthlySummary__meta a {
+    color: var(--color-link);
+}
+
 /* Wikidata-fakta-rad under city-h1 (todo #27 Lager 2). Kompakt
    inline-list, mobile-first. */
 .CityFacts {

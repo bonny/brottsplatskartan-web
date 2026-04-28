@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\BraStatistik;
 use App\CrimeEvent;
 use App\Models\DailySummary;
+use App\Models\MonthlySummary;
 use App\Services\WikidataService;
 use Illuminate\Http\Request;
 use Creitive\Breadcrumbs\Breadcrumbs;
@@ -248,6 +249,15 @@ class CityController extends Controller
             ? WikidataService::getCityFacts($city['wikidataQid'])
             : null;
 
+        // Förra månadens AI-sammanfattning (todo #27 Lager 3). Visas på
+        // startsidan som "ingång till månadsarkivet". Bara aktuell efter
+        // 1:a varje månad när schedulern hunnit generera. Tomt visas inget.
+        $prevMonthForSummary = Carbon::now()->subMonth();
+        $monthlySummary = MonthlySummary::where('area', $normalizedSlug)
+            ->where('year', (int) $prevMonthForSummary->format('Y'))
+            ->where('month', (int) $prevMonthForSummary->format('m'))
+            ->first();
+
         return view('city', [
             'city' => $city,
             'events' => $events,
@@ -268,6 +278,7 @@ class CityController extends Controller
             'mostReadEvents' => $mostReadEvents,
             'cityName' => explode(' och ', $city['name'])[0],
             'cityFacts' => $cityFacts,
+            'monthlySummary' => $monthlySummary,
         ]);
     }
 }

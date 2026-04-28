@@ -37,10 +37,18 @@
 
                 {{-- AI-sammanfattningar --}}
                 @if($todaysSummary)
-                    <x-daily-summary 
-                        :summary="$todaysSummary" 
-                        title="🤖 Sammanfattning av dagens händelser" 
+                    <x-daily-summary
+                        :summary="$todaysSummary"
+                        title="🤖 Sammanfattning av dagens händelser"
                     />
+                @endif
+
+                {{-- AI-månadssammanfattning för förra månaden (todo #27 Lager 3).
+                     Genereras 1:a varje månad av schedulern — visas bara när
+                     den finns. Är primary content-värdig: 300-450 ord unik
+                     prosa per stad/månad. --}}
+                @if (!empty($monthlySummary))
+                    <x-monthly-summary :summary="$monthlySummary" />
                 @endif
 
                 {{-- @if($yesterdaysSummary)
