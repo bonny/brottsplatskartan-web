@@ -162,11 +162,15 @@
 
     <div class="widget__fullwidth">
         <div class="EventsMap__container">
-            <div 
-                class="EventsMap EventsMap--city" 
+            <div
+                class="EventsMap EventsMap--city"
                 data-events-map-size="{{ $mapSize }}"
                 data-events-map-zoom="{{ $mapZoom }}"
                 data-events-map-lat-lng="{{ json_encode($latLng) }}"
+                @if($locationFilter && $locationType)
+                    data-events-map-location="{{ $locationFilter }}"
+                    data-events-map-location-type="{{ $locationType }}"
+                @endif
                 >Laddar karta...</div>
         </div>
     </div>

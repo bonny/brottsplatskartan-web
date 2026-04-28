@@ -283,6 +283,7 @@ class CityController extends Controller
 
         return view('city', [
             'city' => $city,
+            'citySlug' => $normalizedSlug,
             'events' => $events,
             'breadcrumbs' => $breadcrumbs,
             'pageTitle' => $city['pageTitle'],

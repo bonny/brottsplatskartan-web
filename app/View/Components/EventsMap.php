@@ -15,6 +15,8 @@ class EventsMap extends Component {
         public bool $showMapTitle = true,
         public array $latLng = [59, 15],
         public int $mapZoom = 6,
+        public ?string $locationFilter = null,
+        public ?string $locationType = null,
     ) {
         //
     }

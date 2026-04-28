@@ -215,8 +215,17 @@ class EventsMap {
         this.initMap();
     }
 
+    buildApiUrl() {
+        const base = "/api/eventsMap";
+        const filter = this.options.locationFilter;
+        const type = this.options.locationType;
+        if (!filter || !type) return base;
+        const params = new URLSearchParams({ [type]: filter });
+        return `${base}?${params.toString()}`;
+    }
+
     async loadMarkers() {
-        const response = await fetch("/api/eventsMap");
+        const response = await fetch(this.buildApiUrl());
         const data = await response.json();
         const events = data.data;
         const markers = [];
@@ -443,6 +452,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 element.getAttribute("data-events-map-lat-lng")
             ),
             zoom: parseInt(element.getAttribute("data-events-map-zoom")),
+            locationFilter: element.getAttribute("data-events-map-location"),
+            locationType: element.getAttribute("data-events-map-location-type"),
         });
     });
 });

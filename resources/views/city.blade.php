@@ -32,8 +32,16 @@
                      Visas bara om data finns. --}}
                 @include('parts.city-facts')
 
-                {{-- Karta med händelser --}}
-                <x-events-map :show-map-title="false" :lat-lng=$mapStartLatLng :map-zoom=$mapZoom />
+                {{-- Karta med händelser. location-filter + 30d lookback i
+                     API:t (todo #44) — annars hamnar bara 0–2 markers i bbox
+                     när Sverigekartan-feeden är dominerad av Stockholm. --}}
+                <x-events-map
+                    :show-map-title="false"
+                    :lat-lng="$mapStartLatLng"
+                    :map-zoom="$mapZoom"
+                    :location-filter="$citySlug"
+                    location-type="city"
+                />
 
                 {{-- AI-sammanfattningar --}}
                 @if($todaysSummary)
