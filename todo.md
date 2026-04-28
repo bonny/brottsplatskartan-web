@@ -4,7 +4,7 @@ Index över förbättringsarbete. Varje todo har en egen fil under
 [`todos/`](todos/) med fullständig analys. Konvention och
 mappstruktur: [`todos/README.md`](todos/README.md).
 
-Senast uppdaterad: 2026-04-28 (+#42 klar — månadsnav polerad).
+Senast uppdaterad: 2026-04-28 (+#44 klar — eventsMap-API filtrerar per plats).
 
 ## Aktiva
 
@@ -17,7 +17,6 @@ Senast uppdaterad: 2026-04-28 (+#42 klar — månadsnav polerad).
 | 39  | MSB brand- och räddningsstatistik per kommun    | Skissad — research-fas saknas (parallell till #38)                                    | [todos/39-msb-brand-rakning-statistik.md](todos/39-msb-brand-rakning-statistik.md) |
 | 40  | Trafikverket STRADA olycksstatistik per kommun  | Skissad — research-fas saknas (parallell till #38)                                    | [todos/40-trafikverket-strada-olyckor.md](todos/40-trafikverket-strada-olyckor.md) |
 | 41  | Datumnavigering som årskalender                 | Idé — ny visuell månadsnav (12 rutor + heatmap-färg)                                  | [todos/41-arskalender-datumnavigering.md](todos/41-arskalender-datumnavigering.md) |
-| 44  | EventsMap-API ska filtreras per plats           | Bugg: bara 1 marker på /uppsala fast listan visar 3+. API saknar location-parameter   | [todos/44-eventsmap-filter-per-plats.md](todos/44-eventsmap-filter-per-plats.md)   |
 
 ### Beroenden
 
@@ -57,6 +56,7 @@ Sorterade nyast först.
 
 | #   | Titel                                                               | Klar       | Fil                                                                                          |
 | --- | ------------------------------------------------------------------- | ---------- | -------------------------------------------------------------------------------------------- |
+| 44  | EventsMap-API filtreras per stad eller län                          | 2026-04-28 | [todos/done/44-eventsmap-filter-per-plats.md](todos/done/44-eventsmap-filter-per-plats.md)   |
 | 42  | Designa om månadsnav i högerspalten                                 | 2026-04-28 | [todos/done/42-manadsnav-hogerspalt-design.md](todos/done/42-manadsnav-hogerspalt-design.md) |
 | 43  | Designbuggar på Tier 1-månadsvy (grå ruta + brutna marker-ikoner)   | 2026-04-28 | [todos/done/43-manadsvy-design-bugs.md](todos/done/43-manadsvy-design-bugs.md)               |
 | 27  | Berika ort- och månadssidor med rikare innehåll (Lager 1+2+3)       | 2026-04-28 | [todos/done/27-rikare-innehall.md](todos/done/27-rikare-innehall.md)                         |

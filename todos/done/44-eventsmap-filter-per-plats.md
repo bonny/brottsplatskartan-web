@@ -1,4 +1,4 @@
-**Status:** aktiv
+**Status:** klar 2026-04-28 — `/api/eventsMap` accepterar `?city=` och `?lan=`, lookback 30d med filter, cache-key per parameter; city.blade.php skickar filter via nya komponent-props
 **Senast uppdaterad:** 2026-04-28
 
 # Todo #44 — EventsMap-API ska kunna filtreras per plats
