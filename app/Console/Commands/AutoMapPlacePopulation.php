@@ -125,11 +125,17 @@ class AutoMapPlacePopulation extends Command
         }
 
         if (!$dryRun) {
-            // Wipe + insert (mappning kan ändra sig mellan körningar).
-            DB::table('place_population')->truncate();
-            foreach (array_chunk($rows, 200) as $chunk) {
-                DB::table('place_population')->insert($chunk);
-            }
+            // Wipe + insert i transaktion (mappning kan ändra sig mellan
+            // körningar). delete() istället för truncate() — TRUNCATE auto-
+            // commitar i MariaDB och kan inte rullas tillbaka, så ett fail
+            // mid-loop skulle lämna tabellen tom och bryta BRÅ-fuzzy-resolvern
+            // + stadssidor som lookup:ar mot den.
+            DB::transaction(function () use ($rows) {
+                DB::table('place_population')->delete();
+                foreach (array_chunk($rows, 200) as $chunk) {
+                    DB::table('place_population')->insert($chunk);
+                }
+            });
         }
 
         $this->newLine();
