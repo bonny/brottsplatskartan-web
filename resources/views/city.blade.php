@@ -28,6 +28,10 @@
                     <span class="u-block text-2xl mt-4">{{ $city['title'] }}</span>
                 </h1>
 
+                {{-- Wikidata-fakta (todo #27 Lager 2): grundat + yta.
+                     Visas bara om data finns. --}}
+                @include('parts.city-facts')
+
                 {{-- Karta med händelser --}}
                 <x-events-map :show-map-title="false" :lat-lng=$mapStartLatLng :map-zoom=$mapZoom />
 

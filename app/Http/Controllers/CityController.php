@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\BraStatistik;
 use App\CrimeEvent;
 use App\Models\DailySummary;
+use App\Services\WikidataService;
 use Illuminate\Http\Request;
 use Creitive\Breadcrumbs\Breadcrumbs;
 use Carbon\Carbon;
@@ -80,7 +81,7 @@ class CityController extends Controller
             'pageTitle' => 'Helsingborg: Polishändelser och blåljus',
             'title' => 'Senaste blåljusen och händelser från Polisen i Helsingborg med omnejd.',
             'description' => 'Se aktuella polishändelser och blåljuslarm från räddningstjänsten i Helsingborg och Skåne län.',
-            'wikidataQid' => 'Q26793',
+            'wikidataQid' => 'Q25411',
         ],
         'uppsala' => [
             'name' => 'Uppsala och Uppsala län',
@@ -242,6 +243,11 @@ class CityController extends Controller
             5
         );
 
+        // Wikidata-fakta (todo #27 Lager 2): grundat-år + yta. Cache 30d.
+        $cityFacts = !empty($city['wikidataQid'])
+            ? WikidataService::getCityFacts($city['wikidataQid'])
+            : null;
+
         return view('city', [
             'city' => $city,
             'events' => $events,
@@ -261,6 +267,7 @@ class CityController extends Controller
             'topCrimeTypes' => $topCrimeTypes,
             'mostReadEvents' => $mostReadEvents,
             'cityName' => explode(' och ', $city['name'])[0],
+            'cityFacts' => $cityFacts,
         ]);
     }
 }

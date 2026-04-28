@@ -4309,3 +4309,28 @@ h2.widget__title {
 .BraStatistik__source a {
     color: var(--color-link);
 }
+
+/* Wikidata-fakta-rad under city-h1 (todo #27 Lager 2). Kompakt
+   inline-list, mobile-first. */
+.CityFacts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25em 1em;
+    margin: 0.5em 0 var(--default-margin);
+    color: var(--color-gray-1);
+    font-size: var(--font-size-small);
+    line-height: 1.55;
+}
+
+.CityFacts__item strong {
+    color: var(--color-text);
+    font-weight: 600;
+}
+
+.CityFacts__source {
+    color: var(--color-gray-2);
+}
+
+.CityFacts__source a {
+    color: var(--color-link);
+}
