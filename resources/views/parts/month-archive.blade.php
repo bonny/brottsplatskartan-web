@@ -37,12 +37,15 @@ Required vars:
     if ($monthArchiveType === 'lan') {
         $route = 'lanMonth';
         $param = 'lan';
+        $liveRoute = 'lanSingle';
     } elseif ($isTier1) {
         $route = 'cityMonth';
         $param = 'city';
+        $liveRoute = 'city';
     } else {
         $route = 'platsMonth';
         $param = 'plats';
+        $liveRoute = 'platsSingle';
     }
 
     // "You are here"-detektering — om vi tittar på en månadsvy ska
@@ -52,20 +55,21 @@ Required vars:
     $viewingMonth = $viewingYear !== ''
         ? str_pad((string) Route::current()->parameter('month'), 2, '0', STR_PAD_LEFT)
         : '';
+
+    // CTA pekar på live-startsidan (/stockholm, /lan/uppsala-lan, etc) —
+    // "Just nu" = senaste händelserna i realtid, inte aggregerad månadsvy.
+    $onLivePage = request()->routeIs($liveRoute);
 @endphp
 
 <section class="widget MonthArchive">
     <h2 class="widget__title">Tidigare månader</h2>
 
-    {{-- "Just nu"-CTA — separerar live-månaden från arkivet under. --}}
-    @php
-        $currentIsViewing = $viewingYear === $currentMonth['year']
-            && $viewingMonth === $currentMonth['month'];
-    @endphp
+    {{-- "Just nu"-CTA — pekar på live-startsidan (senaste händelser i
+         realtid). Markeras som "you are here" när användaren är där. --}}
     <a
-        href="{{ route($route, [$param => $monthArchiveSlug, 'year' => $currentMonth['year'], 'month' => $currentMonth['month']]) }}"
-        class="MonthArchive__current{{ $currentIsViewing ? ' MonthArchive__current--here' : '' }}"
-        @if ($currentIsViewing) aria-current="page" @endif
+        href="{{ route($liveRoute, [$param => $monthArchiveSlug]) }}"
+        class="MonthArchive__current{{ $onLivePage ? ' MonthArchive__current--here' : '' }}"
+        @if ($onLivePage) aria-current="page" @endif
     >
         <span class="MonthArchive__currentLabel">Just nu</span>
         <span class="MonthArchive__currentMonth">{{ $currentMonth['label'] }}</span>
