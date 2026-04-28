@@ -4,7 +4,7 @@ Index över förbättringsarbete. Varje todo har en egen fil under
 [`todos/`](todos/) med fullständig analys. Konvention och
 mappstruktur: [`todos/README.md`](todos/README.md).
 
-Senast uppdaterad: 2026-04-28 (#27 Lager 1 komplett: trend + brottstyp + mest lästa. Lager 2 BRÅ utbyggd. Lager 3 AI återstår).
+Senast uppdaterad: 2026-04-28 (#27 design-iteration: widget-mönster + DataTable + RankedList + TypeBars + NBSP-helper. Konsistent design över /uppsala, /plats/* och /statistik).
 
 ## Aktiva
 

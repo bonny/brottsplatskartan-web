@@ -1,5 +1,5 @@
-**Status:** aktiv (Lager 1 komplett (utom heatmap) + Lager 2 BRÅ live 2026-04-28. Lager 3 AI-månadssamm. återstår.)
-**Senast uppdaterad:** 2026-04-28 — Lager 1 brottstyp-fördelning + mest lästa events i prod
+**Status:** aktiv (Lager 1 komplett (utom heatmap) + Lager 2 BRÅ live + designsystem konsoliderat 2026-04-28. Lager 3 AI-månadssamm. återstår.)
+**Senast uppdaterad:** 2026-04-28 (kväll 2) — designsystem konsoliderat: widget-mönster + DataTable + RankedList + TypeBars + NBSP-helper
 **Relaterad till:** #24 (Tier 1-städer), #25 (månadsvyer), #37 (SCB-befolkning), #38 (BRÅ-data)
 
 > ## ✓ Update 2026-04-28 — Lager 1 trend-sparkline + Lager 2 BRÅ live
@@ -37,14 +37,34 @@
 > ## ✓ Update 2026-04-28 (kväll) — Lager 1 brottstyp + mest lästa live
 >
 > Lager 1 är nu komplett (utom heatmap):
-> - **Brottstyp-fördelning** (charts-css bar-graf, 0 KB extra JS) —
+> - **Brottstyp-fördelning** (egen TypeBars-layout, 0 KB extra JS) —
 >   topp 8 brottstyper senaste 30 dagarna
 > - **Mest lästa events** (numrerad lista med permalinks + läsningar)
 >   — joinar mot `crime_views`-tabellen
 >
-> Båda visas i 2-kolumns grid (md:grid-cols-2) mellan händelselistan
-> och BRÅ-sektionen. Helpers: `Helper::getTopCrimeTypesNearby` +
-> `getMostReadEventsNearby`. Cache 30min.
+> Helpers: `Helper::getTopCrimeTypesNearby` + `getMostReadEventsNearby`.
+> Cache 30min.
+>
+> ## ✓ Update 2026-04-28 (kväll 2) — designsystem konsoliderat
+>
+> Flera mobilrundor med designfeedback. Slutlig konsolidering:
+>
+> - **Widget-mönster** (`<section class="widget">` + `widget__title`)
+>   ersatte Tailwind utility-klasser — alla nya sektioner använder
+>   sajtens befintliga vit-bg + gul accent-border
+> - **`.DataTable`** — generisk tabell-styling används av BRÅ-tabeller
+>   (Tier 1, plats-sidor) och alla tabeller på `/statistik`
+> - **`.RankedList`** — numrerad lista med blå cirkel-bullets, används
+>   av mest-lästa-listan och rekord-dagar-listan på `/statistik`
+> - **`.TypeBars`** — egen mobile-first bar-graf (etikett över stapel)
+>   ersatte charts-css som överlappade etiketter på smal viewport.
+>   Används både i city-context och `/statistik` topp-10
+> - **`Helper::number($v, $decimals=0)`** — använder U+00A0 NBSP som
+>   tusentalsavgränsare så "11 921 per 100 000" inte bryts mellan rader
+> - **Cache-busting** på `styles.css` via `filemtime()` — uppdateringar
+>   syns direkt utan hård-refresh
+> - **`getHeadline()`** används på mest-lästa istället för `parsed_title`
+>   så rubrikerna matchar event-listor och event-sidor
 >
 > **Återstår:**
 >
