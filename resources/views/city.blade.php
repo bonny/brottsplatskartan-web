@@ -46,10 +46,6 @@
                     />
                 @endif --}}
 
-                {{-- BRÅ:s officiella anmälda brott per kommun (todo #38). Renderar
-                     bara på Tier 1-städer — kommunKod sätts i CityController. --}}
-                @include('parts.bra-statistik')
-
                 {{-- Händelselista. --}}
                 <div class="widget">
                     <div class="widget__listItems widget__listItems--city u-margin-top">
@@ -62,6 +58,12 @@
                         @endforeach
                     </div>
                 </div>
+
+                {{-- BRÅ:s officiella anmälda brott per kommun (todo #38). Visas
+                     EFTER händelselistan — händelser är primary content, BRÅ
+                     är fördjupande kontext. Mobil-mätning visade att sektionen
+                     ovanför händelser tryckte ner primary content för mycket. --}}
+                @include('parts.bra-statistik')
 
                 {{-- Bakåtnavigering via månadsvyer (ersätter ?page=-paginering, todo #25/#33).
                      CityController hämtar bara senaste 25 — för äldre händelser
