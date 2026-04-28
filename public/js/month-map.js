@@ -65,8 +65,19 @@
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
         }).addTo(map);
 
+        // Custom divIcon — Leaflet's default PNG-markers serveras inte
+        // (vendor/leaflet/images/ saknas). Vi använder CSS-styled dot
+        // för att slippa binärfiler och matcha sajtens färgtema.
+        const markerIcon = L.divIcon({
+            className: 'MonthOverviewMap__marker',
+            iconSize: [14, 14],
+            iconAnchor: [7, 7],
+            popupAnchor: [0, -7],
+            html: '<span class="MonthOverviewMap__markerDot"></span>',
+        });
+
         const markers = events.map((e) => {
-            const marker = L.marker([e.lat, e.lng]);
+            const marker = L.marker([e.lat, e.lng], { icon: markerIcon });
             const popupHtml = `
                 <strong><a href="${e.permalink}">${e.title}</a></strong><br>
                 ${e.time} &middot; ${e.type}

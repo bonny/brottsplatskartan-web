@@ -3947,11 +3947,15 @@ h2.widget__title {
  * innehållsförteckning, och dag-sektioner med id-anchors.
  */
 
+/* Snabba fakta-paragraf på månadsvyn — todo #43.
+ * Ligger redan inuti en .widget, så ingen egen ruta — bara avstånd. */
 .Introtext--monthFacts {
-    background-color: var(--color-gray-1);
-    border-left: 3px solid var(--color-link);
-    padding: var(--default-margin) var(--default-margin-double);
-    margin-bottom: var(--default-margin-double);
+    margin: 0 0 var(--default-margin-double);
+    line-height: 1.5;
+}
+
+.Introtext--monthFacts p {
+    margin: 0;
 }
 
 .MonthNav {
@@ -3982,11 +3986,10 @@ h2.widget__title {
     margin-left: auto;
 }
 
+/* "Hoppa till dag" — kompakt nav (todo #43). Ligger inuti widget,
+ * så ingen egen ruta — bara avstånd och tät radhöjd. */
 .MonthToc {
-    background-color: var(--color-gray-1);
-    padding: var(--default-margin) var(--default-margin-double);
     margin-bottom: var(--default-margin-double);
-    border-radius: 4px;
     line-height: 1.8;
     font-size: var(--font-size-small);
 }
@@ -4036,6 +4039,23 @@ h2.widget__title {
 .MonthOverviewMap__leaflet {
     width: 100%;
     height: 320px;
+}
+
+/* Marker — divIcon (todo #43). Leaflet's default PNG-markers serveras
+ * inte; vi använder en CSS-styled dot i police-blue. */
+.MonthOverviewMap__marker {
+    background: transparent;
+    border: 0;
+}
+
+.MonthOverviewMap__markerDot {
+    display: block;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--color-blue-police);
+    border: 2px solid #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
 }
 
 /* ===========================================================
