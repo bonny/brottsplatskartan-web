@@ -3,8 +3,10 @@
 namespace App\Services;
 
 use App\Ai\Agents\DailySummaryAgent;
+use App\Ai\Agents\MonthlySummaryAgent;
 use App\CrimeEvent;
 use App\Models\DailySummary;
+use App\Models\MonthlySummary;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 
@@ -141,7 +143,7 @@ class AISummaryService
 
     /**
      * Kontrollerar om händelserna har ändrats sedan senaste sammanfattning
-     * 
+     *
      * @param \Illuminate\Database\Eloquent\Collection $events Aktuella händelser
      * @param DailySummary $existingSummary Befintlig sammanfattning
      * @return bool True om händelserna är oförändrade
@@ -152,7 +154,7 @@ class AISummaryService
         if ($events->count() !== $existingSummary->events_count) {
             return false;
         }
-        
+
         // Skapa hash av händelse-ID:n för snabb jämförelse
         $currentEventIds = $events->pluck('id')->sort()->values()->toArray();
         $previousEventIds = collect($existingSummary->events_data ?? [])
@@ -160,7 +162,127 @@ class AISummaryService
             ->sort()
             ->values()
             ->toArray();
-        
+
         return $currentEventIds === $previousEventIds;
+    }
+
+    /**
+     * Genererar en AI-månadssammanfattning för ett område (todo #27 Lager 3).
+     * Kontrollerar först om månadens events ändrats sedan senaste körningen
+     * (cheap path) — bara nya/ändrade events triggar AI-anrop.
+     *
+     * @return array{summary: MonthlySummary|null, ai_generated: bool}
+     */
+    public function generateMonthlySummary(string $area, int $year, int $month): array
+    {
+        $start = Carbon::create($year, $month, 1)->startOfMonth();
+        $end = (clone $start)->endOfMonth();
+        $label = "{$area} {$year}-" . str_pad((string) $month, 2, '0', STR_PAD_LEFT);
+
+        $events = $this->getMonthlyEvents($area, $start, $end);
+        if ($events->isEmpty()) {
+            Log::info("Inga månads-events för {$label}");
+            return ['summary' => null, 'ai_generated' => false];
+        }
+
+        $existing = MonthlySummary::where('area', $area)
+            ->where('year', $year)
+            ->where('month', $month)
+            ->first();
+
+        if ($existing && $this->monthlyEventsUnchanged($events, $existing)) {
+            Log::info("Månads-events oförändrade för {$label} — hoppar över AI");
+            return ['summary' => $existing, 'ai_generated' => false];
+        }
+
+        $prevStart = (clone $start)->subMonth();
+        $prevEnd = (clone $prevStart)->endOfMonth();
+        $prevMonthCount = $this->getMonthlyEvents($area, $prevStart, $prevEnd)->count();
+
+        $summary = $this->generateMonthlySummaryText($events, $area, $start, $prevMonthCount);
+        if (!$summary) {
+            Log::error("AI kunde inte generera månadssammanfattning för {$label}");
+            return ['summary' => null, 'ai_generated' => false];
+        }
+
+        $monthly = MonthlySummary::updateOrCreate(
+            ['area' => $area, 'year' => $year, 'month' => $month],
+            [
+                'summary' => $summary,
+                'events_data' => $events->pluck('id')->values()->toArray(),
+                'events_count' => $events->count(),
+                'prev_month_count' => $prevMonthCount,
+            ]
+        );
+
+        return ['summary' => $monthly, 'ai_generated' => true];
+    }
+
+    /**
+     * Hämtar events för en plats över ett månads-range. Speglar
+     * PlatsController::getEventsInPlatsForMonth() men utan att binda
+     * Service till en Controller. Cachen återanvänds — samma cache-key.
+     */
+    private function getMonthlyEvents(string $area, Carbon $start, Carbon $end): \Illuminate\Database\Eloquent\Collection
+    {
+        $cacheKey = sprintf('getEventsInPlatsForMonth:%s:%s', $area, $start->format('Y-m'));
+
+        return \Illuminate\Support\Facades\Cache::remember($cacheKey, 30 * 60, function () use ($area, $start, $end) {
+            return CrimeEvent::orderBy('created_at', 'desc')
+                ->whereBetween('created_at', [$start, $end])
+                ->where(function ($query) use ($area) {
+                    $query->where('parsed_title_location', $area);
+                    $query->orWhere('administrative_area_level_2', $area);
+                    $query->orWhereHas('locations', function ($q) use ($area) {
+                        $q->where('name', '=', $area);
+                    });
+                })
+                ->with('locations')
+                ->get();
+        });
+    }
+
+    /**
+     * Bygger user-prompt + anropar MonthlySummaryAgent.
+     */
+    private function generateMonthlySummaryText($events, string $area, Carbon $monthStart, int $prevMonthCount): ?string
+    {
+        $eventsText = $this->formatEventsForAI($events);
+        $monthLabel = $monthStart->locale('sv')->isoFormat('MMMM YYYY');
+
+        $userPrompt = "<task>\n"
+            . "  <area>{$area}</area>\n"
+            . "  <month>{$monthLabel}</month>\n"
+            . "  <events_count>{$events->count()}</events_count>\n"
+            . "  <prev_month_count>{$prevMonthCount}</prev_month_count>\n"
+            . "</task>\n\n{$eventsText}";
+
+        try {
+            $response = (new MonthlySummaryAgent)->prompt($userPrompt);
+            $text = (string) $response;
+            return $text !== '' ? $text : null;
+        } catch (\Exception $e) {
+            Log::error("MonthlySummaryAgent fel: " . $e->getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Change-detection för månadssammanfattning. Endast id-array sparas
+     * (events_data) för effektivitet — månader kan ha 200+ events.
+     */
+    private function monthlyEventsUnchanged($events, MonthlySummary $existing): bool
+    {
+        if ($events->count() !== $existing->events_count) {
+            return false;
+        }
+
+        $currentIds = $events->pluck('id')->sort()->values()->toArray();
+        $previousIds = collect($existing->events_data ?? [])
+            ->sort()
+            ->values()
+            ->toArray();
+
+        return $currentIds === $previousIds;
     }
 }
