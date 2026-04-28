@@ -19,13 +19,16 @@ Required vars:
         'label' => title_case($startMonth->isoFormat('MMMM YYYY')),
     ];
 
+    // Bygg lista över past months grupperat per år. Året används som
+    // subtil avdelare i listan när den ändras.
     $pastMonths = [];
     for ($i = 1; $i < 12; $i++) {
         $m = (clone $startMonth)->subMonths($i);
         $pastMonths[] = [
             'year' => $m->format('Y'),
             'month' => $m->format('m'),
-            'label' => title_case($m->isoFormat('MMMM YYYY')),
+            'label' => title_case($m->isoFormat('MMMM')),
+            'fullLabel' => title_case($m->isoFormat('MMMM YYYY')),
         ];
     }
 
@@ -75,17 +78,24 @@ Required vars:
         <span class="MonthArchive__currentMonth">{{ $currentMonth['label'] }}</span>
     </a>
 
-    <ul class="widget__listItems MonthArchive__list">
+    <ul class="MonthArchive__list">
+        @php $previousYear = $currentMonth['year']; @endphp
         @foreach ($pastMonths as $m)
             @php
                 $isHere = $viewingYear === $m['year'] && $viewingMonth === $m['month'];
+                $yearChanged = $m['year'] !== $previousYear;
+                $previousYear = $m['year'];
             @endphp
-            <li class="widget__listItem MonthArchive__item{{ $isHere ? ' MonthArchive__item--here' : '' }}">
+            @if ($yearChanged)
+                <li class="MonthArchive__yearLabel" aria-hidden="true">{{ $m['year'] }}</li>
+            @endif
+            <li class="MonthArchive__item{{ $isHere ? ' MonthArchive__item--here' : '' }}">
                 <a
+                    class="MonthArchive__link"
                     href="{{ route($route, [$param => $monthArchiveSlug, 'year' => $m['year'], 'month' => $m['month']]) }}"
                     @if ($isHere) aria-current="page" @endif
                 >
-                    {{ $m['label'] }}
+                    <span class="MonthArchive__linkLabel">{{ $m['label'] }}</span>
                 </a>
             </li>
         @endforeach

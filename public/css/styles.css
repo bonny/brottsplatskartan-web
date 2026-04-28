@@ -4116,14 +4116,86 @@ h2.widget__title {
     filter: brightness(0.95);
 }
 
+/* Listan över tidigare månader — polerad widget-stil med tightare
+   spacing, hover-affordance och subtila år-avdelare när året skiftar. */
+.MonthArchive__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.MonthArchive__yearLabel {
+    margin-top: var(--default-margin-half);
+    padding: var(--default-margin-third) 0;
+    color: var(--color-gray-1);
+    font-size: var(--font-size-xsmall);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    border-bottom: 1px solid var(--color-gray-2);
+}
+
+.MonthArchive__item {
+    margin: 0;
+    padding: 0;
+    border-bottom: 1px solid var(--color-gray-2);
+}
+
+.MonthArchive__item:last-child {
+    border-bottom: none;
+}
+
+.MonthArchive__link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--default-margin-half) var(--default-margin-half);
+    margin: 0 calc(-1 * var(--default-margin-half));
+    color: var(--color-link, var(--color-blue-police));
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background 0.15s, color 0.15s;
+}
+
+.MonthArchive__link::after {
+    content: "›";
+    color: var(--color-gray-1);
+    font-size: 1.2rem;
+    line-height: 1;
+    transition: transform 0.15s, color 0.15s;
+}
+
+.MonthArchive__link:hover,
+.MonthArchive__link:focus {
+    background: rgba(24, 98, 168, 0.06);
+    text-decoration: none;
+}
+
+.MonthArchive__link:hover::after,
+.MonthArchive__link:focus::after {
+    color: var(--color-blue-police);
+    transform: translateX(2px);
+}
+
+.MonthArchive__linkLabel {
+    font-size: var(--font-size-medium-2);
+}
+
 /* Markera vald månad i listan (you-are-here). */
-.MonthArchive__item--here a {
+.MonthArchive__item--here .MonthArchive__link {
+    background: var(--color-yellow);
+    color: var(--color-blue-police-active);
     font-weight: 600;
 }
 
-.MonthArchive__item--here a::before {
-    content: "▸ ";
-    color: var(--color-blue-police);
+.MonthArchive__item--here .MonthArchive__link:hover,
+.MonthArchive__item--here .MonthArchive__link:focus {
+    background: var(--color-yellow);
+    filter: brightness(0.95);
+}
+
+.MonthArchive__item--here .MonthArchive__link::after {
+    color: var(--color-blue-police-active);
 }
 
 /* ===========================================================
