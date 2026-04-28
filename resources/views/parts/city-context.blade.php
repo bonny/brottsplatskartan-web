@@ -58,7 +58,7 @@
                         @if ($event->parsed_title_location)
                             {{ $event->parsed_title_location }} ·
                         @endif
-                        {{ number_format($event->view_count_window, 0, ',', ' ') }}&nbsp;läsningar
+                        {{ \App\Helper::number($event->view_count_window) }}&nbsp;läsningar
                     </span>
                 </li>
             @endforeach

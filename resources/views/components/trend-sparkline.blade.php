@@ -48,9 +48,9 @@
     <section class="widget TrendSparkline">
         <h2 class="widget__title">{{ $heading }}</h2>
         <p class="TrendSparkline__lead">
-            <strong>{{ number_format($totalEvents, 0, ',', ' ') }}</strong>
+            <strong>{{ \App\Helper::number($totalEvents) }}</strong>
             publicerade händelser från Polisen — i snitt
-            {{ number_format($totalEvents / $days, 1, ',', ' ') }} per dag.
+            {{ \App\Helper::number($totalEvents / $days, 1) }} per dag.
         </p>
         <svg viewBox="0 0 {{ $svgWidth }} {{ $svgHeight }}"
              class="TrendSparkline__chart"

@@ -22,18 +22,18 @@
         </h2>
 
         <p class="BraStatistik__lead">
-            <strong>{{ number_format($bra->antal, 0, ',', ' ') }} anmälda brott</strong>
-            — {{ number_format($bra->per_100k, 0, ',', ' ') }} per 100 000 invånare.
+            <strong>{{ \App\Helper::number($bra->antal) }} anmälda brott</strong>
+            — {{ \App\Helper::number($bra->per_100k) }} per {{ \App\Helper::number(100000) }} invånare.
             @if($procentMotRiket !== null)
                 @if($procentMotRiket > 1)
                     Det är <strong>{{ $procentMotRiket }} % över rikssnittet</strong>
-                    ({{ number_format($braRikssnitt, 0, ',', ' ') }} per 100 000).
+                    ({{ \App\Helper::number($braRikssnitt) }} per {{ \App\Helper::number(100000) }}).
                 @elseif($procentMotRiket < -1)
                     Det är <strong>{{ abs($procentMotRiket) }} % under rikssnittet</strong>
-                    ({{ number_format($braRikssnitt, 0, ',', ' ') }} per 100 000).
+                    ({{ \App\Helper::number($braRikssnitt) }} per {{ \App\Helper::number(100000) }}).
                 @else
                     Det är i nivå med rikssnittet
-                    ({{ number_format($braRikssnitt, 0, ',', ' ') }} per 100 000).
+                    ({{ \App\Helper::number($braRikssnitt) }} per {{ \App\Helper::number(100000) }}).
                 @endif
             @endif
         </p>
@@ -48,7 +48,7 @@
                         <tr>
                             <th scope="col">Kommun</th>
                             <th scope="col" class="num">Anmälda brott</th>
-                            <th scope="col" class="num">Per 100 000</th>
+                            <th scope="col" class="num">Per&nbsp;100&nbsp;000</th>
                             <th scope="col" class="num">vs riket</th>
                         </tr>
                     </thead>
@@ -64,8 +64,8 @@
                                 <td>
                                     {{ $g->kommun_namn }}@if ($isAktiv) <span class="BraStatistik__activeTag">denna sida</span>@endif
                                 </td>
-                                <td class="num">{{ number_format($g->antal, 0, ',', ' ') }}</td>
-                                <td class="num">{{ number_format($g->per_100k, 0, ',', ' ') }}</td>
+                                <td class="num">{{ \App\Helper::number($g->antal) }}</td>
+                                <td class="num">{{ \App\Helper::number($g->per_100k) }}</td>
                                 <td class="num">
                                     @if ($diff === null)
                                         —

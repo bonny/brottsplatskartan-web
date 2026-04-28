@@ -16,6 +16,21 @@ class Helper {
     private static $allLanWithStatsCache = null;
 
     /**
+     * Formattera ett tal med icke-brytande mellanslag (U+00A0) som
+     * tusentalsavgränsare, så "11 921" eller "100 000" inte bryts
+     * mellan två rader när texten radas om.
+     *
+     * Använd istället för `number_format($v, 0, ',', ' ')` i Blade-vyer:
+     *
+     *   {{ \App\Helper::number($v) }}        →  "11 921" med nbsp
+     *   {{ \App\Helper::number($v, 1) }}     →  "1 234,5" med nbsp
+     */
+    public static function number(int|float $value, int $decimals = 0): string
+    {
+        return number_format((float) $value, $decimals, ',', "\xc2\xa0");
+    }
+
+    /**
      * Get chart HTML to be used with CSS from https://chartscss.org/.
      *
      * Själva HTML-genereringen cachas i 15 min (SWR 15/25) eftersom

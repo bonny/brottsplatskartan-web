@@ -55,7 +55,7 @@
                 baserad på Polisens officiella RSS-flöden.
             </p>
             <p class="u-margin-top-half u-text-muted">
-                Totalt i databasen: <strong>{{ number_format($totalEvents, 0, ',', ' ') }}</strong>
+                Totalt i databasen: <strong>{{ \App\Helper::number($totalEvents) }}</strong>
                 händelser. Uppdateras automatiskt var 12:e minut.
             </p>
         </header>
@@ -104,9 +104,9 @@
                         @endphp
                         <tr>
                             <td><a href="{{ route('lanSingle', ['lan' => $_slug]) }}">{{ $lan->administrative_area_level_1 }}</a></td>
-                            <td class="u-text-right">{{ number_format($lan->numEvents['today'] ?? 0, 0, ',', ' ') }}</td>
-                            <td class="u-text-right">{{ number_format($lan->numEvents['last7days'] ?? 0, 0, ',', ' ') }}</td>
-                            <td class="u-text-right">{{ number_format($lan->numEvents['last30days'] ?? 0, 0, ',', ' ') }}</td>
+                            <td class="u-text-right">{{ \App\Helper::number($lan->numEvents['today'] ?? 0) }}</td>
+                            <td class="u-text-right">{{ \App\Helper::number($lan->numEvents['last7days'] ?? 0) }}</td>
+                            <td class="u-text-right">{{ \App\Helper::number($lan->numEvents['last30days'] ?? 0) }}</td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -121,7 +121,7 @@
                         <a href="{{ route('startDatum', ['date' => \Illuminate\Support\Carbon::parse($day['date'])->locale('sv_SE')->translatedFormat('j-F-Y')]) }}">
                             {{ \Illuminate\Support\Carbon::parse($day['date'])->locale('sv_SE')->translatedFormat('j F Y') }}
                         </a>
-                        — <strong>{{ number_format($day['count'], 0, ',', ' ') }}</strong> händelser
+                        — <strong>{{ \App\Helper::number($day['count']) }}</strong> händelser
                     </li>
                 @endforeach
             </ol>
@@ -138,10 +138,10 @@
                 <h2 class="widget__title">Officiell brottsstatistik från Brå – {{ $braSenasteAr }}</h2>
 
                 <p class="lead">
-                    <strong>{{ number_format($braRikstotal, 0, ',', ' ') }}</strong>
+                    <strong>{{ \App\Helper::number($braRikstotal) }}</strong>
                     anmälda brott i Sverige {{ $braSenasteAr }} —
-                    <strong>{{ number_format($braRikssnitt, 0, ',', ' ') }}</strong>
-                    per 100 000 invånare (befolkningsviktat snitt).
+                    <strong>{{ \App\Helper::number($braRikssnitt) }}</strong>
+                    per {{ \App\Helper::number(100000) }} invånare (befolkningsviktat snitt).
                 </p>
                 <p class="u-text-muted u-margin-top-half">
                     Det här är officiell statistik från Brottsförebyggande rådet — alla brott
@@ -151,21 +151,21 @@
 
                 <div class="row u-margin-top">
                     <div class="col-12 col-md-6">
-                        <h3 class="u-margin-top">Topp 10 — högst per 100 000 invånare</h3>
+                        <h3 class="u-margin-top">Topp 10 — högst per {{ \App\Helper::number(100000) }} invånare</h3>
                         <table class="Statistics__lanTable">
                             <thead>
                                 <tr>
                                     <th>Kommun</th>
                                     <th class="u-text-right">Antal</th>
-                                    <th class="u-text-right">Per 100 000</th>
+                                    <th class="u-text-right">Per&nbsp;100&nbsp;000</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($braTopKommuner as $k)
                                     <tr>
                                         <td>{{ $k->kommun_namn }}</td>
-                                        <td class="u-text-right">{{ number_format($k->antal, 0, ',', ' ') }}</td>
-                                        <td class="u-text-right">{{ number_format($k->per_100k, 0, ',', ' ') }}</td>
+                                        <td class="u-text-right">{{ \App\Helper::number($k->antal) }}</td>
+                                        <td class="u-text-right">{{ \App\Helper::number($k->per_100k) }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -173,21 +173,21 @@
                     </div>
 
                     <div class="col-12 col-md-6">
-                        <h3 class="u-margin-top">Botten 10 — lägst per 100 000 invånare</h3>
+                        <h3 class="u-margin-top">Botten 10 — lägst per {{ \App\Helper::number(100000) }} invånare</h3>
                         <table class="Statistics__lanTable">
                             <thead>
                                 <tr>
                                     <th>Kommun</th>
                                     <th class="u-text-right">Antal</th>
-                                    <th class="u-text-right">Per 100 000</th>
+                                    <th class="u-text-right">Per&nbsp;100&nbsp;000</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($braBottomKommuner as $k)
                                     <tr>
                                         <td>{{ $k->kommun_namn }}</td>
-                                        <td class="u-text-right">{{ number_format($k->antal, 0, ',', ' ') }}</td>
-                                        <td class="u-text-right">{{ number_format($k->per_100k, 0, ',', ' ') }}</td>
+                                        <td class="u-text-right">{{ \App\Helper::number($k->antal) }}</td>
+                                        <td class="u-text-right">{{ \App\Helper::number($k->per_100k) }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
