@@ -49,14 +49,10 @@ Required vars:
     $thisYear = $startMonth->format('Y');
     $openYears = array_unique(array_filter([$thisYear, $viewingYear]));
 
+    // Format counts som "1 064" (nbsp som tusentalsavgränsare) — exakt
+    // siffra, inte "1,1k"-förkortning.
     $formatCount = function (?int $n): string {
-        if (!$n) {
-            return '0';
-        }
-        if ($n >= 1000) {
-            return number_format($n / 1000, 1, ',', '') . 'k';
-        }
-        return (string) $n;
+        return \App\Helper::number($n ?? 0);
     };
 
     // todo #33: Tier 1-städer länkar till /{city}/handelser/-namespace.
