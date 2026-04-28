@@ -4067,63 +4067,10 @@ h2.widget__title {
     border: 0;
 }
 
-/* Tidigare månader-widget — "Just nu"-CTA + you-are-here (todo #44).
- * CTA-rutan separerar live-månaden från arkivet under och funkar
- * som genväg från en historisk månadsvy tillbaka till nuet. */
-.MonthArchive__current {
-    display: flex;
-    align-items: baseline;
-    gap: var(--default-margin-half);
-    padding: var(--default-margin-half);
-    margin: var(--default-margin-third) calc(-1 * var(--default-margin-half)) var(--default-margin-half);
-    color: var(--color-link, var(--color-blue-police));
-    text-decoration: none;
-    border-radius: 4px;
-    border-left: 3px solid var(--color-yellow);
-    background: rgba(255, 204, 51, 0.12);
-    transition: background 0.15s;
-}
-
-.MonthArchive__current:hover,
-.MonthArchive__current:focus {
-    background: rgba(255, 204, 51, 0.22);
-    text-decoration: none;
-}
-
-.MonthArchive__currentLabel {
-    font-size: var(--font-size-xsmall);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--color-gray-1);
-    flex-shrink: 0;
-}
-
-.MonthArchive__currentMonth {
-    font-size: var(--font-size-medium-2);
-    font-weight: 600;
-    line-height: 1.2;
-}
-
-/* När man redan tittar på innevarande månad — CTA:n är "you are here". */
-.MonthArchive__current--here {
-    background: var(--color-yellow);
-    color: var(--color-blue-police-active);
-}
-
-.MonthArchive__current--here .MonthArchive__currentLabel {
-    color: var(--color-blue-police-active);
-    opacity: 0.75;
-}
-
-.MonthArchive__current--here:hover,
-.MonthArchive__current--here:focus {
-    background: var(--color-yellow);
-    color: var(--color-blue-police-active);
-    filter: brightness(0.97);
-}
-
-/* Listan över tidigare månader — polerad widget-stil med tightare
-   spacing, hover-affordance och subtila år-avdelare när året skiftar. */
+/* Månadsarkiv-widget i sidopanel (todo #25 + #41).
+ * Innevarande år: list direkt utan toggle, med "Just nu"-rad som
+ * länkar till live-vyn. Historiska år: <details> per kalenderår,
+ * collapsed default. */
 .MonthArchive__list {
     list-style: none;
     margin: 0;
@@ -4186,10 +4133,28 @@ h2.widget__title {
     flex-shrink: 0;
 }
 
-/* "Just nu"-CTA-count skjuts till höger om currentMonth. */
-.MonthArchive__current .MonthArchive__count {
-    margin-left: auto;
-    align-self: center;
+/* "Just nu"-rad — pulserande prick som live-indikator + subtil
+   subtitle med innevarande månad. Samma typografisk vikt som vanliga
+   månadsrader (ingen gul ruta — vunnen accent via pricken). */
+.MonthArchive__livePulse {
+    flex-shrink: 0;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #d92d20;
+    box-shadow: 0 0 0 0 rgba(217, 45, 32, 0.4);
+    animation: MonthArchive__livePulse 2s ease-in-out infinite;
+}
+
+@keyframes MonthArchive__livePulse {
+    0% { box-shadow: 0 0 0 0 rgba(217, 45, 32, 0.45); }
+    70% { box-shadow: 0 0 0 6px rgba(217, 45, 32, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(217, 45, 32, 0); }
+}
+
+.MonthArchive__liveSubtitle {
+    color: var(--color-gray-3);
+    font-weight: 400;
 }
 
 /* Tomma månader — dimmade, men fortfarande klickbara. */
@@ -4207,19 +4172,10 @@ h2.widget__title {
     opacity: 0.7;
 }
 
-.MonthArchive__current--here .MonthArchive__count {
-    color: var(--color-blue-police-active);
-    opacity: 0.75;
-}
-
-/* Per-år expanderbart block — todo #41 fas 2. Varje kalenderår är en
-   egen <details>; innevarande + föregående år öppna by default. */
+/* Historiska år — ett <details> per kalenderår, collapsed default.
+   Summary visar bara årtalet (ingen total — pseudo-precision). */
 .MonthArchive__year {
     margin-top: var(--default-margin-half);
-}
-
-.MonthArchive__year:first-of-type {
-    margin-top: 0;
 }
 
 .MonthArchive__yearToggle {
@@ -4261,19 +4217,6 @@ h2.widget__title {
 
 .MonthArchive__year[open] > .MonthArchive__yearToggle::before {
     transform: rotate(90deg);
-}
-
-.MonthArchive__yearTitle {
-    flex: 1;
-}
-
-.MonthArchive__yearCount {
-    color: var(--color-gray-3);
-    font-size: var(--font-size-xsmall);
-    font-weight: 600;
-    font-variant-numeric: tabular-nums;
-    letter-spacing: 0;
-    text-transform: none;
 }
 
 /* Markera vald månad i listan (you-are-here). */
