@@ -32,6 +32,96 @@ class Helper {
     }
 
     /**
+     * Topp-brottstyper (parsed_title) inom bounding box senaste N dagarna.
+     * Returnerar Collection av {parsed_title, count}. Cachat 30 min.
+     */
+    public static function getTopCrimeTypesNearby(
+        float $lat,
+        float $lng,
+        int $distanceKm,
+        int $days = 30,
+        int $limit = 10
+    ) {
+        $cacheKey = "trend-types:lat{$lat}:lng{$lng}:r{$distanceKm}:d{$days}:l{$limit}";
+
+        return Cache::remember($cacheKey, 30 * MINUTE_IN_SECONDS, function () use ($lat, $lng, $distanceKm, $days, $limit) {
+            $distanceInDegrees = $distanceKm / 111;
+            $latMin = $lat - $distanceInDegrees;
+            $latMax = $lat + $distanceInDegrees;
+            $lngMin = $lng - $distanceInDegrees / cos(deg2rad($lat));
+            $lngMax = $lng + $distanceInDegrees / cos(deg2rad($lat));
+
+            return DB::table('crime_events')
+                ->select('parsed_title')
+                ->selectRaw('COUNT(*) as count')
+                ->whereBetween('location_lat', [$latMin, $latMax])
+                ->whereBetween('location_lng', [$lngMin, $lngMax])
+                ->where('created_at', '>=', now()->subDays($days))
+                ->where('is_public', 1)
+                ->whereNotNull('parsed_title')
+                ->where('parsed_title', '!=', '')
+                ->groupBy('parsed_title')
+                ->orderByDesc('count')
+                ->limit($limit)
+                ->get();
+        });
+    }
+
+    /**
+     * Mest lästa events (efter visningar i crime_views) inom bounding box
+     * senaste N dagarna. Returnerar Eloquent CrimeEvent-modeller med
+     * `view_count_window`-property. Cachat 30 min.
+     */
+    public static function getMostReadEventsNearby(
+        float $lat,
+        float $lng,
+        int $distanceKm,
+        int $days = 30,
+        int $limit = 5
+    ) {
+        $cacheKey = "trend-mostread:lat{$lat}:lng{$lng}:r{$distanceKm}:d{$days}:l{$limit}";
+
+        return Cache::remember($cacheKey, 30 * MINUTE_IN_SECONDS, function () use ($lat, $lng, $distanceKm, $days, $limit) {
+            $distanceInDegrees = $distanceKm / 111;
+            $latMin = $lat - $distanceInDegrees;
+            $latMax = $lat + $distanceInDegrees;
+            $lngMin = $lng - $distanceInDegrees / cos(deg2rad($lat));
+            $lngMax = $lng + $distanceInDegrees / cos(deg2rad($lat));
+
+            // Steg 1: hitta {event_id, views} sorterat efter views.
+            $idsWithViews = DB::table('crime_views as v')
+                ->join('crime_events as e', 'v.crime_event_id', '=', 'e.id')
+                ->select('v.crime_event_id')
+                ->selectRaw('COUNT(v.id) as views')
+                ->where('e.is_public', 1)
+                ->whereBetween('e.location_lat', [$latMin, $latMax])
+                ->whereBetween('e.location_lng', [$lngMin, $lngMax])
+                ->where('v.created_at', '>=', now()->subDays($days))
+                ->groupBy('v.crime_event_id')
+                ->orderByDesc('views')
+                ->limit($limit)
+                ->get();
+
+            if ($idsWithViews->isEmpty()) {
+                return collect();
+            }
+
+            // Steg 2: ladda Eloquent-modellerna så getPermalink() funkar.
+            $idToViews = $idsWithViews->pluck('views', 'crime_event_id');
+            $events = \App\CrimeEvent::with('locations')
+                ->whereIn('id', $idToViews->keys())
+                ->get();
+
+            foreach ($events as $event) {
+                /** @phpstan-ignore-next-line property.notFound */
+                $event->view_count_window = (int) $idToViews->get($event->id);
+            }
+
+            return $events->sortByDesc('view_count_window')->values();
+        });
+    }
+
+    /**
      * Antal events per dag senaste N dagarna inom en bounding box.
      *
      * Använder samma bounding-box-approach som CrimeEvent::getEventsForCity

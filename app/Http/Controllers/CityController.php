@@ -219,12 +219,27 @@ class CityController extends Controller
             }
         }
 
-        // Trend-sparkline: events/dag senaste 90 dagarna (todo #27 Lager 1).
+        // Trend-sparkline + brottstyp-fördelning + mest lästa events
+        // (todo #27 Lager 1).
         $trendCounts = \App\Helper::getDailyEventCountsNearby(
             $city['lat'],
             $city['lng'],
             $city['distance'],
             90
+        );
+        $topCrimeTypes = \App\Helper::getTopCrimeTypesNearby(
+            $city['lat'],
+            $city['lng'],
+            $city['distance'],
+            30,
+            8
+        );
+        $mostReadEvents = \App\Helper::getMostReadEventsNearby(
+            $city['lat'],
+            $city['lng'],
+            $city['distance'],
+            30,
+            5
         );
 
         return view('city', [
@@ -243,6 +258,9 @@ class CityController extends Controller
             'braLanGrannar' => $braLanGrannar,
             'braRikssnitt' => $braRikssnitt,
             'trendCounts' => $trendCounts,
+            'topCrimeTypes' => $topCrimeTypes,
+            'mostReadEvents' => $mostReadEvents,
+            'cityName' => explode(' och ', $city['name'])[0],
         ]);
     }
 }

@@ -64,6 +64,11 @@
                      händelser, inte officiell statistik. --}}
                 <x-trend-sparkline :counts="$trendCounts" :days="90" />
 
+                {{-- Topp brottstyper + mest lästa events (todo #27 Lager 1).
+                     Server-rendered med charts-css för bar-grafen, vanlig
+                     HTML-lista för mest lästa. 0 KB extra JS. --}}
+                @include('parts.city-context')
+
                 {{-- BRÅ:s officiella anmälda brott per kommun (todo #38). Visas
                      EFTER händelselistan — händelser är primary content, BRÅ
                      är fördjupande kontext. Mobil-mätning visade att sektionen
