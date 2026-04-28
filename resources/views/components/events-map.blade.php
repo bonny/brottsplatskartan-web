@@ -20,9 +20,18 @@
         <link rel="stylesheet" href="{{ URL::asset('vendor/leaflet/markercluster/MarkerCluster.Default.min.css') }}">
         <script defer src="{{ URL::asset('vendor/leaflet/markercluster/leaflet.markercluster.min.js') }}"></script>
 
+        @php
+            // Cache-bust events-map.css/js via filemtime — Caddy serverar
+            // statiska assets med immutable max-age=1y, så utan ?v= sitter
+            // gamla kopior kvar i browser-cache i evigheter.
+            $_emJsPath = public_path('js/events-map.js');
+            $_emCssPath = public_path('css/events-map.css');
+            $_emJsVer = file_exists($_emJsPath) ? filemtime($_emJsPath) : 1;
+            $_emCssVer = file_exists($_emCssPath) ? filemtime($_emCssPath) : 1;
+        @endphp
         <script defer src="{{ URL::asset('js/leaflet-loader.js') }}"></script>
-        <script defer src="{{ URL::asset('js/events-map.js') }}"></script>
-        <link rel="stylesheet" href="{{ URL::asset('css/events-map.css') }}">
+        <script defer src="/js/events-map.js?v={{ $_emJsVer }}"></script>
+        <link rel="stylesheet" href="/css/events-map.css?v={{ $_emCssVer }}">
     @endpush
 
     @push('footerscripts')
