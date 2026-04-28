@@ -1,4 +1,4 @@
-**Status:** aktiv
+**Status:** klar 2026-04-28 — Leaflet-markers bytta mot CSS-styled divIcon (police-blue dot), grå bakgrund borttagen från Snabba fakta + Hoppa till dag (låg redan inuti widget-wrapper).
 **Senast uppdaterad:** 2026-04-28
 
 # Todo #43 — Designbuggar på Tier 1-månadsvy
@@ -64,9 +64,9 @@ Sannolikt fix:
 ```js
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
-    iconRetinaUrl: '/images/leaflet/marker-icon-2x.png',
-    iconUrl: '/images/leaflet/marker-icon.png',
-    shadowUrl: '/images/leaflet/marker-shadow.png',
+    iconRetinaUrl: "/images/leaflet/marker-icon-2x.png",
+    iconUrl: "/images/leaflet/marker-icon.png",
+    shadowUrl: "/images/leaflet/marker-shadow.png",
 });
 ```
 
