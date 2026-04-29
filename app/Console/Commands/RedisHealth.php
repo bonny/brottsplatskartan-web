@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Redis;
  * Tröskelvärden för varning:
  * - peak >80 % av maxmemory  → överväg höjning
  * - evicted_keys > 0          → cache slits ut, taket sannolikt för litet
- * - mem_fragmentation_ratio >1.5 eller <1.0 → fragmentering/swap
+ * - mem_fragmentation_ratio >1.5 eller <0.95 → fragmentering/möjlig swap
  */
 class RedisHealth extends Command
 {
@@ -99,8 +99,10 @@ class RedisHealth extends Command
         if ($frag > 1.5 && $fragMeaningful) {
             $warnings[] = 'Fragmentation ratio >1.5 — minnet är fragmenterat.';
         }
-        if ($frag > 0 && $frag < 1.0 && $fragMeaningful) {
-            $warnings[] = 'Fragmentation ratio <1.0 — Redis swappar (allvarligt).';
+        // Värden 0.95–1.0 är normal mätbrus från jemalloc (MADV_DONTNEED) och
+        // lazy faulting. Riktig swap visar sig först som tydligt RSS-underskott.
+        if ($frag > 0 && $frag < 0.95 && $fragMeaningful) {
+            $warnings[] = 'Fragmentation ratio <0.95 — möjligen swap, kontrollera /proc/<pid>/status VmSwap.';
         }
 
         if ($warnings === []) {
