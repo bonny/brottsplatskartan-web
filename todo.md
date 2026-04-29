@@ -4,19 +4,17 @@ Index över förbättringsarbete. Varje todo har en egen fil under
 [`todos/`](todos/) med fullständig analys. Konvention och
 mappstruktur: [`todos/README.md`](todos/README.md).
 
-Senast uppdaterad: 2026-04-28 (+#44 klar — eventsMap-API filtrerar per plats).
+Senast uppdaterad: 2026-04-29 (#39 research klar — implementation rekommenderas; #40 avfärdad — STRADA kommunnivå ej fri).
 
 ## Aktiva
 
-| #   | Titel                                           | Status                                                                                | Fil                                                                                |
-| --- | ----------------------------------------------- | ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| 16  | Rensa / avveckla gamla DO-servern (Dokku)       | Appar stoppade, väntar på soak innan radering                                         | [todos/16-rensa-do-server.md](todos/16-rensa-do-server.md)                         |
-| 25  | Månadsvyer istället för dagsvyer (datum-routes) | Pilot live 2026-04-27 (uppsala + västerås + uppsala-lan). 30d-mätning till 2026-05-27 | [todos/25-manadsvyer-datum-routes.md](todos/25-manadsvyer-datum-routes.md)         |
-| 29  | Audit + reducera indexerade pages               | Datum-routes + thin singles deployat, ~22k pages noindex:as. Mätperiod 30–90d i GSC   | [todos/29-audit-indexerade-pages.md](todos/29-audit-indexerade-pages.md)           |
-| 36  | GSC-mätning av AI-titlars CTR-effekt            | Mätperiod startad 2026-04-27, första check 2026-05-25                                 | [todos/36-gsc-matning-ai-titlar.md](todos/36-gsc-matning-ai-titlar.md)             |
-| 39  | MSB brand- och räddningsstatistik per kommun    | Skissad — research-fas saknas (parallell till #38)                                    | [todos/39-msb-brand-rakning-statistik.md](todos/39-msb-brand-rakning-statistik.md) |
-| 40  | Trafikverket STRADA olycksstatistik per kommun  | Skissad — research-fas saknas (parallell till #38)                                    | [todos/40-trafikverket-strada-olyckor.md](todos/40-trafikverket-strada-olyckor.md) |
-| 41  | Datumnavigering som årskalender                 | Idé — ny visuell månadsnav (12 rutor + heatmap-färg)                                  | [todos/41-arskalender-datumnavigering.md](todos/41-arskalender-datumnavigering.md) |
+| #   | Titel                                            | Status                                                                                | Fil                                                                                |
+| --- | ------------------------------------------------ | ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| 25  | Månadsvyer istället för dagsvyer (datum-routes)  | Pilot live 2026-04-27 (uppsala + västerås + uppsala-lan). 30d-mätning till 2026-05-27 | [todos/25-manadsvyer-datum-routes.md](todos/25-manadsvyer-datum-routes.md)         |
+| 29  | Audit + reducera indexerade pages                | Datum-routes + thin singles deployat, ~22k pages noindex:as. Mätperiod 30–90d i GSC   | [todos/29-audit-indexerade-pages.md](todos/29-audit-indexerade-pages.md)           |
+| 36  | GSC-mätning av AI-titlars CTR-effekt             | Mätperiod startad 2026-04-27, första check 2026-05-25                                 | [todos/36-gsc-matning-ai-titlar.md](todos/36-gsc-matning-ai-titlar.md)             |
+| 39  | MSB/MCF brand- och räddningsstatistik per kommun | Research klar — PxWeb-API på statistik.mcf.se, implementation rekommenderas (~4–6h)   | [todos/39-msb-brand-rakning-statistik.md](todos/39-msb-brand-rakning-statistik.md) |
+| 41  | Datumnavigering som årskalender                  | Idé — ny visuell månadsnav (12 rutor + heatmap-färg)                                  | [todos/41-arskalender-datumnavigering.md](todos/41-arskalender-datumnavigering.md) |
 
 ### Beroenden
 
@@ -24,9 +22,9 @@ Senast uppdaterad: 2026-04-28 (+#44 klar — eventsMap-API filtrerar per plats).
 
 ### Föreslagen ordning
 
-1. **#25 Månadsvyer** — Uppsala-pilot pågår, 30d-mätning till 2026-05-27
-2. **#41** — datumnavigering som årskalender — bygger på #42-fundament
-3. **#16** (DO-avveckling) — efter ~2026-05-15 när soak är klar
+1. **#39 MSB/MCF räddningsstatistik** — research klar, redo för implementation (~4–6h)
+2. **#25 Månadsvyer** — Uppsala-pilot pågår, 30d-mätning till 2026-05-27
+3. **#41** — datumnavigering som årskalender — bygger på #42-fundament
 4. **#29** — passiv GSC-mätperiod, åtgärder efter data
 5. **#36** — passiv GSC-mätning, första check 2026-05-25
 
@@ -39,7 +37,6 @@ eller markera todon som klar.
 
 | Datum      | Åtgärd                                                       | Todo                                       |
 | ---------- | ------------------------------------------------------------ | ------------------------------------------ |
-| 2026-05-15 | DO-server: radera efter soak (statiska sajter migrerade)     | [#16](todos/16-rensa-do-server.md)         |
 | 2026-05-25 | GSC-mätning AI-titlar — första check (4v post-deploy)        | [#36](todos/36-gsc-matning-ai-titlar.md)   |
 | 2026-05-27 | Månadsvyer-pilot — 30d-mätning Uppsala/Västerås              | [#25](todos/25-manadsvyer-datum-routes.md) |
 | 2026-06-22 | GSC-mätning AI-titlar — andra check (8v)                     | [#36](todos/36-gsc-matning-ai-titlar.md)   |
@@ -56,6 +53,7 @@ Sorterade nyast först.
 
 | #   | Titel                                                               | Klar       | Fil                                                                                          |
 | --- | ------------------------------------------------------------------- | ---------- | -------------------------------------------------------------------------------------------- |
+| 16  | Rensa / avveckla gamla DO-servern (Dokku)                           | 2026-04-29 | [todos/done/16-rensa-do-server.md](todos/done/16-rensa-do-server.md)                         |
 | 44  | EventsMap-API filtreras per stad eller län                          | 2026-04-28 | [todos/done/44-eventsmap-filter-per-plats.md](todos/done/44-eventsmap-filter-per-plats.md)   |
 | 42  | Designa om månadsnav i högerspalten                                 | 2026-04-28 | [todos/done/42-manadsnav-hogerspalt-design.md](todos/done/42-manadsnav-hogerspalt-design.md) |
 | 43  | Designbuggar på Tier 1-månadsvy (grå ruta + brutna marker-ikoner)   | 2026-04-28 | [todos/done/43-manadsvy-design-bugs.md](todos/done/43-manadsvy-design-bugs.md)               |
@@ -93,8 +91,9 @@ Sorterade nyast först.
 
 ## Avfärdade / sammanslagna
 
-| #   | Titel                                      | Beslut                                         | Fil                                                                                                |
-| --- | ------------------------------------------ | ---------------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| 18  | Attribution vid statiska kartbilder (ODbL) | Avfärdad 2026-04-24 — gråzon, om-sidan räcker  | [todos/rejected/18-attribution-vid-kartbilder.md](todos/rejected/18-attribution-vid-kartbilder.md) |
-| 9   | Extern DB-backup                           | Avfärdad 2026-04-21 — Hetzner-snapshots räcker | [todos/rejected/09-extern-db-backup.md](todos/rejected/09-extern-db-backup.md)                     |
-| 2   | SEO-review (legacy)                        | Sammanslagen med #11 (2026-04-21)              | [todos/rejected/02-seo-review.md](todos/rejected/02-seo-review.md)                                 |
+| #   | Titel                                          | Beslut                                                                            | Fil                                                                                                  |
+| --- | ---------------------------------------------- | --------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| 40  | Trafikverket STRADA olycksstatistik per kommun | Avfärdad 2026-04-29 — kommunnivå kräver myndighetsavtal, öppen data bara län-nivå | [todos/rejected/40-trafikverket-strada-olyckor.md](todos/rejected/40-trafikverket-strada-olyckor.md) |
+| 18  | Attribution vid statiska kartbilder (ODbL)     | Avfärdad 2026-04-24 — gråzon, om-sidan räcker                                     | [todos/rejected/18-attribution-vid-kartbilder.md](todos/rejected/18-attribution-vid-kartbilder.md)   |
+| 9   | Extern DB-backup                               | Avfärdad 2026-04-21 — Hetzner-snapshots räcker                                    | [todos/rejected/09-extern-db-backup.md](todos/rejected/09-extern-db-backup.md)                       |
+| 2   | SEO-review (legacy)                            | Sammanslagen med #11 (2026-04-21)                                                 | [todos/rejected/02-seo-review.md](todos/rejected/02-seo-review.md)                                   |

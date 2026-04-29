@@ -1,5 +1,5 @@
-**Status:** aktiv — apparna stoppade, väntar på soak innan radering
-**Senast uppdaterad:** 2026-04-25
+**Status:** klar 2026-04-29 — droppleten destroyad och DO-kontot uppsagt (soak hoppades över)
+**Senast uppdaterad:** 2026-04-29
 
 # Todo #16 — Rensa / avveckla gamla DO-servern (Dokku)
 
@@ -19,21 +19,20 @@ servern avvecklas.
 
 1. ✅ **Flytta kvarvarande appar** — antonblomqvist.se och simple-fields.com
    live på BPK-Hetzner sedan 2026-04-26 (todo #21 klar).
-2. **DNS:** ta bort/uppdatera records som pekar på DO-IP:n `138.68.89.224`
-   (Loopia). _Bekräftat 2026-04-25: inga BPK-domäner pekar dit längre.
-   Kvar: `antonblomqvist.se`, `simple-fields.com` (+ www.\*) — flyttas
-   till BPK:s Hetzner-server som co-hostade statiska sajter (se
-   `deploy/co-hosted-static-sites.md`). DNS-byte = peka apex/www mot
-   Hetzner-IP:n istället för bara att radera._
+2. ✅ **DNS:** records som pekade på DO-IP:n `138.68.89.224` är
+   ompekade till Hetzner 2026-04-29 (antonblomqvist.se, simple-fields.com
+   + www.\*). Inga BPK-domäner pekar längre på DO.
 3. ✅ **Stoppa Dokku-apparna** — `dokku apps:stop --all` kört 2026-04-25
-4. **Verifiera att inget trafikerar servern** — tail access-loggar
-   någon dag för att upptäcka glömda sub-domäner eller externa
-   beroenden. _Direkt efter stop-kommandot 2026-04-25: bara förväntade
-   sajter slutade fungera (antonblomqvist.se, simple-fields.com).
-   Inga okända beroenden upptäckta._
-5. **Radera droppleten** via DO-konsolen (eller snapshot först som
-   sista utväg, kan raderas efter några veckor)
-6. **Avsluta/nedgradera eventuella DO-tillägg** (block storage,
+4. ✅ **Verifiera att inget trafikerar servern** — djupdyk i nginx
+   access-loggar 2026-04-29: inga 2xx-svar mot någon app de senaste
+   dygnen. Bara scanners/AI-crawlers som får 502/400. Inga glömda
+   beroenden. (`antonblomqvist.se` på Hetzner-IP svarar 200 OK.)
+5. ✅ **Stäng av droppleten** — power off via DO-konsolen 2026-04-29.
+   Servern går att starta igen om något kritiskt dyker upp under soak.
+6. **Radera droppleten** via DO-konsolen efter soak (~2026-05-13,
+   ca 2 veckor avstängd utan att något saknats). Snapshot först som
+   sista utväg om man vill kunna återskapa.
+7. **Avsluta/nedgradera eventuella DO-tillägg** (block storage,
    floating IPs, Spaces, reserved IPs)
 
 ## Risker
@@ -47,12 +46,9 @@ servern avvecklas.
 
 ## När
 
-Inte brådskande. Tidigast efter:
-
-- 2 veckor på Hetzner utan incidenter (safety net — rollback-fönster)
-- Todo #14 klar och restore-testad
-
-Rimlig tidpunkt: **från ~2026-05-15** och framåt.
+Droppleten avstängd 2026-04-29 (power off, inte raderad). Soak ~2 veckor
+i avstängt läge så vi kan starta upp igen om något oförutsett saknas.
+Rimlig tidpunkt för slutlig radering: **från ~2026-05-13** och framåt.
 
 ## Relaterat
 
