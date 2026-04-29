@@ -61,7 +61,18 @@ class FeedController extends Controller
         if ($item->parsed_title_location) {
             $strLocationURLPart .= ", " . $item->parsed_title_location;
         }
-        
+
+        // Disambiguering med län från Polisens API. Lägg till om vi inte
+        // redan har länet i strängen (parsed_title_location är ibland länet,
+        // ibland en stad — om det redan är länet hoppar vi över för att
+        // slippa dubblera signalen).
+        if (
+            ! empty($item->polisen_location_name)
+            && stripos($strLocationURLPart, $item->polisen_location_name) === false
+        ) {
+            $strLocationURLPart .= ", " . $item->polisen_location_name;
+        }
+
         // Erätt "snapparp, , Halmstad " så det inte blir dubbla komman i anrop till Google = blir zero results.
         $strLocationURLPart = str_replace(', ,', ',', $strLocationURLPart);
         $strLocationURLPart = trim($strLocationURLPart, ", ");
@@ -71,7 +82,38 @@ class FeedController extends Controller
             urlencode($strLocationURLPart) // 1
         );
 
+        // Viewport-bias från Polisens grova GPS (län-/kommun-mittpunkt).
+        // ~50 km bbox runt punkten → påverkar Googles träff för
+        // tvetydiga ortnamn (t.ex. "Partille") utan att restriktivt utesluta
+        // träffar utanför boxen. Se #48 fas 2.
+        if (! empty($item->polisen_gps_lat) && ! empty($item->polisen_gps_lng)) {
+            $bounds = $this->buildBoundsBox(
+                (float) $item->polisen_gps_lat,
+                (float) $item->polisen_gps_lng
+            );
+            $apiUrl .= '&bounds=' . urlencode($bounds);
+        }
+
         return $apiUrl;
+    }
+
+    /**
+     * Bygger en ~50 km bounding box runt en punkt för Googles `bounds`-param.
+     * Format: "sw_lat,sw_lng|ne_lat,ne_lng".
+     *
+     * 0.45° lat ≈ 50 km. Lng-graden krymper med cos(lat) på höga breddgrader
+     * — runt 60°N är 0.9° ≈ 50 km. För Sverige (55°–69°N) räcker fast 0.9°
+     * som approximation; biasen är icke-restriktiv så exakthet spelar mindre roll.
+     */
+    private function buildBoundsBox(float $lat, float $lng): string
+    {
+        $latDelta = 0.45;
+        $lngDelta = 0.9;
+
+        $sw = sprintf('%.6f,%.6f', $lat - $latDelta, $lng - $lngDelta);
+        $ne = sprintf('%.6f,%.6f', $lat + $latDelta, $lng + $lngDelta);
+
+        return $sw . '|' . $ne;
     }
 
     /**
@@ -431,6 +473,7 @@ class FeedController extends Controller
             }
 
             [$gpsLat, $gpsLng] = $this->parseGps($item['location']['gps'] ?? null);
+            $locationName = $item['location']['name'] ?? null;
 
             $datetime = ! empty($item['datetime']) ? strtotime($item['datetime']) : null;
             $isoDatetime = $datetime ? date(\DateTime::ATOM, $datetime) : null;
@@ -448,6 +491,7 @@ class FeedController extends Controller
                 'polisen_id' => $polisenId,
                 'polisen_gps_lat' => $gpsLat,
                 'polisen_gps_lng' => $gpsLng,
+                'polisen_location_name' => $locationName,
             ]);
 
             $data["numItemsAdded"]++;

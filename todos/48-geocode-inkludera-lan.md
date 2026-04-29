@@ -1,4 +1,4 @@
-**Status:** aktiv — Fas 1 (RSS → JSON-API) pågår
+**Status:** aktiv — Fas 1 + Fas 2 implementerade 2026-04-29, soak pågår
 **Senast uppdaterad:** 2026-04-29
 
 # Todo #48 — Polisens JSON-API + bättre geocoding
@@ -57,14 +57,26 @@ Värde oavsett geocoding: stabilt `id`, separat `type`-fält, strukturerad
 - Cache 60s (motsvarar nuvarande SimplePie-cache)
 - Pensionera SimplePie-importen (kan tas bort när Fas 1 är stabilt soak:ad)
 
-### Fas 2 — Geocoding-förbättring
+### Fas 2 — Geocoding-förbättring (klar 2026-04-29)
 
-Kräver Fas 1 (för att ha `location.gps`).
+Implementerat:
 
-- Använd `location.gps` som `bounds`-parameter i Google Geocoding-anropet
-  (Viewport Biasing → bättre träff för "partille")
-- Lägg till `, {län}` i query-strängen som extra signal
-- Eventuell backfill-task för gamla felgeokodade events (separat scope)
+- Ny kolumn `polisen_location_name` (län-namn från `location.name`) — fångas
+  i import. Alltid län-nivå, till skillnad från `parsed_title_location`
+  som ibland är stad.
+- `getGeocodeURL` lägger till `, {polisen_location_name}` i Google-querysträngen
+  om länet inte redan finns där.
+- Viewport-bias via `&bounds=sw_lat,sw_lng|ne_lat,ne_lng` — ~50 km bbox runt
+  `polisen_gps_lat/lng`. Icke-restriktiv → biasa, inte begränsa.
+- Backfill av tidigare JSON-importerade rader gjord lokalt; gamla RSS-rader
+  har inga av fälten och påverkas inte (de geokodades redan).
+
+Eventuell uppföljning:
+
+- Backfill-task för gamla felgeokodade events (Kumla→Stockholm-fallet) —
+  separat scope, behöver mätperiod först
+- `geocodeItemFallbackVersion` använder fortfarande gamla query-formatet —
+  kan harmoniseras om vi ser att fallback-vägen träffas ofta i loggarna
 
 ## Risker
 

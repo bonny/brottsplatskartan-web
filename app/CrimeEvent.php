@@ -31,6 +31,7 @@ class CrimeEvent extends Model implements Feedable {
         'polisen_id',
         'polisen_gps_lat',
         'polisen_gps_lng',
+        'polisen_location_name',
         'parsed_date',
         'parsed_title',
         'parsed_title_location',

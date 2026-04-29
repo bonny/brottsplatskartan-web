@@ -4,7 +4,7 @@ Index över förbättringsarbete. Varje todo har en egen fil under
 [`todos/`](todos/) med fullständig analys. Konvention och
 mappstruktur: [`todos/README.md`](todos/README.md).
 
-Senast uppdaterad: 2026-04-29 (#48 reviderad — split i Fas 1 RSS→JSON-API + Fas 2 geocoding-bias).
+Senast uppdaterad: 2026-04-29 (#48 Fas 1 + Fas 2 implementerade — RSS→JSON-API + viewport-bias + län i geocoding).
 
 ## Aktiva
 
@@ -18,7 +18,7 @@ Senast uppdaterad: 2026-04-29 (#48 reviderad — split i Fas 1 RSS→JSON-API + 
 | 45  | Historik per plats: år-vy + trend                | Skissad — fas 1 mini-trend (2h), fas 2 /{plats}/statistik/{år}-vy                     | [todos/45-historik-per-plats.md](todos/45-historik-per-plats.md)                     |
 | 46  | Slå samman Händelser/Senaste/Mest lästa i menyn  | Importerad från GitHub #76 — kräver design + redirect-strategi                        | [todos/46-meny-handelser-konsolidering.md](todos/46-meny-handelser-konsolidering.md) |
 | 47  | Slå ihop stad-URLs (plats vs plats+län vs län)   | Importerad från GitHub #68 — fortsättning på #23/#35-mönstret                         | [todos/47-sla-ihop-stad-urls.md](todos/47-sla-ihop-stad-urls.md)                     |
-| 48  | Polisens JSON-API + bättre geocoding             | Reviderad 2026-04-29 — Fas 1 RSS→JSON-API pågår, Fas 2 viewport-bias efteråt          | [todos/48-geocode-inkludera-lan.md](todos/48-geocode-inkludera-lan.md)               |
+| 48  | Polisens JSON-API + bättre geocoding             | Fas 1 + Fas 2 deployat 2026-04-29 — soak pågår, mätperiod på geo-träff                | [todos/48-geocode-inkludera-lan.md](todos/48-geocode-inkludera-lan.md)               |
 
 ### Beroenden
 
