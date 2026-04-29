@@ -373,7 +373,13 @@ class FeedController extends Controller
      */
     public function updateFeedsFromPolisen()
     {
-        $items = Cache::remember('polisen_api_events', 60, function () {
+        // 75s cache → max 48 anrop/h, väl under Polisens tak (60/h, 1440/dygn,
+        // min 10s mellan anrop). Endast lyckade svar cachas så att transienta
+        // fel inte tystar importen i en hel cacheperiod.
+        $cacheKey = 'polisen_api_events';
+        $items = Cache::get($cacheKey);
+
+        if ($items === null) {
             $response = Http::timeout(15)
                 ->acceptJson()
                 ->withHeaders(['User-Agent' => 'Brottsplatskartan/1.0 (+https://brottsplatskartan.se)'])
@@ -385,11 +391,14 @@ class FeedController extends Controller
                     'status' => $response->status(),
                     'url' => $this->apiUrl,
                 ]);
-                return [];
+                $items = [];
+            } else {
+                $items = $response->json() ?: [];
+                if (! empty($items)) {
+                    Cache::put($cacheKey, $items, 75);
+                }
             }
-
-            return $response->json() ?: [];
-        });
+        }
 
         $data = [
             "numItemsAdded" => 0,
@@ -407,8 +416,13 @@ class FeedController extends Controller
             $itemMd5Permalink = md5($permalink);
 
             // Dedup: nya importer har polisen_id; gamla rader har bara md5.
-            $existing = CrimeEvent::where('polisen_id', $polisenId)
-                ->orWhere('md5', $itemMd5Permalink)
+            // withoutGlobalScopes() — annars missar vi events som markerats
+            // is_public=false av ContentFilterService och re-importerar dem.
+            $existing = CrimeEvent::withoutGlobalScopes()
+                ->where(function ($q) use ($polisenId, $itemMd5Permalink) {
+                    $q->where('polisen_id', $polisenId)
+                        ->orWhere('md5', $itemMd5Permalink);
+                })
                 ->exists();
 
             if ($existing) {

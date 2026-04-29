@@ -24,16 +24,20 @@ Två sammanhängande förbättringar:
   (`FeedController::geocodeItem`, rad 83). Polisens lat/lng används inte alls.
 - Exempel på fel: `trafikolycka-orebro-kumla-103228` hamnade under `stockholms-lan/`.
 
-**Polisens JSON-API** (`https://polisen.se/api/events`) — officiellt sedan ~2017,
-ingen API-nyckel, dokumenterat på polisen.se. Strukturen oförändrad sedan dess.
+**Polisens JSON-API:** <https://polisen.se/api/events> (klicka för att se 500
+senaste händelserna direkt). Officiellt sedan ~2017, ingen API-nyckel.
 
-| Aspekt      | RSS (idag)       | JSON-API                              |
-| ----------- | ---------------- | ------------------------------------- |
-| ID          | bara guid/url    | numeriskt `id`                        |
-| Brottstyp   | inbäddat i titel | separat `type`-fält                   |
-| Plats       | bara i titel     | `location.name` (län-nivå)            |
-| Koordinater | saknas           | `location.gps = "lat,lng"`            |
-| Rate-limit  | odokumenterat    | odokumenterat — community: max ~1/min |
+- Dokumentation: <https://polisen.se/om-polisen/om-webbplatsen/oppna-data/api-over-polisens-handelser/>
+- Regler: <https://polisen.se/om-polisen/om-webbplatsen/oppna-data/regler-for-oppna-data/>
+- Filter-parametrar: `?DateTime=2026-04`, `?locationname=Stockholm;Järfälla`, `?type=Misshandel;Rån`
+
+| Aspekt      | RSS (idag)       | JSON-API                                       |
+| ----------- | ---------------- | ---------------------------------------------- |
+| ID          | bara guid/url    | numeriskt `id`                                 |
+| Brottstyp   | inbäddat i titel | separat `type`-fält                            |
+| Plats       | bara i titel     | `location.name` (län-nivå)                     |
+| Koordinater | saknas           | `location.gps = "lat,lng"`                     |
+| Rate-limit  | odokumenterat    | min 10s/anrop, max 60/h, max 1440/dygn → HTTP 429 |
 
 **Viktig nyans:** `location.gps` i JSON-API är **mittpunkt för län/kommun**, inte
 event-precis. Räcker för viewport-bias men inte för kart-pin. Den event-precisa
