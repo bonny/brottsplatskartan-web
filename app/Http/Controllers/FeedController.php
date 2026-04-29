@@ -19,12 +19,7 @@ class FeedController extends Controller
 
     public function __construct(FeedParserController $feedParser)
     {
-        // Polisens officiella JSON-API över händelser. Migrerade hit från
-        // RSS-flödet 2026-04-29 (todo #48 fas 1) — ger stabilt id, separat
-        // type-fält och grov location.gps för viewport-bias i fas 2.
-        $this->apiUrl = 'https://polisen.se/api/events';
-        $this->apiUrl = \App\Helper::makeUrlUsePolisenDomain($this->apiUrl);
-
+        $this->apiUrl = \App\Helper::makeUrlUsePolisenDomain('https://polisen.se/api/events');
         $this->feedParser = $feedParser;
     }
 
@@ -62,10 +57,9 @@ class FeedController extends Controller
             $strLocationURLPart .= ", " . $item->parsed_title_location;
         }
 
-        // Disambiguering med län från Polisens API. Lägg till om vi inte
-        // redan har länet i strängen (parsed_title_location är ibland länet,
-        // ibland en stad — om det redan är länet hoppar vi över för att
-        // slippa dubblera signalen).
+        // parsed_title_location är ibland stad, ibland län — komplettera med
+        // Polisens säkra län-namn för disambiguering, men bara om det inte
+        // redan står där.
         if (
             ! empty($item->polisen_location_name)
             && stripos($strLocationURLPart, $item->polisen_location_name) === false
@@ -82,10 +76,9 @@ class FeedController extends Controller
             urlencode($strLocationURLPart) // 1
         );
 
-        // Viewport-bias från Polisens grova GPS (län-/kommun-mittpunkt).
-        // ~50 km bbox runt punkten → påverkar Googles träff för
-        // tvetydiga ortnamn (t.ex. "Partille") utan att restriktivt utesluta
-        // träffar utanför boxen. Se #48 fas 2.
+        // Viewport-bias (~50 km bbox) från Polisens grova GPS — biasar mot
+        // rätt län för tvetydiga ortnamn ("Partille") utan att utesluta
+        // träffar utanför boxen.
         if (! empty($item->polisen_gps_lat) && ! empty($item->polisen_gps_lng)) {
             $bounds = $this->buildBoundsBox(
                 (float) $item->polisen_gps_lat,
@@ -448,26 +441,41 @@ class FeedController extends Controller
             "itemsAdded" => []
         ];
 
+        // Batcha dedup-uppslagen — en query för hela listan istället för
+        // 500 exists()-anrop. Bygg först alla nycklar, fråga DB en gång,
+        // håll resultatet i minnet under loopen.
+        $candidatePolisenIds = [];
+        $candidateMd5s = [];
+        $itemRows = [];
         foreach ($items as $item) {
             if (! is_array($item) || empty($item['id']) || empty($item['url'])) {
                 continue;
             }
-
-            $polisenId = (int) $item['id'];
             $permalink = $this->buildPermalink($item['url']);
-            $itemMd5Permalink = md5($permalink);
+            $polisenId = (int) $item['id'];
+            $md5 = md5($permalink);
+            $candidatePolisenIds[] = $polisenId;
+            $candidateMd5s[] = $md5;
+            $itemRows[] = [$item, $polisenId, $permalink, $md5];
+        }
 
-            // Dedup: nya importer har polisen_id; gamla rader har bara md5.
-            // withoutGlobalScopes() — annars missar vi events som markerats
-            // is_public=false av ContentFilterService och re-importerar dem.
-            $existing = CrimeEvent::withoutGlobalScopes()
-                ->where(function ($q) use ($polisenId, $itemMd5Permalink) {
-                    $q->where('polisen_id', $polisenId)
-                        ->orWhere('md5', $itemMd5Permalink);
-                })
-                ->exists();
+        // withoutGlobalScopes() — annars missar vi events som markerats
+        // is_public=false av ContentFilterService och re-importerar dem.
+        $existingQuery = CrimeEvent::withoutGlobalScopes();
+        if (! empty($candidatePolisenIds)) {
+            $existingQuery->whereIn('polisen_id', $candidatePolisenIds);
+        }
+        if (! empty($candidateMd5s)) {
+            $existingQuery->orWhereIn('md5', $candidateMd5s);
+        }
+        $existingRows = $existingQuery->get(['polisen_id', 'md5']);
+        $existingPolisenIds = $existingRows->pluck('polisen_id')->filter()->all();
+        $existingMd5s = $existingRows->pluck('md5')->filter()->all();
+        $existingPolisenIdSet = array_flip($existingPolisenIds);
+        $existingMd5Set = array_flip($existingMd5s);
 
-            if ($existing) {
+        foreach ($itemRows as [$item, $polisenId, $permalink, $itemMd5Permalink]) {
+            if (isset($existingPolisenIdSet[$polisenId]) || isset($existingMd5Set[$itemMd5Permalink])) {
                 $data["numItemsAlreadyAdded"]++;
                 continue;
             }

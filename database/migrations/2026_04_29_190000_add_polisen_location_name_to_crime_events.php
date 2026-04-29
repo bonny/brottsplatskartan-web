@@ -9,10 +9,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('crime_events', function (Blueprint $table) {
-            // Polisens `location.name` — alltid län-nivå ("Stockholms län").
-            // Skiljer sig från `parsed_title_location` som ibland är stad
-            // (titeln slutar på antingen län eller ort beroende på event).
-            // Används i geocoding-querysträngen för disambiguering.
+            // Polisens location.name — alltid län-nivå, används för
+            // geocoding-disambiguering.
             $table->string('polisen_location_name', 80)->nullable()->after('polisen_gps_lng');
         });
     }
