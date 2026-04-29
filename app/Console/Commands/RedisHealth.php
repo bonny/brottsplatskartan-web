@@ -33,6 +33,9 @@ class RedisHealth extends Command
         $stats = $this->parseInfo($conn->command('info', ['stats']));
         $server = $this->parseInfo($conn->command('info', ['server']));
 
+        $lastCacheFlush = $conn->command('get', ['bpk:meta:last-cache-flush']);
+        $lastResponseFlush = $conn->command('get', ['bpk:meta:last-responsecache-flush']);
+
         if ($this->option('json')) {
             $this->line(json_encode([
                 'server' => array_intersect_key($server, array_flip([
@@ -47,6 +50,8 @@ class RedisHealth extends Command
                     'keyspace_hits',
                     'keyspace_misses',
                 ])),
+                'last_cache_flush' => $lastCacheFlush,
+                'last_responsecache_flush' => $lastResponseFlush,
             ], JSON_PRETTY_PRINT));
             return self::SUCCESS;
         }
@@ -76,6 +81,8 @@ class RedisHealth extends Command
             ['Fragmentation ratio', number_format($frag, 2)],
             ['Evicted keys (sedan start)', number_format($evicted)],
             ['Hit rate', $hitRate . ' % (' . number_format($hits) . ' / ' . number_format($hits + $misses) . ')'],
+            ['Senaste cache:clear', $this->formatFlushTime($lastCacheFlush)],
+            ['Senaste responsecache:clear', $this->formatFlushTime($lastResponseFlush)],
         ]);
 
         $warnings = [];
@@ -128,6 +135,19 @@ class RedisHealth extends Command
             $out[$k] = $v;
         }
         return $out;
+    }
+
+    private function formatFlushTime(mixed $iso): string
+    {
+        if (!is_string($iso) || $iso === '') {
+            return 'aldrig (sedan listener installerades)';
+        }
+        try {
+            $when = \Carbon\Carbon::parse($iso);
+            return $when->format('Y-m-d H:i') . ' (' . $when->diffForHumans() . ')';
+        } catch (\Exception) {
+            return $iso;
+        }
     }
 
     private function humanDuration(int $seconds): string
