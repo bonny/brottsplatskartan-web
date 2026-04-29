@@ -4,7 +4,7 @@ Index över förbättringsarbete. Varje todo har en egen fil under
 [`todos/`](todos/) med fullständig analys. Konvention och
 mappstruktur: [`todos/README.md`](todos/README.md).
 
-Senast uppdaterad: 2026-04-29 (#39 research klar — implementation rekommenderas; #40 avfärdad — STRADA kommunnivå ej fri).
+Senast uppdaterad: 2026-04-29 (+#45 historik per plats — år-vy + trend, skissad).
 
 ## Aktiva
 
@@ -15,6 +15,7 @@ Senast uppdaterad: 2026-04-29 (#39 research klar — implementation rekommendera
 | 36  | GSC-mätning av AI-titlars CTR-effekt             | Mätperiod startad 2026-04-27, första check 2026-05-25                                 | [todos/36-gsc-matning-ai-titlar.md](todos/36-gsc-matning-ai-titlar.md)             |
 | 39  | MSB/MCF brand- och räddningsstatistik per kommun | Research klar — PxWeb-API på statistik.mcf.se, implementation rekommenderas (~4–6h)   | [todos/39-msb-brand-rakning-statistik.md](todos/39-msb-brand-rakning-statistik.md) |
 | 41  | Datumnavigering som årskalender                  | Idé — ny visuell månadsnav (12 rutor + heatmap-färg)                                  | [todos/41-arskalender-datumnavigering.md](todos/41-arskalender-datumnavigering.md) |
+| 45  | Historik per plats: år-vy + trend                | Skissad — fas 1 mini-trend (2h), fas 2 /{plats}/statistik/{år}-vy                     | [todos/45-historik-per-plats.md](todos/45-historik-per-plats.md)                   |
 
 ### Beroenden
 
@@ -35,13 +36,14 @@ MCP:s som `mcp-gsc`, SSH-nycklar till prod, eller mänsklig bedömning).
 Granska veckovis. När en åtgärd är gjord, flytta raden till "Avklarade" nedan
 eller markera todon som klar.
 
-| Datum      | Åtgärd                                                       | Todo                                       |
-| ---------- | ------------------------------------------------------------ | ------------------------------------------ |
-| 2026-05-25 | GSC-mätning AI-titlar — första check (4v post-deploy)        | [#36](todos/36-gsc-matning-ai-titlar.md)   |
-| 2026-05-27 | Månadsvyer-pilot — 30d-mätning Uppsala/Västerås              | [#25](todos/25-manadsvyer-datum-routes.md) |
-| 2026-06-22 | GSC-mätning AI-titlar — andra check (8v)                     | [#36](todos/36-gsc-matning-ai-titlar.md)   |
-| 2026-07-27 | GSC-mätning AI-titlar — tredje check (12v) + beslut om fas 3 | [#36](todos/36-gsc-matning-ai-titlar.md)   |
-| 2026-07-27 | Indexerade pages — slutmätning (90d post-noindex)            | [#29](todos/29-audit-indexerade-pages.md)  |
+| Datum      | Åtgärd                                                       | Todo                                           |
+| ---------- | ------------------------------------------------------------ | ---------------------------------------------- |
+| 2026-05-13 | MCF räddningsstatistik — utvärdera trafikimpact i GA4 + GSC  | [#39](todos/39-msb-brand-rakning-statistik.md) |
+| 2026-05-25 | GSC-mätning AI-titlar — första check (4v post-deploy)        | [#36](todos/36-gsc-matning-ai-titlar.md)       |
+| 2026-05-27 | Månadsvyer-pilot — 30d-mätning Uppsala/Västerås              | [#25](todos/25-manadsvyer-datum-routes.md)     |
+| 2026-06-22 | GSC-mätning AI-titlar — andra check (8v)                     | [#36](todos/36-gsc-matning-ai-titlar.md)       |
+| 2026-07-27 | GSC-mätning AI-titlar — tredje check (12v) + beslut om fas 3 | [#36](todos/36-gsc-matning-ai-titlar.md)       |
+| 2026-07-27 | Indexerade pages — slutmätning (90d post-noindex)            | [#29](todos/29-audit-indexerade-pages.md)      |
 
 ### Avklarade uppföljningar
 
