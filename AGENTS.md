@@ -222,6 +222,17 @@ docker compose restart app
 docker compose down && docker compose up -d
 ```
 
+### Backup av prod-DB till lokal fil
+
+```bash
+./deploy/backup-prod-db.sh
+```
+
+Dumpar full prod-DB till `backups/prod-YYYY-MM-DD-HHMMSS.sql.gz`
+(gitignored, chmod 600 — innehåller PII från `users` och liknande).
+Använd `deploy/fetch-prod-db-to-local-db.sh` istället när du vill ersätta
+lokal dev-DB direkt utan mellanfil.
+
 ### Provisionering av ny server
 
 Se **[deploy/provision.md](deploy/provision.md)**.
