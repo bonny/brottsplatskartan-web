@@ -3,7 +3,7 @@
 #
 #  * App exposeas på localhost:8350 (ingen Caddy lokalt)
 #  * Caddy disablas via profiles: [never]
-#  * MariaDB + Redis exposeas på host för GUI-verktyg
+#  * Redis exposeas på host för GUI-verktyg (MariaDB-port ligger i compose.yaml)
 #  * Tileservern är opt-in via profile
 #  * Dev-vänliga env-vars (config cache av, lägre log-nivå, ingen opcache)
 #
@@ -29,9 +29,9 @@ services:
     # Ingen override av volumes – vi använder bind-mount från base (./:/var/www/html)
     # så vendor/, node_modules/ och storage/ är synliga på host.
 
-  mariadb:
-    ports:
-      - "127.0.0.1:33012:3306"
+  # mariadb: port-mapping ligger numera i compose.yaml (127.0.0.1:33012:3306)
+  # så samma binding gäller både lokalt och i prod. Åtkomst via SSH-tunnel
+  # på prod, direkt på lokal.
 
   redis:
     ports:

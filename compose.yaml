@@ -61,6 +61,10 @@ services:
       MARIADB_DATABASE: ${DB_DATABASE}
       MARIADB_USER: ${DB_USERNAME}
       MARIADB_PASSWORD: ${DB_PASSWORD}
+    # Bunden till 127.0.0.1 — bara nåbar via SSH-tunnel från
+    # admin/utvecklarmaskiner (TablePlus/Sequel Ace m.fl.).
+    ports:
+      - "127.0.0.1:33012:3306"
     volumes:
       - mariadb-data:/var/lib/mysql
     healthcheck:
