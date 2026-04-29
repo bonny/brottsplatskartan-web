@@ -3,6 +3,7 @@
 namespace App\CacheProfiles;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Spatie\ResponseCache\CacheProfiles\CacheAllSuccessfulGetRequests;
 use Symfony\Component\HttpFoundation\Response;
@@ -52,14 +53,23 @@ class BrottsplatskartanCacheProfile extends CacheAllSuccessfulGetRequests
      */
     public function useCacheNameSuffix(Request $request): string
     {
+        $parts = [];
+
         if ($request->attributes->get('markdown-response.suffix')
             || str_contains($request->header('Accept', ''), 'text/markdown')
             || $this->isAiUserAgent($request)
         ) {
-            return 'md';
+            $parts[] = 'md';
         }
 
-        return '';
+        // Inkludera auth-state så inloggade användare (admin) inte delar
+        // cache med icke-inloggade. Förälderns default gör detta, men
+        // tappades när vi tog över useCacheNameSuffix() för markdown.
+        if (Auth::check()) {
+            $parts[] = 'auth-' . Auth::id();
+        }
+
+        return implode('-', $parts);
     }
 
     private function isAiUserAgent(Request $request): bool
