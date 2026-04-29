@@ -31,9 +31,15 @@ class RedisHealth extends Command
 
         $memory = $this->parseInfo($conn->command('info', ['memory']));
         $stats = $this->parseInfo($conn->command('info', ['stats']));
+        $server = $this->parseInfo($conn->command('info', ['server']));
 
         if ($this->option('json')) {
             $this->line(json_encode([
+                'server' => array_intersect_key($server, array_flip([
+                    'redis_version',
+                    'uptime_in_seconds',
+                    'uptime_in_days',
+                ])),
                 'memory' => $memory,
                 'stats' => array_intersect_key($stats, array_flip([
                     'evicted_keys',
@@ -56,8 +62,13 @@ class RedisHealth extends Command
             ? round($hits / ($hits + $misses) * 100, 1)
             : 0.0;
 
+        $uptime = (int) ($server['uptime_in_seconds'] ?? 0);
+        $version = $server['redis_version'] ?? '?';
+
         $this->info('Redis minnesstatus');
         $this->table(['Nyckel', 'Värde'], [
+            ['Version', $version],
+            ['Uptime', $this->humanDuration($uptime)],
             ['Använt nu', $this->humanBytes($used)],
             ['Peak', $this->humanBytes($peak)],
             ['Maxmemory', $max > 0 ? $this->humanBytes($max) : '(obegränsat)'],
@@ -117,6 +128,31 @@ class RedisHealth extends Command
             $out[$k] = $v;
         }
         return $out;
+    }
+
+    private function humanDuration(int $seconds): string
+    {
+        if ($seconds <= 0) {
+            return '–';
+        }
+        $days = intdiv($seconds, 86400);
+        $hours = intdiv($seconds % 86400, 3600);
+        $mins = intdiv($seconds % 3600, 60);
+
+        $parts = [];
+        if ($days > 0) {
+            $parts[] = "{$days}d";
+        }
+        if ($hours > 0) {
+            $parts[] = "{$hours}h";
+        }
+        if ($mins > 0 && $days === 0) {
+            $parts[] = "{$mins}m";
+        }
+        if ($parts === []) {
+            $parts[] = "{$seconds}s";
+        }
+        return implode(' ', $parts);
     }
 
     private function humanBytes(int $bytes): string
