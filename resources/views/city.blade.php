@@ -84,6 +84,11 @@
                      ovanför händelser tryckte ner primary content för mycket. --}}
                 @include('parts.bra-statistik')
 
+                {{-- MCF räddningsinsatser per kommun (todo #39). Komplement till
+                     BRÅ — BRÅ täcker brott, MCF täcker olyckor/räddning.
+                     Renderar bara om $mcf finns. --}}
+                @include('parts.mcf-statistik')
+
                 {{-- Bakåtnavigering via månadsvyer (ersätter ?page=-paginering, todo #25/#33).
                      CityController hämtar bara senaste 25 — för äldre händelser
                      länkar vi till föregående månads kalender-vy. Sidopanelen

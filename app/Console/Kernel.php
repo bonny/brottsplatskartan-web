@@ -110,6 +110,14 @@ class Kernel extends ConsoleKernel
             ->yearlyOn(4, 15, '03:00')
             ->withoutOverlapping()
             ->name('bra-import');
+
+        // MCF-import (todo #39): kör 15 april årligen, 03:30 UTC. MCF
+        // släpper räddningsstatistiken runt 10 mars (samma cykel som BRÅ).
+        // PxWeb-API är stabilt — ingen URL-uppdatering krävs.
+        $schedule->command('mcf:import-raddningsinsatser --year=' . (date('Y') - 1))
+            ->yearlyOn(4, 15, '03:30')
+            ->withoutOverlapping()
+            ->name('mcf-import');
     }
 
     /**

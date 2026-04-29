@@ -215,6 +215,10 @@ Designprinciper (#25):
             </section>
         @endforeach
 
+        {{-- MCF räddningsinsatser för exakt denna månad (todo #39 + #25).
+             Sätter Polisens händelser i kontext med officiella siffror. --}}
+        @include('parts.mcf-statistik-manad')
+
         {{-- Föregående/nästa månad-nav längst ner. --}}
         <nav class="MonthNav MonthNav--bottom" aria-label="Månads-navigation">
             @if ($prevMonthLink)

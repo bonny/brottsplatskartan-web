@@ -102,6 +102,9 @@ https://brottsplatskartan.localhost/plats/nacka
              primary content på mobil. Mirror av city.blade.php-mönstret. --}}
         @include('parts.bra-statistik')
 
+        {{-- MCF räddningsinsatser per kommun (todo #39). Komplement till BRÅ. --}}
+        @include('parts.mcf-statistik')
+
         @include('parts.daynav')
     </div>
 

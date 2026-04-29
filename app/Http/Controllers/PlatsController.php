@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\BraStatistik;
+use App\MCFStatistik;
 use App\CrimeEvent;
 use App\Place;
 use App\Tier1;
@@ -324,12 +325,16 @@ class PlatsController extends Controller
         $bra = null;
         $braLanGrannar = null;
         $braRikssnitt = null;
+        $mcf = null;
         if ($isToday) {
             $bra = BraStatistik::forBpkPlaceName($plats);
             if ($bra) {
                 $braLanGrannar = BraStatistik::lanGrannar($bra->kommun_kod, $bra->ar);
                 $braRikssnitt = BraStatistik::rikssnitt($bra->ar);
             }
+            // MCF räddningsstatistik (todo #39) — bara på dagsvyer av samma skäl
+            // som BRÅ (årlig statistik passar inte bredvid dagsdata).
+            $mcf = MCFStatistik::forBpkPlaceName($plats);
         }
 
         $data = [
@@ -358,6 +363,7 @@ class PlatsController extends Controller
             'bra' => $bra,
             'braLanGrannar' => $braLanGrannar,
             'braRikssnitt' => $braRikssnitt,
+            'mcf' => $mcf,
         ];
 
         return view('single-plats', $data);
@@ -556,6 +562,28 @@ class PlatsController extends Controller
 
         $pageTitle = sprintf('Polishändelser i %s, %s', $platsDisplay, $monthYearTitle);
 
+        // MCF räddningsstatistik för exakt denna månad (todo #39). Bara om
+        // platsen är kommun-mappad och datan publicerats för perioden — MCF
+        // släpper året före i mars, så aktuella månader saknar data.
+        $mcfManad = null;
+        $mcfManadKommunNamn = null;
+        $kommunKodForPlats = BraStatistik::kommunKodForBpkPlaceName($platsOriginalFromSlug);
+        if ($kommunKodForPlats) {
+            $manadInsatser = MCFStatistik::forKommunManad(
+                $kommunKodForPlats,
+                (int) $monthRange['start']->format('Y'),
+                (int) $monthRange['start']->format('m'),
+            );
+            if ($manadInsatser->isNotEmpty()) {
+                $mcfManad = $manadInsatser;
+                $mcfManadKommunNamn = optional(
+                    \Illuminate\Support\Facades\DB::table('scb_kommuner')
+                        ->where('kommun_kod', $kommunKodForPlats)
+                        ->first(['kommun_namn'])
+                )->kommun_namn;
+            }
+        }
+
         // AI-månadssammanfattning för Tier 1-städer (todo #27 Lager 3).
         // Lookup på en redan-genererad rad — ingen on-the-fly AI-generering
         // (det är schedulerns jobb 1:a varje månad). Tomt visas inget.
@@ -592,6 +620,8 @@ class PlatsController extends Controller
             'robotsNoindex' => $robotsNoindex,
             'showAdSense' => $totalEvents >= 3,
             'monthlySummary' => $monthlySummary,
+            'mcfManad' => $mcfManad,
+            'mcfManadKommunNamn' => $mcfManadKommunNamn,
         ];
 
         return view('single-plats-month', $data);

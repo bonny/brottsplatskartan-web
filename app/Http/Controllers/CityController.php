@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\BraStatistik;
+use App\MCFStatistik;
 use App\CrimeEvent;
 use App\Models\DailySummary;
 use App\Services\WikidataService;
@@ -123,12 +124,15 @@ class CityController extends Controller
         $bra = null;
         $braLanGrannar = null;
         $braRikssnitt = null;
+        $mcf = null;
         if (!empty($city['kommunKod'])) {
             $bra = BraStatistik::forKommun($city['kommunKod']);
             if ($bra) {
                 $braLanGrannar = BraStatistik::lanGrannar($city['kommunKod'], $bra->ar);
                 $braRikssnitt = BraStatistik::rikssnitt($bra->ar);
             }
+            // MCF räddningsstatistik (todo #39) — komplement till BRÅ.
+            $mcf = MCFStatistik::forKommun($city['kommunKod']);
         }
 
         // Trend-sparkline + brottstyp-fördelning + mest lästa events
@@ -185,6 +189,7 @@ class CityController extends Controller
             'bra' => $bra,
             'braLanGrannar' => $braLanGrannar,
             'braRikssnitt' => $braRikssnitt,
+            'mcf' => $mcf,
             'trendCounts' => $trendCounts,
             'topCrimeTypes' => $topCrimeTypes,
             'mostReadEvents' => $mostReadEvents,
