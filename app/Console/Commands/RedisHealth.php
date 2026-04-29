@@ -92,10 +92,14 @@ class RedisHealth extends Command
         if ($evicted > 0) {
             $warnings[] = "Eviction har skett ({$evicted} nycklar) — cache slits ut i förtid.";
         }
-        if ($frag > 1.5) {
+        // Fragmentation ratio är bara meningsfull när used_memory är stort nog
+        // att allokator-overhead (~20–30 MB baseline) inte dominerar. Under
+        // ~100 MB blir ratio mekaniskt hög utan att spegla riktig fragmentering.
+        $fragMeaningful = $used > 100 * 1024 * 1024;
+        if ($frag > 1.5 && $fragMeaningful) {
             $warnings[] = 'Fragmentation ratio >1.5 — minnet är fragmenterat.';
         }
-        if ($frag > 0 && $frag < 1.0) {
+        if ($frag > 0 && $frag < 1.0 && $fragMeaningful) {
             $warnings[] = 'Fragmentation ratio <1.0 — Redis swappar (allvarligt).';
         }
 
