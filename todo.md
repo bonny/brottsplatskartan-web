@@ -4,18 +4,21 @@ Index över förbättringsarbete. Varje todo har en egen fil under
 [`todos/`](todos/) med fullständig analys. Konvention och
 mappstruktur: [`todos/README.md`](todos/README.md).
 
-Senast uppdaterad: 2026-04-29 (+#45 historik per plats — år-vy + trend, skissad).
+Senast uppdaterad: 2026-04-29 (#48 reviderad — split i Fas 1 RSS→JSON-API + Fas 2 geocoding-bias).
 
 ## Aktiva
 
-| #   | Titel                                            | Status                                                                                | Fil                                                                                |
-| --- | ------------------------------------------------ | ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| 25  | Månadsvyer istället för dagsvyer (datum-routes)  | Pilot live 2026-04-27 (uppsala + västerås + uppsala-lan). 30d-mätning till 2026-05-27 | [todos/25-manadsvyer-datum-routes.md](todos/25-manadsvyer-datum-routes.md)         |
-| 29  | Audit + reducera indexerade pages                | Datum-routes + thin singles deployat, ~22k pages noindex:as. Mätperiod 30–90d i GSC   | [todos/29-audit-indexerade-pages.md](todos/29-audit-indexerade-pages.md)           |
-| 36  | GSC-mätning av AI-titlars CTR-effekt             | Mätperiod startad 2026-04-27, första check 2026-05-25                                 | [todos/36-gsc-matning-ai-titlar.md](todos/36-gsc-matning-ai-titlar.md)             |
-| 39  | MSB/MCF brand- och räddningsstatistik per kommun | Research klar — PxWeb-API på statistik.mcf.se, implementation rekommenderas (~4–6h)   | [todos/39-msb-brand-rakning-statistik.md](todos/39-msb-brand-rakning-statistik.md) |
-| 41  | Datumnavigering som årskalender                  | Idé — ny visuell månadsnav (12 rutor + heatmap-färg)                                  | [todos/41-arskalender-datumnavigering.md](todos/41-arskalender-datumnavigering.md) |
-| 45  | Historik per plats: år-vy + trend                | Skissad — fas 1 mini-trend (2h), fas 2 /{plats}/statistik/{år}-vy                     | [todos/45-historik-per-plats.md](todos/45-historik-per-plats.md)                   |
+| #   | Titel                                            | Status                                                                                | Fil                                                                                  |
+| --- | ------------------------------------------------ | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| 25  | Månadsvyer istället för dagsvyer (datum-routes)  | Pilot live 2026-04-27 (uppsala + västerås + uppsala-lan). 30d-mätning till 2026-05-27 | [todos/25-manadsvyer-datum-routes.md](todos/25-manadsvyer-datum-routes.md)           |
+| 29  | Audit + reducera indexerade pages                | Datum-routes + thin singles deployat, ~22k pages noindex:as. Mätperiod 30–90d i GSC   | [todos/29-audit-indexerade-pages.md](todos/29-audit-indexerade-pages.md)             |
+| 36  | GSC-mätning av AI-titlars CTR-effekt             | Mätperiod startad 2026-04-27, första check 2026-05-25                                 | [todos/36-gsc-matning-ai-titlar.md](todos/36-gsc-matning-ai-titlar.md)               |
+| 39  | MSB/MCF brand- och räddningsstatistik per kommun | Implementerad 2026-04-29 — väntar på trafikmätning 2026-05-13                         | [todos/39-msb-brand-rakning-statistik.md](todos/39-msb-brand-rakning-statistik.md)   |
+| 41  | Datumnavigering som årskalender                  | Idé — ny visuell månadsnav (12 rutor + heatmap-färg)                                  | [todos/41-arskalender-datumnavigering.md](todos/41-arskalender-datumnavigering.md)   |
+| 45  | Historik per plats: år-vy + trend                | Skissad — fas 1 mini-trend (2h), fas 2 /{plats}/statistik/{år}-vy                     | [todos/45-historik-per-plats.md](todos/45-historik-per-plats.md)                     |
+| 46  | Slå samman Händelser/Senaste/Mest lästa i menyn  | Importerad från GitHub #76 — kräver design + redirect-strategi                        | [todos/46-meny-handelser-konsolidering.md](todos/46-meny-handelser-konsolidering.md) |
+| 47  | Slå ihop stad-URLs (plats vs plats+län vs län)   | Importerad från GitHub #68 — fortsättning på #23/#35-mönstret                         | [todos/47-sla-ihop-stad-urls.md](todos/47-sla-ihop-stad-urls.md)                     |
+| 48  | Polisens JSON-API + bättre geocoding             | Reviderad 2026-04-29 — Fas 1 RSS→JSON-API pågår, Fas 2 viewport-bias efteråt          | [todos/48-geocode-inkludera-lan.md](todos/48-geocode-inkludera-lan.md)               |
 
 ### Beroenden
 
@@ -23,11 +26,11 @@ Senast uppdaterad: 2026-04-29 (+#45 historik per plats — år-vy + trend, skiss
 
 ### Föreslagen ordning
 
-1. **#39 MSB/MCF räddningsstatistik** — research klar, redo för implementation (~4–6h)
-2. **#25 Månadsvyer** — Uppsala-pilot pågår, 30d-mätning till 2026-05-27
-3. **#41** — datumnavigering som årskalender — bygger på #42-fundament
-4. **#29** — passiv GSC-mätperiod, åtgärder efter data
-5. **#36** — passiv GSC-mätning, första check 2026-05-25
+1. **#25 Månadsvyer** — Uppsala-pilot pågår, 30d-mätning till 2026-05-27
+2. **#41** — datumnavigering som årskalender — bygger på #42-fundament
+3. **#29** — passiv GSC-mätperiod, åtgärder efter data
+4. **#36** — passiv GSC-mätning, första check 2026-05-25
+5. **#39** — passiv mätning, första check 2026-05-13
 
 ## Uppföljningar — datum att komma ihåg
 
@@ -95,6 +98,7 @@ Sorterade nyast först.
 
 | #   | Titel                                          | Beslut                                                                            | Fil                                                                                                  |
 | --- | ---------------------------------------------- | --------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| 49  | Feeda in Krisinformation.se RSS                | Avfärdad 2026-04-29 — brand-/UX-/SEO-mismatch; VMA täcker redan det akuta         | [todos/rejected/49-feeda-in-krisinformation.md](todos/rejected/49-feeda-in-krisinformation.md)       |
 | 40  | Trafikverket STRADA olycksstatistik per kommun | Avfärdad 2026-04-29 — kommunnivå kräver myndighetsavtal, öppen data bara län-nivå | [todos/rejected/40-trafikverket-strada-olyckor.md](todos/rejected/40-trafikverket-strada-olyckor.md) |
 | 18  | Attribution vid statiska kartbilder (ODbL)     | Avfärdad 2026-04-24 — gråzon, om-sidan räcker                                     | [todos/rejected/18-attribution-vid-kartbilder.md](todos/rejected/18-attribution-vid-kartbilder.md)   |
 | 9   | Extern DB-backup                               | Avfärdad 2026-04-21 — Hetzner-snapshots räcker                                    | [todos/rejected/09-extern-db-backup.md](todos/rejected/09-extern-db-backup.md)                       |

@@ -3,27 +3,27 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 use App\Http\Requests;
-use Feeds;
 use App\CrimeEvent;
 
 use App\Http\Controllers\FeedParserController;
-use SimplePie;
 
 class FeedController extends Controller
 {
 
-    protected $RssURL;
+    protected $apiUrl;
     protected $feedParser;
 
     public function __construct(FeedParserController $feedParser)
     {
-        // URL innan Polisen ändrade sin webbplats
-        // 22 Feb 2018
-        # $this->RssURL = 'https://polisen.se/Stockholms_lan/Aktuellt/Handelser/Handelser-i-hela-landet/?feed=rss';
-        $this->RssURL = 'https://polisen.se/aktuellt/rss/hela-landet/handelser-i-hela-landet/';
-
-        $this->RssURL = \App\Helper::makeUrlUsePolisenDomain($this->RssURL);
+        // Polisens officiella JSON-API över händelser. Migrerade hit från
+        // RSS-flödet 2026-04-29 (todo #48 fas 1) — ger stabilt id, separat
+        // type-fält och grov location.gps för viewport-bias i fas 2.
+        $this->apiUrl = 'https://polisen.se/api/events';
+        $this->apiUrl = \App\Helper::makeUrlUsePolisenDomain($this->apiUrl);
 
         $this->feedParser = $feedParser;
     }
@@ -365,31 +365,31 @@ class FeedController extends Controller
     }
 
     /**
-     * Hämtar RSS-feeden från Polisen
-     * och lägger till händelser i DB
+     * Hämtar händelser från Polisens JSON-API och lägger till nya i DB.
      *
-     * Använder SimplePie direkt (tidigare via willvincent/feeds-wrappern).
+     * Tidigare hämtades RSS via SimplePie. JSON-API:t ger stabilt `id`,
+     * separat `type`-fält och grov `location.gps` (län-/kommun-mittpunkt)
+     * som senare används för viewport-bias i Google-geokoderingen.
      */
     public function updateFeedsFromPolisen()
     {
-        $cacheDir = storage_path('framework/cache/simplepie');
-        if (!is_dir($cacheDir)) {
-            mkdir($cacheDir, 0755, true);
-        }
+        $items = Cache::remember('polisen_api_events', 60, function () {
+            $response = Http::timeout(15)
+                ->acceptJson()
+                ->withHeaders(['User-Agent' => 'Brottsplatskartan/1.0 (+https://brottsplatskartan.se)'])
+                ->retry(2, 500)
+                ->get($this->apiUrl);
 
-        $feed = new \SimplePie\SimplePie();
-        $feed->set_feed_url($this->RssURL);
-        $feed->force_feed(true);
-        $feed->set_curl_options([
-            CURLOPT_SSL_VERIFYPEER => false,
-        ]);
-        $feed->enable_cache(true);
-        $feed->set_cache_location($cacheDir);
-        $feed->set_cache_duration(60);
-        $feed->init();
-        $feed->handle_content_type();
+            if (! $response->successful()) {
+                Log::warning('Polisens JSON-API gav icke-OK svar', [
+                    'status' => $response->status(),
+                    'url' => $this->apiUrl,
+                ]);
+                return [];
+            }
 
-        $feed_items = $feed->get_items();
+            return $response->json() ?: [];
+        });
 
         $data = [
             "numItemsAdded" => 0,
@@ -397,43 +397,80 @@ class FeedController extends Controller
             "itemsAdded" => []
         ];
 
-        foreach ($feed_items as $item) {
+        foreach ($items as $item) {
+            if (! is_array($item) || empty($item['id']) || empty($item['url'])) {
+                continue;
+            }
 
-            // Previously we used get_id for md5 but
-            // after Polisen relaunched their site sometimes
-            // we get duplicates. Try to solve this by
-            // using permalink instead.
-            $item_md5 = md5($item->get_id());
-            $item_md5_permalink = md5($item->get_permalink());
+            $polisenId = (int) $item['id'];
+            $permalink = $this->buildPermalink($item['url']);
+            $itemMd5Permalink = md5($permalink);
 
-            $item_data = [
-                "title" => $item->get_title(),
-                "description" => html_entity_decode($item->get_description()),
-                "permalink" => $item->get_permalink(),
-                "pubdate" => $item->get_date("U"),
-                "pubdate_iso8601" => $item->get_date(\DateTime::ISO8601),
-                "md5" => $item_md5_permalink,
-            ];
+            // Dedup: nya importer har polisen_id; gamla rader har bara md5.
+            $existing = CrimeEvent::where('polisen_id', $polisenId)
+                ->orWhere('md5', $itemMd5Permalink)
+                ->exists();
 
-            // Store items not already stored
-            $existingItem = CrimeEvent::
-                where("md5", $item_md5)
-                ->orWhere("md5", $item_md5_permalink)
-                ->get();
-
-            // Continue to next item if event already is in db
-            if ($existingItem->count()) {
+            if ($existing) {
                 $data["numItemsAlreadyAdded"]++;
                 continue;
             }
 
-            
-            $event = CrimeEvent::create($item_data);
+            [$gpsLat, $gpsLng] = $this->parseGps($item['location']['gps'] ?? null);
+
+            $datetime = ! empty($item['datetime']) ? strtotime($item['datetime']) : null;
+            $isoDatetime = $datetime ? date(\DateTime::ATOM, $datetime) : null;
+
+            $title = $item['name'] ?? '';
+            $summary = $item['summary'] ?? '';
+
+            $event = CrimeEvent::create([
+                'title' => $title,
+                'description' => html_entity_decode($summary),
+                'permalink' => $permalink,
+                'pubdate' => $datetime,
+                'pubdate_iso8601' => $isoDatetime,
+                'md5' => $itemMd5Permalink,
+                'polisen_id' => $polisenId,
+                'polisen_gps_lat' => $gpsLat,
+                'polisen_gps_lng' => $gpsLng,
+            ]);
 
             $data["numItemsAdded"]++;
             $data["itemsAdded"][] = $event;
         }
 
         return $data;
+    }
+
+    /**
+     * Polisens API levererar relativa URL:er (t.ex. "/aktuellt/handelser/...").
+     * Vår domän-helper byter ev. ut polisen.se mot test-domän i lokal dev.
+     */
+    private function buildPermalink(string $relativeOrAbsolute): string
+    {
+        if (str_starts_with($relativeOrAbsolute, 'http')) {
+            return \App\Helper::makeUrlUsePolisenDomain($relativeOrAbsolute);
+        }
+
+        return \App\Helper::makeUrlUsePolisenDomain('https://polisen.se' . $relativeOrAbsolute);
+    }
+
+    /**
+     * Polisens `location.gps` är en sträng "lat,lng". Vid saknad eller
+     * felformaterad input returneras [null, null].
+     */
+    private function parseGps(?string $gps): array
+    {
+        if (empty($gps) || ! str_contains($gps, ',')) {
+            return [null, null];
+        }
+
+        [$lat, $lng] = array_map('trim', explode(',', $gps, 2));
+        if (! is_numeric($lat) || ! is_numeric($lng)) {
+            return [null, null];
+        }
+
+        return [(float) $lat, (float) $lng];
     }
 }

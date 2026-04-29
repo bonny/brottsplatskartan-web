@@ -1,4 +1,4 @@
-**Status:** aktiv (research klar — implementation rekommenderas)
+**Status:** implementerad 2026-04-29 — väntar på mätning 2026-05-13
 **Senast uppdaterad:** 2026-04-29
 **Relaterad till:** #38 (BRÅ-mönster), #27 (rikare innehåll)
 
