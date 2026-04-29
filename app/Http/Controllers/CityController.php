@@ -119,8 +119,6 @@ class CityController extends Controller
         $breadcrumbs->addCrumb('Hem', '/');
         $breadcrumbs->addCrumb($city['name'], route('city', ['city' => $normalizedSlug]));
 
-        // BRÅ:s officiella anmälda brott (todo #38). Bara på sidan 1 — Redis-
-        // cachad 7d, så kostnaden är trivial men onödig på paginerade sidor.
         $bra = null;
         $braLanGrannar = null;
         $braRikssnitt = null;
@@ -131,7 +129,6 @@ class CityController extends Controller
                 $braLanGrannar = BraStatistik::lanGrannar($city['kommunKod'], $bra->ar);
                 $braRikssnitt = BraStatistik::rikssnitt($bra->ar);
             }
-            // MCF räddningsstatistik (todo #39) — komplement till BRÅ.
             $mcf = MCFStatistik::forKommun($city['kommunKod']);
         }
 

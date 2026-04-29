@@ -1,22 +1,8 @@
-{{--
-    MCF (tidigare MSB) räddningstjänstens insatser per kommun (todo #39).
-    Renderar bara om $mcf finns. Mirror-mönster av parts/bra-statistik.blade.php.
-
-    Kontroller måste passa:
-        $mcf — objekt från MCFStatistik::forKommun() med {totalt, olyckor,
-               automatlarm, per_typ Collection, ar, kommun_namn}
---}}
 @if(!empty($mcf))
     @php
         $publiceringsAr = $mcf->ar + 1;
-        // Sortera per_typ enligt antal desc, exkludera typer 14 (automatlarm)
-        // och 15 (annan utan risk) som visas separat. Topp 8 räcker — de minsta
-        // är ofta 0–5 och tappar UX-värde.
         $typerVisa = $mcf->per_typ
-            ->reject(fn ($r) => in_array($r->handelsetyp_id, [
-                \App\MCFStatistik::TYP_AUTOMATLARM,
-                \App\MCFStatistik::TYP_OVRIGT,
-            ]))
+            ->reject(fn ($r) => in_array($r->handelsetyp_id, \App\MCFStatistik::TYPER_EXKLUDERA_DEFAULT))
             ->sortByDesc('antal')
             ->take(8);
     @endphp

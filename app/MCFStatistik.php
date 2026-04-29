@@ -139,6 +139,8 @@ class MCFStatistik
         $cacheKey = "mcf:manad-agg:{$kommunKod}:{$ar}";
 
         return Cache::remember($cacheKey, now()->addDays(self::CACHE_TTL_DAYS), function () use ($kommunKod, $ar) {
+            $exkluderaList = implode(',', self::TYPER_EXKLUDERA_DEFAULT);
+
             $rows = DB::table('mcf_raddningsinsatser')
                 ->where('kommun_kod', $kommunKod)
                 ->where('ar', $ar)
@@ -147,7 +149,7 @@ class MCFStatistik
                 ->select(
                     'manad',
                     DB::raw('SUM(antal) as totalt'),
-                    DB::raw('SUM(CASE WHEN handelsetyp_id IN (14, 15) THEN antal ELSE 0 END) as automatlarm_ovrigt'),
+                    DB::raw("SUM(CASE WHEN handelsetyp_id IN ({$exkluderaList}) THEN antal ELSE 0 END) as automatlarm_ovrigt"),
                 )
                 ->get();
 
@@ -166,19 +168,38 @@ class MCFStatistik
 
     /**
      * Insatser per typ för en kommun en specifik månad. För #25 månadsvyer.
+     *
+     * Returnerar envelope med {kommun_namn, ar, manad, per_typ Collection}
+     * eller null om månaden saknar data. Automatlarm + övrigt exkluderade.
      */
-    public static function forKommunManad(string $kommunKod, int $ar, int $manad): Collection
+    public static function forKommunManad(string $kommunKod, int $ar, int $manad): ?object
     {
         $cacheKey = "mcf:kommun-manad:{$kommunKod}:{$ar}:{$manad}";
 
         return Cache::remember($cacheKey, now()->addDays(self::CACHE_TTL_DAYS), function () use ($kommunKod, $ar, $manad) {
-            return DB::table('mcf_raddningsinsatser')
+            $perTyp = DB::table('mcf_raddningsinsatser')
                 ->where('kommun_kod', $kommunKod)
                 ->where('ar', $ar)
                 ->where('manad', $manad)
                 ->whereNotIn('handelsetyp_id', self::TYPER_EXKLUDERA_DEFAULT)
                 ->orderByDesc('antal')
                 ->get(['handelsetyp_id', 'handelsetyp_namn', 'antal']);
+
+            if ($perTyp->isEmpty()) {
+                return null;
+            }
+
+            $kommunNamn = DB::table('scb_kommuner')
+                ->where('kommun_kod', $kommunKod)
+                ->value('kommun_namn');
+
+            return (object) [
+                'kommun_kod' => $kommunKod,
+                'kommun_namn' => $kommunNamn,
+                'ar' => $ar,
+                'manad' => $manad,
+                'per_typ' => $perTyp,
+            ];
         });
     }
 

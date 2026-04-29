@@ -62,18 +62,15 @@ class ImportMcfRaddningsinsatser extends Command
         foreach ($years as $year) {
             $this->info("Hämtar år {$year} från MCF PxWeb...");
 
-            $response = Http::timeout(60)
-                ->acceptJson()
-                ->withBody(json_encode([
-                    'query' => [
-                        ['code' => 'kommun', 'selection' => ['filter' => 'all', 'values' => ['*']]],
-                        ['code' => 'ar', 'selection' => ['filter' => 'item', 'values' => [(string) $year]]],
-                        ['code' => 'konvHandelsetypId', 'selection' => ['filter' => 'all', 'values' => ['*']]],
-                        ['code' => 'manadNummer', 'selection' => ['filter' => 'all', 'values' => ['*']]],
-                    ],
-                    'response' => ['format' => 'json'],
-                ]), 'application/json')
-                ->post(self::API_URL);
+            $response = Http::timeout(60)->post(self::API_URL, [
+                'query' => [
+                    ['code' => 'kommun', 'selection' => ['filter' => 'all', 'values' => ['*']]],
+                    ['code' => 'ar', 'selection' => ['filter' => 'item', 'values' => [(string) $year]]],
+                    ['code' => 'konvHandelsetypId', 'selection' => ['filter' => 'all', 'values' => ['*']]],
+                    ['code' => 'manadNummer', 'selection' => ['filter' => 'all', 'values' => ['*']]],
+                ],
+                'response' => ['format' => 'json'],
+            ]);
 
             if (!$response->successful()) {
                 $this->error("  HTTP {$response->status()} för {$year} — hoppar över.");
@@ -144,7 +141,6 @@ class ImportMcfRaddningsinsatser extends Command
             $this->info("  Importerade {$count} rader för {$year}.");
             $totalInserted += $count;
 
-            // Aktiv minneshushållning mellan år.
             unset($rows, $batch);
             gc_collect_cycles();
         }

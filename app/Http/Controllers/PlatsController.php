@@ -332,8 +332,6 @@ class PlatsController extends Controller
                 $braLanGrannar = BraStatistik::lanGrannar($bra->kommun_kod, $bra->ar);
                 $braRikssnitt = BraStatistik::rikssnitt($bra->ar);
             }
-            // MCF räddningsstatistik (todo #39) — bara på dagsvyer av samma skäl
-            // som BRÅ (årlig statistik passar inte bredvid dagsdata).
             $mcf = MCFStatistik::forBpkPlaceName($plats);
         }
 
@@ -562,26 +560,15 @@ class PlatsController extends Controller
 
         $pageTitle = sprintf('Polishändelser i %s, %s', $platsDisplay, $monthYearTitle);
 
-        // MCF räddningsstatistik för exakt denna månad (todo #39). Bara om
-        // platsen är kommun-mappad och datan publicerats för perioden — MCF
-        // släpper året före i mars, så aktuella månader saknar data.
+        // MCF släpper datan i mars året efter, så aktuella månader returnerar null.
         $mcfManad = null;
-        $mcfManadKommunNamn = null;
         $kommunKodForPlats = BraStatistik::kommunKodForBpkPlaceName($platsOriginalFromSlug);
         if ($kommunKodForPlats) {
-            $manadInsatser = MCFStatistik::forKommunManad(
+            $mcfManad = MCFStatistik::forKommunManad(
                 $kommunKodForPlats,
                 (int) $monthRange['start']->format('Y'),
                 (int) $monthRange['start']->format('m'),
             );
-            if ($manadInsatser->isNotEmpty()) {
-                $mcfManad = $manadInsatser;
-                $mcfManadKommunNamn = optional(
-                    \Illuminate\Support\Facades\DB::table('scb_kommuner')
-                        ->where('kommun_kod', $kommunKodForPlats)
-                        ->first(['kommun_namn'])
-                )->kommun_namn;
-            }
         }
 
         // AI-månadssammanfattning för Tier 1-städer (todo #27 Lager 3).
@@ -621,7 +608,6 @@ class PlatsController extends Controller
             'showAdSense' => $totalEvents >= 3,
             'monthlySummary' => $monthlySummary,
             'mcfManad' => $mcfManad,
-            'mcfManadKommunNamn' => $mcfManadKommunNamn,
         ];
 
         return view('single-plats-month', $data);
