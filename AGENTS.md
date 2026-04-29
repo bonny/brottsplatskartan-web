@@ -110,7 +110,9 @@ docker compose exec -u root app composer update <paketnamn>
 
 ### Datakällor
 
-- **Polisens RSS-flöden** — https://polisen.se/Aktuellt/RSS/Lokala-RSS-floden/
+- **Polisens JSON-API** — `https://polisen.se/api/events`. Se
+  [docs/polisen-api.md](docs/polisen-api.md) för datafält, rate-limits
+  och hur vi använder det.
 - **TextTV** — kompletterande nyhetstext
 - **OpenStreetMap** — geografisk tile-data
 

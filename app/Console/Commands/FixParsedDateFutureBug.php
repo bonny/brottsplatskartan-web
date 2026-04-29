@@ -22,19 +22,18 @@ class FixParsedDateFutureBug extends Command
     protected $signature = 'crimeevents:fix-parsed-date-future-bug
                             {--dry-run : Visa antal utan att skriva}';
 
-    protected $description = 'Backfill: korrigera events där parsed_date hamnat efter pubdate.';
+    protected $description = 'Backfill: korrigera events där parsed_date hamnat i framtiden.';
 
     public function handle(): int
     {
         $dryRun = (bool) $this->option('dry-run');
 
         $query = CrimeEvent::withoutGlobalScopes()
-            ->whereNotNull('pubdate')
             ->whereNotNull('parsed_date')
-            ->whereRaw('parsed_date > FROM_UNIXTIME(pubdate)');
+            ->where('parsed_date', '>', now());
 
         $total = $query->count();
-        $this->info("Hittade $total rader med parsed_date > pubdate");
+        $this->info("Hittade $total rader med parsed_date i framtiden");
 
         if ($dryRun) {
             $this->warn('Dry-run: inga ändringar gjorda.');
@@ -44,22 +43,20 @@ class FixParsedDateFutureBug extends Command
         $fixed = 0;
         $query->chunkById(500, function ($chunk) use (&$fixed) {
             foreach ($chunk as $e) {
-                $oldParsed = Carbon::parse($e->parsed_date);
-                $pubdate = Carbon::createFromTimestamp($e->pubdate);
-                $titleMins = $oldParsed->hour * 60 + $oldParsed->minute;
-                $pubMins = $pubdate->hour * 60 + $pubdate->minute;
-                $base = $titleMins > $pubMins ? $pubdate->copy()->subDay() : $pubdate->copy();
-                $newParsed = $base->setTime($oldParsed->hour, $oldParsed->minute, 0);
-                if ((string) $e->parsed_date !== (string) $newParsed) {
-                    $e->parsed_date = $newParsed;
-                    $e->save();
-                    $fixed++;
-                }
+                $parsedDate = Carbon::parse($e->parsed_date);
+                $pubdate = $e->pubdate
+                    ? Carbon::createFromTimestamp($e->pubdate)
+                    : Carbon::now();
+                $isYearBoundary = $parsedDate->month === 12 && $pubdate->month === 1;
+                $newDate = $isYearBoundary ? $parsedDate->subYear() : $parsedDate->subDay();
+                $e->parsed_date = $newDate;
+                $e->save();
+                $fixed++;
             }
         });
 
-        $this->info("Fixade $fixed rader. Kvar med parsed_date > pubdate: "
-            . CrimeEvent::withoutGlobalScopes()->whereRaw('parsed_date > FROM_UNIXTIME(pubdate)')->count());
+        $this->info("Fixade $fixed rader. Kvar i framtiden: "
+            . CrimeEvent::withoutGlobalScopes()->where('parsed_date', '>', now())->count());
 
         return self::SUCCESS;
     }

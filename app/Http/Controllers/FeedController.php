@@ -387,15 +387,18 @@ class FeedController extends Controller
         // Parse title
         $parsed_title_items = $this->feedParser->parseTitle($item->title);
 
-        // parsed_date sätts från titelns "DD månad HH.MM" och Carbon defaultar
-        // till innevarande år. När pubdate är tidigare på dagen än titel-tiden
-        // är eventet egentligen från föregående natt; vid årsskifte (titel
-        // "31 december" publicerad 1 januari) blir det istället ett år fel.
-        if (! empty($parsed_title_items['parsed_date']) && ! empty($item->pubdate)) {
+        // parsed_date sätts från titelns "DD månad HH.MM" — Carbon defaultar
+        // till innevarande år vilket ger fel datum när titeln "29 april 22:00"
+        // publiceras kl 06:58 samma morgon (eventet var igår), eller "31 december"
+        // publiceras 1 januari (eventet var föregående år). Fixa bara när
+        // parsed_date hamnar i faktisk framtid — small-skew på några minuter
+        // mellan titel-tid och pubdate-tid är normal data och ska inte röras.
+        if (! empty($parsed_title_items['parsed_date'])) {
             $parsedDate = $parsed_title_items['parsed_date'];
-            $pubdate = \Carbon\Carbon::createFromTimestamp($item->pubdate);
-            if ($parsedDate->gt($pubdate)) {
-                // December i titel + januari i pubdate ⇒ årsskifte
+            if ($parsedDate->isFuture()) {
+                $pubdate = ! empty($item->pubdate)
+                    ? \Carbon\Carbon::createFromTimestamp($item->pubdate)
+                    : \Carbon\Carbon::now();
                 $isYearBoundary = $parsedDate->month === 12 && $pubdate->month === 1;
                 $parsed_title_items['parsed_date'] = $isYearBoundary
                     ? $parsedDate->subYear()
