@@ -79,7 +79,7 @@ services:
     restart: unless-stopped
     command: >
       redis-server
-      --maxmemory 2gb
+      --maxmemory 3gb
       --maxmemory-policy allkeys-lru
       --appendonly yes
       --requirepass ${REDIS_PASSWORD}

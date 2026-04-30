@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Providers\EventServiceProvider;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Redis;
 
@@ -33,8 +34,8 @@ class RedisHealth extends Command
         $stats = $this->parseInfo($conn->command('info', ['stats']));
         $server = $this->parseInfo($conn->command('info', ['server']));
 
-        $lastCacheFlush = $conn->command('get', ['bpk:meta:last-cache-flush']);
-        $lastResponseFlush = $conn->command('get', ['bpk:meta:last-responsecache-flush']);
+        $lastCacheFlush = $this->readFlushTimestamp('last-cache-flush');
+        $lastResponseFlush = $this->readFlushTimestamp('last-responsecache-flush');
 
         if ($this->option('json')) {
             $this->line(json_encode([
@@ -143,11 +144,22 @@ class RedisHealth extends Command
         return $out;
     }
 
+    private function readFlushTimestamp(string $name): ?string
+    {
+        $path = EventServiceProvider::flushTimestampPath($name);
+        if (!is_file($path)) {
+            return null;
+        }
+        $contents = @file_get_contents($path);
+        return is_string($contents) && $contents !== '' ? trim($contents) : null;
+    }
+
     private function formatFlushTime(mixed $iso): string
     {
         if (!is_string($iso) || $iso === '') {
             return 'aldrig (sedan listener installerades)';
         }
+        $iso = trim($iso);
         try {
             $when = \Carbon\Carbon::parse($iso);
             return $when->format('Y-m-d H:i') . ' (' . $when->diffForHumans() . ')';

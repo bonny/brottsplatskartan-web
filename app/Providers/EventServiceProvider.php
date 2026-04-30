@@ -5,7 +5,6 @@ namespace App\Providers;
 use Illuminate\Cache\Events\CacheFlushed;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Redis;
 use Spatie\ResponseCache\Events\ClearedResponseCacheEvent;
 
 class EventServiceProvider extends ServiceProvider
@@ -30,16 +29,30 @@ class EventServiceProvider extends ServiceProvider
     {
         parent::boot();
 
-        // Logga tidpunkten för cache-rensningar i meta-nycklar utanför
-        // cache-prefixet, så de överlever själva flushen och kan visas av
-        // `redis:health`. Listenern körs EFTER flushen → skriv-ordningen
-        // gör att nyckeln alltid finns kvar.
+        // Logga tidpunkten för cache-rensningar till fil. Tidigare lagrades
+        // detta i Redis, men med allkeys-lru evicterades meta-nycklarna i
+        // takt med övriga keys när cache närmade sig maxmemory.
         Event::listen(CacheFlushed::class, function (): void {
-            Redis::connection()->set('bpk:meta:last-cache-flush', now()->toIso8601String());
+            self::writeFlushTimestamp('last-cache-flush');
         });
 
         Event::listen(ClearedResponseCacheEvent::class, function (): void {
-            Redis::connection()->set('bpk:meta:last-responsecache-flush', now()->toIso8601String());
+            self::writeFlushTimestamp('last-responsecache-flush');
         });
+    }
+
+    public static function flushTimestampPath(string $name): string
+    {
+        return storage_path('app/cache-meta/' . $name);
+    }
+
+    private static function writeFlushTimestamp(string $name): void
+    {
+        $path = self::flushTimestampPath($name);
+        $dir = dirname($path);
+        if (!is_dir($dir)) {
+            @mkdir($dir, 0775, true);
+        }
+        @file_put_contents($path, now()->toIso8601String());
     }
 }
