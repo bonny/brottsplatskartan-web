@@ -17,24 +17,34 @@
     @if (!$showMap || !$event->hasMapImage())
         {{-- Ingen karta. --}}
     @elseif ($mapDistance === 'near')
+        @php
+            $listSrc = $useCircleStyle ? $event->getStaticImageSrcCircle(160, 160) : $event->getStaticImageSrc(160, 160);
+            $listSrc2x = $useCircleStyle ? $event->getStaticImageSrcCircle(160, 160, 2) : $event->getStaticImageSrc(160, 160, 2);
+        @endphp
         <a class="ListEvent__imageLink " href="{{ $event->getPermalink() }}">
             <img
                 loading="lazy"
                 alt="{{ $event->getMapAltText() }}"
                 class="ListEvent__image"
-                src="{{ $useCircleStyle ? $event->getStaticImageSrcCircle(160, 160) : $event->getStaticImageSrc(160, 160) }}"
+                src="{{ $listSrc }}"
+                srcset="{{ $listSrc }} 1x, {{ $listSrc2x }} 2x"
                 width="90"
                 height="90"
                 layout="fixed"
             />
         </a>
     @else
+        @php
+            $listSrc = $useCircleStyle ? $event->getStaticImageSrcCircle(160, 160) : $event->getStaticImageSrcFar(160, 160);
+            $listSrc2x = $useCircleStyle ? $event->getStaticImageSrcCircle(160, 160, 2) : $event->getStaticImageSrcFar(160, 160, 2);
+        @endphp
         <a class="ListEvent__imageLink " href="{{ $event->getPermalink() }}">
             <img
                 loading="lazy"
                 alt="{{ $event->getMapAltText() }}"
                 class="ListEvent__image"
-                src="{{ $useCircleStyle ? $event->getStaticImageSrcCircle(160, 160) : $event->getStaticImageSrcFar(160, 160) }}"
+                src="{{ $listSrc }}"
+                srcset="{{ $listSrc }} 1x, {{ $listSrc2x }} 2x"
                 width="90"
                 height="90"
                 layout="fixed"

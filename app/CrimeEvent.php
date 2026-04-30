@@ -138,7 +138,7 @@ class CrimeEvent extends Model implements Feedable {
 
     // return src for an image
     public function getStaticImageSrc($width = 320, $height = 320, $scale = 1) {
-        return app(StaticMapUrlBuilder::class)->closeUpUrl($this, (int) $width, (int) $height);
+        return app(StaticMapUrlBuilder::class)->closeUpUrl($this, (int) $width, (int) $height, (int) $scale);
     }
 
     /**
@@ -149,7 +149,7 @@ class CrimeEvent extends Model implements Feedable {
         $height = 320,
         $scale = 1
     ) {
-        return app(StaticMapUrlBuilder::class)->farUrl($this, (int) $width, (int) $height);
+        return app(StaticMapUrlBuilder::class)->farUrl($this, (int) $width, (int) $height, (int) $scale);
     }
 
     /**
@@ -157,9 +157,9 @@ class CrimeEvent extends Model implements Feedable {
      * radie anpassad efter geo-precision (se todos/20). Faller tillbaka
      * på bbox-varianten för grov precision (far/veryfar).
      */
-    public function getStaticImageSrcCircle(int $width = 617, int $height = 463): string
+    public function getStaticImageSrcCircle(int $width = 617, int $height = 463, int $scale = 1): string
     {
-        return app(StaticMapUrlBuilder::class)->circleUrl($this, $width, $height);
+        return app(StaticMapUrlBuilder::class)->circleUrl($this, $width, $height, $scale);
     }
 
     /**

@@ -34,21 +34,25 @@ class StaticMapUrlBuilder
      * Cirkel-variant: röd tonad cirkel runt eventets koordinat, radie från precision.
      * Faller tillbaka på closeUpUrl() om precisionen är för grov (far/veryfar)
      * eller om eventet saknar location_lat.
+     *
+     * `$scale=2` lägger till `@2x` i URL:n så tileserver-gl renderar dubbel
+     * pixeltäthet — krävs för skarp visning på retina-skärmar (todo #51).
      */
-    public function circleUrl(CrimeEvent $event, int $width = 320, int $height = 320): string
+    public function circleUrl(CrimeEvent $event, int $width = 320, int $height = 320, int $scale = 1): string
     {
         if (!$event->location_lat || !$event->location_lng) {
-            return $this->closeUpUrl($event, $width, $height);
+            return $this->closeUpUrl($event, $width, $height, $scale);
         }
 
         $radius = self::PRECISION_RADIUS[$event->getViewPortSizeAsString()] ?? null;
         if ($radius === null) {
-            return $this->closeUpUrl($event, $width, $height);
+            return $this->closeUpUrl($event, $width, $height, $scale);
         }
 
+        $suffix = $scale === 2 ? '@2x' : '';
         $base = config('services.tileserver.url')
             . 'styles/basic-preview/static/auto/'
-            . "{$width}x{$height}.jpg";
+            . "{$width}x{$height}{$suffix}.jpg";
 
         $lat = (float) $event->location_lat;
         $lng = (float) $event->location_lng;
@@ -102,15 +106,16 @@ class StaticMapUrlBuilder
      * Närbild: viewport-bbox som röd polygon ovanpå auto-zoomad karta.
      * Motsvarar tidigare CrimeEvent::getStaticImageSrc().
      */
-    public function closeUpUrl(CrimeEvent $event, int $width = 320, int $height = 320): string
+    public function closeUpUrl(CrimeEvent $event, int $width = 320, int $height = 320, int $scale = 1): string
     {
         if (!$event->viewport_northeast_lat) {
             return '';
         }
 
+        $suffix = $scale === 2 ? '@2x' : '';
         $base = config('services.tileserver.url')
             . 'styles/basic-preview/static/auto/'
-            . "{$width}x{$height}.jpg";
+            . "{$width}x{$height}{$suffix}.jpg";
 
         $neLat = number_format((float) $event->viewport_northeast_lat, 3, '.', '');
         $neLng = number_format((float) $event->viewport_northeast_lng, 3, '.', '');
@@ -139,7 +144,7 @@ class StaticMapUrlBuilder
      * viewport-rektangel som röd markering. Motsvarar tidigare
      * CrimeEvent::getStaticImageSrcFar().
      */
-    public function farUrl(CrimeEvent $event, int $width = 320, int $height = 320): string
+    public function farUrl(CrimeEvent $event, int $width = 320, int $height = 320, int $scale = 1): string
     {
         if (!$event->viewport_northeast_lat) {
             return '';
@@ -151,10 +156,11 @@ class StaticMapUrlBuilder
         $centerLng = number_format((float) $event->location_lng, 3, '.', '');
         $centerLat = number_format((float) $event->location_lat, 3, '.', '');
 
+        $suffix = $scale === 2 ? '@2x' : '';
         $base = config('services.tileserver.url')
             . 'styles/basic-preview/static/'
             . "{$centerLng},{$centerLat},{$zoomLevel}"
-            . "/{$width}x{$height}.jpg";
+            . "/{$width}x{$height}{$suffix}.jpg";
 
         $neLat = number_format((float) $event->viewport_northeast_lat + $expand, 3, '.', '');
         $neLng = number_format((float) $event->viewport_northeast_lng + $expand, 3, '.', '');

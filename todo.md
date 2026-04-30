@@ -4,7 +4,7 @@ Index över förbättringsarbete. Varje todo har en egen fil under
 [`todos/`](todos/) med fullständig analys. Konvention och
 mappstruktur: [`todos/README.md`](todos/README.md).
 
-Senast uppdaterad: 2026-04-30 (+#50–#60 från Inbox Brottsplatskartan; 2 dubbletter avfärdade. #52 baseline-research klar — 7 åtgärder identifierade).
+Senast uppdaterad: 2026-04-30 (+#56 klar — DPR @2x srcset på alla kartbilder; format-byte avfärdat efter mätning).
 
 ## Aktiva
 
@@ -71,6 +71,7 @@ Sorterade nyast först.
 
 | #   | Titel                                                               | Klar       | Fil                                                                                          |
 | --- | ------------------------------------------------------------------- | ---------- | -------------------------------------------------------------------------------------------- |
+| 56  | Kartbilder: skarpare på retina (DPR @2x srcset)                     | 2026-04-30 | [todos/done/56-kartbilder-format.md](todos/done/56-kartbilder-format.md)                     |
 | 16  | Rensa / avveckla gamla DO-servern (Dokku)                           | 2026-04-29 | [todos/done/16-rensa-do-server.md](todos/done/16-rensa-do-server.md)                         |
 | 44  | EventsMap-API filtreras per stad eller län                          | 2026-04-28 | [todos/done/44-eventsmap-filter-per-plats.md](todos/done/44-eventsmap-filter-per-plats.md)   |
 | 42  | Designa om månadsnav i högerspalten                                 | 2026-04-28 | [todos/done/42-manadsnav-hogerspalt-design.md](todos/done/42-manadsnav-hogerspalt-design.md) |

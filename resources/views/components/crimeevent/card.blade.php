@@ -36,18 +36,32 @@
         $nearMapSrc = $useCircleStyle
             ? $event->getStaticImageSrcCircle(617, 463)
             : $event->getStaticImageSrc(617, 463);
+        $nearMapSrc2x = $useCircleStyle
+            ? $event->getStaticImageSrcCircle(617, 463, 2)
+            : $event->getStaticImageSrc(617, 463, 2);
+        $overviewSrc = $useCircleStyle
+            ? $event->getStaticImageSrcCircle(640, 320)
+            : $event->getStaticImageSrc(640, 320);
+        $overviewSrc2x = $useCircleStyle
+            ? $event->getStaticImageSrcCircle(640, 320, 2)
+            : $event->getStaticImageSrc(640, 320, 2);
+        $farSrc = $event->getStaticImageSrcFar(213, 332);
+        $farSrc2x = $event->getStaticImageSrcFar(213, 332, 2);
     @endphp
     <p class="Event__map">
         @if ($overview)
             <a href="{{ $event->getPermalink() }}">
                 <img loading="lazy" alt="{{ $event->getMapAltText() }}" class="Event__mapImage"
-                    src="{{ $useCircleStyle ? $event->getStaticImageSrcCircle(640, 320) : $event->getStaticImageSrc(640, 320) }}"
+                    src="{{ $overviewSrc }}"
+                    srcset="{{ $overviewSrc }} 1x, {{ $overviewSrc2x }} 2x"
                     width="640" height="320" />
             </a>
         @else
             <span class="Event__mapImageWrap Event__mapImageWrap--near">
                 <img loading="lazy" alt="{{ $event->getMapAltText() }}" class="Event__mapImage Event__mapImage--near"
-                    src="{{ $nearMapSrc }}" width="426" height="320" />
+                    src="{{ $nearMapSrc }}"
+                    srcset="{{ $nearMapSrc }} 1x, {{ $nearMapSrc2x }} 2x"
+                    width="426" height="320" />
                 @if ($useCircleStyle)
                     <span class="Event__mapCaption">Ungefärlig plats — markeringen visar området, inte exakt koordinat.</span>
                 @endif
@@ -55,7 +69,9 @@
             <span class="Event__mapImageWrap Event__mapImageWrap--far">
                 <img loading="lazy"
                     alt="Översiktskarta som visar hela Sverige med en markör som visar ungefär var händelsen inträffat"
-                    class="Event__mapImage Event__mapImage--far" src="{{ $event->getStaticImageSrcFar(213, 332) }}"
+                    class="Event__mapImage Event__mapImage--far"
+                    src="{{ $farSrc }}"
+                    srcset="{{ $farSrc }} 1x, {{ $farSrc2x }} 2x"
                     width="213" height="332" />
             </span>
         @endif
