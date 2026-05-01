@@ -16,6 +16,10 @@ class FetchNewsRss extends Command
 
     protected $description = 'Hämtar nyheter från RSS-feeds.';
 
+    private string $now;
+
+    private int $timeout;
+
     public function handle(): int
     {
         $feeds = config('news-feeds.feeds', []);
@@ -28,6 +32,9 @@ class FetchNewsRss extends Command
                 return self::FAILURE;
             }
         }
+
+        $this->now = Carbon::now()->toDateTimeString();
+        $this->timeout = (int) config('news-feeds.http_timeout', 8);
 
         $totalNew = 0;
         $totalDupes = 0;
@@ -63,7 +70,10 @@ class FetchNewsRss extends Command
         $sp = new SimplePie();
         $sp->set_feed_url($url);
         $sp->enable_cache(false);
-        $sp->set_timeout((int) config('news-feeds.http_timeout', 8));
+        $sp->set_timeout($this->timeout);
+        // CURLOPT_CONNECTTIMEOUT är skild från read-timeout — utan den
+        // kan en DNS-hang blockera långt över set_timeout-värdet.
+        $sp->set_curl_options([CURLOPT_CONNECTTIMEOUT => 5]);
         $sp->set_useragent('Brottsplatskartan/1.0 (+https://brottsplatskartan.se)');
         $sp->init();
 
@@ -72,7 +82,6 @@ class FetchNewsRss extends Command
             throw new \RuntimeException(is_array($err) ? implode('; ', $err) : (string) $err);
         }
 
-        $now = Carbon::now()->toDateTimeString();
         $rows = [];
 
         foreach ($sp->get_items() as $item) {
@@ -100,7 +109,7 @@ class FetchNewsRss extends Command
                 'summary' => $summary !== '' ? Str::limit($summary, 2000, '') : null,
                 'pubdate' => $pubdate,
                 'content_hash' => $hash,
-                'fetched_at' => $now,
+                'fetched_at' => $this->now,
             ];
         }
 
