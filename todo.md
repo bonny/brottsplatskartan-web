@@ -4,7 +4,7 @@ Index över förbättringsarbete. Varje todo har en egen fil under
 [`todos/`](todos/) med fullständig analys. Konvention och
 mappstruktur: [`todos/README.md`](todos/README.md).
 
-Senast uppdaterad: 2026-05-01 (#53 klar — presstalesperson-filter aktivt, 178 events backfillade).
+Senast uppdaterad: 2026-05-01 (#61 avfärdad — ingen driver; #55 oblockerad → Alt D + Alt B med Spatie/immutable; #58/#65 hanterade tidigare idag).
 
 ## Aktiva
 
@@ -23,19 +23,16 @@ Senast uppdaterad: 2026-05-01 (#53 klar — presstalesperson-filter aktivt, 178 
 | 51  | Övriga datakällor: research-skiss                       | Research-katalog (SMHI, räddningstjänst-RSS, Krisinfo, m.fl.) — bryts ut per källa    | [todos/51-ovriga-datakallor-research.md](todos/51-ovriga-datakallor-research.md)                   |
 | 52  | GSC-monitor: lågrankade högvolym-queries                | Baseline klar 2026-04-30 — 7 åtgärder identifierade (A–G), ~25k clicks/90d potential  | [todos/52-gsc-low-rank-monitoring.md](todos/52-gsc-low-rank-monitoring.md)                         |
 | 54  | Trafikkontroll-titlar: utöka AI-rewrite                 | Idé — utöka `isVagueTitle()` med trafikkontroll-mönster                               | [todos/54-trafikkontroll-titlar.md](todos/54-trafikkontroll-titlar.md)                             |
-| 55  | Kortare/snyggare URL:er för kartbilder                  | Skissad — proxy-route `/k/{id}-{w}x{h}`; blockerad av #61                             | [todos/55-kortare-kartbild-urls.md](todos/55-kortare-kartbild-urls.md)                             |
+| 55  | Kortare/snyggare URL:er för kartbilder                  | Skissad — Alt D oblockerad (path-density), Alt B (301 + Spatie + immutable)           | [todos/55-kortare-kartbild-urls.md](todos/55-kortare-kartbild-urls.md)                             |
 | 57  | Aktivera Hetzners referral-program                      | Idé — länk på `/sida/om` med transparent disclosure                                   | [todos/57-hetzner-referral.md](todos/57-hetzner-referral.md)                                       |
-| 58  | spatie/laravel-markdown-response för AI-agenter         | Idé — utöka #12 till alla sidor via auto-detect-middleware                            | [todos/58-laravel-markdown-response.md](todos/58-laravel-markdown-response.md)                     |
 | 59  | "Vad händer nu"-ruta (Krimkartan-känsla)                | Idé — kompakt feed-komponent på startsidan                                            | [todos/59-vad-hander-nu-ruta.md](todos/59-vad-hander-nu-ruta.md)                                   |
 | 60  | Auto-länka events till nyheter via AI + RSS             | Fas 3 (bred) — kör efter #63 visat positivt utfall; SEO-research klar 2026-05-01      | [todos/60-auto-lank-nyheter-ai-rss.md](todos/60-auto-lank-nyheter-ai-rss.md)                       |
-| 61  | Caddy med cache-handler, ersätt nginx-tiles             | Skissad — egen Caddy-image med Souin/badger; konsoliderar tile-cache + frigör #55     | [todos/61-caddy-cache-handler.md](todos/61-caddy-cache-handler.md)                                 |
 | 63  | Relaterade nyheter — prio:a high-traffic events         | Fas 1 (smal pilot) blockerar #60; SEO-research klar 2026-05-01 — Variant C rek        | [todos/63-relaterade-nyheter-trafikprio.md](todos/63-relaterade-nyheter-trafikprio.md)             |
 | 64  | Per-plats nyhetsaggregering — "Senaste nyheter i {ort}" | Skissad — kompletterar #60/#63 med klassifikation per plats; större SEO-träffyta      | [todos/64-per-plats-nyhetsaggregering.md](todos/64-per-plats-nyhetsaggregering.md)                 |
 
 ### Beroenden
 
 - **#10 → #36:** GSC-mätning bygger på #10:s rendering-deploy. _(#10 klar 2026-04-27 — #36 mätperiod startad samma dag.)_
-- **#61 → #55:** `/k/*`-routen i #55 vill ha cache-handler i Caddy igång före launch. _(#61 ska soaka 7d innan #55 startas.)_
 - **#63 → #60:** #63 är fas-1-pilot (smal, top-50 events) som validerar AI-precision + UI; #60 är fas-3-rollout (alla events). SEO-research 2026-05-01 visar att event-trafik är flat-tail → bred ansats vinner på sikt, men smal pilot först.
 
 ### Föreslagen ordning
@@ -76,6 +73,7 @@ Sorterade nyast först.
 
 | #   | Titel                                                               | Klar       | Fil                                                                                                          |
 | --- | ------------------------------------------------------------------- | ---------- | ------------------------------------------------------------------------------------------------------------ |
+| 58  | spatie/laravel-markdown-response för AI-agenter                     | 2026-05-01 | [todos/done/58-laravel-markdown-response.md](todos/done/58-laravel-markdown-response.md)                     |
 | 53  | Återaktivera presstalesperson-filter                                | 2026-05-01 | [todos/done/53-aterativera-presstalesperson-filter.md](todos/done/53-aterativera-presstalesperson-filter.md) |
 | 62  | `getMapAltText()` förbättrad för image-search-SEO                   | 2026-05-01 | [todos/done/62-getmapalttext-image-seo.md](todos/done/62-getmapalttext-image-seo.md)                         |
 | 56  | Kartbilder: skarpare på retina (DPR @2x srcset)                     | 2026-04-30 | [todos/done/56-kartbilder-format.md](todos/done/56-kartbilder-format.md)                                     |
@@ -117,10 +115,12 @@ Sorterade nyast först.
 
 ## Avfärdade / sammanslagna
 
-| #   | Titel                                          | Beslut                                                                            | Fil                                                                                                  |
-| --- | ---------------------------------------------- | --------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| 49  | Feeda in Krisinformation.se RSS                | Avfärdad 2026-04-29 — brand-/UX-/SEO-mismatch; VMA täcker redan det akuta         | [todos/rejected/49-feeda-in-krisinformation.md](todos/rejected/49-feeda-in-krisinformation.md)       |
-| 40  | Trafikverket STRADA olycksstatistik per kommun | Avfärdad 2026-04-29 — kommunnivå kräver myndighetsavtal, öppen data bara län-nivå | [todos/rejected/40-trafikverket-strada-olyckor.md](todos/rejected/40-trafikverket-strada-olyckor.md) |
-| 18  | Attribution vid statiska kartbilder (ODbL)     | Avfärdad 2026-04-24 — gråzon, om-sidan räcker                                     | [todos/rejected/18-attribution-vid-kartbilder.md](todos/rejected/18-attribution-vid-kartbilder.md)   |
-| 9   | Extern DB-backup                               | Avfärdad 2026-04-21 — Hetzner-snapshots räcker                                    | [todos/rejected/09-extern-db-backup.md](todos/rejected/09-extern-db-backup.md)                       |
-| 2   | SEO-review (legacy)                            | Sammanslagen med #11 (2026-04-21)                                                 | [todos/rejected/02-seo-review.md](todos/rejected/02-seo-review.md)                                   |
+| #   | Titel                                          | Beslut                                                                                               | Fil                                                                                                  |
+| --- | ---------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| 61  | Bygg om Caddy med cache-handler                | Avfärdad 2026-05-01 — ingen driver; #55 klarar sig med Spatie + immutable, RAM-pressure ej motiverad | [todos/rejected/61-caddy-cache-handler.md](todos/rejected/61-caddy-cache-handler.md)                 |
+| 65  | Egen Caddy-image via xcaddy                    | Sammanslagen 2026-05-01 in i (då aktiva) #61, sedan avfärdad samma dag tillsammans med #61           | [todos/rejected/65-egen-caddy-image-xcaddy.md](todos/rejected/65-egen-caddy-image-xcaddy.md)         |
+| 49  | Feeda in Krisinformation.se RSS                | Avfärdad 2026-04-29 — brand-/UX-/SEO-mismatch; VMA täcker redan det akuta                            | [todos/rejected/49-feeda-in-krisinformation.md](todos/rejected/49-feeda-in-krisinformation.md)       |
+| 40  | Trafikverket STRADA olycksstatistik per kommun | Avfärdad 2026-04-29 — kommunnivå kräver myndighetsavtal, öppen data bara län-nivå                    | [todos/rejected/40-trafikverket-strada-olyckor.md](todos/rejected/40-trafikverket-strada-olyckor.md) |
+| 18  | Attribution vid statiska kartbilder (ODbL)     | Avfärdad 2026-04-24 — gråzon, om-sidan räcker                                                        | [todos/rejected/18-attribution-vid-kartbilder.md](todos/rejected/18-attribution-vid-kartbilder.md)   |
+| 9   | Extern DB-backup                               | Avfärdad 2026-04-21 — Hetzner-snapshots räcker                                                       | [todos/rejected/09-extern-db-backup.md](todos/rejected/09-extern-db-backup.md)                       |
+| 2   | SEO-review (legacy)                            | Sammanslagen med #11 (2026-04-21)                                                                    | [todos/rejected/02-seo-review.md](todos/rejected/02-seo-review.md)                                   |
