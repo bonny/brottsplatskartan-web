@@ -190,8 +190,8 @@
                             <h3 class="Timeline-itemTitle">{{ $crimeEvent->getHeadline() }}</h3>
                         </div>
                         <img class="Timeline-mapImage" loading="lazy" alt="{{ $crimeEvent->getMapAltText('far') }}"
-                            src="{{ $crimeEvent->getStaticImageSrcFar(100, 100) }}"
-                            srcset="{{ $crimeEvent->getStaticImageSrcFar(100, 100) }} 1x, {{ $crimeEvent->getStaticImageSrcFar(100, 100, 2) }} 2x"
+                            src="{{ $crimeEvent->getKortKartbildUrl('far', 100, 100) }}"
+                            srcset="{{ $crimeEvent->getKortKartbildUrl('far', 100, 100) }} 1x, {{ $crimeEvent->getKortKartbildUrl('far', 100, 100, 2) }} 2x"
                             width="50" height="50" />
                     </div>
                 </a>

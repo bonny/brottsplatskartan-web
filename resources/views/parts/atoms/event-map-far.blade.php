@@ -1,7 +1,7 @@
 @if ($event->geocoded)
     @php
-        $mapSrc = $event->getStaticImageSrcFar(640, 340);
-        $mapSrc2x = $event->getStaticImageSrcFar(640, 340, 2);
+        $mapSrc = $event->getKortKartbildUrl('far', 640, 340);
+        $mapSrc2x = $event->getKortKartbildUrl('far', 640, 340, 2);
     @endphp
     <p class="u-margin-0 u-margin-bottom-half">
         <img loading="{{ ($eager ?? false) ? 'eager' : 'lazy' }}"

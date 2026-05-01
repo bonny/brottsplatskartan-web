@@ -34,19 +34,19 @@
     @php
         $useCircleStyle = config('services.tileserver.map_style') === 'circle';
         $nearMapSrc = $useCircleStyle
-            ? $event->getStaticImageSrcCircle(617, 463)
-            : $event->getStaticImageSrc(617, 463);
+            ? $event->getKortKartbildUrl('circle', 617, 463)
+            : $event->getKortKartbildUrl('near', 617, 463);
         $nearMapSrc2x = $useCircleStyle
-            ? $event->getStaticImageSrcCircle(617, 463, 2)
-            : $event->getStaticImageSrc(617, 463, 2);
+            ? $event->getKortKartbildUrl('circle', 617, 463, 2)
+            : $event->getKortKartbildUrl('near', 617, 463, 2);
         $overviewSrc = $useCircleStyle
-            ? $event->getStaticImageSrcCircle(640, 320)
-            : $event->getStaticImageSrc(640, 320);
+            ? $event->getKortKartbildUrl('circle', 640, 320)
+            : $event->getKortKartbildUrl('near', 640, 320);
         $overviewSrc2x = $useCircleStyle
-            ? $event->getStaticImageSrcCircle(640, 320, 2)
-            : $event->getStaticImageSrc(640, 320, 2);
-        $farSrc = $event->getStaticImageSrcFar(213, 332);
-        $farSrc2x = $event->getStaticImageSrcFar(213, 332, 2);
+            ? $event->getKortKartbildUrl('circle', 640, 320, 2)
+            : $event->getKortKartbildUrl('near', 640, 320, 2);
+        $farSrc = $event->getKortKartbildUrl('far', 213, 332);
+        $farSrc2x = $event->getKortKartbildUrl('far', 213, 332, 2);
     @endphp
     <p class="Event__map">
         @if ($overview)

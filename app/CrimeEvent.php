@@ -166,11 +166,16 @@ class CrimeEvent extends Model implements Feedable {
      * Kort URL till statisk kartbild via /k/v1/-routen (todo #55, Alt B).
      * Returnerar 301 till tileservern, browser-cachas immutable 1 år.
      * Mode: 'circle' | 'circle-low' | 'near' | 'far'.
+     *
+     * `$absolute=true` ger fullständig URL — krävs för OG/Twitter-meta
+     * (`<meta property="og:image">`) och sitemap image:loc där relativa
+     * paths inte resolveras av crawlers.
      */
-    public function getKortKartbildUrl(string $mode, int $width, int $height, int $scale = 1): string
+    public function getKortKartbildUrl(string $mode, int $width, int $height, int $scale = 1, bool $absolute = false): string
     {
         $retina = $scale === 2 ? '@2x' : '';
-        return "/k/v1/{$mode}-{$this->id}-{$width}x{$height}{$retina}.jpg";
+        $path = "/k/v1/{$mode}-{$this->id}-{$width}x{$height}{$retina}.jpg";
+        return $absolute ? url($path) : $path;
     }
 
     /**
