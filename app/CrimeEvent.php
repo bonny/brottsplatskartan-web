@@ -1166,11 +1166,13 @@ class CrimeEvent extends Model implements Feedable {
         // läser parsed_teaser som är för kort för Schema articleBody.
         $bodyText = trim(Helper::stripTagsWithWhitespace($this->display_description));
 
-        // Google rekommenderar flera bildformat för NewsArticle
+        // Google rekommenderar flera bildformat för NewsArticle.
+        // /k/v1/-routen ger Google en kort, stabil image-URL som de följer
+        // via 301 till tileservern (cachas immutable 1 år browser+edge).
         $images = [
-            $this->getStaticImageSrc(1200, 675), // 16:9
-            $this->getStaticImageSrc(800, 600),  // 4:3
-            $this->getStaticImageSrc(640, 640),  // 1:1
+            $this->getKortKartbildUrl('near', 1200, 675, 1, true), // 16:9
+            $this->getKortKartbildUrl('near', 800, 600, 1, true),  // 4:3
+            $this->getKortKartbildUrl('near', 640, 640, 1, true),  // 1:1
         ];
 
         $keywords = array_filter([

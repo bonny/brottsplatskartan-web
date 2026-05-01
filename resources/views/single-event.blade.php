@@ -10,7 +10,7 @@ Template för ett event/händelse
 @section('canonicalLink', $event->getPermalink(true))
 @section('ogUrl', $event->getPermalink(true))
 @section('metaDescription', e($event->getMetaDescription()))
-@section('metaImage'){!! $event->getStaticImageSrc(640, 640, 2) !!}@endsection
+@section('metaImage'){!! $event->getKortKartbildUrl('near', 640, 640, 2, true) !!}@endsection
     {{-- @section('metaImage', config('app.url') . '/img/share-img-blur.jpg') --}}
 @section('metaImageWidth', 640)
 @section('metaImageHeight', 640)
