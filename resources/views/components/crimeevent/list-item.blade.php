@@ -41,7 +41,7 @@
         <a class="ListEvent__imageLink " href="{{ $event->getPermalink() }}">
             <img
                 loading="lazy"
-                alt="{{ $event->getMapAltText() }}"
+                alt="{{ $event->getMapAltText('far') }}"
                 class="ListEvent__image"
                 src="{{ $listSrc }}"
                 srcset="{{ $listSrc }} 1x, {{ $listSrc2x }} 2x"

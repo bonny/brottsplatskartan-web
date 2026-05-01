@@ -1,4 +1,4 @@
-**Status:** aktiv (skissad — research klar, implementation saknas)
+**Status:** klar 2026-05-01 — `getMapAltText($variant)` skriver om alt med event-typ + plats + datum (close) eller "Översiktskarta över Sverige…" (far). 4 blade-callers uppdaterade. PHPStan OK. Mätperiod 60d post-deploy mot baseline (image position ~45, CTR ~0.26 %).
 **Senast uppdaterad:** 2026-05-01
 
 # Todo #62 — Förbättra `getMapAltText()` för image-search-SEO

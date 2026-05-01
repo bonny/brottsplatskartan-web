@@ -4,7 +4,7 @@ Index över förbättringsarbete. Varje todo har en egen fil under
 [`todos/`](todos/) med fullständig analys. Konvention och
 mappstruktur: [`todos/README.md`](todos/README.md).
 
-Senast uppdaterad: 2026-05-01 (+#62 — förbättra `getMapAltText()` för image-search-SEO; #55 slugs avfärdade efter GSC-mätning).
+Senast uppdaterad: 2026-05-01 (#62 klar — getMapAltText() nu med event-typ + plats + datum, far-variant för översiktskartor).
 
 ## Aktiva
 
@@ -30,7 +30,6 @@ Senast uppdaterad: 2026-05-01 (+#62 — förbättra `getMapAltText()` för image
 | 59  | "Vad händer nu"-ruta (Krimkartan-känsla)         | Idé — kompakt feed-komponent på startsidan                                            | [todos/59-vad-hander-nu-ruta.md](todos/59-vad-hander-nu-ruta.md)                                   |
 | 60  | Auto-länka events till nyheter via AI + RSS      | Idé — pollar svenska nyhets-RSS, matchar via Claude Haiku                             | [todos/60-auto-lank-nyheter-ai-rss.md](todos/60-auto-lank-nyheter-ai-rss.md)                       |
 | 61  | Caddy med cache-handler, ersätt nginx-tiles      | Skissad — egen Caddy-image med Souin/badger; konsoliderar tile-cache + frigör #55     | [todos/61-caddy-cache-handler.md](todos/61-caddy-cache-handler.md)                                 |
-| 62  | Förbättra `getMapAltText()` för image-search-SEO | Skissad — alt-text säger "röd fyrkant" (felaktigt) + saknar event-typ/datum           | [todos/62-getmapalttext-image-seo.md](todos/62-getmapalttext-image-seo.md)                         |
 
 ### Beroenden
 
@@ -54,15 +53,16 @@ MCP:s som `mcp-gsc`, SSH-nycklar till prod, eller mänsklig bedömning).
 Granska veckovis. När en åtgärd är gjord, flytta raden till "Avklarade" nedan
 eller markera todon som klar.
 
-| Datum      | Åtgärd                                                       | Todo                                           |
-| ---------- | ------------------------------------------------------------ | ---------------------------------------------- |
-| 2026-05-13 | MCF räddningsstatistik — utvärdera trafikimpact i GA4 + GSC  | [#39](todos/39-msb-brand-rakning-statistik.md) |
-| 2026-05-25 | GSC-mätning AI-titlar — första check (4v post-deploy)        | [#36](todos/36-gsc-matning-ai-titlar.md)       |
-| 2026-05-27 | Månadsvyer-pilot — 30d-mätning Uppsala/Västerås              | [#25](todos/25-manadsvyer-datum-routes.md)     |
-| 2026-06-22 | GSC-mätning AI-titlar — andra check (8v)                     | [#36](todos/36-gsc-matning-ai-titlar.md)       |
-| 2026-07-27 | GSC-mätning AI-titlar — tredje check (12v) + beslut om fas 3 | [#36](todos/36-gsc-matning-ai-titlar.md)       |
-| 2026-07-27 | Indexerade pages — slutmätning (90d post-noindex)            | [#29](todos/29-audit-indexerade-pages.md)      |
-| 2026-07-30 | GSC-monitor: kvartalsrapport (90d compare mot baseline)      | [#52](todos/52-gsc-low-rank-monitoring.md)     |
+| Datum      | Åtgärd                                                       | Todo                                            |
+| ---------- | ------------------------------------------------------------ | ----------------------------------------------- |
+| 2026-05-13 | MCF räddningsstatistik — utvärdera trafikimpact i GA4 + GSC  | [#39](todos/39-msb-brand-rakning-statistik.md)  |
+| 2026-05-25 | GSC-mätning AI-titlar — första check (4v post-deploy)        | [#36](todos/36-gsc-matning-ai-titlar.md)        |
+| 2026-05-27 | Månadsvyer-pilot — 30d-mätning Uppsala/Västerås              | [#25](todos/25-manadsvyer-datum-routes.md)      |
+| 2026-06-22 | GSC-mätning AI-titlar — andra check (8v)                     | [#36](todos/36-gsc-matning-ai-titlar.md)        |
+| 2026-06-30 | GSC image-search — 60d-mätning av nya `getMapAltText()`      | [#62](todos/done/62-getmapalttext-image-seo.md) |
+| 2026-07-27 | GSC-mätning AI-titlar — tredje check (12v) + beslut om fas 3 | [#36](todos/36-gsc-matning-ai-titlar.md)        |
+| 2026-07-27 | Indexerade pages — slutmätning (90d post-noindex)            | [#29](todos/29-audit-indexerade-pages.md)       |
+| 2026-07-30 | GSC-monitor: kvartalsrapport (90d compare mot baseline)      | [#52](todos/52-gsc-low-rank-monitoring.md)      |
 
 ### Avklarade uppföljningar
 
@@ -74,6 +74,7 @@ Sorterade nyast först.
 
 | #   | Titel                                                               | Klar       | Fil                                                                                          |
 | --- | ------------------------------------------------------------------- | ---------- | -------------------------------------------------------------------------------------------- |
+| 62  | `getMapAltText()` förbättrad för image-search-SEO                   | 2026-05-01 | [todos/done/62-getmapalttext-image-seo.md](todos/done/62-getmapalttext-image-seo.md)         |
 | 56  | Kartbilder: skarpare på retina (DPR @2x srcset)                     | 2026-04-30 | [todos/done/56-kartbilder-format.md](todos/done/56-kartbilder-format.md)                     |
 | 16  | Rensa / avveckla gamla DO-servern (Dokku)                           | 2026-04-29 | [todos/done/16-rensa-do-server.md](todos/done/16-rensa-do-server.md)                         |
 | 44  | EventsMap-API filtreras per stad eller län                          | 2026-04-28 | [todos/done/44-eventsmap-filter-per-plats.md](todos/done/44-eventsmap-filter-per-plats.md)   |

@@ -1420,12 +1420,36 @@ class CrimeEvent extends Model implements Feedable {
         return $this->hasMany(CrimeView::class);
     }
 
-    public function getMapAltText(): string {
-        $altText = sprintf(
-            'Karta som med röd fyrkant ramar in %1$s',
-            $this->getLocationString()
-        );
-        return $altText;
+    /**
+     * Alt-text för kartbild. Bygger event-typ + plats + datum så att
+     * image-search-relevanssignalen matchar de queries vi rankar för
+     * (#62). `close` = inzoomad karta över platsen, `far` = översiktskarta
+     * över Sverige med markör.
+     */
+    public function getMapAltText(string $variant = 'close'): string {
+        $type = mb_strtolower(trim($this->parsed_title ?: 'händelse'));
+        $location = $this->getLocationString();
+
+        // Trunca bort administrativ nivå om plats-strängen blir för lång
+        // (Google rekommenderar alt-text under ~125 tecken).
+        if (mb_strlen($location) > 50) {
+            $location = $this->getLocationString(true, true, false);
+        }
+
+        if ($variant === 'far') {
+            if ($location === '') {
+                return "Översiktskarta över Sverige som visar var {$type} inträffade";
+            }
+            return "Översiktskarta över Sverige som visar var {$type} inträffade i {$location}";
+        }
+
+        $date = $this->getParsedDateInFormat('D MMMM YYYY');
+
+        if ($location === '') {
+            return "Karta över {$type}, {$date}";
+        }
+
+        return "Karta över {$type} i {$location}, {$date}";
     }
 
     /**

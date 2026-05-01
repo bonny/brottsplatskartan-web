@@ -68,7 +68,7 @@
             </span>
             <span class="Event__mapImageWrap Event__mapImageWrap--far">
                 <img loading="lazy"
-                    alt="Översiktskarta som visar hela Sverige med en markör som visar ungefär var händelsen inträffat"
+                    alt="{{ $event->getMapAltText('far') }}"
                     class="Event__mapImage Event__mapImage--far"
                     src="{{ $farSrc }}"
                     srcset="{{ $farSrc }} 1x, {{ $farSrc2x }} 2x"

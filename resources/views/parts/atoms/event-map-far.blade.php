@@ -9,6 +9,6 @@
             src="{{ $mapSrc }}"
             srcset="{{ $mapSrc }} 1x, {{ $mapSrc2x }} 2x"
             class="rounded fill"
-            alt="{{ $event->getMapAltText() }}" width="640" height="340" />
+            alt="{{ $event->getMapAltText('far') }}" width="640" height="340" />
     </p>
 @endif
