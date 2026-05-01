@@ -106,7 +106,7 @@ class ContentFilterService
             '/besvaras samtal på pressnumret/i',
 
             // Press-administrativa meddelanden (pressnummer-byten, schema)
-            '/pressnummer(et)? till polisen/i',
+            '/(pressnummer|pressnumret) till polisen/i',
             '/pressfrågor för polisområde/i',
             '/dagens presstalesperson för polisområde/i',
             '/presstalesperson träffas/i',
