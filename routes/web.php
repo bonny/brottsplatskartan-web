@@ -30,6 +30,7 @@ use App\Http\Controllers\VMAAlertsController;
 use App\Http\Controllers\FullScreenMapController;
 use App\Http\Controllers\PolisstationerController;
 use App\Http\Controllers\CityController;
+use App\Http\Controllers\KartbildController;
 
 setlocale(LC_ALL, 'sv_SE', 'sv_SE.utf8');
 
@@ -40,6 +41,24 @@ Route::redirect('/sverigekartan/', '/karta/', 301);
 Route::get('/karta/{location?}', [FullScreenMapController::class, 'index'])->name(
     'sverigekartan'
 );
+
+// Kort URL för statiska kartbilder. Shadow-deployad — ingen blade pekar
+// hit än. Se todo #55, Alt B. Spec-format dokumenterat i KartbildController.
+//
+// Skippar session-middleware: ett 301-svar ska inte sätta Set-Cookie,
+// dels för att Spatie Response Cache inte cachar svar med cookies, dels
+// för att browser/CDN ska kunna lagra redirect:en permanent.
+Route::get('/k/v1/{spec}.jpg', [KartbildController::class, 'show'])
+    ->where('spec', '(circle-low|circle|near|far)-\d+-\d+x\d+(@2x)?')
+    ->withoutMiddleware([
+        \Illuminate\Session\Middleware\StartSession::class,
+        \Illuminate\Cookie\Middleware\EncryptCookies::class,
+        \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+        \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+        \Illuminate\Foundation\Http\Middleware\PreventRequestForgery::class,
+        \App\Http\Middleware\DebugBarMaybeEnable::class,
+    ])
+    ->name('kartbild.show');
 
 Route::get('/sverigekartan-iframe/{location?}', [FullScreenMapController::class, 'iframe'])->name(
     'sverigekartanIframe'

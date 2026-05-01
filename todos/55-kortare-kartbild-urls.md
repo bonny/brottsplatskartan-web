@@ -1,4 +1,4 @@
-**Status:** Alt D implementerad lokalt 2026-05-01 (väntar verifiering i browser innan deploy + Alt A)
+**Status:** Alt D + Alt B (301 redirect) implementerade lokalt 2026-05-01, shadow-deployade (ingen blade pekar dit). Väntar prod-verifiering innan blade-callers byts.
 **Senast uppdaterad:** 2026-05-01
 **Källa:** Inbox Brottsplatskartan (2026-04-30)
 
@@ -179,13 +179,21 @@ LCP eftersom bilderna är `loading="lazy"` (verifiera först).
    `edgeFadedCirclePaths()` ger 1 lager × 24 punkter. Sätts i
    `list-item.blade.php` (160×160-thumbs). Card-storlekarna (617×463,
    640×320) behåller `'high'`. Lokalt: 4092 → 854 bytes per thumb-URL
-   (-79 %). Verifiering i browser pågår innan deploy.
-2. **Alt B**: bygg `KartbildController` + route `/k/{spec}` →
+   (-79 %). Live i prod 2026-05-01 — verifierad.
+
+2. ✅ **Alt B (301 redirect) implementerad 2026-05-01, shadow-deployad.**
+   Route `/k/v1/{spec}.jpg` → `KartbildController::show()` returnerar 301
+   med `Cache-Control: public, max-age=31536000, immutable`. Spec-format:
+   `(circle|circle-low|near|far)-{id}-{w}x{h}[@2x].jpg`. Skippar
+   session/CSRF/debugbar-middleware (Set-Cookie skulle bryta cache).
+   Spatie Response Cache fångar 301:an automatiskt (text/\* content-type).
+   Ingen blade pekar dit än — manuell prod-verifiering med curl först.
+3. **Alt B**: bygg `KartbildController` + route `/k/{spec}` →
    `StaticMapUrlBuilder` → 301 redirect med `Cache-Control: public,
 max-age=31536000, immutable`. Uppdatera blade-callers
    (`card.blade.php`, `list-item.blade.php`, `events-box.blade.php`,
    `event-map-far.blade.php`) att rendera kort-URL. Verifiera att
    Spatie Response Cache fångar 301:an.
-3. Mät: total HTML-bytes per pageview, gzip-transfer, CWV (CrUX),
+4. Mät: total HTML-bytes per pageview, gzip-transfer, CWV (CrUX),
    PHP-FPM CPU under bot-burst.
-4. Om image-search eller bot-traffic missnöjt: byt till Alt A (proxy).
+5. Om image-search eller bot-traffic missnöjt: byt till Alt A (proxy).
