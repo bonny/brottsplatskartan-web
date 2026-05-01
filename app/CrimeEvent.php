@@ -163,6 +163,17 @@ class CrimeEvent extends Model implements Feedable {
     }
 
     /**
+     * Kort URL till statisk kartbild via /k/v1/-routen (todo #55, Alt B).
+     * Returnerar 301 till tileservern, browser-cachas immutable 1 år.
+     * Mode: 'circle' | 'circle-low' | 'near' | 'far'.
+     */
+    public function getKortKartbildUrl(string $mode, int $width, int $height, int $scale = 1): string
+    {
+        $retina = $scale === 2 ? '@2x' : '';
+        return "/k/v1/{$mode}-{$this->id}-{$width}x{$height}{$retina}.jpg";
+    }
+
+    /**
      * The pub date is the date from the RSS-feed,
      * i.e. when the crime is posted by polisen
      * the actual event may have happened much earlier

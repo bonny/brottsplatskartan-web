@@ -18,8 +18,8 @@
         {{-- Ingen karta. --}}
     @elseif ($mapDistance === 'near')
         @php
-            $listSrc = $useCircleStyle ? $event->getStaticImageSrcCircle(160, 160, 1, 'low') : $event->getStaticImageSrc(160, 160);
-            $listSrc2x = $useCircleStyle ? $event->getStaticImageSrcCircle(160, 160, 2, 'low') : $event->getStaticImageSrc(160, 160, 2);
+            $listSrc = $useCircleStyle ? $event->getKortKartbildUrl('circle-low', 160, 160) : $event->getStaticImageSrc(160, 160);
+            $listSrc2x = $useCircleStyle ? $event->getKortKartbildUrl('circle-low', 160, 160, 2) : $event->getStaticImageSrc(160, 160, 2);
         @endphp
         <a class="ListEvent__imageLink " href="{{ $event->getPermalink() }}">
             <img
@@ -35,8 +35,8 @@
         </a>
     @else
         @php
-            $listSrc = $useCircleStyle ? $event->getStaticImageSrcCircle(160, 160, 1, 'low') : $event->getStaticImageSrcFar(160, 160);
-            $listSrc2x = $useCircleStyle ? $event->getStaticImageSrcCircle(160, 160, 2, 'low') : $event->getStaticImageSrcFar(160, 160, 2);
+            $listSrc = $useCircleStyle ? $event->getKortKartbildUrl('circle-low', 160, 160) : $event->getStaticImageSrcFar(160, 160);
+            $listSrc2x = $useCircleStyle ? $event->getKortKartbildUrl('circle-low', 160, 160, 2) : $event->getStaticImageSrcFar(160, 160, 2);
         @endphp
         <a class="ListEvent__imageLink " href="{{ $event->getPermalink() }}">
             <img
