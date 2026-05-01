@@ -86,12 +86,16 @@ class ContentFilterService
         $description = strtolower($event->description ?? '');
         $parsedContent = strtolower($event->parsed_content ?? '');
 
-        // Mönster för pressnummer-informationsmeddelanden
+        // Specifika press-administrativa fraser. Alla är hyper-specifika så de
+        // inte träffar riktiga händelser där pressnummer/-bemanning nämns som
+        // bisats (verifierat 2026-05-01). Undvik breda mönster som
+        // /ordinarie pressnummer/i — den finns i bisatser i många riktiga
+        // händelser (detonation, dubbelmord, skjutning).
         $phoneNumberPatterns = [
             // Huvudmönster för titel
             '/information om polisens pressnummer/i',
             '/polisens pressnummer/i',
-            
+
             // Huvudmönster för innehåll
             '/presstalesperson avslutar sin tjänstgöring för dagen/i',
             '/under resten av kvällen och natten besvaras samtal/i',
@@ -100,6 +104,13 @@ class ContentFilterService
             '/när nattsammanfattningarna är publicerade besvaras samtal på pressnumret/i',
             '/regionledningscentralen i mån av tid/i',
             '/besvaras samtal på pressnumret/i',
+
+            // Press-administrativa meddelanden (pressnummer-byten, schema)
+            '/pressnummer(et)? till polisen/i',
+            '/pressfrågor för polisområde/i',
+            '/dagens presstalesperson för polisområde/i',
+            '/presstalesperson träffas/i',
+            '/pressinformation idag/i',
         ];
 
         // Kontrollera alla textfält mot alla mönster
