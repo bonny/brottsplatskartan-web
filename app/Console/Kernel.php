@@ -118,6 +118,16 @@ class Kernel extends ConsoleKernel
             ->yearlyOn(4, 15, '03:30')
             ->withoutOverlapping()
             ->name('mcf-import');
+
+        $schedule->command('app:news:fetch-rss')
+            ->everyFifteenMinutes()
+            ->withoutOverlapping()
+            ->name('news-fetch-rss');
+
+        $schedule->command('app:news:prune')
+            ->dailyAt('03:45')
+            ->withoutOverlapping()
+            ->name('news-prune');
     }
 
     /**
