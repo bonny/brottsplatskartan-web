@@ -86,6 +86,15 @@
 
                 @include('parts.mcf-statistik')
 
+                {{-- Senaste blåljus-nyheter per plats (todo #64). Aggregerade
+                     från RSS-feeds via news_articles + place_news. Visar
+                     bara om matchningar finns — pageweight 0 för platser
+                     utan träffar. --}}
+                @include('parts.place-news', [
+                    'placeName' => $city['displayName'] ?? $cityName,
+                    'placeLan' => $lan,
+                ])
+
                 {{-- Bakåtnavigering via månadsvyer (ersätter ?page=-paginering, todo #25/#33).
                      CityController hämtar bara senaste 25 — för äldre händelser
                      länkar vi till föregående månads kalender-vy. Sidopanelen

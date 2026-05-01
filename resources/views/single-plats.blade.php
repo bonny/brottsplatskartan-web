@@ -104,6 +104,15 @@ https://brottsplatskartan.localhost/plats/nacka
 
         @include('parts.mcf-statistik')
 
+        {{-- Senaste blåljus-nyheter per plats (todo #64). Visas bara på
+             "idag"-vyn så datumvyer förblir historiska. --}}
+        @if ($isToday)
+            @include('parts.place-news', [
+                'placeName' => $plats,
+                'placeLan' => $place?->lan,
+            ])
+        @endif
+
         @include('parts.daynav')
     </div>
 

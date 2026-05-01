@@ -92,6 +92,13 @@ class FetchNewsRss extends Command
                 continue;
             }
 
+            // Skydd mot javascript:/data: m.fl. icke-http-scheman som kan
+            // smita in via buggig RSS. UI:t renderar URL:en rakt i href,
+            // så vi släpper bara igenom http(s).
+            if (!preg_match('#^https?://#i', $fullUrl)) {
+                continue;
+            }
+
             // Hasha fulla URL:en innan kolumn-trunkering — annars kan två
             // URL:er som skiljer sig efter pos 2000 hashas lika.
             $hash = hash('sha256', $source.'|'.$fullUrl);

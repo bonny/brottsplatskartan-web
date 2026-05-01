@@ -1,5 +1,79 @@
-**Status:** aktiv (RSS-grund delas med #63 — deployad 2026-05-01; klassifikations-pass kvar att bygga)
+**Status:** fas-1 implementerat 2026-05-01 — klassifikations-pass live (regex blåljus + plats), UI på city + plats startsida. Mätperiod på precision + CTR pågår.
 **Senast uppdaterad:** 2026-05-01
+
+## Implementations-status (2026-05-01)
+
+**Klart:**
+
+- `place_news`-tabell + `news_articles.classified_at` (migration `2026_05_01_160000_create_place_news_table.php`)
+- `app:news:classify`-command — regex-pass blåljus + plats (Unicode word-boundary), idempotent via `classified_at`
+- Schemaläggning: cron `5,20,35,50 * * * *` (5 min efter fetch)
+- `App\Models\PlaceNews`-modell
+- `Helper::getLatestNewsForPlace()` med 10-min cache
+- `parts/place-news.blade.php` partial — `rel="nofollow noopener external"`
+- Inkluderad i `city.blade.php` (Tier 1) + `single-plats.blade.php` (idag-vy)
+
+**Konfig:** `config/news-classification.php` — blåljus-termer, min plats-namn-längd (4), batch_size (2000), display_window (72h), display_limit (5).
+
+**Initial körning:** 1013 artiklar bearbetade, 195 blåljus-träffar (~19 %), 132 place_news-rader, 66 distinkta platser.
+
+**SVT Text-TV som källa (tillagd 2026-05-01):** `app:importera-texttv`
+skriver nu också till `news_articles` med `source=svt-texttv`. Pages
+hämtas både från `last_updated` och `most_read` endpoints (texttv.nu),
+~10 sidor/körning, var 5:e min. Test: 10 sidor → 4 blåljus → 3
+plats-kopplingar (varav 2 sanna, 1 false positive på kulturartikel
+"död"-trigger).
+
+**Filer:**
+
+- `app/Console/Commands/ClassifyNewsArticles.php`
+- `app/Models/PlaceNews.php`
+- `app/Helper.php` (ny metod `getLatestNewsForPlace`)
+- `config/news-classification.php`
+- `database/migrations/2026_05_01_160000_create_place_news_table.php`
+- `resources/views/parts/place-news.blade.php`
+- `resources/views/city.blade.php` (include)
+- `resources/views/single-plats.blade.php` (include)
+
+## Kända brister + åtgärder fas 2
+
+- **Aggregator-summary-bias:** google-news-se RSS innehåller ofta lista
+  av "andra artiklar" i `description`, vilket triggar plats-träffar på
+  ortnamn som inte hör till huvudartikeln. Smoke test 2026-05-01 visade
+  exempel: Stockholm-valborg-artikel hamnade på Uppsala-sidan.
+  **Åtgärd fas 2:** för aggregator-källor, matcha bara mot `title`, inte
+  `summary`. Eller introducera AI-fallback på osäkra fall.
+- **Ingen län-disambiguering än:** "Stockholm" matchas i 12 län-rader
+  i `places`. Idag visas alla. **Åtgärd fas 2:** lägg `lan` i artikel-
+  kontext-check (t.ex. om artikeln nämner "Stockholm" + "Solna",
+  bara koppla Solna).
+- **Ingen UI på län-sidor (`/lan/...`):** fas 2 utökar partial:en till
+  `single-lan.blade.php` när precision validerats.
+
+## Mätning
+
+- **Precision:** stickprov 50 artiklar 2026-05-15 → mål >85 %.
+- **CTR + dwell time:** GA4-jämförelse ortssidor med vs utan partial
+  (rendrar bara om träffar finns) över 30d → 2026-05-31.
+- **GSC-position:** ortssidor 30d-jämförelse mot baseline → 2026-05-31.
+
+## Prio-beslut 2026-05-01
+
+Jämförelse av nyhets-todos (#60/#63/#64) gav #64 högst värde på båda
+axlarna:
+
+- **SEO:** träffar redan-trafikerade ortssidor (~25k clicks/90d-potential
+  identifierad i #52-baseline). Ingen pareto-bias — alla 6000 platser
+  får samma behandling, long-tail träffas automatiskt. #63:s smala scope
+  (top-50 events) ger bara ~20 % av event-clicks per egen SEO-research.
+- **UX:** "blåljus i {ort}" → polis-data + medierapportering på samma
+  sida = task completion, stickiness, USP.
+- **Kostnad:** regex-klassifikation + ev. Haiku-fallback (~$0.10/dygn)
+  vs #63:s GA4 + Haiku per event-artikel-par (~$0.25/dygn).
+
+Tekniskt delar #64 mindre med #63 än det verkar — annan pipeline (regex
+per artikel, inte AI-validering per event-artikel-par). Kan köras
+parallellt utan att vänta på #63.
 
 # Todo #64 — Per-plats nyhetsaggregering: "Senaste nyheter i {ort}"
 

@@ -161,6 +161,62 @@ class Helper {
     }
 
     /**
+     * Senaste blåljus-relaterade nyheter per plats (todo #64).
+     *
+     * Slår upp `places` på namn (+ ev. län), joinar place_news och returnerar
+     * artiklar publicerade inom $hours-fönstret. Cachas 10 min — det är
+     * läs-tunnt på heta sidor och fetch+klassifikation kör var 15:e min.
+     *
+     * Returnerar Collection av {id, source, url, title, summary, pubdate}.
+     */
+    public static function getLatestNewsForPlace(
+        string $placeName,
+        ?string $lan = null,
+        int $limit = 5,
+        int $hours = 72
+    ): Collection {
+        $name = trim($placeName);
+        if ($name === '') {
+            return collect();
+        }
+
+        $cacheKey = sprintf(
+            'place-news:%s:%s:l%d:h%d',
+            mb_strtolower($name),
+            mb_strtolower((string) $lan),
+            $limit,
+            $hours
+        );
+
+        return Cache::remember($cacheKey, 10 * MINUTE_IN_SECONDS, function () use ($name, $lan, $limit, $hours) {
+            $placeQuery = DB::table('places')->where('name', $name);
+            if ($lan !== null && $lan !== '') {
+                $placeQuery->where('lan', $lan);
+            }
+            $placeIds = $placeQuery->pluck('id');
+
+            if ($placeIds->isEmpty()) {
+                return collect();
+            }
+
+            $cutoff = Carbon::now()->subHours($hours);
+
+            // Filter + sort på pn.pubdate utnyttjar idx_place_pubdate
+            // (place_id, pubdate). Annars hade vi behövt join + filesort.
+            return DB::table('place_news as pn')
+                ->join('news_articles as na', 'pn.news_article_id', '=', 'na.id')
+                ->whereIn('pn.place_id', $placeIds)
+                ->whereNotNull('pn.pubdate')
+                ->where('pn.pubdate', '>=', $cutoff)
+                ->orderByDesc('pn.pubdate')
+                ->limit($limit)
+                ->select('na.id', 'na.source', 'na.url', 'na.title', 'pn.pubdate')
+                ->distinct()
+                ->get();
+        });
+    }
+
+    /**
      * Antal events per dag senaste N dagarna inom en bounding box.
      *
      * Använder samma bounding-box-approach som CrimeEvent::getEventsForCity

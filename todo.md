@@ -4,7 +4,7 @@ Index över förbättringsarbete. Varje todo har en egen fil under
 [`todos/`](todos/) med fullständig analys. Konvention och
 mappstruktur: [`todos/README.md`](todos/README.md).
 
-Senast uppdaterad: 2026-05-01 (#63 RSS-grund deployad — 29 källor, ~880 art/körning, news_articles-tabell + 15-min cron + 90d prune; #60/#63/#64 statusar uppdaterade).
+Senast uppdaterad: 2026-05-01 (#64 fas-1 implementerat — place_news-tabell + classify-command + UI på city/plats. 1013 artiklar bearbetade, 195 blåljus-träffar, 132 place-news-kopplingar. Mätperiod till 2026-05-31).
 
 ## Aktiva
 
@@ -27,7 +27,7 @@ Senast uppdaterad: 2026-05-01 (#63 RSS-grund deployad — 29 källor, ~880 art/k
 | 59  | "Vad händer nu"-ruta (Krimkartan-känsla)                | Idé — kompakt feed-komponent på startsidan                                            | [todos/59-vad-hander-nu-ruta.md](todos/59-vad-hander-nu-ruta.md)                                     |
 | 60  | Auto-länka events till nyheter via AI + RSS             | RSS-grund delas med #63 (deployad 2026-05-01); fas 3-rollout efter #63 fas 1+2        | [todos/60-auto-lank-nyheter-ai-rss.md](todos/60-auto-lank-nyheter-ai-rss.md)                         |
 | 63  | Relaterade nyheter — prio:a high-traffic events         | RSS-grund deployad 2026-05-01 (29 källor, 90d retention); GA4+Haiku-pipeline kvar     | [todos/63-relaterade-nyheter-trafikprio.md](todos/63-relaterade-nyheter-trafikprio.md)               |
-| 64  | Per-plats nyhetsaggregering — "Senaste nyheter i {ort}" | RSS-grund delas med #63 (deployad 2026-05-01); regex-klassifikation + UI kvar         | [todos/64-per-plats-nyhetsaggregering.md](todos/64-per-plats-nyhetsaggregering.md)                   |
+| 64  | Per-plats nyhetsaggregering — "Senaste nyheter i {ort}" | Fas-1 live 2026-05-01 (classify + UI city/plats); precision-stickprov 2026-05-15      | [todos/64-per-plats-nyhetsaggregering.md](todos/64-per-plats-nyhetsaggregering.md)                   |
 | 66  | Uppföljning #55: mät CWV + PHP-FPM-CPU efter `/k/v1/`   | Passiv mätperiod till 2026-05-31 — CWV-jämförelse, cache-hit-rate, social-share-test  | [todos/66-uppfoljning-55-kortare-kartbild-urls.md](todos/66-uppfoljning-55-kortare-kartbild-urls.md) |
 
 ### Beroenden
@@ -38,12 +38,13 @@ Senast uppdaterad: 2026-05-01 (#63 RSS-grund deployad — 29 källor, ~880 art/k
 ### Föreslagen ordning
 
 1. **#25 Månadsvyer** — Uppsala-pilot pågår, 30d-mätning till 2026-05-27
-2. **#41** — datumnavigering som årskalender — bygger på #42-fundament
+2. **#64 Per-plats nyhetsaggregering** — högst SEO/UX-värde av nyhets-todos: träffar redan-trafikerade ortssidor (~25k clicks/90d via #52-baseline), ingen pareto-bias, regex-klassning + ~$0.10/dygn. RSS-grund klar.
 3. **#50** — Trafikverket live-feed (egen layer + API-nyckel) — hög confidence
-4. **#29** — passiv GSC-mätperiod, åtgärder efter data
-5. **#36** — passiv GSC-mätning, första check 2026-05-25
-6. **#39** — passiv mätning, första check 2026-05-13
-7. **#51** — bryt ut SMHI/räddningstjänst-källor till egna todos när prio sätts
+4. **#41** — datumnavigering som årskalender — bygger på #42-fundament
+5. **#29** — passiv GSC-mätperiod, åtgärder efter data
+6. **#36** — passiv GSC-mätning, första check 2026-05-25
+7. **#39** — passiv mätning, första check 2026-05-13
+8. **#51** — bryt ut SMHI/räddningstjänst-källor till egna todos när prio sätts
 
 ## Uppföljningar — datum att komma ihåg
 
@@ -55,9 +56,11 @@ eller markera todon som klar.
 | Datum      | Åtgärd                                                       | Todo                                                    |
 | ---------- | ------------------------------------------------------------ | ------------------------------------------------------- |
 | 2026-05-13 | MCF räddningsstatistik — utvärdera trafikimpact i GA4 + GSC  | [#39](todos/39-msb-brand-rakning-statistik.md)          |
+| 2026-05-15 | #64 precision-stickprov — 50 artiklar, mål >85 %             | [#64](todos/64-per-plats-nyhetsaggregering.md)          |
 | 2026-05-25 | GSC-mätning AI-titlar — första check (4v post-deploy)        | [#36](todos/36-gsc-matning-ai-titlar.md)                |
 | 2026-05-27 | Månadsvyer-pilot — 30d-mätning Uppsala/Västerås              | [#25](todos/25-manadsvyer-datum-routes.md)              |
 | 2026-05-31 | `/k/v1/`-rollout — CWV + PHP-FPM-CPU + cache-hit-rate (30d)  | [#66](todos/66-uppfoljning-55-kortare-kartbild-urls.md) |
+| 2026-05-31 | #64 CTR + dwell time + GSC-position — 30d-jämförelse         | [#64](todos/64-per-plats-nyhetsaggregering.md)          |
 | 2026-06-22 | GSC-mätning AI-titlar — andra check (8v)                     | [#36](todos/36-gsc-matning-ai-titlar.md)                |
 | 2026-06-30 | GSC image-search — 60d-mätning av nya `getMapAltText()`      | [#62](todos/done/62-getmapalttext-image-seo.md)         |
 | 2026-07-27 | GSC-mätning AI-titlar — tredje check (12v) + beslut om fas 3 | [#36](todos/36-gsc-matning-ai-titlar.md)                |

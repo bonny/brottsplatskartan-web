@@ -124,6 +124,13 @@ class Kernel extends ConsoleKernel
             ->withoutOverlapping()
             ->name('news-fetch-rss');
 
+        // Klassifikation följer fetch men förskjuten 5 min så fetch hinner
+        // skriva färdigt nya rader innan vi läser dem.
+        $schedule->command('app:news:classify')
+            ->cron('5,20,35,50 * * * *')
+            ->withoutOverlapping()
+            ->name('news-classify');
+
         $schedule->command('app:news:prune')
             ->dailyAt('03:45')
             ->withoutOverlapping()
