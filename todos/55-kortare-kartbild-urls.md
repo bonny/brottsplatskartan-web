@@ -1,4 +1,4 @@
-**Status:** Alt D + Alt B (301 redirect) implementerade lokalt 2026-05-01, shadow-deployade (ingen blade pekar dit). Väntar prod-verifiering innan blade-callers byts.
+**Status:** Alt D + Alt B (301 redirect) live i prod 2026-05-01 som shadow-deploy (ingen blade pekar dit). Headers verifierade i prod. StripCookies-mw tillagd som defense-in-depth. Redo att byta blade-callers när vi vill.
 **Senast uppdaterad:** 2026-05-01
 **Källa:** Inbox Brottsplatskartan (2026-04-30)
 
@@ -186,14 +186,64 @@ LCP eftersom bilderna är `loading="lazy"` (verifiera först).
    med `Cache-Control: public, max-age=31536000, immutable`. Spec-format:
    `(circle|circle-low|near|far)-{id}-{w}x{h}[@2x].jpg`. Skippar
    session/CSRF/debugbar-middleware (Set-Cookie skulle bryta cache).
-   Spatie Response Cache fångar 301:an automatiskt (text/\* content-type).
-   Ingen blade pekar dit än — manuell prod-verifiering med curl först.
-3. **Alt B**: bygg `KartbildController` + route `/k/{spec}` →
-   `StaticMapUrlBuilder` → 301 redirect med `Cache-Control: public,
-max-age=31536000, immutable`. Uppdatera blade-callers
-   (`card.blade.php`, `list-item.blade.php`, `events-box.blade.php`,
-   `event-map-far.blade.php`) att rendera kort-URL. Verifiera att
-   Spatie Response Cache fångar 301:an.
-4. Mät: total HTML-bytes per pageview, gzip-transfer, CWV (CrUX),
-   PHP-FPM CPU under bot-burst.
-5. Om image-search eller bot-traffic missnöjt: byt till Alt A (proxy).
+   Spatie Response Cache fångar 301:an automatiskt
+   (`hasCacheableResponseCode()` returnerar true för redirections).
+
+3. ✅ **`StripCookiesForCachableImages` middleware tillagd 2026-05-01.**
+   Defense-in-depth utöver routens `withoutMiddleware`-skipp: ligger
+   FÖRST i web-gruppen så att den kör SIST på response, fångar cookies
+   som framtida paket lägger via mw. Begränsning: cookies satta via
+   `RequestHandled`-event-listeners (Debugbar i dev) körs efter
+   mw-stacken och fångas inte — men Debugbar är inaktiv i prod.
+   Mönstret från Aaron Francis (2025).
+
+4. ✅ **Prod-headers verifierade 2026-05-01.**
+   `https://brottsplatskartan.se/k/v1/circle-{id}-617x463.jpg`:
+   `HTTP/2 301`, `cache-control: immutable, max-age=31536000, public`,
+   `location: https://kartbilder.brottsplatskartan.se/...`,
+   **inga `Set-Cookie`-headers**. TTFB ~100 ms (Hetzner Helsinki-latens
+    - Laravel boot + Redis-lookup; Spatie Response Cache cachar 301:an).
+
+5. **Nästa: byt blade-callers att rendera `/k/v1/...`-URL:er.**
+   `card.blade.php`, `list-item.blade.php`, `events-box.blade.php`,
+   `event-map-far.blade.php`, `single-event.blade.php` (metaImage).
+   Mät: total HTML-bytes per pageview, gzip-transfer, CWV (CrUX),
+   PHP-FPM CPU under bot-burst. Rulla ut blade åt gången, `git revert`
+   per commit om regression.
+
+## Web-research findings (2026-05-01)
+
+Sökte best-practice 2026 för cookieless image-routes i Laravel. Fynd:
+
+- **Aaron Francis (2025)** publicerade en guide för "cookieless,
+  cache-friendly image proxy" där han **proxar bytes** (inte 301) och
+  förlitar sig på Cloudflare framför origin för edge-caching. Cache-
+  Control: `public, max-age=2592000, s-maxage=2592000, immutable`.
+  Hans cookie-strip-mw är samma mönster som vi använder (registrerad
+  först i web-gruppen → kör sist på response).
+- **301 vs 302 vs 308:** 301 cachas av CDN:er enligt cache-control
+  (samma regler som 200). 308 är "modern 301" som preserverar
+  HTTP-method — onödigt för GET-image-URLs.
+- **`immutable`-direktivet** är fortfarande standard för långsiktig
+  cache; tells caches "no need to revalidate while fresh".
+
+### Vår lösning vs Aarons (skillnader)
+
+|               | Aaron (proxa bytes) | Vi (Alt B, 301)                                 |
+| ------------- | ------------------- | ----------------------------------------------- |
+| Mönster       | Proxa image-bytes   | 301 redirect till tileservern                   |
+| TTL           | 30 dagar            | 1 år                                            |
+| `s-maxage`    | Ja                  | Nej (ingen CDN ändå)                            |
+| Cache framför | Cloudflare          | Ingen — bara Hetzner Caddy (cachar inte bilder) |
+| Cookie-strip  | Middleware          | `withoutMiddleware` + StripCookies-mw           |
+
+### Framtida förbättringar (ej nu, ej blockerande)
+
+1. **Lägg Cloudflare framför `brottsplatskartan.se`** (gratis Free-tier)
+   → cold-hits warm-cachas globalt → 0 origin-PHP för repeat-traffic
+   från andra users. Större strukturell förändring. Skapa egen todo om
+   prod-trafiken växer eller CPU-press syns.
+2. **Återöppna #61 (Caddy + cache-handler / Souin)** med disk-storage
+   (Badger) istället för Redis — slipper RAM-pressure som var skälet
+   till att vi avfärdade. Mindre invasivt än Cloudflare men kräver
+   xcaddy-byggd image. YAGNI tills mätning visar behov.

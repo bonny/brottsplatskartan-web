@@ -35,6 +35,10 @@ class Kernel extends HttpKernel
      */
     protected $middlewareGroups = [
         'web' => [
+            // Måste ligga FÖRST: kör sist på response så att alla
+            // Set-Cookie-headers är borta innan svaret går ut. Stripar
+            // bara cookies på /k/v1/*-routerna. Se StripCookiesForCachableImages.
+            \App\Http\Middleware\StripCookiesForCachableImages::class,
             \App\Http\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,
