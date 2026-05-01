@@ -8,26 +8,27 @@ Senast uppdaterad: 2026-05-01 (#55 klar — Alt D + Alt B + StripCookies live i 
 
 ## Aktiva
 
-| #   | Titel                                                   | Status                                                                                | Fil                                                                                                |
-| --- | ------------------------------------------------------- | ------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| 25  | Månadsvyer istället för dagsvyer (datum-routes)         | Pilot live 2026-04-27 (uppsala + västerås + uppsala-lan). 30d-mätning till 2026-05-27 | [todos/25-manadsvyer-datum-routes.md](todos/25-manadsvyer-datum-routes.md)                         |
-| 29  | Audit + reducera indexerade pages                       | Datum-routes + thin singles deployat, ~22k pages noindex:as. Mätperiod 30–90d i GSC   | [todos/29-audit-indexerade-pages.md](todos/29-audit-indexerade-pages.md)                           |
-| 36  | GSC-mätning av AI-titlars CTR-effekt                    | Mätperiod startad 2026-04-27, första check 2026-05-25                                 | [todos/36-gsc-matning-ai-titlar.md](todos/36-gsc-matning-ai-titlar.md)                             |
-| 39  | MSB/MCF brand- och räddningsstatistik per kommun        | Implementerad 2026-04-29 — väntar på trafikmätning 2026-05-13                         | [todos/39-msb-brand-rakning-statistik.md](todos/39-msb-brand-rakning-statistik.md)                 |
-| 41  | Datumnavigering som årskalender                         | Idé — ny visuell månadsnav (12 rutor + heatmap-färg)                                  | [todos/41-arskalender-datumnavigering.md](todos/41-arskalender-datumnavigering.md)                 |
-| 45  | Historik per plats: år-vy + trend                       | Skissad — fas 1 mini-trend (2h), fas 2 /{plats}/statistik/{år}-vy                     | [todos/45-historik-per-plats.md](todos/45-historik-per-plats.md)                                   |
-| 46  | Slå samman Händelser/Senaste/Mest lästa i menyn         | Importerad från GitHub #76 — kräver design + redirect-strategi                        | [todos/46-meny-handelser-konsolidering.md](todos/46-meny-handelser-konsolidering.md)               |
-| 47  | Slå ihop stad-URLs (plats vs plats+län vs län)          | Importerad från GitHub #68 — fortsättning på #23/#35-mönstret                         | [todos/47-sla-ihop-stad-urls.md](todos/47-sla-ihop-stad-urls.md)                                   |
-| 48  | Polisens JSON-API + bättre geocoding                    | Fas 1 + Fas 2 deployat 2026-04-29 — soak pågår, mätperiod på geo-träff                | [todos/48-geocode-inkludera-lan.md](todos/48-geocode-inkludera-lan.md)                             |
-| 50  | Trafikverket Trafikinformation: live på kartan          | Skissad + SEO/AdSense-review klar — väntar på beslut om indexerbarhet & editor-text   | [todos/50-trafikverket-trafikinformation-live.md](todos/50-trafikverket-trafikinformation-live.md) |
-| 51  | Övriga datakällor: research-skiss                       | Research-katalog (SMHI, räddningstjänst-RSS, Krisinfo, m.fl.) — bryts ut per källa    | [todos/51-ovriga-datakallor-research.md](todos/51-ovriga-datakallor-research.md)                   |
-| 52  | GSC-monitor: lågrankade högvolym-queries                | Baseline klar 2026-04-30 — 7 åtgärder identifierade (A–G), ~25k clicks/90d potential  | [todos/52-gsc-low-rank-monitoring.md](todos/52-gsc-low-rank-monitoring.md)                         |
-| 54  | Trafikkontroll-titlar: utöka AI-rewrite                 | Idé — utöka `isVagueTitle()` med trafikkontroll-mönster                               | [todos/54-trafikkontroll-titlar.md](todos/54-trafikkontroll-titlar.md)                             |
-| 57  | Aktivera Hetzners referral-program                      | Idé — länk på `/sida/om` med transparent disclosure                                   | [todos/57-hetzner-referral.md](todos/57-hetzner-referral.md)                                       |
-| 59  | "Vad händer nu"-ruta (Krimkartan-känsla)                | Idé — kompakt feed-komponent på startsidan                                            | [todos/59-vad-hander-nu-ruta.md](todos/59-vad-hander-nu-ruta.md)                                   |
-| 60  | Auto-länka events till nyheter via AI + RSS             | Fas 3 (bred) — kör efter #63 visat positivt utfall; SEO-research klar 2026-05-01      | [todos/60-auto-lank-nyheter-ai-rss.md](todos/60-auto-lank-nyheter-ai-rss.md)                       |
-| 63  | Relaterade nyheter — prio:a high-traffic events         | Fas 1 (smal pilot) blockerar #60; SEO-research klar 2026-05-01 — Variant C rek        | [todos/63-relaterade-nyheter-trafikprio.md](todos/63-relaterade-nyheter-trafikprio.md)             |
-| 64  | Per-plats nyhetsaggregering — "Senaste nyheter i {ort}" | Skissad — kompletterar #60/#63 med klassifikation per plats; större SEO-träffyta      | [todos/64-per-plats-nyhetsaggregering.md](todos/64-per-plats-nyhetsaggregering.md)                 |
+| #   | Titel                                                   | Status                                                                                | Fil                                                                                                  |
+| --- | ------------------------------------------------------- | ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| 25  | Månadsvyer istället för dagsvyer (datum-routes)         | Pilot live 2026-04-27 (uppsala + västerås + uppsala-lan). 30d-mätning till 2026-05-27 | [todos/25-manadsvyer-datum-routes.md](todos/25-manadsvyer-datum-routes.md)                           |
+| 29  | Audit + reducera indexerade pages                       | Datum-routes + thin singles deployat, ~22k pages noindex:as. Mätperiod 30–90d i GSC   | [todos/29-audit-indexerade-pages.md](todos/29-audit-indexerade-pages.md)                             |
+| 36  | GSC-mätning av AI-titlars CTR-effekt                    | Mätperiod startad 2026-04-27, första check 2026-05-25                                 | [todos/36-gsc-matning-ai-titlar.md](todos/36-gsc-matning-ai-titlar.md)                               |
+| 39  | MSB/MCF brand- och räddningsstatistik per kommun        | Implementerad 2026-04-29 — väntar på trafikmätning 2026-05-13                         | [todos/39-msb-brand-rakning-statistik.md](todos/39-msb-brand-rakning-statistik.md)                   |
+| 41  | Datumnavigering som årskalender                         | Idé — ny visuell månadsnav (12 rutor + heatmap-färg)                                  | [todos/41-arskalender-datumnavigering.md](todos/41-arskalender-datumnavigering.md)                   |
+| 45  | Historik per plats: år-vy + trend                       | Skissad — fas 1 mini-trend (2h), fas 2 /{plats}/statistik/{år}-vy                     | [todos/45-historik-per-plats.md](todos/45-historik-per-plats.md)                                     |
+| 46  | Slå samman Händelser/Senaste/Mest lästa i menyn         | Importerad från GitHub #76 — kräver design + redirect-strategi                        | [todos/46-meny-handelser-konsolidering.md](todos/46-meny-handelser-konsolidering.md)                 |
+| 47  | Slå ihop stad-URLs (plats vs plats+län vs län)          | Importerad från GitHub #68 — fortsättning på #23/#35-mönstret                         | [todos/47-sla-ihop-stad-urls.md](todos/47-sla-ihop-stad-urls.md)                                     |
+| 48  | Polisens JSON-API + bättre geocoding                    | Fas 1 + Fas 2 deployat 2026-04-29 — soak pågår, mätperiod på geo-träff                | [todos/48-geocode-inkludera-lan.md](todos/48-geocode-inkludera-lan.md)                               |
+| 50  | Trafikverket Trafikinformation: live på kartan          | Skissad + SEO/AdSense-review klar — väntar på beslut om indexerbarhet & editor-text   | [todos/50-trafikverket-trafikinformation-live.md](todos/50-trafikverket-trafikinformation-live.md)   |
+| 51  | Övriga datakällor: research-skiss                       | Research-katalog (SMHI, räddningstjänst-RSS, Krisinfo, m.fl.) — bryts ut per källa    | [todos/51-ovriga-datakallor-research.md](todos/51-ovriga-datakallor-research.md)                     |
+| 52  | GSC-monitor: lågrankade högvolym-queries                | Baseline klar 2026-04-30 — 7 åtgärder identifierade (A–G), ~25k clicks/90d potential  | [todos/52-gsc-low-rank-monitoring.md](todos/52-gsc-low-rank-monitoring.md)                           |
+| 54  | Trafikkontroll-titlar: utöka AI-rewrite                 | Idé — utöka `isVagueTitle()` med trafikkontroll-mönster                               | [todos/54-trafikkontroll-titlar.md](todos/54-trafikkontroll-titlar.md)                               |
+| 57  | Aktivera Hetzners referral-program                      | Idé — länk på `/sida/om` med transparent disclosure                                   | [todos/57-hetzner-referral.md](todos/57-hetzner-referral.md)                                         |
+| 59  | "Vad händer nu"-ruta (Krimkartan-känsla)                | Idé — kompakt feed-komponent på startsidan                                            | [todos/59-vad-hander-nu-ruta.md](todos/59-vad-hander-nu-ruta.md)                                     |
+| 60  | Auto-länka events till nyheter via AI + RSS             | Fas 3 (bred) — kör efter #63 visat positivt utfall; SEO-research klar 2026-05-01      | [todos/60-auto-lank-nyheter-ai-rss.md](todos/60-auto-lank-nyheter-ai-rss.md)                         |
+| 63  | Relaterade nyheter — prio:a high-traffic events         | Fas 1 (smal pilot) blockerar #60; SEO-research klar 2026-05-01 — Variant C rek        | [todos/63-relaterade-nyheter-trafikprio.md](todos/63-relaterade-nyheter-trafikprio.md)               |
+| 64  | Per-plats nyhetsaggregering — "Senaste nyheter i {ort}" | Skissad — kompletterar #60/#63 med klassifikation per plats; större SEO-träffyta      | [todos/64-per-plats-nyhetsaggregering.md](todos/64-per-plats-nyhetsaggregering.md)                   |
+| 66  | Uppföljning #55: mät CWV + PHP-FPM-CPU efter `/k/v1/`   | Passiv mätperiod till 2026-05-31 — CWV-jämförelse, cache-hit-rate, social-share-test  | [todos/66-uppfoljning-55-kortare-kartbild-urls.md](todos/66-uppfoljning-55-kortare-kartbild-urls.md) |
 
 ### Beroenden
 
@@ -51,16 +52,17 @@ MCP:s som `mcp-gsc`, SSH-nycklar till prod, eller mänsklig bedömning).
 Granska veckovis. När en åtgärd är gjord, flytta raden till "Avklarade" nedan
 eller markera todon som klar.
 
-| Datum      | Åtgärd                                                       | Todo                                            |
-| ---------- | ------------------------------------------------------------ | ----------------------------------------------- |
-| 2026-05-13 | MCF räddningsstatistik — utvärdera trafikimpact i GA4 + GSC  | [#39](todos/39-msb-brand-rakning-statistik.md)  |
-| 2026-05-25 | GSC-mätning AI-titlar — första check (4v post-deploy)        | [#36](todos/36-gsc-matning-ai-titlar.md)        |
-| 2026-05-27 | Månadsvyer-pilot — 30d-mätning Uppsala/Västerås              | [#25](todos/25-manadsvyer-datum-routes.md)      |
-| 2026-06-22 | GSC-mätning AI-titlar — andra check (8v)                     | [#36](todos/36-gsc-matning-ai-titlar.md)        |
-| 2026-06-30 | GSC image-search — 60d-mätning av nya `getMapAltText()`      | [#62](todos/done/62-getmapalttext-image-seo.md) |
-| 2026-07-27 | GSC-mätning AI-titlar — tredje check (12v) + beslut om fas 3 | [#36](todos/36-gsc-matning-ai-titlar.md)        |
-| 2026-07-27 | Indexerade pages — slutmätning (90d post-noindex)            | [#29](todos/29-audit-indexerade-pages.md)       |
-| 2026-07-30 | GSC-monitor: kvartalsrapport (90d compare mot baseline)      | [#52](todos/52-gsc-low-rank-monitoring.md)      |
+| Datum      | Åtgärd                                                       | Todo                                                    |
+| ---------- | ------------------------------------------------------------ | ------------------------------------------------------- |
+| 2026-05-13 | MCF räddningsstatistik — utvärdera trafikimpact i GA4 + GSC  | [#39](todos/39-msb-brand-rakning-statistik.md)          |
+| 2026-05-25 | GSC-mätning AI-titlar — första check (4v post-deploy)        | [#36](todos/36-gsc-matning-ai-titlar.md)                |
+| 2026-05-27 | Månadsvyer-pilot — 30d-mätning Uppsala/Västerås              | [#25](todos/25-manadsvyer-datum-routes.md)              |
+| 2026-05-31 | `/k/v1/`-rollout — CWV + PHP-FPM-CPU + cache-hit-rate (30d)  | [#66](todos/66-uppfoljning-55-kortare-kartbild-urls.md) |
+| 2026-06-22 | GSC-mätning AI-titlar — andra check (8v)                     | [#36](todos/36-gsc-matning-ai-titlar.md)                |
+| 2026-06-30 | GSC image-search — 60d-mätning av nya `getMapAltText()`      | [#62](todos/done/62-getmapalttext-image-seo.md)         |
+| 2026-07-27 | GSC-mätning AI-titlar — tredje check (12v) + beslut om fas 3 | [#36](todos/36-gsc-matning-ai-titlar.md)                |
+| 2026-07-27 | Indexerade pages — slutmätning (90d post-noindex)            | [#29](todos/29-audit-indexerade-pages.md)               |
+| 2026-07-30 | GSC-monitor: kvartalsrapport (90d compare mot baseline)      | [#52](todos/52-gsc-low-rank-monitoring.md)              |
 
 ### Avklarade uppföljningar
 
