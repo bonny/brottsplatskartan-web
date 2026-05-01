@@ -1,4 +1,4 @@
-**Status:** klar 2026-05-01 — filtret återaktivt + 5 nya hyper-specifika mönster för pressnummer-administration tillagda i isPhoneNumberInfo (totalt 220 events markerade is_public=false på prod)
+**Status:** klar 2026-05-01 — filtret återaktivt + 5 nya hyper-specifika press-meta-mönster i isPhoneNumberInfo (~243 events markerade is_public=false på prod). Alla 5 user-rapporterade FP-exempel (#87007, #114826, #178347, #303929, #304144) returnerar nu 404. Stavningsfix i regex för "pressnummer" vs "pressnumret" (Polisen stavar olika i olika regioner).
 **Senast uppdaterad:** 2026-05-01
 **Källa:** Inbox Brottsplatskartan (2026-04-30)
 
