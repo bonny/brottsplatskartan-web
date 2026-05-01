@@ -1,4 +1,4 @@
-**Status:** aktiv (RSS/ToS + SEO-research klar 2026-05-01 — fas-3-scope, kör efter #63)
+**Status:** aktiv (RSS-grund deployad 2026-05-01 av #63 — fas-3-scope, kör efter #63 fas 1+2 visar positivt utfall)
 **Senast uppdaterad:** 2026-05-01
 **Källa:** Inbox Brottsplatskartan (2026-04-30)
 

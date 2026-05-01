@@ -1,4 +1,4 @@
-**Status:** aktiv (RSS/ToS + SEO-research klar 2026-05-01 — fas-1-pilot, blockerar #60)
+**Status:** aktiv (RSS-grund deployad 2026-05-01 — fas-1-pilot pågår, blockerar #60/#64)
 **Senast uppdaterad:** 2026-05-01
 
 # Todo #63 — Automatisera/förenkla relaterade nyheter, prioritera high-traffic events
@@ -202,3 +202,34 @@ om hur det relaterar till #60 är öppen.
 2. Om egen pilot: kör Variant A med top-50 events från GA4 senaste 7d,
    manuell utvärdering på 10 events att precision/recall är OK.
 3. Mätperiod 14d → beslut om scale upp till #60:s breda pipeline.
+
+## Implementations-status (2026-05-01)
+
+**Fas 0 klar:** RSS-fetcher live i prod 2026-05-01 (commits `d25e91a` +
+`7589d57`).
+
+- 29 RSS-feeds hämtas var 15:e min till `news_articles`-tabellen
+- Källor: Google News SE, SVT (rss + inrikes + 20 lokala redaktioner),
+  Aftonbladet, Expressen-familjen (3 feeds), DN, SvD
+- Dedupe via `content_hash` (sha256 source|url) + unique-index
+- Retention 90d via `app:news:prune` dagligen
+- Bara titel + summary från feeden — ingen body-skrapning
+- Polite UA, CURLOPT_CONNECTTIMEOUT 5s, set_timeout 8s, withoutOverlapping
+- ~880 artiklar/körning, ~80k rader steady-state
+
+**Filer:**
+
+- `app/Console/Commands/FetchNewsRss.php`
+- `app/Console/Commands/PruneNewsArticles.php`
+- `app/Models/NewsArticle.php`
+- `config/news-feeds.php`
+- `database/migrations/2026_05_01_120000_create_news_articles_table.php`
+- `database/migrations/2026_05_01_140000_news_articles_pubdate_to_datetime.php`
+
+**Återstår för fas 1:**
+
+1. GA4-query för top-50 events senaste 7d (var 4:e h cron)
+2. Per top-event: Google News SE-search → kandidatartiklar
+3. Claude Haiku-validering → spara `crime_event_news` (event_id, news_id, confidence, ai_reason)
+4. Visning på event-sidan: "Mediabevakning"-sektion (`rel="nofollow"`)
+5. Mätning: AI-precision (stickprov 30 träffar), CTR + dwell time

@@ -4,7 +4,7 @@ Index över förbättringsarbete. Varje todo har en egen fil under
 [`todos/`](todos/) med fullständig analys. Konvention och
 mappstruktur: [`todos/README.md`](todos/README.md).
 
-Senast uppdaterad: 2026-05-01 (#55 klar — Alt D + Alt B + StripCookies live i prod, alla blade-callers bytta till `/k/v1/`; tidigare idag: #61/#65 avfärdade, #58/#62/#53 klara).
+Senast uppdaterad: 2026-05-01 (#63 RSS-grund deployad — 29 källor, ~880 art/körning, news_articles-tabell + 15-min cron + 90d prune; #60/#63/#64 statusar uppdaterade).
 
 ## Aktiva
 
@@ -25,9 +25,9 @@ Senast uppdaterad: 2026-05-01 (#55 klar — Alt D + Alt B + StripCookies live i 
 | 54  | Trafikkontroll-titlar: utöka AI-rewrite                 | Idé — utöka `isVagueTitle()` med trafikkontroll-mönster                               | [todos/54-trafikkontroll-titlar.md](todos/54-trafikkontroll-titlar.md)                               |
 | 57  | Aktivera Hetzners referral-program                      | Idé — länk på `/sida/om` med transparent disclosure                                   | [todos/57-hetzner-referral.md](todos/57-hetzner-referral.md)                                         |
 | 59  | "Vad händer nu"-ruta (Krimkartan-känsla)                | Idé — kompakt feed-komponent på startsidan                                            | [todos/59-vad-hander-nu-ruta.md](todos/59-vad-hander-nu-ruta.md)                                     |
-| 60  | Auto-länka events till nyheter via AI + RSS             | Fas 3 (bred) — kör efter #63 visat positivt utfall; SEO-research klar 2026-05-01      | [todos/60-auto-lank-nyheter-ai-rss.md](todos/60-auto-lank-nyheter-ai-rss.md)                         |
-| 63  | Relaterade nyheter — prio:a high-traffic events         | Fas 1 (smal pilot) blockerar #60; SEO-research klar 2026-05-01 — Variant C rek        | [todos/63-relaterade-nyheter-trafikprio.md](todos/63-relaterade-nyheter-trafikprio.md)               |
-| 64  | Per-plats nyhetsaggregering — "Senaste nyheter i {ort}" | Skissad — kompletterar #60/#63 med klassifikation per plats; större SEO-träffyta      | [todos/64-per-plats-nyhetsaggregering.md](todos/64-per-plats-nyhetsaggregering.md)                   |
+| 60  | Auto-länka events till nyheter via AI + RSS             | RSS-grund delas med #63 (deployad 2026-05-01); fas 3-rollout efter #63 fas 1+2        | [todos/60-auto-lank-nyheter-ai-rss.md](todos/60-auto-lank-nyheter-ai-rss.md)                         |
+| 63  | Relaterade nyheter — prio:a high-traffic events         | RSS-grund deployad 2026-05-01 (29 källor, 90d retention); GA4+Haiku-pipeline kvar     | [todos/63-relaterade-nyheter-trafikprio.md](todos/63-relaterade-nyheter-trafikprio.md)               |
+| 64  | Per-plats nyhetsaggregering — "Senaste nyheter i {ort}" | RSS-grund delas med #63 (deployad 2026-05-01); regex-klassifikation + UI kvar         | [todos/64-per-plats-nyhetsaggregering.md](todos/64-per-plats-nyhetsaggregering.md)                   |
 | 66  | Uppföljning #55: mät CWV + PHP-FPM-CPU efter `/k/v1/`   | Passiv mätperiod till 2026-05-31 — CWV-jämförelse, cache-hit-rate, social-share-test  | [todos/66-uppfoljning-55-kortare-kartbild-urls.md](todos/66-uppfoljning-55-kortare-kartbild-urls.md) |
 
 ### Beroenden

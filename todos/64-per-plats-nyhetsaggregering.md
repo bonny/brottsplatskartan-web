@@ -1,4 +1,4 @@
-**Status:** aktiv (skissad — kompletterar #60/#63, kan köras parallellt)
+**Status:** aktiv (RSS-grund delas med #63 — deployad 2026-05-01; klassifikations-pass kvar att bygga)
 **Senast uppdaterad:** 2026-05-01
 
 # Todo #64 — Per-plats nyhetsaggregering: "Senaste nyheter i {ort}"
@@ -164,7 +164,10 @@ blåljus?" är inte trivialt utan att introducera fel-flaggor.
 
 ## Nästa steg
 
-1. **Bygg RSS-fetcharen som del av #63** — den är gemensam grund.
+1. ~~**Bygg RSS-fetcharen som del av #63**~~ — **klar 2026-05-01**
+   (commits `d25e91a` + `7589d57`). 29 källor, 880 art/körning, 90d
+   retention. `news_articles`-tabellen samlar data klar för
+   klassifikation.
 2. **Klassifikations-prototyp:** regex-pass på 1 veckas RSS-data,
    manuell utvärdering på 100 artiklar (precision/recall).
 3. **Pilot på 5 orter:** Stockholm, Göteborg, Uppsala, Malmö, Västerås.
