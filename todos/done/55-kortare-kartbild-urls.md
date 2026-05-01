@@ -1,4 +1,4 @@
-**Status:** Alt D + Alt B (301 redirect) live i prod 2026-05-01 som shadow-deploy (ingen blade pekar dit). Headers verifierade i prod. StripCookies-mw tillagd som defense-in-depth. Redo att byta blade-callers när vi vill.
+**Status:** ✅ Klar 2026-05-01. Alt D (densitet-kapning) + Alt B (301 redirect via `/k/v1/`) + StripCookies-mw live i prod. Alla blade-callers bytta — event-page: 0 long-URLs kvar i HTML, listsida: 50 thumbnails à ~57 bytes (var ~850 bytes). OG/Twitter-meta + Schema.org JSON-LD-images går också via `/k/v1/`. Verifierad end-to-end inkl. FB-UA-spoofing.
 **Senast uppdaterad:** 2026-05-01
 **Källa:** Inbox Brottsplatskartan (2026-04-30)
 

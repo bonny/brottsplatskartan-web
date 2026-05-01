@@ -4,7 +4,7 @@ Index över förbättringsarbete. Varje todo har en egen fil under
 [`todos/`](todos/) med fullständig analys. Konvention och
 mappstruktur: [`todos/README.md`](todos/README.md).
 
-Senast uppdaterad: 2026-05-01 (#61 avfärdad — ingen driver; #55 oblockerad → Alt D + Alt B med Spatie/immutable; #58/#65 hanterade tidigare idag).
+Senast uppdaterad: 2026-05-01 (#55 klar — Alt D + Alt B + StripCookies live i prod, alla blade-callers bytta till `/k/v1/`; tidigare idag: #61/#65 avfärdade, #58/#62/#53 klara).
 
 ## Aktiva
 
@@ -23,7 +23,6 @@ Senast uppdaterad: 2026-05-01 (#61 avfärdad — ingen driver; #55 oblockerad �
 | 51  | Övriga datakällor: research-skiss                       | Research-katalog (SMHI, räddningstjänst-RSS, Krisinfo, m.fl.) — bryts ut per källa    | [todos/51-ovriga-datakallor-research.md](todos/51-ovriga-datakallor-research.md)                   |
 | 52  | GSC-monitor: lågrankade högvolym-queries                | Baseline klar 2026-04-30 — 7 åtgärder identifierade (A–G), ~25k clicks/90d potential  | [todos/52-gsc-low-rank-monitoring.md](todos/52-gsc-low-rank-monitoring.md)                         |
 | 54  | Trafikkontroll-titlar: utöka AI-rewrite                 | Idé — utöka `isVagueTitle()` med trafikkontroll-mönster                               | [todos/54-trafikkontroll-titlar.md](todos/54-trafikkontroll-titlar.md)                             |
-| 55  | Kortare/snyggare URL:er för kartbilder                  | Skissad — Alt D oblockerad (path-density), Alt B (301 + Spatie + immutable)           | [todos/55-kortare-kartbild-urls.md](todos/55-kortare-kartbild-urls.md)                             |
 | 57  | Aktivera Hetzners referral-program                      | Idé — länk på `/sida/om` med transparent disclosure                                   | [todos/57-hetzner-referral.md](todos/57-hetzner-referral.md)                                       |
 | 59  | "Vad händer nu"-ruta (Krimkartan-känsla)                | Idé — kompakt feed-komponent på startsidan                                            | [todos/59-vad-hander-nu-ruta.md](todos/59-vad-hander-nu-ruta.md)                                   |
 | 60  | Auto-länka events till nyheter via AI + RSS             | Fas 3 (bred) — kör efter #63 visat positivt utfall; SEO-research klar 2026-05-01      | [todos/60-auto-lank-nyheter-ai-rss.md](todos/60-auto-lank-nyheter-ai-rss.md)                       |
@@ -73,6 +72,7 @@ Sorterade nyast först.
 
 | #   | Titel                                                               | Klar       | Fil                                                                                                          |
 | --- | ------------------------------------------------------------------- | ---------- | ------------------------------------------------------------------------------------------------------------ |
+| 55  | Kortare/snyggare URL:er för kartbilder (`/k/v1/` 301 + immutable)   | 2026-05-01 | [todos/done/55-kortare-kartbild-urls.md](todos/done/55-kortare-kartbild-urls.md)                             |
 | 58  | spatie/laravel-markdown-response för AI-agenter                     | 2026-05-01 | [todos/done/58-laravel-markdown-response.md](todos/done/58-laravel-markdown-response.md)                     |
 | 53  | Återaktivera presstalesperson-filter                                | 2026-05-01 | [todos/done/53-aterativera-presstalesperson-filter.md](todos/done/53-aterativera-presstalesperson-filter.md) |
 | 62  | `getMapAltText()` förbättrad för image-search-SEO                   | 2026-05-01 | [todos/done/62-getmapalttext-image-seo.md](todos/done/62-getmapalttext-image-seo.md)                         |
