@@ -1,5 +1,5 @@
-**Status:** aktiv (idé — research saknas)
-**Senast uppdaterad:** 2026-04-30
+**Status:** aktiv (RSS/ToS + SEO-research klar 2026-05-01 — fas-3-scope, kör efter #63)
+**Senast uppdaterad:** 2026-05-01
 **Källa:** Inbox Brottsplatskartan (2026-04-30)
 
 # Todo #60 — Auto-länka events till nyhetsartiklar via AI + RSS
@@ -90,18 +90,63 @@ kostnadskontroll.
 ## Beroenden
 
 - Bygger på #28 (laravel/ai installerat).
+- **Bygger på [#63](63-relaterade-nyheter-trafikprio.md)** — #63 är fas
+  1+2 av samma pipeline; #60 är fas 3 (full bredd) som kör om #63 visar
+  positivt utfall.
 - Synergi med #59 (live-rutan kan visa "Media bevakar:" badge).
 
-## Nästa steg
+## SEO-research (2026-05-01)
 
-1. **Pilot:** välj 3 feeds (Expressen, SVT inrikes, SVT lokalt
-   stockholm). Skriv RSS-importer + tabell. Ingen AI-matchning ännu —
-   bara ackumulera data 7 dagar för att se volym.
-2. **Matchnings-prototyp:** kör på 10 stora events manuellt valda
-   (gripande, dödsfall) — utvärdera Claude-promptens precision.
-3. **Beslut:** fortsätt eller skippa. Om fortsätt: scale upp till
-   alla feeds + alla events, mät kostnad + match-rate 30d.
-4. **UI:** designa "Mediabevakning"-sektion på event-sida.
+Detaljerad analys: [`tmp-news-research/seo-60-vs-63-2026-05-01.md`](../tmp-news-research/seo-60-vs-63-2026-05-01.md).
+
+**Nyckelfynd:** event-trafiken på Brottsplatskartan är **flat-tail**, inte
+Pareto. Top-50 ger bara **20 % av GSC event-clicks** (90d) — 80 % ligger
+i long-tail (15 755 unika sidor får clicks). Det betyder att #60:s breda
+ansats är SEO-mässigt starkare än det smala #63 — men först efter att
+#63 har validerat AI-precision och UI.
+
+**Bred ansats vinner på:**
+
+- Long-tail = 80 % av sökklicken — där positions-lyften är möjliga
+  (rank 8–15 är rörlig; top-50 ligger redan på rank 6–10)
+- Crawl-budget: bred ansats reaktiverar tusentals sidor med låg
+  crawl-rate efter #29:s noindex-purge
+- Topical authority byggs i bredd för aggregator-siter
+
+**Risker att hantera:**
+
+- 150 outbound-länkar/dygn till samma 5 domäner kan misstolkas som
+  link-farm utan disciplin → använd `rel="nofollow"` på media-länkar
+- AI-precision <80 % → fel-länkar pinsamma → höj tröskeln, bara `ja`-svar
+
+## RSS/ToS-research (2026-05-01)
+
+Detaljerad rapport: [`tmp-news-research/news-rss-tos-2026-05-01.md`](../tmp-news-research/news-rss-tos-2026-05-01.md).
+
+**Fas-1-källor (bekräftade RSS + ToS-rena):** Google News SE, SVT
+Nyheter, Aftonbladet, Expressen-familjen (3 feeds), DN.
+**Undvik:** TT (förbjuder robotar i §5.1), Omni (ingen feed), DI
+(fel fokus). Juridiskt rent: URL § 22 + Svensson C-466/12 + DSM art. 15.
+
+## Nästa steg (uppdaterad fas-plan)
+
+**Fas 0 (klar):** RSS/ToS-research + SEO-analys 2026-05-01.
+
+**Fas 1 — kör #63 först (4–6v):**
+
+- Smal pilot (top-50 events från GA4) med Google News SE som pre-filter
+    - Claude Haiku-validering. Etablera UI, AI-precision-tröskel, nofollow-
+      policy. Mät CTR + dwell time på event-sidor med media-sektion vs utan.
+
+**Fas 2 — mid-tier (om fas 1 visar precision >80 % och positivt CTR/dwell):**
+
+- Top-1000 events ≥10 clicks/30d (~10 events/dygn, ~$1/dygn). Täcker
+  ~70 % av event-clicks.
+
+**Fas 3 — full #60 (bred):**
+
+- Alla nya events. Förutsättning: mid-tier visar GSC-positions-lyft >1.0
+  och AI-precision håller. Kostnad ~$5/dygn för Claude Haiku.
 
 ## Inte i scope
 
