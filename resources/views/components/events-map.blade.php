@@ -154,6 +154,8 @@
         <div class="EventsMap__container">
             <div
                 class="EventsMap EventsMap--city"
+                role="region"
+                aria-label="Interaktiv karta över polishändelser"
                 data-events-map-size="{{ $mapSize }}"
                 data-events-map-zoom="{{ $mapZoom }}"
                 data-events-map-lat-lng="{{ json_encode($latLng) }}"

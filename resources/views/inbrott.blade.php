@@ -16,10 +16,11 @@ Template för /inbrott
     <div class="widget">
 
         <form id="inbrottSubnavForm" class="SubNav__form" target="_top" action="/">
-            <label class="SubNav__label">
+            <label class="SubNav__label" for="byt-sida">
                 Välj undersida
                 <select
                     name="byt-sida"
+                    id="byt-sida"
                     class="SubNav__select"
                     onchange="this.closest('form').submit();"
                 >

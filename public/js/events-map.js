@@ -112,6 +112,8 @@ L.Control.ExpandButton = L.Control.extend({
             "leaflet-bar EventsMap-control-expand",
             html
         );
+        expandButton.setAttribute("type", "button");
+        expandButton.setAttribute("aria-label", "Maximera kartan till fullskärm");
 
         var buttonText = L.DomUtil.create(
             "span",
@@ -240,11 +242,11 @@ class EventsMap {
                         <img class="EventsMap-markerTooltip-image" src="${event.image}" alt="">
                         <div class="EventsMap-markerTooltip-innerContent">
                             <div class="EventsMap-markerTooltip-locations">${event.locations}</div>
-                            <h1 class="EventsMap-markerTooltip-headline">
+                            <h3 class="EventsMap-markerTooltip-headline">
                                 <a class="EventsMap-markerTooltip-link" href="${event.permalink}?utm_source=brottsplatskartan&utm_medium=maplink" target="_blank">
                                     ${event.headline}
                                 </a>
-                            </h1>
+                            </h3>
                             <div class="EventsMap-markerTooltip-text">${event.time_human} • ${event.type}</div>
                         </div>
                     </div>

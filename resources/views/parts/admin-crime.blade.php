@@ -119,19 +119,19 @@
                     <legend>Händelsen i media</legend>
 
                     <p class="AddMediaFormFields">
-                        <label>
+                        <label for="AdminFormAddMediaRef-url">
                             URL<br>
-                            <input type="url" name="url" placeholder="" autocomplete="off"
+                            <input type="url" id="AdminFormAddMediaRef-url" name="url" placeholder="" autocomplete="off"
                                 value="{{ old('url') }}">
                         </label>
-                        <label>
+                        <label for="AdminFormAddMediaRef-title">
                             Titel<br>
-                            <input type="text" name="title" placeholder="" autocomplete="off"
+                            <input type="text" id="AdminFormAddMediaRef-title" name="title" placeholder="" autocomplete="off"
                                 value="{{ old('title') }}">
                         </label>
-                        <label>
+                        <label for="AdminFormAddMediaRef-shortdesc">
                             Kort beskrivning<br>
-                            <input type="text" name="shortdesc" placeholder="" autocomplete="off"
+                            <input type="text" id="AdminFormAddMediaRef-shortdesc" name="shortdesc" placeholder="" autocomplete="off"
                                 value="{{ old('shortdesc') }}">
                         </label>
                     </p>
@@ -159,17 +159,17 @@
                     <legend>Platser</legend>
 
                     <p>
-                        <label>
+                        <label for="AdminFormPlatser-locationAdd">
                             Lägg till plats<br>
-                            <input type="text" name="locationAdd" placeholder="Hejsanhoppsangränd"
+                            <input type="text" id="AdminFormPlatser-locationAdd" name="locationAdd" placeholder="Hejsanhoppsangränd"
                                 autocomplete="off">
                         </label>
                     </p>
 
                     <p>
-                        <label>
+                        <label for="AdminFormPlatser-locationIgnore">
                             Ignorera plats<br>
-                            <input type="text" name="locationIgnore" placeholder="Ipsumvägen" autocomplete="off">
+                            <input type="text" id="AdminFormPlatser-locationIgnore" name="locationIgnore" placeholder="Ipsumvägen" autocomplete="off">
                         </label>
                     </p>
 
