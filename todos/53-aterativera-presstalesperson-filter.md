@@ -1,18 +1,29 @@
-**Status:** aktiv (skissad — koden finns men `isPressNotice()` är avstängd)
-**Senast uppdaterad:** 2026-04-30
+**Status:** aktiv (klar för implementation — empirisk analys gjord 2026-05-01)
+**Senast uppdaterad:** 2026-05-01
 **Källa:** Inbox Brottsplatskartan (2026-04-30)
 
-# Todo #53 — Återaktivera presstalesperson-filter med smartare logik
+# Todo #53 — Återaktivera presstalesperson-filter
 
 ## Sammanfattning
 
 > https://brottsplatskartan.se/vastra-gotalands-lan/ovrigt-vastra-gotalands-lan-501252
 > Händelser som denna borde inte komma med, iaf inte synas publikt.
 
-URL:n ovan är en presstalesperson-notis ("Efter klockan 21:45 00 finns
-ingen presstalesperson i tjänst…") som filtreras till `is_public=false` av
-`ContentFilterService::isPressNotice()` — **men anropet är utkommenterat**
+URL:n ovan är en presstalesperson-notis som filtreras till `is_public=false`
+av `ContentFilterService::isPressNotice()` — **men anropet är utkommenterat**
 i `shouldBePublic()`. Det är fortfarande publikt synligt.
+
+**Empirisk analys (2026-05-01) på lokal DB-kopia (501k events, 328k publika):**
+
+- **180 events** skulle filtreras av nuvarande `isPressNotice()`-mönster (~0,05 % av publika).
+- **2 av dessa är falska positiver** (~1,1 % FP-rate) — båda nattsammanfattningar
+  med riktig händelsedata där `description` råkar börja med "Presstalesperson i tjänst".
+- Den enda regex som skapar problemen är **`/presstalesperson.*tjänst/i`** (för bred).
+- Tas det bort → **178 träffar, 0 false positives**. De övriga 5 mönstren
+  täcker upp utan FP.
+
+**Slutsats:** ingen andelsbaserad heuristik behövs. Lösningen är att avkommentera
+filtret och ta bort 1 regex-rad.
 
 ## Bakgrund
 
@@ -28,62 +39,72 @@ I `app/Services/ContentFilterService.php` rad 23–29:
 // }
 ```
 
-Filtret stängdes av sannolikt för att det fångade nattsammanfattningar
-som **både** innehåller riktig händelsedata **och** en avslutande
-"presstalesperson tjänstgör till…"-fras. Pressnummer-filtret
-(`isPhoneNumberInfo()`) är aktivt och fungerar.
+Filtret stängdes av för att `/presstalesperson.*tjänst/i` matchar både:
 
-Mönstren i `isPressNotice()` är breda — t.ex. `/presstalesperson.*tjänst/i`
-träffar nattsammanfattningar med "presstalesperson är i tjänst till 21:00".
+- "Efter klockan 21:45 finns ingen presstalesperson i tjänst" (sann notis)
+- "Presstalesperson i tjänst. Sammanfattning natt..." (nattsammanfattning med riktig data)
+
+### Konkreta false positives identifierade
+
+- **#497682** "05 mars 07.00, Sammanfattning natt, Västra Götalands län" —
+  body 539 tecken (olaga hot Göteborg + brand Trollhättan).
+  Description: "Presstalesperson i tjänst. Sammanfattning natt."
+- **#497676** "05 mars 06.45, Sammanfattning natt, Hallands län" —
+  body 487 tecken (misshandel Halmstad + rattfylleri Kungsbacka).
+  Description: "Presstalesperson i tjänst. Nedan följer en sammanfattning..."
+
+Av 37 803 publika nattsammanfattningar är detta de **enda två** som påverkas —
+för att Polisens API råkat skriva exakt den frasen i description just dessa två gånger.
 
 ## Förslag
 
-**Viktigt:** titeln kan innehålla "presstalesperson"-fras **även när
-brödtexten har riktig händelsedata** (t.ex. nattsammanfattning med
-press-info som rubrik men flera olyckor/inbrott i body). Filtret får
-inte avgöras på titel ensam — det måste titta på vad **brödtexten**
-faktiskt innehåller.
+**Fas 1 (1–2 h):**
 
-Smartare detektering — kombinera mönster med **innehållsanalys**:
+1. **Aktivera anropet** i `shouldBePublic()` (rad 27–29).
+2. **Ta bort regex** `'/presstalesperson.*tjänst/i'` ur `$pressPatterns` (rad 61).
+   De övriga 5 mönstren är tillräckligt specifika och täcker fallen.
+3. **Kör dry-run** lokalt:
+    ```bash
+    docker compose exec app php artisan crimeevents:check-publicity --since=365
+    ```
+    Verifiera ~178 träffar, sticksprov 10 events (alla ska vara rena notiser
+    med kort/tom body, inga "Sammanfattning natt"-titlar).
+4. **PHPUnit-test** för regression. Test-infrastruktur är i princip tom
+   (bara `ExampleTest.php`) — skapa `tests/Unit/Services/ContentFilterServiceTest.php`
+   med fixturer för: ren press-notis, Sammanfattning natt med "Presstalesperson
+   i tjänst" i description, vanlig händelse.
+5. **Deploy + backfill prod:**
+    ```bash
+    ssh deploy@brottsplatskartan.se 'cd /opt/brottsplatskartan && \
+      docker compose exec app php artisan crimeevents:check-publicity --apply --since=365'
+    ```
+6. **Rensa response-cache** så de gamla URL:erna ger 404:
+    ```bash
+    docker compose exec app php artisan responsecache:clear
+    ```
 
-1. **Anropet aktiveras** i `shouldBePublic()` igen.
-2. **isPressNotice() byggs om så det kräver att brödtexten i huvudsak
-   är press-info, inte bara att titeln matchar:**
-    - Räkna ut hur stor andel av `parsed_content` (inte `title`) som
-      matchar press-mönstren. Om > 70 % av brödtexten består av
-      press-fras-tecken → notis. Annars: släpp igenom (innehåller
-      händelsedata).
-    - Kort body (< 150 tecken) + press-fras-träff → notis.
-    - Lång body (≥ 150 tecken) som innehåller både press-fras **och**
-      annat ord-innehåll → sammanfattning/händelse, **släpp igenom**.
-    - Titel-only-träff utan body-träff → släpp igenom (titeln ljuger
-      ofta jämfört med innehållet).
-3. **Backfill-körning:** `crimeevents:check-publicity --apply --since=365`
-   efter aktivering (kommandot finns redan).
-4. **Test:** stickprov på 20 events från `Övrigt`-kategorin —
-   manuellt bekräfta att events med riktig händelsedata förblir publika
-   även när rubriken låter som press-info.
+**Fas 2 (om behov uppstår):** andelsbaserad logik. Inte behövd nu.
 
 ## Risker
 
-- **False positives på nattsammanfattningar.** Mönstret måste testas
-  brett innan backfill — kör först som dry-run
-  (`crimeevents:check-publicity --since=30` utan `--apply`) och inspektera
-  utfallet manuellt.
-- **Pressnummer/presstalesperson-mönstren överlappar** —
-  `isPhoneNumberInfo()` fångar redan en del; var noga med att inte
-  dubbel-räkna.
+- **Låg.** 0 FP i empirisk analys efter regex-borttagning. 178 events i prod-snapshot
+  som markeras `is_public=false` — global scope döljer dem från alla publika
+  vyer/sökningar/sitemap.
+- Eventuella nya falska positiver kommer från framtida Polisen-API-formuleringar.
+  Mitigering: behåll PHPUnit-test, lägg till nya fixturer om något smyger sig in.
+- **`isPhoneNumberInfo()`** är aktiv och fångar pressnummer-info redan — ingen risk
+  för dubbel-räkning, `shouldBePublic()` returnerar bara true/false.
 
 ## Confidence
 
-**Hög.** Koden finns, kommandot finns, testdata finns. 1–2 timmars jobb plus
-stickprovsverifiering.
+**Hög.** Koden finns, kommandot finns, mönstren är empiriskt verifierade.
+Implementation 1–2 h, deploy + backfill 30 min.
 
 ## Nästa steg
 
-1. Identifiera 5 representativa events: 2 rena press-notiser, 2
-   nattsammanfattningar, 1 vanlig händelse. Kör nuvarande
-   `isPressNotice()` mot dem och dokumentera utfall.
-2. Skriv ny logik (proportions/längd-baserad).
-3. Lägg till PHPUnit-test för regressioner.
-4. Aktivera + dry-run över 30d → inspektera lista → backfill 365d.
+1. ~~Identifiera 5 representativa events~~ — gjort 2026-05-01.
+2. Edita `ContentFilterService.php` (avkommentera + ta bort brett mönster).
+3. Skapa `tests/Unit/Services/ContentFilterServiceTest.php`.
+4. Lokal dry-run + sanity-check.
+5. Commit + push → deploy.
+6. Backfill prod + cache-clear.

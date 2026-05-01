@@ -20,13 +20,9 @@ class ContentFilterService
             return false;
         }
 
-        // Presstalesperson-filtret är avaktiverat tills vidare.
-        // TODO: Återaktivera med bättre logik som bara filtrerar händelser
-        // som enbart handlar om presstalespersonens tillgänglighet och inte
-        // innehåller faktisk händelsedata (t.ex. sammanfattningar).
-        // if ($this->isPressNotice($event)) {
-        //     return false;
-        // }
+        if ($this->isPressNotice($event)) {
+            return false;
+        }
 
         // Kontrollera om det är ett pressnummer-informationsmeddelande
         if ($this->isPhoneNumberInfo($event)) {
@@ -50,15 +46,14 @@ class ContentFilterService
         $description = strtolower($event->description ?? '');
         $parsedContent = strtolower($event->parsed_content ?? '');
 
-        // Mönster för presstalesperson-meddelanden
+        // Specifika fraser som indikerar ren press-info utan händelsedata.
+        // OBS: undvik breda mönster som /presstalesperson.*tjänst/i — de träffar
+        // även nattsammanfattningar där description börjar med "Presstalesperson
+        // i tjänst. Sammanfattning natt..." (verifierat 2026-05-01).
         $pressPatterns = [
-            // Huvudmönster
             '/efter klockan \d{1,2}:\d{2} finns ingen presstalesperson i tjänst/i',
             '/frågor från media besvaras av vakthavande befäl i mån av tid/i',
-            
-            // Variationer
             '/ingen presstalesperson/i',
-            '/presstalesperson.*tjänst/i',
             '/media besvaras av vakthavande befäl/i',
             '/vakthavande befäl i mån av tid/i',
         ];
