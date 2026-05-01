@@ -4,7 +4,7 @@ Index över förbättringsarbete. Varje todo har en egen fil under
 [`todos/`](todos/) med fullständig analys. Konvention och
 mappstruktur: [`todos/README.md`](todos/README.md).
 
-Senast uppdaterad: 2026-04-30 (+#56 klar — DPR @2x srcset på alla kartbilder; format-byte avfärdat efter mätning).
+Senast uppdaterad: 2026-05-01 (+#62 — förbättra `getMapAltText()` för image-search-SEO; #55 slugs avfärdade efter GSC-mätning).
 
 ## Aktiva
 
@@ -24,15 +24,18 @@ Senast uppdaterad: 2026-04-30 (+#56 klar — DPR @2x srcset på alla kartbilder;
 | 52  | GSC-monitor: lågrankade högvolym-queries         | Baseline klar 2026-04-30 — 7 åtgärder identifierade (A–G), ~25k clicks/90d potential  | [todos/52-gsc-low-rank-monitoring.md](todos/52-gsc-low-rank-monitoring.md)                         |
 | 53  | Återaktivera presstalesperson-filter             | Skissad — `isPressNotice()` är avstängd, kräver smartare body-baserad logik           | [todos/53-aterativera-presstalesperson-filter.md](todos/53-aterativera-presstalesperson-filter.md) |
 | 54  | Trafikkontroll-titlar: utöka AI-rewrite          | Idé — utöka `isVagueTitle()` med trafikkontroll-mönster                               | [todos/54-trafikkontroll-titlar.md](todos/54-trafikkontroll-titlar.md)                             |
-| 55  | Kortare/snyggare URL:er för kartbilder           | Idé — proxy-route `/k/{id}-{w}x{h}` mot tileserver                                    | [todos/55-kortare-kartbild-urls.md](todos/55-kortare-kartbild-urls.md)                             |
+| 55  | Kortare/snyggare URL:er för kartbilder           | Skissad — proxy-route `/k/{id}-{w}x{h}`; blockerad av #61                             | [todos/55-kortare-kartbild-urls.md](todos/55-kortare-kartbild-urls.md)                             |
 | 57  | Aktivera Hetzners referral-program               | Idé — länk på `/sida/om` med transparent disclosure                                   | [todos/57-hetzner-referral.md](todos/57-hetzner-referral.md)                                       |
 | 58  | spatie/laravel-markdown-response för AI-agenter  | Idé — utöka #12 till alla sidor via auto-detect-middleware                            | [todos/58-laravel-markdown-response.md](todos/58-laravel-markdown-response.md)                     |
 | 59  | "Vad händer nu"-ruta (Krimkartan-känsla)         | Idé — kompakt feed-komponent på startsidan                                            | [todos/59-vad-hander-nu-ruta.md](todos/59-vad-hander-nu-ruta.md)                                   |
 | 60  | Auto-länka events till nyheter via AI + RSS      | Idé — pollar svenska nyhets-RSS, matchar via Claude Haiku                             | [todos/60-auto-lank-nyheter-ai-rss.md](todos/60-auto-lank-nyheter-ai-rss.md)                       |
+| 61  | Caddy med cache-handler, ersätt nginx-tiles      | Skissad — egen Caddy-image med Souin/badger; konsoliderar tile-cache + frigör #55     | [todos/61-caddy-cache-handler.md](todos/61-caddy-cache-handler.md)                                 |
+| 62  | Förbättra `getMapAltText()` för image-search-SEO | Skissad — alt-text säger "röd fyrkant" (felaktigt) + saknar event-typ/datum           | [todos/62-getmapalttext-image-seo.md](todos/62-getmapalttext-image-seo.md)                         |
 
 ### Beroenden
 
 - **#10 → #36:** GSC-mätning bygger på #10:s rendering-deploy. _(#10 klar 2026-04-27 — #36 mätperiod startad samma dag.)_
+- **#61 → #55:** `/k/*`-routen i #55 vill ha cache-handler i Caddy igång före launch. _(#61 ska soaka 7d innan #55 startas.)_
 
 ### Föreslagen ordning
 
