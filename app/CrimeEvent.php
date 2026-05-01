@@ -157,9 +157,9 @@ class CrimeEvent extends Model implements Feedable {
      * radie anpassad efter geo-precision (se todos/20). Faller tillbaka
      * på bbox-varianten för grov precision (far/veryfar).
      */
-    public function getStaticImageSrcCircle(int $width = 617, int $height = 463, int $scale = 1): string
+    public function getStaticImageSrcCircle(int $width = 617, int $height = 463, int $scale = 1, string $density = 'high'): string
     {
-        return app(StaticMapUrlBuilder::class)->circleUrl($this, $width, $height, $scale);
+        return app(StaticMapUrlBuilder::class)->circleUrl($this, $width, $height, $scale, $density);
     }
 
     /**

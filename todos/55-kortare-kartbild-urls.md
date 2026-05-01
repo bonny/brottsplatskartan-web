@@ -1,5 +1,5 @@
-**Status:** aktiv (skissad — blockerad av #61 tills cache-handler är i prod)
-**Senast uppdaterad:** 2026-04-30
+**Status:** Alt D implementerad lokalt 2026-05-01 (väntar verifiering i browser innan deploy + Alt A)
+**Senast uppdaterad:** 2026-05-01
 **Källa:** Inbox Brottsplatskartan (2026-04-30)
 
 # Todo #55 — Kortare/snyggare URL:er för statiska kartbilder
@@ -78,10 +78,11 @@ Risker:
   per-storlek-default i blade-callers.
 
 **Rekommendation: D först (ren win, ingen infra), sedan B (301 +
-immutable + edge-cache via #61).** Alt B är billigare än A eftersom
+`immutable` + Spatie Response Cache).** Alt B är billigare än A eftersom
 long-URL:n är deterministisk från `event_id` → permanent browser-cache
-funkar och PHP-FPM-workern slipper proxa bytes. Alt A bara om B visar
-problem med image-search eller cache-thrash.
+funkar och PHP-FPM-workern slipper proxa bytes. 301-responsen cachas
+av Spatie i Redis (befintlig stack); browser-cachen tar resten. Alt A
+bara om B visar problem med image-search eller cache-thrash.
 
 ### Varför inte Alt A (proxy)
 
@@ -100,9 +101,11 @@ problem med image-search eller cache-thrash.
 | `circlePath()` × 3 × 48 (144 cos/sin) | ~0.5 ms   |
 | **Total per fresh hit**               | ~12–17 ms |
 
-Med Caddy cache-handler (#61) på `/k/*`: returnerande besökare träffar
-edge-cache → 0 PHP-touch. Utan edge-cache: ~1–3 % CPU-ökning under
-crawl-bursts. Acceptabelt på CX33.
+Med Spatie Response Cache (Redis, befintlig) på `/k/*`-routen:
+returnerande besökare och crawls hittar 301:an i cachen → ingen full
+Laravel-render. Browser-cachen (`immutable`) tar resten — samma user
+träffar aldrig servern igen för samma bild. CPU-ökning under cold-cache
+crawl-bursts: ~1–3 %. Acceptabelt på CX33.
 
 ## URL-format (Alt B)
 
@@ -149,8 +152,10 @@ URL ändras. `immutable` Cache-Control kvarstår.
 
 - **Cache-invalidation** vid stilbyte (cirkel-färg etc.) — hanteras via
   version-prefix i URL, se ovan.
-- **Caddy cache-handler måste vara i prod** innan launch — annars
-  blir varje /k/-hit en PHP-touch. Hanteras av #61.
+- **Cold-cache + crawl-burst** = PHP-FPM får jobba. Spatie Response
+  Cache fångar de aktivt requestade URL:erna, men en bot som drar 5000
+  okända events i rad kostar ~1–3 % CPU under bursten. Acceptabelt på
+  CX33; mät under första veckan post-launch.
 - **Migration av statiska metaImage** (`single-event.blade.php` → OG/JSON-LD)
   — befintliga delade länkar med long-URL fortsätter funka oförändrat
   eftersom long-URL:n är giltig parallellt. Bara HTML-render byts till
@@ -164,20 +169,23 @@ LCP eftersom bilderna är `loading="lazy"` (verifiera först).
 ## Beroenden
 
 - Bygger på #20 (kartbilder-med-cirklar), #15 (tiles-cache).
-- **Blockerad av #61** (Caddy cache-handler) — `/k/*`-edge-cache vill
-  vara på plats innan launch.
+- _(Tidigare blockerad av #61 / Caddy cache-handler — avfärdat
+  2026-05-01: 301-responsen cachas tillräckligt av Spatie + browser-
+  immutable.)_
 
 ## Nästa steg
 
-1. **Alt D först** (oblockerad): kapa path-density per storlek.
-   Mät HTML-besparing på `/stockholm/handelser/2026/04` efter deploy.
-   ~30 min implementation + 1d soak.
-2. **Vänta på #61** (Caddy + cache-handler i prod, 7d soak).
-3. **Alt B**: bygg `KartbildController` + route `/k/{spec}` →
+1. ✅ **Alt D implementerad 2026-05-01.** `$density='low'` på `circleUrl()` /
+   `edgeFadedCirclePaths()` ger 1 lager × 24 punkter. Sätts i
+   `list-item.blade.php` (160×160-thumbs). Card-storlekarna (617×463,
+   640×320) behåller `'high'`. Lokalt: 4092 → 854 bytes per thumb-URL
+   (-79 %). Verifiering i browser pågår innan deploy.
+2. **Alt B**: bygg `KartbildController` + route `/k/{spec}` →
    `StaticMapUrlBuilder` → 301 redirect med `Cache-Control: public,
 max-age=31536000, immutable`. Uppdatera blade-callers
    (`card.blade.php`, `list-item.blade.php`, `events-box.blade.php`,
-   `event-map-far.blade.php`) att rendera kort-URL.
-4. Mät: total HTML-bytes per pageview, gzip-transfer, CWV (CrUX),
+   `event-map-far.blade.php`) att rendera kort-URL. Verifiera att
+   Spatie Response Cache fångar 301:an.
+3. Mät: total HTML-bytes per pageview, gzip-transfer, CWV (CrUX),
    PHP-FPM CPU under bot-burst.
-5. Om image-search eller bot-traffic missnöjt: byt till Alt A (proxy).
+4. Om image-search eller bot-traffic missnöjt: byt till Alt A (proxy).

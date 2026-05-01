@@ -37,8 +37,12 @@ class StaticMapUrlBuilder
      *
      * `$scale=2` lägger till `@2x` i URL:n så tileserver-gl renderar dubbel
      * pixeltäthet — krävs för skarp visning på retina-skärmar (todo #51).
+     *
+     * `$density='low'` ritar bara den solida kärnan med 24 punkter istället
+     * för 3 lager × 48 punkter — kapar URL:n från ~4 KB till ~600 bytes.
+     * Avsett för små thumbnails (≤160px) där gradientlagren ändå inte syns.
      */
-    public function circleUrl(CrimeEvent $event, int $width = 320, int $height = 320, int $scale = 1): string
+    public function circleUrl(CrimeEvent $event, int $width = 320, int $height = 320, int $scale = 1, string $density = 'high'): string
     {
         if (!$event->location_lat || !$event->location_lng) {
             return $this->closeUpUrl($event, $width, $height, $scale);
@@ -58,7 +62,7 @@ class StaticMapUrlBuilder
         $lng = (float) $event->location_lng;
 
         $params = ['latlng=1', 'padding=0.35'];
-        foreach ($this->edgeFadedCirclePaths($lat, $lng, $radius) as $path) {
+        foreach ($this->edgeFadedCirclePaths($lat, $lng, $radius, density: $density) as $path) {
             $params[] = 'path=' . rawurlencode($path);
         }
 
@@ -87,11 +91,22 @@ class StaticMapUrlBuilder
      * → solid kärna (0.22 med kontur). Ritningsordningen är bakifrån-och-fram,
      * så kärnan hamnar överst och mitten ser tydligt röd ut.
      *
+     * Vid `$density='low'`: bara den solida kärnan med 24 punkter — visuellt
+     * identiskt på små thumbs men ~7× kortare URL.
+     *
      * @return array<int, string>
      */
-    public function edgeFadedCirclePaths(float $lat, float $lng, float $rMax, int $points = 48): array
+    public function edgeFadedCirclePaths(float $lat, float $lng, float $rMax, int $points = 48, string $density = 'high'): array
     {
         $c = self::CIRCLE_COLOR_RGB;
+
+        if ($density === 'low') {
+            return [
+                "fill:rgba({$c},0.22)|stroke:rgba({$c},0.8)|width:1.2|linejoin:round|"
+                    . $this->circlePath($lat, $lng, $rMax * 0.85, 24),
+            ];
+        }
+
         return [
             "fill:rgba({$c},0.07)|stroke:rgba({$c},0)|width:0|"
                 . $this->circlePath($lat, $lng, $rMax, $points),
