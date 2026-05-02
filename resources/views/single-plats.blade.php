@@ -128,7 +128,7 @@ https://brottsplatskartan.localhost/plats/nacka
 
     {{-- Lista närmaste polisstationerna --}}
     @if ($policeStations)
-        <section class="widget">
+        <section class="widget" id="polisstationer">
             <h2 class="widget__title">Polisstationer nära {{ $plats }}</h2>
             <ul class="widget__listItems">
                 @foreach ($policeStations->slice(0, 3) as $policeStation)

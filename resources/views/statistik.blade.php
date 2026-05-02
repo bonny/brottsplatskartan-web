@@ -60,12 +60,12 @@
             </p>
         </header>
 
-        <section class="widget">
+        <section class="widget" id="handelser-per-dag">
             <h2 class="widget__title">Händelser per dag – senaste 14 dagarna</h2>
             {!! $chart14d !!}
         </section>
 
-        <section class="widget">
+        <section class="widget" id="topp-brottstyper">
             <h2 class="widget__title">Topp 10 brottstyper – senaste 7 dagarna</h2>
             @if (count($topCrimeTypes) > 0)
                 @php $_max = max(array_column($topCrimeTypes, 'count')) ?: 1; @endphp
@@ -88,7 +88,7 @@
             @endif
         </section>
 
-        <section class="widget">
+        <section class="widget" id="lan-topplista">
             <h2 class="widget__title">Län sorterat på antal händelser – senaste 7 dagarna</h2>
             <table class="DataTable">
                 <thead>
@@ -115,7 +115,7 @@
             </table>
         </section>
 
-        <section class="widget">
+        <section class="widget" id="rekord">
             <h2 class="widget__title">Rekord – dagar med flest rapporterade händelser</h2>
             <ol class="RankedList Statistics__topDays">
                 @foreach ($topDays as $day)
@@ -136,7 +136,7 @@
             @php
                 $_braPubliceringsAr = $braSenasteAr + 1;
             @endphp
-            <section class="widget">
+            <section class="widget" id="bra">
                 <h2 class="widget__title">Officiell brottsstatistik från Brå – {{ $braSenasteAr }}</h2>
 
                 <p class="lead">
@@ -210,7 +210,7 @@
             </section>
         @endif
 
-        <section class="widget">
+        <section class="widget" id="kalla-och-metod">
             <h2 class="widget__title">Källa och metod</h2>
             <p>
                 All data kommer från Polisens officiella RSS-flöden

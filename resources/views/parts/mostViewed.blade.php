@@ -1,4 +1,4 @@
-<section class="widget widget--mostViewed">
+<section class="widget widget--mostViewed" id="mest-last">
     <h2 class="widget__title">
         <a title="Visa de mest lästa polishändelserna" href="{{route('mostRead')}}">Mest läst av andra</a>
     </h2>

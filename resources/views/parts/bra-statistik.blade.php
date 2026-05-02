@@ -16,7 +16,7 @@
         $lanLabel = \App\BraStatistik::lanLabel($bra->lan_kod);
     @endphp
 
-    <section class="widget BraStatistik" aria-labelledby="bra-statistik-heading">
+    <section class="widget BraStatistik" id="anmalda-brott" aria-labelledby="bra-statistik-heading">
         <h2 id="bra-statistik-heading" class="widget__title">
             Anmälda brott i {{ $bra->kommun_namn }} kommun {{ $bra->ar }}
         </h2>

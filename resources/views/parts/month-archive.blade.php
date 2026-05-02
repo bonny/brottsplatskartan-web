@@ -110,7 +110,7 @@ Required vars:
     );
 @endphp
 
-<section class="widget MonthArchive">
+<section class="widget MonthArchive" id="manadsarkiv">
     <h2 class="widget__title">Månader</h2>
 
     {{-- Innevarande år: ingen toggle — listan börjar direkt. "Just nu"

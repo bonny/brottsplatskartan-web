@@ -8,7 +8,7 @@ $latestBlogItems = Cache::remember('widgetLatestBlogItems', 1 * 60, function() {
 });
 ?>
 
-<section class="widget widget--blogentries">
+<section class="widget widget--blogentries" id="blogg">
 
     <h2 class="widget__title">Senaste inläggen från vår blogg</h2>
 

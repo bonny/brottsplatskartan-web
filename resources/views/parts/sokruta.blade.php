@@ -1,4 +1,4 @@
-<article class="widget">
+<article class="widget" id="sok">
     <form action="{{ route('adsenseSearch') }}" method="get" class="flex gap-4">
         <label for="q" class="sr-only">Sök efter blåljushändelser</label>
         <input type="text" name="q" id="q" value="" placeholder="Sök efter blåljushändelser" class="flex-1" />

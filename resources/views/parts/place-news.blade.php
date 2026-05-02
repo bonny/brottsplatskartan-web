@@ -27,7 +27,7 @@
 @endphp
 
 @if ($visibleItems->isNotEmpty())
-    <section class="widget widget--placeNews" aria-label="Senaste nyheter i {{ $placeName }}">
+    <section class="widget widget--placeNews" id="nyheter" aria-label="Senaste nyheter i {{ $placeName }}">
         <h2 class="widget__title">Senaste nyheter i {{ $placeName }}</h2>
         <ul class="widget__listItems widget__listItems--placeNews">
             @foreach ($visibleItems as $item)

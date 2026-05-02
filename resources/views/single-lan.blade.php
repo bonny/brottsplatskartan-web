@@ -117,7 +117,7 @@ https://brottsplatskartan.localhost/lan/Stockholms%20l%C3%A4n
         'monthArchiveSlug' => $lan,
     ])
 
-    <div class="widget">
+    <div class="widget" id="brottsstatistik">
         <h2 class="widget__title"><a href="{{ route('statistik') }}">Brottsstatistik</a></h2>
         <div class="widget__listItem__text">
             <p>

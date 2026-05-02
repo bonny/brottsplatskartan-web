@@ -43,7 +43,7 @@ Template för ett event/händelse
 
     @if (isset($eventsNearby) && $eventsNearby->count())
 
-        <aside class="RelatedEvents widget">
+        <aside class="RelatedEvents widget" id="narliggande-handelser">
             <h2 class="widget__title RelatedEvents__title">Fler händelser i närheten</h2>
             <ul class="widget__listItems RelatedEvents__items">
                 @foreach ($eventsNearby as $event)

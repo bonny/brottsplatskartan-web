@@ -1,5 +1,5 @@
 @if (isset($latestEvents))
-    <section class="widget widget--mostViewed">
+    <section class="widget widget--mostViewed" id="senaste-handelser">
         <h2 class="widget__title">Senast inrapporterade händelserna</h2>
         <amp-carousel width="auto" height="175" layout="fixed-height" type="carousel">
             @foreach ($latestEvents as $event)

@@ -7,7 +7,7 @@
             ->take(8);
     @endphp
 
-    <section class="widget MCFStatistik" aria-labelledby="mcf-statistik-heading">
+    <section class="widget MCFStatistik" id="raddningstjansten" aria-labelledby="mcf-statistik-heading">
         <h2 id="mcf-statistik-heading" class="widget__title">
             Räddningstjänstens insatser i {{ $mcf->kommun_namn }} kommun {{ $mcf->ar }}
         </h2>

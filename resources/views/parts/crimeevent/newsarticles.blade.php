@@ -1,5 +1,5 @@
 @if (isset($newsarticles) && $newsarticles->count())
-    <div class="Event__media widget">
+    <div class="Event__media widget" id="i-media">
         <h2 class="Event__mediaTitle widget__title">Händelsen i media</h2>
         <ul class="Event__mediaLinks widget__listItems">
             @foreach ($newsarticles as $newsarticle)

@@ -79,7 +79,7 @@ samt för äldre dagar när man bläddrar i arkivet.
 @section('sidebar')
     @include('parts.sokruta')
 
-    <div class="widget">
+    <div class="widget" id="brottsstatistik">
         <h2 class="widget__title"><a href="{{ route('statistik') }}">Brottsstatistik</a></h2>
         <div class="widget__listItem__text">
             <p>

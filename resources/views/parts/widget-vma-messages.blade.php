@@ -1,5 +1,5 @@
 {{-- Widget som visar aktuella och tidigare VMA-meddelanden --}}
-<section class="widget">
+<section class="widget" id="vma">
     <h2 class="widget__title">
 
         <svg xmlns="http://www.w3.org/2000/svg" class="align-text-bottom" height="18" width="18" viewBox="0 0 48 48">

@@ -2,7 +2,7 @@
 modul i sidebar med länkar till alla län
 --}}
 
-<section class="widget widget--counties">
+<section class="widget widget--counties" id="lan">
     <h2 class="widget__title">Senaste händelserna &amp; brotten i ditt län</h2>
     <?php
     $lans = \App\Helper::getLans();
@@ -29,7 +29,7 @@ modul i sidebar med länkar till alla län
     ?>
 </section>
 
-<section class="widget widget--cities">
+<section class="widget widget--cities" id="stader">
     <h2 class="widget__title">Senast hänt i din stad</h2>
     <p>
         <a title="Händelser från Polisen i Stockholm" href="{{ route("platsSingle", ['plats' => 'Stockholm']) }}">Stockholm</a>
