@@ -94,6 +94,7 @@ return [
         'svt-ost' => 'Östergötlands län',
         'expressen-gt' => 'Västra Götalands län',
         'expressen-kvp' => 'Skåne län',
+        'dn-sthlm' => 'Stockholms län',
     ],
 
     /*
@@ -131,6 +132,7 @@ return [
         'svt-blekinge' => ['Karlskrona', 'Blekinge län'],
         'expressen-gt' => ['Göteborg', 'Västra Götalands län'],
         'expressen-kvp' => ['Malmö', 'Skåne län'],
+        'dn-sthlm' => ['Stockholm', 'Stockholms län'],
     ],
 
     /*

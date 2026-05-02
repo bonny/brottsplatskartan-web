@@ -30,6 +30,7 @@ return [
             ['source' => 'expressen-kvp', 'url' => 'https://feeds.expressen.se/kvallsposten/'],
 
             ['source' => 'dn', 'url' => 'https://www.dn.se/rss/'],
+            ['source' => 'dn-sthlm', 'url' => 'https://www.dn.se/rss/sthlm/'],
 
             ['source' => 'svd', 'url' => 'https://www.svd.se/feed/articles.rss'],
         ]
