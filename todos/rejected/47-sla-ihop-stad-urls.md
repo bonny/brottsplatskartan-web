@@ -1,5 +1,5 @@
-**Status:** aktiv
-**Senast uppdaterad:** 2026-04-29
+**Status:** avfärdad 2026-05-02 — Stockholm-fallet redan löst av #24/#35; Tier 2-städer (Linköping etc.) har försumbar trafik på `-län`-varianterna (GSC 28d: `/plats/linköping` 17 clicks/309 imps vs `/plats/linköping-östergötlands-län` 0 clicks/5 imps), så ingen meningsfull SEO-equity att rädda. Pos 21.6 säger att problemet är svag sida, inte URL-splittring. Rullas in i #24 Tier 2-uppföljningen där `/{stad}`-redirects blir gratis.
+**Senast uppdaterad:** 2026-05-02
 
 # Todo #47 — Slå ihop stad-URLs (plats vs plats+län vs län/kommun)
 
