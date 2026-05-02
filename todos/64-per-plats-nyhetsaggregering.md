@@ -1,7 +1,74 @@
-**Status:** fas-1 implementerat 2026-05-01 — klassifikations-pass live (regex blåljus + plats), UI på city + plats startsida. Mätperiod på precision + CTR pågår.
-**Senast uppdaterad:** 2026-05-01
+**Status:** fas-2 implementerat 2026-05-02 — hybrid regex + AI-pipeline live, source-scope fallback, utökad vokabulär, dn-sthlm-källa, UI med "visa fler"-toggle. Mätperiod på precision + CTR pågår.
+**Senast uppdaterad:** 2026-05-02
 
-## Implementations-status (2026-05-01)
+## Implementations-status fas 2 (2026-05-02)
+
+Triggad av användarobservation: "/stockholm visar rätt få nyheter — finns
+det inte fler i källorna?" Diagnos visade tre problem: (1) Stockholm-
+stadsdelar (Bromma, Hornsgatan, Rålambshovsparken) saknas i `places`,
+(2) blåljus-vokabulär hade luckor (böjningar, sammansatta ord, saknade
+kategorier), (3) regex är fundamentalt för "smutsig" för all blåljus-
+fångning. Lösningen blev en hybrid-pipeline: regex för det uppenbara,
+AI för det subtila.
+
+**Klart fas 2:**
+
+- **Source-scope fallback:** `source_to_primary_place` i config — när en
+  artikel från svt-stockholm m.fl. klassas som blåljus utan plats-match
+  → koppla till källans primära kommun. Fångar Bromma-typen utan att
+  lägga till stadsdelar i `places`. Täcker 22 lokala källor.
+- **Utökad blåljus-vokabulär:**
+    - Böjda former: poliser/poliserna, åtal/åtalas/åtalade, häktas,
+      döms/dömdes, rånare, mordet, dödligt, snattade
+    - Sammansatta ord: sprängdåd, bombdåd, mordbrand, knivattack,
+      omkullkörd, frontalkrock
+    - Nya kategorier: bedrägeri/bedrägerier/bluffannons/bluffmejl
+      (ekobrott), attentat (terrorbrott), pyroman (mordbrand),
+      skadegörelse/klotter/vandalism (egendomsbrott)
+    - Modifierare: raket/raketer, granat/granater, kollision/
+      kolliderade/kollidera, påkörd/påkörda
+- **Ny RSS-källa:** `dn-sthlm` (DN Stockholm-sektion, scope=Stockholms
+  län). Mitt i Stockholm undersöktes men har rotations-hash i URL —
+  instabil. Expressen/Aftonbladet/SvD har inga publika Stockholm-
+  section-feeds.
+- **UI: höjd limit + "visa fler"-toggle:** `display_limit` 5 → 8,
+  `display_limit_expanded` = 23. Helpern hämtar full expanded-limit i
+  en query, blade slicear i visible/hidden — ingen extra DB-träff för
+  utfällda artiklar. `<details>`-element, fungerar utan JS.
+- **AI-klassifikation (todo #64 fas 2.5):** `App\Ai\Agents\NewsClassifier`
+  med Haiku 4.5 + JSON schema (is_blaljus, kommun_names, category,
+  confidence, reason). Schemaläggs 15,45 varje timme efter regex-passet.
+  Fångar vad regex missar — bedrägerier, stadsdelar, böjda termer,
+  sport-namn-förväxlingar (Hammarby IF ≠ Hammarby stadsdel).
+  Idempotent via `news_articles.ai_classified_at`. ~$26/år vid 300
+  art/dygn. Lokal smoke-test verifierade: Skogsbrand i Partille fångad
+  trots att regex missade plats; sport/utrikes/näringsliv korrekt
+  filtrerad.
+
+**Filer fas 2:**
+
+- `app/Ai/Agents/NewsClassifier.php` (ny)
+- `app/Console/Commands/AiClassifyNewsArticles.php` (ny)
+- `resources/views/ai/prompts/news-classify.blade.php` (ny)
+- `database/migrations/2026_05_02_180000_add_ai_classified_to_news_articles.php` (ny)
+- `app/Console/Commands/ClassifyNewsArticles.php` (utökad: source-scope fallback)
+- `config/news-classification.php` (utökad: vokabulär + source_to_primary_place + display_limit_expanded)
+- `config/news-feeds.php` (ny källa: dn-sthlm)
+- `resources/views/parts/place-news.blade.php` (utökad: details-toggle)
+- `app/Console/Kernel.php` (schemaläggning)
+
+**Resultat efter fas 2 + reset på prod 2026-05-02:**
+
+- 1699 artiklar klassade (1656 efter dn-sthlm-tillägg)
+- 411 blåljus-träffar via regex (~24 %)
+- 292 place_news-rader (från 189 → +55 % efter source-scope fallback)
+- Stockholm specifikt: 0 → 15 kopplingar inom 72h
+- AI-klassifikation kicked in 2026-05-02 18:30 UTC, första 20 art:
+  6 AI-blåljus, 14 korrekt nej, 0 fel
+
+**Commits fas 2** (alla 2026-05-02): 94dcf38, 3592cc2, 937431f, 6d5ba21, eae77d9.
+
+## Implementations-status fas 1 (2026-05-01)
 
 **Klart:**
 
@@ -35,20 +102,32 @@ plats-kopplingar (varav 2 sanna, 1 false positive på kulturartikel
 - `resources/views/city.blade.php` (include)
 - `resources/views/single-plats.blade.php` (include)
 
-## Kända brister + åtgärder fas 2
+## Kända brister + åtgärder
 
-- **Aggregator-summary-bias:** google-news-se RSS innehåller ofta lista
-  av "andra artiklar" i `description`, vilket triggar plats-träffar på
-  ortnamn som inte hör till huvudartikeln. Smoke test 2026-05-01 visade
-  exempel: Stockholm-valborg-artikel hamnade på Uppsala-sidan.
-  **Åtgärd fas 2:** för aggregator-källor, matcha bara mot `title`, inte
-  `summary`. Eller introducera AI-fallback på osäkra fall.
-- **Ingen län-disambiguering än:** "Stockholm" matchas i 12 län-rader
-  i `places`. Idag visas alla. **Åtgärd fas 2:** lägg `lan` i artikel-
-  kontext-check (t.ex. om artikeln nämner "Stockholm" + "Solna",
-  bara koppla Solna).
-- **Ingen UI på län-sidor (`/lan/...`):** fas 2 utökar partial:en till
-  `single-lan.blade.php` när precision validerats.
+**Hanterade fas 2 (2026-05-02):**
+
+- ~~Aggregator-summary-bias~~ — `title_only_sources` config med
+  google-news-se i listan. Implementerat 2026-05-01.
+- ~~Ingen län-disambiguering~~ — `source_to_lan` per källa filtrerar
+  plats-träffar till källans scope-län. Implementerat 2026-05-01.
+- ~~Stockholm-stadsdelar saknas~~ — löst via `source_to_primary_place`
+  fallback (Bromma → Stockholm) + AI-pipeline som förstår stadsdels-
+  semantik direkt. Inga stadsdelar tillagda i `places`-tabellen, vilket
+  skulle introducerat false positives (Hammarby IF, Östermalm/Malmö).
+- ~~Vokabulär-luckor~~ — utökad lista + AI som backup.
+
+**Fas 3 — kvar att göra:**
+
+- **UI på län-sidor (`/lan/...`):** `single-lan.blade.php` har inte
+  partial:en än. Vänta in mätperiod (precision-stickprov 2026-05-15)
+  innan utrullning till länsnivå.
+- **Polisens egna RSS:** `polisen.se/aktuellt/rss/lokala-rss-floden/`
+  borde ge polisens egna pressmeddelanden. Hög signal-till-brus.
+  Undersöks separat om volym fortfarande upplevs låg efter fas 2.
+- **Schemaläggning av `app:news:fetch-rss` mot källor med stora
+  flöden:** vissa källor (Aftonbladet, DN-riks) har många artiklar
+  per dygn — vi kan missa nya om RSS-feeden bara visar senaste 25.
+  Fetcha oftare för dessa? Behöver mätning.
 
 ## Mätning
 
