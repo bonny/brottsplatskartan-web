@@ -147,7 +147,14 @@ return [
     'display_window_hours' => 72,
 
     /*
-     * Max antal artiklar att visa per plats i UI:t.
+     * Max antal artiklar i den synliga widget-listan per plats.
      */
-    'display_limit' => 5,
+    'display_limit' => 8,
+
+    /*
+     * Inklusive de extra artiklar som visas bakom <details>-toggle
+     * ("Visa fler"). Helpern hämtar upp till detta antal i en query;
+     * blade slice:ar i visible (display_limit) + hidden (resten).
+     */
+    'display_limit_expanded' => 23,
 ];
