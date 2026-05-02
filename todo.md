@@ -4,7 +4,7 @@ Index över förbättringsarbete. Varje todo har en egen fil under
 [`todos/`](todos/) med fullständig analys. Konvention och
 mappstruktur: [`todos/README.md`](todos/README.md).
 
-Senast uppdaterad: 2026-05-02 (+#67 nyheter egen flik/sida + startsida — analys saknas).
+Senast uppdaterad: 2026-05-02 (#67 avfärdad efter två reviews — pivot till event ↔ artikel-koppling istället).
 
 ## Aktiva
 
@@ -29,7 +29,6 @@ Senast uppdaterad: 2026-05-02 (+#67 nyheter egen flik/sida + startsida — analy
 | 63  | Relaterade nyheter — prio:a high-traffic events         | RSS-grund deployad 2026-05-01 (29 källor, 90d retention); GA4+Haiku-pipeline kvar     | [todos/63-relaterade-nyheter-trafikprio.md](todos/63-relaterade-nyheter-trafikprio.md)               |
 | 64  | Per-plats nyhetsaggregering — "Senaste nyheter i {ort}" | Fas-1 live 2026-05-01 (classify + UI city/plats); precision-stickprov 2026-05-15      | [todos/64-per-plats-nyhetsaggregering.md](todos/64-per-plats-nyhetsaggregering.md)                   |
 | 66  | Uppföljning #55: mät CWV + PHP-FPM-CPU efter `/k/v1/`   | Passiv mätperiod till 2026-05-31 — CWV-jämförelse, cache-hit-rate, social-share-test  | [todos/66-uppfoljning-55-kortare-kartbild-urls.md](todos/66-uppfoljning-55-kortare-kartbild-urls.md) |
-| 67  | Nyheter: egen flik/sida och/eller på startsidan         | Idé — utvärdera scope (egen sida, startsida-modul, båda); synergi med #46 + #59       | [todos/67-nyheter-egen-sida-startsida.md](todos/67-nyheter-egen-sida-startsida.md)                   |
 
 ### Beroenden
 
@@ -121,12 +120,13 @@ Sorterade nyast först.
 
 ## Avfärdade / sammanslagna
 
-| #   | Titel                                          | Beslut                                                                                               | Fil                                                                                                  |
-| --- | ---------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| 61  | Bygg om Caddy med cache-handler                | Avfärdad 2026-05-01 — ingen driver; #55 klarar sig med Spatie + immutable, RAM-pressure ej motiverad | [todos/rejected/61-caddy-cache-handler.md](todos/rejected/61-caddy-cache-handler.md)                 |
-| 65  | Egen Caddy-image via xcaddy                    | Sammanslagen 2026-05-01 in i (då aktiva) #61, sedan avfärdad samma dag tillsammans med #61           | [todos/rejected/65-egen-caddy-image-xcaddy.md](todos/rejected/65-egen-caddy-image-xcaddy.md)         |
-| 49  | Feeda in Krisinformation.se RSS                | Avfärdad 2026-04-29 — brand-/UX-/SEO-mismatch; VMA täcker redan det akuta                            | [todos/rejected/49-feeda-in-krisinformation.md](todos/rejected/49-feeda-in-krisinformation.md)       |
-| 40  | Trafikverket STRADA olycksstatistik per kommun | Avfärdad 2026-04-29 — kommunnivå kräver myndighetsavtal, öppen data bara län-nivå                    | [todos/rejected/40-trafikverket-strada-olyckor.md](todos/rejected/40-trafikverket-strada-olyckor.md) |
-| 18  | Attribution vid statiska kartbilder (ODbL)     | Avfärdad 2026-04-24 — gråzon, om-sidan räcker                                                        | [todos/rejected/18-attribution-vid-kartbilder.md](todos/rejected/18-attribution-vid-kartbilder.md)   |
-| 9   | Extern DB-backup                               | Avfärdad 2026-04-21 — Hetzner-snapshots räcker                                                       | [todos/rejected/09-extern-db-backup.md](todos/rejected/09-extern-db-backup.md)                       |
-| 2   | SEO-review (legacy)                            | Sammanslagen med #11 (2026-04-21)                                                                    | [todos/rejected/02-seo-review.md](todos/rejected/02-seo-review.md)                                   |
+| #   | Titel                                           | Beslut                                                                                               | Fil                                                                                                  |
+| --- | ----------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| 67  | Nyheter: egen flik/sida och/eller på startsidan | Avfärdad 2026-05-02 — brand-mismatch + ingen unik vinkel; pivot till event ↔ artikel-koppling        | [todos/rejected/67-nyheter-egen-sida-startsida.md](todos/rejected/67-nyheter-egen-sida-startsida.md) |
+| 61  | Bygg om Caddy med cache-handler                 | Avfärdad 2026-05-01 — ingen driver; #55 klarar sig med Spatie + immutable, RAM-pressure ej motiverad | [todos/rejected/61-caddy-cache-handler.md](todos/rejected/61-caddy-cache-handler.md)                 |
+| 65  | Egen Caddy-image via xcaddy                     | Sammanslagen 2026-05-01 in i (då aktiva) #61, sedan avfärdad samma dag tillsammans med #61           | [todos/rejected/65-egen-caddy-image-xcaddy.md](todos/rejected/65-egen-caddy-image-xcaddy.md)         |
+| 49  | Feeda in Krisinformation.se RSS                 | Avfärdad 2026-04-29 — brand-/UX-/SEO-mismatch; VMA täcker redan det akuta                            | [todos/rejected/49-feeda-in-krisinformation.md](todos/rejected/49-feeda-in-krisinformation.md)       |
+| 40  | Trafikverket STRADA olycksstatistik per kommun  | Avfärdad 2026-04-29 — kommunnivå kräver myndighetsavtal, öppen data bara län-nivå                    | [todos/rejected/40-trafikverket-strada-olyckor.md](todos/rejected/40-trafikverket-strada-olyckor.md) |
+| 18  | Attribution vid statiska kartbilder (ODbL)      | Avfärdad 2026-04-24 — gråzon, om-sidan räcker                                                        | [todos/rejected/18-attribution-vid-kartbilder.md](todos/rejected/18-attribution-vid-kartbilder.md)   |
+| 9   | Extern DB-backup                                | Avfärdad 2026-04-21 — Hetzner-snapshots räcker                                                       | [todos/rejected/09-extern-db-backup.md](todos/rejected/09-extern-db-backup.md)                       |
+| 2   | SEO-review (legacy)                             | Sammanslagen med #11 (2026-04-21)                                                                    | [todos/rejected/02-seo-review.md](todos/rejected/02-seo-review.md)                                   |
