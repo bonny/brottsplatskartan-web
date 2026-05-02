@@ -55,6 +55,45 @@ return [
     ],
 
     /*
+     * Källa → tillåtna län. Lokala redaktioners RSS-feeds rapporterar
+     * primärt om sitt eget län — om en svt-jamtland-artikel matchar
+     * "Stockholm" är det nästan alltid kontextuellt brus (turné, SM,
+     * olympiad), inte en blåljus-händelse i Stockholm.
+     *
+     * Filtrerar bort plats-träffar i andra län vid klassifikation.
+     * Källor som inte listas här (t.ex. `dn`, `aftonbladet`, `svt`,
+     * `svt-texttv`, `google-news-se`) har ingen geografisk scope och
+     * matchar mot alla län.
+     *
+     * Värde kan vara string (ett län) eller array (flera län — t.ex.
+     * SVT Småland täcker Kronoberg + Kalmar + Jönköping).
+     */
+    'source_to_lan' => [
+        'svt-blekinge' => 'Blekinge län',
+        'svt-dalarna' => 'Dalarnas län',
+        'svt-gavleborg' => 'Gävleborgs län',
+        'svt-halland' => 'Hallands län',
+        'svt-helsingborg' => 'Skåne län',
+        'svt-jamtland' => 'Jämtlands län',
+        'svt-jonkoping' => 'Jönköpings län',
+        'svt-norrbotten' => 'Norrbottens län',
+        'svt-skane' => 'Skåne län',
+        'svt-smaland' => ['Kronobergs län', 'Kalmar län', 'Jönköpings län'],
+        'svt-stockholm' => 'Stockholms län',
+        'svt-sormland' => 'Södermanlands län',
+        'svt-uppsala' => 'Uppsala län',
+        'svt-varmland' => 'Värmlands län',
+        'svt-vast' => 'Västra Götalands län',
+        'svt-vasterbotten' => 'Västerbottens län',
+        'svt-vasternorrland' => 'Västernorrlands län',
+        'svt-vastmanland' => 'Västmanlands län',
+        'svt-orebro' => 'Örebro län',
+        'svt-ost' => 'Östergötlands län',
+        'expressen-gt' => 'Västra Götalands län',
+        'expressen-kvp' => 'Skåne län',
+    ],
+
+    /*
      * Hur många artiklar per körning. Det är säkrare att kör fler korta
      * pass än ett långt — RSS-fetchen kör var 15:e min så vi bör hinna
      * med inflödet (~880 art/körning för alla 29 källor).

@@ -24,7 +24,7 @@ class ClassifyNewsArticles extends Command
         $minPlaceLen = (int) config('news-classification.min_place_name_length', 4);
 
         $blaljusPattern = $this->buildBlaljusPattern();
-        [$placePattern, $placeMap] = $this->buildPlacePattern($minPlaceLen);
+        [$placePattern, $placeMap, $placeLanById] = $this->buildPlacePattern($minPlaceLen);
 
         if ($placeMap === []) {
             $this->warn('Inga platser hittades i `places`-tabellen — hoppar över klassifikation.');
@@ -32,6 +32,7 @@ class ClassifyNewsArticles extends Command
         }
 
         $titleOnlySources = array_flip((array) config('news-classification.title_only_sources', []));
+        $sourceToLan = (array) config('news-classification.source_to_lan', []);
 
         $articles = DB::table('news_articles')
             ->select('id', 'source', 'title', 'summary', 'pubdate')
@@ -71,6 +72,14 @@ class ClassifyNewsArticles extends Command
                 continue;
             }
 
+            // Källa-scope: lokala redaktioner får bara koppla artiklar till
+            // sitt eget län. Källor utan scope (dn, aftonbladet, svt-texttv,
+            // google-news-se m.fl.) matchar mot alla län.
+            $allowedLans = null;
+            if (isset($sourceToLan[$article->source])) {
+                $allowedLans = array_flip((array) $sourceToLan[$article->source]);
+            }
+
             $placeIds = [];
             foreach ($matches[1] as $matched) {
                 $key = mb_strtolower($matched);
@@ -78,6 +87,12 @@ class ClassifyNewsArticles extends Command
                     continue;
                 }
                 foreach ($placeMap[$key] as $id) {
+                    if ($allowedLans !== null) {
+                        $placeLan = $placeLanById[$id] ?? null;
+                        if ($placeLan === null || !isset($allowedLans[$placeLan])) {
+                            continue;
+                        }
+                    }
                     $placeIds[$id] = true;
                 }
             }
@@ -129,33 +144,40 @@ class ClassifyNewsArticles extends Command
     }
 
     /**
-     * Bygger en sammanslagen regex för plats-namn + en lookup-map från
-     * lowercased name → list of place_id. Två platser kan dela namn
-     * (samma ort i två län), så samma matchning kan koppla till flera id.
+     * Bygger en sammanslagen regex för plats-namn + två lookup-mappar:
+     *  - $map: lowercased name → list of place_id (för matchning)
+     *  - $lanById: place_id → lan (för källa-scope-filtrering)
      *
-     * @return array{0: string, 1: array<string, list<int>>}
+     * Två platser kan dela namn (samma ort i två län), så samma matchning
+     * kan koppla till flera id.
+     *
+     * @return array{0: string, 1: array<string, list<int>>, 2: array<int, ?string>}
      */
     private function buildPlacePattern(int $minLen): array
     {
         /** @var array<string, list<int>> $map */
         $map = [];
+        /** @var array<int, ?string> $lanById */
+        $lanById = [];
 
         DB::table('places')
-            ->select('id', 'name')
+            ->select('id', 'name', 'lan')
             ->orderBy('id')
-            ->chunkById(2000, function ($chunk) use (&$map, $minLen) {
+            ->chunkById(2000, function ($chunk) use (&$map, &$lanById, $minLen) {
                 foreach ($chunk as $row) {
                     $name = trim((string) $row->name);
                     if (mb_strlen($name) < $minLen) {
                         continue;
                     }
                     $key = mb_strtolower($name);
-                    $map[$key][] = (int) $row->id;
+                    $id = (int) $row->id;
+                    $map[$key][] = $id;
+                    $lanById[$id] = $row->lan !== null ? (string) $row->lan : null;
                 }
             });
 
         if ($map === []) {
-            return ['', []];
+            return ['', [], []];
         }
 
         // Längsta först — då matchar PCRE "Sundsvalls kommun" före "Sundsvall"
@@ -166,6 +188,6 @@ class ClassifyNewsArticles extends Command
         $escaped = array_map(fn ($n) => preg_quote($n, '/'), $names);
         $pattern = '/(?<![\p{L}])('.implode('|', $escaped).')(?![\p{L}])/iu';
 
-        return [$pattern, $map];
+        return [$pattern, $map, $lanById];
     }
 }
