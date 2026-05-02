@@ -1,5 +1,5 @@
-**Status:** aktiv
-**Senast uppdaterad:** 2026-04-28
+**Status:** avfärdad 2026-05-02 — saknar empiriskt stöd; navigeringsproblem löses bättre av enkel `<select>`-dropdown (30 min) än heatmap-grid (1 dag). Heatmap-färg "relativ per år" är dessutom aktivt vilseledande på brottssajt. #42 (månadsnav-redesign) precis klar 2026-04-28.
+**Senast uppdaterad:** 2026-05-02
 
 # Todo #41 — Datumnavigering som årskalender
 

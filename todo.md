@@ -4,7 +4,7 @@ Index över förbättringsarbete. Varje todo har en egen fil under
 [`todos/`](todos/) med fullständig analys. Konvention och
 mappstruktur: [`todos/README.md`](todos/README.md).
 
-Senast uppdaterad: 2026-05-02 (#64 fas 2 — hybrid regex + AI Haiku 4.5, source-scope fallback, dn-sthlm-källa, "visa fler"-toggle).
+Senast uppdaterad: 2026-05-02 (-#45 historik per plats — avfärdad, GSC visar 0 clicks på "brott {plats} {år}"-queries).
 
 ## Aktiva
 
@@ -14,8 +14,6 @@ Senast uppdaterad: 2026-05-02 (#64 fas 2 — hybrid regex + AI Haiku 4.5, source
 | 29  | Audit + reducera indexerade pages                       | Datum-routes + thin singles deployat, ~22k pages noindex:as. Mätperiod 30–90d i GSC              | [todos/29-audit-indexerade-pages.md](todos/29-audit-indexerade-pages.md)                             |
 | 36  | GSC-mätning av AI-titlars CTR-effekt                    | Mätperiod startad 2026-04-27, första check 2026-05-25                                            | [todos/36-gsc-matning-ai-titlar.md](todos/36-gsc-matning-ai-titlar.md)                               |
 | 39  | MSB/MCF brand- och räddningsstatistik per kommun        | Implementerad 2026-04-29 — väntar på trafikmätning 2026-05-13                                    | [todos/39-msb-brand-rakning-statistik.md](todos/39-msb-brand-rakning-statistik.md)                   |
-| 41  | Datumnavigering som årskalender                         | Idé — ny visuell månadsnav (12 rutor + heatmap-färg)                                             | [todos/41-arskalender-datumnavigering.md](todos/41-arskalender-datumnavigering.md)                   |
-| 45  | Historik per plats: år-vy + trend                       | Skissad — fas 1 mini-trend (2h), fas 2 /{plats}/statistik/{år}-vy                                | [todos/45-historik-per-plats.md](todos/45-historik-per-plats.md)                                     |
 | 46  | Slå samman Händelser/Senaste/Mest lästa i menyn         | Importerad från GitHub #76 — kräver design + redirect-strategi                                   | [todos/46-meny-handelser-konsolidering.md](todos/46-meny-handelser-konsolidering.md)                 |
 | 47  | Slå ihop stad-URLs (plats vs plats+län vs län)          | Importerad från GitHub #68 — fortsättning på #23/#35-mönstret                                    | [todos/47-sla-ihop-stad-urls.md](todos/47-sla-ihop-stad-urls.md)                                     |
 | 48  | Polisens JSON-API + bättre geocoding                    | Fas 1 + Fas 2 deployat 2026-04-29 — soak pågår, mätperiod på geo-träff                           | [todos/48-geocode-inkludera-lan.md](todos/48-geocode-inkludera-lan.md)                               |
@@ -40,11 +38,10 @@ Senast uppdaterad: 2026-05-02 (#64 fas 2 — hybrid regex + AI Haiku 4.5, source
 1. **#25 Månadsvyer** — Uppsala-pilot pågår, 30d-mätning till 2026-05-27
 2. **#64 Per-plats nyhetsaggregering** — högst SEO/UX-värde av nyhets-todos: träffar redan-trafikerade ortssidor (~25k clicks/90d via #52-baseline), ingen pareto-bias, regex-klassning + ~$0.10/dygn. RSS-grund klar.
 3. **#50** — Trafikverket live-feed (egen layer + API-nyckel) — hög confidence
-4. **#41** — datumnavigering som årskalender — bygger på #42-fundament
-5. **#29** — passiv GSC-mätperiod, åtgärder efter data
-6. **#36** — passiv GSC-mätning, första check 2026-05-25
-7. **#39** — passiv mätning, första check 2026-05-13
-8. **#51** — bryt ut SMHI/räddningstjänst-källor till egna todos när prio sätts
+4. **#29** — passiv GSC-mätperiod, åtgärder efter data
+5. **#36** — passiv GSC-mätning, första check 2026-05-25
+6. **#39** — passiv mätning, första check 2026-05-13
+7. **#51** — bryt ut SMHI/räddningstjänst-källor till egna todos när prio sätts
 
 ## Uppföljningar — datum att komma ihåg
 
@@ -120,13 +117,15 @@ Sorterade nyast först.
 
 ## Avfärdade / sammanslagna
 
-| #   | Titel                                           | Beslut                                                                                               | Fil                                                                                                  |
-| --- | ----------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| 67  | Nyheter: egen flik/sida och/eller på startsidan | Avfärdad 2026-05-02 — brand-mismatch + ingen unik vinkel; pivot till event ↔ artikel-koppling        | [todos/rejected/67-nyheter-egen-sida-startsida.md](todos/rejected/67-nyheter-egen-sida-startsida.md) |
-| 61  | Bygg om Caddy med cache-handler                 | Avfärdad 2026-05-01 — ingen driver; #55 klarar sig med Spatie + immutable, RAM-pressure ej motiverad | [todos/rejected/61-caddy-cache-handler.md](todos/rejected/61-caddy-cache-handler.md)                 |
-| 65  | Egen Caddy-image via xcaddy                     | Sammanslagen 2026-05-01 in i (då aktiva) #61, sedan avfärdad samma dag tillsammans med #61           | [todos/rejected/65-egen-caddy-image-xcaddy.md](todos/rejected/65-egen-caddy-image-xcaddy.md)         |
-| 49  | Feeda in Krisinformation.se RSS                 | Avfärdad 2026-04-29 — brand-/UX-/SEO-mismatch; VMA täcker redan det akuta                            | [todos/rejected/49-feeda-in-krisinformation.md](todos/rejected/49-feeda-in-krisinformation.md)       |
-| 40  | Trafikverket STRADA olycksstatistik per kommun  | Avfärdad 2026-04-29 — kommunnivå kräver myndighetsavtal, öppen data bara län-nivå                    | [todos/rejected/40-trafikverket-strada-olyckor.md](todos/rejected/40-trafikverket-strada-olyckor.md) |
-| 18  | Attribution vid statiska kartbilder (ODbL)      | Avfärdad 2026-04-24 — gråzon, om-sidan räcker                                                        | [todos/rejected/18-attribution-vid-kartbilder.md](todos/rejected/18-attribution-vid-kartbilder.md)   |
-| 9   | Extern DB-backup                                | Avfärdad 2026-04-21 — Hetzner-snapshots räcker                                                       | [todos/rejected/09-extern-db-backup.md](todos/rejected/09-extern-db-backup.md)                       |
-| 2   | SEO-review (legacy)                             | Sammanslagen med #11 (2026-04-21)                                                                    | [todos/rejected/02-seo-review.md](todos/rejected/02-seo-review.md)                                   |
+| #   | Titel                                           | Beslut                                                                                                            | Fil                                                                                                  |
+| --- | ----------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| 41  | Datumnavigering som årskalender                 | Avfärdad 2026-05-02 — ingen GSC-evidens; löses bättre av `<select>`-dropdown (30 min) än heatmap-grid             | [todos/rejected/41-arskalender-datumnavigering.md](todos/rejected/41-arskalender-datumnavigering.md) |
+| 45  | Historik per plats: år-vy + trend               | Avfärdad 2026-05-02 — GSC visar 0 clicks på "brott {plats} {år}"-queries; återöppna efter #29-mätperiod om signal | [todos/rejected/45-historik-per-plats.md](todos/rejected/45-historik-per-plats.md)                   |
+| 67  | Nyheter: egen flik/sida och/eller på startsidan | Avfärdad 2026-05-02 — brand-mismatch + ingen unik vinkel; pivot till event ↔ artikel-koppling                     | [todos/rejected/67-nyheter-egen-sida-startsida.md](todos/rejected/67-nyheter-egen-sida-startsida.md) |
+| 61  | Bygg om Caddy med cache-handler                 | Avfärdad 2026-05-01 — ingen driver; #55 klarar sig med Spatie + immutable, RAM-pressure ej motiverad              | [todos/rejected/61-caddy-cache-handler.md](todos/rejected/61-caddy-cache-handler.md)                 |
+| 65  | Egen Caddy-image via xcaddy                     | Sammanslagen 2026-05-01 in i (då aktiva) #61, sedan avfärdad samma dag tillsammans med #61                        | [todos/rejected/65-egen-caddy-image-xcaddy.md](todos/rejected/65-egen-caddy-image-xcaddy.md)         |
+| 49  | Feeda in Krisinformation.se RSS                 | Avfärdad 2026-04-29 — brand-/UX-/SEO-mismatch; VMA täcker redan det akuta                                         | [todos/rejected/49-feeda-in-krisinformation.md](todos/rejected/49-feeda-in-krisinformation.md)       |
+| 40  | Trafikverket STRADA olycksstatistik per kommun  | Avfärdad 2026-04-29 — kommunnivå kräver myndighetsavtal, öppen data bara län-nivå                                 | [todos/rejected/40-trafikverket-strada-olyckor.md](todos/rejected/40-trafikverket-strada-olyckor.md) |
+| 18  | Attribution vid statiska kartbilder (ODbL)      | Avfärdad 2026-04-24 — gråzon, om-sidan räcker                                                                     | [todos/rejected/18-attribution-vid-kartbilder.md](todos/rejected/18-attribution-vid-kartbilder.md)   |
+| 9   | Extern DB-backup                                | Avfärdad 2026-04-21 — Hetzner-snapshots räcker                                                                    | [todos/rejected/09-extern-db-backup.md](todos/rejected/09-extern-db-backup.md)                       |
+| 2   | SEO-review (legacy)                             | Sammanslagen med #11 (2026-04-21)                                                                                 | [todos/rejected/02-seo-review.md](todos/rejected/02-seo-review.md)                                   |

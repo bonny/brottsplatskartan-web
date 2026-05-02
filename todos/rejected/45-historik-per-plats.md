@@ -1,5 +1,5 @@
-**Status:** aktiv (skissad — research-fas pågår)
-**Senast uppdaterad:** 2026-04-29
+**Status:** avfärdad 2026-05-02 — GSC-baseline visar nästan noll volym på "brott {plats} {år}"-queries (27 queries/0 clicks för "2024", 9/0 för "2023", 0 träffar för "historik"). Fas 2 saknar SEO-grund, fas 1 sparkline kan göras som del av framtida content-arbete utan separat todo. Återöppna om GSC visar plats×år-queries med >100 imp/90d efter #29-mätperioden 2026-07-27.
+**Senast uppdaterad:** 2026-05-02
 **Relaterad till:** #38 (BRÅ), #39 (MCF), #27 (rikare innehåll), #25 (månadsvyer)
 
 # Todo #45 — Historik per plats: år-vy + trend
