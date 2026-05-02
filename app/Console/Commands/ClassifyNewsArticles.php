@@ -33,6 +33,7 @@ class ClassifyNewsArticles extends Command
 
         $titleOnlySources = array_flip((array) config('news-classification.title_only_sources', []));
         $sourceToLan = (array) config('news-classification.source_to_lan', []);
+        $sourcePrimaryPlaceId = $this->buildSourcePrimaryPlaceMap();
 
         $articles = DB::table('news_articles')
             ->select('id', 'source', 'title', 'summary', 'pubdate')
@@ -68,10 +69,6 @@ class ClassifyNewsArticles extends Command
             }
             $blaljusHits++;
 
-            if (preg_match_all($placePattern, $text, $matches) === 0) {
-                continue;
-            }
-
             // Källa-scope: lokala redaktioner får bara koppla artiklar till
             // sitt eget län. Källor utan scope (dn, aftonbladet, svt-texttv,
             // google-news-se m.fl.) matchar mot alla län.
@@ -81,20 +78,30 @@ class ClassifyNewsArticles extends Command
             }
 
             $placeIds = [];
-            foreach ($matches[1] as $matched) {
-                $key = mb_strtolower($matched);
-                if (!isset($placeMap[$key])) {
-                    continue;
-                }
-                foreach ($placeMap[$key] as $id) {
-                    if ($allowedLans !== null) {
-                        $placeLan = $placeLanById[$id] ?? null;
-                        if ($placeLan === null || !isset($allowedLans[$placeLan])) {
-                            continue;
-                        }
+            if (preg_match_all($placePattern, $text, $matches) > 0) {
+                foreach ($matches[1] as $matched) {
+                    $key = mb_strtolower($matched);
+                    if (!isset($placeMap[$key])) {
+                        continue;
                     }
-                    $placeIds[$id] = true;
+                    foreach ($placeMap[$key] as $id) {
+                        if ($allowedLans !== null) {
+                            $placeLan = $placeLanById[$id] ?? null;
+                            if ($placeLan === null || !isset($allowedLans[$placeLan])) {
+                                continue;
+                            }
+                        }
+                        $placeIds[$id] = true;
+                    }
                 }
+            }
+
+            // Source-scope fallback: artikel klassad som blåljus men ingen
+            // plats matchade i texten. Stora städer rapporteras ofta utifrån
+            // stadsdelar (Bromma, Hornsgatan) som inte finns i `places`.
+            // Lokala källor får då koppling till sin primära plats.
+            if ($placeIds === [] && isset($sourcePrimaryPlaceId[$article->source])) {
+                $placeIds[$sourcePrimaryPlaceId[$article->source]] = true;
             }
 
             if ($placeIds === []) {
@@ -141,6 +148,41 @@ class ClassifyNewsArticles extends Command
         $terms = (array) config('news-classification.blaljus_terms', []);
         $escaped = array_map(fn ($t) => preg_quote((string) $t, '/'), $terms);
         return '/(?<![\p{L}])(?:'.implode('|', $escaped).')(?![\p{L}])/iu';
+    }
+
+    /**
+     * Bygger map: source → place_id för fallback-koppling. Källor vars
+     * primära plats inte finns i `places` (eller där name+lan inte
+     * matchar) hoppas över med en varning — bättre än att tysta sluka
+     * konfig-fel.
+     *
+     * @return array<string, int>
+     */
+    private function buildSourcePrimaryPlaceMap(): array
+    {
+        $config = (array) config('news-classification.source_to_primary_place', []);
+        if ($config === []) {
+            return [];
+        }
+
+        $map = [];
+        foreach ($config as $source => $spec) {
+            if (!is_array($spec) || count($spec) !== 2) {
+                $this->warn("Ogiltig source_to_primary_place-konfig för '$source' — förväntar [name, lan].");
+                continue;
+            }
+            [$name, $lan] = $spec;
+            $id = DB::table('places')
+                ->where('name', $name)
+                ->where('lan', $lan)
+                ->value('id');
+            if ($id === null) {
+                $this->warn("Hittade ingen plats för '$source' fallback ($name / $lan) — hoppar över.");
+                continue;
+            }
+            $map[$source] = (int) $id;
+        }
+        return $map;
     }
 
     /**

@@ -15,9 +15,9 @@ return [
      * agerar som extra filter.
      */
     'blaljus_terms' => [
-        'polis', 'polisen', 'polismän', 'polisinsats', 'polisman', 'gripen',
+        'polis', 'polisen', 'polisens', 'polismän', 'polisinsats', 'polisman', 'gripen',
         'gripande', 'anhållen', 'häktad', 'misstänkt', 'misstänkts',
-        'brott', 'brand', 'bränder', 'brinner', 'brand-', 'brinnande',
+        'brott', 'brand', 'branden', 'bränder', 'brinner', 'brand-', 'brinnande',
         'eldsvåda', 'rökutveckling', 'räddningstjänst', 'räddningstjänsten',
         'räddningsinsats', 'utryckning', 'larm', 'blåljus',
         'rån', 'rånad', 'rånet', 'inbrott', 'inbrottet',
@@ -26,8 +26,11 @@ return [
         'misshandel', 'misshandlad', 'misshandlade',
         'skottlossning', 'skotten', 'skjuten', 'skjutning', 'skjutningar',
         'sprängning', 'detonation', 'explosion', 'explosioner',
+        'granat', 'granater', 'raket', 'raketer',
         'kniv', 'knivhot', 'knivskuren', 'knivskars', 'knivöverfall',
-        'olycka', 'trafikolycka', 'krock', 'krockade', 'singelolycka',
+        'olycka', 'olyckan', 'olyckor', 'trafikolycka', 'krock', 'krockade',
+        'frontalkrock', 'kollision', 'kolliderade', 'kollidera', 'singelolycka',
+        'påkörd', 'påkörda',
         'försvunnen', 'efterlyst', 'efterlyses', 'försvann',
         'evakuerad', 'evakuering', 'avspärrat', 'avspärrad', 'avspärrning',
         'narkotika', 'drog', 'droger', 'narkotikabrott',
@@ -91,6 +94,43 @@ return [
         'svt-ost' => 'Östergötlands län',
         'expressen-gt' => 'Västra Götalands län',
         'expressen-kvp' => 'Skåne län',
+    ],
+
+    /*
+     * Källa → primär plats (name + lan). Används som fallback när en
+     * artikel klassats som blåljus men ingen plats matchat i texten.
+     * Stora städer (särskilt Stockholm) rapporteras ofta utifrån
+     * stadsdelar (Bromma, Hornsgatan, Rålambshovsparken) som inte
+     * finns i `places`. Då faller vi tillbaka till källans primära
+     * plats så att artikeln ändå syns på t.ex. /stockholm.
+     *
+     * Värdet är [name, lan] — slås upp i `places` vid command-start.
+     * Källor utan post här får ingen fallback (ingen plats → ingen
+     * koppling, som tidigare).
+     */
+    'source_to_primary_place' => [
+        'svt-stockholm' => ['Stockholm', 'Stockholms län'],
+        'svt-skane' => ['Malmö', 'Skåne län'],
+        'svt-helsingborg' => ['Helsingborg', 'Skåne län'],
+        'svt-vast' => ['Göteborg', 'Västra Götalands län'],
+        'svt-uppsala' => ['Uppsala', 'Uppsala län'],
+        'svt-orebro' => ['Örebro', 'Örebro län'],
+        'svt-vasternorrland' => ['Sundsvall', 'Västernorrlands län'],
+        'svt-norrbotten' => ['Luleå', 'Norrbottens län'],
+        'svt-vasterbotten' => ['Umeå', 'Västerbottens län'],
+        'svt-ost' => ['Linköping', 'Östergötlands län'],
+        'svt-sormland' => ['Eskilstuna', 'Södermanlands län'],
+        'svt-vastmanland' => ['Västerås', 'Västmanlands län'],
+        'svt-dalarna' => ['Falun', 'Dalarnas län'],
+        'svt-gavleborg' => ['Gävle', 'Gävleborgs län'],
+        'svt-jamtland' => ['Östersund', 'Jämtlands län'],
+        'svt-varmland' => ['Karlstad', 'Värmlands län'],
+        'svt-jonkoping' => ['Jönköping', 'Jönköpings län'],
+        'svt-smaland' => ['Växjö', 'Kronobergs län'],
+        'svt-halland' => ['Halmstad', 'Hallands län'],
+        'svt-blekinge' => ['Karlskrona', 'Blekinge län'],
+        'expressen-gt' => ['Göteborg', 'Västra Götalands län'],
+        'expressen-kvp' => ['Malmö', 'Skåne län'],
     ],
 
     /*
