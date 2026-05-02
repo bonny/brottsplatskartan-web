@@ -40,13 +40,20 @@ Numret matchas mot filnamnets prefix (`<NN>-...`).
 ## list / (tomt)
 
 1. Read `todo.md`.
-2. Visa **Aktiva**-tabellen som en kort lista — `#NN — Titel — Status`.
-3. Om "Beroenden" är icke-tom, nämn de relevanta i en mening.
-4. **Kolla "Uppföljningar"-sektionen:** om någon rad har datum inom 14 dagar
+2. Klassificera varje rad i **Aktiva**-tabellen som **aktionerbar** eller
+   **väntande**. En todo är väntande om Status-kolumnen indikerar väntan:
+    - Innehåller "väntar på", "soak", "mätperiod", "pilot", "30d", "60d", "90d", "passiv", "till YYYY-MM-DD"
+    - Har ett framtida datum (> `currentDate`) i Status-kolumnen
+    - "Blockerad av: #N" där #N inte är klar (kolla **Beroenden**-sektionen)
+3. Visa två rubriker (hoppa över rubriken om gruppen är tom):
+    - **Aktionerbara nu** — `#NN — Titel — Status` per rad
+    - **Väntande / på hold** — samma format; sortera efter eventuellt framtida datum (närmast först)
+4. Om "Beroenden" är icke-tom, nämn de relevanta i en mening efter listan.
+5. **Kolla "Uppföljningar"-sektionen:** om någon rad har datum inom 14 dagar
    från `currentDate`, nämn den/dem ("Nästa uppföljning: YYYY-MM-DD — <åtgärd>").
    Om en uppföljning är **förfallen** (datum < currentDate), flagga det
    tydligt med ⚠ — det betyder en check-in är glömd.
-5. Inga andra filer öppnas — bara index.
+6. Inga andra filer öppnas — bara index.
 
 ## next
 
