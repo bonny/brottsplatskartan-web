@@ -131,6 +131,17 @@ class Kernel extends ConsoleKernel
             ->withoutOverlapping()
             ->name('news-classify');
 
+        // AI-klassifikation (todo #64) — fångar vad regex missar
+        // (bedrägerier, stadsdelar, böjda termer). Körs 10 min efter regex,
+        // var 30:e min för rimlig latens med låg kostnad. Limit 50/körning
+        // = ~2400 art/dygn ceiling, men i praktiken bara nya artiklar
+        // (ai_classified_at IS NULL) — typiskt 50-100/körning bara vid hög
+        // RSS-aktivitet. Haiku 4.5 (~$26/år).
+        $schedule->command('app:news:ai-classify --limit=50')
+            ->cron('15,45 * * * *')
+            ->withoutOverlapping()
+            ->name('news-ai-classify');
+
         $schedule->command('app:news:prune')
             ->dailyAt('03:45')
             ->withoutOverlapping()
