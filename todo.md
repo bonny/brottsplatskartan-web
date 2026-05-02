@@ -4,7 +4,7 @@ Index över förbättringsarbete. Varje todo har en egen fil under
 [`todos/`](todos/) med fullständig analys. Konvention och
 mappstruktur: [`todos/README.md`](todos/README.md).
 
-Senast uppdaterad: 2026-05-01 (#64 fas-1 implementerat — place_news-tabell + classify-command + UI på city/plats. 1013 artiklar bearbetade, 195 blåljus-träffar, 132 place-news-kopplingar. Mätperiod till 2026-05-31).
+Senast uppdaterad: 2026-05-02 (+#67 nyheter egen flik/sida + startsida — analys saknas).
 
 ## Aktiva
 
@@ -29,6 +29,7 @@ Senast uppdaterad: 2026-05-01 (#64 fas-1 implementerat — place_news-tabell + c
 | 63  | Relaterade nyheter — prio:a high-traffic events         | RSS-grund deployad 2026-05-01 (29 källor, 90d retention); GA4+Haiku-pipeline kvar     | [todos/63-relaterade-nyheter-trafikprio.md](todos/63-relaterade-nyheter-trafikprio.md)               |
 | 64  | Per-plats nyhetsaggregering — "Senaste nyheter i {ort}" | Fas-1 live 2026-05-01 (classify + UI city/plats); precision-stickprov 2026-05-15      | [todos/64-per-plats-nyhetsaggregering.md](todos/64-per-plats-nyhetsaggregering.md)                   |
 | 66  | Uppföljning #55: mät CWV + PHP-FPM-CPU efter `/k/v1/`   | Passiv mätperiod till 2026-05-31 — CWV-jämförelse, cache-hit-rate, social-share-test  | [todos/66-uppfoljning-55-kortare-kartbild-urls.md](todos/66-uppfoljning-55-kortare-kartbild-urls.md) |
+| 67  | Nyheter: egen flik/sida och/eller på startsidan         | Idé — utvärdera scope (egen sida, startsida-modul, båda); synergi med #46 + #59       | [todos/67-nyheter-egen-sida-startsida.md](todos/67-nyheter-egen-sida-startsida.md)                   |
 
 ### Beroenden
 

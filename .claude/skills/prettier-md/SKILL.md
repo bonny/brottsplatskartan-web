@@ -20,16 +20,12 @@ Hoppa över när:
 
 ## Hur
 
-Kör lokalt via host-prettier (finns redan på maskinen, 3.7+):
+Använd `npx --yes prettier` — det funkar oavsett om `prettier` ligger i
+PATH eller inte (vissa maskiner har det globalt, andra inte). `--yes`
+hoppar över interaktiv install-prompt om paketet inte är cachat.
 
 ```bash
-prettier --write <file1.md> <file2.md> ...
-```
-
-Alternativ om `prettier` inte är i PATH:
-
-```bash
-npx prettier --write <file.md>
+npx --yes prettier --write <file1.md> <file2.md> ...
 ```
 
 Kör bara på de filer du faktiskt ändrade — inte hela `**/*.md`. Det
@@ -50,7 +46,8 @@ undviker ovidkommande diffar i andra dokument.
 
 ## Kontext
 
-- Prettier finns globalt installerat (via nvm/npm på hosten, v3.7+).
+- Prettier körs via `npx` (3.7+). Globalt-installerat funkar också men
+  PATH varierar per maskin — `npx` är portabelt.
 - Repo saknar egen `.prettierrc*` → defaults används. Om vi senare
   lägger till config plockas den upp automatiskt.
 - Skillen gäller även filer i `todos/` (djupdykningarna per todo).
