@@ -1,25 +1,37 @@
 {{--
     Pilot-vy för Trafikverket-data (todo #50, Fas 1).
-    Olänkad i menyn. noindex via $robotsNoindex.
+    Olänkad i menyn men indexerbar.
 --}}
 
-@extends('layouts.web', ['robotsNoindex' => true])
+@extends('layouts.web')
 
-@section('title', 'Trafikinfo (pilot)')
+@section('title', 'Trafikhändelser i Sverige just nu — olyckor, vägarbeten och störningar')
+
+@section('canonicalLink', route('trafik'))
 
 @section('content')
     <div class="widget">
-        <h1>Trafikinfo</h1>
+        <h1>Trafikhändelser i Sverige just nu</h1>
 
         <div class="teaser">
             <p>
-                Aktiva trafikhändelser från Trafikverkets öppna API. Pilot-vy
-                under utveckling — innehåll och layout kommer ändras.
+                Aktuella trafikhändelser från Trafikverkets öppna data — olyckor,
+                vägarbeten, broöppningar, hinder, vägstängningar och andra störningar
+                på det svenska statliga vägnätet i realtid. Sidan uppdateras var 5:e
+                minut.
+            </p>
+            <p>
+                Trafikverkets data kompletterar polishändelserna på Brottsplatskartan
+                — den fångar olyckor och störningar som påverkar trafiken men inte
+                nödvändigtvis kräver polisinsats (singelolyckor, vägarbeten,
+                vilthinder, broöppningar etc.). För händelser med polisinsats, se
+                <a href="{{ route('start') }}">Brottsplatskartans förstasida</a>
+                eller länssidor.
             </p>
             <p>
                 <small>
-                    Källa: <a href="https://trafikinfo.trafikverket.se/" target="_blank" rel="noopener">Trafikverket</a>.
-                    Datan uppdateras var 5:e minut.
+                    Källa: <a href="https://trafikinfo.trafikverket.se/" target="_blank" rel="noopener">Trafikverket</a>
+                    (öppen data, CC0).
                 </small>
             </p>
         </div>
