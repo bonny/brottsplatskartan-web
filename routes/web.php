@@ -762,6 +762,30 @@ Route::get('/sok-blåljushändelser/', [SearchController::class, 'adsenseSearch'
 Route::get('/helikopter', [PlatsController::class, 'helicopter'])->name('helicopter');
 
 /**
+ * Trafikverket Trafikinformation — pilot-vy (todo #50, Fas 1).
+ *
+ * Olänkad i menyn. noindex så sidan inte ranks. Användaren utvärderar
+ * UX innan vi bygger Fas 2-aggregatet (mixad polishändelser + Trafikverket
+ * + editorial intro-text).
+ */
+Route::get('/trafik', function () {
+    $cacheKey = 'trafik:pilot:v1';
+    $events = Cache::remember($cacheKey, 5 * 60, function () {
+        return \App\Models\Event::active()
+            ->forSource('trafikverket')
+            ->orderByRaw("FIELD(message_type, 'Olycka', 'Hinder', 'Trafikmeddelande', 'Restriktion', 'Viktig trafikinformation', 'Vägarbete')")
+            ->orderByDesc('start_time')
+            ->limit(500)
+            ->get()
+            ->groupBy('message_type');
+    });
+
+    return view('trafik', [
+        'eventsByType' => $events,
+    ]);
+})->name('trafik');
+
+/**
  * Testsida för design, så vi lätt kan se hur rubriker
  * av olika storlekar och listor och stycken och bilder
  * osv samspelar.
