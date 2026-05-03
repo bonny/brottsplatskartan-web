@@ -249,17 +249,15 @@ indexeras:**
 1. **Källa-attribuering** synlig på sidan: "Källa: Trafikverket" + länk till
    Trafikverkets `WebLink` (om finns) eller `https://trafikinfo.trafikverket.se/`.
    Ger E-E-A-T och good-faith mot datakällan.
-2. **GDPR-skanning** av `Header`/`Message` med regex för svenska regnummer
-   (`\b[A-Z]{3}\s?\d{2}[A-Z0-9]\b`) → maska före lagring. Trivial försäkring.
-3. **Editorial intro-text** på sidan (min 150 ord per incident-typ-mall) —
+2. **Editorial intro-text** på sidan (min 150 ord per incident-typ-mall) —
    vad är detta, varför visar vi det, vad gör läsaren med info. Annars
    "limited original content"-flagga från AdSense.
-4. **Schema.org `SpecialAnnouncement`** + `Place` per incident — strukturerad
+3. **Schema.org `SpecialAnnouncement`** + `Place` per incident — strukturerad
    data så Google förstår att detta inte är en NewsArticle.
-5. **Ad-block-flagga** vid `SeverityCode >= 4` ELLER keyword-match på
+4. **Ad-block-flagga** vid `SeverityCode >= 4` ELLER keyword-match på
    `död|avliden|dödad|allvarlig` i `Header`/`Message`. ~50 % av Deviations
    saknar SeverityCode → keyword-fallback obligatorisk.
-6. **MessageType låses vid first-write.** Om en `Trafikmeddelande · Vägen
+5. **MessageType låses vid first-write.** Om en `Trafikmeddelande · Vägen
 avstängd` senare uppgraderas till `Olycka` av Trafikverket: behåll
    ursprungstypen. Annars retroflyttas raden till permalink-rymden mid-life
    och retention-policy ändras med bibehållen URL.
@@ -434,11 +432,6 @@ retroflyttas raden mellan retention-policies med bibehållen URL).
 var aktiv flippar till Suspended: behåll i tabellen, sätt `last_seen_active_at`,
 filtrera ur live-aggregat. Möjliggör debugging av Suspended-flippar utan
 att tappa historik.
-
-**GDPR — regnummer-maskning:** vid import-parsing, applicera regex
-`\b[A-Z]{3}\s?\d{2}[A-Z0-9]\b` på `Header` + `Message` → ersätt med
-`***`. Trivial försäkring mot edge case där Trafikverket råkar publicera
-fordonsidentifierande info.
 
 **Rate-limit / failure-strategi:**
 
@@ -831,12 +824,13 @@ Sammanfattning av tagna beslut:
 - **Soft dedup först** — log only i Fas 1, auto-hide i Fas 2 om data motiverar.
 - **Markercluster är gating** — acceptance-kriterium före launch.
 - **Rate-limit/backoff-strategi** — inbyggd från start.
-- **GDPR regnummer-maskning** — regex vid import, trivial försäkring.
 - **MessageType låses vid first-write** — förhindrar retroaktiva retention-byten.
 - **`last_seen_active_at`** lagts till för Suspended-debugging.
 - **Permalinks behålls i Fas 3** (användarens beslut) — gating-kriterier
-  (källa-attribuering, editorial text, Schema.org, ad-block-flagga, GDPR-mask)
+  (källa-attribuering, editorial text, Schema.org, ad-block-flagga)
   obligatoriska före indexering.
+- **GDPR regnummer-maskning avskriven** — Trafikverket är myndighet och
+  publicerar operativa trafikmeddelanden, inga fordonsidentifierande detaljer.
 - **Fas-uppdelning** — minimal Fas 1 → aggregat Fas 2 → permalinks Fas 3,
   med mätbara gates emellan.
 
@@ -856,8 +850,7 @@ Inga nya routes, inga permalinks, ingen `/trafik`-sida.
 - Migration: `events`-tabell med ~15 kolumner (se schema-blocket).
 - `App\Models\Event` + ev. helper.
 - `php artisan trafikverket:fetch` — 5 min schedule, idempotent UPSERT,
-  filtrera `Suspended=true` och `Färjor` vid query, regnummer-maskning,
-  rate-limit/backoff-logik.
+  filtrera `Suspended=true` och `Färjor` vid query, rate-limit/backoff-logik.
 - `php artisan trafikverket:prune` — 1×/dygn, två retention-regler.
 - `/api/eventsMap` får `?source=polisen|trafikverket|all` med default `polisen`
   för bakåtkompat.
