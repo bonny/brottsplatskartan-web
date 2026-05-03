@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:sta="http://datex2.eu/schema/3/staExtensions" xmlns:com="http://datex2.eu/schema/3/common" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://datex2.eu/schema/3/staExtensions" version="3.1" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="DATEXII_3_Common.xsd" namespace="http://datex2.eu/schema/3/common" />
+  <xs:complexType name="_RoadConditionWarningTypeEnum">
+    <xs:simpleContent>
+      <xs:extension base="sta:RoadConditionWarningTypeEnum">
+        <xs:attribute name="_extendedValue" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="EmergencyInfo">
+    <xs:annotation>
+      <xs:documentation>EmergencyInfo </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="header" type="com:MultilingualString">
+        <xs:annotation>
+          <xs:documentation>Header</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="1" maxOccurs="1" name="description" type="com:LongString">
+        <xs:annotation>
+          <xs:documentation>Description of emergency information</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="1" name="image" type="com:Base64Binary">
+        <xs:annotation>
+          <xs:documentation>Jpeg image</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="RoadConditionExtension">
+    <xs:annotation>
+      <xs:documentation>Extension for RoadCondition</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="partly" type="com:Boolean">
+        <xs:annotation>
+          <xs:documentation>When set to true this means that the weatherrelated road conditions is partly valid </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="RoadConditionOverview">
+    <xs:annotation>
+      <xs:documentation>RoadconditionOverview.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="text" type="com:LongString">
+        <xs:annotation>
+          <xs:documentation>Text describing the roadcondition status</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="RoadConditionWarning">
+    <xs:annotation>
+      <xs:documentation>Road condition warning</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="roadConditionWarningType" type="sta:_RoadConditionWarningTypeEnum">
+        <xs:annotation>
+          <xs:documentation>Road condition warning type</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="_roadConditionWarningExtension" type="com:_ExtensionType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="RoadConditionWarningExtension">
+    <xs:annotation>
+      <xs:documentation>Roadcondition warning extension</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="roadConditionWarning" type="sta:RoadConditionWarning" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="RoadConditionWarningTypeEnum">
+    <xs:annotation>
+      <xs:documentation>Roadcondition warning type enum</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="riskForSlipperyRoad">
+        <xs:annotation>
+          <xs:documentation>Risk for slippery road</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="slipperyRoad">
+        <xs:annotation>
+          <xs:documentation>Slippery road</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="snowSmoke">
+        <xs:annotation>
+          <xs:documentation>Snow smoke</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="snowDrove">
+        <xs:annotation>
+          <xs:documentation>Snow drove</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="strongWinds">
+        <xs:annotation>
+          <xs:documentation>Strong winds</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="snowFall">
+        <xs:annotation>
+          <xs:documentation>Snow fall</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="_extended" />
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:roa="http://datex2.eu/schema/3/roadTrafficData" xmlns:com="http://datex2.eu/schema/3/common" xmlns:loc="http://datex2.eu/schema/3/locationReferencing" xmlns:wd="http://datex2.eu/schema/3/weatherDataExtension" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://datex2.eu/schema/3/roadTrafficData" version="3.1" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="DATEXII_3_WeatherDataExtension.xsd" namespace="http://datex2.eu/schema/3/weatherDataExtension" />
+  <xs:import schemaLocation="DATEXII_3_LocationReferencing.xsd" namespace="http://datex2.eu/schema/3/locationReferencing" />
+  <xs:import schemaLocation="DATEXII_3_Common.xsd" namespace="http://datex2.eu/schema/3/common" />
+  <xs:complexType name="DateTimeValue">
+    <xs:annotation>
+      <xs:documentation>A measured or calculated value of an instant in time.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="com:DataValue">
+        <xs:sequence>
+          <xs:element minOccurs="1" maxOccurs="1" name="dateTime" type="com:DateTime">
+            <xs:annotation>
+              <xs:documentation>A time stamp defining an instant in time.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="_dateTimeValueExtension" type="com:_ExtensionType" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+</xs:schema>

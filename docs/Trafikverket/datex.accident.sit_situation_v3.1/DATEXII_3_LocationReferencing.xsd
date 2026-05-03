@@ -1,0 +1,1682 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:loc="http://datex2.eu/schema/3/locationReferencing" xmlns:com="http://datex2.eu/schema/3/common" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://datex2.eu/schema/3/locationReferencing" version="3.1" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="DATEXII_3_Common.xsd" namespace="http://datex2.eu/schema/3/common" />
+  <xs:complexType name="_AlertCDirectionEnum">
+    <xs:simpleContent>
+      <xs:extension base="loc:AlertCDirectionEnum">
+        <xs:attribute name="_extendedValue" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="_CarriagewayEnum">
+    <xs:simpleContent>
+      <xs:extension base="loc:CarriagewayEnum">
+        <xs:attribute name="_extendedValue" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="_GeographicCharacteristicEnum">
+    <xs:simpleContent>
+      <xs:extension base="loc:GeographicCharacteristicEnum">
+        <xs:attribute name="_extendedValue" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="_InfrastructureDescriptorEnum">
+    <xs:simpleContent>
+      <xs:extension base="loc:InfrastructureDescriptorEnum">
+        <xs:attribute name="_extendedValue" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="_LaneEnum">
+    <xs:simpleContent>
+      <xs:extension base="loc:LaneEnum">
+        <xs:attribute name="_extendedValue" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="_LinearDirectionEnum">
+    <xs:simpleContent>
+      <xs:extension base="loc:LinearDirectionEnum">
+        <xs:attribute name="_extendedValue" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="_OpenlrFormOfWayEnum">
+    <xs:simpleContent>
+      <xs:extension base="loc:OpenlrFormOfWayEnum">
+        <xs:attribute name="_extendedValue" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="_OpenlrFunctionalRoadClassEnum">
+    <xs:simpleContent>
+      <xs:extension base="loc:OpenlrFunctionalRoadClassEnum">
+        <xs:attribute name="_extendedValue" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="_OpenlrOrientationEnum">
+    <xs:simpleContent>
+      <xs:extension base="loc:OpenlrOrientationEnum">
+        <xs:attribute name="_extendedValue" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="_OpenlrSideOfRoadEnum">
+    <xs:simpleContent>
+      <xs:extension base="loc:OpenlrSideOfRoadEnum">
+        <xs:attribute name="_extendedValue" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="_PredefinedLocationVersionedReference">
+    <xs:complexContent mixed="false">
+      <xs:extension base="com:VersionedReference">
+        <xs:attribute fixed="loc:PredefinedLocation" name="targetClass" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="_SubdivisionTypeEnum">
+    <xs:simpleContent>
+      <xs:extension base="loc:SubdivisionTypeEnum">
+        <xs:attribute name="_extendedValue" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="AlertCArea">
+    <xs:annotation>
+      <xs:documentation>An area defined by reference to a predefined ALERT-C location table.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="alertCLocationCountryCode" type="com:String">
+        <xs:annotation>
+          <xs:documentation>ALERT-C country code as defined in IEC 62106.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="1" maxOccurs="1" name="alertCLocationTableNumber" type="com:String">
+        <xs:annotation>
+          <xs:documentation>Number allocated to an ALERT-C table in a country. Ref. EN ISO 14819-3 for the allocation of a location table number.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="1" maxOccurs="1" name="alertCLocationTableVersion" type="com:String">
+        <xs:annotation>
+          <xs:documentation>Version number associated with an ALERT-C table reference.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="areaLocation" type="loc:AlertCLocation">
+        <xs:annotation>
+          <xs:documentation>Area location defined by a specific Alert-C location.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="_alertCAreaExtension" type="com:_ExtensionType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="AlertCDirection">
+    <xs:annotation>
+      <xs:documentation>The direction of traffic flow along the road to which the information relates.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="alertCDirectionCoded" type="loc:_AlertCDirectionEnum">
+        <xs:annotation>
+          <xs:documentation>Direction of navigation with respect to secondary to primary location (RDS direction)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="1" maxOccurs="1" name="alertCAffectedDirection" type="loc:_LinearDirectionEnum">
+        <xs:annotation>
+          <xs:documentation>The direction(s) of traffic flow to which the situation, traffic data or information is related.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="_alertCDirectionExtension" type="com:_ExtensionType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="AlertCDirectionEnum">
+    <xs:annotation>
+      <xs:documentation>Direction used to reach the primary location from the secondary location in ALERT-C location table, as defined in CEN ISO 14819-1</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="negative">
+        <xs:annotation>
+          <xs:documentation>The direction of navigation in an ALERT-C table that corresponds to the negative offset usage to go from the secondary location to the primary location within the ALERT-C location table.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="positive">
+        <xs:annotation>
+          <xs:documentation>The direction of navigation in an ALERT-C table that corresponds to the negative offset usage to go from the secondary location to the primary location within the ALERT-C location table.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="_extended" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="AlertCLinear" abstract="true">
+    <xs:annotation>
+      <xs:documentation>A linear section along a road defined between two points on the road by reference to a pre-defined ALERT-C location table.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="alertCLocationCountryCode" type="com:String">
+        <xs:annotation>
+          <xs:documentation>ALERT-C country code as defined in IEC 62106.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="1" maxOccurs="1" name="alertCLocationTableNumber" type="com:String">
+        <xs:annotation>
+          <xs:documentation>Number allocated to an ALERT-C table in a country. Ref. EN ISO 14819-3 for the allocation of a location table number.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="1" maxOccurs="1" name="alertCLocationTableVersion" type="com:String">
+        <xs:annotation>
+          <xs:documentation>Version number associated with an ALERT-C table reference.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="_alertCLinearExtension" type="com:_ExtensionType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="AlertCLocation">
+    <xs:annotation>
+      <xs:documentation>Identification of a specific point, linear or area location in an ALERT-C location table.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="specificLocation" type="loc:AlertCLocationCode">
+        <xs:annotation>
+          <xs:documentation>Unique code within the ALERT-C location table which identifies the specific point, linear or area location.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="_alertCLocationExtension" type="com:_ExtensionType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="AlertCLocationCode">
+    <xs:annotation>
+      <xs:documentation>A positive integer number (between 1 and 63 487) which uniquely identifies a pre-defined Alert C location defined within an Alert-C table.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="com:NonNegativeInteger">
+      <xs:minInclusive value="1" />
+      <xs:maxInclusive value="63487" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="AlertCMethod2Linear">
+    <xs:annotation>
+      <xs:documentation>A linear section along a road between two points, primary and secondary, which are pre-defined in an ALERT-C location table. Direction is FROM the secondary point TO the primary point, i.e. the primary point is downstream of the secondary point.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="loc:AlertCLinear">
+        <xs:sequence>
+          <xs:element name="alertCDirection" type="loc:AlertCDirection" />
+          <xs:element name="alertCMethod2PrimaryPointLocation" type="loc:AlertCMethod2PrimaryPointLocation" />
+          <xs:element name="alertCMethod2SecondaryPointLocation" type="loc:AlertCMethod2SecondaryPointLocation" />
+          <xs:element minOccurs="0" name="_alertCMethod2LinearExtension" type="com:_ExtensionType" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="AlertCMethod2Point">
+    <xs:annotation>
+      <xs:documentation>A single point on the road network defined by reference to a point in a pre-defined ALERT-C location table and which has an associated direction of traffic flow.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="loc:AlertCPoint">
+        <xs:sequence>
+          <xs:element name="alertCDirection" type="loc:AlertCDirection" />
+          <xs:element name="alertCMethod2PrimaryPointLocation" type="loc:AlertCMethod2PrimaryPointLocation" />
+          <xs:element minOccurs="0" name="_alertCMethod2PointExtension" type="com:_ExtensionType" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="AlertCMethod2PrimaryPointLocation">
+    <xs:annotation>
+      <xs:documentation>The point (called Primary point) which is either a single point or at the downstream end of a linear road section. The point is specified by a reference to a point in a pre-defined ALERT-C location table.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="alertCLocation" type="loc:AlertCLocation" />
+      <xs:element minOccurs="0" name="_alertCMethod2PrimaryPointLocationExtension" type="com:_ExtensionType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="AlertCMethod2SecondaryPointLocation">
+    <xs:annotation>
+      <xs:documentation>The point (called Secondary point) which is at the upstream end of a linear road section. The point is specified by a reference to a point in a pre-defined ALERT-C location table.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="alertCLocation" type="loc:AlertCLocation" />
+      <xs:element minOccurs="0" name="_alertCMethod2SecondaryPointLocationExtension" type="com:_ExtensionType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="AlertCMethod4Linear">
+    <xs:annotation>
+      <xs:documentation>A linear section along a road between two points, primary and secondary, which are pre-defined ALERT-C locations plus offset distance. Direction is FROM the secondary point TO the primary point, i.e. the primary point is downstream of the secondary point.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="loc:AlertCLinear">
+        <xs:sequence>
+          <xs:element name="alertCDirection" type="loc:AlertCDirection" />
+          <xs:element name="alertCMethod4PrimaryPointLocation" type="loc:AlertCMethod4PrimaryPointLocation" />
+          <xs:element name="alertCMethod4SecondaryPointLocation" type="loc:AlertCMethod4SecondaryPointLocation" />
+          <xs:element minOccurs="0" name="_alertCMethod4LinearExtension" type="com:_ExtensionType" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="AlertCMethod4Point">
+    <xs:annotation>
+      <xs:documentation>A single point on the road network defined by reference to a point in a pre-defined ALERT-C location table plus an offset distance and which has an associated direction of traffic flow.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="loc:AlertCPoint">
+        <xs:sequence>
+          <xs:element name="alertCDirection" type="loc:AlertCDirection" />
+          <xs:element name="alertCMethod4PrimaryPointLocation" type="loc:AlertCMethod4PrimaryPointLocation" />
+          <xs:element minOccurs="0" name="_alertCMethod4PointExtension" type="com:_ExtensionType" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="AlertCMethod4PrimaryPointLocation">
+    <xs:annotation>
+      <xs:documentation>The point (called Primary point) which is either a single point or at the downstream end of a linear road section. The point is specified by a reference to a point in a pre-defined ALERT-C location table plus a non-negative offset distance.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="alertCLocation" type="loc:AlertCLocation" />
+      <xs:element name="offsetDistance" type="loc:OffsetDistance" />
+      <xs:element minOccurs="0" name="_alertCMethod4PrimaryPointLocationExtension" type="com:_ExtensionType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="AlertCMethod4SecondaryPointLocation">
+    <xs:annotation>
+      <xs:documentation>The point (called Secondary point) which is at the upstream end of a linear road section. The point is specified by a reference to a point in a pre-defined Alert-C location table plus a non-negative offset distance.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="alertCLocation" type="loc:AlertCLocation" />
+      <xs:element name="offsetDistance" type="loc:OffsetDistance" />
+      <xs:element minOccurs="0" name="_alertCMethod4SecondaryPointLocationExtension" type="com:_ExtensionType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="AlertCPoint" abstract="true">
+    <xs:annotation>
+      <xs:documentation>A single point on the road network defined by reference to a pre-defined ALERT-C location table and which has an associated direction of traffic flow.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="alertCLocationCountryCode" type="com:String">
+        <xs:annotation>
+          <xs:documentation>ALERT-C country code as defined IEC 62106.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="1" maxOccurs="1" name="alertCLocationTableNumber" type="com:String">
+        <xs:annotation>
+          <xs:documentation>Number allocated to an ALERT-C table in a country. Ref. EN ISO 14819-3 for the allocation of a location table number.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="1" maxOccurs="1" name="alertCLocationTableVersion" type="com:String">
+        <xs:annotation>
+          <xs:documentation>Version number associated with an ALERT-C table reference.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="_alertCPointExtension" type="com:_ExtensionType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="AreaLocation">
+    <xs:annotation>
+      <xs:documentation>Location representing a geographic or geometric defined area which may be qualified by height information to provide additional geospatial discrimination (e.g. for snow in an area but only above a certain altitude).</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="loc:Location">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="alertCArea" type="loc:AlertCArea" />
+          <xs:element minOccurs="0" name="_areaLocationExtension" type="com:_ExtensionType" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="Carriageway">
+    <xs:annotation>
+      <xs:documentation>Supplementary positional information which details carriageway and lane locations. Several instances may exist where the element being described extends over more than one carriageway.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="carriageway" type="loc:_CarriagewayEnum">
+        <xs:annotation>
+          <xs:documentation>Indicates the section of carriageway to which the location relates.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="1" name="originalNumberOfLanes" type="com:Integer">
+        <xs:annotation>
+          <xs:documentation>Normal number of lanes, potentially available for moving traffic, before reduction due to situations. Hard shoulder should not be counted unless it is sometimes used operationally for moving traffic.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="lane" type="loc:Lane" />
+      <xs:element minOccurs="0" name="_carriagewayExtension" type="com:_ExtensionType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="CarriagewayEnum">
+    <xs:annotation>
+      <xs:documentation>List of descriptors identifying specific carriageway details.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="connectingCarriageway">
+        <xs:annotation>
+          <xs:documentation>On the connecting carriageway.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="cycleTrack">
+        <xs:annotation>
+          <xs:documentation>Independent road or part of a road designated for cycles, signposted as such. A cycle track is separated from other roads or other parts of the same road by structural means.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="entrySlipRoad">
+        <xs:annotation>
+          <xs:documentation>On the entry slip road.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="exitSlipRoad">
+        <xs:annotation>
+          <xs:documentation>On the exit slip road.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="flyover">
+        <xs:annotation>
+          <xs:documentation>On the flyover, i.e. the section of road passing over another.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="footpath">
+        <xs:annotation>
+          <xs:documentation>On the footpath</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="leftHandFeederRoad">
+        <xs:annotation>
+          <xs:documentation>On the left hand feeder road.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="leftHandParallelCarriageway">
+        <xs:annotation>
+          <xs:documentation>On the left hand parallel carriageway.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="mainCarriageway">
+        <xs:annotation>
+          <xs:documentation>On the main carriageway.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="oppositeCarriageway">
+        <xs:annotation>
+          <xs:documentation>On the opposite carriageway.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="parallelCarriageway">
+        <xs:annotation>
+          <xs:documentation>On the adjacent external parallel carriageway.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="rightHandFeederRoad">
+        <xs:annotation>
+          <xs:documentation>On the right hand feeder road.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="rightHandParallelCarriageway">
+        <xs:annotation>
+          <xs:documentation>On the right hand parallel carriageway.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="roundabout">
+        <xs:annotation>
+          <xs:documentation>On the roundabout.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="serviceRoad">
+        <xs:annotation>
+          <xs:documentation>On the adjacent service road.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="slipRoads">
+        <xs:annotation>
+          <xs:documentation>On the slip roads.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="underpass">
+        <xs:annotation>
+          <xs:documentation>On the underpass, i.e. the section of road passing under another.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="unspecifiedCarriageway">
+        <xs:annotation>
+          <xs:documentation>On an unspecified carriageway</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="_extended" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="GeographicCharacteristicEnum">
+    <xs:annotation>
+      <xs:documentation>Descriptor to help to identify a specific location.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="aroundABendInRoad">
+        <xs:annotation>
+          <xs:documentation>Around a bend in the road.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="onBorder">
+        <xs:annotation>
+          <xs:documentation>On border crossing.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="onPass">
+        <xs:annotation>
+          <xs:documentation>On mountain pass.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="overCrestOfHill">
+        <xs:annotation>
+          <xs:documentation>Over the crest of a hill.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="_extended" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="GmlLineString">
+    <xs:annotation>
+      <xs:documentation>Line string based on GML (EN ISO 19136) definition: a curve defined by a series of two or more coordinate tuples. Unlike GML may be self-intersecting. If srsName attribute is not present, posList is assumed to use "ETRS89-LatLonh" reference system.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="posList" type="loc:GmlPosList">
+        <xs:annotation>
+          <xs:documentation>List of coordinate Tuples define the geometry of this GmlLineString. There must be at least 2 Tuples of coordinates.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="_gmlLineStringExtension" type="com:_ExtensionType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="GmlPosList">
+    <xs:annotation>
+      <xs:documentation>List of coordinates, space-separated, within the same coordinate reference system, defining a geometric entity. Modelled on DirectPositionListType in GML (EN ISO 19136), but constrained to represent a 2D or 3D polyline.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="com:LongString">
+      <xs:pattern value="[-+]?[0-9]*\.?[0-9]+(\s[-+]?[0-9]*\.?[0-9]+){3,}" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="InfrastructureDescriptorEnum">
+    <xs:annotation>
+      <xs:documentation>Descriptor identifying infrastructure to help to identify a specific location.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="atMotorwayInterchange">
+        <xs:annotation>
+          <xs:documentation>At a motorway interchange.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="atRestArea">
+        <xs:annotation>
+          <xs:documentation>At rest area off the carriageway.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="atServiceArea">
+        <xs:annotation>
+          <xs:documentation>At service area.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="atTollPlaza">
+        <xs:annotation>
+          <xs:documentation>At toll plaza.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="atTunnelEntryOrExit">
+        <xs:annotation>
+          <xs:documentation>At entry or exit of tunnel.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="inGallery">
+        <xs:annotation>
+          <xs:documentation>In gallery.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="inTunnel">
+        <xs:annotation>
+          <xs:documentation>In tunnel.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="onBridge">
+        <xs:annotation>
+          <xs:documentation>On bridge.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="onConnector">
+        <xs:annotation>
+          <xs:documentation>On connecting carriageway between two different roads or road sections.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="onElevatedSection">
+        <xs:annotation>
+          <xs:documentation>On elevated section of road.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="onFlyover">
+        <xs:annotation>
+          <xs:documentation>On flyover, i.e. on section of road over another road.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="onIceRoad">
+        <xs:annotation>
+          <xs:documentation>On ice road.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="onLevelCrossing">
+        <xs:annotation>
+          <xs:documentation>On level-crossing.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="onLinkRoad">
+        <xs:annotation>
+          <xs:documentation>On road section linking two different roads.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="onRoundabout">
+        <xs:annotation>
+          <xs:documentation>On roundabout.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="onTheRoadway">
+        <xs:annotation>
+          <xs:documentation>On the roadway.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="onUndergroundSection">
+        <xs:annotation>
+          <xs:documentation>On underground section of road.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="onUnderpass">
+        <xs:annotation>
+          <xs:documentation>On underpass, i.e. section of road which passes under another road.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="withinJunction">
+        <xs:annotation>
+          <xs:documentation>On the main carriageway within a junction between exit slip road and entry slip road.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="_extended" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="IsoNamedArea">
+    <xs:annotation>
+      <xs:documentation>The ISO 3166-2 representation for the named area.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="loc:NamedArea">
+        <xs:sequence>
+          <xs:element minOccurs="1" maxOccurs="1" name="subdivisionType" type="loc:_SubdivisionTypeEnum">
+            <xs:annotation>
+              <xs:documentation>The ISO 3166-2 subdivison type for the named area.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="1" maxOccurs="1" name="subdivisionCode" type="loc:SubdivisionCode">
+            <xs:annotation>
+              <xs:documentation>The ISO 3166-2 subdivision code for the named area.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="_isoNamedAreaExtension" type="com:_ExtensionType" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="Lane">
+    <xs:annotation>
+      <xs:documentation>Indicates a specific lane or group of lanes.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="laneNumber" type="com:Integer">
+        <xs:annotation>
+          <xs:documentation>The number of the lane, where 1 is nearest the hard shoulder/verge and the numbers increase towards the central reservation/road axis.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="1" name="laneUsage" type="loc:_LaneEnum">
+        <xs:annotation>
+          <xs:documentation>Indicates the specific lane to which the location relates.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="_laneExtension" type="com:_ExtensionType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="LaneEnum">
+    <xs:annotation>
+      <xs:documentation>List of descriptors identifying specific lanes.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="allLanesCompleteCarriageway">
+        <xs:annotation>
+          <xs:documentation>In all lanes of the carriageway.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="busLane">
+        <xs:annotation>
+          <xs:documentation>In the bus lane.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="busStop">
+        <xs:annotation>
+          <xs:documentation>In the bus stop lane.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="carPoolLane">
+        <xs:annotation>
+          <xs:documentation>In the carpool lane.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="centralReservation">
+        <xs:annotation>
+          <xs:documentation>On the central reservation separating the two directional carriageways of the highway.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="crawlerLane">
+        <xs:annotation>
+          <xs:documentation>In the crawler lane - a lane that should be used by slower vehicles.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="cycleLane">
+        <xs:annotation>
+          <xs:documentation>Part of a carriageway designated for cycles. A cycle lane is distinguished from the rest of the carriageway by longitudinal road markings.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="emergencyLane">
+        <xs:annotation>
+          <xs:documentation>In the emergency lane.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="escapeLane">
+        <xs:annotation>
+          <xs:documentation>In the escape lane.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="expressLane">
+        <xs:annotation>
+          <xs:documentation>In the express lane.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="hardShoulder">
+        <xs:annotation>
+          <xs:documentation>On the hard shoulder.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="heavyVehicleLane">
+        <xs:annotation>
+          <xs:documentation>In the heavy vehicle lane.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="layBy">
+        <xs:annotation>
+          <xs:documentation>In a lay-by.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="leftHandTurningLane">
+        <xs:annotation>
+          <xs:documentation>In the left hand turning lane.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="leftLane">
+        <xs:annotation>
+          <xs:documentation>In the left lane.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="localTrafficLane">
+        <xs:annotation>
+          <xs:documentation>In the local traffic lane.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="middleLane">
+        <xs:annotation>
+          <xs:documentation>In the middle lane.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="overtakingLane">
+        <xs:annotation>
+          <xs:documentation>In the overtaking lane.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="rightHandTurningLane">
+        <xs:annotation>
+          <xs:documentation>In the right hand turning lane.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="rightLane">
+        <xs:annotation>
+          <xs:documentation>In the right lane.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="rushHourLane">
+        <xs:annotation>
+          <xs:documentation>In the lane dedicated for use during the rush (peak) hour.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="setDownArea">
+        <xs:annotation>
+          <xs:documentation>In the area/lane reserved for passenger pick-up or set-down.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="slowVehicleLane">
+        <xs:annotation>
+          <xs:documentation>In a lane dedicated to vehicles that are not permitted to exceed a fixed slow speed.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="throughTrafficLane">
+        <xs:annotation>
+          <xs:documentation>In the through traffic lane.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="tidalFlowLane">
+        <xs:annotation>
+          <xs:documentation>In the lane dedicated for use as a tidal flow lane.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="turningLane">
+        <xs:annotation>
+          <xs:documentation>In the turning lane.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="verge">
+        <xs:annotation>
+          <xs:documentation>On the verge.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="_extended" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="LinearDirectionEnum">
+    <xs:annotation>
+      <xs:documentation>Directions of traffic flow relative to the direction in which the linear element is defined.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="both">
+        <xs:annotation>
+          <xs:documentation>Indicates that both directions of traffic flow are affected by the situation or relate to the traffic data.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="opposite">
+        <xs:annotation>
+          <xs:documentation>Indicates that the direction of traffic flow affected by the situation or related to the traffic data is in the opposite sense to the direction in which the linear element is defined.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="aligned">
+        <xs:annotation>
+          <xs:documentation>Indicates that the direction of traffic flow affected by the situation or related to the traffic data is in the same sense as the direction in which the linear element is defined.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="unknown">
+        <xs:annotation>
+          <xs:documentation>Indicates that the direction of traffic flow affected by the situation or related to the traffic data is unknown.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="_extended" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="LinearLocation">
+    <xs:annotation>
+      <xs:documentation>Location representing a linear section with optional directionality defined between two points. </xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="loc:NetworkLocation">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="openlrLinear" type="loc:OpenlrLinear" />
+          <xs:element minOccurs="0" name="gmlLineString" type="loc:GmlLineString" />
+          <xs:element minOccurs="0" name="_linearLocationExtension" type="com:_ExtensionType" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="Location" abstract="true">
+    <xs:annotation>
+      <xs:documentation>The specification of a location either on a network (as a point or a linear location) or as an area. This may be provided in one or more referencing systems.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="loc:LocationReference">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="coordinatesForDisplay" type="loc:PointCoordinates">
+            <xs:annotation>
+              <xs:documentation>Coordinates that may be used by clients for visual display on user interfaces.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="_locationExtension" type="com:_ExtensionType" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="LocationByReference">
+    <xs:annotation>
+      <xs:documentation>A location defined by reference to a predefined location.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="loc:Location">
+        <xs:sequence>
+          <xs:element minOccurs="1" maxOccurs="1" name="predefinedLocationReference" type="loc:_PredefinedLocationVersionedReference">
+            <xs:annotation>
+              <xs:documentation>A reference to a versioned predefined location.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="_locationByReferenceExtension" type="com:_ExtensionType" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="LocationGroup" abstract="true">
+    <xs:annotation>
+      <xs:documentation>Multiple (i.e. more than one) physically separate locations which have no specific order.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="loc:LocationReference">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="_locationGroupExtension" type="com:_ExtensionType" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="LocationGroupByList">
+    <xs:annotation>
+      <xs:documentation>A group of (i.e. more than one) physically separate locations which have no specific order and where each location is explicitly listed.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="loc:LocationGroup">
+        <xs:sequence>
+          <xs:element minOccurs="2" maxOccurs="unbounded" name="locationContainedInGroup" type="loc:Location">
+            <xs:annotation>
+              <xs:documentation>A location contained in a non-ordered group of locations.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="_locationGroupByListExtension" type="com:_ExtensionType" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="LocationReference" abstract="true">
+    <xs:annotation>
+      <xs:documentation>Represents one or more physically separate locations. Multiple locations may be related, as in an itinerary or route, or may be unrelated. One LocationReference should not use multiple Location objects to represent the same physical location.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="_locationReferenceExtension" type="com:_ExtensionType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="NamedArea">
+    <xs:annotation>
+      <xs:documentation>An area defined by a name and/or in terms of known boundaries, such as country or county boundaries or allocated control area of particular authority. The attributes do not form a union; instead, the smallest intersection forms the resulting area.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="com:NamedArea">
+        <xs:sequence>
+          <xs:element minOccurs="1" maxOccurs="1" name="areaName" type="com:MultilingualString">
+            <xs:annotation>
+              <xs:documentation>The name of the area.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" maxOccurs="1" name="country" type="com:CountryCode">
+            <xs:annotation>
+              <xs:documentation>EN ISO 3166-1 two-character country code.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="_namedAreaExtension" type="com:_ExtensionType" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="NetworkLocation" abstract="true">
+    <xs:annotation>
+      <xs:documentation>The specification of a location on a network (as a point or a linear location).</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="loc:Location">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="supplementaryPositionalDescription" type="loc:SupplementaryPositionalDescription" />
+          <xs:element minOccurs="0" name="_networkLocationExtension" type="com:_ExtensionType" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="OffsetDistance">
+    <xs:annotation>
+      <xs:documentation>The non-negative offset distance from the ALERT-C referenced point to the actual point.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="offsetDistance" type="com:MetresAsNonNegativeInteger">
+        <xs:annotation>
+          <xs:documentation>The non-negative offset distance from the ALERT-C referenced point to the actual point. The ALERT-C locations in the primary and secondary locations must always encompass the linear section being specified, thus offset distance is towards the other point.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="_offsetDistanceExtension" type="com:_ExtensionType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="OpenlrBasePointLocation" abstract="true">
+    <xs:annotation>
+      <xs:documentation>Holds common data that are used both in OpenlrPointAccessPoint and OpenlrPointAlongLine.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="loc:OpenlrPointLocationReference">
+        <xs:sequence>
+          <xs:element minOccurs="1" maxOccurs="1" name="openlrSideOfRoad" type="loc:_OpenlrSideOfRoadEnum">
+            <xs:annotation>
+              <xs:documentation>Provides the of road where the corresponding point lies.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="1" maxOccurs="1" name="openlrOrientation" type="loc:_OpenlrOrientationEnum">
+            <xs:annotation>
+              <xs:documentation>Orientation of the driving direction in relation with the direction of the underlying linear</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="openlrLocationReferencePoint" type="loc:OpenlrLocationReferencePoint">
+            <xs:annotation>
+              <xs:documentation>Allows defining the first point of the OpenLR path</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="openlrLastLocationReferencePoint" type="loc:OpenlrLastLocationReferencePoint">
+            <xs:annotation>
+              <xs:documentation>Allows defining the last point of the OpenLR path</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="openlrOffsets" type="loc:OpenlrOffsets">
+            <xs:annotation>
+              <xs:documentation>Provides optional offsets relative to the path</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="_openlrBasePointLocationExtension" type="com:_ExtensionType" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="OpenlrBaseReferencePoint" abstract="true">
+    <xs:annotation>
+      <xs:documentation>Base class used to hold data about a reference point.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="openlrCoordinates" type="loc:PointCoordinates">
+        <xs:annotation>
+          <xs:documentation>Provides coordinates for the base point of the OpenLR path</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="openlrLineAttributes" type="loc:OpenlrLineAttributes">
+        <xs:annotation>
+          <xs:documentation>Properties of the line towards the topologically adjacent OpenLR location referencing point, on the shortest path to that point.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="_openlrBaseReferencePointExtension" type="com:_ExtensionType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="OpenlrFormOfWayEnum">
+    <xs:annotation>
+      <xs:documentation>Enumeration of for of way</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="undefined">
+        <xs:annotation>
+          <xs:documentation>Undefined</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="motorway">
+        <xs:annotation>
+          <xs:documentation>Motorway</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="multipleCarriageway">
+        <xs:annotation>
+          <xs:documentation>Multiple carriageway</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="singleCarriageway">
+        <xs:annotation>
+          <xs:documentation>Single carriageway</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="roundabout">
+        <xs:annotation>
+          <xs:documentation>Roundabout</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="slipRoad">
+        <xs:annotation>
+          <xs:documentation>Slip road</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="trafficSquare">
+        <xs:annotation>
+          <xs:documentation>Traffic square</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="other">
+        <xs:annotation>
+          <xs:documentation>Other</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="_extended" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="OpenlrFunctionalRoadClassEnum">
+    <xs:annotation>
+      <xs:documentation>Enemuration of functional road class</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="frc0">
+        <xs:annotation>
+          <xs:documentation>Main road, highest importance</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="frc1">
+        <xs:annotation>
+          <xs:documentation>First class road</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="frc2">
+        <xs:annotation>
+          <xs:documentation>Second class road</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="frc3">
+        <xs:annotation>
+          <xs:documentation>Third class road</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="frc4">
+        <xs:annotation>
+          <xs:documentation>Fourth class road</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="frc5">
+        <xs:annotation>
+          <xs:documentation>Fifth class road</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="frc6">
+        <xs:annotation>
+          <xs:documentation>Sixth class road</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="frc7">
+        <xs:annotation>
+          <xs:documentation>Other class road, lowest importance</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="_extended" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="OpenlrLastLocationReferencePoint">
+    <xs:annotation>
+      <xs:documentation>The sequence of location reference points is terminated by a last location reference point.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="loc:OpenlrBaseReferencePoint">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="_openlrLastLocationReferencePointExtension" type="com:_ExtensionType" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="OpenlrLinear">
+    <xs:annotation>
+      <xs:documentation>OpenLR line location reference</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="firstDirection" type="loc:OpenlrLineLocationReference">
+        <xs:annotation>
+          <xs:documentation>First OpenLR reference in first/main direction.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="oppositeDirection" type="loc:OpenlrLineLocationReference">
+        <xs:annotation>
+          <xs:documentation>If both direction, this is the reference in the opposite direction against firstDirection.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="_openlrLinearExtension" type="com:_ExtensionType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="OpenlrLineAttributes">
+    <xs:annotation>
+      <xs:documentation>Line attributes are part of a location reference point and consists of functional road class (FRC),form of way (FOW) and bearing (BEAR) data.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="openlrFunctionalRoadClass" type="loc:_OpenlrFunctionalRoadClassEnum">
+        <xs:annotation>
+          <xs:documentation>Certain aspects of the physical form that a Road Element takes. It is based on a number of certain physical and traffic properties. (EN ISO 14825 § 7.2.85)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="1" maxOccurs="1" name="openlrFormOfWay" type="loc:_OpenlrFormOfWayEnum">
+        <xs:annotation>
+          <xs:documentation>A classification based on the importance of the role that the Road Element (or Ferry Connection) performs in the connectivity of the total road network. (EN ISO 14825 § 7.2.88)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="1" maxOccurs="1" name="openlrBearing" type="com:AngleInDegrees">
+        <xs:annotation>
+          <xs:documentation>defines the bearing field as an integer value between 0 and 359</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="_openlrLineAttributesExtension" type="com:_ExtensionType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="OpenlrLineLocationReference">
+    <xs:annotation>
+      <xs:documentation>A line location reference is defined by an ordered sequence of location reference points and a terminating last location reference point.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" name="openlrLocationReferencePoint" type="loc:OpenlrLocationReferencePoint" />
+      <xs:element name="openlrLastLocationReferencePoint" type="loc:OpenlrLastLocationReferencePoint" />
+      <xs:element minOccurs="0" name="openlrOffsets" type="loc:OpenlrOffsets">
+        <xs:annotation>
+          <xs:documentation>Allows for adding offsets to the line location path defined by nodes when the starting (respectively ending) point does not coincide with a node.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="_openlrLineLocationReferenceExtension" type="com:_ExtensionType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="OpenlrLocationReferencePoint">
+    <xs:annotation>
+      <xs:documentation>The basis of a location reference is a sequence of location reference points (LRPs).</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="loc:OpenlrBaseReferencePoint">
+        <xs:sequence>
+          <xs:element name="openlrPathAttributes" type="loc:OpenlrPathAttributes">
+            <xs:annotation>
+              <xs:documentation>Additional path attributes relative to the next point</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="_openlrLocationReferencePointExtension" type="com:_ExtensionType" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="OpenlrOffsets">
+    <xs:annotation>
+      <xs:documentation>Offsets are used to locate the start and end of a location more precisely than bounding to the nodes in a network.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="openlrPositiveOffset" type="com:MetresAsNonNegativeInteger">
+        <xs:annotation>
+          <xs:documentation>The positive offset along the line of the location measured along the line reference path between the start point of the location reference and the starting node of the line reference path.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="1" name="openlrNegativeOffset" type="com:MetresAsNonNegativeInteger">
+        <xs:annotation>
+          <xs:documentation>The negative offset along the line of the location measured along the line reference path between the end point of the location reference and the ending node of the line reference path.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="_openlrOffsetsExtension" type="com:_ExtensionType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="OpenlrOrientationEnum">
+    <xs:annotation>
+      <xs:documentation>Enumeration of side of road</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="noOrientationOrUnknown">
+        <xs:annotation>
+          <xs:documentation>No orientation or unknown</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="withLineDirection">
+        <xs:annotation>
+          <xs:documentation>With line direction</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="againstLineDirection">
+        <xs:annotation>
+          <xs:documentation>Against line direction</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="both">
+        <xs:annotation>
+          <xs:documentation>Both directions</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="_extended" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="OpenlrPathAttributes">
+    <xs:annotation>
+      <xs:documentation>Properties of the path from the associated location reference point to the next location reference point, which are specified to assist correct identification of the point in an external map data source.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="openlrLowestFrcToNextLRPoint" type="loc:_OpenlrFunctionalRoadClassEnum">
+        <xs:annotation>
+          <xs:documentation>The lowest FRC to the next point indicates the lowest functional road class used in the location reference path to the next LR-point.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="1" maxOccurs="1" name="openlrDistanceToNextLRPoint" type="com:NonNegativeInteger">
+        <xs:annotation>
+          <xs:documentation>The DNP attribute measures the distance in meters between two consecutive location reference-points along the location reference path described in the corresponding enumeration</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="_openlrPathAttributesExtension" type="com:_ExtensionType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="OpenlrPointLocationReference" abstract="true">
+    <xs:annotation>
+      <xs:documentation>A point location is a zero-dimensional element in a map that specifies a geometric location.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="_openlrPointLocationReferenceExtension" type="com:_ExtensionType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="OpenlrPoiWithAccessPoint">
+    <xs:annotation>
+      <xs:documentation>A point of interest (POI) along a line with access is a point location which is defined by a linear reference path, an offset value (defining the access point) from the starting node of this path and a coordinate pair that defines the POI itself.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="loc:OpenlrBasePointLocation">
+        <xs:sequence>
+          <xs:element name="openlrCoordinates" type="loc:PointCoordinates">
+            <xs:annotation>
+              <xs:documentation>The coordinate of the actual point of interest</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="_openlrPoiWithAccessPointExtension" type="com:_ExtensionType" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="OpenlrSideOfRoadEnum">
+    <xs:annotation>
+      <xs:documentation>Enumeration of side of road</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="onRoadOrUnknown">
+        <xs:annotation>
+          <xs:documentation>On road or unknown</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="right">
+        <xs:annotation>
+          <xs:documentation>On the right side of the road.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="left">
+        <xs:annotation>
+          <xs:documentation>On the left side of the road.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="both">
+        <xs:annotation>
+          <xs:documentation>On both sides of the road.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="_extended" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="PointCoordinates">
+    <xs:annotation>
+      <xs:documentation>A pair of planar coordinates defining the geodetic position of a single point using the European Terrestrial Reference System 1989 (ETRS89).</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="latitude" type="com:Float">
+        <xs:annotation>
+          <xs:documentation>Latitude in decimal degrees using the European Terrestrial Reference System 1989 (ETRS89).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="1" maxOccurs="1" name="longitude" type="com:Float">
+        <xs:annotation>
+          <xs:documentation>Longitude in decimal degrees using the European Terrestrial Reference System 1989 (ETRS89).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="_pointCoordinatesExtension" type="com:_ExtensionType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="PointLocation">
+    <xs:annotation>
+      <xs:documentation>Location representing a single geospatial point.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="loc:NetworkLocation">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="alertCPoint" type="loc:AlertCPoint">
+            <xs:annotation>
+              <xs:documentation>The point location expressed using AlertC. Multiple instances of AlertCPoint shall represent the same real-world geographic feature.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="openlrPointLocationReference" type="loc:OpenlrPointLocationReference" />
+          <xs:element minOccurs="0" name="_pointLocationExtension" type="com:_ExtensionType" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="RoadInformation">
+    <xs:annotation>
+      <xs:documentation>Information on a road</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="roadName" type="com:String">
+        <xs:annotation>
+          <xs:documentation>The name of the road</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="1" name="roadNumber" type="com:String">
+        <xs:annotation>
+          <xs:documentation>The road number designated by the road authority</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="_roadInformationExtension" type="com:_ExtensionType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SingleRoadLinearLocation">
+    <xs:annotation>
+      <xs:documentation>Location representing a linear section along a single road with optional directionality defined between two points on the same road. No matter the kind of linear reference it uses, the constraint of using only a single road must be preserved.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="loc:LinearLocation">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="alertCLinear" type="loc:AlertCLinear">
+            <xs:annotation>
+              <xs:documentation>The linear location expressed using AlertC. Multiple instances of AlertCLinear shall represent the same real-world geographic feature.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="_singleRoadLinearLocationExtension" type="com:_ExtensionType" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="SubdivisionCode">
+    <xs:annotation>
+      <xs:documentation>ISO 3166-2 country sub-division code (up to 3 characters).</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="com:String">
+      <xs:maxLength value="3" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="SubdivisionTypeEnum">
+    <xs:annotation>
+      <xs:documentation>ISO 3166-2 subdivison types.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="administrativeAtoll">
+        <xs:annotation>
+          <xs:documentation>Administrative atoll</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="administrativeRegion">
+        <xs:annotation>
+          <xs:documentation>Administrative region</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="administrativeTerritory">
+        <xs:annotation>
+          <xs:documentation>Administrative territory</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="arcticRegion">
+        <xs:annotation>
+          <xs:documentation>Arctic region</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="autonomousCity">
+        <xs:annotation>
+          <xs:documentation>Autonomous city</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="autonomousCityInNorthAfrica">
+        <xs:annotation>
+          <xs:documentation>Autonomous city in North Africa</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="autonomousCommunity">
+        <xs:annotation>
+          <xs:documentation>Autonomous community</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="autonomousDistrict">
+        <xs:annotation>
+          <xs:documentation>Autonomous district</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="autonomousProvince">
+        <xs:annotation>
+          <xs:documentation>Autonomous province</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="autonomousRegion">
+        <xs:annotation>
+          <xs:documentation>Autonomous region</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="canton">
+        <xs:annotation>
+          <xs:documentation>Canton</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="capitalCity">
+        <xs:annotation>
+          <xs:documentation>Capital city</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="city">
+        <xs:annotation>
+          <xs:documentation>City</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="cityMunicipality">
+        <xs:annotation>
+          <xs:documentation>City municipality</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="cityOfCountyRight">
+        <xs:annotation>
+          <xs:documentation>City of county right</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="commune">
+        <xs:annotation>
+          <xs:documentation>Commune</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="councilArea">
+        <xs:annotation>
+          <xs:documentation>Council area</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="county">
+        <xs:annotation>
+          <xs:documentation>County</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="country">
+        <xs:annotation>
+          <xs:documentation>Country</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="department">
+        <xs:annotation>
+          <xs:documentation>Department</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="dependency">
+        <xs:annotation>
+          <xs:documentation>Dependency</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="district">
+        <xs:annotation>
+          <xs:documentation>District</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="districtMunicipality">
+        <xs:annotation>
+          <xs:documentation>District municipality</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="districtWithSpecialStatus">
+        <xs:annotation>
+          <xs:documentation>District with special status</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="entity">
+        <xs:annotation>
+          <xs:documentation>Entity</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="geographicalEntity">
+        <xs:annotation>
+          <xs:documentation>Geographical entity</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="governorate">
+        <xs:annotation>
+          <xs:documentation>Governorate</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="laender">
+        <xs:annotation>
+          <xs:documentation>Länder</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="localCouncil">
+        <xs:annotation>
+          <xs:documentation>Local Council</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="londonBorough">
+        <xs:annotation>
+          <xs:documentation>London borough</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="metropolitanArea">
+        <xs:annotation>
+          <xs:documentation>Metropolitan area</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="metropolitanDepartment">
+        <xs:annotation>
+          <xs:documentation>Metropolitan department</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="metropolitanDistrict">
+        <xs:annotation>
+          <xs:documentation>Metropolitan district</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="metropolitanRegion">
+        <xs:annotation>
+          <xs:documentation>Metropolitan region</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="municipality">
+        <xs:annotation>
+          <xs:documentation>Municipality</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="overseasDepartment">
+        <xs:annotation>
+          <xs:documentation>Overseas department</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="overseasRegion">
+        <xs:annotation>
+          <xs:documentation>Overseas region</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="overseasTerritorialCollectivity">
+        <xs:annotation>
+          <xs:documentation>Overseas territorial collectivity</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="parish">
+        <xs:annotation>
+          <xs:documentation>Parish</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="province">
+        <xs:annotation>
+          <xs:documentation>Province</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="quarter">
+        <xs:annotation>
+          <xs:documentation>Quarter</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="region">
+        <xs:annotation>
+          <xs:documentation>Region</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="republic">
+        <xs:annotation>
+          <xs:documentation>Republic</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="republicanCity">
+        <xs:annotation>
+          <xs:documentation>Republic city</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="selfGovernedPart">
+        <xs:annotation>
+          <xs:documentation>Self-governed part</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="specialMunicipality">
+        <xs:annotation>
+          <xs:documentation>Special Municipality</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="state">
+        <xs:annotation>
+          <xs:documentation>State</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="territorialUnit">
+        <xs:annotation>
+          <xs:documentation>Territorial unit</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="territory">
+        <xs:annotation>
+          <xs:documentation>Territory</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="twoTierCounty">
+        <xs:annotation>
+          <xs:documentation>Two tier country</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="unitaryAuthority">
+        <xs:annotation>
+          <xs:documentation>Unitary Authority</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="ward">
+        <xs:annotation>
+          <xs:documentation>Ward</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="other">
+        <xs:annotation>
+          <xs:documentation>Other</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="_extended" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="SupplementaryPositionalDescription">
+    <xs:annotation>
+      <xs:documentation>A collection of supplementary positional information which improves the precision of the location.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="geographicDescriptor" type="loc:_GeographicCharacteristicEnum">
+        <xs:annotation>
+          <xs:documentation>Descriptor which identifies a geographic characteristic to help identify the specific location</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="1" name="infrastructureDescriptor" type="loc:_InfrastructureDescriptorEnum">
+        <xs:annotation>
+          <xs:documentation>Descriptor which identifies infrastructure to help identify the specific location.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="1" name="lengthAffected" type="com:MetresAsFloat">
+        <xs:annotation>
+          <xs:documentation>This indicates the length (measured in metres) of carriageway (and lanes) affected by the associated traffic element.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="1" name="locationDescription" type="com:MultilingualString">
+        <xs:annotation>
+          <xs:documentation>Supplementary human-readable description of the location</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="carriageway" type="loc:Carriageway" />
+      <xs:element minOccurs="0" name="namedArea" type="loc:NamedArea" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="roadInformation" type="loc:RoadInformation">
+        <xs:annotation>
+          <xs:documentation>Information on a set of one or more roads. The location could correspond to a part of the road identified, the whole stretch of road identified, or a combination of multiple road sections.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="_supplementaryPositionalDescriptionExtension" type="com:_ExtensionType" />
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

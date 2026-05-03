@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:wd="http://datex2.eu/schema/3/weatherDataExtension" xmlns:com="http://datex2.eu/schema/3/common" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://datex2.eu/schema/3/weatherDataExtension" version="1" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="DATEXII_3_Common.xsd" namespace="http://datex2.eu/schema/3/common" />
+  <xs:complexType name="_ComputationalSourceTypeEnum">
+    <xs:simpleContent>
+      <xs:extension base="wd:ComputationalSourceTypeEnum">
+        <xs:attribute name="_extendedValue" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:simpleType name="ComputationalSourceTypeEnum">
+    <xs:annotation>
+      <xs:documentation>Enum of computationalSourceType</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="measured">
+        <xs:annotation>
+          <xs:documentation>The measurement is based on measurements</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="calculated">
+        <xs:annotation>
+          <xs:documentation>The measurement is based on calculation</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="estimated">
+        <xs:annotation>
+          <xs:documentation>The measurement is based on estimation</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="_extended" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="DataValueExtension">
+    <xs:annotation>
+      <xs:documentation>Extension of DataValue</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="computationalSourceType" type="wd:_ComputationalSourceTypeEnum">
+        <xs:annotation>
+          <xs:documentation>Computational source Type</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

@@ -1,0 +1,1870 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:com="http://datex2.eu/schema/3/common" xmlns:wd="http://datex2.eu/schema/3/weatherDataExtension" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://datex2.eu/schema/3/common" version="3.1" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="DATEXII_3_WeatherDataExtension.xsd" namespace="http://datex2.eu/schema/3/weatherDataExtension" />
+  <xs:complexType name="_ComparisonOperatorEnum">
+    <xs:simpleContent>
+      <xs:extension base="com:ComparisonOperatorEnum">
+        <xs:attribute name="_extendedValue" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="_ComputationMethodEnum">
+    <xs:simpleContent>
+      <xs:extension base="com:ComputationMethodEnum">
+        <xs:attribute name="_extendedValue" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="_ConfidentialityValueEnum">
+    <xs:simpleContent>
+      <xs:extension base="com:ConfidentialityValueEnum">
+        <xs:attribute name="_extendedValue" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="_DataValueExtensionType">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="dataValueExtension" type="wd:DataValueExtension" />
+      <xs:any minOccurs="0" maxOccurs="unbounded" namespace="##other" processContents="lax" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="_ExtensionType">
+    <xs:sequence>
+      <xs:any minOccurs="0" maxOccurs="unbounded" namespace="##any" processContents="lax" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="_InformationStatusEnum">
+    <xs:simpleContent>
+      <xs:extension base="com:InformationStatusEnum">
+        <xs:attribute name="_extendedValue" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="_LoadTypeEnum">
+    <xs:simpleContent>
+      <xs:extension base="com:LoadTypeEnum">
+        <xs:attribute name="_extendedValue" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="_PublicEventTypeEnum">
+    <xs:simpleContent>
+      <xs:extension base="com:PublicEventTypeEnum">
+        <xs:attribute name="_extendedValue" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="_SourceTypeEnum">
+    <xs:simpleContent>
+      <xs:extension base="com:SourceTypeEnum">
+        <xs:attribute name="_extendedValue" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="_TrafficTrendTypeEnum">
+    <xs:simpleContent>
+      <xs:extension base="com:TrafficTrendTypeEnum">
+        <xs:attribute name="_extendedValue" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="_UrlLinkTypeEnum">
+    <xs:simpleContent>
+      <xs:extension base="com:UrlLinkTypeEnum">
+        <xs:attribute name="_extendedValue" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="_ValidityStatusEnum">
+    <xs:simpleContent>
+      <xs:extension base="com:ValidityStatusEnum">
+        <xs:attribute name="_extendedValue" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="_VehicleTypeEnum">
+    <xs:simpleContent>
+      <xs:extension base="com:VehicleTypeEnum">
+        <xs:attribute name="_extendedValue" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="_WeatherRelatedRoadConditionTypeEnum">
+    <xs:simpleContent>
+      <xs:extension base="com:WeatherRelatedRoadConditionTypeEnum">
+        <xs:attribute name="_extendedValue" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="_WeightTypeEnum">
+    <xs:simpleContent>
+      <xs:extension base="com:WeightTypeEnum">
+        <xs:attribute name="_extendedValue" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:simpleType name="AngleInDegrees">
+    <xs:annotation>
+      <xs:documentation>An integer number representing an angle in whole degrees between 0 and 359.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="com:NonNegativeInteger">
+      <xs:minInclusive value="0" />
+      <xs:maxInclusive value="359" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="Base64Binary">
+    <xs:annotation>
+      <xs:documentation>Binary data in base 64 encoding, for example for image data.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:base64Binary" />
+  </xs:simpleType>
+  <xs:simpleType name="Boolean">
+    <xs:annotation>
+      <xs:documentation>Boolean has the value space required to support the mathematical concept of binary-valued logic: {true, false}. </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:boolean" />
+  </xs:simpleType>
+  <xs:simpleType name="ComparisonOperatorEnum">
+    <xs:annotation>
+      <xs:documentation>Logical comparison operations.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="equalTo">
+        <xs:annotation>
+          <xs:documentation>Logical comparison operator of "equal to".</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="greaterThan">
+        <xs:annotation>
+          <xs:documentation>Logical comparison operator of "greater than".</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="greaterThanOrEqualTo">
+        <xs:annotation>
+          <xs:documentation>Logical comparison operator of "greater than or equal to".</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="lessThan">
+        <xs:annotation>
+          <xs:documentation>Logical comparison operator of "less than".</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="lessThanOrEqualTo">
+        <xs:annotation>
+          <xs:documentation>Logical comparison operator of "less than or equal to".</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="_extended" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="ComputationMethodEnum">
+    <xs:annotation>
+      <xs:documentation>Types of computational methods used in deriving data values for data sets.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="arithmeticAverageOfSamplesBasedOnAFixedNumberOfSamples">
+        <xs:annotation>
+          <xs:documentation>Arithmetic average of sample values based on a fixed number of samples.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="arithmeticAverageOfSamplesInATimePeriod">
+        <xs:annotation>
+          <xs:documentation>Arithmetic average of sample values in a time period.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="harmonicAverageOfSamplesInATimePeriod">
+        <xs:annotation>
+          <xs:documentation>Harmonic average of sample values in a time period.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="medianOfSamplesInATimePeriod">
+        <xs:annotation>
+          <xs:documentation>Median of sample values taken over a time period.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="movingAverageOfSamples">
+        <xs:annotation>
+          <xs:documentation>Moving average of sample values.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="_extended" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="ConfidentialityValueEnum">
+    <xs:annotation>
+      <xs:documentation>Values of confidentiality.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="internalUse">
+        <xs:annotation>
+          <xs:documentation>For internal use only of the recipient organisation.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="noRestriction">
+        <xs:annotation>
+          <xs:documentation>No restriction on usage.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="restrictedToAuthorities">
+        <xs:annotation>
+          <xs:documentation>Restricted for use only by authorities.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="restrictedToAuthoritiesAndTrafficOperators">
+        <xs:annotation>
+          <xs:documentation>Restricted for use only by authorities and traffic operators.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="_extended" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="CountryCode">
+    <xs:annotation>
+      <xs:documentation>EN ISO 3166-1 alpha-2 two-letter country code</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="com:String">
+      <xs:maxLength value="2" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="DataValue" abstract="true">
+    <xs:annotation>
+      <xs:documentation>A data value of something that can be measured or calculated. Any provided meta-data values specified in the attributes override any specified generic characteristics such as defined for a specific measurement in the MeasurementSiteTable. </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="dataError" type="com:Boolean">
+        <xs:annotation>
+          <xs:documentation>Indication of whether the value is deemed to be erroneous by the supplier (true = erroneous). If not present, the data value is assumed to be ok. This may be used when automatic fault detection information relating to sensors is available.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="1" name="reasonForDataError" type="com:MultilingualString">
+        <xs:annotation>
+          <xs:documentation>The reason why the value is deemed to be erroneous by the supplier.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="_dataValueExtension" type="com:_DataValueExtensionType" />
+    </xs:sequence>
+    <xs:attribute name="accuracy" type="com:Percentage" use="optional">
+      <xs:annotation>
+        <xs:documentation>The extent to which the value is expected to be free from error, measured as a percentage of the data value. 100% means fully accurate.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="computationalMethod" type="com:ComputationMethodEnum" use="optional">
+      <xs:annotation>
+        <xs:documentation>Method of computation which has been used to compute this data value.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="numberOfIncompleteInputs" type="com:NonNegativeInteger" use="optional">
+      <xs:annotation>
+        <xs:documentation>The number of inputs detected but not completed during the sampling or measurement period; e.g. vehicles detected entering but not exiting the detection zone.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="numberOfInputValuesUsed" type="com:NonNegativeInteger" use="optional">
+      <xs:annotation>
+        <xs:documentation>The number of input values used in the sampling or measurement period to determine the data value.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="smoothingFactor" type="com:Float" use="optional">
+      <xs:annotation>
+        <xs:documentation>Coefficient required when a moving average is computed to give specific weights to the former average and the new data. A typical formula is, F being the smoothing factor: New average = (old average) F + (new data) (1 - F).</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="standardDeviation" type="com:Float" use="optional">
+      <xs:annotation>
+        <xs:documentation>The standard deviation of the sample of input values from which this value was derived, measured in the units of the data value. </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="supplierCalculatedDataQuality" type="com:Percentage" use="optional">
+      <xs:annotation>
+        <xs:documentation>A measure of data quality assigned to the value by the supplier. 100% equates to ideal/perfect quality. The method of calculation is supplier specific and needs to be agreed between supplier and client.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:simpleType name="DateTime">
+    <xs:annotation>
+      <xs:documentation>A combination of integer-valued year, month, day, hour, minute properties, a decimal-valued second property and a time zone property from which it is possible to determine the local time, the equivalent UTC time and the time zone offset from UTC.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:dateTime" />
+  </xs:simpleType>
+  <xs:simpleType name="Float">
+    <xs:annotation>
+      <xs:documentation>A floating point number whose value space consists of the values m × 2^e, where m is an integer whose absolute value is less than 2^24, and e is an integer between -149 and 104, inclusive.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:float" />
+  </xs:simpleType>
+  <xs:complexType name="GlobalReference" abstract="true">
+    <xs:annotation>
+      <xs:documentation>A versioned reference to an object that may be in another publication from another publisher.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="_globalReferenceExtension" type="com:_ExtensionType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="GrossWeightCharacteristic">
+    <xs:annotation>
+      <xs:documentation>Gross weight characteristic of a vehicle.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="comparisonOperator" type="com:_ComparisonOperatorEnum">
+        <xs:annotation>
+          <xs:documentation>The operator to be used in the vehicle characteristic comparison operation.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="1" maxOccurs="1" name="grossVehicleWeight" type="com:Tonnes">
+        <xs:annotation>
+          <xs:documentation>The gross weight of the vehicle and its load, including any trailers.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="1" maxOccurs="1" name="typeOfWeight" type="com:_WeightTypeEnum">
+        <xs:annotation>
+          <xs:documentation>The meaning of the weight value</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="_grossWeightCharacteristicExtension" type="com:_ExtensionType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="HeaderInformation">
+    <xs:annotation>
+      <xs:documentation>Management information relating to the data contained within a publication.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="confidentiality" type="com:_ConfidentialityValueEnum">
+        <xs:annotation>
+          <xs:documentation>The extent to which the related information may be circulated, according to the recipient type.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="1" maxOccurs="1" name="informationStatus" type="com:_InformationStatusEnum">
+        <xs:annotation>
+          <xs:documentation>The status of the related information (real, test, exercise ....).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="_headerInformationExtension" type="com:_ExtensionType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="HeightCharacteristic">
+    <xs:annotation>
+      <xs:documentation>Height characteristic of a vehicle.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="comparisonOperator" type="com:_ComparisonOperatorEnum">
+        <xs:annotation>
+          <xs:documentation>The operator to be used in the vehicle characteristic comparison operation.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="1" maxOccurs="1" name="vehicleHeight" type="com:MetresAsFloat">
+        <xs:annotation>
+          <xs:documentation>The height of the highest part, excluding antennae, of an individual vehicle above the road surface, in metres.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="_heightCharacteristicExtension" type="com:_ExtensionType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="InformationStatusEnum">
+    <xs:annotation>
+      <xs:documentation>Status of the related information (i.e. real, test or exercise).</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="real">
+        <xs:annotation>
+          <xs:documentation>The information is real. It is not a test or exercise.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="securityExercise">
+        <xs:annotation>
+          <xs:documentation>The information is part of an exercise which is for testing security.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="technicalExercise">
+        <xs:annotation>
+          <xs:documentation>The information is part of an exercise which includes tests of associated technical subsystems.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="test">
+        <xs:annotation>
+          <xs:documentation>The information is part of a test for checking the exchange of this type of information.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="_extended" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="Integer">
+    <xs:annotation>
+      <xs:documentation>An integer number whose value space is the set {-2147483648, -2147483647, -2147483646, ..., -2, -1, 0, 1, 2, ..., 2147483645, 2147483646, 2147483647}.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:integer" />
+  </xs:simpleType>
+  <xs:complexType name="InternationalIdentifier">
+    <xs:annotation>
+      <xs:documentation>An identifier/name whose range is specific to the particular country.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="country" type="com:CountryCode">
+        <xs:annotation>
+          <xs:documentation>EN ISO 3166-1 two-character country code.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="1" maxOccurs="1" name="nationalIdentifier" type="com:String">
+        <xs:annotation>
+          <xs:documentation>Identifier or name unique within the specified country.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="_internationalIdentifierExtension" type="com:_ExtensionType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="KilometresPerHour">
+    <xs:annotation>
+      <xs:documentation>A measure of speed defined in kilometres per hour.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="com:Float" />
+  </xs:simpleType>
+  <xs:simpleType name="Language">
+    <xs:annotation>
+      <xs:documentation>A language datatype, identifies a specified language by an ISO 639-1 2-alpha code.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:language" />
+  </xs:simpleType>
+  <xs:complexType name="LengthCharacteristic">
+    <xs:annotation>
+      <xs:documentation>Length characteristic of a vehicle.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="comparisonOperator" type="com:_ComparisonOperatorEnum">
+        <xs:annotation>
+          <xs:documentation>The operator to be used in the vehicle characteristic comparison operation.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="1" maxOccurs="1" name="vehicleLength" type="com:MetresAsFloat">
+        <xs:annotation>
+          <xs:documentation>The overall distance between the front and back of an individual vehicle, including the length of any trailers, couplings, embedded features etc.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="_lengthCharacteristicExtension" type="com:_ExtensionType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="LoadTypeEnum">
+    <xs:annotation>
+      <xs:documentation>Types of load carried by a vehicle.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="abnormalLoad">
+        <xs:annotation>
+          <xs:documentation>A load that exceeds normal vehicle dimensions in terms of height, length, width, gross vehicle weight or axle weight or any combination of these. Generally termed an "abnormal load".</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="ammunition">
+        <xs:annotation>
+          <xs:documentation>Ammunition.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="chemicals">
+        <xs:annotation>
+          <xs:documentation>Chemicals of unspecified type.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="combustibleMaterials">
+        <xs:annotation>
+          <xs:documentation>Combustible materials of unspecified type.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="corrosiveMaterials">
+        <xs:annotation>
+          <xs:documentation>Corrosive materials of unspecified type.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="debris">
+        <xs:annotation>
+          <xs:documentation>Debris of unspecified type.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="empty">
+        <xs:annotation>
+          <xs:documentation>No load.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="explosiveMaterials">
+        <xs:annotation>
+          <xs:documentation>Explosive materials of unspecified type.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="extraHighLoad">
+        <xs:annotation>
+          <xs:documentation>A load of exceptional height.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="extraLongLoad">
+        <xs:annotation>
+          <xs:documentation>A load of exceptional length.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="extraWideLoad">
+        <xs:annotation>
+          <xs:documentation>A load of exceptional width.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="fuel">
+        <xs:annotation>
+          <xs:documentation>Fuel of unspecified type.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="glass">
+        <xs:annotation>
+          <xs:documentation>Glass.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="goods">
+        <xs:annotation>
+          <xs:documentation>Any goods of a commercial nature.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="hazardousMaterials">
+        <xs:annotation>
+          <xs:documentation>Materials classed as being of a hazardous nature.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="liquid">
+        <xs:annotation>
+          <xs:documentation>Liquid of an unspecified nature.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="livestock">
+        <xs:annotation>
+          <xs:documentation>Livestock.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="materials">
+        <xs:annotation>
+          <xs:documentation>General materials of unspecified type.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="materialsDangerousForPeople">
+        <xs:annotation>
+          <xs:documentation>Materials classed as being of a danger to people or animals.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="materialsDangerousForTheEnvironment">
+        <xs:annotation>
+          <xs:documentation>Materials classed as being potentially dangerous to the environment.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="materialsDangerousForWater">
+        <xs:annotation>
+          <xs:documentation>Materials classed as being dangerous when exposed to water (e.g. materials which may react exothermically with water).</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="oil">
+        <xs:annotation>
+          <xs:documentation>Oil.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="ordinary">
+        <xs:annotation>
+          <xs:documentation>Materials that present limited environmental or health risk. Non-combustible, non-toxic, non-corrosive.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="perishableProducts">
+        <xs:annotation>
+          <xs:documentation>Products or produce that will significantly degrade in quality or freshness over a short period of time.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="petrol">
+        <xs:annotation>
+          <xs:documentation>Petrol or petroleum.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="pharmaceuticalMaterials">
+        <xs:annotation>
+          <xs:documentation>Pharmaceutical materials.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="radioactiveMaterials">
+        <xs:annotation>
+          <xs:documentation>Materials that emit significant quantities of electro-magnetic radiation that may present a risk to people, animals or the environment.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="refrigeratedGoods">
+        <xs:annotation>
+          <xs:documentation>Refrigerated goods.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="refuse">
+        <xs:annotation>
+          <xs:documentation>Refuse.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="toxicMaterials">
+        <xs:annotation>
+          <xs:documentation>Materials of a toxic nature which may damage the environment or endanger public health.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="vehicles">
+        <xs:annotation>
+          <xs:documentation>Vehicles of any type which are being transported.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="other">
+        <xs:annotation>
+          <xs:documentation>Other than as defined in this enumeration.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="_extended" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="LongString">
+    <xs:annotation>
+      <xs:documentation>A character string with no specified length limit, whose value space is the set of finite-length sequences of characters. Every character has a corresponding Universal Character Set code point (as defined in ISO/IEC 10646), which is an integer.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string" />
+  </xs:simpleType>
+  <xs:simpleType name="MetresAsFloat">
+    <xs:annotation>
+      <xs:documentation>A measure of distance defined in metres in a floating point format.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="com:Float" />
+  </xs:simpleType>
+  <xs:simpleType name="MetresAsNonNegativeInteger">
+    <xs:annotation>
+      <xs:documentation>A measure of distance defined in metres in a non negative integer format.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="com:NonNegativeInteger" />
+  </xs:simpleType>
+  <xs:complexType name="MultilingualString">
+    <xs:sequence>
+      <xs:element name="values">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="unbounded" name="value" type="com:MultilingualStringValue" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="MultilingualStringValue">
+    <xs:simpleContent>
+      <xs:extension base="com:MultilingualStringValueType">
+        <xs:attribute name="lang" type="xs:language" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:simpleType name="MultilingualStringValueType">
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="1024" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="NamedArea" abstract="true">
+    <xs:annotation>
+      <xs:documentation>An abstract hook class to hook in a model for a named area.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="_namedAreaExtension" type="com:_ExtensionType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="NonNegativeInteger">
+    <xs:annotation>
+      <xs:documentation>An integer number whose value space is the set {0, 1, 2, ..., 2147483645, 2147483646, 2147483647}.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:nonNegativeInteger" />
+  </xs:simpleType>
+  <xs:complexType name="OverallPeriod">
+    <xs:annotation>
+      <xs:documentation>A continuous or discontinuous period of validity defined by overall bounding start and end times and the possible intersection of valid periods (potentially recurring) with the complement of exception periods (also potentially recurring).</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="overallStartTime" type="com:DateTime">
+        <xs:annotation>
+          <xs:documentation>Start of bounding period of validity defined by date and time.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="1" name="overallEndTime" type="com:DateTime">
+        <xs:annotation>
+          <xs:documentation>End of bounding period of validity defined by date and time.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="validPeriod" type="com:Period">
+        <xs:annotation>
+          <xs:documentation>A single time period, a recurring time period or a set of different recurring time periods during which validity is true.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="_overallPeriodExtension" type="com:_ExtensionType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="PayloadPublication" abstract="true">
+    <xs:annotation>
+      <xs:documentation>A payload publication of traffic related information or associated management information created at a specific point in time that can be exchanged via a DATEX II interface.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="publicationTime" type="com:DateTime">
+        <xs:annotation>
+          <xs:documentation>Date/time at which the payload publication was created.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="publicationCreator" type="com:InternationalIdentifier" />
+      <xs:element minOccurs="0" name="_payloadPublicationExtension" type="com:_ExtensionType" />
+    </xs:sequence>
+    <xs:attribute name="lang" type="com:Language" use="required">
+      <xs:annotation>
+        <xs:documentation>The default language used throughout the payload publication.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute fixed="3" name="modelBaseVersion" type="xs:string" use="required" />
+    <xs:attribute name="extensionName" type="xs:string" use="optional" />
+    <xs:attribute name="extensionVersion" type="xs:string" use="optional" />
+    <xs:attribute name="profileName" type="xs:string" use="optional" />
+    <xs:attribute name="profileVersion" type="xs:string" use="optional" />
+  </xs:complexType>
+  <xs:simpleType name="Percentage">
+    <xs:annotation>
+      <xs:documentation>A measure of percentage.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="com:Float" />
+  </xs:simpleType>
+  <xs:complexType name="Period">
+    <xs:annotation>
+      <xs:documentation>A continuous time period or a set of discontinuous time periods defined by the intersection of a set of criteria all within an overall delimiting interval.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="startOfPeriod" type="com:DateTime">
+        <xs:annotation>
+          <xs:documentation>Start of period.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="1" name="endOfPeriod" type="com:DateTime">
+        <xs:annotation>
+          <xs:documentation>End of a period.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="recurringTimePeriodOfDay" type="com:TimePeriodOfDay">
+        <xs:annotation>
+          <xs:documentation>A recurring period of a day.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="_periodExtension" type="com:_ExtensionType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="PublicEventTypeEnum">
+    <xs:annotation>
+      <xs:documentation>Types of public events.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="agriculturalShow">
+        <xs:annotation>
+          <xs:documentation>Agricultural show or event which could disrupt traffic.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="airShow">
+        <xs:annotation>
+          <xs:documentation>Air show or other aeronautical event which could disrupt traffic.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="artEvent">
+        <xs:annotation>
+          <xs:documentation>Art event</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="athleticsMeeting">
+        <xs:annotation>
+          <xs:documentation>Athletics event that could disrupt traffic.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="commercialEvent">
+        <xs:annotation>
+          <xs:documentation>Commercial event which could disrupt traffic.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="culturalEvent">
+        <xs:annotation>
+          <xs:documentation>Cultural event which could disrupt traffic.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="ballGame">
+        <xs:annotation>
+          <xs:documentation>Ball game event that could disrupt traffic.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="baseballGame">
+        <xs:annotation>
+          <xs:documentation>Baseball game event that could disrupt traffic.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="basketballGame">
+        <xs:annotation>
+          <xs:documentation>Basketball game event that could disrupt traffic.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="beerFestival">
+        <xs:annotation>
+          <xs:documentation>Beer festival</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="bicycleRace">
+        <xs:annotation>
+          <xs:documentation>Bicycle race that could disrupt traffic.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="boatRace">
+        <xs:annotation>
+          <xs:documentation>Regatta (boat race event of sailing, powerboat or rowing) that could disrupt traffic.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="boatShow">
+        <xs:annotation>
+          <xs:documentation>Boat show which could disrupt traffic.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="boxingTournament">
+        <xs:annotation>
+          <xs:documentation>Boxing event that could disrupt traffic.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="bullFight">
+        <xs:annotation>
+          <xs:documentation>Bull fighting event that could disrupt traffic.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="ceremonialEvent">
+        <xs:annotation>
+          <xs:documentation>Formal or religious act, rite or ceremony that could disrupt traffic.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="concert">
+        <xs:annotation>
+          <xs:documentation>Concert event that could disrupt traffic.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="cricketMatch">
+        <xs:annotation>
+          <xs:documentation>Cricket match that could disrupt traffic.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="exhibition">
+        <xs:annotation>
+          <xs:documentation>Major display or trade show which could disrupt traffic.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="fair">
+        <xs:annotation>
+          <xs:documentation>Periodic (e.g. annual), often traditional, gathering for entertainment or trade promotion, which could disrupt traffic.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="festival">
+        <xs:annotation>
+          <xs:documentation>Celebratory event or series of events which could disrupt traffic.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="filmFestival">
+        <xs:annotation>
+          <xs:documentation>Film festival</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="filmTVMaking">
+        <xs:annotation>
+          <xs:documentation>Film or TV making event which could disrupt traffic.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="fireworkDisplay">
+        <xs:annotation>
+          <xs:documentation>Firework display</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="flowerEvent">
+        <xs:annotation>
+          <xs:documentation>Flower event</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="foodFestival">
+        <xs:annotation>
+          <xs:documentation>Food festival</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="footballMatch">
+        <xs:annotation>
+          <xs:documentation>Football match that could disrupt traffic.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="funfair">
+        <xs:annotation>
+          <xs:documentation>Periodic (e.g. annual), often traditional, gathering for entertainment, which could disrupt traffic.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="gardeningOrFlowerShow">
+        <xs:annotation>
+          <xs:documentation>Gardening and/or flower show or event which could disrupt traffic.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="golfTournament">
+        <xs:annotation>
+          <xs:documentation>Golf tournament event that could disrupt traffic.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="hockeyGame">
+        <xs:annotation>
+          <xs:documentation>Hockey game event that could disrupt traffic.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="horseRaceMeeting">
+        <xs:annotation>
+          <xs:documentation>Horse race meeting that could disrupt traffic.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="internationalSportsMeeting">
+        <xs:annotation>
+          <xs:documentation>Large sporting event of an international nature that could disrupt traffic.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="majorEvent">
+        <xs:annotation>
+          <xs:documentation>Significant organised event either on or near the roadway which could disrupt traffic.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="marathon">
+        <xs:annotation>
+          <xs:documentation>Marathon, cross-country or road running event that could disrupt traffic.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="market">
+        <xs:annotation>
+          <xs:documentation>Periodic (e.g. weekly) gathering for buying and selling, which could disrupt traffic.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="match">
+        <xs:annotation>
+          <xs:documentation>Sports match of unspecified type that could disrupt traffic.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="motorShow">
+        <xs:annotation>
+          <xs:documentation>Motor show which could disrupt traffic.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="motorSportRaceMeeting">
+        <xs:annotation>
+          <xs:documentation>Motor sport race meeting that could disrupt traffic.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="openAirConcert">
+        <xs:annotation>
+          <xs:documentation>Open air concert</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="parade">
+        <xs:annotation>
+          <xs:documentation>Formal display or organised procession which could disrupt traffic.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="procession">
+        <xs:annotation>
+          <xs:documentation>An organised procession which could disrupt traffic.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="raceMeeting">
+        <xs:annotation>
+          <xs:documentation>Race meeting (other than horse or motor sport) that could disrupt traffic.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="rugbyMatch">
+        <xs:annotation>
+          <xs:documentation>Rugby match that could disrupt traffic.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="severalMajorEvents">
+        <xs:annotation>
+          <xs:documentation>A series of significant organised events either on or near the roadway which could disrupt traffic.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="show">
+        <xs:annotation>
+          <xs:documentation>Entertainment event that could disrupt traffic.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="showJumping">
+        <xs:annotation>
+          <xs:documentation>Horse showing jumping and tournament event that could disrupt traffic.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="soundAndLightShow">
+        <xs:annotation>
+          <xs:documentation>Sound and light show.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="sportsMeeting">
+        <xs:annotation>
+          <xs:documentation>Sports event of unspecified type that could disrupt traffic.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="stateOccasion">
+        <xs:annotation>
+          <xs:documentation>Public ceremony or visit of national or international significance which could disrupt traffic.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="streetFestival">
+        <xs:annotation>
+          <xs:documentation>Street festival</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="tennisTournament">
+        <xs:annotation>
+          <xs:documentation>Tennis tournament that could disrupt traffic.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="theatricalEvent">
+        <xs:annotation>
+          <xs:documentation>Theatrical event</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="tournament">
+        <xs:annotation>
+          <xs:documentation>Sporting event or series of events of unspecified type lasting more than one day which could disrupt traffic.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="tradeFair">
+        <xs:annotation>
+          <xs:documentation>A periodic (e.g. annual), often traditional, gathering for trade promotion, which could disrupt traffic.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="waterSportsMeeting">
+        <xs:annotation>
+          <xs:documentation>Water sports meeting that could disrupt traffic.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="wineFestival">
+        <xs:annotation>
+          <xs:documentation>Wine festival</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="winterSportsMeeting">
+        <xs:annotation>
+          <xs:documentation>Winter sports meeting or event (e.g. skiing, ski jumping, skating) that could disrupt traffic.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="unknown">
+        <xs:annotation>
+          <xs:documentation>Service provider does not know at time of message generation.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="other">
+        <xs:annotation>
+          <xs:documentation>Other than as defined in this enumeration.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="_extended" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="Reference">
+    <xs:attribute name="id" type="xs:string" use="required" />
+  </xs:complexType>
+  <xs:complexType name="Source">
+    <xs:annotation>
+      <xs:documentation>Details of the source from which the information was obtained.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="sourceIdentification" type="com:String">
+        <xs:annotation>
+          <xs:documentation>Language independent textual code or identifier for the organisation or the equipment that has produced the information.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="1" name="sourceName" type="com:MultilingualString">
+        <xs:annotation>
+          <xs:documentation>The name of the organisation which has produced the information relating to this version of the information.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="1" name="sourceType" type="com:_SourceTypeEnum">
+        <xs:annotation>
+          <xs:documentation>Information about the technology used for measuring the data or the method used for obtaining qualitative descriptions relating to this version of the information.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="_sourceExtension" type="com:_ExtensionType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="SourceTypeEnum">
+    <xs:annotation>
+      <xs:documentation>Type of sources from which situation information may be derived.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="automobileClubPatrol">
+        <xs:annotation>
+          <xs:documentation>A patrol of an automobile club.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="cameraObservation">
+        <xs:annotation>
+          <xs:documentation>A camera observation (either still or video camera).</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="freightVehicleOperator">
+        <xs:annotation>
+          <xs:documentation>An operator of freight vehicles.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="inductionLoopMonitoringStation">
+        <xs:annotation>
+          <xs:documentation>A station dedicated to the monitoring of the road network by processing inductive loop information.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="infraredMonitoringStation">
+        <xs:annotation>
+          <xs:documentation>A station dedicated to the monitoring of the road network by processing infrared image information.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="microwaveMonitoringStation">
+        <xs:annotation>
+          <xs:documentation>A station dedicated to the monitoring of the road network by processing microwave information.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="mobileTelephoneCaller">
+        <xs:annotation>
+          <xs:documentation>A caller using a mobile telephone (who may be or not on the road network).</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="nonPoliceEmergencyServicePatrol">
+        <xs:annotation>
+          <xs:documentation>Emergency service patrols other than police.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="otherInformation">
+        <xs:annotation>
+          <xs:documentation>Other sources of information.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="otherOfficialVehicle">
+        <xs:annotation>
+          <xs:documentation>Personnel from a vehicle belonging to the road operator or authority or any emergency service, including authorised breakdown service organisations.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="policePatrol">
+        <xs:annotation>
+          <xs:documentation>A police patrol.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="privateBreakdownService">
+        <xs:annotation>
+          <xs:documentation>A private breakdown service.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="publicAndPrivateUtilities">
+        <xs:annotation>
+          <xs:documentation>A utility organisation, either public or private.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="registeredMotoristObserver">
+        <xs:annotation>
+          <xs:documentation>A motorist who is an officially registered observer.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="roadAuthorities">
+        <xs:annotation>
+          <xs:documentation>A road authority.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="roadOperatorPatrol">
+        <xs:annotation>
+          <xs:documentation>A patrol of the road operator or authority.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="roadsideTelephoneCaller">
+        <xs:annotation>
+          <xs:documentation>A caller who is using an emergency roadside telephone.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="spotterAircraft">
+        <xs:annotation>
+          <xs:documentation>A spotter aircraft of an organisation specifically assigned to the monitoring of the traffic network.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="trafficMonitoringStation">
+        <xs:annotation>
+          <xs:documentation>A station, usually automatic, dedicated to the monitoring of the road network.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="transitOperator">
+        <xs:annotation>
+          <xs:documentation>An operator of a transit service, e.g. bus link operator.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="vehicleProbeMeasurement">
+        <xs:annotation>
+          <xs:documentation>A specially equipped vehicle used to provide measurements.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="videoProcessingMonitoringStation">
+        <xs:annotation>
+          <xs:documentation>A station dedicated to the monitoring of the road network by processing video image information.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="_extended" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="String">
+    <xs:annotation>
+      <xs:documentation>A character string whose value space is the set of finite-length sequences of characters. Every character has a corresponding Universal Character Set code point (as defined in ISO/IEC 10646), which is an integer.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="1024" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="Time">
+    <xs:annotation>
+      <xs:documentation>An instant of time that recurs every day. The value space of time is the space of time of day values as defined in § 5.3 of [ISO 8601]. Specifically, it is a set of zero-duration daily time instances.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:time" />
+  </xs:simpleType>
+  <xs:complexType name="TimePeriodOfDay">
+    <xs:annotation>
+      <xs:documentation>Specification of a continuous period of time within a 24 hour period.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="startTimeOfPeriod" type="com:Time">
+        <xs:annotation>
+          <xs:documentation>Start of time period.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="1" maxOccurs="1" name="endTimeOfPeriod" type="com:Time">
+        <xs:annotation>
+          <xs:documentation>End of time period.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="_timePeriodOfDayExtension" type="com:_ExtensionType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="Tonnes">
+    <xs:annotation>
+      <xs:documentation>A measure of weight defined in metric tonnes.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="com:Float" />
+  </xs:simpleType>
+  <xs:simpleType name="TrafficTrendTypeEnum">
+    <xs:annotation>
+      <xs:documentation>List of terms used to describe the trend in traffic conditions.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="trafficBuildingUp">
+        <xs:annotation>
+          <xs:documentation>Traffic conditions are changing from free-flow to heavy or slow service levels.  Queues may also be expected.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="trafficEasing">
+        <xs:annotation>
+          <xs:documentation>Traffic conditions are changing from heavy or slow service levels to free-flow.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="trafficStable">
+        <xs:annotation>
+          <xs:documentation>Traffic conditions are currently stable.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="unknown">
+        <xs:annotation>
+          <xs:documentation>The trend of traffic conditions is currently unknown.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="_extended" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="Url">
+    <xs:annotation>
+      <xs:documentation>A Uniform Resource Locator (URL) address comprising a compact string of characters for a resource available on the Internet.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:anyURI" />
+  </xs:simpleType>
+  <xs:complexType name="UrlLink">
+    <xs:annotation>
+      <xs:documentation>Details of a Uniform Resource Locator (URL) address pointing to a resource available on the Internet from where further relevant information may be obtained.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="urlLinkAddress" type="com:Url">
+        <xs:annotation>
+          <xs:documentation>A Uniform Resource Locator (URL) address pointing to a resource available on the Internet from where further relevant information may be obtained.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="1" name="urlLinkDescription" type="com:MultilingualString">
+        <xs:annotation>
+          <xs:documentation>Description of the relevant information available on the Internet from the URL link.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="1" name="urlLinkType" type="com:_UrlLinkTypeEnum">
+        <xs:annotation>
+          <xs:documentation>Details of the type of relevant information available on the Internet from the URL link.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="_urlLinkExtension" type="com:_ExtensionType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="UrlLinkTypeEnum">
+    <xs:annotation>
+      <xs:documentation>Types of URL links.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="documentPdf">
+        <xs:annotation>
+          <xs:documentation>URL link to a pdf document.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="html">
+        <xs:annotation>
+          <xs:documentation>URL link to an html page.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="image">
+        <xs:annotation>
+          <xs:documentation>URL link to an image.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="rss">
+        <xs:annotation>
+          <xs:documentation>URL link to an RSS feed.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="videoStream">
+        <xs:annotation>
+          <xs:documentation>URL link to a video stream.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="voiceStream">
+        <xs:annotation>
+          <xs:documentation>URL link to a voice stream.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="other">
+        <xs:annotation>
+          <xs:documentation>Other than as defined in this enumeration.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="_extended" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="Validity">
+    <xs:annotation>
+      <xs:documentation>Specification of validity, either explicitly or by a validity time period specification which may be discontinuous.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="validityStatus" type="com:_ValidityStatusEnum">
+        <xs:annotation>
+          <xs:documentation>Specification of validity, either explicitly overriding the validity time specification or confirming it.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="validityTimeSpecification" type="com:OverallPeriod">
+        <xs:annotation>
+          <xs:documentation>A specification of periods of validity defined by overall bounding start and end times and the possible intersection of valid periods with exception periods (exception periods overriding valid periods).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="_validityExtension" type="com:_ExtensionType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="ValidityStatusEnum">
+    <xs:annotation>
+      <xs:documentation>Values of validity status that can be assigned to a described event, action or item.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="active">
+        <xs:annotation>
+          <xs:documentation>The described event, action or item is currently active regardless of the definition of the validity time specification.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="planned">
+        <xs:annotation>
+          <xs:documentation>The described event, action or item is currently planned regardless of the definition of the validity time specification.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="suspended">
+        <xs:annotation>
+          <xs:documentation>The described event, action or item is currently suspended, that is inactive, regardless of the definition of the validity time specification.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="definedByValidityTimeSpec">
+        <xs:annotation>
+          <xs:documentation>The validity status of the described event, action or item is in accordance with the definition of the validity time specification.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="_extended" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="Vehicle">
+    <xs:annotation>
+      <xs:documentation>Details of an individual vehicle.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="vehicleCharacteristics" type="com:VehicleCharacteristics" />
+      <xs:element minOccurs="0" name="_vehicleExtension" type="com:_ExtensionType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="VehicleCharacteristics">
+    <xs:annotation>
+      <xs:documentation>The characteristics of a vehicle, e.g. lorry of gross weight greater than 30 tonnes.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="loadType" type="com:_LoadTypeEnum">
+        <xs:annotation>
+          <xs:documentation>The type of load carried by the vehicle, especially in respect of hazardous loads.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="vehicleType" type="com:_VehicleTypeEnum">
+        <xs:annotation>
+          <xs:documentation>Vehicle type.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="2" name="grossWeightCharacteristic" type="com:GrossWeightCharacteristic" />
+      <xs:element minOccurs="0" maxOccurs="2" name="heightCharacteristic" type="com:HeightCharacteristic" />
+      <xs:element minOccurs="0" maxOccurs="2" name="lengthCharacteristic" type="com:LengthCharacteristic" />
+      <xs:element minOccurs="0" maxOccurs="2" name="widthCharacteristic" type="com:WidthCharacteristic" />
+      <xs:element minOccurs="0" name="_vehicleCharacteristicsExtension" type="com:_ExtensionType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="VehicleTypeEnum">
+    <xs:annotation>
+      <xs:documentation>Types of vehicle.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="agriculturalVehicle">
+        <xs:annotation>
+          <xs:documentation>Vehicle normally used for agricultural purposes, e.g. tractor, combined harvester etc.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="anyVehicle">
+        <xs:annotation>
+          <xs:documentation>Vehicle of any type.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="articulatedBus">
+        <xs:annotation>
+          <xs:documentation>Articulated bus</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="articulatedTrolleyBus">
+        <xs:annotation>
+          <xs:documentation>Articulated trolley bus</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="articulatedVehicle">
+        <xs:annotation>
+          <xs:documentation>Articulated vehicle.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="bicycle">
+        <xs:annotation>
+          <xs:documentation>Bicycle.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="bus">
+        <xs:annotation>
+          <xs:documentation>Bus.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="car">
+        <xs:annotation>
+          <xs:documentation>Vehicles designed and constructed for the carriage of passengers and comprising no more than eight seats in addition to the driver’s seat, and having a maximum mass (“technically permissible maximum laden mass”) not exceeding 3.5 tons (M1).</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="caravan">
+        <xs:annotation>
+          <xs:documentation>Caravan.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="carOrLightVehicle">
+        <xs:annotation>
+          <xs:documentation>Car or light vehicle.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="carWithCaravan">
+        <xs:annotation>
+          <xs:documentation>Car towing a caravan.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="carWithTrailer">
+        <xs:annotation>
+          <xs:documentation>Car towing a trailer.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="constructionOrMaintenanceVehicle">
+        <xs:annotation>
+          <xs:documentation>Vehicle normally used for construction or maintenance purposes, e.g. digger, excavator, bulldozer, lorry mounted crane etc.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="fourWheelDrive">
+        <xs:annotation>
+          <xs:documentation>Four wheel drive vehicle.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="heavyGoodsVehicle">
+        <xs:annotation>
+          <xs:documentation>Vehicles with a total weight above 3,500 kg (vehicle and load).</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="heavyGoodsVehicleWithTrailer">
+        <xs:annotation>
+          <xs:documentation>Heavy goods vehicle with trailer</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="heavyDutyTransporter">
+        <xs:annotation>
+          <xs:documentation>A transporter for heavy duty (usually with abnormal dimensions).</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="heavyVehicle">
+        <xs:annotation>
+          <xs:documentation>Vehicle whose weight means it should be classed as a heavy vehicle</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="highSidedVehicle">
+        <xs:annotation>
+          <xs:documentation>High sided vehicle.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="lightCommercialVehicle">
+        <xs:annotation>
+          <xs:documentation>Vehicles for the carriage of goods and having a maximum mass not exceeding 3.5 tonnes (class N1).</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="largeCar">
+        <xs:annotation>
+          <xs:documentation>Large car</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="largeGoodsVehicle">
+        <xs:annotation>
+          <xs:documentation>Vehicles for the carriage of goods and having a maximum mass exceeding 3.5 tonnes (belonging to class N2 when not exceeding 12 tonnes, otherwise class N3).</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="lightCommercialVehicleWithTrailer">
+        <xs:annotation>
+          <xs:documentation>Light goods vehicle with trailer</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="longHeavyLorry">
+        <xs:annotation>
+          <xs:documentation>A heavy lorry that is longer than normal.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="lorry">
+        <xs:annotation>
+          <xs:documentation>Lorry of any type.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="metro">
+        <xs:annotation>
+          <xs:documentation>Metro</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="minibus">
+        <xs:annotation>
+          <xs:documentation>Vehicles designed and constructed for the carriage of passengers, comprising more than eight seats in addition to the driver’s seat, and having a maximum mass not exceeding 5 tonnes (class M2).</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="moped">
+        <xs:annotation>
+          <xs:documentation>Moped (a two wheeled motor vehicle characterized by a small engine typically less than 50cc and by normally having pedals).</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="motorcycle">
+        <xs:annotation>
+          <xs:documentation>Motorcycle.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="motorcycleWithSideCar">
+        <xs:annotation>
+          <xs:documentation>Three wheeled vehicle comprising a motorcycle with an attached side car.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="motorhome">
+        <xs:annotation>
+          <xs:documentation>Motorhome</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="motorscooter">
+        <xs:annotation>
+          <xs:documentation>Motorscooter (a two wheeled motor vehicle characterized by a step-through frame and small diameter wheels).</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="passengerCar">
+        <xs:annotation>
+          <xs:documentation>Passenger car</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="smallCar">
+        <xs:annotation>
+          <xs:documentation>Small car</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="tanker">
+        <xs:annotation>
+          <xs:documentation>Vehicle with large tank for carrying bulk liquids.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="threeWheeledVehicle">
+        <xs:annotation>
+          <xs:documentation>Three wheeled vehicle of unspecified type.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="trailer">
+        <xs:annotation>
+          <xs:documentation>Trailer.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="tram">
+        <xs:annotation>
+          <xs:documentation>Tram.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="trolleyBus">
+        <xs:annotation>
+          <xs:documentation>Trolley bus</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="twoWheeledVehicle">
+        <xs:annotation>
+          <xs:documentation>Two wheeled vehicle of unspecified type.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="van">
+        <xs:annotation>
+          <xs:documentation>Van.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="vehicleWithCaravan">
+        <xs:annotation>
+          <xs:documentation>Vehicle (of unspecified type) towing a caravan.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="vehicleWithCatalyticConverter">
+        <xs:annotation>
+          <xs:documentation>Vehicle with catalytic converter.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="vehicleWithoutCatalyticConverter">
+        <xs:annotation>
+          <xs:documentation>Vehicle without catalytic converter.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="vehicleWithTrailer">
+        <xs:annotation>
+          <xs:documentation>Vehicle (of unspecified type) towing a trailer.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="withEvenNumberedRegistrationPlates">
+        <xs:annotation>
+          <xs:documentation>Vehicle with even numbered registration plate.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="withOddNumberedRegistrationPlates">
+        <xs:annotation>
+          <xs:documentation>Vehicle with odd numbered registration plate.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="unknown">
+        <xs:annotation>
+          <xs:documentation>Unknown.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="other">
+        <xs:annotation>
+          <xs:documentation>Other than as defined in this enumeration.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="_extended" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="VersionedReference">
+    <xs:attribute name="id" type="xs:string" use="required" />
+    <xs:attribute name="version" type="xs:string" use="optional" />
+  </xs:complexType>
+  <xs:simpleType name="WeatherRelatedRoadConditionTypeEnum">
+    <xs:annotation>
+      <xs:documentation>Types of road surface conditions which are related to the weather.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="blackIce">
+        <xs:annotation>
+          <xs:documentation>Severe skid risk due to black ice (i.e. clear ice, which is impossible or very difficult to see).</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="deepSnow">
+        <xs:annotation>
+          <xs:documentation>Deep snow on the roadway.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="dry">
+        <xs:annotation>
+          <xs:documentation>There is no humidity over the sensor.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="freezingOfWetRoads">
+        <xs:annotation>
+          <xs:documentation>The wet road surface is subject to freezing.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="freezingPavements">
+        <xs:annotation>
+          <xs:documentation>The pavements for pedestrians are subject to freezing.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="freezingRain">
+        <xs:annotation>
+          <xs:documentation>Severe skid risk due to rain falling on sub-zero temperature road surface and freezing.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="freshSnow">
+        <xs:annotation>
+          <xs:documentation>Fresh snow (with little or no traffic yet) on the roadway.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="glaze">
+        <xs:annotation>
+          <xs:documentation>Glaze of the road surface.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="ice">
+        <xs:annotation>
+          <xs:documentation>Increased skid risk due to ice (of any kind).</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="iceBuildUp">
+        <xs:annotation>
+          <xs:documentation>Ice is building up on the roadway causing a serious skid hazard.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="iceWithWheelBarTracks">
+        <xs:annotation>
+          <xs:documentation>Ice on the road frozen in the form of wheel tracks.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="icyPatches">
+        <xs:annotation>
+          <xs:documentation>Severe skid risk due to icy patches (i.e. intermittent ice on roadway).</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="looseSnow">
+        <xs:annotation>
+          <xs:documentation>Powdery snow on the road which is subject to being blown by the wind.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="moist">
+        <xs:annotation>
+          <xs:documentation>From (0,01 mm) water film thickness over the sensor</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="normalWinterConditionsForPedestrians">
+        <xs:annotation>
+          <xs:documentation>Conditions for pedestrians are consistent with those normally expected in winter.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="notDry">
+        <xs:annotation>
+          <xs:documentation>The road surface is not dry.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="packedSnow">
+        <xs:annotation>
+          <xs:documentation>Packed snow (heavily trafficked) on the roadway.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="rime">
+        <xs:annotation>
+          <xs:documentation>Fresh snow (with little or no traffic yet) on the roadway.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="roadSurfaceMelting">
+        <xs:annotation>
+          <xs:documentation>The road surface is melting, or has melted due to abnormally high temperatures.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="slippery">
+        <xs:annotation>
+          <xs:documentation>Detection at least of the presence of partly or wholly solidified aqueous solution over the sensor.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="slushOnRoad">
+        <xs:annotation>
+          <xs:documentation>Increased skid risk due to melting snow (slush) on road.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="slushStrings">
+        <xs:annotation>
+          <xs:documentation>Melting snow (slush) on the roadway is formed into wheel tracks.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="snow">
+        <xs:annotation>
+          <xs:documentation>Fresh snow (with little or no traffic yet) on the roadway.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="snowDrifts">
+        <xs:annotation>
+          <xs:documentation>Snow drifting is in progress or patches of deep snow are present due to earlier drifting.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="snowOnPavement">
+        <xs:annotation>
+          <xs:documentation>Snow is on the pedestrian pavement.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="wetAndIcyRoad">
+        <xs:annotation>
+          <xs:documentation>Increased skid risk due to partly thawed, wet road with packed snow and ice, or rain falling on packed snow and ice.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="snowOnTheRoad">
+        <xs:annotation>
+          <xs:documentation>Snow is lying on the road surface.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="wetIcyPavement">
+        <xs:annotation>
+          <xs:documentation>Partly thawed, wet pedestrian pavement with packed snow and ice, or rain falling on packed snow and ice.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="streamingWater">
+        <xs:annotation>
+          <xs:documentation>From (2 mm) water film thickness over the sensor.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="surfaceWater">
+        <xs:annotation>
+          <xs:documentation>Water is resting on the roadway which provides an increased hazard to vehicles.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="wet">
+        <xs:annotation>
+          <xs:documentation>From (0,2 mm) water film thickness over the sensor</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="other">
+        <xs:annotation>
+          <xs:documentation>Other than as defined in this enumeration.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="_extended" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="WeightTypeEnum">
+    <xs:annotation>
+      <xs:documentation>Type of weight - describing the meaning of a vehicle weight value</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="actual">
+        <xs:annotation>
+          <xs:documentation>The weight is the actual weight of a specific vehicle</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="maximumPermitted">
+        <xs:annotation>
+          <xs:documentation>The weight is the maximum permitted weight for a vehicle</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="_extended" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="WidthCharacteristic">
+    <xs:annotation>
+      <xs:documentation>Width characteristic of a vehicle.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="comparisonOperator" type="com:_ComparisonOperatorEnum">
+        <xs:annotation>
+          <xs:documentation>The operator to be used in the vehicle characteristic comparison operation.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="1" maxOccurs="1" name="vehicleWidth" type="com:MetresAsFloat">
+        <xs:annotation>
+          <xs:documentation>The maximum width of an individual vehicle, including any features embedded or fixed on it, in metres.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="_widthCharacteristicExtension" type="com:_ExtensionType" />
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
