@@ -1,4 +1,4 @@
-**Status:** aktiv (skissad + SEO/AdSense-review 2026-04-29 + live-verifiering + arkitektur-review 2026-05-03; **fas 1-plan klar — redo att implementera**)
+**Status:** aktiv (skissad + SEO/AdSense-review 2026-04-29 + live-verifiering + arkitektur-review + UX/SEO-review 2026-05-03; **fas 1-plan klar — redo att implementera**)
 **Senast uppdaterad:** 2026-05-03
 **Relaterad till:** #40 (Trafikverket STRADA — historisk parallell), #51 (övriga live-källor)
 **XSD-källa:** `docs/Trafikverket/response_Situation_v1.6.xsd` (auktoritativ).
@@ -208,9 +208,13 @@ händer på platsen, inte vem som rapporterat.
 | ----------------------- | ------------------------------------------------------------------------------------------------------------- |
 | `/trafik`               | Trafikverket (alla `MessageType` utom Färjor) + polishändelser där `parsed_title` är trafik-/fordonsrelaterad |
 | `/{lan}/trafik`         | samma men filtrerat på län                                                                                    |
-| `/trafikolyckor`        | Endast olyckor: Trafikverket `MessageType=Olycka` + polishändelser med trafikolycks-relaterad `parsed_title`  |
-| `/{lan}/trafikolyckor`  | samma per län                                                                                                 |
 | `/brand`, `/helikopter` | Oförändrade — ren polishändelse-feed                                                                          |
+
+**`/trafikolyckor` slogs ihop med `/trafik` 2026-05-03 (UX/SEO-review).**
+~70 % query-overlap mellan "trafik {plats}" och "trafikolyckor {plats}" → cannibalisering.
+Användare som vill se bara olyckor får filter: `/trafik?typ=olycka` (eller `#olyckor`-anchor).
+Filter-vyn är `noindex,follow` — ingen separat URL i sitemap. Lyft till egen route bara om
+GSC visar separat sökintent efter 90 d soak.
 
 **Polishändelse-`parsed_title` som räknas som trafik** (filter-set):
 
@@ -246,18 +250,38 @@ URL-equity.
 **Gating-kriterier — alla måste vara klara INNAN `/trafik/olycka/{tv_id}`
 indexeras:**
 
-1. **Källa-attribuering** synlig på sidan: "Källa: Trafikverket" + länk till
-   Trafikverkets `WebLink` (om finns) eller `https://trafikinfo.trafikverket.se/`.
-   Ger E-E-A-T och good-faith mot datakällan.
-2. **Editorial intro-text** på sidan (min 150 ord per incident-typ-mall) —
-   vad är detta, varför visar vi det, vad gör läsaren med info. Annars
-   "limited original content"-flagga från AdSense.
-3. **Schema.org `SpecialAnnouncement`** + `Place` per incident — strukturerad
-   data så Google förstår att detta inte är en NewsArticle.
-4. **Ad-block-flagga** vid `SeverityCode >= 4` ELLER keyword-match på
+1. **AI-rewrite av `Header` är obligatorisk** _(UX/SEO-review)_. Trafikverkets
+   `Header` ("Trafikolycka E4 i höjd med Upplands Väsby") är operativ text,
+   inte sökoptimerad. Använd befintlig laravel/ai-pipeline (Sonnet 4.6 från
+   #28). Få: AI-genererad SEO-titel som `"Trafikolycka E4 Upplands Väsby —
+körfält avstängt 3 maj"`. Bevara Trafikverkets text in-page som blockcitat.
+   **Att pausa rewrite är fel beslut** givet befintligt #36-mönster: CTR är
+   primär ranking-input på pos 7-15-spannet där dessa permalinks landar.
+2. **Per-incident kontextberikning — minst 4 av 5 element måste finnas:**
+   (a) AI-summary av `Message` + `LocationDescriptor` (60–80 ord).
+   (b) "Andra händelser på {RoadNumber}" — list från events-tabellen, samma
+   `road_number`, sorterat på `start_time` desc, max 5.
+   (c) "Polishändelser inom 5 km / 24 h" via befintlig `eventsNearby`-helper —
+   interlink-bonus + lokal kontext.
+   (d) Liten kartbild med marker (befintlig kartbild-pipeline från #20/#55).
+   (e) "Senast uppdaterad {modified_time}" som färskhetssignal.
+   Boilerplate-mall får max 30 % av sidans content (AdSense limited-content-fälla).
+3. **Källa-attribuering inline, ej footer** _(UX/SEO-review)_: "Trafikverket
+   rapporterar:" före `Message`-blockcitat, plus `<cite>Trafikverket</cite>` +
+   permalänk till `WebLink`. Footer-fotnot signalerar "scraped"; inline-byline
+   signalerar redaktionellt val.
+4. **Schema.org `Event`** _(UX/SEO-review — bytt från SpecialAnnouncement)_.
+   `SpecialAnnouncement` är designad för officiella krismeddelanden (COVID etc)
+   med strikt `category`-enum — fel typ för trafikolyckor. Använd `Event` med
+   `eventStatus=EventScheduled`, `location.geo`, `startDate`/`endDate`,
+   `organizer.name="Trafikverket"`. Plus `BreadcrumbList`. `ItemList` på `/trafik`.
+5. **Ad-block-flagga** vid `SeverityCode >= 4` ELLER keyword-match på
    `död|avliden|dödad|allvarlig` i `Header`/`Message`. ~50 % av Deviations
    saknar SeverityCode → keyword-fallback obligatorisk.
-5. **MessageType låses vid first-write.** Om en `Trafikmeddelande · Vägen
+6. **MessageType + county_no låses vid first-write.** Om Trafikverket flippar
+   typ eller county-array-ordning under livstiden: behåll ursprungs-värdena.
+   Annars retroflyttas raden mellan retention-policies / län-aggregat med
+   bibehållen URL. Om en `Trafikmeddelande · Vägen
 avstängd` senare uppgraderas till `Olycka` av Trafikverket: behåll
    ursprungstypen. Annars retroflyttas raden till permalink-rymden mid-life
    och retention-policy ändras med bibehållen URL.
@@ -368,7 +392,8 @@ CREATE TABLE events (
   message TEXT NULL,
   location_descriptor TEXT NULL,
   road_number VARCHAR(32) NULL,               -- 'E4', '73'
-  county_no SMALLINT NULL,                    -- första/primära värdet från CountyNo[]; 2 mappas till 1; 0/0 ignoreras
+  county_no SMALLINT NULL,                    -- LÅSES vid first-write (samma princip som message_type). Första värdet från CountyNo[];
+                                              -- 2 mappas till 1; 0 ignoreras (rikstäckande poster). Multi-county: se event_counties nedan.
   administrative_area_level_1 VARCHAR(64) NULL, -- 'Stockholms län' — derived från county_no
   lat DECIMAL(10,7) NOT NULL,
   lng DECIMAL(10,7) NOT NULL,
@@ -406,10 +431,29 @@ Migration kan lägga till kolumner senare när konkret use case finns.
 
 **CountyNo-edge case (review 2026-05-03):** XSD säger `<xs:element maxOccurs="unbounded">` —
 gränsöverskridande situations (t.ex. E4 över Stockholm/Uppsala län) ger
-`CountyNo: [1, 3]`. Vårt schema tar första värdet i `county_no`-kolumnen,
-hela arrayen lagras i `payload.CountyNo`. `2 → 1` (deprecated länkkod).
-**Verifiera mot live-data innan migration deployas** — om gränsöverskridande
-visar sig vanligt, lyft till separat `event_counties`-tabell.
+`CountyNo: [1, 3]`. UX/SEO-reviewen pekar ut två risker: (1) raden visas bara
+i Stockholm-aggregat fast den hör hemma i båda; (2) Trafikverket kan flippa
+ordning `[1, 3] → [3, 1]` mellan fetch:ar → raden byter aggregat retroaktivt.
+
+**Lösning:** separat `event_counties`-join-tabell + `county_no` låst vid first-write.
+
+```sql
+CREATE TABLE event_counties (
+  event_id BIGINT UNSIGNED NOT NULL,
+  county_no SMALLINT NOT NULL,           -- 1-25 (2 mappad till 1), 0 ignoreras
+  PRIMARY KEY (event_id, county_no),
+  FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE,
+  KEY idx_county (county_no, event_id)
+);
+```
+
+`events.county_no` (singel-kolumn) = primärt värde, låst vid first-write.
+`event_counties` = alla värden från `CountyNo[]`, kan uppdateras vid UPSERT
+(om Trafikverket lägger till nya län). Aggregat-queries använder JOIN mot
+`event_counties`. Permalink-URL stannar oförändrad oavsett array-byten.
+
+`2 → 1` deprecated-mappning sker innan både `events.county_no` och
+`event_counties.county_no` skrivs.
 
 ### Import-jobb
 
@@ -459,18 +503,128 @@ Aktiva situations (`end_time IS NULL`) sparas oavsett ålder.
 
 ### UI
 
-- **Egen Leaflet-layer** med skild ikon (vägikon i orange/röd) — inte
-  blandat med polishändelse-markers.
-- **Layer toggle** i kart-kontroller: "Trafikhändelser (Trafikverket)".
-- **Default OFF** initialt — ~1245 aktiva Trafikverket-Situations gör
-  kartan stökigare än befintliga användare är vana vid. Toggle synlig
-  och tydlig. Ändra default till PÅ senare om feedback är positiv.
-- **Markercluster är gating, inte nice-to-have.** 1245 markers utan
-  clustering = LCP-tank på mobil + CLS vid layer-toggle. Acceptance-
-  kriterium före layer-toggle aktiveras.
-- **`min-height` på kart-container** fastställd före JS körs (CLS-skydd).
-- **Egen sida `/trafik`** — Fas 2, inte Fas 1. Kräver editorial intro-text
-  före launch (annars AdSense "limited original content").
+#### Layer-toggle på `/karta` — två-nivå (UX-review 2026-05-03)
+
+Befintlig binär toggle täcker inte de tre primärpersona:
+
+- **(a) "Åkte förbi olycka"** — vill se nyligt, bara olyckor.
+- **(b) "Ska köra E4 imorgon"** — vill se framtida vägarbeten.
+- **(c) "Browse"** — vill se vad som händer just nu, alla typer.
+
+**Lösning:** två-nivå-kontroll.
+
+1. Primär toggle: `[ Trafikinfo PÅ/AV ]` i kart-kontroller.
+2. Sekundär checklista (öppnas vid PÅ): `Olyckor`, `Vägarbeten`, `Hinder`,
+   `Trafikmeddelanden`. **Default vid första PÅ:** `Olyckor + Hinder` aktiva
+   (de mest newsworthy). Persona (b) får aktivera Vägarbeten manuellt.
+3. State persisteras i `localStorage` (key: `trafikverket_layer_state`) så
+   återbesökare slipper konfigurera om.
+4. **Default OFF** initialt på sajten. Återbesökare som aktiverar en gång
+   får layer på vid nästa besök via localStorage.
+
+#### Marker-popup-template
+
+Specat explicit för att inte krocka mot polishändelse-popups (annan ton,
+ingen AI-rewrite, annan datatyp).
+
+```
+[Severity-färgad vägikon (32×32)]   <- ersätter bildplatsen i polishändelse-popups
+{Header} (rubrik, AI-rewriten i Fas 3, raw i Fas 1-2)
+{RoadNumber} · {LocationDescriptor (max 80 tecken)}
+{Message (max 2 rader, klippes med …)}
+─────────────────────────────────
+Pågår till {EndTime} (eller "Pågår tills vidare" om NULL)
+Källa: Trafikverket  →  WebLink (om finns)
+```
+
+**Multi-year vägarbete-fix (UX-review):** Om `MessageType=Vägarbete` AND
+`(now - start_time) > 7 dygn`: ersätt klockslag med "Pågår sedan {start_time:date}
+→ {end_time:date}". Annars visas `13:42` som om händelsen hände idag, även när
+vägarbetet startade 2020.
+
+**Intern dedup (UX-review):** Vid `parent_external_id`-grupp (t.ex. Olycka +
+Vägen avstängd på samma punkt): rendera **en marker** med primärtypens ikon
+(prioritet: Olycka > Hinder > Trafikmeddelande > Vägarbete > övrigt).
+Popup-rubrik = primärtypens `Header`. Sub-Deviation rendrad som gul callout
+under: "⚠ Vägen är avstängd". Ingen duplicering, ingen förlorad info.
+
+#### Markercluster + mobile-prestanda
+
+Markercluster är **gating**, inte nice-to-have. 1245 markers utan clustering
+= LCP-tank på mobil (70 % av trafiken).
+
+- `maxClusterRadius`: höj från befintliga `10` → `40-60` vid `zoom < 9` när
+  Trafikverket-layer ON. Befintligt värde är för lågt — clusters bildas
+  inte aggressivt nog vid låg zoom.
+- Separata cluster-grupper per source (Polisen / Trafikverket) men dela
+  `maxClusterRadius`-policy.
+- **Bbox-lazy-load:** hämta bara markers inom synligt fönster + 50 % buffert
+  (1245 → ~50–200 typiska för Stockholms län vid default zoom). Fetch fler
+  vid pan-event.
+- **CLS-skydd:** skeleton-loader inom kart-container vid layer-toggle, inte
+  layout-shift utanför kartan. `min-height` fastställd före JS körs.
+- Acceptance-test: simulera mobil viewport (375×667) på `/karta` med
+  Stockholm-bbox + Trafikverket-layer ON → ≥ 32 px tappable markers vid
+  default zoom.
+
+#### Source-discovery för befintliga besökare
+
+UX-review: ~12 års befintliga besökare upptäcker aldrig Trafikverket-data om
+inget signaleras.
+
+- **Engångs-tooltip på layer-toggle första besöket:** "Nytt: trafikinfo från
+  Trafikverket — slå på för att se vägarbeten och olyckor i realtid." Stängs
+  vid klick, persisteras i localStorage.
+- **Header-länk** under "Händelser" → "Trafik" (när `/trafik`-sidan launchas
+  i Fas 2).
+- **Textbadge på `/karta`** när Trafikverket-layer är OFF: "Trafikinfo dold
+  ({n} händelser) — klicka för att visa". Diskret, nere på kartan.
+
+#### `/trafik`-sidan (Fas 2)
+
+**Lista-först, inte karta-först** (UX-review). Befintliga kategori-aggregat
+(`/brand`) är listor utan karta. Att göra `/trafik` till karta-först = nästan-
+duplikat av `/karta?layer=trafik`, både SEO-cannibalisering (samma URL-cluster
+som `/karta`) och UX-förvirring.
+
+- Mall: spegla `brand.blade.php` (lista först, ev. liten passiv karta 300px
+  ovanför).
+- Användare som vill ha kart-vy: "Visa på stor karta" → `/karta?layer=trafik`.
+- `/trafik?typ=olycka` (filter, `noindex,follow`) för bara-olyckor-vy.
+- Vägarbete default-foldat bakom "Visa pågående vägarbeten"-CTA. Aggregatet
+  visar default `MessageType IN (Olycka, Hinder, Trafikmeddelande)`.
+
+**0-event-fallback** (UX-review): När aktiva < 3 i ett län → visa de senaste
+10 utgångna events från senaste 7 dygnen ("Senast rapporterade händelser") +
+länk till länets polishändelser. Tomma sidor signalerar "trasig sajt" mer
+än "lugn trafik".
+
+#### List-item-komponenter — source-distinction
+
+UX-review: polishändelse vs Trafikverket-rad i samma `<x-crimeevent.list-item>`
+förlorar provenance. Använd två komponenter:
+
+- `<x-crimeevent.list-item>` — orörd.
+- `<x-trafikinfo.list-item>` — egen visuell signatur:
+    - Vänsterkant orange (vs polisens blå).
+    - Liten "Trafikverket"-badge inline.
+    - Ingen avatar/bild — ersätt med severity-färgad vägikon.
+    - Inline-attribution: "Trafikverket rapporterar:" före `Message`.
+
+Mixad lista renderas via Blade-components, source är ögonblickligen tydlig.
+
+#### Stadssidor — selektiv inklusion
+
+UX-review: stadssidor (`/stockholm`, `/uppsala`) har redan 7 sektioner.
+Att dumpa 332 Trafikverket-Situations ovanpå = scroll-fatigue, polishändelser
+trycks ner.
+
+- **Stadssidor inkluderar bara `Olycka + Hinder`** från Trafikverket — newsworthy
+  kategorier.
+- `Vägarbete + Trafikmeddelande` länkas separat: "Se aktuella trafikhändelser i
+  {stad}" → `/{stad}/trafik`.
+- Layer-toggle på stadssidornas karta: default OFF även här, samma policy som
+  huvudkartan.
 
 ### API-utbyggnad
 
@@ -831,6 +985,51 @@ Sammanfattning av tagna beslut:
   obligatoriska före indexering.
 - **GDPR regnummer-maskning avskriven** — Trafikverket är myndighet och
   publicerar operativa trafikmeddelanden, inga fordonsidentifierande detaljer.
+
+## UX/SEO-review 2026-05-03 — slutsatser
+
+Två parallella sub-agent-reviews (UX-vinkel + SEO-vinkel) levererade 24
+findings sammantaget. 15 unika teman efter konsolidering. Alla bearbetade
+i denna todo. Sammanfattning av tagna beslut:
+
+**Kritiska (ändringar i sektionerna ovan):**
+
+- **AI-rewrite obligatorisk för permalinks**, ej "pausa initialt". CTR är
+  primär ranking-input på pos 7-15-spannet. Befintlig laravel/ai-pipeline
+  återanvänds.
+- **Per-incident kontextberikning** krävs (AI-summary, samma-väg-events,
+  närliggande polishändelser, kartbild, färskhetsstämpel). Boilerplate
+  max 30 % av sidan.
+- **`/trafikolyckor` slogs ihop med `/trafik`** — cannibalisering. Filter
+  `?typ=olycka` (`noindex,follow`) ersätter separat URL.
+- **Schema.org bytt** `SpecialAnnouncement` → `Event`. Förstnämnd är fel
+  typ-enum (designad för officiella krismeddelanden, inte trafikolyckor).
+- **`/trafik` är lista-först** (mall som `/brand`), ej karta-först — undvik
+  cannibalisering mot `/karta?layer=trafik`.
+- **Två-nivå layer-toggle** med typ-filter. Default vid PÅ: `Olyckor + Hinder`.
+- **Marker-popup-template specat** explicit — multi-year vägarbete får
+  duration-rendering, intern dedup grupperas under primärtypens marker.
+- **Stadssidor inkluderar bara `Olycka + Hinder`** från Trafikverket.
+- **Multi-county join-tabell** (`event_counties`) + `county_no` låst vid
+  first-write. Gränsöverskridande situations visas i båda läns-aggregat.
+
+**Viktiga (Fas 2/3-detaljer):**
+
+- **Sitemap egen fil** + soft-deindex 7d innan 410 — undviker sitemap-trust-
+  förlust.
+- **Två-tröskel rollback** (lokal pos < 25 på 30d, domän CTR < 8 % regression
+  veckovis).
+- **Lift-prioritering** efter search demand × volym (Sthlm/VG/Skåne först).
+- **Lift-checklist** för att tvinga reindex efter `noindex` lyfts.
+- **Vägarbete default-foldat** i aggregat — 65 % volym, 0 newsworthy.
+- **Markercluster + bbox-lazy-load** är gating, inte nice-to-have.
+  `maxClusterRadius` höjs från 10 → 40-60 vid zoom < 9.
+- **Two-list-item-komponenter** för source-distinction (vänsterkant orange
+  vs polisens blå).
+- **Source-discovery** via header-länk + engångs-tooltip + textbadge på
+  `/karta`.
+- **0-event-fallback**: när < 3 aktiva i ett län → visa utgångna 7d.
+- **Inline-attribution** ("Trafikverket rapporterar:") — ej footer-fotnot.
 - **Fas-uppdelning** — minimal Fas 1 → aggregat Fas 2 → permalinks Fas 3,
   med mätbara gates emellan.
 
@@ -867,9 +1066,10 @@ Inga nya routes, inga permalinks, ingen `/trafik`-sida.
 
 ### Fas 2 — aggregat-sidor (1–2 dagar, efter gate)
 
-**Mål:** `/trafik` + `/{lan}/trafik` + `/trafikolyckor` + `/{lan}/trafikolyckor`
-som aggregat-vyer. Mixar Trafikverket + polishändelser enligt `parsed_title`-
-filter-set.
+**Mål:** `/trafik` + `/{lan}/trafik` som aggregat-vyer (lista-först,
+mall speglar `brand.blade.php`). Mixar Trafikverket + polishändelser
+enligt `parsed_title`-filter-set. Filter `?typ=olycka` (`noindex,follow`)
+ersätter tidigare planerad `/trafikolyckor`-route.
 
 - Routes + controllers.
 - **Editorial intro-text** per sid-typ (min 300 ord på `/trafik`, min 150 ord
@@ -877,7 +1077,17 @@ filter-set.
   till Google.
 - **`noindex` initialt** på alla `/trafik*`-routes. Lyfts manuellt en sida i
   taget när text är granskad.
+- **Lift-prioritering efter search demand × volym** (SEO-review):
+  Sthlm + VG + Skåne först (befintlig auktoritet att hänga på).
+  Norrbotten/Västerbotten sist eller permanent `noindex` — låg söktrafik
+  motiverar inte editorial-investeringen trots hög datavolym.
+- **Lift-checklist** (för att tvinga reindex efter `noindex` lyfts):
+    1. Lägg in i sitemap (egen sitemap-fil — se Fas 3).
+    2. GSC URL-inspektion → "Request Indexing" manuellt.
+    3. Bumpa `Last-Modified` på `/{lan}`-parent så Google återupptäcker länken.
 - Internlänk från `/lan/{lan}` → `/lan/{lan}/trafik`.
+- Vägarbete default-foldat bakom CTA i listan (UX-review: 65 % volym, 0
+  newsworthy → tunnar ut "trafikolycka {plats}"-intent).
 - Auto-hide vid dedup-match aktiveras (om Fas 1-soak motiverar).
 
 **Gate till Fas 3 (4 v efter Fas 2):**
@@ -891,20 +1101,51 @@ filter-set.
 **Mål:** `/trafik/olycka/{tv_id}` indexeras med 90d retention sedan 410.
 
 - Permalinks rendrar `Olycka`-rader från events-tabellen.
-- Schema.org `SpecialAnnouncement` + `Place`.
-- Källa-attribuering ("Källa: Trafikverket" + `WebLink`).
+- **AI-rewrite av `Header` obligatorisk** via befintlig laravel/ai-pipeline
+  (Sonnet 4.6 från #28). Trafikverkets raw-text är operativ, inte sökoptimerad
+  — pos 7-15-spannet kräver CTR-optimerad titel (samma princip som #36 visat).
+- **Per-incident kontextberikning** (4 av 5 element obligatoriska):
+  AI-summary 60-80 ord, "Andra händelser på {RoadNumber}", "Polishändelser
+  inom 5 km / 24 h" via `eventsNearby`, kartbild, "Senast uppdaterad"-tid.
+  Boilerplate-mall max 30 % av sidan (AdSense limited-content-fälla).
+- Schema.org `Event` (ej `SpecialAnnouncement` — fel typ-enum) + `BreadcrumbList`.
+- Källa-attribuering inline ("Trafikverket rapporterar:" + `<cite>` +
+  permalänk till `WebLink`).
 - Ad-block-flagga vid `SeverityCode >= 4` ELLER keyword-match på
   `död|avliden|dödad|allvarlig`.
-- Sitemap-utbyggnad — endast aktiva permalinks listas.
-- 410-strategi: pruning-jobbet skickar `Status: 410 Gone` på utgångna IDs
-  (ej 404) så Google avindexerar snabbare.
 
-**90-dagars mätperiod efter Fas 3:**
+**Sitemap-strategi — egen fil med soft-deindex-period (SEO-review):**
 
-- Aggregat: visar permalinks rankning.
-- Domänbetyg: ingen regression i GSC-aggregat.
-- AdSense RPM/CPM på `/trafik/olycka/*` jämfört med domänsnitt — om < 50 % är
-  innehållet för tunt; överväg `noindex` eller avveckla.
+`sitemap-trafik-olycka-current.xml` regenereras varje cron-tick:
+
+```xml
+<url>
+  <loc>https://brottsplatskartan.se/trafik/olycka/{tv_id}</loc>
+  <lastmod>{modified_time}</lastmod>
+  <changefreq>hourly</changefreq>
+</url>
+```
+
+- Max 500 URL:er i filen (steady state förväntat).
+- **Soft-deindex 7 d innan 410:** pruning-jobbet sätter `is_indexable=false`
+  7 d före `EndTime`. Sidan returnerar fortfarande 200 OK med `<meta name="robots"
+content="noindex">`, tas bort från sitemap. Google avindexerar via
+  sitemap-bortfall först — undviker att bygga "killed pages"-record i GSC.
+- **410 efter 90 d retention:** ren `Status: 410 Gone` på utgångna IDs.
+
+Att dumpa 410:s direkt i en sitemap-bas devaluerar hela sitemap-trust:en.
+Vi har redan 21 600 noindex-sidor från #29; en till sitemap-fil med dåligt
+track-record är svårt att reparera.
+
+**Två-tröskel-rollback (SEO-review):**
+
+- **Lokal (30 d):** nya `/trafik/olycka/*`-URLs ska nå `avg position < 25`.
+  Om inte → `noindex` på det subset av rader. Tracka via `mcp__mcp-gsc__get_search_analytics`.
+- **Domän (veckovis):** top-100-URL CTR får inte falla > 8 % från 30 d-baseline.
+  Tracka via `mcp__mcp-gsc__compare_search_periods`. Tidig rollback billigare
+  än sen — domänsignal-skada tar 6+ mån att reparera.
+- AdSense: RPM/CPM på `/trafik/olycka/*` jämfört med domänsnitt; om < 50 % →
+  innehållet för tunt → överväg `noindex` eller avveckla.
 
 ## Inte i scope
 
