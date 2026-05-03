@@ -163,6 +163,9 @@
                     data-events-map-location="{{ $locationFilter }}"
                     data-events-map-location-type="{{ $locationType }}"
                 @endif
+                @if($mapSize === 'fullscreen')
+                    data-events-map-trafikverket="1"
+                @endif
                 >Laddar karta...</div>
         </div>
     </div>

@@ -64,4 +64,10 @@ return [
         'pilot' => env('MONTHLY_VIEWS_PILOT', ''),
     ],
 
+    'trafikverket' => [
+        // Trafikverket Trafikinformation API (todo #50). CC0-licens, gratis,
+        // registrera nyckel: https://data.trafikverket.se/oauth2/Account/register
+        'api_key' => env('TRAFIKVERKET_API_KEY', ''),
+    ],
+
 ];

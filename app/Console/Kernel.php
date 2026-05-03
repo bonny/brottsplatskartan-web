@@ -23,6 +23,18 @@ class Kernel extends ConsoleKernel
             ->cron('*/12 * * * *')
             ->withoutOverlapping();
 
+        // Trafikverket Trafikinformation (todo #50, Fas 1).
+        // 5 min matchar crimeevents:fetch — olyckor varar 1-2h, ingen UX-vinst
+        // i tightare schedule. Backoff-strategi i kommandot hanterar 429/5xx.
+        $schedule->command('trafikverket:fetch')
+            ->everyFiveMinutes()
+            ->withoutOverlapping()
+            ->name('trafikverket-fetch');
+
+        $schedule->command('trafikverket:prune')
+            ->dailyAt('03:30')
+            ->name('trafikverket-prune');
+
         // Kolla uppdateringar för befintliga händelser (tidigare host-cron, */33 * * * *).
         $schedule->command('crimeevents:checkForUpdates')
             ->cron('*/33 * * * *')

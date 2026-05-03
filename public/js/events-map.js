@@ -330,6 +330,13 @@ class EventsMap {
         this.map.on("load", () => {
             this.loadMarkers();
 
+            // Trafikverket-layer (todo #50, Fas 1). Aktiveras via attribut på
+            // .EventsMap-elementet — bara på fullscreen-kartan tills vi vet
+            // att UX håller. Default OFF, opt-in via layer-toggle.
+            if (this.options.enableTrafikverket) {
+                this.initTrafikverketLayer();
+            }
+
             // Map is "disabled" by default, no interaction because elements are on top of it.
             let parentElement = this.mapContainer.closest(
                 ".EventsMap__container"
@@ -438,6 +445,114 @@ class EventsMap {
             })
             .addTo(map);
     }
+
+    /**
+     * Trafikverket layer-toggle (todo #50, Fas 1).
+     * Lazy-load: fetchar bara när användaren slår på togglen första gången.
+     * State persisteras i localStorage så återbesökare slipper konfigurera om.
+     */
+    initTrafikverketLayer() {
+        // Egen cluster-grupp med större maxClusterRadius — 1245 markers
+        // utan aggressiv clustering blir oklickbart på mobil (UX-review).
+        this.trafikverketGroup = L.markerClusterGroup({
+            maxClusterRadius: 50,
+            iconCreateFunction: (cluster) =>
+                getLayerIcon(cluster, this.map, "trafikverket", cluster.getChildCount()),
+        });
+        this.trafikverketLoaded = false;
+
+        const overlays = {
+            "Trafikinfo (Trafikverket)": this.trafikverketGroup,
+        };
+        L.control
+            .layers(null, overlays, { position: "topright", collapsed: false })
+            .addTo(this.map);
+
+        this.map.on("overlayadd", (e) => {
+            if (e.layer === this.trafikverketGroup) {
+                localStorage.setItem("bpk_trafikverket_layer", "1");
+                if (!this.trafikverketLoaded) {
+                    this.loadTrafikverketMarkers();
+                }
+            }
+        });
+
+        this.map.on("overlayremove", (e) => {
+            if (e.layer === this.trafikverketGroup) {
+                localStorage.setItem("bpk_trafikverket_layer", "0");
+            }
+        });
+
+        // Återställ från localStorage — återbesökare som tidigare slog på
+        // layern får den på igen utan att behöva klicka. Default OFF för
+        // first-time-besökare.
+        if (localStorage.getItem("bpk_trafikverket_layer") === "1") {
+            this.trafikverketGroup.addTo(this.map);
+        }
+    }
+
+    async loadTrafikverketMarkers() {
+        this.trafikverketLoaded = true;
+
+        const params = new URLSearchParams({ source: "trafikverket" });
+        const filter = this.options.locationFilter;
+        const type = this.options.locationType;
+        // Trafikverket har bara län-granularitet; ?city ignoreras av backend.
+        if (filter && type === "lan") {
+            params.set("lan", filter);
+        }
+
+        const url = `/api/eventsMap?${params.toString()}`;
+        const response = await fetch(url);
+        const data = await response.json();
+        const events = data.data || [];
+
+        const markers = events.map((event) => {
+            const ends = event.ends_at
+                ? new Date(event.ends_at).toLocaleString("sv-SE", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      day: "2-digit",
+                      month: "2-digit",
+                  })
+                : "tills vidare";
+
+            return L.marker([event.lat, event.lng], {
+                icon: getLayerIcon(null, this.map, "trafikverket", ""),
+                trafikverketEventData: event,
+            }).bindPopup(
+                `
+                    <div class="EventsMap-markerTooltip EventsMap-markerTooltip--trafikverket">
+                        <div class="EventsMap-markerTooltip-innerContent">
+                            <div class="EventsMap-markerTooltip-locations">${escapeHtml(event.locations || "")}</div>
+                            <h3 class="EventsMap-markerTooltip-headline">${escapeHtml(event.headline || event.type || "")}</h3>
+                            <div class="EventsMap-markerTooltip-text">
+                                ${escapeHtml(event.type)}${event.message_code ? " · " + escapeHtml(event.message_code) : ""}
+                                <br>Pågår till ${escapeHtml(ends)}
+                            </div>
+                            <div class="EventsMap-markerTooltip-source">
+                                Källa: <a href="${event.source_url || "https://trafikinfo.trafikverket.se/"}" target="_blank" rel="noopener">Trafikverket</a>
+                            </div>
+                        </div>
+                    </div>
+                `,
+                { direction: "bottom", permanent: false }
+            );
+        });
+
+        this.trafikverketGroup.addLayers(markers);
+        console.log(`Trafikverket-layer: ${markers.length} markers laddade`);
+    }
+}
+
+function escapeHtml(s) {
+    if (s == null) return "";
+    return String(s)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
 }
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -456,6 +571,7 @@ document.addEventListener("DOMContentLoaded", function () {
             zoom: parseInt(element.getAttribute("data-events-map-zoom")),
             locationFilter: element.getAttribute("data-events-map-location"),
             locationType: element.getAttribute("data-events-map-location-type"),
+            enableTrafikverket: element.getAttribute("data-events-map-trafikverket") === "1",
         });
     });
 });
