@@ -72,6 +72,114 @@ Utan namespace: `ObjectType 'Situation' does not exists.`
 innehåller mestadels suspended=true** (~74 % i sample 500). Alla queries måste
 filtrera bort `Suspended=true`, annars visas inaktiva markers på kartan.
 
+## Live-verifiering 2026-05-03
+
+Snapshot av aktiva (ej suspended) Situations vid kl ~14:30:
+
+### Hela Sverige
+
+| Antal Deviations | MessageType      |
+| ---------------: | ---------------- |
+|            1 544 | Trafikmeddelande |
+|              803 | Vägarbete        |
+|              370 | Hinder           |
+|               40 | Färjor           |
+|            **3** | **Olycka**       |
+
+1 245 Situations / 2 760 Deviations totalt.
+
+### Per län (top 5)
+
+| Antal | Län                           |
+| ----: | ----------------------------- |
+|   465 | Norrbottens län (CountyNo=25) |
+|   460 | Västra Götalands län (14)     |
+|   352 | Västerbottens län (24)        |
+|   332 | Stockholms län (1+2¹)         |
+|   204 | Jämtlands län (23)            |
+
+¹ `CountyNo=2` är **deprecated** men returneras fortfarande. Mappa till null
+eller `1` vid import — annars dubblas Stockholm.
+
+### Severity-fördelning (hela Sverige)
+
+| Antal | SeverityCode | Påverkan    |
+| ----: | :----------: | ----------- |
+| 1 373 |     null     | (oklassad)  |
+|   178 |      5       | Mycket stor |
+|   439 |      4       | Stor        |
+|   735 |      2       | Liten       |
+|    35 |      1       | Liten       |
+
+**~50 % av Deviations saknar SeverityCode-klassning.** SEO-reviewen i denna
+todo använder "ad-block vid `SeverityCode >= 4`" — det måste kompletteras
+med keyword-match på `Header`/`Message` ("död", "avliden", "dödad", "allvarlig")
+för att täcka oklassade allvarliga incidenter.
+
+### Aktivt **startat samma dag** (newsworthy-volym, hela Sverige)
+
+| Antal | Typ              |
+| ----: | ---------------- |
+|    23 | Trafikmeddelande |
+|     8 | Vägarbete        |
+|     3 | Olycka           |
+
+### Faktiska olyckor i Sverige just nu (3 st, alla på lokala vägar)
+
+| Tid         | Plats                                             | Severity | Typ                                                          |
+| ----------- | ------------------------------------------------- | :------: | ------------------------------------------------------------ |
+| 13:01–14:45 | Väg 110 Cirkulationsplats Hyllinge → Bjuv (Skåne) |    5     | Olycka + parallell `Vägen avstängd`-Deviation på samma punkt |
+| 13:57–15:00 | Väg 120 Veräng → Mårslycke (Kronoberg)            |    4     | Olycka                                                       |
+| 14:08–14:54 | Väg 561 Eldsberga (Halland)                       |    2     | Olycka med tungt fordon                                      |
+
+**Volymbaseline för planning:** ~3–10 olyckor/dygn på riksnivå (jämför med
+Polisens RSS som har ~50–100 trafikolyckor/dygn). Trafikverket är **komplement**,
+inte ersättning. Vid 90d retention på Olycka: ~270–900 permalink-sidor totalt.
+
+### MessageCode-katalog (Stockholm, sample)
+
+Visar finkorniga subtyper under varje MessageType:
+
+```
+Vägarbete:
+  Vägarbete                       (180+)
+  Beläggningsarbete                  (7)
+  Sprängningsarbete                  (3)
+
+Trafikmeddelande:
+  Hastighetsbegränsning gäller      (37)
+  Körfältsavstängningar             (26)
+  Vägen avstängd                    (20)
+  Följ omledningsskyltar             (4)
+  Fordonshaveri                      (2)
+  Brand i fordon                     (1)
+  Broöppning                         (1)
+  Djur på vägen                      (1)
+  Vägskada                           (1)
+```
+
+**Newsworthy MessageCodes** (kandidater för specialhantering): `Brand i fordon`,
+`Djur på vägen`, `Fordonshaveri`, `Broöppning`, `Vägskada` — i `Trafikmeddelande`-
+gruppen. Söks aktivt på "broöppning E4 idag", "djur på vägen 279" etc.
+
+### DATEX-endpointen (`/v2/datex.xml`) — testat, ej användbar
+
+Kunde inte komma åt med någon namespace/objecttype-kombination ur våra XSD-filer
+(`MessageContainer`, `PayloadPublication`, `SituationPublication`, `D2LogicalModel`,
+m.fl. — alla returnerar `does not exists`). DATEX kräver troligen ett helt annat
+anrop-format som inte är dokumenterat publikt. **Spelar ingen roll** — JSON-
+endpointen `/v2/data.json` exponerar samma underliggande data i enklare format.
+
+### Intern dedup (Trafikverket-rader sinsemellan)
+
+Olycka #1 ovan (Väg 110) hade **två Deviations på samma `Geometry.WGS84`,
+samma `StartTime`, samma `EndTime`**: en `Olycka · Olycka` + en `Trafikmeddelande
+· Vägen avstängd`. Samma Situation-Id, olika Deviation-Id.
+
+→ Vid render på kartan: **gruppera Deviations per `parent_external_id` (Situation.Id)**
+och visa primär-typen (prioritera Olycka > Vägen avstängd > övrigt). Annars staplas
+flera markers på samma punkt och kartan blir oläsbar.
+
 ## Designbeslut 2026-05-03
 
 ### 1. Lagrings-mönster — **B: ny `events`-tabell**
@@ -135,7 +243,69 @@ Två separata permalink-rymder ger riskspridning: en eventuell SEO-fälla i
 Trafikverkets temporära-data-rymd påverkar inte polishändelsernas 12-åriga
 URL-equity.
 
-### 2. Dedup mot Polisens RSS
+### 4. Vad importeras till `events`-tabellen
+
+**Importera allt utom Färjor och Suspended.** Inte bara olyckor — annars
+mister vi 99 % av Trafikverket-värdet (vägarbeten, broöppningar, djur på
+väg, fordonshaverier som söks aktivt). `/trafik`-kartan måste vara rik nog
+att vara intressant att besöka regelbundet.
+
+| MessageType                 | Importeras? | Retention efter `EndTime`             | Permalink? | Indexerad? |
+| --------------------------- | :---------: | ------------------------------------- | :--------: | :--------: |
+| **Olycka**                  |     Ja      | **90 d** (matchar `crime_events`)     |     Ja     |     Ja     |
+| Trafikmeddelande            |     Ja      | 7 d                                   |    Nej     |  Aggregat  |
+| Hinder                      |     Ja      | 7 d                                   |    Nej     |  Aggregat  |
+| Vägarbete                   |     Ja      | Direkt vid `EndTime` (ingen historik) |    Nej     | Live-karta |
+| Restriktion                 |     Ja      | Direkt vid `EndTime`                  |    Nej     | Live-karta |
+| Viktig trafikinformation    |     Ja      | 7 d                                   |    Nej     |  Aggregat  |
+| **Färjor**                  |   **Nej**   | —                                     |     —      |     —      |
+| **`Suspended=true`** (alla) |   **Nej**   | —                                     |     —      |     —      |
+
+**Logik:**
+
+- **Olycka** är journalistiskt intressant content → samma retention som polishändelser.
+  Volymbaseline 3–10/dygn → 270–900 rader/90d. Trivial DB-belastning.
+- **Trafikmeddelande/Hinder** har 7d historik så någon som söker "broöppning E4 igår"
+  hittar den. Längre retention är poänglös — content är ej narrative.
+- **Vägarbete** är inte newsworthy, dominerar volym (803 aktiva). Direktradering vid
+  EndTime håller tabellen liten. Multi-year vägarbeten radera ändå inte (`EndTime`
+  ligger 2026-08-31 → blir kvar tills då).
+- **Färjor** filtreras vid import — brand-mismatch, inget värde för Brottsplatskartan.
+- **Suspended** är operativt avstängd data, ej newsworthy.
+
+**Pruning-jobb:**
+
+```sql
+-- Olycka: 90d efter end_time
+DELETE FROM events
+WHERE source = 'trafikverket'
+  AND message_type = 'Olycka'
+  AND end_time IS NOT NULL
+  AND end_time < NOW() - INTERVAL 90 DAY;
+
+-- Trafikmeddelande/Hinder/Viktig trafikinformation: 7d efter end_time
+DELETE FROM events
+WHERE source = 'trafikverket'
+  AND message_type IN ('Trafikmeddelande', 'Hinder', 'Viktig trafikinformation')
+  AND end_time IS NOT NULL
+  AND end_time < NOW() - INTERVAL 7 DAY;
+
+-- Vägarbete/Restriktion: direkt vid end_time
+DELETE FROM events
+WHERE source = 'trafikverket'
+  AND message_type IN ('Vägarbete', 'Restriktion')
+  AND end_time IS NOT NULL
+  AND end_time < NOW();
+```
+
+Kör som schemalagt jobb 1×/dygn. Aktiva (`end_time IS NULL` eller framtid)
+påverkas aldrig.
+
+**Soft-delete-alternativ:** Istället för `DELETE` kan vi sätta `pruned_at` och
+filtrera bort i alla queries. Behålls tills DB-storlek motiverar hård radering.
+Initialt: hård DELETE (enklare).
+
+### 5. Dedup mot Polisens RSS
 
 "Trafikolycka" finns i båda källorna. Behöver lösning i kod, inte bara UI:
 
@@ -143,12 +313,9 @@ URL-equity.
   ~500 m och ~30 min — antingen länka dem (`related_event_id`) eller
   dölj Trafikverket-versionen.
 - Polisens rad har AI-rewrite + permalänk → den prioriteras vid krock.
-
-### 3. Spara historik?
-
-Om kartan bara visar aktiva räcker `WHERE end_time IS NULL OR end_time > NOW()`
-— men då tappas "antal vägarbeten Q1 2026". Beslut innan bygget,
-annars läcker scope.
+- Volymbaseline: ~3–10 olyckor/dygn från Trafikverket vs ~50–100 från
+  Polisen. Förväntad träfffrekvens i dedup-jobbet: ~1–3/dygn (där samma
+  olycka rapporteras av båda).
 
 ## Förslag
 
@@ -464,17 +631,27 @@ Trafikverket"-badge).
 - **API-nyckel-rotation.** Nyckel registrerad 2026-05-03, ingen utgångstid
   satt. Rate-limits ej publicerade — Trafikverket "övervakar och hör av sig"
   vid överskridning.
-- **Volym.** Sample 500 hela landet visar att ~74 % är `Suspended=true` —
-  vi importerar bara aktiva (`Suspended=false`), så reell volym är lägre
-  än det verkar.
-- **Olyckor är sällsynta i realtid.** 0 aktiva i Stockholm vid testtillfället.
-  Trafikverket rapporterar bara olyckor som **påverkar trafiken** — detta är
-  bra (selektiv hög-kvalitetsdata, lågt brus) men betyder att Polisens RSS
-  fortsatt täcker majoriteten av blåljus-olyckor.
+- **Volym.** Sverige-snapshot 2026-05-03: 1 245 aktiva Situations / 2 760
+  Deviations efter Suspended-filter. Stationär nivå långsiktigt eftersom
+  Vägarbeten dominerar (803/2 760 = 29 %) och de är mestadels stationära.
+  Med pruning enligt importpolicy: ~5 000–10 000 rader steady-state.
+- **Olyckor är sällsynta i realtid.** 3 aktiva olyckor i hela Sverige vid
+  testtillfället; 0 i Stockholm. Trafikverket rapporterar bara olyckor som
+  **påverkar trafiken** — detta är bra (selektiv hög-kvalitetsdata, lågt
+  brus) men betyder att Polisens RSS fortsatt täcker majoriteten av blåljus-
+  olyckor (~50–100/dygn vs ~3–10/dygn från Trafikverket).
+- **SeverityCode-täckning är dålig.** ~50 % av Deviations saknar klassning.
+  Ad-block-flagga måste komplettera `SeverityCode >= 4` med keyword-match
+  på "död"/"avliden"/"allvarlig" i `Header`/`Message`.
 - **Multi-year vägarbeten.** Sett aktivt vägarbete med `StartTime=2020-09-01`
-  och `EndTime=2026-08-31`. Pruning på `end_time < NOW() - 30 DAY` är OK,
-  men `start_time` får inte användas som "händelsedatum" för UX — vissa
-  vägarbeten är 6 år gamla.
+  och `EndTime=2026-08-31`. För Vägarbete-typen radera vid `EndTime`
+  (ingen retention) — `start_time` får aldrig visas som "händelsedatum"
+  för UX, vissa är flera år gamla.
+- **CountyNo=2 (deprecated)** returnerar fortfarande data, dubblar Stockholm.
+  Mappa `2 → 1` (eller dropp) vid import.
+- **Norrbotten/Västerbotten-bias.** ~50 % av rikets aktiva Situations ligger
+  i de fyra nordliga länen. Söktrafiken där är låg → `/lan/norrbottens-lan/trafik`
+  blir rik content men låg-volym. Inte en risk, bara en observation.
 - **Begreppskrock med Polisens RSS** — se "Öppna designval" punkt 2.
 - **Statlig väg-bias.** Kommunala vägar täcks dåligt — innerstads-
   händelser kommer fortfarande mest från Polisen.
