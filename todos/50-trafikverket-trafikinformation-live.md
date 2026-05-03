@@ -1,4 +1,4 @@
-**Status:** aktiv (skissad + SEO/AdSense-review 2026-04-29 + live-verifiering + arkitektur-review + UX/SEO-review 2026-05-03; **fas 1-plan klar — redo att implementera**)
+**Status:** aktiv — **Fas 1 deployat 2026-05-03** (live-karta-layer + olänkad `/trafik` + `/trafik/{id}`-permalinks). Soak till 2026-05-10, sedan beslut om Fas 2.
 **Senast uppdaterad:** 2026-05-03
 **Relaterad till:** #40 (Trafikverket STRADA — historisk parallell), #51 (övriga live-källor)
 **XSD-källa:** `docs/Trafikverket/response_Situation_v1.6.xsd` (auktoritativ).
@@ -1041,28 +1041,44 @@ många rörliga delar (DB-schema, import-job, dedup, SEO-aggregat, layer-UI,
 permalinks, AdSense-flaggor) och ger för stor rollback-risk om något
 flaggas. Delas upp i tre faser med konkreta gates emellan.
 
-### Fas 1 — minimal live-karta (1–2 dagar)
+### Fas 1 — minimal live-karta — **klar 2026-05-03**
 
-**Mål:** Trafikverket-data syns på huvudkartan (`/karta`) som extra layer.
-Inga nya routes, inga permalinks, ingen `/trafik`-sida.
+**Mål uppnått:** Trafikverket-data syns på `/karta` som extra layer (default
+OFF) + olänkad pilot-sida `/trafik` (lista grupperad per MessageType) +
+permalinks `/trafik/{id}` (klickbara från lista, indexerbara).
 
-- Migration: `events`-tabell med ~15 kolumner (se schema-blocket).
-- `App\Models\Event` + ev. helper.
-- `php artisan trafikverket:fetch` — 5 min schedule, idempotent UPSERT,
-  filtrera `Suspended=true` och `Färjor` vid query, rate-limit/backoff-logik.
-- `php artisan trafikverket:prune` — 1×/dygn, två retention-regler.
-- `/api/eventsMap` får `?source=polisen|trafikverket|all` med default `polisen`
-  för bakåtkompat.
-- Frontend: ny Leaflet-layer (`L.markerClusterGroup`), toggle default **OFF**,
-  ikoner per `MessageType`.
-- `min-height` på kart-container; markercluster aktivt från start.
+**Implementerat:**
 
-**Gate till Fas 2 (1 vecka soak):**
+- ✅ Migration: `events` + `event_counties` join-tabell (multi-county).
+- ✅ `App\Models\Event` med scopes (`active`, `forSource`, `forCounty`).
+- ✅ `php artisan trafikverket:fetch` — 5 min schedule, idempotent UPSERT,
+  filtrerar `Suspended` + `Färjor` + LINESTRING-only, `message_type` och
+  `county_no` låses first-write, exponential backoff (1→5→30→60 min) vid
+  429/5xx, ERROR-logg vid 401/403.
+- ✅ `php artisan trafikverket:prune` — 1×/dygn 03:30, två retention-regler.
+- ✅ `/api/eventsMap?source=polisen|trafikverket|all` (default polisen).
+- ✅ Frontend: Leaflet-layer med markercluster (`maxClusterRadius=50`),
+  toggle via `L.control.layers`, default OFF, lazy-load, localStorage-state.
+- ✅ Pilot-vyer `/trafik` + `/trafik/{id}` (indexerbara, ej i menyn).
+
+**Avviker från plan (medvetet):**
+
+- Permalinks byggdes redan i Fas 1 (tidigare planerad till Fas 3).
+  Användarens beslut: pilot-vy med raw Trafikverket-text + inline källa-
+  attribuering. AI-rewrite + per-incident-berikning skjuts till Fas 3 —
+  utvärderas mot mätfönstret 2026-05-10.
+- `/trafik` är indexerbar redan i Fas 1 (planen sa `noindex` initialt).
+  Användarens beslut: aggregat-sida med 500 rader är inte tunn content,
+  samma mönster som `/brand` rankar bra på.
+
+**Soak-period 2026-05-03 → 2026-05-10. Gates till Fas 2:**
 
 - Volym stationär: ingen DB-tillväxt-explosion utöver baseline.
 - Ingen CWV-regression på `/karta` (LCP/CLS jämfört med pre-deploy).
 - Ingen rate-limit-trippning från Trafikverket.
-- Soft-dedup-loggar visar < 5 % false-positives på manuellt stickprov.
+- `/trafik` upptäcks i GSC (impressions > 0)?
+- Pruning fungerar (verifiera dygnsjobb).
+- Inga oväntade 401/403-larm i loggar.
 
 ### Fas 2 — aggregat-sidor (1–2 dagar, efter gate)
 

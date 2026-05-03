@@ -4,7 +4,7 @@ Index över förbättringsarbete. Varje todo har en egen fil under
 [`todos/`](todos/) med fullständig analys. Konvention och
 mappstruktur: [`todos/README.md`](todos/README.md).
 
-Senast uppdaterad: 2026-05-02 (-#47 stad-URL-konsolidering — avfärdad, Stockholm löst, Tier 2 har försumbar splittring; rullas in i #24 Tier 2).
+Senast uppdaterad: 2026-05-03 (#50 Trafikverket Fas 1 deployat — live-karta-layer + /trafik + permalinks; soak till 2026-05-10).
 
 ## Aktiva
 
@@ -16,7 +16,7 @@ Senast uppdaterad: 2026-05-02 (-#47 stad-URL-konsolidering — avfärdad, Stockh
 | 39  | MSB/MCF brand- och räddningsstatistik per kommun        | Implementerad 2026-04-29 — väntar på trafikmätning 2026-05-13                                    | [todos/39-msb-brand-rakning-statistik.md](todos/39-msb-brand-rakning-statistik.md)                   |
 | 46  | Slå samman Händelser/Senaste/Mest lästa i menyn         | Importerad från GitHub #76 — kräver design + redirect-strategi                                   | [todos/46-meny-handelser-konsolidering.md](todos/46-meny-handelser-konsolidering.md)                 |
 | 48  | Polisens JSON-API + bättre geocoding                    | Fas 1 + Fas 2 deployat 2026-04-29 — soak pågår, mätperiod på geo-träff                           | [todos/48-geocode-inkludera-lan.md](todos/48-geocode-inkludera-lan.md)                               |
-| 50  | Trafikverket Trafikinformation: live på kartan          | Skissad + SEO/AdSense-review klar — väntar på beslut om indexerbarhet & editor-text              | [todos/50-trafikverket-trafikinformation-live.md](todos/50-trafikverket-trafikinformation-live.md)   |
+| 50  | Trafikverket Trafikinformation: live på kartan          | Fas 1 deployat 2026-05-03 (live-karta-layer + /trafik + permalinks) — soak till 2026-05-10       | [todos/50-trafikverket-trafikinformation-live.md](todos/50-trafikverket-trafikinformation-live.md)   |
 | 51  | Övriga datakällor: research-skiss                       | Research-katalog (SMHI, räddningstjänst-RSS, Krisinfo, m.fl.) — bryts ut per källa               | [todos/51-ovriga-datakallor-research.md](todos/51-ovriga-datakallor-research.md)                     |
 | 52  | GSC-monitor: lågrankade högvolym-queries                | Baseline klar 2026-04-30 — 7 åtgärder identifierade (A–G), ~25k clicks/90d potential             | [todos/52-gsc-low-rank-monitoring.md](todos/52-gsc-low-rank-monitoring.md)                           |
 | 54  | Trafikkontroll-titlar: utöka AI-rewrite                 | Idé — utöka `isVagueTitle()` med trafikkontroll-mönster                                          | [todos/54-trafikkontroll-titlar.md](todos/54-trafikkontroll-titlar.md)                               |
@@ -51,6 +51,7 @@ eller markera todon som klar.
 
 | Datum      | Åtgärd                                                       | Todo                                                    |
 | ---------- | ------------------------------------------------------------ | ------------------------------------------------------- |
+| 2026-05-10 | Trafikverket Fas 1 — soak-mätning + gates-beslut (Fas 2?)    | [#50](todos/50-trafikverket-trafikinformation-live.md)  |
 | 2026-05-13 | MCF räddningsstatistik — utvärdera trafikimpact i GA4 + GSC  | [#39](todos/39-msb-brand-rakning-statistik.md)          |
 | 2026-05-15 | #64 precision-stickprov — 50 artiklar, mål >85 %             | [#64](todos/64-per-plats-nyhetsaggregering.md)          |
 | 2026-05-25 | GSC-mätning AI-titlar — första check (4v post-deploy)        | [#36](todos/36-gsc-matning-ai-titlar.md)                |
