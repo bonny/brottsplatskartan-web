@@ -1,6 +1,7 @@
-**Status:** aktiv (skissad + SEO/AdSense-review klar 2026-04-29; väntar på beslut om lagrings-strategi och indexerbarhet innan kod)
-**Senast uppdaterad:** 2026-04-29
+**Status:** aktiv (skissad + SEO/AdSense-review klar 2026-04-29; **schema verifierat live 2026-05-03** mot v1.6 + faktisk respons; väntar på beslut om lagrings-strategi och indexerbarhet innan kod)
+**Senast uppdaterad:** 2026-05-03
 **Relaterad till:** #40 (Trafikverket STRADA — historisk parallell), #51 (övriga live-källor)
+**XSD-källa:** `docs/Trafikverket/response_Situation_v1.6.xsd` (auktoritativ).
 
 # Todo #50 — Trafikverket Trafikinformation: live-events på kartan
 
@@ -40,7 +41,7 @@ Källan är **den** primära för svensk trafikincident-data.
 - **Realtid:** Ja, live (push via WebSocket finns men overkill för oss)
 - **Geografi:** Punkt-koordinater per `Situation`/`Deviation`
 
-Relevanta object-typer:
+Relevanta object-typer (alla under namespace `Road.TrafficInfo`):
 
 - `Situation` (container) → `Deviation[]` — incidenter, olyckor, vägarbeten.
   En Situation kan innehålla flera Deviations med var sin koordinat.
@@ -48,25 +49,91 @@ Relevanta object-typer:
 - `WeatherStation` — väglagsdata realtid
 - `Camera` — trafikkameror (sekundärt)
 
-## Öppna designval (måste avgöras innan migration skrivs)
+### Query-format (verifierat 2026-05-03)
 
-### 1. Lagrings-mönster
+`namespace="Road.TrafficInfo"` är **obligatoriskt** på `<QUERY>` i v2 av API:t.
+Utan namespace: `ObjectType 'Situation' does not exists.`
 
-Tre alternativ — välj **innan** schemat hamnar i en migration:
+```xml
+<REQUEST>
+  <LOGIN authenticationkey="..." />
+  <QUERY namespace="Road.TrafficInfo" objecttype="Situation" schemaversion="1.6" limit="100">
+    <FILTER>
+      <AND>
+        <EQ name="Deviation.MessageType" value="Olycka" />
+        <NE name="Deviation.Suspended" value="true" />
+      </AND>
+    </FILTER>
+  </QUERY>
+</REQUEST>
+```
 
-- **(A) Egen tabell `trafikverket_deviations`** — enklast nu, men #51
-  introducerar minst 3 källor till (SMHI, räddningstjänst, krisinfo).
-  4–6 tabeller med 80% överlappande kolumner skalar dåligt; frontend
-  måste fetcha N endpoints och slå ihop.
-- **(B) Ny gemensam `events`-tabell med `source ENUM`-kolumn** —
-  polymorf rad, gemensamma kolumner + `payload JSON` för källspecifikt.
-  `crime_events` lever vidare som-är (för stort att migrera nu); nya
-  källor går i `events`. På sikt kan `crime_events` migreras in.
-  **Rekommenderat alternativ.**
-- **(C) Utöka `crime_events` med `source` + `external_id`** — snabbast,
-  men `crime_events` har AI-rewrite-fält (`title_alt_1`,
-  `description_alt_1`), `is_public`-scope, `parsed_*`-pipeline som är
-  död vikt för Trafikverket-rader. Tabellnamnet ljuger sen.
+`Deviation.Suspended` (nytt i v1.6) anger om händelsen är inaktiv. **Default-respons
+innehåller mestadels suspended=true** (~74 % i sample 500). Alla queries måste
+filtrera bort `Suspended=true`, annars visas inaktiva markers på kartan.
+
+## Designbeslut 2026-05-03
+
+### 1. Lagrings-mönster — **B: ny `events`-tabell**
+
+`crime_events` lever vidare orörd. Ny `events`-tabell tar Trafikverket nu
+och #51:s framtida källor (SMHI, räddningstjänst, krisinfo) utan
+ytterligare schema-arbete. Polymorf rad: gemensamma kolumner + `payload JSON`
+för källspecifikt.
+
+Avfärdade alternativ:
+
+- **(A) Egen tabell per källa** — duplicerat schema-arbete för #51.
+- **(C) Utöka `crime_events`** — `crime_events` har AI-rewrite-fält,
+  `is_public`-scope och parsed-pipeline som är död vikt för Trafikverket-
+  rader. Tabellnamnet ljuger sen.
+
+### 2. Vyer och filtrering
+
+**Plats-sidor (`/stockholm`, `/uppsala`, `/{lan}`, `/{plats}`)** —
+mixar **alla källor och alla typer**. Användaren bryr sig om vad som
+händer på platsen, inte vem som rapporterat.
+
+**Kategori-sidor:**
+
+| URL                     | Innehåll                                                                                                      |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `/trafik`               | Trafikverket (alla `MessageType` utom Färjor) + polishändelser där `parsed_title` är trafik-/fordonsrelaterad |
+| `/{lan}/trafik`         | samma men filtrerat på län                                                                                    |
+| `/trafikolyckor`        | Endast olyckor: Trafikverket `MessageType=Olycka` + polishändelser med trafikolycks-relaterad `parsed_title`  |
+| `/{lan}/trafikolyckor`  | samma per län                                                                                                 |
+| `/brand`, `/helikopter` | Oförändrade — ren polishändelse-feed                                                                          |
+
+**Polishändelse-`parsed_title` som räknas som trafik** (filter-set):
+
+```
+Trafikolycka
+Trafikolycka, personskada
+Trafikolycka, vilt
+Trafikolycka, singel
+Trafikolycka, smitning från
+Trafikbrott
+Rattfylleri
+Trafikkontroll  (inkl. plural-stavning "Trafikkontroller")
+Trafikhinder
+Kontroll person/fordon
+```
+
+**Exkluderas från `/trafik`** (även om de involverar fordon):
+`Motorfordon, stöld`, `Motorfordon, anträffat stulet`, `Stöld ur fordon`,
+`Fylleri/LOB`, `Fylleri`. De hör hemma i stöld-/fyllerivyer.
+
+### 3. Permalinks
+
+| Källa                  | Permalink-mönster                               | Indexeras?                  |
+| ---------------------- | ----------------------------------------------- | --------------------------- |
+| Polisens trafikolyckor | `/{lan}/trafikolycka-{titel}-{id}` (oförändrat) | Ja                          |
+| Trafikverket `Olycka`  | `/trafik/olycka/{tv_id}`                        | Ja, 90d retention sedan 410 |
+| Trafikverket övriga    | inga permalinks — bara live-karta + aggregat    | Nej                         |
+
+Två separata permalink-rymder ger riskspridning: en eventuell SEO-fälla i
+Trafikverkets temporära-data-rymd påverkar inte polishändelsernas 12-åriga
+URL-equity.
 
 ### 2. Dedup mot Polisens RSS
 
@@ -90,24 +157,40 @@ annars läcker scope.
 Vid alternativ A: byt tabellnamn till `trafikverket_deviations` och
 ta bort `source`-kolumnen. Övriga fält samma.
 
+Faktiska MessageType-värden enligt v1.6-XSD: `"Viktig trafikinformation"`,
+`"Färjor"`, `"Hinder"`, `"Olycka"`, `"Restriktion"`, `"Trafikmeddelande"`,
+`"Vägarbete"`. **"Vilt" finns inte som MessageType** — vilt rapporteras
+som `MessageCode` under "Hinder" eller "Trafikmeddelande". `"Färjor"`
+filtreras bort i fas 1 (brand-mismatch).
+
 ```sql
 CREATE TABLE events (
   id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
   source VARCHAR(32) NOT NULL,                -- 'trafikverket', 'smhi', 'krisinfo', framtida 'polisen'
   external_id VARCHAR(64) NOT NULL,           -- t.ex. Trafikverkets Deviation.Id
   parent_external_id VARCHAR(64) NULL,        -- t.ex. Situation.Id (en Situation har flera Deviations)
-  message_type VARCHAR(64) NOT NULL,          -- 'Olycka', 'Vägarbete', 'Vilt', 'Avstängning'
-  severity_code TINYINT NULL,                 -- Trafikverkets SeverityCode 1–5; lagra rått, mappa vid render
-  icon_id VARCHAR(64) NULL,                   -- Trafikverkets IconId
-  message TEXT NULL,                          -- nullable: RoadCondition har ofta ingen Message
+  message_type VARCHAR(64) NOT NULL,          -- 'Olycka', 'Vägarbete', 'Hinder', 'Trafikmeddelande', 'Restriktion', 'Viktig trafikinformation'
+  message_code VARCHAR(64) NULL,              -- finkornig: 'Beläggningsarbete', 'Körfältsavstängningar', 'Vilt på vägen'
+  severity_code TINYINT NULL,                 -- Trafikverkets SeverityCode (1, 2, 4, 5 — ej 3); lagra rått, mappa vid render
+  suspended BOOLEAN NOT NULL DEFAULT FALSE,   -- v1.6-fält; aktiva incidenter har FALSE
+  icon_id VARCHAR(64) NULL,                   -- Trafikverkets IconId ('accident', 'roadwork', 'ferryDepartureOnSchedule', ...)
+  message TEXT NULL,                          -- nullable: vissa typer saknar Message
   location_descriptor TEXT NULL,              -- TEXT istället för VARCHAR(255) — kan bli långt
-  road_number VARCHAR(32) NULL,               -- "E4", "Rv40"
-  county_no SMALLINT NULL,                    -- Trafikverkets numeriska länskod (1–25)
-  administrative_area_level_1 VARCHAR(64) NULL, -- "Stockholms län" — för join mot resten av appen
-  lat DECIMAL(10,7) NOT NULL,
+  road_number VARCHAR(32) NULL,               -- "E4", "73"
+  road_name VARCHAR(255) NULL,                -- v1.6-fält separat från RoadNumber
+  creator VARCHAR(64) NULL,                   -- 'Trafikverket', externa källor; relevant för dedup
+  affected_direction VARCHAR(32) NULL,        -- 'BothDirections', 'OneDirection'
+  managed_cause BOOLEAN NULL,                 -- objektet är orsaken till situationen
+  county_no SMALLINT NULL,                    -- Trafikverkets numeriska länskod. 0=hela Sverige, 1-25, OBS: 2 är DEPRECATED
+  administrative_area_level_1 VARCHAR(64) NULL, -- "Stockholms län" — derived från county_no, för join mot appen
+  country_code CHAR(2) NULL,                  -- 'SE', 'NO', 'DK', 'DE'
+  lat DECIMAL(10,7) NOT NULL,                 -- WGS84 från Geometry.WGS84 eller Geometry.Point.WGS84
   lng DECIMAL(10,7) NOT NULL,
-  start_time TIMESTAMP NOT NULL,
-  end_time TIMESTAMP NULL,
+  geometry_type ENUM('point','line') NOT NULL DEFAULT 'point', -- Trafikverket har även Line för avstängda sträckor
+  geometry_wkt TEXT NULL,                     -- för Line: WKT-stringen rakt av
+  start_time TIMESTAMP NOT NULL,              -- OBS: kan vara år bakåt på pågående vägarbeten
+  end_time TIMESTAMP NULL,                    -- OBS: kan vara år framåt; ValidUntilFurtherNotice=true → end_time NULL
+  valid_until_further_notice BOOLEAN NULL,    -- specialvärde
   created_time TIMESTAMP NOT NULL,
   modified_time TIMESTAMP NOT NULL,
   related_event_id BIGINT UNSIGNED NULL,      -- dedup: pekar på matchande crime_event vid krock
@@ -117,10 +200,13 @@ CREATE TABLE events (
   UNIQUE KEY idx_source_external (source, external_id),
   KEY idx_geo (lat, lng),                     -- B-tree (samma som crime_events idag); SPATIAL POINT övervägt men inte nödvändigt
   KEY idx_time (start_time, end_time),
-  KEY idx_source_active (source, end_time),   -- snabb "aktiva från Trafikverket"-query
+  KEY idx_source_active (source, suspended, end_time),   -- snabb "aktiva från Trafikverket"-query
   KEY idx_county_time (county_no, start_time)
 );
 ```
+
+**Aktiv-query:** `WHERE source='trafikverket' AND suspended=FALSE AND (end_time IS NULL OR end_time > NOW())`.
+Bägge villkoren krävs — `Suspended=true` kan ha framtida `EndTime` och tvärtom.
 
 **Viktigt:** **en rad per Deviation, inte per Situation.** Trafikverkets
 Situation är en container med flera Deviations som var och en har egen
@@ -375,11 +461,20 @@ Trafikverket"-badge).
 
 ## Risker
 
-- **API-nyckel-rotation.** Trafikverket kan kräva förnyelse — rate-limits
-  okända innan registrering. **Registrera nyckel innan schemat låses**
-  så fält-nomenklaturen verifieras mot riktig respons.
-- **Volym.** Live-feed har 5–15k aktiva situations samtidigt. Skriv-
-  belastningen är försumbar med idempotent upsert. Pruning enligt ovan.
+- **API-nyckel-rotation.** Nyckel registrerad 2026-05-03, ingen utgångstid
+  satt. Rate-limits ej publicerade — Trafikverket "övervakar och hör av sig"
+  vid överskridning.
+- **Volym.** Sample 500 hela landet visar att ~74 % är `Suspended=true` —
+  vi importerar bara aktiva (`Suspended=false`), så reell volym är lägre
+  än det verkar.
+- **Olyckor är sällsynta i realtid.** 0 aktiva i Stockholm vid testtillfället.
+  Trafikverket rapporterar bara olyckor som **påverkar trafiken** — detta är
+  bra (selektiv hög-kvalitetsdata, lågt brus) men betyder att Polisens RSS
+  fortsatt täcker majoriteten av blåljus-olyckor.
+- **Multi-year vägarbeten.** Sett aktivt vägarbete med `StartTime=2020-09-01`
+  och `EndTime=2026-08-31`. Pruning på `end_time < NOW() - 30 DAY` är OK,
+  men `start_time` får inte användas som "händelsedatum" för UX — vissa
+  vägarbeten är 6 år gamla.
 - **Begreppskrock med Polisens RSS** — se "Öppna designval" punkt 2.
 - **Statlig väg-bias.** Kommunala vägar täcks dåligt — innerstads-
   händelser kommer fortfarande mest från Polisen.
@@ -500,11 +595,14 @@ alternativ B (ny tabell + adapter-pattern).
    före launch.** Skriv min 5–10 aggregat-sidors text _innan_ deploy
    (inte efter). Tunna sidor som indexeras får svår-reverserbar låg
    quality-poäng och drar ner AdSense-betyg.
-6. Registrera API-nyckel på trafikinfo.trafikverket.se → spara i
-   `.env` som `TRAFIKVERKET_API_KEY`.
-7. Skissa query mot `Situation`/`Deviation`-objekten — verifiera fält
-   mot riktig respons.
-8. Skapa migration + model + import-command.
+6. ~~Registrera API-nyckel~~ **klart 2026-05-03** — nyckel i lokal `.env`
+   som `TRAFIKVERKET_API_KEY`. Lägg in i prod-`.env` vid deploy.
+7. ~~Verifiera schema mot riktig respons~~ **klart 2026-05-03** — se
+   `tmp-trafikverket/test.sh` + responses/. Schema 1.6 + namespace
+   bekräftade.
+8. Skapa migration + model + import-command. **Filter:** alltid
+   `<NE name="Deviation.Suspended" value="true" />` + ev.
+   `<NE name="Deviation.MessageType" value="Färjor" />` (brand-mismatch).
 9. Bygg Leaflet-layer + toggle (default OFF) + ad-block-flagga för
    sensitiva incidenter.
 10. Schemalägg fetch var 2:a minut.

@@ -44,5 +44,6 @@ bpk*.gz
 /tmp-news-research/
 /tmp-scb/
 /tmp-bra/
+/tmp-trafikverket/
 tmp-ai-baseline
 .claude/scheduled_tasks.lock
