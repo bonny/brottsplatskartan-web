@@ -785,6 +785,14 @@ Route::get('/trafik', function () {
     ]);
 })->name('trafik');
 
+Route::get('/trafik/{id}', function (int $id) {
+    $event = \App\Models\Event::where('source', 'trafikverket')
+        ->where('id', $id)
+        ->firstOrFail();
+
+    return view('trafik-detail', ['event' => $event]);
+})->where('id', '[0-9]+')->name('trafik.show');
+
 /**
  * Testsida för design, så vi lätt kan se hur rubriker
  * av olika storlekar och listor och stycken och bilder

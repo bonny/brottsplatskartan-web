@@ -43,7 +43,9 @@
                 @foreach ($events as $event)
                     <li style="border-bottom: 1px solid #eee; padding: 0.75rem 0;">
                         <div style="font-weight: bold;">
-                            {{ $event->message ?: $event->location_descriptor ?: $event->message_type }}
+                            <a href="{{ route('trafik.show', $event->id) }}">
+                                {{ $event->message ?: $event->location_descriptor ?: $event->message_type }}
+                            </a>
                         </div>
 
                         <div style="color: #666; font-size: 0.9em; margin-top: 0.25rem;">
