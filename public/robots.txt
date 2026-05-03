@@ -2,8 +2,9 @@
 # Se även /llms.txt för LLM-specifik sajtguide.
 
 # Generellt
+# Pixel-routes (/pixel, /pixel-sok) blockeras INTE här. De använder POST
+# och returnerar X-Robots-Tag: noindex så Google inte indexerar dem.
 User-agent: *
-Disallow: /pixel?
 
 # -----------------------------------------------------------------
 # AI-träningsbotar — inte tillåtna (vi vill inte bli träningsdata
@@ -49,31 +50,24 @@ Disallow: /
 # -----------------------------------------------------------------
 
 User-agent: OAI-SearchBot
-Disallow: /pixel?
 Allow: /
 
 User-agent: ChatGPT-User
-Disallow: /pixel?
 Allow: /
 
 User-agent: PerplexityBot
-Disallow: /pixel?
 Allow: /
 
 User-agent: Perplexity-User
-Disallow: /pixel?
 Allow: /
 
 User-agent: Claude-SearchBot
-Disallow: /pixel?
 Allow: /
 
 User-agent: Claude-User
-Disallow: /pixel?
 Allow: /
 
 User-agent: Applebot
-Disallow: /pixel?
 Allow: /
 
 # -----------------------------------------------------------------

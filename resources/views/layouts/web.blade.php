@@ -237,22 +237,14 @@ Layout template for web
     @include('parts.sitefooter')
 
     {{--
-        Pixel,
-        ladda via JS för att minimera laddning via bots.
+        Tracking-pixel via navigator.sendBeacon (POST). Googlebot triggar
+        inte POST under JS-rendering, så URL:en hamnar inte i indexet.
     --}}
-    @php
-        $pixelUrl = sprintf(
-            '%1$s?path=%2$s&rand=%3$s',
-            url('/pixel'), // 1
-            Request::path(), // 2
-            rand(), // 3
-        );
-    @endphp
-
     <script>
         (function() {
-            let i = new Image();
-            i.src = '{{ $pixelUrl }}';
+            if (!navigator.sendBeacon) return;
+            const data = new URLSearchParams({ path: @json(Request::path()) });
+            navigator.sendBeacon(@json(url('/pixel')), data);
         })();
     </script>
 

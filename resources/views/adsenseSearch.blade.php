@@ -41,8 +41,11 @@
     <script>
         // https://developers.google.com/custom-search/docs/element#results-ready
         function myResultsReadyCallback(gname, query, promoElts, resultElts) {
-            // Skicka pixel för sökstatistik.
-            let i = (new Image()).src = '{{ route('pixel-sok') }}?q=' + query + '&c=' + resultElts.length;
+            // Skicka pixel för sökstatistik via POST så Googlebot inte
+            // upptäcker URL:en under JS-rendering.
+            if (!navigator.sendBeacon) return;
+            const data = new URLSearchParams({ q: query, c: resultElts.length });
+            navigator.sendBeacon(@json(route('pixel-sok')), data);
         }
 
         window.__gcse || (window.__gcse = {});

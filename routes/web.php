@@ -64,10 +64,10 @@ Route::get('/sverigekartan-iframe/{location?}', [FullScreenMapController::class,
     'sverigekartanIframe'
 );
 
-// URL is like
-// https://brottsplatskartan.localhost/pixel?path=%2Fstockholms-lan%2Ftrafikolycka-taby-taby-kyrkby-37653&rand=0.1843466328440977
-Route::get('/pixel', [PixelController::class, 'pixel']);
-Route::get('/pixel-sok', [PixelController::class, 'pixelSok'])->name('pixel-sok');
+// Tracking-pixlar via POST (navigator.sendBeacon) så Googlebot inte hittar
+// dem under JS-rendering. Body innehåller "path" (eller "q"+"c" för sök).
+Route::post('/pixel', [PixelController::class, 'pixel']);
+Route::post('/pixel-sok', [PixelController::class, 'pixelSok'])->name('pixel-sok');
 
 Route::get('/polisstationer', [PolisstationerController::class, 'index'])->name(
     'polisstationer'

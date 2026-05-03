@@ -14,6 +14,9 @@ class VerifyCsrfToken extends BaseVerifier
     protected $except = [
         '/',
         'https://brottsplatskartan.se',
-        'https://brottsplatskartan.se/'
+        'https://brottsplatskartan.se/',
+        // Tracking-pixlar via POST — anrops av navigator.sendBeacon utan CSRF-token.
+        'pixel',
+        'pixel-sok',
     ];
 }

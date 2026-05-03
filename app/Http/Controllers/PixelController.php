@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CrimeView;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 /**
@@ -15,27 +16,27 @@ class PixelController extends Controller {
      *
      * @param Request $req Request.
      *
-     * @return array|\Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function pixelSok(Request $req) {
-        $query = urldecode($req->input('q'));
+    public function pixelSok(Request $req): JsonResponse {
+        $query = urldecode((string) $req->input('q'));
         $query = str($query)->trim()->lower()->stripTags()->limit(100)->toString();
-        
+
         // Antal träffar. 10 = 10 eller fler pga paginering.
-        $results_count = (int) urldecode($req->input('c'));
+        $results_count = (int) urldecode((string) $req->input('c'));
 
         $settingsKey = 'searches3';
 
         // Om show-setting finns så visa sökningar.
-        // Exempel: https://brottsplatskartan.se/pixel-sok?show-setting
+        // Exempel: POST https://brottsplatskartan.se/pixel-sok body: show-setting=1
         if ($req->has('show-setting')) {
             $searches = \Setting::get($settingsKey, []);
-            return is_array($searches) ? $searches : [];
+            return $this->noindexJson(is_array($searches) ? $searches : []);
         }
 
         // Bail on query är tom.
         if (empty($query)) {
-            return response()->json(['error' => 'No query'], 400);
+            return $this->noindexJson(['error' => 'No query'], 400);
         }
 
         // Hämta och spara setting.
@@ -49,7 +50,7 @@ class PixelController extends Controller {
                 'hits' => $results_count,
                 'count' => 0,
             ];
-        } 
+        }
 
         $searches[$query]['count']++;
 
@@ -67,12 +68,10 @@ class PixelController extends Controller {
         // Spara setting.
         \Setting::set($settingsKey, $searches);
 
-        $data = [
+        return $this->noindexJson([
             'query' => $query,
-            'setting' => $searches
-        ];
-
-        return $data;
+            'setting' => $searches,
+        ]);
     }
 
     /**
@@ -80,12 +79,11 @@ class PixelController extends Controller {
      *
      * @param Request $req Request.
      *
-     * @return array
+     * @return JsonResponse
      */
-    public function pixel(Request $req) {
+    public function pixel(Request $req): JsonResponse {
         // path: /stockholms-lan/trafikolycka-taby-taby-kyrkby-37653
-        $path = $req->input('path');
-        $path = urldecode($path);
+        $path = urldecode((string) $req->input('path'));
 
         $data = [];
 
@@ -108,6 +106,17 @@ class PixelController extends Controller {
             }
         }
 
-        return $data;
+        return $this->noindexJson($data);
+    }
+
+    /**
+     * JsonResponse med X-Robots-Tag: noindex så Google droppar URL:en
+     * om den ändå skulle hitta den.
+     *
+     * @param array<mixed> $data
+     */
+    private function noindexJson(array $data, int $status = 200): JsonResponse {
+        return response()->json($data, $status)
+            ->header('X-Robots-Tag', 'noindex, nofollow');
     }
 }
