@@ -70,4 +70,14 @@ return [
         'api_key' => env('TRAFIKVERKET_API_KEY', ''),
     ],
 
+    'scheduler' => [
+        // Tvinga på AI-tunga schemalagda jobb även när APP_ENV != production.
+        // Default: AI-jobben (summary:generate*, crimeevents:create-summaries,
+        // app:news:ai-classify) kör bara i prod för att undvika att lokala
+        // dev-stackar med scheduler-containern dubbeldebiterar samma
+        // CLAUDE_API_KEY. Sätt till true tillfälligt när du vill testa
+        // schemaläggningen lokalt. Manuella `artisan ...`-anrop påverkas inte.
+        'ai_local' => env('SCHEDULE_AI_LOCAL', false),
+    ],
+
 ];

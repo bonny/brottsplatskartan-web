@@ -16,6 +16,14 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        // AI-tunga jobb körs bara i production. Annars dubbel-debiterar
+        // varje dev-stack med scheduler igång (samma CLAUDE_API_KEY i
+        // .env). Sätt SCHEDULE_AI_LOCAL=true i lokal .env för att tvinga
+        // på AI-jobben tillfälligt — t.ex. när du testar en prompt-ändring.
+        // Manuella `artisan ...`-anrop påverkas inte, bara schemaläggningen.
+        $aiAllowed = static fn (): bool => app()->environment('production')
+            || filter_var(config('services.scheduler.ai_local'), FILTER_VALIDATE_BOOLEAN);
+
         $schedule->command('model:prune')->daily();
 
         // Hämta nya polishändelser (tidigare host-cron, */12 * * * *).
@@ -50,7 +58,8 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('crimeevents:create-summaries --administrative_area_level_1=stockholm')
             ->everyFiveMinutes()
-            ->withoutOverlapping();
+            ->withoutOverlapping()
+            ->when($aiAllowed);
 
         // Auto-trigger för AI-titlar på vaga events i hela Sverige (todo #10
         // fas 2). Stockholm-jobbet ovan körs utan vague-filter — det här
@@ -59,7 +68,8 @@ class Kernel extends ConsoleKernel
         // Rate-limit-säkert: ~20-30 nya vaga events/dag i hela landet.
         $schedule->command('crimeevents:create-summaries --vague-only --limit=100')
             ->everyFifteenMinutes()
-            ->withoutOverlapping();
+            ->withoutOverlapping()
+            ->when($aiAllowed);
 
         // Daily AI-sammanfattning för alla Tier 1-städer. Change-detection
         // i AISummaryService gör att AI bara körs när events ändrats — så
@@ -67,12 +77,14 @@ class Kernel extends ConsoleKernel
         // (Stockholm dominerar; mindre städer har få nya events/dag).
         $schedule->command('summary:generate --all-tier1 --yesterday')
             ->dailyAt('06:00')
-            ->name('daily-summary-tier1-yesterday');
+            ->name('daily-summary-tier1-yesterday')
+            ->when($aiAllowed);
 
         $schedule->command('summary:generate --all-tier1')
             ->everyThirtyMinutes()
             ->withoutOverlapping()
-            ->name('daily-summary-tier1-today');
+            ->name('daily-summary-tier1-today')
+            ->when($aiAllowed);
 
         // Månads-sammanfattning för Tier 1-städer (todo #27 Lager 3).
         // Två schemalägg:
@@ -88,12 +100,14 @@ class Kernel extends ConsoleKernel
         $schedule->command('summary:generate-monthly --all-tier1')
             ->monthlyOn(1, '02:00')
             ->withoutOverlapping()
-            ->name('monthly-summary-tier1-prev');
+            ->name('monthly-summary-tier1-prev')
+            ->when($aiAllowed);
 
         $schedule->command('summary:generate-monthly --all-tier1 --current')
             ->cron('0 */6 * * *')
             ->withoutOverlapping()
-            ->name('monthly-summary-tier1-current');
+            ->name('monthly-summary-tier1-current')
+            ->when($aiAllowed);
 
         // Pre-warma response cache på populära sidor var 15:e minut så
         // användare aldrig träffar kall cache. Låg kostnad: ~25 HTTP-
@@ -152,7 +166,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('app:news:ai-classify --limit=50')
             ->cron('15,45 * * * *')
             ->withoutOverlapping()
-            ->name('news-ai-classify');
+            ->name('news-ai-classify')
+            ->when($aiAllowed);
 
         $schedule->command('app:news:prune')
             ->dailyAt('03:45')
