@@ -93,40 +93,56 @@ Tolka utdata:
 ## all / (tomt)
 
 Kör allt i **en enda SSH-anslutning** för att minimera handshake-overhead.
-`docker stats` (~2 s) och rå `redis-cli INFO` (<100 ms) körs parallellt
-via bakgrundsjobb. `redis-cli` använder `REDISCLI_AUTH` (env-var i
-redis-containern, satt i `compose.yaml`) — inget lösenord behövs i
-shell-anropet.
+Tunga jobb (`docker stats`, `redis-cli INFO`, `du -sh`) startas i
+bakgrunden direkt så de överlappar med de snabba sekventiella anropen.
+`redis-cli` använder `REDISCLI_AUTH` (env-var i redis-containern, satt i
+`compose.yaml`) — inget lösenord behövs i shell-anropet.
 
 ```bash
 ssh deploy@brottsplatskartan.se '
+  cd /opt/brottsplatskartan
+
+  # Starta tunga jobb i bakgrund så de överlappar med de snabba nedan.
+  # docker stats sätter golvet (~2 s, inneboende sampling).
+  docker stats --no-stream > /tmp/_bpk_stats.txt &
+  docker exec -i brottsplatskartan-redis-1 redis-cli INFO memory stats server > /tmp/_bpk_redis.txt &
+  du -sh /opt/brottsplatskartan > /tmp/_bpk_du.txt 2>/dev/null &
+
   uptime
   echo === MEM ===
   free -h
   echo === DISK ===
-  df -h / && du -sh /opt/brottsplatskartan 2>/dev/null
+  df -h /
   echo === DOCKER PS ===
-  cd /opt/brottsplatskartan
-  docker compose ps
-  docker stats --no-stream > /tmp/_bpk_stats.txt &
-  docker compose exec -T redis redis-cli INFO memory stats server > /tmp/_bpk_redis.txt &
+  docker ps -a --filter label=com.docker.compose.project=brottsplatskartan --format "table {{.Names}}\t{{.Status}}"
+  echo === CACHE-FLUSH ===
+  cat storage/app/cache-meta/last-cache-flush 2>/dev/null; echo
+  cat storage/app/cache-meta/last-responsecache-flush 2>/dev/null; echo
+
   wait
+  echo === PROJECT SIZE ===
+  cat /tmp/_bpk_du.txt
   echo === DOCKER STATS ===
   cat /tmp/_bpk_stats.txt
   echo === REDIS INFO ===
   cat /tmp/_bpk_redis.txt
-  echo === CACHE-FLUSH ===
-  docker compose exec -T app sh -c "cat storage/app/cache-meta/last-cache-flush 2>/dev/null; echo; cat storage/app/cache-meta/last-responsecache-flush 2>/dev/null"
-  rm -f /tmp/_bpk_stats.txt /tmp/_bpk_redis.txt
+  rm -f /tmp/_bpk_stats.txt /tmp/_bpk_redis.txt /tmp/_bpk_du.txt
 '
 ```
 
 Varför detta mönster:
 
 - **En SSH-handshake** istället för flera separata anslutningar.
-- **`docker stats` + `redis-cli INFO` parallellt** — `docker stats` är
-  golvet (~2 s, inneboende), redis-anropet är försvinnande lite. Total
-  tid ≈ 2–2.5 s.
+- **Bakgrundsjobben startas först** så `docker stats` (~2 s-golvet)
+  överlappar med uptime/free/df/cache-flush-läsningarna istället för
+  att dyka upp efteråt. Total tid ≈ 2 s (begränsat av docker stats).
+- **`docker exec` istället för `docker compose exec`** för redis-anropet
+  — slipper compose-yaml-parsen (~300 ms).
+- **Cache-flush läses direkt från host** — `storage/` är bind-monterad
+  (`./:/var/www/html` i compose.yaml), så ingen `docker exec` behövs
+  (~500 ms).
+- **`docker ps --filter` istället för `docker compose ps`** — samma
+  resonemang, slipper compose-parsen.
 - **Inget Laravel-boot** — rå `redis-cli` istället för `php artisan
 redis:health`. Skillen tolkar `INFO`-output själv (se nedan).
 - **`SSH ControlMaster`** (i `~/.ssh/config`) sparar handshake vid
