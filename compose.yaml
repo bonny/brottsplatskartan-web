@@ -83,6 +83,10 @@ services:
       --maxmemory-policy allkeys-lru
       --appendonly yes
       --requirepass ${REDIS_PASSWORD}
+    environment:
+      # Plockas upp av redis-cli automatiskt — slipper -a-flagga och
+      # shell-quoting av specialtecken i lösenordet.
+      REDISCLI_AUTH: ${REDIS_PASSWORD}
     volumes:
       - redis-data:/data
     networks: [internal]
