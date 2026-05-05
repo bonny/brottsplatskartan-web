@@ -1,5 +1,5 @@
-**Status:** aktiv — Fas 1 + Fas 2 implementerade 2026-04-29, soak pågår
-**Senast uppdaterad:** 2026-04-29
+**Status:** klar 2026-05-05 — Fas 1 + Fas 2 deployat 2026-04-29; 6d soak ren (100 % polisen_id + 100 % geocoded sedan 2026-04-30, inga rate-limit-fel). RSS-referenser i kommentarer/blade städade.
+**Senast uppdaterad:** 2026-05-05
 
 # Todo #48 — Polisens JSON-API + bättre geocoding
 
@@ -31,12 +31,12 @@ senaste händelserna direkt). Officiellt sedan ~2017, ingen API-nyckel.
 - Regler: <https://polisen.se/om-polisen/om-webbplatsen/oppna-data/regler-for-oppna-data/>
 - Filter-parametrar: `?DateTime=2026-04`, `?locationname=Stockholm;Järfälla`, `?type=Misshandel;Rån`
 
-| Aspekt      | RSS (idag)       | JSON-API                                       |
-| ----------- | ---------------- | ---------------------------------------------- |
-| ID          | bara guid/url    | numeriskt `id`                                 |
-| Brottstyp   | inbäddat i titel | separat `type`-fält                            |
-| Plats       | bara i titel     | `location.name` (län-nivå)                     |
-| Koordinater | saknas           | `location.gps = "lat,lng"`                     |
+| Aspekt      | RSS (idag)       | JSON-API                                          |
+| ----------- | ---------------- | ------------------------------------------------- |
+| ID          | bara guid/url    | numeriskt `id`                                    |
+| Brottstyp   | inbäddat i titel | separat `type`-fält                               |
+| Plats       | bara i titel     | `location.name` (län-nivå)                        |
+| Koordinater | saknas           | `location.gps = "lat,lng"`                        |
 | Rate-limit  | odokumenterat    | min 10s/anrop, max 60/h, max 1440/dygn → HTTP 429 |
 
 **Viktig nyans:** `location.gps` i JSON-API är **mittpunkt för län/kommun**, inte

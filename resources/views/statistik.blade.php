@@ -213,8 +213,8 @@
         <section class="widget" id="kalla-och-metod">
             <h2 class="widget__title">Källa och metod</h2>
             <p>
-                All data kommer från Polisens officiella RSS-flöden
-                (<a href="https://polisen.se/aktuellt/rss/">polisen.se/aktuellt/rss</a>)
+                All data kommer från Polisens officiella JSON-API
+                (<a href="https://polisen.se/api/events">polisen.se/api/events</a>)
                 och hämtas automatiskt var 12:e minut. Positioner geokodas med Google
                 Maps Geocoding API. Endast händelser som Polisen publicerar räknas —
                 mörkertalet för brott i Sverige är sannolikt betydligt högre.

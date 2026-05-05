@@ -4,7 +4,7 @@ Index över förbättringsarbete. Varje todo har en egen fil under
 [`todos/`](todos/) med fullständig analys. Konvention och
 mappstruktur: [`todos/README.md`](todos/README.md).
 
-Senast uppdaterad: 2026-05-03 (#50 Trafikverket Fas 1 deployat — live-karta-layer + /trafik + permalinks; soak till 2026-05-10).
+Senast uppdaterad: 2026-05-05 (+#48 klar — Polisens JSON-API + bättre geocoding, 6d soak 100 % geocoded).
 
 ## Aktiva
 
@@ -15,7 +15,6 @@ Senast uppdaterad: 2026-05-03 (#50 Trafikverket Fas 1 deployat — live-karta-la
 | 36  | GSC-mätning av AI-titlars CTR-effekt                    | Mätperiod startad 2026-04-27, första check 2026-05-25                                            | [todos/36-gsc-matning-ai-titlar.md](todos/36-gsc-matning-ai-titlar.md)                               |
 | 39  | MSB/MCF brand- och räddningsstatistik per kommun        | Implementerad 2026-04-29 — väntar på trafikmätning 2026-05-13                                    | [todos/39-msb-brand-rakning-statistik.md](todos/39-msb-brand-rakning-statistik.md)                   |
 | 46  | Slå samman Händelser/Senaste/Mest lästa i menyn         | Importerad från GitHub #76 — kräver design + redirect-strategi                                   | [todos/46-meny-handelser-konsolidering.md](todos/46-meny-handelser-konsolidering.md)                 |
-| 48  | Polisens JSON-API + bättre geocoding                    | Fas 1 + Fas 2 deployat 2026-04-29 — soak pågår, mätperiod på geo-träff                           | [todos/48-geocode-inkludera-lan.md](todos/48-geocode-inkludera-lan.md)                               |
 | 50  | Trafikverket Trafikinformation: live på kartan          | Fas 1 deployat 2026-05-03 (live-karta-layer + /trafik + permalinks) — soak till 2026-05-10       | [todos/50-trafikverket-trafikinformation-live.md](todos/50-trafikverket-trafikinformation-live.md)   |
 | 51  | Övriga datakällor: research-skiss                       | Research-katalog (SMHI, räddningstjänst-RSS, Krisinfo, m.fl.) — bryts ut per källa               | [todos/51-ovriga-datakallor-research.md](todos/51-ovriga-datakallor-research.md)                     |
 | 52  | GSC-monitor: lågrankade högvolym-queries                | Baseline klar 2026-04-30 — 7 åtgärder identifierade (A–G), ~25k clicks/90d potential             | [todos/52-gsc-low-rank-monitoring.md](todos/52-gsc-low-rank-monitoring.md)                           |
@@ -74,6 +73,7 @@ Sorterade nyast först.
 
 | #   | Titel                                                               | Klar       | Fil                                                                                                          |
 | --- | ------------------------------------------------------------------- | ---------- | ------------------------------------------------------------------------------------------------------------ |
+| 48  | Polisens JSON-API + bättre geocoding                                | 2026-05-05 | [todos/done/48-geocode-inkludera-lan.md](todos/done/48-geocode-inkludera-lan.md)                             |
 | 55  | Kortare/snyggare URL:er för kartbilder (`/k/v1/` 301 + immutable)   | 2026-05-01 | [todos/done/55-kortare-kartbild-urls.md](todos/done/55-kortare-kartbild-urls.md)                             |
 | 58  | spatie/laravel-markdown-response för AI-agenter                     | 2026-05-01 | [todos/done/58-laravel-markdown-response.md](todos/done/58-laravel-markdown-response.md)                     |
 | 53  | Återaktivera presstalesperson-filter                                | 2026-05-01 | [todos/done/53-aterativera-presstalesperson-filter.md](todos/done/53-aterativera-presstalesperson-filter.md) |

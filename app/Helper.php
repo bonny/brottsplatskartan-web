@@ -1153,7 +1153,7 @@ class Helper {
 
     public static function getOrter() {
         // DISTINCT över 460k+ rader utan WHERE-filter = dyr query.
-        // Nya orter tillkommer sällan (nya adressnamn i RSS-feeds).
+        // Nya orter tillkommer sällan (nya adressnamn i Polisens händelser).
         // 24h TTL räcker gott.
         return Cache::remember('getOrter', 24 * HOUR_IN_SECONDS, function () {
             return \DB::table('crime_events')

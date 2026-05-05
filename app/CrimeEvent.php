@@ -179,9 +179,9 @@ class CrimeEvent extends Model implements Feedable {
     }
 
     /**
-     * The pub date is the date from the RSS-feed,
-     * i.e. when the crime is posted by polisen
-     * the actual event may have happened much earlier
+     * The pub date is the datetime polisen publicerar händelsen
+     * (Polisens JSON-API `datetime`-fält). Det faktiska brottet
+     * kan ha hänt långt tidigare.
      */
     public function getPubDateISO8601() {
         return Carbon::createFromTimestamp($this->pubdate)->toIso8601String();
@@ -199,7 +199,7 @@ class CrimeEvent extends Model implements Feedable {
 
     /**
      * Parsed date = the date that is written as text in each crime.
-     * Is often much earlier than the date in the RSS data.
+     * Is often much earlier than the publish-datetime from Polisens API.
      */
     public function getParsedDateFormattedForHumans() {
         $date = $this->parsed_date;

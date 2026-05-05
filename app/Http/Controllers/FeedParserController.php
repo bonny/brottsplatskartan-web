@@ -354,11 +354,12 @@ class FeedParserController extends Controller
         $arr_description_words = $matches[0];
         $arr_description_words = array_map("mb_strtolower", $arr_description_words);
 
-        // Länet, t.ex. "Stockholms län"
-        // Användbart för att grovt avgränsa plats för händelsen.
-        // Borttaget efter omgörning av polisen.se 22 Feb 2018,
-        // dock borde vi kunna ta det från URL istället?
-        // Nej... varje län har dock en egen RSS-feed, så hämta via det på nåt vis istället då..
+        // Länet, t.ex. "Stockholms län" — kunde tidigare läsas från
+        // sista raden i händelsetexten ("Polisen Stockholms län") men
+        // togs bort av polisen.se 2018-02-22. Sedan #48 finns det i
+        // `polisen_location_name` (från JSON-API:t) på CrimeEvent —
+        // den här lokala variabeln är vestigial men behålls eftersom
+        // findLocations()-arrayen byggs runt prio-strukturen nedan.
         $police_lan = "";
 
         // Remove "Polisen Värmland" etc that's the last line in the content words
