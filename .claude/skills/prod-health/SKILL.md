@@ -92,9 +92,35 @@ Tolka utdata:
 
 ## all / (tomt)
 
-Kör cpu → mem → disk → docker → redis i ordning. Sammanfatta i slutet:
-"Allt OK" eller lista avvikelser (load > 4, mem available < 1 GB, disk >
-80 %, container nere, Redis evictions, etc.).
+Kör allt i **en enda SSH-anslutning** för att minimera handshake-overhead.
+De två långsammaste kommandona (`docker stats` och `redis:health`) körs
+parallellt via bakgrundsjobb och temporärfiler — som läses tillbaka efter `wait`.
+
+```bash
+ssh deploy@brottsplatskartan.se '
+  uptime
+  free -h
+  df -h / && du -sh /opt/brottsplatskartan 2>/dev/null
+  cd /opt/brottsplatskartan
+  docker compose ps
+  docker stats --no-stream > /tmp/_bpk_stats.txt &
+  docker compose exec -T app php artisan redis:health > /tmp/_bpk_redis.txt &
+  wait
+  cat /tmp/_bpk_stats.txt
+  cat /tmp/_bpk_redis.txt
+  rm -f /tmp/_bpk_stats.txt /tmp/_bpk_redis.txt
+'
+```
+
+Varför detta mönster:
+- **En SSH-handshake** istället för fem separata anslutningar
+- **`docker stats` + `redis:health` parallellt** — de tar ~2s respektive ~3s;
+  parallellt = 3s totalt, sekventiellt = 5s totalt
+- **Temporärfiler läses tillbaka** efter `wait` så inget output försvinner
+- **`rm` i slutet** städar upp — servern påverkas inte permanent
+
+Sammanfatta i slutet: "Allt OK" eller lista avvikelser (load > 4,
+mem available < 1 GB, disk > 80 %, container nere, Redis evictions, etc.).
 
 För `all` räcker det med en kondenserad version per sektion — inte hela
 top-output. Visa det viktigaste:
