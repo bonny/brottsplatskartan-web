@@ -13,11 +13,8 @@ www.brottsplatskartan.se {
 brottsplatskartan.se {
 	reverse_proxy app:8080
 	encode gzip zstd
-	header {
-		Strict-Transport-Security "max-age=31536000; includeSubDomains"
-		X-Content-Type-Options "nosniff"
-		Referrer-Policy "strict-origin-when-cross-origin"
-	}
+	# Security headers sätts av serversideup/php nginx (security.conf) —
+	# dubblera inte här. X-Frame-Options sätts också där.
 }
 
 kartbilder.brottsplatskartan.se {
