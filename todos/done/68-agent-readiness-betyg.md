@@ -1,4 +1,4 @@
-**Status:** quick wins implementerade lokalt 2026-05-06 — väntar på deploy + re-scan
+**Status:** klar 2026-05-06 — Level 0 → Level 4 "Agent-Integrated" (4/5 quick wins → pass)
 **Senast uppdaterad:** 2026-05-06
 
 # Todo #68 — Höj agent-readiness-betyg (isitagentready.com)
