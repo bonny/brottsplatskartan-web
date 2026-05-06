@@ -1,5 +1,5 @@
-**Status:** aktiv (idé — research saknas)
-**Senast uppdaterad:** 2026-04-30
+**Status:** avfärdad 2026-05-06 — Hetzner avvecklar referral-programmet 2026-06-15
+**Senast uppdaterad:** 2026-05-06
 **Källa:** Inbox Brottsplatskartan (2026-04-30)
 
 # Todo #57 — Aktivera Hetzners referral-program

@@ -5,6 +5,12 @@
 # Pixel-routes (/pixel, /pixel-sok) blockeras INTE här. De använder POST
 # och returnerar X-Robots-Tag: noindex så Google inte indexerar dem.
 User-agent: *
+# Content Signals (Cloudflare-spec) — maskinläsbar policy för hur
+# innehållet får användas av automatiserade agenter.
+# https://blog.cloudflare.com/content-signals/
+# search=yes (sök/index ok), ai-input=yes (RAG/realtidssvar ok),
+# ai-train=no (inte träningsdata).
+Content-Signal: search=yes, ai-input=yes, ai-train=no
 
 # -----------------------------------------------------------------
 # AI-träningsbotar — inte tillåtna (vi vill inte bli träningsdata

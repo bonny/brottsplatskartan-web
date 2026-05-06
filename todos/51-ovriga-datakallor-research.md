@@ -1,5 +1,5 @@
 **Status:** aktiv (research-skiss — väntar på prioritering efter #50)
-**Senast uppdaterad:** 2026-04-29
+**Senast uppdaterad:** 2026-05-06
 **Relaterad till:** #50 (Trafikverket live), #38/#39/#40 (statistik per kommun)
 
 # Todo #51 — Övriga datakällor: research-skiss
@@ -64,18 +64,6 @@ Research-fas klar 2026-04-29. Implementation kräver per-källa skissfas.
   (samma mönster som BRÅ).
 - **Risk:** Polygoner saknas oftast → reduceras till "lista per län"
 
-### D) Sveriges Radio trafikmeddelanden-API
-
-- **Endpoint:** `https://api.sr.se/api/v2/traffic/messages`
-- **Vad:** P4-redaktionens trafikmeddelanden — olyckor, hinder, vilt, kö
-- **Geografi:** Punkt (lat/lng) + textbeskrivning
-- **Format:** REST/JSON, ingen nyckel
-- **Confidence:** **Medel** — API:t är officiellt unmaintained men
-  fungerar
-- **Best fit:** Överlappar Trafikverket (#50) — mindre värde solo.
-  Kanske bara komplement för redaktionellt urval.
-- **Sannolikt:** Skippa om #50 är gjord — för stor överlapp.
-
 ### E) SSM Strålsäkerhetsmyndigheten — gammastationer
 
 - **UI:** `https://karttjanst.ssm.se/gammastationer`
@@ -121,6 +109,9 @@ Research-fas klar 2026-04-29. Implementation kräver per-källa skissfas.
 
 ## Skippade källor (inte värt research nu)
 
+- **Sveriges Radio trafikmeddelanden-API** (`api.sr.se/api/v2/traffic/messages`)
+  — för stor överlapp med Trafikverket (#50, live sedan 2026-05-03); SR:s
+  API är dessutom officiellt unmaintained. Avfärdad 2026-05-06.
 - **SOS Alarm händelseinformation** — kommersiellt avtal krävs
 - **Sjöfartsverket RAIS** — avgiftsbelagt (PSI-undantag)
 - **Statens haverikommission** — bara historiska utredningar, månader sent
@@ -146,7 +137,7 @@ från "1 kvällsprojekt" (SMHI, A) till "långsiktig adapter-portfölj"
    befintlig VMAAlert
 5. **G) Folkhälsomyndigheten** — kuriosa, låg prio
 6. **E) SSM gammastationer** — coolhets-faktor, kräver outreach
-7. **D, H)** — sannolikt skippa
+7. **H) Stockholms stad OGC API** — sannolikt skippa, oklar realtidsstatus
 
 ## Beroenden mot andra todos
 

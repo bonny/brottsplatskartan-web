@@ -39,6 +39,12 @@ class Kernel extends HttpKernel
             // Set-Cookie-headers är borta innan svaret går ut. Stripar
             // bara cookies på /k/v1/*-routerna. Se StripCookiesForCachableImages.
             \App\Http\Middleware\StripCookiesForCachableImages::class,
+            // Stripar cookies på sitemap/.well-known/* så scannrar och
+            // proxies kan cacha agent-discovery-routerna.
+            \App\Http\Middleware\StripCookiesForAgentDiscovery::class,
+            // Lägger till Link-headers på startsidan (RFC 8288) som
+            // pekar mot llms.txt och api-catalog för agent-discovery.
+            \App\Http\Middleware\AgentDiscoveryLinkHeaders::class,
             \App\Http\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,

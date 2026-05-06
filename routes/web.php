@@ -99,6 +99,10 @@ Route::get('/statistik', [\App\Http\Controllers\StatisticsController::class, 'in
 Route::get('/sitemap.xml', function () {
     return \App\Http\Controllers\SitemapController::serveCached('index');
 });
+
+// Agent-discovery: API-katalog enligt RFC 9727 (Linkset-format).
+// Hjälper AI-agenter och scannrar att hitta våra publika API-endpoints.
+Route::get('/.well-known/api-catalog', [\App\Http\Controllers\AgentDiscoveryController::class, 'apiCatalog']);
 Route::get('/sitemap-main.xml', function () {
     return \App\Http\Controllers\SitemapController::serveCached('main');
 });
