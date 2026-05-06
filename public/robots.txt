@@ -5,6 +5,11 @@
 # Pixel-routes (/pixel, /pixel-sok) blockeras INTE här. De använder POST
 # och returnerar X-Robots-Tag: noindex så Google inte indexerar dem.
 User-agent: *
+# Allow: / är explicit för att Googles robots-parser inte ska tolka
+# en grupp med bara Content-Signal (utan Allow/Disallow) som restriktiv.
+# Utan denna rad rapporterade GSC "blocked by robots.txt" på alla URL:er
+# 2026-05-06 — direkt efter att Content-Signal lades till.
+Allow: /
 # Content Signals (Cloudflare-spec) — maskinläsbar policy för hur
 # innehållet får användas av automatiserade agenter.
 # https://blog.cloudflare.com/content-signals/
