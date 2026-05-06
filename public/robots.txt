@@ -1,8 +1,78 @@
 # Brottsplatskartan robots.txt
-# DIAGNOSTIK 2026-05-06: minimal version för att isolera GSC Live Test "blocked".
-# Återställ från git när problem är isolerat.
+# Se även /llms.txt för LLM-specifik sajtguide.
 
+# Generellt
+# Pixel-routes (/pixel, /pixel-sok) blockeras INTE här. De använder POST
+# och returnerar X-Robots-Tag: noindex så Google inte indexerar dem.
 User-agent: *
 Allow: /
+
+# -----------------------------------------------------------------
+# AI-träningsbotar — inte tillåtna (vi vill inte bli träningsdata
+# utan kompensation).
+# -----------------------------------------------------------------
+
+User-agent: ClaudeBot
+Disallow: /
+
+User-agent: GPTBot
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: Meta-ExternalAgent
+Disallow: /
+
+User-agent: Meta-ExternalFetcher
+Disallow: /
+
+User-agent: Applebot-Extended
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+User-agent: cohere-ai
+Disallow: /
+
+User-agent: Diffbot
+Disallow: /
+
+User-agent: Omgili
+Disallow: /
+
+# -----------------------------------------------------------------
+# AI-retrievalbotar (sök/svar i realtid) — tillåtna. De skickar
+# trafik tillbaka när användare klickar, vilket är värdefullt.
+# -----------------------------------------------------------------
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+# -----------------------------------------------------------------
+# Sitemap
+# -----------------------------------------------------------------
 
 Sitemap: https://brottsplatskartan.se/sitemap.xml
