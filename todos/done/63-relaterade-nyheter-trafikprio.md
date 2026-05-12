@@ -1,4 +1,4 @@
-**Status:** aktiv (Fas 1 byggd lokalt 2026-05-12 — väntar på deploy + 30d-mätning)
+**Status:** klar 2026-05-12 — Fas 1 deployad till prod, pilot 8/8 precision, schemajobb live (var 4:e h). UI sammanslagen med "Händelsen i media". Uppföljning 2026-06-11.
 **Senast uppdaterad:** 2026-05-12
 
 # Todo #63 — Automatisera/förenkla relaterade nyheter, prioritera high-traffic events
