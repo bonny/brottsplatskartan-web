@@ -1,7 +1,45 @@
-**Status:** aktiv — Fas 1 + 2 + 3 klara 2026-05-12, Fas 4 kvarstår (mätningsberoende)
+**Status:** klar 2026-05-12 — Fas 1+2+3 implementerade, Fas 4 ej motiverad (mätning)
 **Senast uppdaterad:** 2026-05-12
 
 # Todo #71 — Startsida-redesign: kompaktare layout + SEO-städ
+
+## Fas 4 klar 2026-05-12 — ingen åtgärd behövs (mätning visar att lazy-load ej är motiverad)
+
+Mätskript: [`tmp-startsida-analys-2026-05-12/audit-network.mjs`](../tmp-startsida-analys-2026-05-12/audit-network.mjs).
+Kört mot lokal dev (http://brottsplatskartan.test:8350/).
+
+Resultat per viewport (efter Fas 1–3):
+
+| Mått                   | Desktop 1440 | Tablet 820 | Mobile 390 |
+| ---------------------- | ------------ | ---------- | ---------- |
+| Total bytes            | 1368 kB      | 1368 kB    | 1368 kB    |
+| Total requests         | 53           | 53         | 53         |
+| Kart-tiles bytes       | 69 kB        | 69 kB      | 69 kB      |
+| Kart-tiles requests    | 17           | 17         | 17         |
+| Kart-tiles % av bytes  | 5.1 %        | 5.1 %      | 5.1 %      |
+| Leaflet-assets (cache) | 223 kB / 9   | 223 / 9    | 223 / 9    |
+| Lazy-able totalt       | 292 kB / 26  | 292 / 26   | 292 / 26   |
+
+Tile-data laddas från egen tileserver (`kartbilder.brottsplatskartan.se`)
+i WebP — varje tile är 5–8 kB. Totalt ~69 kB över 17 requests, vilket
+är försumbart mot resten av sidans 1.3 MB.
+
+Beslutsregel (definierad i todo-prompt):
+
+- Kart-tiles ≥ 30 % av mobile bytes → **5.1 % — ej trigger**
+- Kart-tiles ≥ 20 requests → **17 — ej trigger**
+- Mobile > 2 MB OCH kart-tiles > 500 kB → **1.37 MB / 69 kB — ej trigger**
+
+Lazy-load skulle besparat ~292 kB / 26 req (Leaflet + tiles tillsammans),
+men eftersom kart-tiles ensamt är så få och så små finns ingen
+bandwidth-motivering. Leaflet-assets cachas dessutom hårt mellan
+sidvisningar.
+
+UX-värde av kartan på startsidan bedöms högre än 21 % bytes-besparing
+på första laddningen. **Ingen lazy-load implementeras.**
+
+Om mätning i framtiden visar att tile-trafik växer (t.ex. om vi byter
+till retina-tiles eller högre default-zoom), kan Fas 4 återöppnas.
 
 ## Fas 3 klar 2026-05-12 — commit `ab33758`. Mätning: mobile docH 7 429 → 4 929 px (−33.7 %), desktop oförändrad (3 779 → 3 747 ≈ mätbrus).
 
