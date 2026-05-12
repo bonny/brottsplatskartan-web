@@ -1,4 +1,4 @@
-**Status:** aktiv — Fas 1 klar; **Fas 2 foundation deployad 2026-05-12**. Editorial intro skriven för Tier 1 (Sthlm 172 ord / VG 186 ord / Skåne 173 ord), lokal verifierad — noindex kvar tills granskad + rolling lift. Återstår: vägarbete-fold, noindex-lyft per län, intern länk från `/lan/{lan}`, sitemap-entry, 28d-gates.
+**Status:** aktiv — Fas 1 klar; **Fas 2 lyft 2026-05-12** (ec9f97e): editorial intro Sthlm/VG/Skåne, noindex lyft på Tier 1, vägarbete-fold, internlänk från `/lan/{lan}` resp. `/<stad>`, sitemap-entry. Återstår: manuell GSC "Request Indexing" + 28d-gate-mätning till **2026-06-09**.
 **Senast uppdaterad:** 2026-05-12
 **Relaterad till:** #40 (Trafikverket STRADA — historisk parallell), #51 (övriga live-källor)
 **XSD-källa:** `docs/Trafikverket/response_Situation_v1.6.xsd` (auktoritativ).
@@ -1141,16 +1141,26 @@ Commits: `92688da` (foundation), `5fb98e1` (footer-länk till /trafik).
       Källförklarings-paragrafen droppad (redundant med `Källor:`-footer).
     - Wire-in via `view()->exists()`-pattern i `trafik/lan.blade.php` —
       fler län plugin:as som egna partials per slug.
-    - **noindex kvar på alla tre tills granskad och rolling-lift utförd.**
-2. **Vägarbete default-foldat bakom CTA** i listan (UX-review: 65 % volym,
-   0 newsworthy).
-3. **Intern länk** från `/lan/{lan}`-vyn → `/{lan}/trafik` (lägg in efter
-   editorial text klar och noindex lyfts per Tier 1 län).
-4. **Lyft noindex per Tier 1 län** när text granskad (manuell rolling per
-   lift-checklist: sitemap, GSC URL-inspektion, bumpa `Last-Modified`).
-5. **Sitemap-entry** för aggregat-sidor (egen fil eller huvudsitemap?).
-6. **28d-gates** mot Fas 3 (impressions, pos < 30, ingen
-   AdSense-flag, ingen CTR/pos-regression).
+    - ✅ **noindex lyft 2026-05-12** för alla tre Tier 1 (paketdeploy
+      `ec9f97e`). Filter-vyer `?typ=*` förblir permanent noindex.
+2. ✅ **Vägarbete default-foldat bakom CTA** i listan (deploy `ec9f97e`):
+   Blade `->partition()` på `message_type === 'Vägarbete'` → `<details>`
+   default stängd. Sthlm: 74 vägarbeten foldas, ~14 övriga ovanför.
+3. ✅ **Intern länk** från `/lan/{lan}` → `/{lan}/trafik` (deploy `ec9f97e`):
+   `single-lan.blade.php` för Skåne/VG; `city.blade.php` för Sthlm
+   (eftersom `/lan/Stockholms län` 301:as till `/stockholm` via
+   `CityRedirectMiddleware`). Central whitelist:
+   `TrafikController::TIER1_INDEXABLE_LAN_SLUGS` + `::tier1LanSlug()`.
+4. ✅ **Lyft noindex per Tier 1 län** (deploy `ec9f97e`). Alla tre samtidigt
+   istället för rolling — kort feedback-loop och risken är liten på 3 sidor.
+5. ✅ **Sitemap-entry** för Tier 1 aggregat (deploy `ec9f97e`): tillagd i
+   befintlig `sitemap-main.xml` (3 URLs, prio 0.7, hourly). Egen sitemap-fil
+   behövs först vid Fas 3 (permalinks). Bumpas naturligt var 30 min via
+   `sitemap:generate`-cron.
+6. **28d-gates** mot Fas 3 (impressions, pos < 30, ingen AdSense-flag, ingen
+   CTR/pos-regression). Mätperiod **2026-05-12 → 2026-06-09**.
+7. **Kvar:** GSC URL-inspektion "Request Indexing" manuellt på alla 3 slugs
+   (snabbar upp Googles upptäckt — sitemap räcker i sig men ger 1-7 d delay).
 
 ### Fas 2 — aggregat-sidor (1–2 dagar, efter gate)
 
