@@ -16,6 +16,7 @@ use Illuminate\Support\Str;
 use App\Locations;
 use App\Newsarticle;
 use App\Models\CrimeView;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 use App\Services\StaticMapUrlBuilder;
@@ -1133,6 +1134,20 @@ class CrimeEvent extends Model implements Feedable {
 
     public function newsarticles(): HasMany {
         return $this->hasMany(Newsarticle::class);
+    }
+
+    /**
+     * Haiku-validerade nyhetsartiklar för det här eventet (todo #63 fas 1).
+     * Pivot-fält `confidence` ("hög" | "medel" | "låg") + `ai_reason`.
+     */
+    public function relatedNews(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            \App\Models\NewsArticle::class,
+            'crime_event_news',
+            'crime_event_id',
+            'news_article_id'
+        )->withPivot(['confidence', 'ai_reason', 'matched_at']);
     }
 
     /**

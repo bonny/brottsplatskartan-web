@@ -134,7 +134,10 @@
 @endif
 
 @if (!$overview)
-    @include('parts.crimeevent.newsarticles', ['newsarticles' => $newsarticles ?? collect()])
+    @include('parts.crimeevent.newsarticles', [
+        'newsarticles' => $newsarticles ?? collect(),
+        'event' => $event,
+    ])
 
     @include('parts.admin-crime')
 

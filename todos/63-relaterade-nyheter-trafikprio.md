@@ -1,5 +1,5 @@
-**Status:** aktiv (RSS-grund deployad 2026-05-01 — fas-1-pilot pågår, blockerar #60/#64)
-**Senast uppdaterad:** 2026-05-01
+**Status:** aktiv (Fas 1 byggd lokalt 2026-05-12 — väntar på deploy + 30d-mätning)
+**Senast uppdaterad:** 2026-05-12
 
 # Todo #63 — Automatisera/förenkla relaterade nyheter, prioritera high-traffic events
 
@@ -233,3 +233,59 @@ om hur det relaterar till #60 är öppen.
 3. Claude Haiku-validering → spara `crime_event_news` (event_id, news_id, confidence, ai_reason)
 4. Visning på event-sidan: "Mediabevakning"-sektion (`rel="nofollow"`)
 5. Mätning: AI-precision (stickprov 30 träffar), CTR + dwell time
+
+## Implementations-status Fas 1 (2026-05-12)
+
+**Arkitektur-beslut:** återanvänd #64:s push-pipeline (`news_articles`
+
+- `place_news`) istället för originalplanens Google News-pull. Subagent-
+  review verifierade prod-täckning: 63 % av events 7d har ≥2 kandidat-
+  artiklar, 48 % har ≥5; storstadsbias matchar förväntad top-50-trafik.
+  Google News finns redan med som en av de 29 RSS-källorna.
+
+**Pilot-mätning (1 event, 18 kandidater, lokal körning):**
+
+- Event 501949 (olycka Kulladal/Malmö 2026-05-10): 18 kandidat-artiklar
+  fångade via place_news ±2d, Haiku validerade 8 som matchningar (7 hög, 1 medel)
+- 100 % precision på stickprovet — alla 8 träffar handlade om samma
+  konkreta händelse (man klämdes ihjäl under bil)
+
+**Nya filer:**
+
+- `database/migrations/2026_05_12_100000_create_crime_event_news_table.php`
+- `app/Models/CrimeEventNews.php`
+- `app/Ai/Agents/EventNewsMatcher.php` + `resources/views/ai/prompts/event-news-match.blade.php`
+- `app/Console/Commands/MatchEventNews.php` (signature `app:event-news:match`)
+- `resources/views/parts/event-news.blade.php`
+
+**Ändringar:**
+
+- `app/CrimeEvent.php` — `relatedNews()` belongsToMany-relation med
+  withPivot(`confidence`, `ai_reason`, `matched_at`)
+- `resources/views/single-event.blade.php` — inkluderar parts/event-news
+  efter cardet
+- `app/Console/Kernel.php` — `app:event-news:match --limit=50` cron `25 */4 * * *`,
+  withoutOverlapping, gated på `$aiAllowed` (= production)
+
+**Top-N-källa:** lokala `crime_views` senaste 7d (proxy för GA4 page
+views). GA4-pull byggs i en följande iteration om/när trafiken motiverar
+finare urval. Filter: bara events skapade senaste 30d (uppföljnings-fönster).
+
+**Kostnad pilot-uppskattning:** 50 events × ~5 nya kandidater × Haiku
+(~$0.001) × 6 körningar/dygn ≈ $1.5/dygn worst case. I praktiken lägre
+eftersom de flesta events redan är processade — bara nya
+kandidat-artiklar (`whereNotIn ... crime_event_news`) körs igen.
+
+**Visningströsken:** `wherePivot('confidence', '!=', 'låg')` — bara hög/medel
+syns på sajten. Låg-confidence sparas inte alls (Haiku returnerar då
+is_match=false).
+
+**PHPStan:** 0 errors (level 5).
+
+**Kvar innan deploy:**
+
+- Manuell test i webbläsaren av event-vyn med matchningar
+- Pushdeploy → produktionssoak
+- Tabell-fönster: efter deploy kommer schedulern köra första matchnings-
+  passet inom 4 h. Lägg in uppföljnings-datum för 30d-mätning av
+  precision (stickprov 30) + CTR/dwell när deploy gjorts.

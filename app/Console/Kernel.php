@@ -173,6 +173,16 @@ class Kernel extends ConsoleKernel
             ->dailyAt('03:45')
             ->withoutOverlapping()
             ->name('news-prune');
+
+        // Event ↔ artikel-matchning (todo #63 fas 1). Plockar top-50 mest
+        // visade events senaste 7d och matchar dem mot place_news ±2d via
+        // Haiku 4.5. Var 4:e h ger latens 0-4 h från artikel/event-uppdykande
+        // till matchning, vilket är OK för Mediabevakning-sektionen.
+        $schedule->command('app:event-news:match --limit=50')
+            ->cron('25 */4 * * *')
+            ->withoutOverlapping()
+            ->name('event-news-match')
+            ->when($aiAllowed);
     }
 
     /**
