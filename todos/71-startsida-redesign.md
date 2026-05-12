@@ -3,7 +3,7 @@
 
 # Todo #71 — Startsida-redesign: kompaktare layout + SEO-städ
 
-## Fas 4 klar 2026-05-12 — ingen åtgärd behövs (mätning visar att lazy-load ej är motiverad)
+## Fas 4 klar 2026-05-12 — commit `0c7ae4a`. Ingen åtgärd behövs (mätning visar att lazy-load ej är motiverad)
 
 Mätskript: [`tmp-startsida-analys-2026-05-12/audit-network.mjs`](../tmp-startsida-analys-2026-05-12/audit-network.mjs).
 Kört mot lokal dev (http://brottsplatskartan.test:8350/).
