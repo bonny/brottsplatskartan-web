@@ -632,6 +632,14 @@ Route::get('/brand/{undersida?}', function (
 })->name('brand');
 
 /**
+ * /{lan}/trafik — Fas 2 aggregat per län (todo #50).
+ * Måste registreras FÖRE `/{lan}/{eventName}`-routern nedan, annars
+ * tolkar Laravel "trafik" som ett event-namn inom län:et.
+ */
+Route::get('/{lan}/trafik', [\App\Http\Controllers\TrafikController::class, 'lan'])
+    ->name('trafikLan');
+
+/**
  * single event page/en händelse/ett crimeevent
  *
  * ca. såhär:

@@ -1,5 +1,5 @@
-**Status:** aktiv — **Fas 1 deployat 2026-05-03** (live-karta-layer + olänkad `/trafik` + `/trafik/{id}`-permalinks). Soak till 2026-05-10, sedan beslut om Fas 2.
-**Senast uppdaterad:** 2026-05-03
+**Status:** aktiv — Fas 1 klar; **Fas 2 foundation byggd lokalt 2026-05-12** (route, controller, view, noindex). Återstår: editorial intro per Tier 1 län + lyft noindex + intern länk från `/lan/{lan}`.
+**Senast uppdaterad:** 2026-05-12
 **Relaterad till:** #40 (Trafikverket STRADA — historisk parallell), #51 (övriga live-källor)
 **XSD-källa:** `docs/Trafikverket/response_Situation_v1.6.xsd` (auktoritativ).
 
@@ -1079,6 +1079,58 @@ permalinks `/trafik/{id}` (klickbara från lista, indexerbara).
 - `/trafik` upptäcks i GSC (impressions > 0)?
 - Pruning fungerar (verifiera dygnsjobb).
 - Inga oväntade 401/403-larm i loggar.
+
+#### Soak-utfall 2026-05-12 (2 dagar efter planerat gate-datum)
+
+| # | Gate                                       | Status | Detalj                                                                                                  |
+| - | ------------------------------------------ | :----: | ------------------------------------------------------------------------------------------------------- |
+| 1 | Volym stationär                            |   ✅   | 10 136 events. Fördelning: Trafikmeddelande 5 911 / Vägarbete 3 185 / Hinder 738 / Olycka 301 / Väglag 1 |
+| 2 | Ingen CWV-regression på `/karta`           |   ✅   | Trafikverket-layern är lazy + default OFF; inga init-requests från den (bara `/api/eventsMap` 15,8 KB). LCP/CLS-problem på `/karta` är pre-existing (LCP-element = Leaflet-kartan, CLS = footer + AdSense-consent) |
+| 3 | Ingen rate-limit-trippning från Trafikverket |  ✅   | Inga 429/401/403 i 10d-loggar                                                                            |
+| 4 | `/trafik` upptäcks i GSC                   |   ✅   | 3 clicks / 92 impressions / CTR 3,26 % / pos 13,1 (10d-fönster 2026-05-03 → 2026-05-12)                  |
+| 5 | Pruning fungerar                           |   ✅   | `trafikverket:prune` kör 03:30 dagligen, ~600 ms/körning (verifierat 2026-05-11 + 2026-05-12)            |
+| 6 | Inga oväntade 401/403-larm                 |   ✅   | Inga i loggarna                                                                                          |
+
+**Lighthouse mobile `/karta` 2026-05-12 (info, ej blockerare):** Performance 53, LCP 6,5 s, CLS 0,884, TBT 20 ms, FCP 0,9 s. LCP-element = `div.EventsMap__container > div.EventsMap` (saknar `fetchpriority=high`). CLS-källor: `footer.SiteFooter` (×2 vid map-expand) + `div.fc-dialog-container` (Funding Choices consent). Båda pre-existing → egen todo (#70).
+
+**Slutsats:** alla 6 gates passerade → grönt ljus för Fas 2.
+
+#### Fas 2 foundation — lokalt klar 2026-05-12
+
+**Implementerat:**
+
+- ✅ `App\Http\Controllers\TrafikController` med `index()` (refactor Fas 1) +
+  `lan(Request, $lan)` (ny Fas 2-aggregat).
+- ✅ Route `/{lan}/trafik` registrerad **före** `/{lan}/{eventName}` (line 650)
+  i `routes/web.php` så Laravel inte tolkar "trafik" som ett event-namn.
+- ✅ Mappning: län-slug → län-namn via `Helper::getLanSlugsToNameArray()` +
+  län-namn → SCB county-nr via ny publik konstant `Event::COUNTY_NAMES` och
+  `Event::getCountyNoForLanName()`.
+- ✅ Polisen `parsed_title`-filter-set verifierat mot 90d prod-data:
+  `Trafikolycka`, `Trafikolycka, personskada`, `Trafikolycka, singel`,
+  `Trafikolycka, vilt`, `Trafikolycka, smitning från`, `Trafikbrott`,
+  `Trafikkontroll`, `Trafikhinder`.
+- ✅ `?typ=olycka`-filter (`noindex,follow` via `$robotsNoindex`-mekanismen
+  i layout — sätts från controller).
+- ✅ View `resources/views/trafik/lan.blade.php` med breadcrumb, intro-stub,
+  "Live från Trafikverket"-sektion (med permalink-länk till Fas 1-vyn) +
+  Polishändelser-sektion (återanvänder `<x-crimeevent.list-item>`).
+- ✅ Verifierat lokalt: 200 OK på `/skane-lan/trafik` + `?typ=olycka`,
+  404 på obefintliga län. Mobile-screenshot OK.
+
+**Återstår för Fas 2 deploy:**
+
+1. **Editorial intro-text per Tier 1 län** (min 150 ord vardera) —
+   Sthlm + VG + Skåne. Skrivs FÖRE noindex lyfts.
+2. **Vägarbete default-foldat bakom CTA** i listan (UX-review: 65 % volym,
+   0 newsworthy).
+3. **Intern länk** från `/lan/{lan}`-vyn → `/{lan}/trafik` (lägg in efter
+   editorial text klar och noindex lyfts).
+4. **Lyft noindex per Tier 1 län** när text granskad (manuell rolling per
+   lift-checklist: sitemap, GSC URL-inspektion, bumpa `Last-Modified`).
+5. **Sitemap-entry** för aggregat-sidor (egen fil eller huvudsitemap?).
+6. **Deploy + 28d-gates** mot Fas 3 (impressions, pos < 30, ingen
+   AdSense-flag, ingen CTR/pos-regression).
 
 ### Fas 2 — aggregat-sidor (1–2 dagar, efter gate)
 
