@@ -1,4 +1,4 @@
-**Status:** aktiv — fix implementerad + verifierad lokalt 2026-05-12. Väntar prod-deploy + 28d CrUX för att bekräfta field-data.
+**Status:** aktiv — fix delvis lyckad på prod 2026-05-12. Desktop −64 % (klar). Mobile oförändrad — behöver iteration #2.
 **Senast uppdaterad:** 2026-05-12
 
 # Todo #70 — `/karta` CWV: CLS-rotorsak = oreserverad map-höjd
@@ -76,26 +76,55 @@ höjd-shift. Höjd-fix på 70dvh → calc(100dvh - vars) är sekundär.
    så body har `position: fixed` redan från första paint på `/karta` —
    eliminerar mobile-footer-shift som triggades av JS-toggle.
 
-### Resultat (lokal mätning 2026-05-12, dev-miljö med phpdebugbar)
+### Resultat — lokal mätning (dev, har phpdebugbar)
 
-| Viewport | Före (CLS) | Efter (CLS) | Förändring | Återstående källa |
-|----------|-----------:|------------:|-----------:|--------------------|
-| Mobile (Pixel 7, 4×CPU, 1,6 Mbps) | 0,262 | **0,062** | **−77 %** | `div.phpdebugbar` (dev-only) |
-| Desktop (1366×900) | 0,579 | **0,003** | **−99,6 %** | `phpdebugbar-header-right` (dev-only) |
+| Viewport | Före (CLS) | Efter (CLS) | Δ |
+|----------|-----------:|------------:|--:|
+| Mobile (Pixel 7, 4×CPU, 1,6 Mbps) | 0,262 | 0,062 | −77 % |
+| Desktop (1366×900) | 0,579 | 0,003 | −99,6 % |
 
-LCP oförändrad (good i båda viewports). På prod (utan debugbar) bör CLS
-hamna ≈ 0 desktop och ≈ 0,01 mobile. Verifieras med Playwright mot prod
-efter deploy.
+### Resultat — prod-mätning post-deploy 2026-05-12
+
+| Viewport | Före (CLS) | Efter (CLS) | Δ | Återstående källa |
+|----------|-----------:|------------:|--:|-------------------|
+| Mobile | 0,262 | **0,262** | **0 %** | `footer.SiteFooter` |
+| Desktop | 0,579 | **0,211** | **−64 %** | `footer.SiteFooter` |
+
+**Desktop lyckad** — `.EventsMap`-shifts borta (var 1,10 i 3 shifts före).
+Kvarvarande shift = footer.
+
+**Mobile oförändrad** — lokala 0,062-resultatet var en artefakt av
+debugbar-layout (debugbar tar plats överst → andra elements positioner
+ändras). På prod (utan debugbar) finns inte den artefakten, och footer-
+shift kvarstår.
+
+Min hypotes om body.map-is-expanded server-side gick inte hem på mobile.
+Möjliga orsaker:
+
+- AdSense FundingChoices laddas async → ändrar layout efter consent-paint
+- `dvh` ändras på mobile när URL-bar gömmer/visar sig under load
+- `--header-elms-height`-default (120px) matchar inte exakt vad JS räknar
+  fram → liten initial-shift på footer
+- CSS `body.map-is-expanded { position: fixed }` tar inte hänsyn till
+  notification-bar/sitebar/header som har egen `position: fixed`
+
+LCP oförändrad (good i båda viewports — 1,2 s mobile, 0,2 s desktop).
 
 ### Restpunkter
 
-- Deploya till prod
-- Kör om `tmp-cwv/measure-karta-webvitals.mjs` mot `https://brottsplatskartan.se/karta`
-  för att bekräfta lab-mätning post-deploy
-- Vänta 28d för CrUX field-data via PSI (när kvot återkommit)
-- Avvakta consent-popup-effekt på field-data — Playwrights lokala mätning
-  fångar den inte (consent kommer från Google-tjänst, varierar per
-  besökare)
+- ✅ Deployad till prod 2026-05-12 (commit 4866c81).
+- ✅ Mätt mot prod post-deploy — desktop OK, mobile kvar.
+- **Mobile iteration #2 behövs** för footer-shift. Möjliga vägar:
+    1. Lägg footer i `<aside>` med `position: fixed; bottom: 0` på
+       fullscreen-kartan — tar footer ur flow helt.
+    2. Reservera plats för footer (`min-height: <footer-höjd>`) på
+       container så footer inte hoppar när content omfördelas.
+    3. Kolla om `body.map-is-expanded`-CSS-cascade slår innan första
+       paint (kanske `<style>`-inline i `<head>` behövs istället för
+       extern stylesheet).
+    4. Verifiera mobile med `dvh` → testa `vh` istället för att
+       eliminera URL-bar-dynamics.
+- Vänta 28d för CrUX field-data via PSI (när kvot återkommit).
 
 ## Förslag — gammal (förflyttat ovanför till "Fix")
 
