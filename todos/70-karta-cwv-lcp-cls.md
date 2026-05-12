@@ -1,4 +1,4 @@
-**Status:** aktiv — fix delvis lyckad på prod 2026-05-12. Desktop −64 % (klar). Mobile oförändrad — behöver iteration #2.
+**Status:** aktiv — desktop −64 % (klar). Mobile pre-existing 0,262 — iter #2 (inline CSS) ingen effekt, iter #3 (overflow:hidden) gjorde sämre → reverterad. Mobile är öppen research-fråga.
 **Senast uppdaterad:** 2026-05-12
 
 # Todo #70 — `/karta` CWV: CLS-rotorsak = oreserverad map-höjd
@@ -110,21 +110,52 @@ Möjliga orsaker:
 
 LCP oförändrad (good i båda viewports — 1,2 s mobile, 0,2 s desktop).
 
-### Restpunkter
+### Iteration #2 — inline kritisk CSS (commit ffac7f9, deployad 2026-05-12)
 
-- ✅ Deployad till prod 2026-05-12 (commit 4866c81).
-- ✅ Mätt mot prod post-deploy — desktop OK, mobile kvar.
-- **Mobile iteration #2 behövs** för footer-shift. Möjliga vägar:
-    1. Lägg footer i `<aside>` med `position: fixed; bottom: 0` på
-       fullscreen-kartan — tar footer ur flow helt.
-    2. Reservera plats för footer (`min-height: <footer-höjd>`) på
-       container så footer inte hoppar när content omfördelas.
-    3. Kolla om `body.map-is-expanded`-CSS-cascade slår innan första
-       paint (kanske `<style>`-inline i `<head>` behövs istället för
-       extern stylesheet).
-    4. Verifiera mobile med `dvh` → testa `vh` istället för att
-       eliminera URL-bar-dynamics.
-- Vänta 28d för CrUX field-data via PSI (när kvot återkommit).
+Hypotes: `<link rel="stylesheet">` för events-map.css hann inte appliceras
+före initial paint på mobile → `body.map-is-expanded { position: fixed }`
+gällde inte → footer på normal-flow-position → CSS-load triggade shift.
+
+Inlinade samma CSS-regel i `<head>` via `@push('styles')` i sverigekartan-
+vyn.
+
+**Resultat:** mobile 0,262 → **0,262** (ingen effekt). Hypotesen fel.
+
+### Iteration #3 — overflow:hidden istället för position:fixed (commit af0bf0c, deployad 2026-05-12, reverterad)
+
+Hypotes: `position: fixed; inset: 0` på body kopplade body-storlek till
+dynamic viewport. Mobile URL-bar göms under load → body-storlek ändras →
+footer-shift.
+
+Bytte till `overflow: hidden; height: 100vh` (statisk vh) och behöll
+`.EventsMap` position:fixed för viewport-fyllning.
+
+**Resultat:** mobile 0,262 → **0,388 (sämre)**, desktop 0,211 → 0,224.
+Reverterad i commit `aaf518c`.
+
+Faktiskt motverkande effekt — `position: fixed; inset: 0` minskar
+shift trots intuitionen, medan `overflow: hidden + height: 100vh` ger
+mer shift. Kan vara att html-scroll triggas, eller att body-positioning
+i flow ger mer dynamisk omflyttning än fixed-positionerad body.
+
+### Restpunkter — mobile är öppen research-fråga
+
+- ✅ Iter #1 deployad: desktop −64 %.
+- ❌ Iter #2 deployad: ingen effekt mobile.
+- ❌ Iter #3 deployad + reverterad: gjorde mobile sämre.
+- **Mobile-CLS 0,262 är pre-existing-state** efter iter #1 är aktiv.
+  Roten är troligen AdSense Funding Choices async load + body-flow-
+  ändring. Behöver djupare research med Playwright trace-mode för att
+  förstå exakt vilket scenario flyttar footer.
+- Avvakta CrUX field-data via PSI (28d) när kvot återställs — kanske
+  field-data ser annorlunda ut än vår Playwright-emulering (consent-
+  cookies, varierad device-size, etc.).
+- Möjliga framtida vägar (oprovade):
+    1. Footer som `<aside position: fixed; bottom: 0>` på fullscreen —
+       tar footer helt ur flow. Risk: AdSense flaggar som intrusive.
+    2. Reservera footer-höjd via `min-height` på container.
+    3. Inspektera footer-shift med Playwright `trace.zip` (per-frame
+       DOM-state) för att se exakt vad som flyttar och när.
 
 ## Förslag — gammal (förflyttat ovanför till "Fix")
 

@@ -4,7 +4,7 @@ Index över förbättringsarbete. Varje todo har en egen fil under
 [`todos/`](todos/) med fullständig analys. Konvention och
 mappstruktur: [`todos/README.md`](todos/README.md).
 
-Senast uppdaterad: 2026-05-12 (+#50 Fas 1 soak OK + Fas 2 foundation deployad; +#70 CWV-fix deployad — desktop −64 %, mobile oförändrad, iteration #2 behövs).
+Senast uppdaterad: 2026-05-12 (+#50 Fas 1 soak OK + Fas 2 foundation deployad; +#70 CWV-fix iter #1–3 — desktop −64 %, mobile öppen).
 
 ## Aktiva
 
@@ -24,7 +24,7 @@ Senast uppdaterad: 2026-05-12 (+#50 Fas 1 soak OK + Fas 2 foundation deployad; +
 | 64  | Per-plats nyhetsaggregering — "Senaste nyheter i {ort}" | Fas-2 live 2026-05-02 (hybrid regex + AI Haiku 4.5 + dn-sthlm + visa-fler); stickprov 2026-05-15    | [todos/64-per-plats-nyhetsaggregering.md](todos/64-per-plats-nyhetsaggregering.md)                   |
 | 66  | Uppföljning #55: mät CWV + PHP-FPM-CPU efter `/k/v1/`   | Passiv mätperiod till 2026-05-31 — CWV-jämförelse, cache-hit-rate, social-share-test                | [todos/66-uppfoljning-55-kortare-kartbild-urls.md](todos/66-uppfoljning-55-kortare-kartbild-urls.md) |
 | 69  | SMHI vädervarningar som kart-layer                      | Skissad 2026-05-06 — scope A (ren layer, ingen /varningar-route). Väntar på #50 soak-end 2026-05-10 | [todos/69-smhi-vadervarningar-kart-layer.md](todos/69-smhi-vadervarningar-kart-layer.md)             |
-| 70  | `/karta` CWV: CLS-fix delvis lyckad på prod             | Desktop 0,58→0,21 (−64 %, klar). Mobile 0,26→0,26 oförändrad — footer.SiteFooter shifts kvar, behöver iteration #2 | [todos/70-karta-cwv-lcp-cls.md](todos/70-karta-cwv-lcp-cls.md)                                       |
+| 70  | `/karta` CWV: desktop −64 %, mobile öppen research      | Iter #1 desktop OK; iter #2 ingen effekt; iter #3 sämre (reverterad). Mobile-CLS 0,262 pre-existing — research kvar | [todos/70-karta-cwv-lcp-cls.md](todos/70-karta-cwv-lcp-cls.md)                                       |
 
 ### Beroenden
 
