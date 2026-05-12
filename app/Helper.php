@@ -203,7 +203,7 @@ class Helper {
 
             // Filter + sort på pn.pubdate utnyttjar idx_place_pubdate
             // (place_id, pubdate). Annars hade vi behövt join + filesort.
-            return DB::table('place_news as pn')
+            $items = DB::table('place_news as pn')
                 ->join('news_articles as na', 'pn.news_article_id', '=', 'na.id')
                 ->whereIn('pn.place_id', $placeIds)
                 ->whereNotNull('pn.pubdate')
@@ -213,6 +213,34 @@ class Helper {
                 ->select('na.id', 'na.source', 'na.url', 'na.title', 'na.summary', 'pn.pubdate')
                 ->distinct()
                 ->get();
+
+            // Berika med event-koppling från crime_event_news (todo #63 fas 1).
+            // Per artikel: ta bästa matchningen (hög > medel, senaste matched_at).
+            $articleIds = $items->pluck('id');
+            if ($articleIds->isNotEmpty()) {
+                $couplings = DB::table('crime_event_news')
+                    ->whereIn('news_article_id', $articleIds)
+                    ->orderByRaw("FIELD(confidence, 'hög', 'medel') ASC")
+                    ->orderByDesc('matched_at')
+                    ->get(['news_article_id', 'crime_event_id'])
+                    ->keyBy('news_article_id');
+
+                $eventIds = $couplings->pluck('crime_event_id')->unique()->all();
+                $events = $eventIds === []
+                    ? collect()
+                    : \App\CrimeEvent::with('locations')->whereIn('id', $eventIds)->get()->keyBy('id');
+
+                foreach ($items as $item) {
+                    $coupling = $couplings->get($item->id);
+                    $event = $coupling ? $events->get($coupling->crime_event_id) : null;
+                    $item->event_permalink = $event?->getPermalink(false);
+                    $item->event_label = $event
+                        ? trim($event->parsed_title . ' i ' . ($event->parsed_title_location ?: $event->administrative_area_level_1))
+                        : null;
+                }
+            }
+
+            return $items;
         });
     }
 

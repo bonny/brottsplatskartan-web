@@ -53,6 +53,12 @@
                             {{ \Illuminate\Support\Str::limit($item->summary, 220) }}
                         </div>
                     @endif
+                    @if (!empty($item->event_permalink))
+                        <p class="widget__listItem__eventLink">
+                            → Polishändelse:
+                            <a href="{{ $item->event_permalink }}">{{ $item->event_label }}</a>
+                        </p>
+                    @endif
                 </li>
             @endforeach
         </ul>
