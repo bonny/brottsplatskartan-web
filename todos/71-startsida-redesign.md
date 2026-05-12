@@ -1,7 +1,44 @@
-**Status:** aktiv — Fas 1 klar 2026-05-12, Fas 2–4 kvarstår
+**Status:** aktiv — Fas 1 + 2 klara 2026-05-12, Fas 3–4 kvarstår
 **Senast uppdaterad:** 2026-05-12
 
 # Todo #71 — Startsida-redesign: kompaktare layout + SEO-städ
+
+## Fas 2 klar 2026-05-12
+
+Variant A (alla tre hero-kort kompakta horisontella rader, ingen
+"super-hero" på topp). Bilden bedöms inte vara central för CTR — det
+är listan över mest klickade händelser, inte ett redaktionellt urval.
+Konsekvent kompakt layout gör listan mer scannbar.
+
+Audit-mätning före → efter (lokalt mot brottsplatskartan.test:8350):
+
+| Mått                 | Före (Fas 1) | Efter (Fas 2) |
+| -------------------- | ------------ | ------------- |
+| `foldCards` desktop  | 4            | 8             |
+| `foldCards` mobile   | 3            | 8             |
+| `foldCards` tablet   | 4            | 10            |
+| Stora hero-kort höjd | 620 px       | 160 px        |
+| Små hero-kort höjd   | ~280 px      | ~103 px       |
+| Mobile `docH`        | 7 630 px     | 7 429 px      |
+| `biggestMap.top`     | 228 px       | 228 px        |
+
+Ändringar:
+
+- `resources/views/components/crimeevent/hero.blade.php` — skriven om
+  till horisontell flex-layout. Thumbnail 240×160 (large) / 160×110
+  (small) till vänster, text till höger. Använder nya BEM-klasser
+  `.EventHero` / `.EventHero--compact` / `.EventHero--small`. LCP-stöd
+  (eager + fetchpriority) flyttat till img-elementet.
+- `public/css/styles.css` — nytt block med `.EventHero*`-regler efter
+  Event\_\_-blocket (rad ~742). Inkluderar mobile breakpoint vid 480 px
+  som krymper thumbnail ytterligare.
+
+Karta-containern (`biggestMap.top=228`) ligger redan inom målet
+≤350 — ingen åtgärd där.
+
+Verifierat: PHPStan level 5 OK, visuell granskning i desktop/tablet/
+mobile via audit-screenshots OK (texten läsbar, bilder inte fult
+klippta).
 
 ## Fas 1 klar 2026-05-12
 

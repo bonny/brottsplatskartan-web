@@ -739,6 +739,104 @@ blockquote {
     display: none;
 }
 
+/* ============================================================
+   EventHero — kompakt horisontell variant av "Mest läst"-korten.
+   Fas 2 av #71 (2026-05-12): tidigare 850×620 → mål ≤200 px höjd.
+   Layout: thumbnail (vänster) + text (höger), flex-rad.
+   ============================================================ */
+.EventHero {
+    display: block;
+    margin: 0;
+}
+
+.EventHero__link {
+    display: flex;
+    gap: var(--default-margin);
+    align-items: flex-start;
+    color: inherit;
+    text-decoration: none;
+}
+
+.EventHero__link:hover {
+    text-decoration: none;
+}
+
+.EventHero__media {
+    flex: 0 0 auto;
+    display: block;
+    overflow: hidden;
+    border-radius: var(--border-radius-normal);
+    line-height: 0;
+}
+
+.EventHero__image {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: var(--border-radius-normal);
+}
+
+.EventHero__body {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: block;
+}
+
+.EventHero__title {
+    line-height: 1.2;
+    margin-top: 0.15rem;
+    margin-bottom: 0.15rem;
+}
+
+.EventHero__date {
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+.EventHero__teaser {
+    display: block;
+    line-height: 1.35;
+}
+
+.EventHero__teaser p {
+    margin: 0;
+}
+
+/* Kompakt large-variant: thumb 240×160 */
+.EventHero--compact .EventHero__media {
+    flex-basis: 240px;
+    max-width: 240px;
+}
+
+/* Mini-variant för 2-kolumns small-rader: thumb 160×110 */
+.EventHero--small .EventHero__media {
+    flex-basis: 140px;
+    max-width: 140px;
+}
+
+.EventHero--small .EventHero__teaser {
+    /* Andra hero-raden är trängre — låt teaser falla bort om utrymme saknas. */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* På smala skärmar — stack istället för rad så texten får plats. */
+@media (max-width: 480px) {
+    .EventHero__link {
+        gap: var(--default-margin-half);
+    }
+    .EventHero--compact .EventHero__media {
+        flex-basis: 120px;
+        max-width: 120px;
+    }
+    .EventHero--small .EventHero__media {
+        flex-basis: 96px;
+        max-width: 96px;
+    }
+}
+
 .SearchForm {
     margin-bottom: var(--default-margin);
 }
