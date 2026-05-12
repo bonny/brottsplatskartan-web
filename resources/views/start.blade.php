@@ -38,11 +38,10 @@ samt för äldre dagar när man bläddrar i arkivet.
 @endsection
 
 @section('content')
-    {{-- H1 på startsidan: tidigare saknades H1 helt. Klassen sr-only
-         används för att inte visuellt dubbla med sektionsrubriken
-         "Senaste händelserna" som följer direkt under, men H1 behövs
-         för SEO + tillgänglighet (sid-titel/landmark). --}}
-    <h1 class="sr-only">Brottsplatskartan: Polisens händelser i hela Sverige</h1>
+    {{-- Visuell H1 ovanför kartan — ger sidan en tydlig brand/landmark
+         på små skärmar där headern är minimal. Sektions-H2:s nedan är
+         bredare formulerade, så ingen visuell duplicering. --}}
+    <h1 class="StartPage__title">Polisens händelser i hela Sverige</h1>
 
     <x-events-map />
 
