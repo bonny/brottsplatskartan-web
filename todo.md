@@ -4,7 +4,7 @@ Index över förbättringsarbete. Varje todo har en egen fil under
 [`todos/`](todos/) med fullständig analys. Konvention och
 mappstruktur: [`todos/README.md`](todos/README.md).
 
-Senast uppdaterad: 2026-05-12 (+#71 ny — startsida-redesign: kompaktare layout + SEO-städ. Playwright-audit klar: 3 kort i fold desktop / 2 mobil, mobile docH 12 210 px, saknad H1, duplicerad H2, 12 saknade alt, schema-vakuum).
+Senast uppdaterad: 2026-05-12 (+#71 klar — startsida-redesign: 4 faser, foldCards desktop 3→8 / mobile 2→8, mobile docH 12 210 → 4 929 px (−60 %), H1+ItemList+alt 100 % + meta description; Fas 4 mätning visar att karta-lazy-load ej är motiverad).
 
 ## Aktiva
 
@@ -24,7 +24,6 @@ Senast uppdaterad: 2026-05-12 (+#71 ny — startsida-redesign: kompaktare layout
 | 64  | Per-plats nyhetsaggregering — "Senaste nyheter i {ort}" | Fas-2 live 2026-05-02 (hybrid regex + AI Haiku 4.5 + dn-sthlm + visa-fler); stickprov 2026-05-15                                    | [todos/64-per-plats-nyhetsaggregering.md](todos/64-per-plats-nyhetsaggregering.md)                   |
 | 66  | Uppföljning #55: mät CWV + PHP-FPM-CPU efter `/k/v1/`   | Passiv mätperiod till 2026-05-31 — CWV-jämförelse, cache-hit-rate, social-share-test                                                | [todos/66-uppfoljning-55-kortare-kartbild-urls.md](todos/66-uppfoljning-55-kortare-kartbild-urls.md) |
 | 69  | SMHI vädervarningar som kart-layer                      | Skissad 2026-05-06 — scope A (ren layer, ingen /varningar-route). Väntar på #50 soak-end 2026-05-10                                 | [todos/69-smhi-vadervarningar-kart-layer.md](todos/69-smhi-vadervarningar-kart-layer.md)             |
-| 71  | Startsida-redesign: kompaktare layout + SEO-städ        | Audit klar 2026-05-12: 3 kort i fold desktop / 2 mobil, docH 12 210 px mobil, saknad H1, duplicerad H2, 12 saknade alt              | [todos/71-startsida-redesign.md](todos/71-startsida-redesign.md)                                     |
 
 ### Beroenden
 
@@ -76,6 +75,7 @@ Sorterade nyast först.
 
 | #   | Titel                                                                       | Klar       | Fil                                                                                                          |
 | --- | --------------------------------------------------------------------------- | ---------- | ------------------------------------------------------------------------------------------------------------ |
+| 71  | Startsida-redesign: kompaktare layout + SEO-städ (4 faser)                  | 2026-05-12 | [todos/done/71-startsida-redesign.md](todos/done/71-startsida-redesign.md)                                   |
 | 70  | `/karta` CWV — desktop −64 % CLS (mobile öppen som not, ej blockerande)     | 2026-05-12 | [todos/done/70-karta-cwv-lcp-cls.md](todos/done/70-karta-cwv-lcp-cls.md)                                     |
 | 63  | Relaterade nyheter — Fas 1 (Haiku event×artikel-matchning + Mediabevakning) | 2026-05-12 | [todos/done/63-relaterade-nyheter-trafikprio.md](todos/done/63-relaterade-nyheter-trafikprio.md)             |
 | 68  | Höj agent-readiness-betyg (isitagentready.com)                              | 2026-05-06 | [todos/done/68-agent-readiness-betyg.md](todos/done/68-agent-readiness-betyg.md)                             |
