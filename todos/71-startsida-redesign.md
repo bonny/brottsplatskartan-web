@@ -3,7 +3,7 @@
 
 # Todo #71 — Startsida-redesign: kompaktare layout + SEO-städ
 
-## Fas 3 klar 2026-05-12
+## Fas 3 klar 2026-05-12 — commit `ab33758`. Mätning: mobile docH 7 429 → 4 929 px (−33.7 %), desktop oförändrad (3 779 → 3 747 ≈ mätbrus).
 
 Mobile-paginering via CSS-only `<input type=checkbox>` + `<label>`-toggles
 per sektion. Desktop och tablet behåller full listning tack vare
