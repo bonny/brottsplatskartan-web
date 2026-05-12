@@ -36,7 +36,15 @@ class NewsArticle extends Model
      */
     public function getSourceDisplayName(): string
     {
-        $source = (string) $this->source;
+        return self::sourceDisplayName((string) $this->source);
+    }
+
+    /**
+     * Static variant för callers som har en source-slug men ingen modell-
+     * instans (t.ex. blade-partials med DB::table-rader).
+     */
+    public static function sourceDisplayName(string $source): string
+    {
         if (isset(self::SOURCE_DISPLAY_NAMES[$source])) {
             return self::SOURCE_DISPLAY_NAMES[$source];
         }

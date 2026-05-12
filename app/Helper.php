@@ -210,7 +210,7 @@ class Helper {
                 ->where('pn.pubdate', '>=', $cutoff)
                 ->orderByDesc('pn.pubdate')
                 ->limit($limit)
-                ->select('na.id', 'na.source', 'na.url', 'na.title', 'pn.pubdate')
+                ->select('na.id', 'na.source', 'na.url', 'na.title', 'na.summary', 'pn.pubdate')
                 ->distinct()
                 ->get();
         });
