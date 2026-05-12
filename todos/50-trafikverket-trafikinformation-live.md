@@ -1,4 +1,4 @@
-**Status:** aktiv — Fas 1 klar; **Fas 2 foundation deployad 2026-05-12**. Editorial intro skriven för Sthlm 2026-05-12 (172 ord, lokal verifierad — noindex kvar tills granskad + rolling lift). Återstår: VG + Skåne intros, vägarbete-fold, noindex-lyft per län, intern länk från `/lan/{lan}`, sitemap-entry, 28d-gates.
+**Status:** aktiv — Fas 1 klar; **Fas 2 foundation deployad 2026-05-12**. Editorial intro skriven för Tier 1 (Sthlm 172 ord / VG 186 ord / Skåne 173 ord), lokal verifierad — noindex kvar tills granskad + rolling lift. Återstår: vägarbete-fold, noindex-lyft per län, intern länk från `/lan/{lan}`, sitemap-entry, 28d-gates.
 **Senast uppdaterad:** 2026-05-12
 **Relaterad till:** #40 (Trafikverket STRADA — historisk parallell), #51 (övriga live-källor)
 **XSD-källa:** `docs/Trafikverket/response_Situation_v1.6.xsd` (auktoritativ).
@@ -1130,11 +1130,17 @@ Commits: `92688da` (foundation), `5fb98e1` (footer-länk till /trafik).
 1. **Editorial intro-text per Tier 1 län** (min 150 ord vardera) —
    Sthlm + VG + Skåne. Skrivs FÖRE noindex lyfts.
     - ✅ Sthlm: `resources/views/trafik/intros/stockholms-lan.blade.php`
-      (172 ord, deployad 2026-05-12, lokal 200 OK; **noindex kvar tills
-      granskad och rolling-lift utförd**). Wire-in via `view()->exists()`-pattern
-      i `trafik/lan.blade.php` — fler län plugin:as som egna partials per slug.
-    - VG: kvar.
-    - Skåne: kvar.
+      (172 ord, lokal 200 OK 2026-05-12). E4/Essingeleden, pågående
+      infrastrukturprojekt, vinter-profil, källförklaring.
+    - ✅ VG: `resources/views/trafik/intros/vastra-gotalands-lan.blade.php`
+      (186 ord, lokal 200 OK 2026-05-12). E6/E20/E45/Rv40, Tingstadstunneln,
+      Västlänken, Skaraborg/Bohuslän-inland, färjelägen.
+    - ✅ Skåne: `resources/views/trafik/intros/skane-lan.blade.php`
+      (173 ord, lokal 200 OK 2026-05-12). E6/E22/E4, Öresundsbron,
+      Söderåsen-vilt, Öresund-väder.
+    - Wire-in via `view()->exists()`-pattern i `trafik/lan.blade.php` —
+      fler län plugin:as som egna partials per slug.
+    - **noindex kvar på alla tre tills granskad och rolling-lift utförd.**
 2. **Vägarbete default-foldat bakom CTA** i listan (UX-review: 65 % volym,
    0 newsworthy).
 3. **Intern länk** från `/lan/{lan}`-vyn → `/{lan}/trafik` (lägg in efter

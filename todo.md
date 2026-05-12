@@ -4,7 +4,7 @@ Index över förbättringsarbete. Varje todo har en egen fil under
 [`todos/`](todos/) med fullständig analys. Konvention och
 mappstruktur: [`todos/README.md`](todos/README.md).
 
-Senast uppdaterad: 2026-05-12 (+#70 klar — desktop CLS −64 %, mobile öppen som not; +#50 Fas 2 foundation deployad + footer-länk; +#50 Sthlm intro-text klar 172 ord).
+Senast uppdaterad: 2026-05-12 (+#70 klar — desktop CLS −64 %, mobile öppen som not; +#50 Fas 2 foundation deployad + footer-länk; +#50 Tier 1 intro-texter klara: Sthlm 172 / VG 186 / Skåne 173 ord).
 
 ## Aktiva
 
