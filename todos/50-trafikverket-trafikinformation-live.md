@@ -1,4 +1,4 @@
-**Status:** aktiv — Fas 1 klar; **Fas 2 foundation byggd lokalt 2026-05-12** (route, controller, view, noindex). Återstår: editorial intro per Tier 1 län + lyft noindex + intern länk från `/lan/{lan}`.
+**Status:** aktiv — Fas 1 klar; **Fas 2 foundation deployad 2026-05-12** (route, controller, view, noindex + footer-länk till /trafik). Återstår: editorial intro per Tier 1 län + lyft noindex + intern länk från `/lan/{lan}`.
 **Senast uppdaterad:** 2026-05-12
 **Relaterad till:** #40 (Trafikverket STRADA — historisk parallell), #51 (övriga live-källor)
 **XSD-källa:** `docs/Trafikverket/response_Situation_v1.6.xsd` (auktoritativ).
@@ -1095,12 +1095,14 @@ permalinks `/trafik/{id}` (klickbara från lista, indexerbara).
 
 **Slutsats:** alla 6 gates passerade → grönt ljus för Fas 2.
 
-#### Fas 2 foundation — lokalt klar 2026-05-12
+#### Fas 2 foundation — deployad 2026-05-12
+
+Commits: `92688da` (foundation), `5fb98e1` (footer-länk till /trafik).
 
 **Implementerat:**
 
 - ✅ `App\Http\Controllers\TrafikController` med `index()` (refactor Fas 1) +
-  `lan(Request, $lan)` (ny Fas 2-aggregat).
+  `show()` + `lan(Request, $lan)` (ny Fas 2-aggregat).
 - ✅ Route `/{lan}/trafik` registrerad **före** `/{lan}/{eventName}` (line 650)
   i `routes/web.php` så Laravel inte tolkar "trafik" som ett event-namn.
 - ✅ Mappning: län-slug → län-namn via `Helper::getLanSlugsToNameArray()` +
@@ -1115,21 +1117,26 @@ permalinks `/trafik/{id}` (klickbara från lista, indexerbara).
 - ✅ View `resources/views/trafik/lan.blade.php` med breadcrumb, intro-stub,
   "Live från Trafikverket"-sektion (med permalink-länk till Fas 1-vyn) +
   Polishändelser-sektion (återanvänder `<x-crimeevent.list-item>`).
-- ✅ Verifierat lokalt: 200 OK på `/skane-lan/trafik` + `?typ=olycka`,
-  404 på obefintliga län. Mobile-screenshot OK.
+- ✅ Footer-länk till `/trafik` (Sverige-aggregat, Fas 1) i
+  `parts/sitefooter.blade.php` — passerar intern länk-juice till
+  redan-rankande sida (pos 13,1 / 92 imp/10d). `/{lan}/trafik` har
+  fortfarande INGEN intern länk eftersom noindex.
+- ✅ Verifierat på prod: 200 OK på Sthlm/Skåne/VG, `?typ=olycka`,
+  404 på obefintliga län; `noindex,follow` syns i HTML.
+- ✅ PHPStan/Larastan level 5: no errors.
 
-**Återstår för Fas 2 deploy:**
+**Återstår för Fas 2 full:**
 
 1. **Editorial intro-text per Tier 1 län** (min 150 ord vardera) —
    Sthlm + VG + Skåne. Skrivs FÖRE noindex lyfts.
 2. **Vägarbete default-foldat bakom CTA** i listan (UX-review: 65 % volym,
    0 newsworthy).
 3. **Intern länk** från `/lan/{lan}`-vyn → `/{lan}/trafik` (lägg in efter
-   editorial text klar och noindex lyfts).
+   editorial text klar och noindex lyfts per Tier 1 län).
 4. **Lyft noindex per Tier 1 län** när text granskad (manuell rolling per
    lift-checklist: sitemap, GSC URL-inspektion, bumpa `Last-Modified`).
 5. **Sitemap-entry** för aggregat-sidor (egen fil eller huvudsitemap?).
-6. **Deploy + 28d-gates** mot Fas 3 (impressions, pos < 30, ingen
+6. **28d-gates** mot Fas 3 (impressions, pos < 30, ingen
    AdSense-flag, ingen CTR/pos-regression).
 
 ### Fas 2 — aggregat-sidor (1–2 dagar, efter gate)
