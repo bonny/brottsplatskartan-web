@@ -102,6 +102,16 @@ https://brottsplatskartan.localhost/lan/Stockholms%20l%C3%A4n
             @endif
         @endif
 
+        {{-- Trafik-aggregat per län (todo #50 Fas 2). Bara Tier 1 — Tier 2/3
+             ligger kvar med noindex tills editorial intro skrivs. --}}
+        @php($trafikLanSlug = \App\Http\Controllers\TrafikController::tier1LanSlug($lan))
+        @if ($trafikLanSlug)
+            <p>
+                Se även <a href="{{ route('trafikLan', ['lan' => $trafikLanSlug]) }}">aktuella trafikhändelser
+                    i {{ $lan }}</a> — vägarbeten, störningar och olyckor live från Trafikverket och Polisen.
+            </p>
+        @endif
+
         @includeWhen($events, 'parts.events-by-day')
 
         @include('parts.daynav')

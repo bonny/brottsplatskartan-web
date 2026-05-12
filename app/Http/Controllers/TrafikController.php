@@ -23,6 +23,33 @@ use Illuminate\Support\Facades\Cache;
 class TrafikController extends Controller
 {
     /**
+     * Län-slugs med editorial intro-text + indexerbara `/{lan}/trafik`-vyer.
+     * Lyfts en i taget enligt lift-checklisten i todo #50 Fas 2:
+     *   text granskad → sitemap-entry → noindex lyfts → internlänk.
+     * Tier 2/3-län ligger kvar med noindex tills text skrivs.
+     */
+    public const TIER1_INDEXABLE_LAN_SLUGS = [
+        'stockholms-lan',
+        'vastra-gotalands-lan',
+        'skane-lan',
+    ];
+
+    /**
+     * Mappar länets långa namn till slug för `/{slug}/trafik`. Returnerar
+     * null om länet inte är Tier 1-indexerbart (då ska ingen internlänk
+     * från `/lan/{lan}` renderas).
+     */
+    public static function tier1LanSlug(string $lanName): ?string
+    {
+        $map = [
+            'Stockholms län' => 'stockholms-lan',
+            'Västra Götalands län' => 'vastra-gotalands-lan',
+            'Skåne län' => 'skane-lan',
+        ];
+        return $map[$lanName] ?? null;
+    }
+
+    /**
      * Polisen-parsed-titlar som räknas som trafik-händelser.
      * Verifierat mot 90d data 2026-05-12 (todo #50, Fas 2).
      */
@@ -147,6 +174,12 @@ class TrafikController extends Controller
         $breadcrumbs->addCrumb($lanName, '/lan/' . $lan);
         $breadcrumbs->addCrumb('Trafik', '');
 
+        // Indexerbar om Tier 1-län OCH ingen filter-vy. Filter-vyer
+        // (?typ=...) förblir permanent noindex så de inte kannibaliserar
+        // huvudaggregatet om söktrafik. Tier 2/3-län noindex tills text skrivs.
+        $robotsNoindex = !in_array($lan, self::TIER1_INDEXABLE_LAN_SLUGS, true)
+            || $typ !== null;
+
         return view('trafik.lan', [
             'lan' => $lan,
             'lanName' => $lanName,
@@ -155,10 +188,7 @@ class TrafikController extends Controller
             'polisenEvents' => $data['polisenEvents'],
             'trafikverketEvents' => $data['trafikverketEvents'],
             'breadcrumbs' => $breadcrumbs,
-            // Fas 2: noindex initialt på alla /{lan}/trafik-routes (även
-            // utan filter). Lyfts manuellt per län när editorial intro är
-            // skriven. Filter-vyer (?typ=...) är permanent noindex.
-            'robotsNoindex' => true,
+            'robotsNoindex' => $robotsNoindex,
         ]);
     }
 }

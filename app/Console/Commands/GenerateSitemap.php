@@ -84,6 +84,17 @@ class GenerateSitemap extends Command
             }
         }
 
+        // Tier 1 läns-trafik-aggregat (todo #50 Fas 2). Bara läns-slugs med
+        // editorial intro-text — Tier 2/3 är noindex tills text skrivs.
+        foreach (\App\Http\Controllers\TrafikController::TIER1_INDEXABLE_LAN_SLUGS as $trafikLanSlug) {
+            $main->add(
+                Url::create("/{$trafikLanSlug}/trafik")
+                    ->setLastModificationDate($now)
+                    ->setChangeFrequency(Url::CHANGE_FREQUENCY_HOURLY)
+                    ->setPriority(0.7)
+            );
+        }
+
         // Tier 1-städer: månadsvyer via /{slug}/handelser/{year}/{month}
         // (todo #33). /plats/{slug}/handelser/... 301:as till denna URL.
         foreach (Tier1::slugs() as $cityCity) {

@@ -86,6 +86,20 @@
 
                 @include('parts.mcf-statistik')
 
+                {{-- Trafik-aggregat per län (todo #50 Fas 2). Bara Tier 1 —
+                     Tier 2/3 ligger kvar med noindex. För Sthlm/Uppsala når
+                     användarna lansidan via /stad-redirecten i
+                     CityRedirectMiddleware. --}}
+                @php
+                    $trafikLanSlug = \App\Http\Controllers\TrafikController::tier1LanSlug($lan);
+                @endphp
+                @if ($trafikLanSlug)
+                    <p class="u-margin-top">
+                        Se även <a href="{{ route('trafikLan', ['lan' => $trafikLanSlug]) }}">aktuella trafikhändelser
+                            i {{ $lan }}</a> — vägarbeten, störningar och olyckor live från Trafikverket och Polisen.
+                    </p>
+                @endif
+
                 {{-- Senaste blåljus-nyheter per plats (todo #64). Aggregerade
                      från RSS-feeds via news_articles + place_news. Visar
                      bara om matchningar finns — pageweight 0 för platser

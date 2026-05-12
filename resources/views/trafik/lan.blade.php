@@ -50,29 +50,65 @@
             </p>
         @endif
 
-        {{-- Trafikverket-händelser (live) --}}
+        {{-- Trafikverket-händelser (live). Vägarbeten foldas bakom <details>
+             — ~65 % av volymen och 0 newsworthy enligt UX-review (#50). --}}
         @if ($trafikverketEvents->isNotEmpty())
+            @php
+                [$vagarbeten, $other] = $trafikverketEvents->partition(
+                    fn($e) => $e->message_type === 'Vägarbete',
+                );
+            @endphp
+
             <h2>Live från Trafikverket</h2>
-            <ul style="list-style: none; padding: 0; margin: 0;">
-                @foreach ($trafikverketEvents as $event)
-                    <li style="border-bottom: 1px solid #eee; padding: 0.75rem 0;">
-                        <div style="font-weight: bold;">
-                            <a href="{{ route('trafik.show', $event->id) }}">
-                                {{ $event->message ?: $event->location_descriptor ?: $event->message_type }}
-                            </a>
-                        </div>
-                        <div style="color: #666; font-size: 0.9em; margin-top: 0.25rem;">
-                            @if ($event->road_number)
-                                <strong>{{ $event->road_number }}</strong> ·
-                            @endif
-                            {{ $event->message_type }}
-                            @if ($event->start_time)
-                                · från {{ $event->start_time->format('Y-m-d H:i') }}
-                            @endif
-                        </div>
-                    </li>
-                @endforeach
-            </ul>
+
+            @if ($other->isNotEmpty())
+                <ul style="list-style: none; padding: 0; margin: 0;">
+                    @foreach ($other as $event)
+                        <li style="border-bottom: 1px solid #eee; padding: 0.75rem 0;">
+                            <div style="font-weight: bold;">
+                                <a href="{{ route('trafik.show', $event->id) }}">
+                                    {{ $event->message ?: $event->location_descriptor ?: $event->message_type }}
+                                </a>
+                            </div>
+                            <div style="color: #666; font-size: 0.9em; margin-top: 0.25rem;">
+                                @if ($event->road_number)
+                                    <strong>{{ $event->road_number }}</strong> ·
+                                @endif
+                                {{ $event->message_type }}
+                                @if ($event->start_time)
+                                    · från {{ $event->start_time->format('Y-m-d H:i') }}
+                                @endif
+                            </div>
+                        </li>
+                    @endforeach
+                </ul>
+            @endif
+
+            @if ($vagarbeten->isNotEmpty())
+                <details style="margin-top: 1rem;">
+                    <summary>Visa {{ $vagarbeten->count() }} vägarbeten</summary>
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        @foreach ($vagarbeten as $event)
+                            <li style="border-bottom: 1px solid #eee; padding: 0.75rem 0;">
+                                <div style="font-weight: bold;">
+                                    <a href="{{ route('trafik.show', $event->id) }}">
+                                        {{ $event->message ?: $event->location_descriptor ?: $event->message_type }}
+                                    </a>
+                                </div>
+                                <div style="color: #666; font-size: 0.9em; margin-top: 0.25rem;">
+                                    @if ($event->road_number)
+                                        <strong>{{ $event->road_number }}</strong> ·
+                                    @endif
+                                    {{ $event->message_type }}
+                                    @if ($event->start_time)
+                                        · från {{ $event->start_time->format('Y-m-d H:i') }}
+                                    @endif
+                                </div>
+                            </li>
+                        @endforeach
+                    </ul>
+                </details>
+            @endif
         @endif
 
         {{-- Polishändelser --}}
