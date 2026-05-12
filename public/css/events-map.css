@@ -79,13 +79,15 @@
 }
 
 
+/* CLS-fix (#70 iter #3): bytte från `position: fixed; inset: 0` till
+   `overflow: hidden; height: 100vh`. Skälet: position:fixed på body
+   tar body ut ur normal flow och dynamisk viewport på mobile (URL-bar)
+   ändrade body-höjd → footer.SiteFooter shiftade ~0,262 på prod.
+   .EventsMap har egen position:fixed (z-index 20) och täcker viewport
+   så footer är visuellt dold även om den är kvar i flow. */
 body.map-is-expanded {
     overflow: hidden;
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
+    height: 100vh;
 }
 
 body.map-is-expanded .sitebar__Events {

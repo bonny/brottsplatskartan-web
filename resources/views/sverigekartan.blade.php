@@ -13,18 +13,18 @@ Template för sverigekartan
      från första paint, undviker shift när JS toggar klassen efter Leaflet-mount. --}}
 @section('bodyClass', 'map-is-expanded')
 
-{{-- CLS-fix (#70 iter #2): inline kritisk CSS för fullscreen-layouten så
+{{-- CLS-fix (#70 iter #3): inline kritisk CSS för fullscreen-layouten så
      reglerna gäller redan vid första HTML-parse, INNAN extern events-map.css
-     laddats. På mobile hann footer.SiteFooter shifta innan extern CSS hann
-     applicera body.map-is-expanded { position: fixed }. --}}
+     laddats. Iter #2 (position:fixed på body) lyckades inte på mobile —
+     dvh-dynamics flyttade body-höjd → footer.SiteFooter shiftade. Bytte
+     till `overflow:hidden; height:100vh` (statisk vh). --}}
 @push('styles')
     <style>
         /* Speglar regler i events-map.css. Inline här för att garantera
            cascade-träff före extern stylesheet på fullscreen-karta-routes. */
         body.map-is-expanded {
             overflow: hidden;
-            position: fixed;
-            inset: 0;
+            height: 100vh;
         }
     </style>
 @endpush
