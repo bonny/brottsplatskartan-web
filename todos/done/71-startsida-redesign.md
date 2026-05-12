@@ -1,5 +1,24 @@
-**Status:** klar 2026-05-12 — Fas 1+2+3 implementerade, Fas 4 ej motiverad (mätning)
+**Status:** klar 2026-05-12 — Fas 1+2+3 implementerade, Fas 4 ej motiverad (mätning), tre efter-fixar för mobil-UX
 **Senast uppdaterad:** 2026-05-12
+
+## Efter-fixar 2026-05-12 (efter UX-feedback från användaren)
+
+Tre uppföljnings-commits baserat på visuell granskning av deployad prod:
+
+- **`c9bf8da`** — UX-fix mobil hero + tap-targets + visuell H1 + hyphens:
+    - EventHero stacka (flex-direction: column) på <480 px så thumb tar
+      full bredd och texten får hela viewporten (tidigare horisontell
+      tvingade fram "indu-striområde"-radbrytningar)
+    - sitebar\_\_EventsItemLink padding-y 8→12 + min-height 44 (iOS HIG)
+    - sr-only H1 → visuell .StartPage\_\_title (18/22 px)
+    - .EventHero\_\_title: overflow-wrap: anywhere + hyphens: auto
+- **`4c20209`** — Alltid synliga län/städer (inga expand-toggles):
+    - Sidopanel: mc-lan-list + mc-cities-list borttagna
+    - Footer: mc-footer-lan + mc-footer-stader borttagna
+    - Motivering: SEO-mässig intern länkning ska inte gömmas
+- **`be5d7a2`** — Huvudnav i footer också alltid synlig:
+    - mc-footer-bpk borttagen ("Visa alla länkar")
+    - Resultat: alla footer-kolumner expanderade på alla viewports
 
 # Todo #71 — Startsida-redesign: kompaktare layout + SEO-städ
 
