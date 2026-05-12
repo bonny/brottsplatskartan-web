@@ -1,4 +1,4 @@
-**Status:** aktiv — desktop −64 % (klar). Mobile pre-existing 0,262 — iter #2 (inline CSS) ingen effekt, iter #3 (overflow:hidden) gjorde sämre → reverterad. Mobile är öppen research-fråga.
+**Status:** klar 2026-05-12 — desktop CLS −64 % (0,58 → 0,21) via CSS-fix på .EventsMap[fullscreen] + server-side body.map-is-expanded. Mobile pre-existing 0,262 lämnas som öppen research (iter #2 ingen effekt, iter #3 sämre + reverterad). Återöppnas om CrUX 28d-data visar mobile-regression.
 **Senast uppdaterad:** 2026-05-12
 
 # Todo #70 — `/karta` CWV: CLS-rotorsak = oreserverad map-höjd
