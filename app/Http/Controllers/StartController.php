@@ -74,7 +74,9 @@ class StartController extends Controller
         
         $title = 'Händelser från Polisen idag';
         $pageTitle = 'Polisens händelser - aktuella brott & senaste blåljusen';
-        $pageMetaDescription = 'Se senaste händelserna & brotten som Polisen rapporterat. Se polishändelser på vår brottskarta.';
+        // ~140 tecken — fyller på med blåljus, trafikolyckor och kommun/län-nyckelord
+        // för bättre CTR i sökresultaten (tidigare 99 tecken).
+        $pageMetaDescription = 'Se senaste polishändelserna, blåljusen och brotten i hela Sverige. Trafikolyckor, inbrott, bränder och larm – per kommun och län, live på karta.';
 
         $data = [
             'eventsMostViewedRecentlyCrimeEvents' => $eventsMostViewedRecentlyCrimeEvents,

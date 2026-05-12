@@ -4,7 +4,7 @@ Index över förbättringsarbete. Varje todo har en egen fil under
 [`todos/`](todos/) med fullständig analys. Konvention och
 mappstruktur: [`todos/README.md`](todos/README.md).
 
-Senast uppdaterad: 2026-05-12 (+#70 klar — desktop CLS −64 %, mobile öppen som not; +#50 Fas 2 lyft Tier 1: editorial intros + vägarbete-fold + noindex lyft + internlänk + sitemap-entry; 28d-gates till 2026-06-09).
+Senast uppdaterad: 2026-05-12 (+#71 ny — startsida-redesign: kompaktare layout + SEO-städ. Playwright-audit klar: 3 kort i fold desktop / 2 mobil, mobile docH 12 210 px, saknad H1, duplicerad H2, 12 saknade alt, schema-vakuum).
 
 ## Aktiva
 
@@ -24,6 +24,7 @@ Senast uppdaterad: 2026-05-12 (+#70 klar — desktop CLS −64 %, mobile öppen 
 | 64  | Per-plats nyhetsaggregering — "Senaste nyheter i {ort}" | Fas-2 live 2026-05-02 (hybrid regex + AI Haiku 4.5 + dn-sthlm + visa-fler); stickprov 2026-05-15                                    | [todos/64-per-plats-nyhetsaggregering.md](todos/64-per-plats-nyhetsaggregering.md)                   |
 | 66  | Uppföljning #55: mät CWV + PHP-FPM-CPU efter `/k/v1/`   | Passiv mätperiod till 2026-05-31 — CWV-jämförelse, cache-hit-rate, social-share-test                                                | [todos/66-uppfoljning-55-kortare-kartbild-urls.md](todos/66-uppfoljning-55-kortare-kartbild-urls.md) |
 | 69  | SMHI vädervarningar som kart-layer                      | Skissad 2026-05-06 — scope A (ren layer, ingen /varningar-route). Väntar på #50 soak-end 2026-05-10                                 | [todos/69-smhi-vadervarningar-kart-layer.md](todos/69-smhi-vadervarningar-kart-layer.md)             |
+| 71  | Startsida-redesign: kompaktare layout + SEO-städ        | Audit klar 2026-05-12: 3 kort i fold desktop / 2 mobil, docH 12 210 px mobil, saknad H1, duplicerad H2, 12 saknade alt              | [todos/71-startsida-redesign.md](todos/71-startsida-redesign.md)                                     |
 
 ### Beroenden
 

@@ -23,7 +23,27 @@ samt för äldre dagar när man bläddrar i arkivet.
 @section('metaImageWidth', 600)
 @section('metaImageHeight', 315)
 
+@section('metaContent')
+    {{-- ItemList-schema för de senaste händelserna (≤10). Återanvänder
+         samma partial som #32 etablerade (mestLasta + overview-sidor). --}}
+    @include('parts.itemlist-jsonld', [
+        'itemListName' => 'Senaste polishändelserna',
+        'itemListItems' => collect($eventsRecent ?? [])
+            ->take(10)
+            ->map(fn ($event) => [
+                'name' => $event->getHeadline(),
+                'url' => $event->getPermalink(true),
+            ])->all(),
+    ])
+@endsection
+
 @section('content')
+    {{-- H1 på startsidan: tidigare saknades H1 helt. Klassen sr-only
+         används för att inte visuellt dubbla med sektionsrubriken
+         "Senaste händelserna" som följer direkt under, men H1 behövs
+         för SEO + tillgänglighet (sid-titel/landmark). --}}
+    <h1 class="sr-only">Brottsplatskartan: Polisens händelser i hela Sverige</h1>
+
     <x-events-map />
 
     <div class="widget">

@@ -129,6 +129,8 @@ L.Control.ExpandButton = L.Control.extend({
         );
         imgExpand.src =
             "/img/expand_content_24dp_FILL0_wght400_GRAD0_opsz24.svg";
+        // Dekorativ ikon — knappen har redan aria-label "Maximera kartan till fullskärm".
+        imgExpand.alt = "";
 
         var imgMinimize = L.DomUtil.create(
             "img",
@@ -137,6 +139,8 @@ L.Control.ExpandButton = L.Control.extend({
         );
         imgMinimize.src =
             "/img/collapse_content_24dp_FILL0_wght400_GRAD0_opsz24.svg";
+        // Dekorativ ikon — knappen har redan aria-label.
+        imgMinimize.alt = "";
 
         L.DomEvent.on(expandButton, "click", function (evt) {
             expandMap(map);
@@ -408,6 +412,9 @@ class EventsMap {
                 maxZoom: 18,
                 attribution:
                     '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                // Dekorativa tile-bilder — kartan ovan har aria-label.
+                // Leaflet sätter alt="" på tile-img när detta anges.
+                alt: "",
             }
         ).addTo(this.map);
 

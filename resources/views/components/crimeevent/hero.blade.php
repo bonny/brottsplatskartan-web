@@ -22,9 +22,11 @@
         </p>
 
         @if ($isLarge)
-            <h2 class="text-2xl font-bold break-hyphens u-margin-0 tracking-tight u-color-link group-hover:underline">
+            {{-- H3 reserveras för event-titlar; H2 används för sektionsrubriker
+                 ("Mest läst", "Senaste händelserna", etc.). Stilen följer av storlek. --}}
+            <h3 class="text-2xl font-bold break-hyphens u-margin-0 tracking-tight u-color-link group-hover:underline">
                 {{ $event->getHeadline() }}
-            </h2>
+            </h3>
         @else
             <h3 class="text-base font-semibold break-hyphens tracking-tight u-color-link u-margin-0">
                 {{ $event->getHeadline() }}
