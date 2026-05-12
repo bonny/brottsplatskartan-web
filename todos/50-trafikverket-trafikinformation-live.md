@@ -1,4 +1,4 @@
-**Status:** aktiv — Fas 1 klar; **Fas 2 foundation deployad 2026-05-12** (route, controller, view, noindex + footer-länk till /trafik). Återstår: editorial intro per Tier 1 län + lyft noindex + intern länk från `/lan/{lan}`.
+**Status:** aktiv — Fas 1 klar; **Fas 2 foundation deployad 2026-05-12**. Editorial intro skriven för Sthlm 2026-05-12 (172 ord, lokal verifierad — noindex kvar tills granskad + rolling lift). Återstår: VG + Skåne intros, vägarbete-fold, noindex-lyft per län, intern länk från `/lan/{lan}`, sitemap-entry, 28d-gates.
 **Senast uppdaterad:** 2026-05-12
 **Relaterad till:** #40 (Trafikverket STRADA — historisk parallell), #51 (övriga live-källor)
 **XSD-källa:** `docs/Trafikverket/response_Situation_v1.6.xsd` (auktoritativ).
@@ -1082,14 +1082,14 @@ permalinks `/trafik/{id}` (klickbara från lista, indexerbara).
 
 #### Soak-utfall 2026-05-12 (2 dagar efter planerat gate-datum)
 
-| # | Gate                                       | Status | Detalj                                                                                                  |
-| - | ------------------------------------------ | :----: | ------------------------------------------------------------------------------------------------------- |
-| 1 | Volym stationär                            |   ✅   | 10 136 events. Fördelning: Trafikmeddelande 5 911 / Vägarbete 3 185 / Hinder 738 / Olycka 301 / Väglag 1 |
-| 2 | Ingen CWV-regression på `/karta`           |   ✅   | Trafikverket-layern är lazy + default OFF; inga init-requests från den (bara `/api/eventsMap` 15,8 KB). LCP/CLS-problem på `/karta` är pre-existing (LCP-element = Leaflet-kartan, CLS = footer + AdSense-consent) |
-| 3 | Ingen rate-limit-trippning från Trafikverket |  ✅   | Inga 429/401/403 i 10d-loggar                                                                            |
-| 4 | `/trafik` upptäcks i GSC                   |   ✅   | 3 clicks / 92 impressions / CTR 3,26 % / pos 13,1 (10d-fönster 2026-05-03 → 2026-05-12)                  |
-| 5 | Pruning fungerar                           |   ✅   | `trafikverket:prune` kör 03:30 dagligen, ~600 ms/körning (verifierat 2026-05-11 + 2026-05-12)            |
-| 6 | Inga oväntade 401/403-larm                 |   ✅   | Inga i loggarna                                                                                          |
+| #   | Gate                                         | Status | Detalj                                                                                                                                                                                                             |
+| --- | -------------------------------------------- | :----: | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 1   | Volym stationär                              |   ✅   | 10 136 events. Fördelning: Trafikmeddelande 5 911 / Vägarbete 3 185 / Hinder 738 / Olycka 301 / Väglag 1                                                                                                           |
+| 2   | Ingen CWV-regression på `/karta`             |   ✅   | Trafikverket-layern är lazy + default OFF; inga init-requests från den (bara `/api/eventsMap` 15,8 KB). LCP/CLS-problem på `/karta` är pre-existing (LCP-element = Leaflet-kartan, CLS = footer + AdSense-consent) |
+| 3   | Ingen rate-limit-trippning från Trafikverket |   ✅   | Inga 429/401/403 i 10d-loggar                                                                                                                                                                                      |
+| 4   | `/trafik` upptäcks i GSC                     |   ✅   | 3 clicks / 92 impressions / CTR 3,26 % / pos 13,1 (10d-fönster 2026-05-03 → 2026-05-12)                                                                                                                            |
+| 5   | Pruning fungerar                             |   ✅   | `trafikverket:prune` kör 03:30 dagligen, ~600 ms/körning (verifierat 2026-05-11 + 2026-05-12)                                                                                                                      |
+| 6   | Inga oväntade 401/403-larm                   |   ✅   | Inga i loggarna                                                                                                                                                                                                    |
 
 **Lighthouse mobile `/karta` 2026-05-12 (info, ej blockerare):** Performance 53, LCP 6,5 s, CLS 0,884, TBT 20 ms, FCP 0,9 s. LCP-element = `div.EventsMap__container > div.EventsMap` (saknar `fetchpriority=high`). CLS-källor: `footer.SiteFooter` (×2 vid map-expand) + `div.fc-dialog-container` (Funding Choices consent). Båda pre-existing → egen todo (#70).
 
@@ -1129,6 +1129,12 @@ Commits: `92688da` (foundation), `5fb98e1` (footer-länk till /trafik).
 
 1. **Editorial intro-text per Tier 1 län** (min 150 ord vardera) —
    Sthlm + VG + Skåne. Skrivs FÖRE noindex lyfts.
+    - ✅ Sthlm: `resources/views/trafik/intros/stockholms-lan.blade.php`
+      (172 ord, deployad 2026-05-12, lokal 200 OK; **noindex kvar tills
+      granskad och rolling-lift utförd**). Wire-in via `view()->exists()`-pattern
+      i `trafik/lan.blade.php` — fler län plugin:as som egna partials per slug.
+    - VG: kvar.
+    - Skåne: kvar.
 2. **Vägarbete default-foldat bakom CTA** i listan (UX-review: 65 % volym,
    0 newsworthy).
 3. **Intern länk** från `/lan/{lan}`-vyn → `/{lan}/trafik` (lägg in efter

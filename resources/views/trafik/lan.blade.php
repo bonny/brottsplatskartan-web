@@ -27,14 +27,20 @@
             </p>
         @endif
 
-        {{-- TODO Fas 2: editorial intro-text per län (min 150 ord).
-             Skrivs FÖRE lyft av noindex. Prio: Sthlm/VG/Skåne. --}}
+        {{-- Editorial intro per län. En partial per slug under
+             trafik/intros/. Saknas partial → generisk teaser (Tier 2/3-län
+             som är permanent noindex tills text skrivits). --}}
         <div class="teaser">
-            <p>
-                Aktuella trafikhändelser i {{ $lanName }} —
-                kombinerar polishändelser från Polisens RSS med vägarbeten,
-                vägstörningar och olyckor från Trafikverkets öppna data.
-            </p>
+            @if (view()->exists('trafik.intros.' . $lan))
+                @include('trafik.intros.' . $lan)
+            @else
+                <p>
+                    Aktuella trafikhändelser i {{ $lanName }} —
+                    kombinerar polishändelser från Polisens RSS med vägarbeten,
+                    vägstörningar och olyckor från Trafikverkets öppna data.
+                </p>
+            @endif
+
             @if (!$typ)
                 <p>
                     <small>

@@ -4,26 +4,26 @@ Index över förbättringsarbete. Varje todo har en egen fil under
 [`todos/`](todos/) med fullständig analys. Konvention och
 mappstruktur: [`todos/README.md`](todos/README.md).
 
-Senast uppdaterad: 2026-05-12 (+#70 klar — desktop CLS −64 %, mobile öppen som not; +#50 Fas 2 foundation deployad + footer-länk).
+Senast uppdaterad: 2026-05-12 (+#70 klar — desktop CLS −64 %, mobile öppen som not; +#50 Fas 2 foundation deployad + footer-länk; +#50 Sthlm intro-text klar 172 ord).
 
 ## Aktiva
 
-| #   | Titel                                                   | Status                                                                                              | Fil                                                                                                  |
-| --- | ------------------------------------------------------- | --------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| 25  | Månadsvyer istället för dagsvyer (datum-routes)         | Pilot live 2026-04-27 (uppsala + västerås + uppsala-lan). 30d-mätning till 2026-05-27               | [todos/25-manadsvyer-datum-routes.md](todos/25-manadsvyer-datum-routes.md)                           |
-| 29  | Audit + reducera indexerade pages                       | Datum-routes + thin singles deployat, ~22k pages noindex:as. Mätperiod 30–90d i GSC                 | [todos/29-audit-indexerade-pages.md](todos/29-audit-indexerade-pages.md)                             |
-| 36  | GSC-mätning av AI-titlars CTR-effekt                    | Mätperiod startad 2026-04-27, första check 2026-05-25                                               | [todos/36-gsc-matning-ai-titlar.md](todos/36-gsc-matning-ai-titlar.md)                               |
-| 39  | MSB/MCF brand- och räddningsstatistik per kommun        | Implementerad 2026-04-29 — väntar på trafikmätning 2026-05-13                                       | [todos/39-msb-brand-rakning-statistik.md](todos/39-msb-brand-rakning-statistik.md)                   |
-| 46  | Slå samman Händelser/Senaste/Mest lästa i menyn         | Importerad från GitHub #76 — kräver design + redirect-strategi                                      | [todos/46-meny-handelser-konsolidering.md](todos/46-meny-handelser-konsolidering.md)                 |
+| #   | Titel                                                   | Status                                                                                                                   | Fil                                                                                                  |
+| --- | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------- |
+| 25  | Månadsvyer istället för dagsvyer (datum-routes)         | Pilot live 2026-04-27 (uppsala + västerås + uppsala-lan). 30d-mätning till 2026-05-27                                    | [todos/25-manadsvyer-datum-routes.md](todos/25-manadsvyer-datum-routes.md)                           |
+| 29  | Audit + reducera indexerade pages                       | Datum-routes + thin singles deployat, ~22k pages noindex:as. Mätperiod 30–90d i GSC                                      | [todos/29-audit-indexerade-pages.md](todos/29-audit-indexerade-pages.md)                             |
+| 36  | GSC-mätning av AI-titlars CTR-effekt                    | Mätperiod startad 2026-04-27, första check 2026-05-25                                                                    | [todos/36-gsc-matning-ai-titlar.md](todos/36-gsc-matning-ai-titlar.md)                               |
+| 39  | MSB/MCF brand- och räddningsstatistik per kommun        | Implementerad 2026-04-29 — väntar på trafikmätning 2026-05-13                                                            | [todos/39-msb-brand-rakning-statistik.md](todos/39-msb-brand-rakning-statistik.md)                   |
+| 46  | Slå samman Händelser/Senaste/Mest lästa i menyn         | Importerad från GitHub #76 — kräver design + redirect-strategi                                                           | [todos/46-meny-handelser-konsolidering.md](todos/46-meny-handelser-konsolidering.md)                 |
 | 50  | Trafikverket Trafikinformation: live på kartan          | Fas 2 foundation byggd lokalt 2026-05-12 (route+ctrl+view+noindex). Återstår: editorial text Tier 1 + lyft + intern länk | [todos/50-trafikverket-trafikinformation-live.md](todos/50-trafikverket-trafikinformation-live.md)   |
-| 51  | Övriga datakällor: research-skiss                       | Research-katalog (SMHI, räddningstjänst-RSS, Krisinfo, m.fl.) — bryts ut per källa                  | [todos/51-ovriga-datakallor-research.md](todos/51-ovriga-datakallor-research.md)                     |
-| 52  | GSC-monitor: lågrankade högvolym-queries                | Baseline klar 2026-04-30 — 7 åtgärder identifierade (A–G), ~25k clicks/90d potential                | [todos/52-gsc-low-rank-monitoring.md](todos/52-gsc-low-rank-monitoring.md)                           |
-| 54  | Trafikkontroll-titlar: utöka AI-rewrite                 | Idé — utöka `isVagueTitle()` med trafikkontroll-mönster                                             | [todos/54-trafikkontroll-titlar.md](todos/54-trafikkontroll-titlar.md)                               |
-| 59  | "Vad händer nu"-ruta (Krimkartan-känsla)                | Idé — kompakt feed-komponent på startsidan                                                          | [todos/59-vad-hander-nu-ruta.md](todos/59-vad-hander-nu-ruta.md)                                     |
-| 60  | Auto-länka events till nyheter via AI + RSS             | RSS-grund delas med #63 (deployad 2026-05-01); fas 3-rollout efter #63 fas 1+2                      | [todos/60-auto-lank-nyheter-ai-rss.md](todos/60-auto-lank-nyheter-ai-rss.md)                         |
-| 64  | Per-plats nyhetsaggregering — "Senaste nyheter i {ort}" | Fas-2 live 2026-05-02 (hybrid regex + AI Haiku 4.5 + dn-sthlm + visa-fler); stickprov 2026-05-15    | [todos/64-per-plats-nyhetsaggregering.md](todos/64-per-plats-nyhetsaggregering.md)                   |
-| 66  | Uppföljning #55: mät CWV + PHP-FPM-CPU efter `/k/v1/`   | Passiv mätperiod till 2026-05-31 — CWV-jämförelse, cache-hit-rate, social-share-test                | [todos/66-uppfoljning-55-kortare-kartbild-urls.md](todos/66-uppfoljning-55-kortare-kartbild-urls.md) |
-| 69  | SMHI vädervarningar som kart-layer                      | Skissad 2026-05-06 — scope A (ren layer, ingen /varningar-route). Väntar på #50 soak-end 2026-05-10 | [todos/69-smhi-vadervarningar-kart-layer.md](todos/69-smhi-vadervarningar-kart-layer.md)             |
+| 51  | Övriga datakällor: research-skiss                       | Research-katalog (SMHI, räddningstjänst-RSS, Krisinfo, m.fl.) — bryts ut per källa                                       | [todos/51-ovriga-datakallor-research.md](todos/51-ovriga-datakallor-research.md)                     |
+| 52  | GSC-monitor: lågrankade högvolym-queries                | Baseline klar 2026-04-30 — 7 åtgärder identifierade (A–G), ~25k clicks/90d potential                                     | [todos/52-gsc-low-rank-monitoring.md](todos/52-gsc-low-rank-monitoring.md)                           |
+| 54  | Trafikkontroll-titlar: utöka AI-rewrite                 | Idé — utöka `isVagueTitle()` med trafikkontroll-mönster                                                                  | [todos/54-trafikkontroll-titlar.md](todos/54-trafikkontroll-titlar.md)                               |
+| 59  | "Vad händer nu"-ruta (Krimkartan-känsla)                | Idé — kompakt feed-komponent på startsidan                                                                               | [todos/59-vad-hander-nu-ruta.md](todos/59-vad-hander-nu-ruta.md)                                     |
+| 60  | Auto-länka events till nyheter via AI + RSS             | RSS-grund delas med #63 (deployad 2026-05-01); fas 3-rollout efter #63 fas 1+2                                           | [todos/60-auto-lank-nyheter-ai-rss.md](todos/60-auto-lank-nyheter-ai-rss.md)                         |
+| 64  | Per-plats nyhetsaggregering — "Senaste nyheter i {ort}" | Fas-2 live 2026-05-02 (hybrid regex + AI Haiku 4.5 + dn-sthlm + visa-fler); stickprov 2026-05-15                         | [todos/64-per-plats-nyhetsaggregering.md](todos/64-per-plats-nyhetsaggregering.md)                   |
+| 66  | Uppföljning #55: mät CWV + PHP-FPM-CPU efter `/k/v1/`   | Passiv mätperiod till 2026-05-31 — CWV-jämförelse, cache-hit-rate, social-share-test                                     | [todos/66-uppfoljning-55-kortare-kartbild-urls.md](todos/66-uppfoljning-55-kortare-kartbild-urls.md) |
+| 69  | SMHI vädervarningar som kart-layer                      | Skissad 2026-05-06 — scope A (ren layer, ingen /varningar-route). Väntar på #50 soak-end 2026-05-10                      | [todos/69-smhi-vadervarningar-kart-layer.md](todos/69-smhi-vadervarningar-kart-layer.md)             |
 
 ### Beroenden
 
@@ -64,8 +64,8 @@ eller markera todon som klar.
 
 ### Avklarade uppföljningar
 
-| Planerat   | Utfört     | Åtgärd                                                                                                                | Todo                                                   |
-| ---------- | ---------- | --------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
+| Planerat   | Utfört     | Åtgärd                                                                                                                                                 | Todo                                                   |
+| ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------ |
 | 2026-05-10 | 2026-05-12 | Trafikverket Fas 1 soak + gates-beslut: 6/6 OK (volym/CWV/rate-limit/GSC/prune/logs) — grönt ljus Fas 2. Pre-existing CWV på `/karta` flyttat till #70 | [#50](todos/50-trafikverket-trafikinformation-live.md) |
 
 ## Klara
