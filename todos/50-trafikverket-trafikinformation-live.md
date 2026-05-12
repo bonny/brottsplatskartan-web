@@ -1130,14 +1130,15 @@ Commits: `92688da` (foundation), `5fb98e1` (footer-länk till /trafik).
 1. **Editorial intro-text per Tier 1 län** (min 150 ord vardera) —
    Sthlm + VG + Skåne. Skrivs FÖRE noindex lyfts.
     - ✅ Sthlm: `resources/views/trafik/intros/stockholms-lan.blade.php`
-      (172 ord, lokal 200 OK 2026-05-12). E4/Essingeleden, pågående
-      infrastrukturprojekt, vinter-profil, källförklaring.
+      (157 ord). E4/Essingeleden, pågående infrastrukturprojekt, vinter-profil.
     - ✅ VG: `resources/views/trafik/intros/vastra-gotalands-lan.blade.php`
-      (186 ord, lokal 200 OK 2026-05-12). E6/E20/E45/Rv40, Tingstadstunneln,
-      Västlänken, Skaraborg/Bohuslän-inland, färjelägen.
+      (161 ord). E6/E20/E45/Rv40, Tingstadstunneln, Västlänken, Skaraborg/Bohuslän.
     - ✅ Skåne: `resources/views/trafik/intros/skane-lan.blade.php`
-      (173 ord, lokal 200 OK 2026-05-12). E6/E22/E4, Öresundsbron,
-      Söderåsen-vilt, Öresund-väder.
+      (151 ord). E6/E22/E4, Öresundsbron, Söderåsen-vilt, Öresund-väder.
+    - **Visuell layout (efter UX-feedback 2026-05-12):** kort lead-sats i
+      `.teaser` (stor font) + ett faktastycke i normal body-text. Tidigare
+      version hade hela introt i `.teaser` → fontmässigt för tungt.
+      Källförklarings-paragrafen droppad (redundant med `Källor:`-footer).
     - Wire-in via `view()->exists()`-pattern i `trafik/lan.blade.php` —
       fler län plugin:as som egna partials per slug.
     - **noindex kvar på alla tre tills granskad och rolling-lift utförd.**

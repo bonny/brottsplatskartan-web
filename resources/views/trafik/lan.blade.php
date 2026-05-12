@@ -27,28 +27,28 @@
             </p>
         @endif
 
-        {{-- Editorial intro per län. En partial per slug under
-             trafik/intros/. Saknas partial → generisk teaser (Tier 2/3-län
-             som är permanent noindex tills text skrivits). --}}
-        <div class="teaser">
-            @if (view()->exists('trafik.intros.' . $lan))
-                @include('trafik.intros.' . $lan)
-            @else
+        {{-- Editorial intro per län. Partial sköter själv .teaser-wrap
+             för lead-stycket + ev. body-text utanför. Saknas partial →
+             generisk teaser-fallback. --}}
+        @if (view()->exists('trafik.intros.' . $lan))
+            @include('trafik.intros.' . $lan)
+        @else
+            <div class="teaser">
                 <p>
                     Aktuella trafikhändelser i {{ $lanName }} —
                     kombinerar polishändelser från Polisens RSS med vägarbeten,
                     vägstörningar och olyckor från Trafikverkets öppna data.
                 </p>
-            @endif
+            </div>
+        @endif
 
-            @if (!$typ)
-                <p>
-                    <small>
-                        <a href="{{ route('trafikLan', ['lan' => $lan, 'typ' => 'olycka']) }}">Visa bara olyckor</a>
-                    </small>
-                </p>
-            @endif
-        </div>
+        @if (!$typ)
+            <p>
+                <small>
+                    <a href="{{ route('trafikLan', ['lan' => $lan, 'typ' => 'olycka']) }}">Visa bara olyckor</a>
+                </small>
+            </p>
+        @endif
 
         {{-- Trafikverket-händelser (live) --}}
         @if ($trafikverketEvents->isNotEmpty())
