@@ -25,19 +25,12 @@ Länkparagraferna viks ihop bakom CSS-only toggle på mobil
 
     $lanOutput = trim($lanOutput, ", ");
     ?>
-    <div class="MobileCollapse MobileCollapse--sidebar">
-        <input type="checkbox" id="mc-lan-list" class="MobileCollapse__toggle">
-        <label for="mc-lan-list" class="MobileCollapse__summary">Visa alla 21 län</label>
-        <p class="MobileCollapse__content">{!! $lanOutput !!}</p>
-    </div>
+    <p>{!! $lanOutput !!}</p>
 </section>
 
 <section class="widget widget--cities" id="stader">
     <h2 class="widget__title">Senast hänt i din stad</h2>
-    <div class="MobileCollapse MobileCollapse--sidebar">
-        <input type="checkbox" id="mc-cities-list" class="MobileCollapse__toggle">
-        <label for="mc-cities-list" class="MobileCollapse__summary">Visa 10 största städerna</label>
-        <p class="MobileCollapse__content">
+    <p>
             <a title="Händelser från Polisen i Stockholm" href="{{ route("platsSingle", ['plats' => 'Stockholm']) }}">Stockholm</a>
             <a title="Händelser från Polisen i Göteborg" href="{{ route("platsSingle", ['plats' => 'Göteborg']) }}">Göteborg</a>
             <a title="Händelser från Polisen i Malmö" href="{{ route("platsSingle", ['plats' => 'Malmö']) }}">Malmö</a>
@@ -48,6 +41,5 @@ Länkparagraferna viks ihop bakom CSS-only toggle på mobil
             <a title="Händelser från Polisen i Helsingborg" href="{{ route("platsSingle", ['plats' => 'Helsingborg']) }}">Helsingborg</a>
             <a title="Händelser från Polisen i Jönköping" href="{{ route("platsSingle", ['plats' => 'Jönköping']) }}">Jönköping</a>
             <a title="Händelser från Polisen i Norrköping" href="{{ route("platsSingle", ['plats' => 'Norrköping']) }}">Norrköping</a>
-        </p>
-    </div>
+    </p>
 </section>

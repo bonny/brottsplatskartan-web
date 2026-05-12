@@ -34,55 +34,47 @@
     <div class="SiteFooter__col">
         <div class="SiteFooter__lanListing">
             <h2>Händelser från Polisen i ditt län</h2>
-            <div class="MobileCollapse MobileCollapse--footer">
-                <input type="checkbox" id="mc-footer-lan" class="MobileCollapse__toggle">
-                <label for="mc-footer-lan" class="MobileCollapse__summary">Visa alla län</label>
-                <ul class="SiteFooter__lanListing__items SiteFooter__navlinks MobileCollapse__content">
-                    @foreach (App\Helper::getAllLan() as $oneLanName)
-                        <li class="SiteFooter__lanListing__item">
-                            <a href="{{ route('lanSingle', ['lan' => $oneLanName]) }}"
-                                title="Händelser och brott från Polisen i {{ $oneLanName }}">
-                                {{ $oneLanName }}
-                            </a>
-                        </li>
-                    @endforeach
-                </ul>
-            </div>
+            <ul class="SiteFooter__lanListing__items SiteFooter__navlinks">
+                @foreach (App\Helper::getAllLan() as $oneLanName)
+                    <li class="SiteFooter__lanListing__item">
+                        <a href="{{ route('lanSingle', ['lan' => $oneLanName]) }}"
+                            title="Händelser och brott från Polisen i {{ $oneLanName }}">
+                            {{ $oneLanName }}
+                        </a>
+                    </li>
+                @endforeach
+            </ul>
         </div>
     </div>
 
     <div class="SiteFooter__col">
         <h2>Händelser i 10 största städerna</h2>
-        <div class="MobileCollapse MobileCollapse--footer">
-            <input type="checkbox" id="mc-footer-stader" class="MobileCollapse__toggle">
-            <label for="mc-footer-stader" class="MobileCollapse__summary">Visa alla städer</label>
-            <ul class="SiteFooter__navlinks MobileCollapse__content">
-                <li>
-                    {{-- Tier 1-städer (CityController, dedikerade /<stad>-sidor) --}}
-                    <a title="Händelser från Polisen i Stockholm"
-                        href="{{ route('city', ['city' => 'stockholm']) }}">Stockholm</a>
-                    <a title="Händelser från Polisen i Göteborg"
-                        href="{{ route('city', ['city' => 'goteborg']) }}">Göteborg</a>
-                    <a title="Händelser från Polisen i Malmö"
-                        href="{{ route('city', ['city' => 'malmo']) }}">Malmö</a>
-                    <a title="Händelser från Polisen i Uppsala"
-                        href="{{ route('city', ['city' => 'uppsala']) }}">Uppsala</a>
-                    <a title="Händelser från Polisen i Helsingborg"
-                        href="{{ route('city', ['city' => 'helsingborg']) }}">Helsingborg</a>
-                    {{-- Övriga (PlatsController, lowercase-slugs) --}}
-                    <a title="Händelser från Polisen i Västerås"
-                        href="{{ route('platsSingle', ['plats' => 'västerås']) }}">Västerås</a>
-                    <a title="Händelser från Polisen i Örebro"
-                        href="{{ route('platsSingle', ['plats' => 'örebro']) }}">Örebro</a>
-                    <a title="Händelser från Polisen i Linköping"
-                        href="{{ route('platsSingle', ['plats' => 'linköping']) }}">Linköping</a>
-                    <a title="Händelser från Polisen i Jönköping"
-                        href="{{ route('platsSingle', ['plats' => 'jönköping']) }}">Jönköping</a>
-                    <a title="Händelser från Polisen i Norrköping"
-                        href="{{ route('platsSingle', ['plats' => 'norrköping']) }}">Norrköping</a>
-                </li>
-            </ul>
-        </div>
+        <ul class="SiteFooter__navlinks">
+            <li>
+                {{-- Tier 1-städer (CityController, dedikerade /<stad>-sidor) --}}
+                <a title="Händelser från Polisen i Stockholm"
+                    href="{{ route('city', ['city' => 'stockholm']) }}">Stockholm</a>
+                <a title="Händelser från Polisen i Göteborg"
+                    href="{{ route('city', ['city' => 'goteborg']) }}">Göteborg</a>
+                <a title="Händelser från Polisen i Malmö"
+                    href="{{ route('city', ['city' => 'malmo']) }}">Malmö</a>
+                <a title="Händelser från Polisen i Uppsala"
+                    href="{{ route('city', ['city' => 'uppsala']) }}">Uppsala</a>
+                <a title="Händelser från Polisen i Helsingborg"
+                    href="{{ route('city', ['city' => 'helsingborg']) }}">Helsingborg</a>
+                {{-- Övriga (PlatsController, lowercase-slugs) --}}
+                <a title="Händelser från Polisen i Västerås"
+                    href="{{ route('platsSingle', ['plats' => 'västerås']) }}">Västerås</a>
+                <a title="Händelser från Polisen i Örebro"
+                    href="{{ route('platsSingle', ['plats' => 'örebro']) }}">Örebro</a>
+                <a title="Händelser från Polisen i Linköping"
+                    href="{{ route('platsSingle', ['plats' => 'linköping']) }}">Linköping</a>
+                <a title="Händelser från Polisen i Jönköping"
+                    href="{{ route('platsSingle', ['plats' => 'jönköping']) }}">Jönköping</a>
+                <a title="Händelser från Polisen i Norrköping"
+                    href="{{ route('platsSingle', ['plats' => 'norrköping']) }}">Norrköping</a>
+            </li>
+        </ul>
     </div>
 
 </footer>
