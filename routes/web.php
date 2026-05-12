@@ -632,6 +632,18 @@ Route::get('/brand/{undersida?}', function (
 })->name('brand');
 
 /**
+ * /{city}/trafik → 301 till motsvarande län:s trafik-aggregat (todo #50).
+ * Användare "hackar" ofta URL:er manuellt: stannar på /stockholm och skriver
+ * till /trafik. Data är län-skopat, så vi redirectar till länets aggregat.
+ * Måste registreras FÖRE /{lan}/trafik nedan.
+ */
+Route::get('/stockholm/trafik', fn () => redirect('/stockholms-lan/trafik', 301));
+Route::get('/goteborg/trafik', fn () => redirect('/vastra-gotalands-lan/trafik', 301));
+Route::get('/malmo/trafik', fn () => redirect('/skane-lan/trafik', 301));
+Route::get('/uppsala/trafik', fn () => redirect('/uppsala-lan/trafik', 301));
+Route::get('/helsingborg/trafik', fn () => redirect('/skane-lan/trafik', 301));
+
+/**
  * /{lan}/trafik — Fas 2 aggregat per län (todo #50).
  * Måste registreras FÖRE `/{lan}/{eventName}`-routern nedan, annars
  * tolkar Laravel "trafik" som ett event-namn inom län:et.
