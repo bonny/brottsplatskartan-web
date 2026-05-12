@@ -20,6 +20,7 @@
             <li><a href="{{ route('page', ['pagename' => 'api']) }}">Brottsplatser API</a></li>
             <li><a href="{{ route('inbrott') }}">Inbrott & hur du skyddar dig</span></a></li>
             <li><a href="{{ route('brand') }}">Brand, mordbrand, bilbrand, rökutveckling, ...</span></a></li>
+            <li><a href="{{ route('trafik') }}">Trafikolyckor, vägarbeten, störningar</a></li>
         </ul>
     </div>
 
