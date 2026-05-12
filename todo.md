@@ -4,7 +4,7 @@ Index över förbättringsarbete. Varje todo har en egen fil under
 [`todos/`](todos/) med fullständig analys. Konvention och
 mappstruktur: [`todos/README.md`](todos/README.md).
 
-Senast uppdaterad: 2026-05-12 (+#63 klar — Fas 1 deployad, pilot 8/8 precision, schemajobb live).
+Senast uppdaterad: 2026-05-12 (+#50 Fas 1 soak OK + Fas 2 foundation byggd lokalt; +#70 CWV-fix lokalt — mobile −77 %, desktop −99,6 %).
 
 ## Aktiva
 
@@ -15,7 +15,7 @@ Senast uppdaterad: 2026-05-12 (+#63 klar — Fas 1 deployad, pilot 8/8 precision
 | 36  | GSC-mätning av AI-titlars CTR-effekt                    | Mätperiod startad 2026-04-27, första check 2026-05-25                                               | [todos/36-gsc-matning-ai-titlar.md](todos/36-gsc-matning-ai-titlar.md)                               |
 | 39  | MSB/MCF brand- och räddningsstatistik per kommun        | Implementerad 2026-04-29 — väntar på trafikmätning 2026-05-13                                       | [todos/39-msb-brand-rakning-statistik.md](todos/39-msb-brand-rakning-statistik.md)                   |
 | 46  | Slå samman Händelser/Senaste/Mest lästa i menyn         | Importerad från GitHub #76 — kräver design + redirect-strategi                                      | [todos/46-meny-handelser-konsolidering.md](todos/46-meny-handelser-konsolidering.md)                 |
-| 50  | Trafikverket Trafikinformation: live på kartan          | Fas 1 deployat 2026-05-03 (live-karta-layer + /trafik + permalinks) — soak till 2026-05-10          | [todos/50-trafikverket-trafikinformation-live.md](todos/50-trafikverket-trafikinformation-live.md)   |
+| 50  | Trafikverket Trafikinformation: live på kartan          | Fas 2 foundation byggd lokalt 2026-05-12 (route+ctrl+view+noindex). Återstår: editorial text Tier 1 + lyft + intern länk | [todos/50-trafikverket-trafikinformation-live.md](todos/50-trafikverket-trafikinformation-live.md)   |
 | 51  | Övriga datakällor: research-skiss                       | Research-katalog (SMHI, räddningstjänst-RSS, Krisinfo, m.fl.) — bryts ut per källa                  | [todos/51-ovriga-datakallor-research.md](todos/51-ovriga-datakallor-research.md)                     |
 | 52  | GSC-monitor: lågrankade högvolym-queries                | Baseline klar 2026-04-30 — 7 åtgärder identifierade (A–G), ~25k clicks/90d potential                | [todos/52-gsc-low-rank-monitoring.md](todos/52-gsc-low-rank-monitoring.md)                           |
 | 54  | Trafikkontroll-titlar: utöka AI-rewrite                 | Idé — utöka `isVagueTitle()` med trafikkontroll-mönster                                             | [todos/54-trafikkontroll-titlar.md](todos/54-trafikkontroll-titlar.md)                               |
@@ -24,6 +24,7 @@ Senast uppdaterad: 2026-05-12 (+#63 klar — Fas 1 deployad, pilot 8/8 precision
 | 64  | Per-plats nyhetsaggregering — "Senaste nyheter i {ort}" | Fas-2 live 2026-05-02 (hybrid regex + AI Haiku 4.5 + dn-sthlm + visa-fler); stickprov 2026-05-15    | [todos/64-per-plats-nyhetsaggregering.md](todos/64-per-plats-nyhetsaggregering.md)                   |
 | 66  | Uppföljning #55: mät CWV + PHP-FPM-CPU efter `/k/v1/`   | Passiv mätperiod till 2026-05-31 — CWV-jämförelse, cache-hit-rate, social-share-test                | [todos/66-uppfoljning-55-kortare-kartbild-urls.md](todos/66-uppfoljning-55-kortare-kartbild-urls.md) |
 | 69  | SMHI vädervarningar som kart-layer                      | Skissad 2026-05-06 — scope A (ren layer, ingen /varningar-route). Väntar på #50 soak-end 2026-05-10 | [todos/69-smhi-vadervarningar-kart-layer.md](todos/69-smhi-vadervarningar-kart-layer.md)             |
+| 70  | `/karta` CWV: CLS-fix implementerad 2026-05-12          | Mobile 0,26→0,06 (−77 %), desktop 0,58→0,003 (−99,6 %) lokalt. Väntar prod-deploy + 28d CrUX | [todos/70-karta-cwv-lcp-cls.md](todos/70-karta-cwv-lcp-cls.md)                                       |
 
 ### Beroenden
 
@@ -49,7 +50,6 @@ eller markera todon som klar.
 
 | Datum      | Åtgärd                                                                                                   | Todo                                                    |
 | ---------- | -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
-| 2026-05-10 | Trafikverket Fas 1 — soak-mätning + gates-beslut (Fas 2?)                                                | [#50](todos/50-trafikverket-trafikinformation-live.md)  |
 | 2026-05-13 | MCF räddningsstatistik — utvärdera trafikimpact i GA4 + GSC                                              | [#39](todos/39-msb-brand-rakning-statistik.md)          |
 | 2026-05-15 | #64 precision-stickprov — 50 artiklar, mål >85 %                                                         | [#64](todos/64-per-plats-nyhetsaggregering.md)          |
 | 2026-05-25 | GSC-mätning AI-titlar — första check (4v post-deploy)                                                    | [#36](todos/36-gsc-matning-ai-titlar.md)                |
@@ -65,7 +65,9 @@ eller markera todon som klar.
 
 ### Avklarade uppföljningar
 
-(flytta hit med faktiskt utfallsdatum när en check-in är gjord)
+| Planerat   | Utfört     | Åtgärd                                                                                                                | Todo                                                   |
+| ---------- | ---------- | --------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
+| 2026-05-10 | 2026-05-12 | Trafikverket Fas 1 soak + gates-beslut: 6/6 OK (volym/CWV/rate-limit/GSC/prune/logs) — grönt ljus Fas 2. Pre-existing CWV på `/karta` flyttat till #70 | [#50](todos/50-trafikverket-trafikinformation-live.md) |
 
 ## Klara
 
