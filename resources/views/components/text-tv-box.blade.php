@@ -64,11 +64,18 @@
     </ul>
 
 
+    {{-- Mobile-paginering (todo #71 Fas 3): visa 3 första, övriga
+         viks ihop bakom CSS-only toggle på mobil. Desktop ser hela listan. --}}
     @if (isset($latestNews))
         <h3>Senaste nytt</h3>
 
+        @php
+            $latestVisible = collect($latestNews)->take(3);
+            $latestHidden = collect($latestNews)->slice(3);
+        @endphp
+
         <ul class="TextTVBox-newslisting">
-            @foreach ($latestNews as $news)
+            @foreach ($latestVisible as $news)
                 <li>
                     <a href="{{ $news['permalink'] }}?utm_source=brottsplatskartan&utm_medium=newslist">
                         <div class="TextTVBox-newslisting-text">
@@ -79,13 +86,37 @@
                 </li>
             @endforeach
         </ul>
+
+        @if ($latestHidden->isNotEmpty())
+            <div class="MobileCollapse MobileCollapse--texttv">
+                <input type="checkbox" id="mc-texttv-latest" class="MobileCollapse__toggle">
+                <label for="mc-texttv-latest" class="MobileCollapse__summary">Visa {{ $latestHidden->count() }} fler</label>
+                <ul class="TextTVBox-newslisting MobileCollapse__content">
+                    @foreach ($latestHidden as $news)
+                        <li>
+                            <a href="{{ $news['permalink'] }}?utm_source=brottsplatskartan&utm_medium=newslist">
+                                <div class="TextTVBox-newslisting-text">
+                                    <div>{{ $news['date_added_time'] }}</div>
+                                    <div>{{ $news['title'] }}</div>
+                                </div>
+                            </a>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
     @endif
 
     @if (isset($mostRead))
         <h3>Mest läst</h3>
 
+        @php
+            $mostReadVisible = collect($mostRead)->take(3);
+            $mostReadHidden = collect($mostRead)->slice(3);
+        @endphp
+
         <ul class="TextTVBox-newslisting">
-            @foreach ($mostRead as $news)
+            @foreach ($mostReadVisible as $news)
                 <li>
                     <a href="{{ $news['permalink'] }}?utm_source=brottsplatskartan&utm_medium=newslist">
                         <div class="TextTVBox-newslisting-text">
@@ -96,5 +127,24 @@
                 </li>
             @endforeach
         </ul>
+
+        @if ($mostReadHidden->isNotEmpty())
+            <div class="MobileCollapse MobileCollapse--texttv">
+                <input type="checkbox" id="mc-texttv-mostread" class="MobileCollapse__toggle">
+                <label for="mc-texttv-mostread" class="MobileCollapse__summary">Visa {{ $mostReadHidden->count() }} fler</label>
+                <ul class="TextTVBox-newslisting MobileCollapse__content">
+                    @foreach ($mostReadHidden as $news)
+                        <li>
+                            <a href="{{ $news['permalink'] }}?utm_source=brottsplatskartan&utm_medium=newslist">
+                                <div class="TextTVBox-newslisting-text">
+                                    <div>{{ $news['date_added_time'] }}</div>
+                                    <div>{{ $news['title'] }}</div>
+                                </div>
+                            </a>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
     @endif
 </div>

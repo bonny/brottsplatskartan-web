@@ -837,6 +837,76 @@ blockquote {
     }
 }
 
+/* ----------------------------------------------------------------------
+   MobileCollapse — viker ihop innehåll bakom en CSS-only toggle på
+   mobil men håller hela listan synlig på desktop (todo #71 Fas 3).
+
+   Vi använder checkbox + label-pattern (inte <details>) eftersom
+   <details>-elementets browser-rendering inte är CSS-överskridbar:
+   även om vi sätter `display: block` på children av en <details>
+   utan [open] så förblir innehållet dolt av webbläsarens interna
+   rendering (slot/::details-content). Checkbox-pattern är CSS-styrt
+   fullt ut och fungerar utan JS i alla evergreen-browsers.
+
+   Markup:
+     <div class="MobileCollapse">
+         <input type="checkbox" id="mc-X" class="MobileCollapse__toggle">
+         <label for="mc-X" class="MobileCollapse__summary">Visa fler</label>
+         <div/ul class="MobileCollapse__content">…dolt innehåll…</div>
+     </div>
+
+   Länkarna ligger alltid kvar i DOM:en → crawl:bart för Googlebot.
+   ---------------------------------------------------------------------- */
+.MobileCollapse__toggle {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+}
+
+.MobileCollapse > .MobileCollapse__content {
+    display: none;
+}
+
+.MobileCollapse > .MobileCollapse__toggle:checked ~ .MobileCollapse__content {
+    display: block;
+}
+
+.MobileCollapse__summary {
+    cursor: pointer;
+    display: inline-block;
+    padding: var(--default-margin-half) 0;
+    color: var(--color-link, #0c3256);
+    font-size: var(--font-size-medium-2, 0.95rem);
+    user-select: none;
+}
+
+.MobileCollapse__summary:hover {
+    text-decoration: underline;
+}
+
+.MobileCollapse__summary::before {
+    content: "+ ";
+    display: inline;
+}
+
+.MobileCollapse > .MobileCollapse__toggle:checked ~ .MobileCollapse__summary::before {
+    content: "− ";
+}
+
+/* På desktop (≥769 px): toggle försvinner, innehåll visas alltid. */
+@media (min-width: 769px) {
+    .MobileCollapse > .MobileCollapse__summary {
+        display: none;
+    }
+    .MobileCollapse > .MobileCollapse__content {
+        display: block !important;
+    }
+}
+
 .SearchForm {
     margin-bottom: var(--default-margin);
 }

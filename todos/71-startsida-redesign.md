@@ -1,7 +1,75 @@
-**Status:** aktiv — Fas 1 + 2 klara 2026-05-12, Fas 3–4 kvarstår
+**Status:** aktiv — Fas 1 + 2 + 3 klara 2026-05-12, Fas 4 kvarstår (mätningsberoende)
 **Senast uppdaterad:** 2026-05-12
 
 # Todo #71 — Startsida-redesign: kompaktare layout + SEO-städ
+
+## Fas 3 klar 2026-05-12
+
+Mobile-paginering via CSS-only `<input type=checkbox>` + `<label>`-toggles
+per sektion. Desktop och tablet behåller full listning tack vare
+`@media (min-width: 769px)`-regel som tvingar `.MobileCollapse__content`
+till `display: block`. Länkar ligger alltid kvar i DOM:en → crawl:bart
+för Googlebot (verifierat manuellt med playwright + skiftning av
+viewport).
+
+Anmärkning: tidigt försök använde `<details>`/`<summary>` (samma
+pattern som #64 per-plats-nyheter). Det visade sig att webbläsarens
+interna `<details>`-rendering inte är CSS-överskridbar — även med
+`display: block !important` på `.MobileCollapse__content` förblev
+innehållet dolt på desktop när elementet saknade `[open]`. Byttes
+därför till checkbox-pattern som är fullt CSS-styrt.
+
+Audit-mätning före → efter (390×844 mobile):
+
+| Mått                      | Före (Fas 2) | Efter (Fas 3) | Δ       |
+| ------------------------- | ------------ | ------------- | ------- |
+| Mobile `docH`             | 7 429 px     | 4 929 px      | −33.7 % |
+| Tablet `docH` (820×1180)  | 5 010 px     | 4 978 px      | −0.6 %  |
+| Desktop `docH` (1440×900) | 3 779 px     | 3 747 px      | −0.8 %  |
+| `foldCards` mobile        | 8            | 8             | =       |
+| `foldCards` desktop       | 8            | 8             | =       |
+
+Toggle:ade sektioner (alla mobile-only, desktop ser hela listan):
+
+- `parts/events-heroes.blade.php` — 6 små heroes + 8 normala
+  ListEvent-kort i "Mest läst" viks ihop bakom toggle. Första 3
+  hero-korten alltid synliga (det är huvudvärdet).
+- `parts/lan-and-cities.blade.php` — sidebar widgets "Senaste
+  händelserna & brotten i ditt län" (21 län-länkar) + "Senast hänt
+  i din stad" (10 stad-länkar).
+- `parts/widget-blog-entries.blade.php` — visar 1 senaste bloggpost,
+  resten viks ihop.
+- `parts/widget-vma-messages.blade.php` — arkiverade VMA viks ihop;
+  aktuella VMA alltid synliga.
+- `components/text-tv-box.blade.php` — visar 3 första nyheter per
+  lista ("Senaste nytt" + "Mest läst"), resten viks ihop.
+- `parts/sitefooter.blade.php` — alla tre footer-kolumner
+  (huvudnav, län-lista, städer-lista) viks ihop på mobil. Affecterar
+  hela sajten — bedöms OK eftersom desktop oförändrat och länkarna
+  finns kvar i DOM.
+
+Sektioner som **inte** toggle:ades (medvetet):
+
+- "Senaste händelserna" + "Mest lästa händelserna" Timeline-listor —
+  core content per brief, lämnade orörda.
+- "Mest läst"-hero (första 3 stora kort) — primärt klick-mål.
+- Brottsstatistik-widgeten — paragrafen är så kort att toggle-labelen
+  äter upp vinsten (testat: gav +2 px på mobil).
+- Karta + AdSense — utanför scope.
+
+CSS-block tillagt i `public/css/styles.css` (efter EventHero-blocket):
+`.MobileCollapse`, `.MobileCollapse__toggle` (visuellt dolt sr-pattern),
+`.MobileCollapse__summary` (klickbar label med `+/−` prefix), och
+desktop-media-query som tvingar innehåll till `display: block`.
+
+Verifierat manuellt:
+
+- Mobil 390px: alla 6 toggle-summaries synliga, content gömt vid
+  load. Klick på label expanderar (docH 5004 → 8346 px efter klick
+  på alla 9 toggle:s).
+- Desktop 1440px: ingen summary synlig, allt innehåll alltid expanderat.
+- Tablet 820px: identiskt med desktop (≥769px regel träffar).
+- PHPStan level 5: 0 errors.
 
 ## Fas 2 klar 2026-05-12
 
