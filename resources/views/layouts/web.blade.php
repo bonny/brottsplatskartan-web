@@ -201,7 +201,7 @@ Layout template for web
 
 </head>
 
-<body class="@if ($shared_notification_bar_contents) has-notification-bar @endif">
+<body class="@if ($shared_notification_bar_contents) has-notification-bar @endif @yield('bodyClass')">
     @include('parts.notificationbar')
     @include('parts.bar-events')
     @include('parts.siteheader')

@@ -9,6 +9,10 @@ Template för sverigekartan
 @section('title', 'Brottskarta – brott och händelser från Polisen utmarkerade på karta')
 @section('canonicalLink', route('sverigekartan'))
 
+{{-- CLS-fix (#70): server-side sätta map-is-expanded så body har position: fixed
+     från första paint, undviker shift när JS toggar klassen efter Leaflet-mount. --}}
+@section('bodyClass', 'map-is-expanded')
+
 @section('content')
 
     <h1 class="sr-only">Brottskarta — brott och händelser från Polisen utmarkerade på karta</h1>

@@ -45,6 +45,40 @@
     background-size: cover;
 }
 
+/* CLS-fix (#70): på /karta (fullscreen) toggas .is-expanded via JS efter
+   Leaflet-mount och `--header-elms-height` skrivs då samtidigt från JS.
+   Resultat: 100dvh → calc(100dvh - N px) shift på första render.
+   Sätt rimliga DEFAULT-värden på root-vars (matchar typisk
+   sitebar+header på desktop ~80 px, mobile ~120 px) så även första paint
+   är nära slut-värdet — minskar shift utan att låsa exakt pixel. */
+:root {
+    --header-elms-height: 80px;
+    --ad-top-height: 0px;
+    --ad-bottom-height: 0px;
+}
+
+@media (max-width: 767px) {
+    :root {
+        --header-elms-height: 120px;
+    }
+}
+
+/* Initial-state på fullscreen-kartan matchar slut-värdet (.is-expanded)
+   så ingen shift när JS toggar klassen. Speglar `.EventsMap.is-expanded`. */
+.EventsMap[data-events-map-size="fullscreen"] {
+    position: fixed;
+    height: calc(
+        100dvh - var(--header-elms-height) - var(--ad-top-height) -
+            var(--ad-bottom-height)
+    );
+    top: calc(var(--header-elms-height) + var(--ad-top-height));
+    bottom: var(--ad-bottom-height);
+    left: 0;
+    right: 0;
+    z-index: 20;
+}
+
+
 body.map-is-expanded {
     overflow: hidden;
     position: fixed;
