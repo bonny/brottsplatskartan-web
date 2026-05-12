@@ -1,34 +1,26 @@
 <footer class="SiteFooter">
 
-    {{-- På mobil viks varje footer-kolumn ihop bakom <details>-toggle
-         (todo #71 Fas 3). Desktop visas hela listan tack vare CSS-regeln
-         för .MobileCollapse__content i media (min-width: 769 px). --}}
-
     <div class="SiteFooter__col">
         <h2>Brottsplatskartan</h2>
-        <div class="MobileCollapse MobileCollapse--footer">
-            <input type="checkbox" id="mc-footer-bpk" class="MobileCollapse__toggle">
-            <label for="mc-footer-bpk" class="MobileCollapse__summary">Visa alla länkar</label>
-            <ul class="SiteFooter__navlinks MobileCollapse__content">
-                <li><a href="{{ route('start') }}">Händelser</a></li>
-                <li><a href="/nara-hitta-plats">Händelser nära dig</a></li>
-                <li><a href="{{ route('mostRead') }}">Mest lästa händelserna</a></li>
-                <li><a href="{{ route('sverigekartan') }}">Karta</a></li>
-                <li><a href="{{ route('typeOverview') }}">Händelsertyper</a></li>
-                <li><a href="{{ route('helicopter') }}">Helikopter</a></li>
-                <li><a href="{{ route('polisstationer') }}">Polisstationer</a></li>
-                <li><a href="{{ route('vma-overview') }}">VMA</a></li>
-                <li><a href="{{ route('statistik') }}">Statistik</a></li>
-                <li><a href="{{ route('blog') }}">Blogg</a></li>
-                <li><a href="{{ route('page', ['pagename' => 'om']) }}">Om Brottsplatskartan</a></li>
-                <li><a href="{{ route('page', ['pagename' => 'press']) }}">Press</a></li>
-                <li><a href="{{ route('ordlista') }}">Ordlista</a></li>
-                <li><a href="{{ route('page', ['pagename' => 'api']) }}">Brottsplatser API</a></li>
-                <li><a href="{{ route('inbrott') }}">Inbrott & hur du skyddar dig</span></a></li>
-                <li><a href="{{ route('brand') }}">Brand, mordbrand, bilbrand, rökutveckling, ...</span></a></li>
-                <li><a href="{{ route('trafik') }}">Trafikolyckor, vägarbeten, störningar</a></li>
-            </ul>
-        </div>
+        <ul class="SiteFooter__navlinks">
+            <li><a href="{{ route('start') }}">Händelser</a></li>
+            <li><a href="/nara-hitta-plats">Händelser nära dig</a></li>
+            <li><a href="{{ route('mostRead') }}">Mest lästa händelserna</a></li>
+            <li><a href="{{ route('sverigekartan') }}">Karta</a></li>
+            <li><a href="{{ route('typeOverview') }}">Händelsertyper</a></li>
+            <li><a href="{{ route('helicopter') }}">Helikopter</a></li>
+            <li><a href="{{ route('polisstationer') }}">Polisstationer</a></li>
+            <li><a href="{{ route('vma-overview') }}">VMA</a></li>
+            <li><a href="{{ route('statistik') }}">Statistik</a></li>
+            <li><a href="{{ route('blog') }}">Blogg</a></li>
+            <li><a href="{{ route('page', ['pagename' => 'om']) }}">Om Brottsplatskartan</a></li>
+            <li><a href="{{ route('page', ['pagename' => 'press']) }}">Press</a></li>
+            <li><a href="{{ route('ordlista') }}">Ordlista</a></li>
+            <li><a href="{{ route('page', ['pagename' => 'api']) }}">Brottsplatser API</a></li>
+            <li><a href="{{ route('inbrott') }}">Inbrott & hur du skyddar dig</span></a></li>
+            <li><a href="{{ route('brand') }}">Brand, mordbrand, bilbrand, rökutveckling, ...</span></a></li>
+            <li><a href="{{ route('trafik') }}">Trafikolyckor, vägarbeten, störningar</a></li>
+        </ul>
     </div>
 
     <div class="SiteFooter__col">
