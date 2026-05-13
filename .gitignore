@@ -48,3 +48,6 @@ bpk*.gz
 /tmp-startsida-analys-2026-05-12/
 tmp-ai-baseline
 .claude/scheduled_tasks.lock
+
+# Playwright MCP-loggar/snapshots — debug-artefakter, inte källkod
+/.playwright-mcp/

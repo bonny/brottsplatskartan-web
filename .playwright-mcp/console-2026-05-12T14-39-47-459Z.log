@@ -1,5 +1,0 @@
-[     294ms] [LOG] headerElmsHeight 157 @ http://brottsplatskartan.test:8350/:1318
-[     517ms] [LOG] window.map now available e @ http://brottsplatskartan.test:8350/js/events-map.js?v=1778595238:328
-[     518ms] [LOG] map init location [59, 15] 6 [59, 15] 6 @ http://brottsplatskartan.test:8350/js/events-map.js?v=1778595238:398
-[     521ms] [LOG] map loaded with options: {size: normal, latLng: Array(2), zoom: 6, locationFilter: null, locationType: null} @ http://brottsplatskartan.test:8350/js/events-map.js?v=1778595238:348
-[     870ms] [LOG] markers loaded [e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e] @ http://brottsplatskartan.test:8350/js/events-map.js?v=1778595238:263
