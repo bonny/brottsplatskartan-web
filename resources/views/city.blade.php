@@ -24,7 +24,7 @@
 
                 {{-- Introtext. --}}
                 <h1>
-                    <strong>{{ $city['displayName'] }}</strong>
+                    <strong>Polishändelser i {{ $city['displayName'] }}</strong>
                     <span class="u-block text-2xl mt-4">{{ $city['title'] }}</span>
                 </h1>
 
