@@ -1,4 +1,4 @@
-**Status:** aktiv — utbruten från #76 senior-review (2026-05-13)
+**Status:** arkiverad/uppskjuten 2026-05-13 — premature; sammanslås troligen med #76 Fas A när det startas. Se "Review 2026-05-13" nedan.
 **Senast uppdaterad:** 2026-05-13
 
 # Todo #80 — Cannibalisering startsida `/` vs `/stockholm` på "polisen händelser"
@@ -99,3 +99,46 @@ vi ändrar Stockholm.
   möjligen mergea ihop när Fas A startas.
 - **#46** (Händelser/Senaste/Mest lästa-konsolidering) — relaterad
   hub-sida-diskussion.
+
+## Review 2026-05-13 — varför arkiverad
+
+Egen kritisk review identifierade flera svagheter som gör att todon
+inte bör startas i nuvarande form:
+
+1. **Diffust förhållande till #76 Fas A.** Fas A är auditen över ALLA
+   15+ sidor som rankar på "polisen händelser". #80 plockar ut en
+   delmängd (`/` vs `/stockholm`) och riskerar dubbelarbete eller
+   motstridig fix om den körs separat.
+2. **Saknar GSC-baseline för "Sverige"-modifierade fraser.** Förslaget
+   är att startsidan ska äga `polisen händelser sverige`. Men har vi
+   imp på den frasen idag? Om volymen är 0 så pivoterar vi från en
+   pos 7.6-fras med 30k imp till en fras med 0 imp — regression
+   maskerad som strategi.
+3. **Plats-sidors roll otydlig.** `/plats/göteborg` är en lika stor
+   cannibaliseringskälla som `/stockholm` (3 358 imp/90d, pos 6.8).
+   Delegerades till "Fas A" utan tydlig ägare.
+4. **Stockholm-Fas-B är obevisad.** Om Stockholm tappar rank under
+   60d-mätningen (uppföljning 2026-07-12), så är #80:s grundpremiss
+   ("stadssidor äger stad-noden") fel.
+5. **"Live från hela landet" är inte ett SEO-keyword.** Det är
+   marknadsförings-copy. Att byta startsidans title kan tappa
+   matching mot "polisen händelser" generiskt utan att vinna något.
+6. **Canary-strategin omvänd.** Filen säger "ändra startsidan först,
+   sen Stockholm". Men Stockholm är redan ändrad i Fas B.
+7. **Confidence övervärderad.** "Medel" sattes på senior-review-
+   insikten, inte på implementationsplanen som är skissartad.
+
+### Avblockning
+
+Återöppna när:
+
+1. #76 Fas B 60d-mätning klar (2026-07-12) → vet om Stockholm-pivot
+   funkar.
+2. #76 Fas A audit klar → vet hur cannibaliseringen ser ut totalt
+   över alla 15+ sidor.
+3. GSC-baseline körd för "polisen händelser sverige", "polisen
+   händelser hela landet", "polisens händelser idag" → vet om en
+   pivot till "Sverige nationellt" har matching-potential alls.
+
+I praktiken: denna todo bör sammanslås med #76 Fas A som en av flera
+besluts-output, inte handhanteras separat.
