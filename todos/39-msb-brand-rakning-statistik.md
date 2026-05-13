@@ -1,5 +1,5 @@
-**Status:** implementerad 2026-04-29 — väntar på mätning 2026-05-13
-**Senast uppdaterad:** 2026-04-29
+**Status:** implementerad 2026-04-29 — 14d-check 2026-05-13 visade ingen attribuerbar effekt, mätperiod förlängd till 60d (2026-06-29)
+**Senast uppdaterad:** 2026-05-13 (14d GSC-check — ingen MCF-specifik signal, confounded med #24/#33/#10)
 **Relaterad till:** #38 (BRÅ-mönster), #27 (rikare innehåll)
 
 # Todo #39 — MSB brand- och räddningsstatistik per kommun
@@ -300,3 +300,65 @@ Joinas mot `scb_kommuner` på namn (samma mönster som #38).
 - **Real-time räddningsinsatser** — MSB-data är retrospektiv (årsstatistik).
   Vår "händelser just nu" fortsätter med Polisen-data.
 - **Olycksdetaljer per insats.** Bara aggregerad statistik per kommun.
+
+## 14d-mätning (2026-05-13)
+
+GSC-jämförelse pre-deploy (2026-04-15→04-28) vs post-deploy
+(2026-04-29→05-12), per page + per query.
+
+### Resultat — confounded med samtidiga deploys
+
+Sidor där MCF visas (Tier 1 + `/plats/`) har stor click-uppgång, men
+det är **URL-konsolidering**, inte MCF:
+
+| Page                   | P1   | P2   | Δ       |
+| ---------------------- | ---- | ---- | ------- |
+| `/goteborg`            | 61   | 691  | +1033 % |
+| `/malmo`               | 27   | 541  | +1904 % |
+| `/uppsala`             | 0    | 236  | nytt    |
+| `/helsingborg`         | 0    | 106  | nytt    |
+| `/stockholm`           | 3130 | 3251 | +3.9 %  |
+| `/plats/malm%C3%B6`    | 263  | 4    | −98.5 % |
+| `/plats/g%C3%B6teborg` | 149  | 0    | −100 %  |
+
+Spegelvändningen `/plats/...` → `/{city}` visar att uppgången är från
+**#24/#35-cannibalization-fix**, inte MCF. Samtidigt:
+
+- **#33** Tier 1 month routes deployades 2026-04-27 (−2d)
+- **#10** AI-titles rollout 2026-04-27 (−2d)
+- **#39** MCF 2026-04-29
+
+Alla tre är confounded i samma 14d-fönster.
+
+### MCF-specifika queries — frånvarande
+
+Inga nya queries i top 50 som matchar MCF-content-tema:
+
+- "räddningstjänsten statistik" — saknas helt
+- "bränder Stockholm 2024" / "trafikolyckor Uppsala" — saknas
+- "räddningstjänsten senaste larm stockholm" −46 % (gick ner)
+
+Topplistan domineras av event-drivna ("mord ornö", "brand vallentuna")
+och generic ("blåljus malmö") — ingen attribuerbar MCF-trafik ännu.
+
+### Tolkning
+
+14 dagar är **för kort** för innehållstillägg som MCF. SEO behöver
+30–60d för:
+
+- Google crawlar nya sektioner
+- Kvalitetsbedömning väger in efter dwell-time-data
+- Nya queries rankar för relaterade termer
+
+GA4-token är utgången → kan inte mäta dwell time / bounce / interna klick.
+Det är där MCF-värdet sannolikt syns först (rikare innehåll → längre
+dwell → bättre Quality Score över tid).
+
+### Action
+
+- **Förläng mätperioden till 60d** (2026-06-29).
+- Förnya GA4-token före nästa check så vi får dwell-time-data.
+- Slå ihop med #25 månadsvyer-mätningen — samma fönster, samma sidor.
+- Om 60d fortfarande inte visar effekt: avgör om feature ska behållas
+  (lika gärna passiv content-quality som SEO-driver) eller fas-2 med
+  prominentare placering/anchor.
