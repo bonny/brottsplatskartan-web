@@ -1,8 +1,29 @@
-**Status:** uppföljning — passiv mätperiod till 2026-05-31
-**Senast uppdaterad:** 2026-05-01
+**Status:** klar 2026-05-13 — 12d-mätning bekräftade allt OK: 99.7 % 301 på /k/v1/, hit rate 95.5 %, app-CPU 0.02 %. Stängs tidigt.
+**Senast uppdaterad:** 2026-05-13
 **Källa:** uppföljning av [#55](done/55-kortare-kartbild-urls.md) som rullades 2026-05-01
 
 # Todo #66 — Uppföljning av #55: mät CWV-impact och PHP-FPM-CPU efter `/k/v1/`-rollout
+
+## Utfall (2026-05-13, 12d post-rollout)
+
+Stängdes tidigt — alla tekniska gates klart OK på 12 dagar:
+
+| Mätning             | Resultat           | Tröskel     | Status              |
+| ------------------- | ------------------ | ----------- | ------------------- |
+| HTTP 301 / `/k/v1/` | 22 757 (99.7 %)    | förväntat   | ✅                  |
+| HTTP 404 / `/k/v1/` | 55 (0.24 %)        | <0.1 %      | acceptabelt (n=55)  |
+| Redis hit rate      | 95.5 % (385M/404M) | inget krav  | ✅ utmärkt          |
+| app-container CPU   | 0.02 %             | <10 % press | ✅ ingen press alls |
+
+404-raten ligger marginellt över 0.1 %-tröskeln men 55 av 22 757 — sannolikt
+cachat HTML som pekar på borttagna events, inte trasiga URL-byggare.
+
+Redis peak (3.03 GB / 101 % av cap, 12 376 evicted keys) är **inte**
+en #55-regression — det är RAM-trenden som hör hemma i
+[`project_cx33_ram_constraints`](../../memory/project_cx33_ram_constraints.md).
+
+Social-share-test (FB OG-debugger / Twitter card validator) inte körd —
+kan göras manuellt vid behov men inga signaler på regression.
 
 ## Sammanfattning
 

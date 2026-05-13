@@ -76,3 +76,15 @@ Populära Text TV-sidor:
 - [Sida 300 - Sport](https://texttv.nu/300)
 - [Sida 377 - Målservice](https://texttv.nu/377)
 - [Sida 700 - Innehåll](https://texttv.nu/700)
+
+## Licens
+
+Källkoden är licensierad under **[GNU Affero General Public License v3.0 eller senare](LICENSE)** (AGPL-3.0-or-later).
+
+I korthet: du får använda, modifiera och distribuera koden fritt, men om du
+kör en modifierad version som en nätverkstjänst (t.ex. egen webbsajt baserad
+på denna kod) måste du också göra _din_ källkod tillgänglig för
+användarna. Standardvalet för open source-projekt som vill förbli öppna
+även när andra hostar dem.
+
+Copyright © 2014–2026 Pär Thernström.
