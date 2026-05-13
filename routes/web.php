@@ -215,10 +215,6 @@ Route::get('/typ/', function () {
  * https://brottsplatskartan.se/typ/Inbrott
  */
 Route::get('/typ/{typ}', function ($typ) {
-    $data = [
-        "type" => $typ
-    ];
-
     // Skicka vidare anrop till inbrotts-relaterade saker till sidan om inbrott.
     $inbrottSlugs = [
         'inbrott',
@@ -234,17 +230,50 @@ Route::get('/typ/{typ}', function ($typ) {
     }
 
     // Skicka vidare anrop till brand-relaterade saker till sidan om brand.
-    $inbrottSlugs = [
+    $brandSlugs = [
         'brand',
         'brand automatlarm',
     ];
 
-    if (in_array(mb_strtolower($typ), $inbrottSlugs)) {
+    if (in_array(mb_strtolower($typ), $brandSlugs)) {
         return redirect()->route('brand');
     }
 
+    // Slash-aliases: ren slug i URL, slash-värdet i DB.
+    // Nyckel = canonical-slug (URL-form). Värde = ['db' => parsed_title, 'display' => H1/breadcrumb].
+    $typeAliases = [
+        'polisinsats' => [
+            'db' => 'Polisinsats/kommendering',
+            'display' => 'Polisinsatser',
+        ],
+    ];
+
+    // 301 från fulla slash-titeln till ren slug (mot dup-content).
+    $lowerTyp = mb_strtolower($typ);
+    foreach ($typeAliases as $cleanSlug => $alias) {
+        if ($lowerTyp === mb_strtolower($alias['db'])) {
+            return redirect('/typ/' . $cleanSlug, 301);
+        }
+    }
+
+    if (isset($typeAliases[$lowerTyp])) {
+        $alias = $typeAliases[$lowerTyp];
+        $dbTitle = $alias['db'];
+        $displayTitle = $alias['display'];
+        $canonicalSlug = $lowerTyp;
+    } else {
+        $dbTitle = $typ;
+        $displayTitle = $typ;
+        $canonicalSlug = mb_strtolower($typ);
+    }
+
+    $data = [
+        "type" => $displayTitle,
+        "canonicalSlug" => $canonicalSlug,
+    ];
+
     $data["events"] = CrimeEvent::orderBy("created_at", "desc")
-        ->where("parsed_title", $typ)
+        ->where("parsed_title", $dbTitle)
         ->paginate(10);
 
     if (!$data["events"]->count()) {
@@ -255,7 +284,7 @@ Route::get('/typ/{typ}', function ($typ) {
     $breadcrumbs->setDivider('›');
     $breadcrumbs->addCrumb('Hem', '/');
     $breadcrumbs->addCrumb('Brottstyper', route("typeOverview"));
-    $breadcrumbs->addCrumb(e($typ), route("typeSingle", ["typ" => $typ]));
+    $breadcrumbs->addCrumb(e($displayTitle), route("typeSingle", ["typ" => $canonicalSlug]));
 
     $data["breadcrumbs"] = $breadcrumbs;
 

@@ -9,12 +9,12 @@ Template för ett län
 
 @section('title', "$type")
 @section('metaDescription', "Brott och polishändelser av typen {$type}. Aktuella inrapporterade händelser från Polisen, sorterade efter datum.")
-@section('canonicalLink', '/typ/' . mb_strtolower($type))
+@section('canonicalLink', '/typ/' . ($canonicalSlug ?? mb_strtolower($type)))
 
 @section('metaContent')
     @include('parts.collectionpage-jsonld', [
         'cpName' => "Brott och händelser av typen {$type}",
-        'cpUrl' => url('/typ/' . mb_strtolower($type)),
+        'cpUrl' => url('/typ/' . ($canonicalSlug ?? mb_strtolower($type))),
         'cpAboutType' => 'Thing',
         'cpAboutName' => $type,
         'cpDescription' => "Brott och polishändelser av typen {$type}. Aktuella inrapporterade händelser från Polisen, sorterade efter datum.",

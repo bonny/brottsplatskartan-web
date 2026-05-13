@@ -4,7 +4,7 @@ Index över förbättringsarbete. Varje todo har en egen fil under
 [`todos/`](todos/) med fullständig analys. Konvention och
 mappstruktur: [`todos/README.md`](todos/README.md).
 
-Senast uppdaterad: 2026-05-13 (#80 arkiverad efter egen kritisk review — premature, slås troligen med #76 Fas A).
+Senast uppdaterad: 2026-05-13 (#72 implementerad lokalt — alias polisinsats → Polisinsats/kommendering, 301 + canonical, väntar deploy + 30d GSC).
 
 ## Aktiva
 
@@ -23,7 +23,7 @@ Senast uppdaterad: 2026-05-13 (#80 arkiverad efter egen kritisk review — prema
 | 60  | Auto-länka events till nyheter via AI + RSS             | RSS-grund delas med #63 (deployad 2026-05-01); fas 3-rollout efter #63 fas 1+2                                                      | [todos/60-auto-lank-nyheter-ai-rss.md](todos/60-auto-lank-nyheter-ai-rss.md)                                         |
 | 64  | Per-plats nyhetsaggregering — "Senaste nyheter i {ort}" | Fas-2 live 2026-05-02 (hybrid regex + AI Haiku 4.5 + dn-sthlm + visa-fler); stickprov 2026-05-15                                    | [todos/64-per-plats-nyhetsaggregering.md](todos/64-per-plats-nyhetsaggregering.md)                                   |
 | 69  | SMHI vädervarningar som kart-layer                      | Skissad 2026-05-06 — scope A (ren layer, ingen /varningar-route). Väntar på #50 soak-end 2026-05-10                                 | [todos/69-smhi-vadervarningar-kart-layer.md](todos/69-smhi-vadervarningar-kart-layer.md)                             |
-| 72  | `/typ/polisinsats` alias för Polisinsats/kommendering   | Utbruten från #52 D (2026-05-13) — mikrojobb ~30 min, ~790 klick/90d potential                                                      | [todos/72-typ-polisinsats-alias.md](todos/72-typ-polisinsats-alias.md)                                               |
+| 72  | `/typ/polisinsats` alias för Polisinsats/kommendering   | Implementerad lokalt 2026-05-13 — alias + 301 + ren canonical, väntar deploy + 30d GSC                                              | [todos/72-typ-polisinsats-alias.md](todos/72-typ-polisinsats-alias.md)                                               |
 | 76  | "polisen händelser X idag" + Malmö/Göteborg             | Fas B klar 2026-05-13 (5 Tier 1 titles + h1.displayName, v2 efter senior-SEO-review). Fas A/C/D/E kvar. 60d-mätning 2026-07-12      | [todos/76-polisen-handelser-stad-idag.md](todos/76-polisen-handelser-stad-idag.md)                                   |
 | 77  | "aktuella brott" CTR-fix                                | Utbruten från #52 G + #73 fas 2 (2026-05-13) — mikrojobb ~30 min, pos 4.1 men 0.66 % CTR. ~2 140 clicks/90d                         | [todos/77-aktuella-brott-ctr-fix.md](todos/77-aktuella-brott-ctr-fix.md)                                             |
 | 78  | Multi-plats-händelser missvisande på kartan             | Ny 2026-05-13 — sammanfattning natt/dag/kväll renderas som en cirkel fast brotten är geografiskt utspridda. Analys saknas           | [todos/78-handelser-utspridda-platser-kart-missvisning.md](todos/78-handelser-utspridda-platser-kart-missvisning.md) |
@@ -67,6 +67,7 @@ eller markera todon som klar.
 | 2026-07-27 | GSC-mätning AI-titlar — tredje check (12v) + beslut om fas 3                                             | [#36](todos/36-gsc-matning-ai-titlar.md)               |
 | 2026-07-27 | Indexerade pages — slutmätning (90d post-noindex)                                                        | [#29](todos/29-audit-indexerade-pages.md)              |
 | 2026-07-30 | GSC-monitor: kvartalsrapport (90d compare mot baseline)                                                  | [#52](todos/52-gsc-low-rank-monitoring.md)             |
+| 2026-06-12 | #72 GSC-mätning "polisinsats" — 30d post-deploy (mål: pos 9.3 → topp-3, ~790 clicks/90d)                 | [#72](todos/72-typ-polisinsats-alias.md)               |
 
 ### Avklarade uppföljningar
 

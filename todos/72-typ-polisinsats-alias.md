@@ -1,5 +1,5 @@
-**Status:** aktiv (utbruten från #52 åtgärd D, 2026-05-13)
-**Senast uppdaterad:** 2026-05-13
+**Status:** implementerad lokalt 2026-05-13 — väntar deploy + 30d GSC-mätning
+**Senast uppdaterad:** 2026-05-13 (implementation klar, rökstest ✓, PHPStan ✓)
 **Källa:** #52 GSC-monitor — åtgärd D
 
 # Todo #72 — Egen `/typ/polisinsats` (alias för Polisinsats/kommendering)
@@ -25,46 +25,93 @@ queryn flyttas till topp-3.
 
 ## Förslag
 
+### Steg 0 — Scope-koll innan implementation
+
+Kör innan deploy så vi vet om alias-arrayen ska designas för flera entries direkt:
+
+```sql
+SELECT parsed_title, COUNT(*) AS n
+FROM crime_events
+WHERE parsed_title LIKE '%/%'
+GROUP BY parsed_title
+ORDER BY n DESC;
+```
+
+Om bara `Polisinsats/kommendering` är värt något → fortsätt enligt nedan.
+Om fler slash-titles har volym → bygg ut alias-mappen direkt och kör en
+gemensam GSC-mätning.
+
 ### Steg 1 — Alias polisinsats → Polisinsats/kommendering (mikrojobb, ~30 min)
 
-Lägg till i `/typ/{typ}`-routen, **före** parsed_title-query:
+Lägg till i `/typ/{typ}`-routen, **före** parsed_title-query, med separat
+canonical-slug så vi kan styra både query och URL-form korrekt:
 
 ```php
-// Alias: "polisinsats" → "Polisinsats/kommendering"
-if (mb_strtolower($typ) === 'polisinsats') {
-    $typ = 'Polisinsats/kommendering';
+// Slash-aliases: ren slug i URL, slash-värdet i DB
+$typeAliases = [
+    'polisinsats' => 'Polisinsats/kommendering',
+];
+
+$slug = mb_strtolower($typ);
+$canonicalSlug = $slug;            // används till canonical + breadcrumb-länk
+$displayTitle = $typ;              // visningsnamn i breadcrumb / H1
+
+if (isset($typeAliases[$slug])) {
+    $typ = $typeAliases[$slug];    // DB-query använder fulla värdet
+    $displayTitle = 'Polisinsatser'; // snyggt visningsnamn
 }
 ```
 
-Eller WHERE-utvidgning:
+Använd `$canonicalSlug` i `route("typeSingle", …)` för breadcrumb-länk
+och `<link rel="canonical">` så att canonical alltid pekar på den **rena**
+URL:en `/typ/polisinsats` — inte den fula `/typ/Polisinsats%2Fkommendering`.
+
+### Steg 2 — 301 från slash-varianten till ren slug
+
+`/typ/Polisinsats/kommendering` funkar idag (URL-encoded slash) och är
+sannolikt redan indexerad. Lägg in **301 redirect** till `/typ/polisinsats`
+överst i routen så vi inte serverar två URL:er med samma innehåll
+(dup-content-mönstret från #29):
 
 ```php
-->where(function ($q) use ($typ) {
-    $q->where("parsed_title", $typ);
-    if (mb_strtolower($typ) === 'polisinsats') {
-        $q->orWhere("parsed_title", "Polisinsats/kommendering");
-    }
-})
+if (mb_strtolower($typ) === 'polisinsats/kommendering') {
+    return redirect('/typ/polisinsats', 301);
+}
 ```
 
-Första varianten är enklare; brödsmulor och canonical funkar via samma
-typ-value.
+### Steg 3 — Breadcrumb + title/meta
 
-### Steg 2 — Förbättra title/meta på `/typ/polisinsats` (synergi med C/#54)
+`routes/web.php:258` använder `e($typ)` rått i breadcrumben. Efter alias-
+reassign blir det `Polisinsats/kommendering` med encodad slash i länken.
+Använd `$displayTitle` (visning) och `$canonicalSlug` (länk):
 
-`/typ/polisinsats` får default-titel från `single-typ.blade.php`. Hugg en
-explicit title som matchar query-intent: t.ex. "Polisinsatser i Sverige —
-senaste händelserna | Brottsplatskartan".
+```php
+$breadcrumbs->addCrumb(e($displayTitle), route("typeSingle", ["typ" => $canonicalSlug]));
+```
 
-### Steg 3 — Mätning
+Plus explicit title som matchar query-intent: t.ex. "Polisinsatser i
+Sverige — senaste händelserna | Brottsplatskartan" (synergi med C/#54).
+
+### Steg 4 — Mätning
 
 - GSC: position + CTR för "polisinsats" 30/60/90d post-deploy.
 - Slå ihop med #36-mönstret om vi vill ha gemensam rapport.
 
+### Småfix (passar att fixa när vi ändå rör koden)
+
+`routes/web.php:237` — variabeln för brand-slugs heter fortfarande
+`$inbrottSlugs` (copy-paste-rester). Döp om till `$brandSlugs`.
+
 ## Risker
 
 - **Liten — befintlig route-logik täcker mönstret.** Aliasing finns redan
-  för inbrott/brand.
+  för inbrott/brand (men det är dedikerade routes, inte detta — vårt
+  alias stannar på `typeSingle`).
+- **Intent-mismatch:** "polisinsats" som query kan vara informationssök
+  ("vad är en polisinsats" → Wikipedia) lika gärna som lokal-händelse-sök
+  ("polisinsats Malmö idag"). 5.5k imp på pos 9.3 visar att Google iaf
+  hittar oss relevanta, men CTR-lyftet kan bli mindre än 790/90d om
+  Wikipedia-intent dominerar.
 - **AI-titel-rewrite för enskilda events** ("Polisinsats/kommendering"
   är vagt-titel-kandidat) — separat scope, hör hemma i #54 om vi utökar
   `isVagueTitle()` att täcka även detta mönster.
@@ -72,9 +119,10 @@ senaste händelserna | Brottsplatskartan".
 ## Confidence
 
 **Hög.** Trivial ändring i en redan etablerad route-logik, ~30 min inkl.
-deploy. Risken är att mätningen ändå inte ger topp-3 — query-intentionen
-för "polisinsats" är inte glasklart kommersiell, men 5.5k imp/90d på
-pos 9.3 indikerar att Google ändå rankar oss precis utanför.
+deploy (något mer om Steg 0 visar fler slash-titles att ta in). Risken är
+att mätningen ändå inte ger topp-3 — query-intentionen för "polisinsats"
+är inte glasklart kommersiell, men 5.5k imp/90d på pos 9.3 indikerar att
+Google ändå rankar oss precis utanför.
 
 ## Beroenden
 
@@ -86,7 +134,10 @@ pos 9.3 indikerar att Google ändå rankar oss precis utanför.
 
 ## Nästa steg
 
-1. Implementera alias i `/typ/{typ}`-routen.
-2. Hugg title/meta på `/typ/polisinsats` (single-typ-bladen eller route-data).
-3. Deploya, vänta GSC-data 30d.
-4. Mät och stäng — eller utöka till fler kategorier (`misshandel`-slug-varianter etc.) om mönstret bär.
+1. Kör Steg 0-query (slash-titles i DB) — avgör om scope ska utökas.
+2. Implementera alias-map + canonical-slug i `/typ/{typ}`-routen (Steg 1).
+3. Lägg till 301 från slash-varianten till ren slug (Steg 2).
+4. Uppdatera breadcrumb + title/meta (Steg 3) — använd `$displayTitle` / `$canonicalSlug`.
+5. Småfix: döp om `$inbrottSlugs` → `$brandSlugs` på rad 237.
+6. Deploya, vänta GSC-data 30d.
+7. Mät och stäng — eller utöka till fler kategorier (`misshandel`-slug-varianter etc.) om mönstret bär.
