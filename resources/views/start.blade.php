@@ -43,6 +43,10 @@ samt för äldre dagar när man bläddrar i arkivet.
          bredare formulerade, så ingen visuell duplicering. --}}
     <h1 class="StartPage__title">Polisens händelser i hela Sverige</h1>
 
+    {{-- #59 pilot: "Vad händer nu"-ruta bakom feature flag (?show_live=1).
+         Komponenten själv kollar flaggan och returnerar tomt om av. --}}
+    <x-vad-hander-nu />
+
     <x-events-map />
 
     <div class="widget">
