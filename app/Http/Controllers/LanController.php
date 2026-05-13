@@ -80,8 +80,22 @@ class LanController extends Controller
         $isYesterday = $date['date']->isYesterday();
         $isCurrentYear = $date['date']->isCurrentYear();
 
-        // Om län innehåller minustecken ersätter vi det med mellanslag, pga lagrar länen icke-slug'ade
-        $lan = str_replace('-', ' ', $lan);
+        // Validera och kanonisera län-input. Okända län 404:as istället för
+        // att rendera tom 200-sida; engelska Google-alias och slug-varianter
+        // 301:as till svenskt canonical-namn.
+        $canonicalLan = \App\Helper::resolveLanName($lan);
+        if ($canonicalLan === null) {
+            abort(404);
+        }
+        if ($canonicalLan !== $lan) {
+            $params = ['lan' => $canonicalLan];
+            if ($rawDateArg) {
+                $params['date'] = $rawDateArg;
+                return redirect()->route('lanDate', $params, 301);
+            }
+            return redirect()->route('lanSingle', $params, 301);
+        }
+        $lan = $canonicalLan;
 
         $daysBack = 3;
         if ($isToday) {
@@ -298,8 +312,19 @@ class LanController extends Controller
             abort(404);
         }
 
-        // Län lagras med mellanslag (icke-slug'at).
-        $lan = str_replace('-', ' ', $lan);
+        // Validera och kanonisera län. Okända län 404:as; alias/slugar 301:as.
+        $canonicalLan = \App\Helper::resolveLanName($lan);
+        if ($canonicalLan === null) {
+            abort(404);
+        }
+        if ($canonicalLan !== $lan) {
+            return redirect()->route('lanMonth', [
+                'lan' => $canonicalLan,
+                'year' => $year,
+                'month' => $month,
+            ], 301);
+        }
+        $lan = $canonicalLan;
 
         $events = $this->getEventsInLanForMonth($lan, $monthRange['start'], $monthRange['end']);
 

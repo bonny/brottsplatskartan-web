@@ -680,6 +680,70 @@ class Helper {
     }
 
     /**
+     * Engelska Google-Geocoder-namn → kanoniska svenska länsnamn.
+     * Historiskt indexerade URL:er som /lan/Skåne%20County renderade
+     * tidigare en tom 200-sida; resolveLanName() 301:ar dem till
+     * canonical istället.
+     *
+     * @return array<string, string>
+     */
+    public static function getLanEnglishAliases(): array
+    {
+        return [
+            'Blekinge County' => 'Blekinge län',
+            'Dalarna County' => 'Dalarnas län',
+            'Gotland County' => 'Gotlands län',
+            'Gävleborg County' => 'Gävleborgs län',
+            'Halland County' => 'Hallands län',
+            'Jämtland County' => 'Jämtlands län',
+            'Jönköping County' => 'Jönköpings län',
+            'Kalmar County' => 'Kalmar län',
+            'Kronoberg County' => 'Kronobergs län',
+            'Norrbotten County' => 'Norrbottens län',
+            'Skåne County' => 'Skåne län',
+            'Stockholm County' => 'Stockholms län',
+            'Södermanland County' => 'Södermanlands län',
+            'Uppsala County' => 'Uppsala län',
+            'Värmland County' => 'Värmlands län',
+            'Västerbotten County' => 'Västerbottens län',
+            'Västernorrland County' => 'Västernorrlands län',
+            'Västmanland County' => 'Västmanlands län',
+            'Västra Götaland County' => 'Västra Götalands län',
+            'Örebro County' => 'Örebro län',
+            'Östergötland County' => 'Östergötlands län',
+        ];
+    }
+
+    /**
+     * Kanoniserar en län-input från URL till svenskt länsnamn.
+     * Matchar exakt, engelska Google-alias och slug-varianter
+     * (t.ex. "skane-lan", "vastra-gotalands-lan"). Returnerar null
+     * om input inte är ett känt län — anroparen bör 404:a då.
+     */
+    public static function resolveLanName(string $input): ?string
+    {
+        $canonical = self::getAllLan();
+
+        if ($canonical->contains($input)) {
+            return $input;
+        }
+
+        $aliases = self::getLanEnglishAliases();
+        if (isset($aliases[$input])) {
+            return $aliases[$input];
+        }
+
+        $inputSlug = Str::slug($input);
+        foreach ($canonical as $name) {
+            if (Str::slug($name) === $inputSlug) {
+                return $name;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Wikidata Q-id-mapping för Sveriges 21 län (todo #32).
      * Används som `sameAs` i Place-schema för entity-graph-koppling
      * mot AI Overviews. Hämtad via wbsearchentities 2026-04-27.
