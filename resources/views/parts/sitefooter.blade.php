@@ -29,7 +29,7 @@
             <ul class="SiteFooter__lanListing__items SiteFooter__navlinks">
                 @foreach (App\Helper::getAllLan() as $oneLanName)
                     <li class="SiteFooter__lanListing__item">
-                        <a href="{{ route('lanSingle', ['lan' => $oneLanName]) }}"
+                        <a href="{{ route('lanSingle', ['lan' => App\Helper::lanSlug($oneLanName)]) }}"
                             title="Händelser och brott från Polisen i {{ $oneLanName }}">
                             {{ $oneLanName }}
                         </a>

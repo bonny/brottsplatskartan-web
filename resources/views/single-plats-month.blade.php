@@ -253,7 +253,7 @@ Designprinciper (#25):
             </p>
             @if ($place->lan)
                 <p>
-                    <a href="{{ route('lanSingle', ['lan' => $place->lan]) }}">
+                    <a href="{{ route('lanSingle', ['lan' => App\Helper::lanSlug($place->lan)]) }}">
                         Alla händelser i {{ $place->lan }}
                     </a>
                 </p>

@@ -13,7 +13,7 @@ Länkparagraferna viks ihop bakom CSS-only toggle på mobil
     $lanOutput = "";
 
     foreach ($lans as $lan) {
-        $url = route('lanSingle', ['lan' => $lan["name"]]);
+        $url = route('lanSingle', ['lan' => \App\Helper::lanSlug($lan["name"])]);
 
         $lanOutput .= sprintf(
             '<a href="%3$s">%2$s</a>, ',

@@ -80,21 +80,23 @@ class LanController extends Controller
         $isYesterday = $date['date']->isYesterday();
         $isCurrentYear = $date['date']->isCurrentYear();
 
-        // Validera och kanonisera län-input. Okända län 404:as istället för
-        // att rendera tom 200-sida; engelska Google-alias och slug-varianter
-        // 301:as till svenskt canonical-namn.
+        // Validera + kanonisera till slug-form. Okända län 404:as; engelska
+        // alias, display-form och varianter 301:as till `/lan/{slug}` som
+        // canonical URL.
         $canonicalLan = \App\Helper::resolveLanName($lan);
         if ($canonicalLan === null) {
             abort(404);
         }
-        if ($canonicalLan !== $lan) {
-            $params = ['lan' => $canonicalLan];
+        $canonicalSlug = \App\Helper::lanSlug($canonicalLan);
+        if ($lan !== $canonicalSlug) {
+            $params = ['lan' => $canonicalSlug];
             if ($rawDateArg) {
                 $params['date'] = $rawDateArg;
                 return redirect()->route('lanDate', $params, 301);
             }
             return redirect()->route('lanSingle', $params, 301);
         }
+        $lanSlug = $canonicalSlug;
         $lan = $canonicalLan;
 
         $daysBack = 3;
@@ -143,7 +145,7 @@ class LanController extends Controller
             $formattedDateFortitle = trim($firstDayDate->isoFormat('dddd D MMMM YYYY'));
             $prevDayLink = [
                 'title' => sprintf('‹ %1$s', $formattedDateFortitle),
-                'link' => route("lanDate", ['lan' => $lan, 'date' => $formattedDate])
+                'link' => route("lanDate", ['lan' => $lanSlug, 'date' => $formattedDate])
             ];
         }
 
@@ -155,7 +157,7 @@ class LanController extends Controller
             $formattedDateFortitle = trim($firstDayDate->isoFormat('dddd D MMMM YYYY'));
             $nextDayLink = [
                 'title' => sprintf('%1$s ›', $formattedDateFortitle),
-                'link' => route("lanDate", ['lan' => $lan, 'date' => $formattedDate])
+                'link' => route("lanDate", ['lan' => $lanSlug, 'date' => $formattedDate])
             ];
         }
 
@@ -198,12 +200,12 @@ class LanController extends Controller
         }
 
         if ($isToday) {
-            $canonicalLink = route('lanSingle', ['lan' => $lan]);
+            $canonicalLink = route('lanSingle', ['lan' => $lanSlug]);
         } else {
             $canonicalLink = route(
                 'lanDate',
                 [
-                    'lan' => $lan,
+                    'lan' => $lanSlug,
                     'date' => trim(str::lower($date['date']->isoFormat('D-MMMM-YYYY')))
                 ]
             );
@@ -312,25 +314,27 @@ class LanController extends Controller
             abort(404);
         }
 
-        // Validera och kanonisera län. Okända län 404:as; alias/slugar 301:as.
+        // Validera + kanonisera till slug-form. Canonical URL = `/lan/{slug}`.
         $canonicalLan = \App\Helper::resolveLanName($lan);
         if ($canonicalLan === null) {
             abort(404);
         }
-        if ($canonicalLan !== $lan) {
+        $canonicalSlug = \App\Helper::lanSlug($canonicalLan);
+        if ($lan !== $canonicalSlug) {
             return redirect()->route('lanMonth', [
-                'lan' => $canonicalLan,
+                'lan' => $canonicalSlug,
                 'year' => $year,
                 'month' => $month,
             ], 301);
         }
+        $lanSlug = $canonicalSlug;
         $lan = $canonicalLan;
 
         $events = $this->getEventsInLanForMonth($lan, $monthRange['start'], $monthRange['end']);
 
         // Tomma månader: 301 till län-startsidan.
         if ($events->isEmpty()) {
-            return redirect()->route('lanSingle', ['lan' => $lan], 301);
+            return redirect()->route('lanSingle', ['lan' => $lanSlug], 301);
         }
 
         $totalEvents = $events->count();
@@ -363,7 +367,7 @@ class LanController extends Controller
         $prevMonthLink = [
             'title' => sprintf('‹ %s', title_case($prevMonth->isoFormat('MMMM YYYY'))),
             'link' => route('lanMonth', [
-                'lan' => $lan,
+                'lan' => $lanSlug,
                 'year' => $prevMonth->format('Y'),
                 'month' => $prevMonth->format('m'),
             ]),
@@ -371,7 +375,7 @@ class LanController extends Controller
         $nextMonthLink = $nextMonth->isFuture() ? null : [
             'title' => sprintf('%s ›', title_case($nextMonth->isoFormat('MMMM YYYY'))),
             'link' => route('lanMonth', [
-                'lan' => $lan,
+                'lan' => $lanSlug,
                 'year' => $nextMonth->format('Y'),
                 'month' => $nextMonth->format('m'),
             ]),
@@ -380,7 +384,7 @@ class LanController extends Controller
         $monthYearTitle = title_case($monthRange['start']->isoFormat('MMMM YYYY'));
 
         $canonicalLink = route('lanMonth', [
-            'lan' => $lan,
+            'lan' => $lanSlug,
             'year' => $monthRange['start']->format('Y'),
             'month' => $monthRange['start']->format('m'),
         ]);
@@ -389,7 +393,7 @@ class LanController extends Controller
         $breadcrumbs->setDivider('›');
         $breadcrumbs->addCrumb('Hem', '/');
         $breadcrumbs->addCrumb('Län', route('lanOverview'));
-        $breadcrumbs->addCrumb(e($lan), route('lanSingle', ['lan' => $lan]));
+        $breadcrumbs->addCrumb(e($lan), route('lanSingle', ['lan' => $lanSlug]));
         $breadcrumbs->addCrumb($monthYearTitle);
 
         $metaDescription = sprintf(

@@ -391,7 +391,7 @@ class Helper {
             if ($lan == "home") {
                 $day_link = route("startDatum", ['date' => $formattedDate]);
             } else {
-                $day_link = route("lanDate", ['lan' => $lan, 'date' => $formattedDate]);
+                $day_link = route("lanDate", ['lan' => self::lanSlug($lan), 'date' => $formattedDate]);
             }
 
             // $prevDayLink = [
@@ -712,6 +712,16 @@ class Helper {
             'Örebro County' => 'Örebro län',
             'Östergötland County' => 'Östergötlands län',
         ];
+    }
+
+    /**
+     * Slug-form av ett länsnamn. Canonical URL-form (`/lan/skane-lan`).
+     * Tunn wrapper runt `Str::slug` för att markera intentionen och
+     * centralisera om vi senare vill ändra slug-strategi.
+     */
+    public static function lanSlug(string $displayName): string
+    {
+        return Str::slug($displayName);
     }
 
     /**

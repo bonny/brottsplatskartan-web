@@ -20,7 +20,7 @@ Template för län-översikt
         'itemListName' => 'Län i Sverige',
         'itemListItems' => collect($lan)->map(fn ($l) => [
             'name' => $l->administrative_area_level_1,
-            'url' => route('lanSingle', ['lan' => $l->administrative_area_level_1]),
+            'url' => route('lanSingle', ['lan' => App\Helper::lanSlug($l->administrative_area_level_1)]),
         ])->all(),
     ])
 @endsection
@@ -42,7 +42,7 @@ Template för län-översikt
                 <div class="LanListing__lan">
 
                     <h2 class="LanListing__title">
-                        <a href="{{ route('lanSingle', ['lan' => $oneLan->administrative_area_level_1]) }}">
+                        <a href="{{ route('lanSingle', ['lan' => App\Helper::lanSlug($oneLan->administrative_area_level_1)]) }}">
                             {{ $oneLan->administrative_area_level_1 }}
                         </a>
                     </h2>

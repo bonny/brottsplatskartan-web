@@ -498,7 +498,7 @@ class CrimeEvent extends Model implements Feedable {
             $locations[] = sprintf(
                 '<a href="%2$s">%1$s</a>',
                 $lan,
-                route("lanSingle", ["lan" => mb_strtolower($lan)])
+                route("lanSingle", ["lan" => \App\Helper::lanSlug($lan)])
             );
         }
 

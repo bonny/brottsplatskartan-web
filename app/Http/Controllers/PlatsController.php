@@ -284,7 +284,7 @@ class PlatsController extends Controller
         $breadcrumbs->addCrumb('Platser', route("platserOverview"));
 
         if ($place) {
-            $breadcrumbs->addCrumb($place->lan, route("lanSingle", ['lan' => $place->lan]));
+            $breadcrumbs->addCrumb($place->lan, route("lanSingle", ['lan' => \App\Helper::lanSlug($place->lan)]));
         }
 
         $breadcrumbs->addCrumb(
@@ -540,7 +540,7 @@ class PlatsController extends Controller
         $breadcrumbs->addCrumb('Hem', '/');
         $breadcrumbs->addCrumb('Platser', route('platserOverview'));
         if ($place) {
-            $breadcrumbs->addCrumb($place->lan, route('lanSingle', ['lan' => $place->lan]));
+            $breadcrumbs->addCrumb($place->lan, route('lanSingle', ['lan' => \App\Helper::lanSlug($place->lan)]));
         }
         $breadcrumbs->addCrumb(
             e($platsDisplay),
@@ -835,7 +835,7 @@ class PlatsController extends Controller
         $breadcrumbs->addCrumb('Platser', route("platserOverview"));
 
         if ($place) {
-            $breadcrumbs->addCrumb($place->lan, route("lanSingle", ['lan' => $place->lan]));
+            $breadcrumbs->addCrumb($place->lan, route("lanSingle", ['lan' => \App\Helper::lanSlug($place->lan)]));
         }
         $this->dieAfterTryCount();
         $breadcrumbs->addCrumb(

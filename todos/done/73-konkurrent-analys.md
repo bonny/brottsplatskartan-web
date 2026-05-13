@@ -1,4 +1,4 @@
-**Status:** fas 1+3 klara 2026-05-13. IP-beslut: behåll helt öppet. Nästa: bryt ut inspirations-todos (statistik-narrativ, bevaka-funktion, rättsblogg) + LICENSE-mikrotodo.
+**Status:** klar 2026-05-13 — fas 1 (konkurrent-spaning), fas 3 (IP-beslut: AGPL v3 + öppet), fas 4 (kommunikation, inget att göra) klara. Fas 2 (inspirations-todos) utbruten till #75 (slug-fix lan), #76 (polisen händelser X idag + Malmö/Göteborg), #77 (aktuella brott CTR). LICENSE som mikrotodo #74 — klar.
 **Senast uppdaterad:** 2026-05-13
 
 # Todo #73 — Konkurrent-analys + utvärdera privat repo
@@ -242,6 +242,33 @@ Konkreta kandidater från fas 1, sorterat efter effekt/effort:
 | Låg  | **Native mobile-app**                                                 | Poliskoll-appen. Stor satsning, antagligen nej.                                  |
 
 Bryt ut de fyra Hög-raderna till egna todos (#74–#77) när #73 stängs.
+
+### Utbrutet 2026-05-13
+
+Efter fas 2-analysen mot #52-baseline (data-driven) blev prioriteringen:
+
+- **#74 — LICENSE-fil (AGPL v3)** — klar 2026-05-13.
+- **#75 — Slug-aware LanController** — utbruten. Upptäcktes att slug-form
+  redan används i sitemap/warmer men controllern renderar fel display-namn
+  ("vastra gotalands lan" utan å). Aktiv SEO-bugg, ~1 350+ clicks/90d
+  (#52 F). Hög prio.
+- **#76 — "polisen händelser X idag" + Malmö/Göteborg** — utbruten.
+  Kombinerar fas 2#3 + #52 A/B. ~15 800 clicks/90d-potential, största
+  enskilda i hela GSC.
+- **#77 — "aktuella brott" CTR-fix** — utbruten. Mikrojobb, ~30 min,
+  pos 4.1 men 0.66 % CTR. ~2 140 clicks/90d (#52 G).
+
+**Inte utbrutet (avskrivet eller skjutet på framtiden):**
+
+- **`/olyckor`-landningssida** — spekulativt utan SERP-test mot
+  olyckskartan.se. Skjuts på framtiden tills vi har konkret evidens.
+- **Bevaka-funktion** — engagement, inte SEO. Hör hemma i en separat
+  feature-tråd när #25/#36-mätningar är klara.
+- **Per-län-statistik på framsidan / per-capita** — använder #37+#38
+  som vi redan har, men oklar konkret SEO-vinst. Vänta på #39-mätning
+  (2026-05-13) som signal.
+- **Push/PWA, native app** — låg prio, oklar ROI. Avskriv eller skjut
+  på framtiden.
 
 ## Fas 3 — IP-beslut: ÖPPET UNDER AGPL v3 (2026-05-13)
 
