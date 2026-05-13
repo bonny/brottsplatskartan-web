@@ -4,7 +4,7 @@ Index över förbättringsarbete. Varje todo har en egen fil under
 [`todos/`](todos/) med fullständig analys. Konvention och
 mappstruktur: [`todos/README.md`](todos/README.md).
 
-Senast uppdaterad: 2026-05-13 (#72 deployad — alias polisinsats; #39 14d-check klar — ingen attribuerbar effekt, mätperiod förlängd till 60d).
+Senast uppdaterad: 2026-05-13 (+#77 klar — diagnos visade title/meta redan optimerade, ingen mekanisk fix möjlig; eventuell h1-justering skjuten till efter mätperiod-stabilisering).
 
 ## Aktiva
 
@@ -25,7 +25,6 @@ Senast uppdaterad: 2026-05-13 (#72 deployad — alias polisinsats; #39 14d-check
 | 69  | SMHI vädervarningar som kart-layer                      | Skissad 2026-05-06 — scope A (ren layer, ingen /varningar-route). Väntar på #50 soak-end 2026-05-10                                 | [todos/69-smhi-vadervarningar-kart-layer.md](todos/69-smhi-vadervarningar-kart-layer.md)                             |
 | 72  | `/typ/polisinsats` alias för Polisinsats/kommendering   | Implementerad lokalt 2026-05-13 — alias + 301 + ren canonical, väntar deploy + 30d GSC                                              | [todos/72-typ-polisinsats-alias.md](todos/72-typ-polisinsats-alias.md)                                               |
 | 76  | "polisen händelser X idag" + Malmö/Göteborg             | Fas B klar 2026-05-13 (5 Tier 1 titles + h1.displayName, v2 efter senior-SEO-review). Fas A/C/D/E kvar. 60d-mätning 2026-07-12      | [todos/76-polisen-handelser-stad-idag.md](todos/76-polisen-handelser-stad-idag.md)                                   |
-| 77  | "aktuella brott" CTR-fix                                | Utbruten från #52 G + #73 fas 2 (2026-05-13) — mikrojobb ~30 min, pos 4.1 men 0.66 % CTR. ~2 140 clicks/90d                         | [todos/77-aktuella-brott-ctr-fix.md](todos/77-aktuella-brott-ctr-fix.md)                                             |
 | 78  | Multi-plats-händelser missvisande på kartan             | Ny 2026-05-13 — sammanfattning natt/dag/kväll renderas som en cirkel fast brotten är geografiskt utspridda. Analys saknas           | [todos/78-handelser-utspridda-platser-kart-missvisning.md](todos/78-handelser-utspridda-platser-kart-missvisning.md) |
 | 79  | Soft-404-fallback för "idag"-titlar med 0 events        | Utbruten från #76 senior-review (2026-05-13) — Tier 1 risk vid 0-event-dygn. Steg 1 = mätning, sannolikhet låg                      | [todos/79-soft-404-idag-fallback.md](todos/79-soft-404-idag-fallback.md)                                             |
 
@@ -83,6 +82,7 @@ Sorterade nyast först.
 
 | #   | Titel                                                                       | Klar       | Fil                                                                                                            |
 | --- | --------------------------------------------------------------------------- | ---------- | -------------------------------------------------------------------------------------------------------------- |
+| 77  | "aktuella brott" CTR-fix — diagnos visade att title/meta redan optimerade   | 2026-05-13 | [todos/done/77-aktuella-brott-ctr-fix.md](todos/done/77-aktuella-brott-ctr-fix.md)                             |
 | 75  | Slug-aware LanController (slug-form canonical, display 301:as)              | 2026-05-13 | [todos/done/75-slug-aware-lan-controller.md](todos/done/75-slug-aware-lan-controller.md)                       |
 | 73  | Konkurrent-analys + utvärdera privat repo                                   | 2026-05-13 | [todos/done/73-konkurrent-analys.md](todos/done/73-konkurrent-analys.md)                                       |
 | 74  | Committa LICENSE-fil (AGPL v3) + composer.json + README                     | 2026-05-13 | [todos/done/74-license-fil.md](todos/done/74-license-fil.md)                                                   |

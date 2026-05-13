@@ -1,4 +1,4 @@
-**Status:** aktiv — utbruten från #52 G + #73 fas 2 (2026-05-13)
+**Status:** klar 2026-05-13 — diagnos visade att title/meta redan innehåller båda queries; ingen mekanisk fix att göra. Lågrisk H1-justering skjuts upp till efter mätperiod-stabilisering.
 **Senast uppdaterad:** 2026-05-13
 
 # Todo #77 — "aktuella brott" CTR-fix
@@ -126,3 +126,69 @@ om vi verifierar att sidan inte tar massor av andra queries.
 1. Kör GSC-uppslag för att hitta landningssidan.
 2. Om det är `/` — vänta på #76 Fas A.
 3. Om det är annan sida — implementera direkt.
+
+## Utfall 2026-05-13
+
+### Steg 1 — landningssida (GSC 90d, query equals "aktuella brott")
+
+| Page                                                    | Clicks | Impressions | CTR           | Position  |
+| ------------------------------------------------------- | ------ | ----------- | ------------- | --------- |
+| `/`                                                     | 50     | 13 702      | 0.36 %        | 4.6       |
+| `/stockholm`                                            | 13     | 3 665       | 0.35 %        | 5.3       |
+| `/lan/Örebro%20län` (case)                              | 11+9   | 327+199     | 3.36 / 4.52 % | 5.9 / 4.8 |
+| Övriga (`/lan/Uppsala%20län`, `/plats/västerås`, m.fl.) | 1–2    | <100        | –             | –         |
+
+Landningssidan är **startsidan `/`**. Det kolliderar med #76 Fas A
+(cannibalisation-audit för "polisen händelser" på samma sida).
+
+### Steg 2 — audit:a title + meta + h1 på `/`
+
+```html
+<title>Polisens händelser - aktuella brott & senaste blåljusen</title>
+<meta
+    name="description"
+    content="Se senaste polishändelserna, blåljusen och brotten i hela Sverige.
+  Trafikolyckor, inbrott, bränder och larm – per kommun och län, live på karta."
+/>
+<h1>Polisens händelser i hela Sverige</h1>
+```
+
+Introtexten (i `Setting::get('introtext-start')`):
+
+> "Brottsplatskartan visar senaste nytt från Polisen, t.ex. vilka brott
+> som skett eller rapporterats idag. **Aktuella brott** och händelser
+> hämtas från Polisens RSS-flöden …"
+
+### Slutsats — hypotesen i #77 var fel
+
+Title och meta innehåller **redan** båda fraserna ("polisens händelser"
+
+- "aktuella brott"). Ingen mekanisk word-match-fix finns att göra.
+
+Den låga CTR:n (0.36 % vid pos 4.6, väntat ~6-8 %) måste därför bero på
+någon av:
+
+1. **SERP-konkurrens** — pos 4 på en bred informationsquery där topp-3
+   (polisen.se / polisinfo.se?) tar nästan alla klick.
+2. **Brand-mismatch** — "Brottsplatskartan" signalerar kanske inte
+   "aktuell info" lika starkt som polisen.se.
+3. **Snippet-utseende** — efter h1 kommer kartan direkt; ingen prosa
+   som lockar i Googles preview.
+
+### Möjlig framtida åtgärd (skjuten)
+
+**Lågrisk h1-justering:** byt `<h1>Polisens händelser i hela Sverige</h1>`
+till `<h1>Aktuella brott och polishändelser i hela Sverige</h1>` så h1
+matchar båda queries. Möjlig marginell CTR-effekt, oklar storlek.
+
+Skjuts upp av två skäl:
+
+1. **För många samtidiga ändringar** — #72/#76/#50 deployade senaste
+   veckan; Google måste få stabilisera sig innan vi mäter eller ändrar
+   mer på `/`.
+2. **#76 Fas A bör avgöra först** vilken sida som ska vara canonical för
+   "polisen händelser" — om svaret är att `/` ska äga både queries kan
+   h1-fixen göras parallellt med den åtgärden istället för isolerat.
+
+Om CTR fortfarande är < 2 % efter mätperiod-stabilisering — återöppna
+som ny todo med scope: h1 + snippet-prosa-injection.
