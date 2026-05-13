@@ -110,6 +110,5 @@ Sidmall för:
     </div>
 
     @include('parts.lan-and-cities')
-    @include('parts.widget-blog-entries')
 
 @endsection

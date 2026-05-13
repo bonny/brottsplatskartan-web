@@ -109,7 +109,6 @@ samt för äldre dagar när man bläddrar i arkivet.
     </div>
 
     @include('parts.lan-and-cities')
-    @include('parts.widget-blog-entries')
     @include('parts.widget-vma-messages')
 
     <x-text-tv-box />

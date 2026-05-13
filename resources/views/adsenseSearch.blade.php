@@ -58,6 +58,5 @@
 @endsection
 
 @section('sidebar')
-    @include('parts.widget-blog-entries')
     @include('parts.lan-and-cities')
 @endsection

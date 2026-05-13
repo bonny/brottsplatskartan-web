@@ -151,6 +151,5 @@
         'monthArchiveSlug' => mb_strtolower(request()->route('city')),
     ])
     @include('parts.lan-and-cities')
-    @include('parts.widget-blog-entries')
     @include('parts.lan-policestations')
 @endsection
