@@ -21,8 +21,14 @@ representerar vi dem på kartan utan att lura läsaren?
 
 - Polisens "Sammanfattning"-händelser är en känd typ — de plottas på
   en samordningspunkt (ofta polisstationens adress eller länets centrum).
+- Vi har redan AI-flöden (Haiku 4.5) för titel-rewrite (#10) och
+  event↔nyhet-matchning (#63) — samma stack kan extrahera platsnämn
+  ur brödtexten.
+- Geocoding finns redan (#48 — Polisens JSON-API + bättre geocoding).
+- Kartrendering: Leaflet på frontend, statiska kartbilder via egen
+  tileserver (kartbilder.brottsplatskartan.se).
 
-Exempel-events att utgå från vid analys:
+### Exempel-events att utgå från vid analys
 
 - https://brottsplatskartan.se/vastra-gotalands-lan/sammanfattning-natt-vastra-gotalands-lan-502091
 - https://brottsplatskartan.se/gavleborgs-lan/trafikolycka-personskada-soderhamn-halsingland-flera-allvarliga-trafikolyckor-i-halsingland-pa-grund-av-extrem-halka-499567
@@ -37,13 +43,6 @@ Notera att även icke-"Sammanfattning"-händelser drabbas — t.ex.
 Gävleborg-trafikolycks-eventet ovan beskriver "flera allvarliga
 trafikolyckor i Hälsingland" → ren rubrik-regex räcker inte, brödtext-
 parsing krävs för full täckning.
-
-- Vi har redan AI-flöden (Haiku 4.5) för titel-rewrite (#10) och
-  event↔nyhet-matchning (#63) — samma stack kan extrahera platsnämn
-  ur brödtexten.
-- Geocoding finns redan (#48 — Polisens JSON-API + bättre geocoding).
-- Kartrendering: Leaflet på frontend, statiska kartbilder via egen
-  tileserver (kartbilder.brottsplatskartan.se).
 
 ## Förslag (skiss — behöver utvärderas)
 
@@ -64,6 +63,36 @@ Rendering-alternativ:
 - **D. Exkludera från karta** helt — visa bara i tidslinje/feed.
 - **E. Hybrid:** primär pin på centroid + sekundära mindre markers på
   extraherade platser (om vi har hög konfidens).
+
+## Teknisk realiserbarhet — statisk kartbild med flera markeringar
+
+Undersökt 2026-05-13:
+
+- **Tileserver-gl** (egen container på `kartbilder.brottsplatskartan.se`)
+  stöder redan flera `&path=...`-params i samma URL — formatet finns där.
+- **Laravel-koden är inte byggd för det.** `StaticMapUrlBuilder::circleUrl()`
+  tar ett enda `CrimeEvent` och bygger 3 cirkel-lager (depth-effekt) runt
+  dess enda lat/lng. Ingen method tar array av koordinater.
+- **Route-formatet** `/k/v1/circle-{id}-{w}x{h}.jpg` (KartbildController)
+  antar 1 event-ID.
+
+Vad som krävs för multi-marker-stöd i statiska bilder:
+
+1. Ny helper `StaticMapUrlBuilder::multiCircleUrl(array $coordinates, ...)`
+   som loopar och adderar `path=` per punkt.
+2. Ny route-variant, t.ex. `/k/v1/multi-{id1},{id2},{id3}-{w}x{h}.jpg`
+   (eller hash-bas om många IDs).
+3. URL-budget att hålla koll på: ~3 KB per marker × N. Vid 5+ markers
+   närmar man sig nginx default `large_client_header_buffers` 32 KB —
+   behöver verifieras / höjas.
+
+Styling-configen för tileserver-gl (`basic-preview`-stil) bor bara på
+prod-servern, inte i repot. Den är generisk path-rendering, så
+multi-marker kräver ingen styling-ändring.
+
+**Frontend (Leaflet)** har inget tekniskt hinder — Leaflet stöder
+multi-marker out of the box. Det är bara den statiska bilden som behöver
+nytt URL-format.
 
 ## Risker
 
