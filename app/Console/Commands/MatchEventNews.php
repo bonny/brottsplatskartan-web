@@ -224,21 +224,25 @@ class MatchEventNews extends Command
 
     private function formatEventBlock(CrimeEvent $event): string
     {
-        $teaser = (string) ($event->parsed_teaser ?? $event->parsed_content ?? '');
-        $teaser = trim(preg_replace('/\s+/u', ' ', $teaser) ?? '');
-        if (mb_strlen($teaser) > 600) {
-            $teaser = mb_substr($teaser, 0, 600) . '…';
+        // AI-omskriven titel/beskrivning (title_alt_1 / description_alt_1) är rikare
+        // än Polisens parsed_title/parsed_teaser och nämner ofta specifik gata, stadsdel
+        // eller landmärke — kritiskt för att matcher ska kunna koppla event till artikel.
+        $title = (string) ($event->title_alt_1 ?: $event->parsed_title ?: $event->title ?? '');
+        $summary = (string) ($event->description_alt_1 ?: $event->parsed_teaser ?: $event->parsed_content ?? '');
+        $summary = trim(preg_replace('/\s+/u', ' ', $summary) ?? '');
+        if (mb_strlen($summary) > 600) {
+            $summary = mb_substr($summary, 0, 600) . '…';
         }
 
         return sprintf(
             "HÄNDELSE\nTitel: %s\nDatum: %s\nPlats: %s%s\nSammanfattning: %s",
-            (string) ($event->parsed_title ?? $event->title ?? ''),
+            $title,
             $event->created_at?->format('Y-m-d') ?? '',
             (string) ($event->parsed_title_location ?? $event->administrative_area_level_2 ?? ''),
             $event->administrative_area_level_1
                 ? ' (' . $event->administrative_area_level_1 . ')'
                 : '',
-            $teaser
+            $summary
         );
     }
 
