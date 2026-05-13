@@ -118,8 +118,8 @@
         <ul class="VadHanderNu__list">
             @foreach ($events as $event)
                 @php
-                    $parsedDate = \Carbon\Carbon::parse($event->parsed_date);
-                    $minutesAgo = max(0, (int) $parsedDate->diffInMinutes(now()));
+                    $pubDate = \Carbon\Carbon::createFromTimestamp($event->pubdate);
+                    $minutesAgo = max(0, (int) $pubDate->diffInMinutes(now()));
                     $timeLabel = $minutesAgo < 1
                         ? 'just nu'
                         : ($minutesAgo === 1 ? '1 min sedan' : "{$minutesAgo} min sedan");

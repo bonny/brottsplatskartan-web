@@ -24,16 +24,23 @@ class VadHanderNu extends Component
 
     public function render(): View|Closure|string
     {
-        // 5 senaste events inom 60 min — speglar "live"-känslan.
-        // Om 0 events finns < 60 min, dölj rutan helt (per todo:
-        // hellre osynlig än uppenbart inaktuell).
+        // 5 senaste publicerade events inom 120 min.
+        // Använder pubdate (när Polisen publicerade) snarare än
+        // parsed_date (när händelsen inträffade) — pubdate ger
+        // 2x volym och speglar bättre "live på sajten"-känslan.
+        // Median pub-parsed-gap är 22 min, p90 = 3.4 h, så ett
+        // parsed_date-filter missar nyligen publicerade events.
+        // Om 0 events inom fönstret, dölj rutan helt.
         $events = Cache::remember(
-            'vadHanderNu:latestLiveEvents:60min',
+            'vadHanderNu:latestLiveEvents:pubdate120min',
             60, // 1 min — kortare än response-cache så känns färskt
             function () {
                 $now = now();
-                return CrimeEvent::whereBetween('parsed_date', [$now->copy()->subHour(), $now])
-                    ->orderBy('parsed_date', 'desc')
+                return CrimeEvent::whereBetween('pubdate', [
+                        $now->copy()->subMinutes(120)->timestamp,
+                        $now->timestamp,
+                    ])
+                    ->orderBy('pubdate', 'desc')
                     ->with('locations')
                     ->limit(5)
                     ->get();
