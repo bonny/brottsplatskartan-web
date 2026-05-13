@@ -4,7 +4,7 @@ Index över förbättringsarbete. Varje todo har en egen fil under
 [`todos/`](todos/) med fullständig analys. Konvention och
 mappstruktur: [`todos/README.md`](todos/README.md).
 
-Senast uppdaterad: 2026-05-12 (+#71 klar — startsida-redesign: 4 faser, foldCards desktop 3→8 / mobile 2→8, mobile docH 12 210 → 4 929 px (−60 %), H1+ItemList+alt 100 % + meta description; Fas 4 mätning visar att karta-lazy-load ej är motiverad).
+Senast uppdaterad: 2026-05-13 (#51 live-testad — A SMHI ✅ (→ #69), B RTÖG ✅ pilot-klar (täckning ~2 %), C Krisinfo avfärdad (19 items/år, hälften VMA-overlap), F NV utsläpp korrekt endpoint, E/G/H kräver outreach/nyckel).
 
 ## Aktiva
 
@@ -16,7 +16,7 @@ Senast uppdaterad: 2026-05-12 (+#71 klar — startsida-redesign: 4 faser, foldCa
 | 39  | MSB/MCF brand- och räddningsstatistik per kommun        | Implementerad 2026-04-29 — väntar på trafikmätning 2026-05-13                                                                       | [todos/39-msb-brand-rakning-statistik.md](todos/39-msb-brand-rakning-statistik.md)                   |
 | 46  | Slå samman Händelser/Senaste/Mest lästa i menyn         | Importerad från GitHub #76 — kräver design + redirect-strategi                                                                      | [todos/46-meny-handelser-konsolidering.md](todos/46-meny-handelser-konsolidering.md)                 |
 | 50  | Trafikverket Trafikinformation: live på kartan          | Fas 2 Tier 1 lyft 2026-05-12 — noindex borta, vägarbete-fold, sitemap. 28d-gate till 2026-06-09 + manuell GSC Request Indexing kvar | [todos/50-trafikverket-trafikinformation-live.md](todos/50-trafikverket-trafikinformation-live.md)   |
-| 51  | Övriga datakällor: research-skiss                       | Research-katalog (SMHI, räddningstjänst-RSS, Krisinfo, m.fl.) — bryts ut per källa                                                  | [todos/51-ovriga-datakallor-research.md](todos/51-ovriga-datakallor-research.md)                     |
+| 51  | Övriga datakällor: research-skiss                       | Live-testad 2026-05-13 — A SMHI→#69, B RTÖG pilot-klar, C Krisinfo avfärdad; F/E/G/H låg prio                                       | [todos/51-ovriga-datakallor-research.md](todos/51-ovriga-datakallor-research.md)                     |
 | 52  | GSC-monitor: lågrankade högvolym-queries                | Baseline klar 2026-04-30 — 7 åtgärder identifierade (A–G), ~25k clicks/90d potential                                                | [todos/52-gsc-low-rank-monitoring.md](todos/52-gsc-low-rank-monitoring.md)                           |
 | 54  | Trafikkontroll-titlar: utöka AI-rewrite                 | Idé — utöka `isVagueTitle()` med trafikkontroll-mönster                                                                             | [todos/54-trafikkontroll-titlar.md](todos/54-trafikkontroll-titlar.md)                               |
 | 59  | "Vad händer nu"-ruta (Krimkartan-känsla)                | Idé — kompakt feed-komponent på startsidan                                                                                          | [todos/59-vad-hander-nu-ruta.md](todos/59-vad-hander-nu-ruta.md)                                     |
