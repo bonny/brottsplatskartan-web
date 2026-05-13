@@ -4,7 +4,7 @@ Index över förbättringsarbete. Varje todo har en egen fil under
 [`todos/`](todos/) med fullständig analys. Konvention och
 mappstruktur: [`todos/README.md`](todos/README.md).
 
-Senast uppdaterad: 2026-05-13 (#51 live-testad — A SMHI ✅ (→ #69), B RTÖG ✅ pilot-klar (täckning ~2 %), C Krisinfo avfärdad (19 items/år, hälften VMA-overlap), F NV utsläpp korrekt endpoint, E/G/H kräver outreach/nyckel).
+Senast uppdaterad: 2026-05-13 (+#72 /typ/polisinsats alias utbruten från #52 D; #54 utökad med #52 C — `/typ/trafikkontroll` title/meta-fix).
 
 ## Aktiva
 
@@ -24,6 +24,7 @@ Senast uppdaterad: 2026-05-13 (#51 live-testad — A SMHI ✅ (→ #69), B RTÖG
 | 64  | Per-plats nyhetsaggregering — "Senaste nyheter i {ort}" | Fas-2 live 2026-05-02 (hybrid regex + AI Haiku 4.5 + dn-sthlm + visa-fler); stickprov 2026-05-15                                    | [todos/64-per-plats-nyhetsaggregering.md](todos/64-per-plats-nyhetsaggregering.md)                   |
 | 66  | Uppföljning #55: mät CWV + PHP-FPM-CPU efter `/k/v1/`   | Passiv mätperiod till 2026-05-31 — CWV-jämförelse, cache-hit-rate, social-share-test                                                | [todos/66-uppfoljning-55-kortare-kartbild-urls.md](todos/66-uppfoljning-55-kortare-kartbild-urls.md) |
 | 69  | SMHI vädervarningar som kart-layer                      | Skissad 2026-05-06 — scope A (ren layer, ingen /varningar-route). Väntar på #50 soak-end 2026-05-10                                 | [todos/69-smhi-vadervarningar-kart-layer.md](todos/69-smhi-vadervarningar-kart-layer.md)             |
+| 72  | `/typ/polisinsats` alias för Polisinsats/kommendering   | Utbruten från #52 D (2026-05-13) — mikrojobb ~30 min, ~790 klick/90d potential                                                      | [todos/72-typ-polisinsats-alias.md](todos/72-typ-polisinsats-alias.md)                               |
 
 ### Beroenden
 

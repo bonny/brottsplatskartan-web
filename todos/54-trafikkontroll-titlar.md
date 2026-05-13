@@ -1,6 +1,6 @@
-**Status:** aktiv (idé — research saknas)
-**Senast uppdaterad:** 2026-04-30
-**Källa:** Inbox Brottsplatskartan (2026-04-30)
+**Status:** aktiv (idé — research saknas; utökad 2026-05-13 med #52 åtgärd C)
+**Senast uppdaterad:** 2026-05-13
+**Källa:** Inbox Brottsplatskartan (2026-04-30) + #52 GSC-baseline 2026-04-30
 
 # Todo #54 — Förbättra trafikkontroll-titlar (utöka AI-rewrite-coverage)
 
@@ -28,6 +28,22 @@ URL-sluggen — blir generisk.
 - Stickprov 2026-04-30 på `vasterbottens-lan/trafikkontroll-...-501247`:
   brödtext nämner Skellefteå, Bolidenvägen, Åsele, antal förare med
   böter — gott om material för en bra rubrik.
+
+## #52 åtgärd C — `/typ/trafikkontroll` listans title/meta (~1 470 klick/90d)
+
+GSC-baseline (#52, 2026-04-30) visar att `/typ/trafikkontroll` tar 89 %
+av impressionerna för queryn "trafikkontroll" (9 630/10 816) men har
+**CTR 0.05 %** (5 klick på 9 630 imp). Symptom: thin/dålig title/meta
+på själva typ-listan.
+
+Det här är **utöver** AI-rewrite-jobbet nedan — den fixar enskilda
+event-rubriker; listsidans title/meta är en separat fix:
+
+- Hugg explicit `<title>` i `single-typ.blade.php` för
+  `parsed_title === 'trafikkontroll'`-fallet (eller alla typer):
+  "Trafikkontroll i Sverige — senaste polisinsatserna | Brottsplatskartan".
+- Lägg till `<meta name="description">` med plats-/tids-vinkel.
+- Mätning: GSC CTR på "trafikkontroll"-queryn 30/60/90d post-deploy.
 
 ## Förslag
 
