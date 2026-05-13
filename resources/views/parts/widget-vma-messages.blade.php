@@ -29,28 +29,22 @@
         @endforeach
     </ul>
 
-    {{-- Arkiverade VMA viks ihop bakom CSS-only toggle på mobil
-         (todo #71 Fas 3). Desktop ser hela listan. --}}
     @php($archivedVmas = $shared_archived_vma_alerts->slice(0, 3))
     @if ($archivedVmas->isNotEmpty())
-        <div class="MobileCollapse MobileCollapse--vma">
-            <input type="checkbox" id="mc-vma-archived" class="MobileCollapse__toggle">
-            <label for="mc-vma-archived" class="MobileCollapse__summary">Visa tidigare VMA</label>
-            <ul class="widget__listItems MobileCollapse__content">
-                @foreach ($archivedVmas as $alert)
-                    <li class="widget__listItem">
-                        <p class="widget__listItem__preTitle">
-                            <time datetime="{{ $alert->getIsoSentDateTime() }}">{{ $alert->getHumanSentDate() }}</time>
-                        </p>
-                        <p class="widget__listItem__title">
-                            <a href="{{ $alert->getPermalink() }}">
-                                {{ $alert->getShortDescription() }}
-                            </a>
-                        </p>
-                    </li>
-                @endforeach
-            </ul>
-        </div>
+        <ul class="widget__listItems">
+            @foreach ($archivedVmas as $alert)
+                <li class="widget__listItem">
+                    <p class="widget__listItem__preTitle">
+                        <time datetime="{{ $alert->getIsoSentDateTime() }}">{{ $alert->getHumanSentDate() }}</time>
+                    </p>
+                    <p class="widget__listItem__title">
+                        <a href="{{ $alert->getPermalink() }}">
+                            {{ $alert->getShortDescription() }}
+                        </a>
+                    </p>
+                </li>
+            @endforeach
+        </ul>
     @endif
 
     <hr />
