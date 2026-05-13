@@ -1,4 +1,4 @@
-**Status:** aktiv — utbruten från #73 fas 2 + #52 A/B (2026-05-13)
+**Status:** aktiv — Fas B klar 2026-05-13 (title/h1/meta för 5 Tier 1-städer, v2 efter senior-SEO-review). Fas A/C/D/E kvar. Soft-404 → #79, cannibalisering startsida → #80.
 **Senast uppdaterad:** 2026-05-13
 
 # Todo #76 — "polisen händelser X idag" + Malmö/Göteborg
@@ -158,7 +158,71 @@ Fas A-beslut + koordination med #46. Fas D är spekulativ. Estimat:
 
 ## Nästa steg
 
-1. Vänta tills #75 är deployad + cache stabiliserad (1–2 veckor).
-2. Kör Fas A-auditen, skriv beslut i denna fil.
-3. Implementera Fas B (title/h1) — låg risk, mät impact först.
-4. Beslut om Fas C utifrån A-resultat.
+1. ~~Vänta tills #75 är deployad~~ — klar (commit `fafbb28`).
+2. ~~Implementera Fas B (title/h1)~~ — klar 2026-05-13. Ändrade
+   `pageTitle`, `title` (h1-subline) och `description` i
+   `config/tier1-cities.php` för stockholm/malmo/goteborg/helsingborg/
+   uppsala. Ny title-mall: `"Polisen händelser <Stad> idag – senaste
+blåljusen"`. Deploy → vänta 30–60d för GSC-mätning.
+3. Sätt uppföljning 2026-07-12 (60d) — mät pos på "polisen händelser
+   malmö idag", "polisen händelser göteborg idag", "polisen händelser
+   stockholm" mot pre-deploy-baseline.
+4. Kör Fas A-auditen efter att Fas B-ändringarna haft tid att
+   indexeras (annars förorenar Fas B-effekten Fas A-datan).
+5. Beslut om Fas C utifrån A-resultat.
+
+## Fas B-implementation (2026-05-13)
+
+Senior-SEO-review revsade junior-versionen och gav konkret omtag.
+Slutgiltig version (alla 5 städer samma mönster):
+
+```diff
+- 'pageTitle' => 'Malmö: Polishändelser och blåljus',
++ 'pageTitle' => 'Polisen händelser Malmö idag – brott, olyckor och larm',
+- 'title' => 'Senaste blåljusen och händelser från Polisen i Malmö med omnejd.',
++ 'title' => 'Polishändelser, brott och blåljus – uppdateras live från polisen.se',
+- 'description' => 'Se aktuella polishändelser och blåljuslarm från räddningstjänsten i Malmö och Skåne län.',
++ 'description' => 'Alla polisens händelser i Malmö idag på karta – brott, trafikolyckor, bränder och larm. Aggregerat live från Polismyndigheten med 10 års arkiv.',
+```
+
+**H1-ändring i `city.blade.php`** rad 27:
+
+```diff
+- <strong>{{ $city['name'] }}</strong>
++ <strong>{{ $city['displayName'] }}</strong>
+```
+
+H1-strong visar nu "Malmö" istället för "Malmö och Skåne län" — tar
+bort dublett-ord (län-namnet finns inte heller längre i subline).
+
+### Senior-reviews motivering per fält
+
+- **Title:** "från X län" är intent-mismatch (användaren sökte stad,
+  inte län). "brott, olyckor och larm" plockar long-tail som
+  "trafikolycka malmö idag".
+- **Subline:** ren synonym-spread (`polishändelser`, `blåljus`) +
+  freshness-claim (`uppdateras live`). Inga geo-dubletter med h1.
+- **Description:** USP-vinkel (karta + 10 års arkiv) som polisen.se
+  inte har — det är där vi vinner clicks även på pos 6.
+
+### Skippade förslag (med motivering)
+
+- **Brand-suffix " | Brottsplatskartan"** — junior+senior föreslog,
+  men domänen `brottsplatskartan.se` + `WebSite` schema (`name:
+Brottsplatskartan`) + `og:site_name` ger redan brand-display i
+  SERP. Trippel-redundant, kostar ~190px keyword-utrymme. Skip.
+- **`CityMetaService` template-arkitektur** — YAGNI tills Tier 2
+  faktiskt planeras.
+
+### Utbrutna problem
+
+- **Soft-404 vid 0 events idag** → #79 (Tier 1 har sällan men ej
+  noll-frekvens, behöver mätning först).
+- **Cannibalisering `/` vs `/stockholm`** → #80 (startsida måste
+  differentieras till "Sverige nationellt"-vinkel).
+
+### Risker att övervaka i 60d-uppföljning
+
+- Stockholm rankar pos 2.2 på "senaste blåljusen stockholm" (26 %
+  CTR). Vi tappar "senaste blåljusen" från title (fortfarande i
+  subline). Övervaka för regression de första 14 dagarna.

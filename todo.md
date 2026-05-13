@@ -4,7 +4,7 @@ Index över förbättringsarbete. Varje todo har en egen fil under
 [`todos/`](todos/) med fullständig analys. Konvention och
 mappstruktur: [`todos/README.md`](todos/README.md).
 
-Senast uppdaterad: 2026-05-13 (+#75 klar — slug-form `/lan/{slug}` canonical, display-form 301:as. PHPStan grönt, alla 21 län verifierade).
+Senast uppdaterad: 2026-05-13 (+#76 Fas B v2 efter senior-SEO-review — Tier 1 city titles + h1.displayName. +#79 soft-404-fallback +#80 cannibalisering startsida vs Stockholm utbrutna).
 
 ## Aktiva
 
@@ -24,9 +24,11 @@ Senast uppdaterad: 2026-05-13 (+#75 klar — slug-form `/lan/{slug}` canonical, 
 | 64  | Per-plats nyhetsaggregering — "Senaste nyheter i {ort}" | Fas-2 live 2026-05-02 (hybrid regex + AI Haiku 4.5 + dn-sthlm + visa-fler); stickprov 2026-05-15                                    | [todos/64-per-plats-nyhetsaggregering.md](todos/64-per-plats-nyhetsaggregering.md)                                   |
 | 69  | SMHI vädervarningar som kart-layer                      | Skissad 2026-05-06 — scope A (ren layer, ingen /varningar-route). Väntar på #50 soak-end 2026-05-10                                 | [todos/69-smhi-vadervarningar-kart-layer.md](todos/69-smhi-vadervarningar-kart-layer.md)                             |
 | 72  | `/typ/polisinsats` alias för Polisinsats/kommendering   | Utbruten från #52 D (2026-05-13) — mikrojobb ~30 min, ~790 klick/90d potential                                                      | [todos/72-typ-polisinsats-alias.md](todos/72-typ-polisinsats-alias.md)                                               |
-| 76  | "polisen händelser X idag" + Malmö/Göteborg             | Utbruten från #73 fas 2 + #52 A/B (2026-05-13) — cannibalisation-audit + title/h1 Tier 1. ~15 800 clicks/90d, största i GSC         | [todos/76-polisen-handelser-stad-idag.md](todos/76-polisen-handelser-stad-idag.md)                                   |
+| 76  | "polisen händelser X idag" + Malmö/Göteborg             | Fas B klar 2026-05-13 (5 Tier 1 titles + h1.displayName, v2 efter senior-SEO-review). Fas A/C/D/E kvar. 60d-mätning 2026-07-12      | [todos/76-polisen-handelser-stad-idag.md](todos/76-polisen-handelser-stad-idag.md)                                   |
 | 77  | "aktuella brott" CTR-fix                                | Utbruten från #52 G + #73 fas 2 (2026-05-13) — mikrojobb ~30 min, pos 4.1 men 0.66 % CTR. ~2 140 clicks/90d                         | [todos/77-aktuella-brott-ctr-fix.md](todos/77-aktuella-brott-ctr-fix.md)                                             |
 | 78  | Multi-plats-händelser missvisande på kartan             | Ny 2026-05-13 — sammanfattning natt/dag/kväll renderas som en cirkel fast brotten är geografiskt utspridda. Analys saknas           | [todos/78-handelser-utspridda-platser-kart-missvisning.md](todos/78-handelser-utspridda-platser-kart-missvisning.md) |
+| 79  | Soft-404-fallback för "idag"-titlar med 0 events        | Utbruten från #76 senior-review (2026-05-13) — Tier 1 risk vid 0-event-dygn. Steg 1 = mätning, sannolikhet låg                      | [todos/79-soft-404-idag-fallback.md](todos/79-soft-404-idag-fallback.md)                                             |
+| 80  | Cannibalisering startsida `/` vs `/stockholm`           | Utbruten från #76 senior-review (2026-05-13) — startsidan måste differentieras till "Sverige nationellt"-vinkel                     | [todos/80-cannibalisering-startsida-vs-stockholm.md](todos/80-cannibalisering-startsida-vs-stockholm.md)             |
 
 ### Beroenden
 
@@ -58,6 +60,7 @@ eller markera todon som klar.
 | 2026-05-27 | Månadsvyer-pilot — 30d-mätning Uppsala/Västerås                                                          | [#25](todos/25-manadsvyer-datum-routes.md)             |
 | 2026-05-31 | #64 CTR + dwell time + GSC-position — 30d-jämförelse                                                     | [#64](todos/64-per-plats-nyhetsaggregering.md)         |
 | 2026-06-13 | #75 GSC-jämförelse `/lan/...`-queries (mål: pos 7-8 → 5-6, ~1 350 clicks/90d)                            | [#75](todos/done/75-slug-aware-lan-controller.md)      |
+| 2026-07-12 | #76 Fas B — 60d GSC-mätning Tier 1 city titles (mål: pos ≤4 på "polisen händelser <stad> idag")          | [#76](todos/76-polisen-handelser-stad-idag.md)         |
 | 2026-06-09 | #50 Fas 2 — 28d-gate Tier 1 trafik-aggregat (impressions, pos < 30, AdSense-flag, CTR/pos-regression)    | [#50](todos/50-trafikverket-trafikinformation-live.md) |
 | 2026-06-11 | #63 Fas 1 — AI-precision stickprov (30 träffar, mål >80 %) + CTR/dwell på event-sidor med Mediabevakning | [#63](todos/done/63-relaterade-nyheter-trafikprio.md)  |
 | 2026-06-22 | GSC-mätning AI-titlar — andra check (8v)                                                                 | [#36](todos/36-gsc-matning-ai-titlar.md)               |
