@@ -4,7 +4,7 @@ Index över förbättringsarbete. Varje todo har en egen fil under
 [`todos/`](todos/) med fullständig analys. Konvention och
 mappstruktur: [`todos/README.md`](todos/README.md).
 
-Senast uppdaterad: 2026-05-13 (+#77 klar — diagnos visade title/meta redan optimerade, ingen mekanisk fix möjlig; eventuell h1-justering skjuten till efter mätperiod-stabilisering).
+Senast uppdaterad: 2026-05-13 (+#59 klar — pilot live bakom ?show_live=1 efter UX+AD-review, 3 events/120min med kompakt location och dämpad puls).
 
 ## Aktiva
 
@@ -19,7 +19,6 @@ Senast uppdaterad: 2026-05-13 (+#77 klar — diagnos visade title/meta redan opt
 | 51  | Övriga datakällor: research-skiss                       | Live-testad 2026-05-13 — A SMHI→#69, B RTÖG pilot-klar, C Krisinfo avfärdad; F/E/G/H låg prio                                       | [todos/51-ovriga-datakallor-research.md](todos/51-ovriga-datakallor-research.md)                                     |
 | 52  | GSC-monitor: lågrankade högvolym-queries                | Baseline klar 2026-04-30 — 7 åtgärder identifierade (A–G), ~25k clicks/90d potential                                                | [todos/52-gsc-low-rank-monitoring.md](todos/52-gsc-low-rank-monitoring.md)                                           |
 | 54  | Trafikkontroll-titlar: utöka AI-rewrite                 | Idé — utöka `isVagueTitle()` med trafikkontroll-mönster                                                                             | [todos/54-trafikkontroll-titlar.md](todos/54-trafikkontroll-titlar.md)                                               |
-| 59  | "Vad händer nu"-ruta (Krimkartan-känsla)                | Idé — kompakt feed-komponent på startsidan                                                                                          | [todos/59-vad-hander-nu-ruta.md](todos/59-vad-hander-nu-ruta.md)                                                     |
 | 60  | Auto-länka events till nyheter via AI + RSS             | RSS-grund delas med #63 (deployad 2026-05-01); fas 3-rollout efter #63 fas 1+2                                                      | [todos/60-auto-lank-nyheter-ai-rss.md](todos/60-auto-lank-nyheter-ai-rss.md)                                         |
 | 64  | Per-plats nyhetsaggregering — "Senaste nyheter i {ort}" | Fas-2 live 2026-05-02 (hybrid regex + AI Haiku 4.5 + dn-sthlm + visa-fler); stickprov 2026-05-15                                    | [todos/64-per-plats-nyhetsaggregering.md](todos/64-per-plats-nyhetsaggregering.md)                                   |
 | 69  | SMHI vädervarningar som kart-layer                      | Skissad 2026-05-06 — scope A (ren layer, ingen /varningar-route). Väntar på #50 soak-end 2026-05-10                                 | [todos/69-smhi-vadervarningar-kart-layer.md](todos/69-smhi-vadervarningar-kart-layer.md)                             |
@@ -82,6 +81,7 @@ Sorterade nyast först.
 
 | #   | Titel                                                                       | Klar       | Fil                                                                                                            |
 | --- | --------------------------------------------------------------------------- | ---------- | -------------------------------------------------------------------------------------------------------------- |
+| 59  | "Vad händer nu"-ruta — pilot bakom `?show_live=1` (3 events/120min)         | 2026-05-13 | [todos/done/59-vad-hander-nu-ruta.md](todos/done/59-vad-hander-nu-ruta.md)                                     |
 | 77  | "aktuella brott" CTR-fix — diagnos visade att title/meta redan optimerade   | 2026-05-13 | [todos/done/77-aktuella-brott-ctr-fix.md](todos/done/77-aktuella-brott-ctr-fix.md)                             |
 | 75  | Slug-aware LanController (slug-form canonical, display 301:as)              | 2026-05-13 | [todos/done/75-slug-aware-lan-controller.md](todos/done/75-slug-aware-lan-controller.md)                       |
 | 73  | Konkurrent-analys + utvärdera privat repo                                   | 2026-05-13 | [todos/done/73-konkurrent-analys.md](todos/done/73-konkurrent-analys.md)                                       |

@@ -1,5 +1,5 @@
-**Status:** aktiv (idé — research saknas)
-**Senast uppdaterad:** 2026-04-30
+**Status:** klar 2026-05-13 — pilot live bakom `?show_live=1` på prod, 3 events/120min med kompakt location och dämpad puls om senaste >30min (efter UX+AD-review)
+**Senast uppdaterad:** 2026-05-13
 **Källa:** Inbox Brottsplatskartan (2026-04-30)
 
 # Todo #59 — "Vad händer nu"-ruta (Krimkartan/DN Direkt-känsla)
