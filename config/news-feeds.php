@@ -33,6 +33,11 @@ return [
             ['source' => 'dn-sthlm', 'url' => 'https://www.dn.se/rss/sthlm/'],
 
             ['source' => 'svd', 'url' => 'https://www.svd.se/feed/articles.rss'],
+
+            // Mitt i Stockholm — Bonnier-ägd gratistidning, lokaljournalistik
+            // från reportrar för hela Stockholms-regionen. Ett samlat feed
+            // för alla upplagor (ingen intern syndikeringsrisk).
+            ['source' => 'mitti', 'url' => 'https://www.mitti.se/rss-6.8.0.0.e70d15cb3c'],
         ]
     ),
 
