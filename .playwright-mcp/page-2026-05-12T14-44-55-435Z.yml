@@ -1,0 +1,474 @@
+- generic [active] [ref=e1]:
+  - generic "Senaste händelse-ticker" [ref=e2]:
+    - link "Senaste händelse-ticker" [ref=e4] [cursor=pointer]:
+      - /url: http://brottsplatskartan.test:8350/handelser
+      - generic [ref=e5]: Senaste händelse-ticker
+    - list [ref=e6]:
+      - listitem [ref=e7]:
+        - link "13:57 Två bilar kolliderar på väg 102, söder om Veberöd." [ref=e8] [cursor=pointer]:
+          - /url: /skane-lan/trafikolycka-lund-veberod-502074
+      - listitem [ref=e9]:
+        - link "12:46 Polisen är på plats vid en trafikolycka i Leksand." [ref=e10] [cursor=pointer]:
+          - /url: /dalarnas-lan/trafikolycka-leksand-502072
+      - listitem [ref=e11]:
+        - link "12:39 Kollision mellan två personbilar, Norra leden." [ref=e12] [cursor=pointer]:
+          - /url: /skane-lan/trafikolycka-vellinge-norra-leden-502071
+      - listitem [ref=e13]:
+        - link "12:33 En olycka har inträffat i centrum" [ref=e14] [cursor=pointer]:
+          - /url: /dalarnas-lan/trafikolycka-falun-502066
+      - listitem [ref=e15]:
+        - link "12:28 Polis, räddningstjänst och ambulans kallas till ett industriområde i Upplands Väsby med uppgifter om en brand alternativt en explosion." [ref=e16] [cursor=pointer]:
+          - /url: /stockholm/brand-upplands-vasby-502069
+      - listitem [ref=e17]:
+        - link "12:01 Man omhändertagen för fylleri." [ref=e18] [cursor=pointer]:
+          - /url: /norrbottens-lan/fylleri-lulea-502073
+      - listitem [ref=e19]:
+        - link "11:51 Västernorrland, resultat från två av dagens trafikkontroller." [ref=e20] [cursor=pointer]:
+          - /url: /vasternorrlands-lan/trafikkontroll-vasternorrlands-lan-vasternorrland-502062
+      - listitem [ref=e21]:
+        - link "11:50 Misstänkt drograttfylleri i Sundsvall." [ref=e22] [cursor=pointer]:
+          - /url: /vasternorrlands-lan/rattfylleri-sundsvall-502070
+      - listitem [ref=e23]:
+        - link "11:43 Polis kallas till Gärdestunneln i riktning mot Lidingö med anledning av att en bil kört in i tunnelväggen." [ref=e24] [cursor=pointer]:
+          - /url: /stockholm/trafikolycka-stockholm-gardestunneln-lidingo-502065
+      - listitem [ref=e25]:
+        - link "11:17 Misstänkt langningsbrott i Östersund." [ref=e26] [cursor=pointer]:
+          - /url: /jamtlands-lan/alkohollagen-ostersund-502075
+  - banner [ref=e27]:
+    - link "Brottsplatskartan Polisens händelser på karta" [ref=e30] [cursor=pointer]:
+      - /url: /
+    - navigation [ref=e31]:
+      - list [ref=e33]:
+        - listitem [ref=e34]:
+          - link "Händelser" [ref=e35] [cursor=pointer]:
+            - /url: http://brottsplatskartan.test:8350
+        - listitem [ref=e36]:
+          - link "Senaste" [ref=e37] [cursor=pointer]:
+            - /url: /handelser
+        - listitem [ref=e38]:
+          - link "Mest lästa" [ref=e39] [cursor=pointer]:
+            - /url: /mest-last
+        - listitem [ref=e40]:
+          - link "Län" [ref=e41] [cursor=pointer]:
+            - /url: /lan
+        - listitem [ref=e42]:
+          - link "Nära" [ref=e43] [cursor=pointer]:
+            - /url: http://brottsplatskartan.test:8350/nara-hitta-plats
+        - listitem [ref=e44]:
+          - link "Karta" [ref=e45] [cursor=pointer]:
+            - /url: /karta
+        - listitem [ref=e46]:
+          - link "Sök" [ref=e47] [cursor=pointer]:
+            - /url: /sok-bl%C3%A5ljush%C3%A4ndelser
+  - generic [ref=e48]:
+    - main [ref=e49]:
+      - 'heading "Brottsplatskartan: Polisens händelser i hela Sverige" [level=1] [ref=e50]'
+      - generic [ref=e51]:
+        - heading "Händelsekarta" [level=2] [ref=e52]:
+          - link "Händelsekarta" [ref=e53] [cursor=pointer]:
+            - /url: http://brottsplatskartan.test:8350/karta
+        - region "Interaktiv karta över polishändelser" [ref=e56]:
+          - text: Laddar karta...
+          - generic:
+            - generic [ref=e57]:
+              - button "Zoom in" [ref=e58] [cursor=pointer]: +
+              - button "Zoom out" [ref=e59] [cursor=pointer]: −
+            - generic:
+              - button "Visa var jag är" [ref=e61] [cursor=pointer]
+              - button "Maximera kartan till fullskärm" [ref=e64]:
+                - generic [ref=e65]: Maximera
+      - generic [ref=e67]:
+        - heading "Mest läst Karta" [level=2] [ref=e68]:
+          - img [ref=e69]
+          - link "Mest läst" [ref=e72] [cursor=pointer]:
+            - /url: http://brottsplatskartan.test:8350/mest-last
+          - link "Karta" [ref=e73] [cursor=pointer]:
+            - /url: http://brottsplatskartan.test:8350/karta
+            - img [ref=e74]
+            - text: Karta
+        - paragraph [ref=e77]:
+          - text: De vanligaste händelserna idag är
+          - strong [ref=e78]: sammanfattning natt
+          - text: ","
+          - strong [ref=e79]: trafikolycka
+          - text: ","
+          - strong [ref=e80]: misshandel
+          - text: ","
+          - strong [ref=e81]: brand
+          - text: och
+          - strong [ref=e82]: rattfylleri
+          - text: .
+        - article [ref=e83]:
+          - link "Översiktskarta över Sverige som visar var trafikolycka inträffade i Gärdestunneln, Lidingö, Stockholm, Stockholms län Trafikolycka Polis kallas till Gärdestunneln i riktning mot Lidingö med anledning av att en bil kört in i tunnelväggen. 3 timmar sedan · Gärdestunneln, Lidingö, Stockholm En person har förts i ambulans till sjukhus. Personen var vaken i övrigt är skadeläget oklart. Övrig trafik..." [ref=e84] [cursor=pointer]:
+            - /url: /stockholm/trafikolycka-stockholm-gardestunneln-lidingo-502065
+            - img "Översiktskarta över Sverige som visar var trafikolycka inträffade i Gärdestunneln, Lidingö, Stockholm, Stockholms län" [ref=e86]
+            - generic [ref=e87]:
+              - generic [ref=e88]: Trafikolycka
+              - heading "Polis kallas till Gärdestunneln i riktning mot Lidingö med anledning av att en bil kört in i tunnelväggen." [level=3] [ref=e89]
+              - generic [ref=e90]:
+                - time [ref=e91]: 3 timmar sedan
+                - text: · Gärdestunneln, Lidingö, Stockholm
+              - generic [ref=e92]: En person har förts i ambulans till sjukhus. Personen var vaken i övrigt är skadeläget oklart. Övrig trafik...
+        - link "» Fler händelser som många läst" [ref=e94] [cursor=pointer]:
+          - /url: http://brottsplatskartan.test:8350/mest-last
+      - generic [ref=e95]:
+        - generic [ref=e96]:
+          - generic [ref=e97]:
+            - heading "Senaste händelserna" [level=2] [ref=e98]:
+              - link "Senaste händelserna" [ref=e99] [cursor=pointer]:
+                - /url: http://brottsplatskartan.test:8350/handelser
+                - text: Senaste händelserna
+            - link "↻ Uppdatera" [ref=e101] [cursor=pointer]:
+              - /url: http://brottsplatskartan.test:8350?t=1778597043608906564#senaste
+              - text: ↻
+              - generic [ref=e102]: Uppdatera
+          - list [ref=e103]:
+            - listitem [ref=e104]:
+              - link "13:57 Två bilar kolliderar på väg 102, söder om Veberöd. Översiktskarta över Sverige som visar var trafikolycka inträffade i Veberöd, Lund, Skåne län" [ref=e105] [cursor=pointer]:
+                - /url: /skane-lan/trafikolycka-lund-veberod-502074
+                - generic [ref=e108]:
+                  - generic [ref=e109]:
+                    - paragraph [ref=e110]: 13:57
+                    - heading "Två bilar kolliderar på väg 102, söder om Veberöd." [level=3] [ref=e111]
+                  - img "Översiktskarta över Sverige som visar var trafikolycka inträffade i Veberöd, Lund, Skåne län" [ref=e112]
+            - listitem [ref=e113]:
+              - link "12:46 Polisen är på plats vid en trafikolycka i Leksand. Översiktskarta över Sverige som visar var trafikolycka inträffade i Leksand, Dalarnas län" [ref=e114] [cursor=pointer]:
+                - /url: /dalarnas-lan/trafikolycka-leksand-502072
+                - generic [ref=e117]:
+                  - generic [ref=e118]:
+                    - paragraph [ref=e119]: 12:46
+                    - heading "Polisen är på plats vid en trafikolycka i Leksand." [level=3] [ref=e120]
+                  - img "Översiktskarta över Sverige som visar var trafikolycka inträffade i Leksand, Dalarnas län" [ref=e121]
+            - listitem [ref=e122]:
+              - link "12:39 Kollision mellan två personbilar, Norra leden. Översiktskarta över Sverige som visar var trafikolycka inträffade i Norra Leden, Vellinge, Skåne län" [ref=e123] [cursor=pointer]:
+                - /url: /skane-lan/trafikolycka-vellinge-norra-leden-502071
+                - generic [ref=e126]:
+                  - generic [ref=e127]:
+                    - paragraph [ref=e128]: 12:39
+                    - heading "Kollision mellan två personbilar, Norra leden." [level=3] [ref=e129]
+                  - img "Översiktskarta över Sverige som visar var trafikolycka inträffade i Norra Leden, Vellinge, Skåne län" [ref=e130]
+            - listitem [ref=e131]:
+              - link "12:33 En olycka har inträffat i centrum Översiktskarta över Sverige som visar var trafikolycka inträffade i Gruvgatan, Falun, Dalarnas län" [ref=e132] [cursor=pointer]:
+                - /url: /dalarnas-lan/trafikolycka-falun-502066
+                - generic [ref=e135]:
+                  - generic [ref=e136]:
+                    - paragraph [ref=e137]: 12:33
+                    - heading "En olycka har inträffat i centrum" [level=3] [ref=e138]
+                  - img "Översiktskarta över Sverige som visar var trafikolycka inträffade i Gruvgatan, Falun, Dalarnas län" [ref=e139]
+            - listitem [ref=e140]:
+              - link "12:28 Polis, räddningstjänst och ambulans kallas till ett industriområde i Upplands Väsby med uppgifter om en brand alternativt en explosion. Översiktskarta över Sverige som visar var brand inträffade i Väsby, Upplands Väsby, Stockholms län" [ref=e141] [cursor=pointer]:
+                - /url: /stockholm/brand-upplands-vasby-502069
+                - generic [ref=e144]:
+                  - generic [ref=e145]:
+                    - paragraph [ref=e146]: 12:28
+                    - heading "Polis, räddningstjänst och ambulans kallas till ett industriområde i Upplands Väsby med uppgifter om en brand alternativt en explosion." [level=3] [ref=e147]
+                  - img "Översiktskarta över Sverige som visar var brand inträffade i Väsby, Upplands Väsby, Stockholms län" [ref=e148]
+          - generic [ref=e149]:
+            - checkbox "+ Visa 5 fler händelser"
+            - generic [ref=e150] [cursor=pointer]: + Visa 5 fler händelser
+          - list [ref=e151]:
+            - listitem [ref=e152]:
+              - link "Visa fler →" [ref=e153] [cursor=pointer]:
+                - /url: http://brottsplatskartan.test:8350/handelser
+                - generic [ref=e156]: Visa fler →
+        - generic [ref=e157]:
+          - generic [ref=e158]:
+            - heading "Mest lästa händelserna" [level=2] [ref=e159]:
+              - link "Mest lästa händelserna" [ref=e160] [cursor=pointer]:
+                - /url: http://brottsplatskartan.test:8350/handelser
+                - text: Mest lästa händelserna
+            - link "↻ Uppdatera" [ref=e162] [cursor=pointer]:
+              - /url: http://brottsplatskartan.test:8350?t=1778597043230684145#mest-last
+              - text: ↻
+              - generic [ref=e163]: Uppdatera
+          - list [ref=e164]:
+            - listitem [ref=e165]:
+              - link "11:43 Polis kallas till Gärdestunneln i riktning mot Lidingö med anledning av att en bil kört in i tunnelväggen. Översiktskarta över Sverige som visar var trafikolycka inträffade i Gärdestunneln, Lidingö, Stockholm, Stockholms län" [ref=e166] [cursor=pointer]:
+                - /url: /stockholm/trafikolycka-stockholm-gardestunneln-lidingo-502065
+                - generic [ref=e169]:
+                  - generic [ref=e170]:
+                    - paragraph [ref=e171]: 11:43
+                    - heading "Polis kallas till Gärdestunneln i riktning mot Lidingö med anledning av att en bil kört in i tunnelväggen." [level=3] [ref=e172]
+                  - img "Översiktskarta över Sverige som visar var trafikolycka inträffade i Gärdestunneln, Lidingö, Stockholm, Stockholms län" [ref=e173]
+          - list [ref=e174]:
+            - listitem [ref=e175]:
+              - link "Visa fler →" [ref=e176] [cursor=pointer]:
+                - /url: http://brottsplatskartan.test:8350/mest-last
+                - generic [ref=e179]: Visa fler →
+    - complementary [ref=e180]:
+      - article [ref=e181]:
+        - generic [ref=e182]:
+          - generic [ref=e183]: Sök efter blåljushändelser
+          - textbox "Sök efter blåljushändelser" [ref=e184]
+          - button "Sök" [ref=e185]
+      - generic [ref=e186]:
+        - heading "Brottsstatistik" [level=2] [ref=e187]:
+          - link "Brottsstatistik" [ref=e188] [cursor=pointer]:
+            - /url: http://brottsplatskartan.test:8350/statistik
+        - paragraph [ref=e190]:
+          - text: Se alla händelser per dag, topp 10 brottstyper och länstopplistan på
+          - link "statistik-sidan" [ref=e191] [cursor=pointer]:
+            - /url: http://brottsplatskartan.test:8350/statistik
+          - text: .
+      - generic [ref=e192]:
+        - heading "Senaste händelserna & brotten i ditt län" [level=2] [ref=e193]
+        - paragraph [ref=e194]:
+          - link "Blekinge" [ref=e195] [cursor=pointer]:
+            - /url: http://brottsplatskartan.test:8350/lan/Blekinge%20l%C3%A4n
+          - text: ","
+          - link "Dalarna" [ref=e196] [cursor=pointer]:
+            - /url: http://brottsplatskartan.test:8350/lan/Dalarnas%20l%C3%A4n
+          - text: ","
+          - link "Gävleborg" [ref=e197] [cursor=pointer]:
+            - /url: http://brottsplatskartan.test:8350/lan/G%C3%A4vleborgs%20l%C3%A4n
+          - text: ","
+          - link "Gotland" [ref=e198] [cursor=pointer]:
+            - /url: http://brottsplatskartan.test:8350/lan/Gotlands%20l%C3%A4n
+          - text: ","
+          - link "Halland" [ref=e199] [cursor=pointer]:
+            - /url: http://brottsplatskartan.test:8350/lan/Hallands%20l%C3%A4n
+          - text: ","
+          - link "Jämtland" [ref=e200] [cursor=pointer]:
+            - /url: http://brottsplatskartan.test:8350/lan/J%C3%A4mtlands%20l%C3%A4n
+          - text: ","
+          - link "Jönköping" [ref=e201] [cursor=pointer]:
+            - /url: http://brottsplatskartan.test:8350/lan/J%C3%B6nk%C3%B6pings%20l%C3%A4n
+          - text: ","
+          - link "Kalmar" [ref=e202] [cursor=pointer]:
+            - /url: http://brottsplatskartan.test:8350/lan/Kalmar%20l%C3%A4n
+          - text: ","
+          - link "Kronoberg" [ref=e203] [cursor=pointer]:
+            - /url: http://brottsplatskartan.test:8350/lan/Kronobergs%20l%C3%A4n
+          - text: ","
+          - link "Norrbotten" [ref=e204] [cursor=pointer]:
+            - /url: http://brottsplatskartan.test:8350/lan/Norrbottens%20l%C3%A4n
+          - text: ","
+          - link "Örebro" [ref=e205] [cursor=pointer]:
+            - /url: http://brottsplatskartan.test:8350/lan/%C3%96rebro%20l%C3%A4n
+          - text: ","
+          - link "Östergötland" [ref=e206] [cursor=pointer]:
+            - /url: http://brottsplatskartan.test:8350/lan/%C3%96sterg%C3%B6tlands%20l%C3%A4n
+          - text: ","
+          - link "Skåne" [ref=e207] [cursor=pointer]:
+            - /url: http://brottsplatskartan.test:8350/lan/Sk%C3%A5ne%20l%C3%A4n
+          - text: ","
+          - link "Södermanland" [ref=e208] [cursor=pointer]:
+            - /url: http://brottsplatskartan.test:8350/lan/S%C3%B6dermanlands%20l%C3%A4n
+          - text: ","
+          - link "Stockholm" [ref=e209] [cursor=pointer]:
+            - /url: http://brottsplatskartan.test:8350/lan/Stockholms%20l%C3%A4n
+          - text: ","
+          - link "Uppsala" [ref=e210] [cursor=pointer]:
+            - /url: http://brottsplatskartan.test:8350/lan/Uppsala%20l%C3%A4n
+          - text: ","
+          - link "Värmland" [ref=e211] [cursor=pointer]:
+            - /url: http://brottsplatskartan.test:8350/lan/V%C3%A4rmlands%20l%C3%A4n
+          - text: ","
+          - link "Västerbotten" [ref=e212] [cursor=pointer]:
+            - /url: http://brottsplatskartan.test:8350/lan/V%C3%A4sterbottens%20l%C3%A4n
+          - text: ","
+          - link "Västernorrland" [ref=e213] [cursor=pointer]:
+            - /url: http://brottsplatskartan.test:8350/lan/V%C3%A4sternorrlands%20l%C3%A4n
+          - text: ","
+          - link "Västmanland" [ref=e214] [cursor=pointer]:
+            - /url: http://brottsplatskartan.test:8350/lan/V%C3%A4stmanlands%20l%C3%A4n
+          - text: ","
+          - link "Västra Götaland" [ref=e215] [cursor=pointer]:
+            - /url: http://brottsplatskartan.test:8350/lan/V%C3%A4stra%20G%C3%B6talands%20l%C3%A4n
+      - generic [ref=e216]:
+        - heading "Senast hänt i din stad" [level=2] [ref=e217]
+        - paragraph [ref=e218]:
+          - link "Stockholm" [ref=e219] [cursor=pointer]:
+            - /url: http://brottsplatskartan.test:8350/plats/Stockholm
+          - link "Göteborg" [ref=e220] [cursor=pointer]:
+            - /url: http://brottsplatskartan.test:8350/plats/G%C3%B6teborg
+          - link "Malmö" [ref=e221] [cursor=pointer]:
+            - /url: http://brottsplatskartan.test:8350/plats/Malm%C3%B6
+          - link "Uppsala" [ref=e222] [cursor=pointer]:
+            - /url: http://brottsplatskartan.test:8350/plats/Uppsala
+          - link "Västerås" [ref=e223] [cursor=pointer]:
+            - /url: http://brottsplatskartan.test:8350/plats/V%C3%A4ster%C3%A5s
+          - link "Örebro" [ref=e224] [cursor=pointer]:
+            - /url: http://brottsplatskartan.test:8350/plats/%C3%96rebro
+          - link "Linköping" [ref=e225] [cursor=pointer]:
+            - /url: http://brottsplatskartan.test:8350/plats/Link%C3%B6ping
+          - link "Helsingborg" [ref=e226] [cursor=pointer]:
+            - /url: http://brottsplatskartan.test:8350/plats/Helsingborg
+          - link "Jönköping" [ref=e227] [cursor=pointer]:
+            - /url: http://brottsplatskartan.test:8350/plats/J%C3%B6nk%C3%B6ping
+          - link "Norrköping" [ref=e228] [cursor=pointer]:
+            - /url: http://brottsplatskartan.test:8350/plats/Norrk%C3%B6ping
+      - generic [ref=e229]:
+        - heading "Senaste inläggen från vår blogg" [level=2] [ref=e230]
+        - list [ref=e231]:
+          - listitem [ref=e232]:
+            - paragraph [ref=e233]:
+              - time [ref=e234]: 6 juli 2024
+            - heading "Aftonbladet publicerar interaktiv karta med skjutningar i Sverige 2024" [level=3] [ref=e235]:
+              - link "Aftonbladet publicerar interaktiv karta med skjutningar i Sverige 2024" [ref=e236] [cursor=pointer]:
+                - /url: http://brottsplatskartan.test:8350/blogg/2024/aftonbladets-interaktiva-karta
+          - listitem [ref=e237]:
+            - paragraph [ref=e238]:
+              - time [ref=e239]: 2 juli 2024
+            - heading "Förbättringar i API:et" [level=3] [ref=e240]:
+              - link "Förbättringar i API:et" [ref=e241] [cursor=pointer]:
+                - /url: http://brottsplatskartan.test:8350/blogg/2024/uppdatering-api
+          - listitem [ref=e242]:
+            - paragraph [ref=e243]:
+              - time [ref=e244]: 11 juni 2024
+            - heading "Det tog bara 8 år men nu är nya appen (nästan) här" [level=3] [ref=e245]:
+              - link "Det tog bara 8 år men nu är nya appen (nästan) här" [ref=e246] [cursor=pointer]:
+                - /url: http://brottsplatskartan.test:8350/blogg/2024/ny-app-snart
+        - paragraph [ref=e247]:
+          - link "» Se alla blogginlägg" [ref=e248] [cursor=pointer]:
+            - /url: http://brottsplatskartan.test:8350/blogg
+      - generic [ref=e249]:
+        - heading "VMA-meddelanden" [level=2] [ref=e250]:
+          - img [ref=e251]
+          - link "VMA-meddelanden" [ref=e253] [cursor=pointer]:
+            - /url: http://brottsplatskartan.test:8350/vma
+        - list [ref=e254]:
+          - listitem [ref=e255]:
+            - paragraph [ref=e256]:
+              - time [ref=e257]: 2 maj 2026
+            - paragraph [ref=e258]:
+              - link "Viktigt meddelande till allmänheten i Uddevalla och Vänersborg i Västra Götalands län." [ref=e259] [cursor=pointer]:
+                - /url: http://brottsplatskartan.test:8350/vma/2-maj-2026-viktigt-meddelande-till-allmanheten-i-uddevalla-och-vanersborg-i-vastra-gotalands-lan-386
+          - listitem [ref=e260]:
+            - paragraph [ref=e261]:
+              - time [ref=e262]: 1 maj 2026
+            - paragraph [ref=e263]:
+              - link "Viktigt meddelande till allmänheten i Malmö i Malmö kommun, Skåne län." [ref=e264] [cursor=pointer]:
+                - /url: http://brottsplatskartan.test:8350/vma/1-maj-2026-viktigt-meddelande-till-allmanheten-i-malmo-i-malmo-kommun-skane-lan-384
+          - listitem [ref=e265]:
+            - paragraph [ref=e266]:
+              - time [ref=e267]: 12 apr 2026
+            - paragraph [ref=e268]:
+              - link "Viktigt meddelande till allmänheten i Hemmanet i Sundsvalls kommun, Västernorrlands län." [ref=e269] [cursor=pointer]:
+                - /url: http://brottsplatskartan.test:8350/vma/12-apr-2026-viktigt-meddelande-till-allmanheten-i-hemmanet-i-sundsvalls-kommun-vasternorrlands-lan-382
+        - separator [ref=e270]
+        - paragraph [ref=e271]:
+          - link "Se tidigare VMA-meddelanden" [ref=e272] [cursor=pointer]:
+            - /url: http://brottsplatskartan.test:8350/vma
+          - text: "|"
+          - link "Vad är VMA?" [ref=e273] [cursor=pointer]:
+            - /url: http://brottsplatskartan.test:8350/vma/sida/om-vma
+      - generic [ref=e274]:
+        - heading "Nyheter från Text TV" [level=2] [ref=e275]
+        - paragraph [ref=e276]:
+          - text: Presenteras i samarbete med
+          - link "TextTV.nu" [ref=e277] [cursor=pointer]:
+            - /url: https://texttv.nu/
+          - text: .
+        - list [ref=e278]:
+          - listitem [ref=e279]:
+            - link "Nyheter" [ref=e280] [cursor=pointer]:
+              - /url: https://texttv.nu/100
+          - listitem [ref=e281]:
+            - link "Sport" [ref=e282] [cursor=pointer]:
+              - /url: https://texttv.nu/300
+          - listitem [ref=e283]:
+            - link "Målservice" [ref=e284] [cursor=pointer]:
+              - /url: https://texttv.nu/377
+          - listitem [ref=e285]:
+            - link "Väder" [ref=e286] [cursor=pointer]:
+              - /url: https://texttv.nu/400
+          - listitem [ref=e287]:
+            - link "Innehåll" [ref=e288] [cursor=pointer]:
+              - /url: https://texttv.nu/700
+        - heading "Senaste nytt" [level=3] [ref=e289]
+        - list [ref=e290]:
+          - listitem [ref=e291]:
+            - link "16:08 Misstänkt mord i Västerås" [ref=e292] [cursor=pointer]:
+              - /url: https://texttv.nu/114/misstankt-mord-i-vasteras-37155293?utm_source=brottsplatskartan&utm_medium=newslist
+              - generic [ref=e293]:
+                - generic [ref=e294]: 16:08
+                - generic [ref=e295]: Misstänkt mord i Västerås
+          - listitem [ref=e296]:
+            - link "16:08 Så utnyttjar gängen välfärden" [ref=e297] [cursor=pointer]:
+              - /url: https://texttv.nu/113/sa-utnyttjar-gangen-valfarden-37155292?utm_source=brottsplatskartan&utm_medium=newslist
+              - generic [ref=e298]:
+                - generic [ref=e299]: 16:08
+                - generic [ref=e300]: Så utnyttjar gängen välfärden
+          - listitem [ref=e301]:
+            - link "16:08 SD-vilden Katja Nyberg åtalas" [ref=e302] [cursor=pointer]:
+              - /url: https://texttv.nu/112/sd-vilden-katja-nyberg-atalas-37155291?utm_source=brottsplatskartan&utm_medium=newslist
+              - generic [ref=e303]:
+                - generic [ref=e304]: 16:08
+                - generic [ref=e305]: SD-vilden Katja Nyberg åtalas
+        - generic [ref=e306]:
+          - checkbox "+ Visa 2 fler"
+          - generic [ref=e307] [cursor=pointer]: + Visa 2 fler
+        - heading "Mest läst" [level=3] [ref=e308]
+        - list [ref=e309]:
+          - listitem [ref=e310]:
+            - link "00:08 Myndigheten vill byta namn - igen" [ref=e311] [cursor=pointer]:
+              - /url: https://texttv.nu/108/myndigheten-vill-byta-namn-igen-37154512?utm_source=brottsplatskartan&utm_medium=newslist
+              - generic [ref=e312]:
+                - generic [ref=e313]: 00:08
+                - generic [ref=e314]: Myndigheten vill byta namn - igen
+          - listitem [ref=e315]:
+            - 'link "09:06 Expert: Inte starten på ny pandemi" [ref=e316] [cursor=pointer]':
+              - /url: https://texttv.nu/107/expert-inte-starten-pa-ny-pandemi-37154996?utm_source=brottsplatskartan&utm_medium=newslist
+              - generic [ref=e317]:
+                - generic [ref=e318]: 09:06
+                - generic [ref=e319]: "Expert: Inte starten på ny pandemi"
+          - listitem [ref=e320]:
+            - link "07:34 Hotellrum dyrare - bokas ändå" [ref=e321] [cursor=pointer]:
+              - /url: https://texttv.nu/108/hotellrum-dyrare-bokas-anda-37154892?utm_source=brottsplatskartan&utm_medium=newslist
+              - generic [ref=e322]:
+                - generic [ref=e323]: 07:34
+                - generic [ref=e324]: Hotellrum dyrare - bokas ändå
+        - generic [ref=e325]:
+          - checkbox "+ Visa 2 fler"
+          - generic [ref=e326] [cursor=pointer]: + Visa 2 fler
+  - contentinfo [ref=e327]:
+    - generic [ref=e328]:
+      - heading "Brottsplatskartan" [level=2] [ref=e329]
+      - generic [ref=e330]:
+        - checkbox "+ Visa alla länkar"
+        - generic [ref=e331] [cursor=pointer]: + Visa alla länkar
+    - generic [ref=e333]:
+      - heading "Händelser från Polisen i ditt län" [level=2] [ref=e334]
+      - generic [ref=e335]:
+        - checkbox "+ Visa alla län"
+        - generic [ref=e336] [cursor=pointer]: + Visa alla län
+    - generic [ref=e337]:
+      - heading "Händelser i 10 största städerna" [level=2] [ref=e338]
+      - generic [ref=e339]:
+        - checkbox "+ Visa alla städer"
+        - generic [ref=e340] [cursor=pointer]: + Visa alla städer
+  - generic [ref=e342]:
+    - heading "Om Brottsplatskartan" [level=2] [ref=e343]
+    - paragraph [ref=e344]: Brottsplatskartan är en plattform som erbjuder aktuell information om händelser och brott som rapporteras av Polisen i Sverige. På sajten kan du enkelt ta del av de senaste nyheterna om brott på lokal nivå, kategoriserat efter län, stad och gata. Informationen hämtas direkt från Polisens RSS-flöden och presenteras på ett överskådligt sätt, så att du snabbt kan hålla dig uppdaterad om vad som händer i ditt närområde.
+    - paragraph [ref=e345]:
+      - text: Besök även nyhetssajten
+      - link "TextTV.nu" [ref=e346] [cursor=pointer]:
+        - /url: https://texttv.nu/
+      - text: (som såklart har den klassiska
+      - link "sportsidan 377" [ref=e347] [cursor=pointer]:
+        - /url: https://texttv.nu/377
+      - text: ).
+  - generic [ref=e349]:
+    - link "Cookies" [ref=e350] [cursor=pointer]:
+      - /url: http://brottsplatskartan.test:8350/sida/cookies
+    - text: "|"
+    - link "Sekretesspolicy" [ref=e351] [cursor=pointer]:
+      - /url: http://brottsplatskartan.test:8350/sida/sekretesspolicy
+    - text: "|"
+    - link "Servrar i EU 🇪🇺 (Finland)" [ref=e352] [cursor=pointer]:
+      - /url: http://brottsplatskartan.test:8350/sida/om
+    - text: "| Deploy söndag 26 april 2026 14:12 (232c9af)"
+  - generic [ref=e355]:
+    - generic [ref=e357]:
+      - generic [ref=e362] [cursor=pointer]: "1"
+      - generic [ref=e369] [cursor=pointer]: "1"
+      - generic [ref=e374] [cursor=pointer]: "73"
+    - generic [ref=e377]:
+      - generic [ref=e384] [cursor=pointer]:
+        - generic [ref=e385]: "2"
+        - generic [ref=e386]: GET /
+      - generic [ref=e387] [cursor=pointer]:
+        - generic: 181ms
+      - generic [ref=e389] [cursor=pointer]:
+        - generic: 31MB

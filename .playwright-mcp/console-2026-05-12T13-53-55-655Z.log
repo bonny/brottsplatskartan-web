@@ -1,0 +1,7 @@
+[     256ms] [LOG] headerElmsHeight 157 @ https://brottsplatskartan.se/:2086
+[     284ms] [LOG] window.map now available e @ https://brottsplatskartan.se/js/events-map.js?v=1777817900:324
+[     284ms] [LOG] map init location [59, 15] 6 [59, 15] 6 @ https://brottsplatskartan.se/js/events-map.js?v=1777817900:394
+[     286ms] [LOG] map loaded with options: {size: normal, latLng: Array(2), zoom: 6, locationFilter: null, locationType: null} @ https://brottsplatskartan.se/js/events-map.js?v=1777817900:344
+[     382ms] [LOG] markers loaded [e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e] @ https://brottsplatskartan.se/js/events-map.js?v=1777817900:259
+[   67713ms] [ERROR] Attestation check for Shared Storage on https://www.googleadservices.com failed. @ https://www.googleadservices.com/pagead/managed/js/activeview/current/reach_worklet.html:0
+[   67718ms] [ERROR] Attestation check for Shared Storage on https://www.googleadservices.com failed. @ https://www.googleadservices.com/pagead/managed/js/activeview/current/reach_worklet.html:0

@@ -79,6 +79,12 @@ class MatchEventNews extends Command
 
             $eventBlock = $this->formatEventBlock($event);
 
+            if ($this->getOutput()->isVerbose()) {
+                $this->line('--- EVENT-BLOCK ---');
+                $this->line($eventBlock);
+                $this->line('-------------------');
+            }
+
             foreach ($candidates as $article) {
                 $userMessage = $eventBlock . "\n\n" . $this->formatArticleBlock($article);
 
@@ -105,6 +111,18 @@ class MatchEventNews extends Command
                 $isMatch = (bool) ($response['is_match'] ?? false);
                 $confidence = (string) ($response['confidence'] ?? 'låg');
                 $reason = mb_substr((string) ($response['reason'] ?? ''), 0, 500);
+
+                if ($this->getOutput()->isVerbose()) {
+                    $this->line(sprintf(
+                        '  event-%d × article-%d (%s): is_match=%s confidence=%s — %s',
+                        $event->id,
+                        $article->id,
+                        $article->source,
+                        $isMatch ? 'true' : 'false',
+                        $confidence,
+                        $reason
+                    ));
+                }
 
                 if (!$isMatch) {
                     continue;
