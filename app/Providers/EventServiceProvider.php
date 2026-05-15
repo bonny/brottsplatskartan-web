@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
+use App\Listeners\LogAiUsage;
 use Illuminate\Cache\Events\CacheFlushed;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
+use Laravel\Ai\Events\AgentPrompted;
 use Spatie\ResponseCache\Events\ClearedResponseCacheEvent;
 
 class EventServiceProvider extends ServiceProvider
@@ -15,8 +17,8 @@ class EventServiceProvider extends ServiceProvider
      * @var array<string, array<int, string>>
      */
     protected $listen = [
-        'App\Events\SomeEvent' => [
-            'App\Listeners\EventListener',
+        AgentPrompted::class => [
+            LogAiUsage::class,
         ],
     ];
 

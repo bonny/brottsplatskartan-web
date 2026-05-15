@@ -127,6 +127,16 @@ class Kernel extends ConsoleKernel
             ->withoutOverlapping()
             ->name('sitemap');
 
+        // Prune ai_usage_logs (todo #81). 90 dagars retention räcker — det
+        // är en monitorerings-tabell, inte ett audit-arkiv.
+        $schedule->call(function (): void {
+            \Illuminate\Support\Facades\DB::table('ai_usage_logs')
+                ->where('created_at', '<', now()->subDays(90))
+                ->delete();
+        })
+            ->dailyAt('04:00')
+            ->name('ai-usage-logs-prune');
+
         // BRÅ-import (todo #38): kör 15 april årligen, 03:00 UTC. BRÅ
         // släpper kommunstatistiken runt 31 mars, så 2 veckor failsafe.
         // OBS: download-id i URL:en ändras varje år — KNOWN_URLS i
