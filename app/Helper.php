@@ -448,7 +448,7 @@ class Helper {
                 )
                 ->where('administrative_area_level_1', $lan)
                 ->groupBy('YMD')
-                ->orderBy('YMD', 'DESC')
+                ->orderBy('YMD', 'desc')
                 ->limit(14)
                 ->get();
 

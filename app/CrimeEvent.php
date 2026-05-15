@@ -727,8 +727,8 @@ class CrimeEvent extends Model implements Feedable {
         )
             ->where('created_at', '>', $someDaysAgoYMD)
             ->having("distance", "<=", $nearbyInKm)
-            ->orderBy("parsed_date", "DESC")
-            ->orderBy("distance", "ASC")
+            ->orderBy("parsed_date", "desc")
+            ->orderBy("distance", "asc")
             ->limit($nearbyCount)
             ->with('locations')
             ->get();
@@ -790,8 +790,8 @@ class CrimeEvent extends Model implements Feedable {
                     [$lat, $lng, $lat]
                 )
                 ->having('distance', '<=', $nearbyInKm)
-                ->orderBy('parsed_date', 'DESC')
-                ->orderBy('distance', 'ASC')
+                ->orderBy('parsed_date', 'desc')
+                ->orderBy('distance', 'asc')
                 ->with('locations');
 
             return $query->paginate(
