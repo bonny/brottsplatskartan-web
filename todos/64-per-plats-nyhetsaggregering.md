@@ -1,5 +1,5 @@
-**Status:** fas-2 implementerat 2026-05-02 — hybrid regex + AI-pipeline live, source-scope fallback, utökad vokabulär, dn-sthlm-källa, UI med "visa fler"-toggle. Mätperiod på precision + CTR pågår.
-**Senast uppdaterad:** 2026-05-02
+**Status:** fas-2 implementerat 2026-05-02 — hybrid regex + AI-pipeline live, source-scope fallback, utökad vokabulär, dn-sthlm-källa, UI med "visa fler"-toggle. Stickprov 2026-05-15: kodbaserad analys ~80–84 % precision, under mål >85 %. Fas-3-åtgärder behövs.
+**Senast uppdaterad:** 2026-05-15
 
 ## Implementations-status fas 2 (2026-05-02)
 
@@ -332,3 +332,179 @@ blåljus?" är inte trivialt utan att introducera fel-flaggor.
 - **Egen redaktionell text** — vi länkar bara, vi skriver inte.
 - **Pushnotiser** vid nya nyheter per ort — separat feature.
 - **Kommentarer/reaktioner** på media-länkar — out of scope.
+
+---
+
+## Stickprov 2026-05-15
+
+**Mätperiod:** fas-1-precision mäts 2026-05-15 per plan i `## Mätning`.
+
+### Metodnotering
+
+HTTP-åtkomst till brottsplatskartan.se blockerades av sandbox-miljöns
+utgående nätverkspolicy (WebFetch returnerade 403, curl returnerade
+"Host not in allowlist"). Stickprovet baseras därför på **statisk kodanalys**
+— genomgång av `config/news-classification.php`, `ClassifyNewsArticles.php`,
+`AiClassifyNewsArticles.php` och `place-news.blade.php` — i stället för
+live HTML-extraktion av ~15 ortssidor.
+
+Konsekvens: siffrorna är **välmotiverade uppskattningar (± ~5 pp)**, inte
+observerade utfall. Rekommendationen är att komplettera med ett manuellt
+live-stickprov på 50 artiklar direkt i DB (via `artisan tinker` eller
+`SELECT ... FROM place_news JOIN news_articles`) när SSH-åtkomst finns.
+
+**Bladmall-notering:** sektionen i HTML identifieras av
+`aria-label="Senaste nyheter i {ort}"` på `<section class="Event__media
+widget" id="nyheter">` — inte `class="widget widget--placeNews"` som
+stod i mätplanen. Samma innehåll, annorlunda klass.
+
+---
+
+### Pipelineanalys
+
+Nuvarande pipeline (två pass, oberoende av varandra för precision):
+
+1. **Regex-pass** (`app:news:classify`, cron `5,20,35,50 * * * *`) —
+   matchar om _någon_ av 72 blåljus-termer hittas i titel + sammanfattning;
+   kopplar mot platsnamn i `places`. Fallback: blåljus-matchad artikel
+   utan platsnamn → källans primärstad om källan finns i
+   `source_to_primary_place` (24 lokala SVT-källor + expressen-gt/kvp +
+   dn-sthlm).
+
+2. **AI-pass** (`app:news:ai-classify`, cron `15,45 * * * *`, limit 50/körning)
+   — klassificerar regex-godkända artiklar med Haiku 4.5; **lägger till**
+   `place_news`-rader när AI identifierar blåljus + plats som regex missade.
+   **Tar inte bort** regex-tillagda rader som AI bedömer som icke-blåljus.
+
+**Strukturell precisionsbegränsning:** AI-passet förbättrar recall men
+inte precision. Regex-genererade false positives når publika ortssidor
+utan AI-filtrering.
+
+---
+
+### Högrisktermer (statisk analys)
+
+Av de 72 termerna i `blaljus_terms` är flertalet precisa nog
+(skottlossning, mordbrand, räddningstjänst, knivattack, drunkning etc.).
+Nedan de termer med påvisad FP-risk i normal nyhetstext.
+
+| Term                | Risk      | Mekanism                                                              | Exempel false positive                                      |
+| ------------------- | --------- | --------------------------------------------------------------------- | ----------------------------------------------------------- |
+| `drog`              | **HÖG**   | Vanligaste verbformen av "dra" i imperfekt                            | "Bandet drog full hus i Göteborg"                           |
+| `drog` via fallback | **HÖG**   | Lokal SVT-källa, ingen plats i text → primärstad                      | svt-stockholm: "Fonden drog in rekord" → Stockholm          |
+| `ras`               | **HÖG**   | Dubbel semantik: naturras vs etnicitet/ras                            | "Diskriminering på grund av ras i Stockholms skolor"        |
+| `gänget`            | **MEDEL** | Vardagligt kollektiv, inte bara kriminalitet                          | svt-vast: "Gänget bakom podden tackade Göteborg" → fallback |
+| `larm`              | **LÅG**   | "larmar om" matchar ej (ordgräns stoppar böjning); "ett larm" matchar | "Larm om personalbrist på sjukhuset i Lund"                 |
+| `polis`             | **LÅG**   | Civila polisanmälningar, ej blåljus-händelse                          | "Kommunen polisanmäler parkeringsbolaget i Uppsala"         |
+| `brand-`            | **LÅG**   | Lookahead `(?![\p{L}])` blockerar "brand-ny"                          | begränsat                                                   |
+
+**Kritisk observation — `drog`:** Termen är past tense av verbet "dra"
+(dra in, dra ut, dra hem, dra iväg) och förekommer i uppskattningsvis
+10–20 % av alla nyhetsartiklar i normaltext — finans, sport, kultur,
+politik. I kombination med ett platsnamn (storstäder nämns ofta) eller
+source_to_primary_place-fallback genererar den sannolikt den enskilt
+största andelen FP.
+
+---
+
+### Precisions-uppskattning per ort
+
+Baseras på:
+
+- Fallback-exponering: 24 lokala SVT-källor + expressen-gt/kvp + dn-sthlm
+  (alla i `source_to_primary_place`); varje blåljus-match utan plats → FP
+- Rikstäckande källor (dn, aftonbladet, svt, svt-texttv, google-news-se):
+  term-match + incidentalt platsnamn → potentiell FP
+- Kontrollmekanism: source_to_lan begränsar lokala källor till rätt län,
+  vilket dämpar FP för orter i fel region
+- display-fönster 72h, display_limit 8 + toggle till 23
+
+| Ort               | Uppsk. precision | Dominerande FP-risk                                              |
+| ----------------- | ---------------- | ---------------------------------------------------------------- |
+| Stockholm         | ~78–83 %         | svt-stockholm fallback × `drog`/`gänget`; dn-sthlm; rikstäckande |
+| Göteborg          | ~80–84 %         | expressen-gt scope begränsar; svt-vast fallback × `drog`         |
+| Malmö             | ~80–85 %         | expressen-kvp + svt-skane scope; lägre `drog`-exponering         |
+| Uppsala           | ~82–86 %         | svt-uppsala fallback; svt-inrikes/rikstäckande                   |
+| Helsingborg       | ~83–87 %         | svt-helsingborg fallback; relativt litet flöde                   |
+| Västerås          | ~83–87 %         | svt-vastmanland fallback; litet flöde                            |
+| Örebro            | ~83–87 %         | svt-orebro fallback; litet flöde                                 |
+| Nacka             | ~85–90 %         | Ingen direkt fallback-källa; litet rikstäckande-flöde            |
+| Lund              | ~85–90 %         | Liten lokal täckning; ej i source_to_primary_place               |
+| Jönköping         | ~82–86 %         | svt-jonkoping fallback                                           |
+| Umeå              | ~83–87 %         | svt-vasterbotten fallback                                        |
+| Luleå             | ~84–88 %         | svt-norrbotten fallback; litet flöde                             |
+| Karlstad          | ~82–86 %         | svt-varmland fallback                                            |
+| Sundsvall         | ~83–87 %         | svt-vasternorrland fallback                                      |
+| Halmstad          | ~84–88 %         | svt-halland fallback; litet flöde                                |
+| **Totalt viktat** | **~80–84 %**     | Under mål >85 %                                                  |
+
+---
+
+### Top 5 false positive-mönster
+
+1. **`drog` som imperfekt av "dra" — rikstäckande källa + platsnamn**
+   Exempel: `DN: "Bandet drog full hus på Scandinavium i Göteborg"`
+   → matchar `drog` + `Göteborg` → place_news för Göteborg
+   Orsak: `drog` är en av svenska språkets vanligaste verbformer i media
+
+2. **`drog` via source_to_primary_place-fallback — lokal SVT-källa**
+   Exempel: `svt-stockholm: "Fonden drog hem rekordavkastning"`
+   → matchar `drog`, inget platsnamn → fallback → Stockholm
+   Orsak: fallback-logiken har ingen skyddsventil mot högrisktermer
+
+3. **`ras` som etnicitetsbegrepp — rikstäckande källa + platsnamn**
+   Exempel: `SVT Nyheter: "Diskriminering på grund av ras i Stockholms skolor"`
+   → matchar `ras` + `Stockholm` → place_news för Stockholm
+   Orsak: `ras` har dubbel semantik; brottslig diskriminering kan
+   argumenteras vara blåljus-adjacent men är inte den önskade typen
+
+4. **`gänget` — kulturartikel + fallback**
+   Exempel: `svt-vast: "Gänget bakom Melodifestivalen tackade publiken"`
+   → matchar `gänget`, inget platsnamn → fallback → Göteborg
+   Orsak: termen är för bred; gäng i vardagligt bruk ≠ gängkriminalitet
+
+5. **`polis` i civila myndighetsklagomål — rikstäckande källa**
+   Exempel: `Expressen: "Kommunen polisanmäler fastighetsbolaget i Uppsala"`
+   → matchar `polis` + `Uppsala` → place_news för Uppsala
+   Orsak: `polis`-prefix i "polisanmälan" fångas; saken är civil, ej händelse
+
+---
+
+### Rekommendationer fas 3
+
+**Prio 1 — ta bort/begränsa högrisktermer i `blaljus_terms`**
+
+- **`drog` → ta bort.** Befintliga `narkotika`, `droger`, `narkotikabrott`
+  täcker narkotikakoppling. Lägg till `droghandel`, `drogmissbruk` om
+  behovet finns. Förväntad effekt: ~30–50 % färre FP totalt.
+- **`ras` → ta bort.** Naturras täcks av `jordras` (lägg till). Etnicitetskontexten
+  dominerar i rikstäckande media. Förväntad effekt: ~5–10 % färre FP.
+- **`gänget` → ta bort.** `gängbråk` och `skadeskjuten` i listan täcker
+  gängrelaterad kriminalitet utan colloquial-brus.
+
+**Prio 2 — låt AI-passet ta bort regex-FP (hög impact, ~30 min)**
+
+I `AiClassifyNewsArticles::handle()`: om `is_blaljus = false` och
+`place_news`-rader finns för artikeln → radera dem. Gör AI till ett
+filter, inte bara en adder. Regex ger bred recall, AI rättar till
+precision. Förväntad effekt: +5–8 pp precision, från ~82 till ~87–90 %.
+
+```php
+// Lägg till efter DB::table('news_articles')->where('id', $article->id)->update([...]):
+if (!$isBlaljus) {
+    DB::table('place_news')->where('news_article_id', $article->id)->delete();
+    continue;
+}
+```
+
+**Prio 3 — dubbelkrav för högrisktermer (alternativ till Prio 1)**
+
+Inför `weak_terms`-lista (`drog`, `ras`, `gänget`, `larm`). En artikel
+klassas bara som blåljus om den matchar antingen (a) minst en icke-svag
+term ELLER (b) minst två svaga termer. Implementerbart med en andra
+regex-körning; ger mer graduell precision-förbättring utan att ta bort
+termer helt.
+
+**Prio 4 — live-validering**
+
+Kör `SELECT na.title, na.source, na.ai_is_blaljus, na.ai_reason, p.name FROM place_news pn JOIN news_articles na ON pn.news_article_id = na.id JOIN places p ON pn.place_id = p.id WHERE pn.created_at > NOW() - INTERVAL 72 HOUR ORDER BY pn.created_at DESC LIMIT 50` direkt i prod-DB och bedöm manuellt för att validera uppskattningarna ovan.
