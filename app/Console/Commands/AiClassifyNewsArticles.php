@@ -61,10 +61,47 @@ class AiClassifyNewsArticles extends Command
         // (osannolikt på kommunnivå men teoretiskt möjligt), tar vi alla.
         $kommunMap = $this->buildKommunMap();
 
+        // Pre-filter (todo #81): skippa AI-anropet helt om titel + summary
+        // inte innehåller en enda blåljus-term ur config-listan. Sparar
+        // ~30-40 % av Haiku-volymen utan att rubba blåljus-recall — listan
+        // är medvetet bred (~80 termer) och AI:n skulle ändå avfärda dessa
+        // som "ej blåljus". Loggar `prefilter-skip` i ai_reason för audit.
+        $blaljusTerms = (array) config('news-classification.blaljus_terms', []);
+
         $now = Carbon::now()->toDateTimeString();
-        $stats = ['ai_blaljus' => 0, 'place_rows_added' => 0, 'no_place_match' => 0, 'errors' => 0];
+        $stats = [
+            'ai_blaljus' => 0,
+            'place_rows_added' => 0,
+            'no_place_match' => 0,
+            'errors' => 0,
+            'prefilter_skipped' => 0,
+        ];
 
         foreach ($articles as $article) {
+            $haystack = mb_strtolower(($article->title ?? '') . ' ' . ($article->summary ?? ''));
+
+            $hasKeyword = false;
+            foreach ($blaljusTerms as $term) {
+                if (mb_strpos($haystack, mb_strtolower((string) $term)) !== false) {
+                    $hasKeyword = true;
+                    break;
+                }
+            }
+
+            if (!$hasKeyword) {
+                $stats['prefilter_skipped']++;
+                if ($dryRun) {
+                    $this->line('PREFILTER-SKIP: ' . mb_substr($article->title, 0, 80));
+                    continue;
+                }
+                DB::table('news_articles')->where('id', $article->id)->update([
+                    'ai_classified_at' => $now,
+                    'ai_is_blaljus' => false,
+                    'ai_reason' => '[prefilter-skip] ingen blåljus-term i titel/summary',
+                ]);
+                continue;
+            }
+
             $userMessage = sprintf(
                 "Källa: %s\nTitel: %s\nSammanfattning: %s",
                 $article->source,
@@ -137,7 +174,8 @@ class AiClassifyNewsArticles extends Command
         }
 
         $this->info(sprintf(
-            'Klart. AI-blåljus: %d, plats-rader: %d, ingen plats-match: %d, fel: %d.',
+            'Klart. Prefilter-skip: %d, AI-blåljus: %d, plats-rader: %d, ingen plats-match: %d, fel: %d.',
+            $stats['prefilter_skipped'],
             $stats['ai_blaljus'],
             $stats['place_rows_added'],
             $stats['no_place_match'],
