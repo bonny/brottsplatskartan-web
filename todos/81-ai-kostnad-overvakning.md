@@ -1,5 +1,5 @@
-**Status:** aktiv — fas 1 implementerad + verifierad lokalt 2026-05-15, väntar push/deploy + prod-data-soak
-**Senast uppdaterad:** 2026-05-15 (fas 1 implementerad: migration + config/ai-pricing.php + LogAiUsage-listener + ai:usage-command + prune-job. PHPStan grön. Lokal smoke-test loggade NewsClassifier-anrop korrekt: 2941 input + 141 output tokens = $0.003646)
+**Status:** aktiv — fas 1 + tre lågrisk-spakar deployade 2026-05-15, ~74 % kostnadsbesparing verifierad. 7d-uppföljning 2026-05-23.
+**Senast uppdaterad:** 2026-05-16 (deploy 2026-05-15 19:38: EventNewsMatcher 4h→12h + limit 50→20 + NewsClassifier regex-prefilter. Verifierat på prod: $10.40 → $2.60/dygn (~74 % besparing). GA4-CTR ~1.7 klick/dygn = $1.62/klick. Behåll — diminishing returns på fortsatt optimering)
 
 # Todo #81 — Håll koll på hur mycket AI-anropen kostar
 
@@ -205,6 +205,60 @@ Lägg i `config/ai-pricing.php`, env-overridable om vi vill testa.
 - **Tabellstorlek:** ~400 anrop/dygn × 90 dagar = 36k rader. Försumbart, men prune-job skadar inte.
 - **Context-data via `$_SERVER['argv']`** är ful men funktionell. Acceptabelt så länge vi inte behöver bryta ner på något finkornigare än kommando-namn.
 - **Steg 0-risk:** om Stockholm-jobbet sänks till 15 min kan en specifik UX-feature på Stockholm-sidor (typ-A-titlar i nära realtid) försämras. Verifiera vad som faktiskt konsumerar Stockholm-titlar i realtid — sannolikt inget.
+
+## Resultat 2026-05-16 — post-deploy verifiering
+
+Tre lågrisk-spakar deployade 2026-05-15 19:38 (commit `9ca9739`):
+
+1. **EventNewsMatcher schemaläggning 4h → 12h** (6 → 2 körningar/dygn)
+2. **EventNewsMatcher --limit 50 → 20** (top-20 mest visade events)
+3. **Regex-prefilter på NewsClassifier** — skippa AI-anrop om titel + summary saknar ALLA ~80 blåljus-termer i `config/news-classification.php`
+
+### Kostnad
+
+| Mätning          | Före   | Efter | Besparing                           |
+| ---------------- | ------ | ----- | ----------------------------------- |
+| Total $/dygn     | $10.40 | $2.60 | **~74 %** ($228/mån)                |
+| EventNewsMatcher | $4.50  | $0.55 | -88 %                               |
+| NewsClassifier   | $5.50  | $2.05 | -63 % (prefilter ~50 % av artiklar) |
+| Sonnet-trio      | $0.40  | $0.10 | försumbar                           |
+
+### Klick-värde (GA4, 30d-data)
+
+Utgående klick till nyhetsdomäner (svt, aftonbladet, mitti, expressen, dn, m.fl.) sammanlagt **~67 klick/30d ≈ 2.2/dygn**. Bryts ner:
+
+| Yta                            | Klick/30d | Källa            |
+| ------------------------------ | --------- | ---------------- |
+| Tier 1 ortssidor + plats-sidor | ~26       | NewsClassifier   |
+| Event-sidor                    | ~24       | EventNewsMatcher |
+| Bloggposter (gamla)            | ~12       | Inget AI         |
+| Övriga                         | ~5        | Blandning        |
+
+CTR från top-ortssidor: 0.07–0.32 % — låg men inte noll. `/stockholm` ger 0.07 % på 11k PV/30d.
+
+### Cost / klick per feature
+
+| Feature          | $/dygn    | Klick/dygn | $/klick   |
+| ---------------- | --------- | ---------- | --------- |
+| NewsClassifier   | $2.05     | 0.87       | $2.36     |
+| EventNewsMatcher | $0.55     | 0.80       | $0.69     |
+| Sonnet           | $0.10     | —          | —         |
+| **Total**        | **$2.70** | **1.67**   | **$1.62** |
+
+EventNewsMatcher är nu billig per klick — solid ROI. NewsClassifier är dyrare per klick men driver också möjligt-osynligt SEO-värde via rikare ortssidor.
+
+### Beslut 2026-05-16
+
+**Behåll nuvarande config.** Diminishing returns på fortsatt optimering — krympa prompts (0a) sparar ~$30-50/mån men kräver A/B-precisions-stickprov, hög arbete relativt vinst. $2.60/dygn = $80/mån är inom rimligt operativt overhead.
+
+### 7d-uppföljning 2026-05-23
+
+Verifiera att $2.60/dygn håller över en hel vecka (ingen dygnsvariation). Kolla även:
+
+- `php artisan ai:usage --days=7 --by=agent` på prod (per-agent split)
+- `php artisan ai:usage --days=7 --by=day` (variation över veckodagar)
+- GA4: klick per nyhetsdomän senaste 7d, jämför mot baseline (~2/dygn)
+- Spot-check ortssidor (`/stockholm`, `/malmo`, `/uppsala`) att nyhetsblocket fortfarande visar artiklar (prefilter har inte rasat recall)
 
 ## Confidence
 
