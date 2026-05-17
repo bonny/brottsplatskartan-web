@@ -49,30 +49,30 @@ MCP:s som `mcp-gsc`, SSH-nycklar till prod, eller mänsklig bedömning).
 Granska veckovis. När en åtgärd är gjord, flytta raden till "Avklarade" nedan
 eller markera todon som klar.
 
-| Datum      | Åtgärd                                                                                                      | Todo                                                   |
-| ---------- | ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
-| 2026-06-29 | MCF räddningsstatistik — 60d-mätning (förlängd från 14d efter att 2026-05-13 inte gav attribuerbar signal)  | [#39](todos/39-msb-brand-rakning-statistik.md)         |
-| 2026-05-15 | #64 precision-stickprov — 50 artiklar, mål >85 %                                                            | [#64](todos/64-per-plats-nyhetsaggregering.md)         |
-| 2026-05-25 | GSC-mätning AI-titlar — första check (4v post-deploy)                                                       | [#36](todos/36-gsc-matning-ai-titlar.md)               |
-| 2026-05-27 | Månadsvyer-pilot — 30d-mätning Uppsala/Västerås                                                             | [#25](todos/25-manadsvyer-datum-routes.md)             |
-| 2026-05-31 | #64 CTR + dwell time + GSC-position — 30d-jämförelse                                                        | [#64](todos/64-per-plats-nyhetsaggregering.md)         |
-| 2026-06-13 | #75 GSC-jämförelse `/lan/...`-queries (mål: pos 7-8 → 5-6, ~1 350 clicks/90d)                               | [#75](todos/done/75-slug-aware-lan-controller.md)      |
-| 2026-07-12 | #76 Fas B — 60d GSC-mätning Tier 1 city titles (mål: pos ≤4 på "polisen händelser <stad> idag")             | [#76](todos/76-polisen-handelser-stad-idag.md)         |
-| 2026-06-09 | #50 Fas 2 — 28d-gate Tier 1 trafik-aggregat (impressions, pos < 30, AdSense-flag, CTR/pos-regression)       | [#50](todos/50-trafikverket-trafikinformation-live.md) |
-| 2026-06-11 | #63 Fas 1 — AI-precision stickprov (30 träffar, mål >80 %) + CTR/dwell på event-sidor med Mediabevakning    | [#63](todos/done/63-relaterade-nyheter-trafikprio.md)  |
-| 2026-06-22 | GSC-mätning AI-titlar — andra check (8v)                                                                    | [#36](todos/36-gsc-matning-ai-titlar.md)               |
-| 2026-06-30 | GSC image-search — 60d-mätning av nya `getMapAltText()`                                                     | [#62](todos/done/62-getmapalttext-image-seo.md)        |
-| 2026-07-27 | GSC-mätning AI-titlar — tredje check (12v) + beslut om fas 3                                                | [#36](todos/36-gsc-matning-ai-titlar.md)               |
-| 2026-07-27 | Indexerade pages — slutmätning (90d post-noindex)                                                           | [#29](todos/29-audit-indexerade-pages.md)              |
-| 2026-07-30 | GSC-monitor: kvartalsrapport (90d compare mot baseline)                                                     | [#52](todos/52-gsc-low-rank-monitoring.md)             |
-| 2026-06-12 | #72 GSC-mätning "polisinsats" — 30d post-deploy (mål: pos 9.3 → topp-3, ~790 clicks/90d)                    | [#72](todos/72-typ-polisinsats-alias.md)               |
-| 2026-05-24 | #81 soak-uppföljning: hela veckans dynamik post-deploy, beslut om att stänga av EventNewsMatcher (-$18/mån) | [#81](todos/81-ai-kostnad-overvakning.md)              |
+| Datum      | Åtgärd                                                                                                                                | Todo                                                   |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
+| 2026-06-29 | MCF räddningsstatistik — 60d-mätning (förlängd från 14d efter att 2026-05-13 inte gav attribuerbar signal)                            | [#39](todos/39-msb-brand-rakning-statistik.md)         |
+| 2026-05-15 | #64 precision-stickprov — 50 artiklar, mål >85 %                                                                                      | [#64](todos/64-per-plats-nyhetsaggregering.md)         |
+| 2026-05-25 | GSC-mätning AI-titlar — första check (4v post-deploy)                                                                                 | [#36](todos/36-gsc-matning-ai-titlar.md)               |
+| 2026-05-27 | Månadsvyer-pilot — 30d-mätning Uppsala/Västerås                                                                                       | [#25](todos/25-manadsvyer-datum-routes.md)             |
+| 2026-05-31 | #64 CTR + dwell time + GSC-position — 30d-jämförelse                                                                                  | [#64](todos/64-per-plats-nyhetsaggregering.md)         |
+| 2026-06-13 | #75 GSC-jämförelse `/lan/...`-queries (mål: pos 7-8 → 5-6, ~1 350 clicks/90d)                                                         | [#75](todos/done/75-slug-aware-lan-controller.md)      |
+| 2026-07-12 | #76 Fas B — 60d GSC-mätning Tier 1 city titles (mål: pos ≤4 på "polisen händelser <stad> idag")                                       | [#76](todos/76-polisen-handelser-stad-idag.md)         |
+| 2026-06-09 | #50 Fas 2 — 28d-gate Tier 1 trafik-aggregat (impressions, pos < 30, AdSense-flag, CTR/pos-regression)                                 | [#50](todos/50-trafikverket-trafikinformation-live.md) |
+| 2026-06-11 | #63 Fas 1 — AI-precision stickprov (30 träffar, mål >80 %) + CTR/dwell på event-sidor med Mediabevakning                              | [#63](todos/done/63-relaterade-nyheter-trafikprio.md)  |
+| 2026-06-22 | GSC-mätning AI-titlar — andra check (8v)                                                                                              | [#36](todos/36-gsc-matning-ai-titlar.md)               |
+| 2026-06-30 | GSC image-search — 60d-mätning av nya `getMapAltText()`                                                                               | [#62](todos/done/62-getmapalttext-image-seo.md)        |
+| 2026-07-27 | GSC-mätning AI-titlar — tredje check (12v) + beslut om fas 3                                                                          | [#36](todos/36-gsc-matning-ai-titlar.md)               |
+| 2026-07-27 | Indexerade pages — slutmätning (90d post-noindex)                                                                                     | [#29](todos/29-audit-indexerade-pages.md)              |
+| 2026-07-30 | GSC-monitor: kvartalsrapport (90d compare mot baseline)                                                                               | [#52](todos/52-gsc-low-rank-monitoring.md)             |
+| 2026-06-12 | #72 GSC-mätning "polisinsats" — 30d post-deploy (mål: pos 9.3 → topp-3, ~790 clicks/90d)                                              | [#72](todos/72-typ-polisinsats-alias.md)               |
+| 2026-05-24 | #81 soak-uppföljning: verifiera ny ~$1.60/dygn-takt efter EventNewsMatcher-avstängning + beslut om NewsClassifier-prefilter-skärpning | [#81](todos/81-ai-kostnad-overvakning.md)              |
 
 ### Avklarade uppföljningar
 
 | Planerat   | Utfört     | Åtgärd                                                                                                                                                 | Todo                                                         |
 | ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------ |
-| 2026-05-23 | 2026-05-17 | #81 7d-uppföljning tidigarelagd efter faktura: $2.20/dygn håller, värdes-review klar, EventNewsMatcher kandidat för avstängning (1.6 % event-täckning) | [#81](todos/81-ai-kostnad-overvakning.md)                    |
+| 2026-05-23 | 2026-05-17 | #81 7d-uppföljning tidigarelagd efter faktura: $2.20/dygn håller, värdes-review klar, EventNewsMatcher avstängd (1.6 % event-täckning, -$18/mån)       | [#81](todos/81-ai-kostnad-overvakning.md)                    |
 | 2026-05-13 | 2026-05-13 | #39 MCF 14d-check: ingen attribuerbar effekt; Tier 1 click-uppgång confounded med #24/#33/#10; queries räddning/bränder saknas. Mätperiod → 60d        | [#39](todos/39-msb-brand-rakning-statistik.md)               |
 | 2026-05-31 | 2026-05-13 | `/k/v1/`-rollout — 12d-mätning: 99.7 % 301, 0.24 % 404 (acceptabelt), hit rate 95.5 %, app-CPU 0.02 %. Stängde tidigt, #66 done                        | [#66](todos/done/66-uppfoljning-55-kortare-kartbild-urls.md) |
 | 2026-05-10 | 2026-05-12 | Trafikverket Fas 1 soak + gates-beslut: 6/6 OK (volym/CWV/rate-limit/GSC/prune/logs) — grönt ljus Fas 2. Pre-existing CWV på `/karta` flyttat till #70 | [#50](todos/50-trafikverket-trafikinformation-live.md)       |
