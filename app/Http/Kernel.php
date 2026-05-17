@@ -25,6 +25,7 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\RedirectBytSida::class,
         \App\Http\Middleware\DebugBarMaybeEnable::class,
         \App\Http\Middleware\CityRedirectMiddleware::class,
+        \App\Http\Middleware\NoIndexCacheBuster::class,
         RedirectIndexPhp::class
     ];
 

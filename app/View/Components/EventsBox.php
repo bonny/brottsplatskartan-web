@@ -47,15 +47,12 @@ class EventsBox extends Component {
                 return null;
             }
 
-            $showReloadLink = $data['attributes']->get('show-reload-link', 'true') === 'true';
-
             return view('components.events-box')
                 ->with('events', $events)
                 ->with('containerId', $containerId)
                 ->with('eventsType', $eventsType)
                 ->with('title', $title)
-                ->with('moreEventsLink', $moreEventsLink)
-                ->with('showReloadLink', $showReloadLink);
+                ->with('moreEventsLink', $moreEventsLink);
         };
     }
 }

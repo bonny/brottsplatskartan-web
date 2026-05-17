@@ -19,14 +19,6 @@
             padding-bottom: var(--default-margin-half);
         }
 
-        .Timeline-reloadLink {
-            display: block;
-            font-size: var(--font-size-medium-2);
-            padding-left: var(--default-margin);
-            color: inherit;
-            line-height: 1;
-        }
-
         .Timeline-items {
             list-style: none;
             padding: 0;
@@ -170,11 +162,6 @@
                 {{ $title }}
             </a>
         </h2>
-
-        @if ($showReloadLink)
-            <a class="Timeline-reloadLink" rel="nofollow" href="{{ Request::Url() }}?t={{ time() . rand() }}#{{ $containerId }}">
-                ↻ <span class="sr-only">Uppdatera</span></a>
-        @endif
     </div>
 
     <ul class='Timeline-items'>
