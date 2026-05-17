@@ -1,5 +1,5 @@
-**Status:** aktiv — fas 1 + tre lågrisk-spakar deployade 2026-05-15, ~74 % kostnadsbesparing verifierad. 7d-uppföljning 2026-05-23.
-**Senast uppdaterad:** 2026-05-16 (deploy 2026-05-15 19:38: EventNewsMatcher 4h→12h + limit 50→20 + NewsClassifier regex-prefilter. Verifierat på prod: $10.40 → $2.60/dygn (~74 % besparing). GA4-CTR ~1.7 klick/dygn = $1.62/klick. Behåll — diminishing returns på fortsatt optimering)
+**Status:** aktiv — EventNewsMatcher avstängd 2026-05-17 (-$18/månad). Soak till ~2026-05-24 för att verifiera ny dygnstakt ~$1.60.
+**Senast uppdaterad:** 2026-05-17 (kommenterade ut event-news-match-schemat i Kernel.php — 1.6 % event-täckning motiverar inte $18/mån. NewsClassifier behållen, ev. skärpa prefilter efter #36-data 2026-05-25.)
 
 # Todo #81 — Håll koll på hur mycket AI-anropen kostar
 
@@ -251,14 +251,95 @@ EventNewsMatcher är nu billig per klick — solid ROI. NewsClassifier är dyrar
 
 **Behåll nuvarande config.** Diminishing returns på fortsatt optimering — krympa prompts (0a) sparar ~$30-50/mån men kräver A/B-precisions-stickprov, hög arbete relativt vinst. $2.60/dygn = $80/mån är inom rimligt operativt overhead.
 
-### 7d-uppföljning 2026-05-23
+### Tidigarelagd uppföljning 2026-05-17 — kostnad håller, värde är frågan
 
-Verifiera att $2.60/dygn håller över en hel vecka (ingen dygnsvariation). Kolla även:
+Faktura natt 2026-05-17 triggade ny granskning. Inga kostnader klättrar tillbaka — det är normal $10 auto-recharge som nu tickar var 3–4:e dygn istället för dagligen.
 
-- `php artisan ai:usage --days=7 --by=agent` på prod (per-agent split)
-- `php artisan ai:usage --days=7 --by=day` (variation över veckodagar)
-- GA4: klick per nyhetsdomän senaste 7d, jämför mot baseline (~2/dygn)
-- Spot-check ortssidor (`/stockholm`, `/malmo`, `/uppsala`) att nyhetsblocket fortfarande visar artiklar (prefilter har inte rasat recall)
+**Kostnad per dygn post-deploy:**
+
+| Dag                  | Anrop | $     |
+| -------------------- | ----- | ----- |
+| 2026-05-16 (full)    | 524   | $2.22 |
+| 2026-05-17 (partial) | 246   | $1.07 |
+
+**Per agent 2026-05-16 (full dag post-deploy):**
+
+| Agent              | Anrop | $/dygn | $/mån   |
+| ------------------ | ----- | ------ | ------- |
+| NewsClassifier     | 326   | $1.23  | **$37** |
+| EventNewsMatcher   | 171   | $0.59  | **$18** |
+| EventTitleRewriter | 20    | $0.23  | $7      |
+| MonthlySummary     | 3     | $0.13  | $4      |
+| DailySummary       | 4     | $0.04  | $1      |
+| **Total**          |       |        | **$67** |
+
+### Värdes-review per agent 2026-05-17
+
+**Synlighet av AI-output (senaste 30d, prod-DB):**
+
+| Agent              | Volym                                    | Synligt på sajten                              |
+| ------------------ | ---------------------------------------- | ---------------------------------------------- |
+| NewsClassifier     | 14 618 artiklar klassade, 18.7 % blåljus | "Senaste nyheter i {ort}" på ortssidor         |
+| EventNewsMatcher   | 203 matches, 31 unika events             | **31/1925 events (1.61 %) får Mediabevakning** |
+| EventTitleRewriter | 588 rewrites                             | 30.5 % av events får AI-titel                  |
+
+**GA4 outbound-klick 30d (nyhetsdomäner):**
+
+| Domän          | Klick/30d |
+| -------------- | --------- |
+| svt.se         | 25        |
+| mitti.se       | 17        |
+| aftonbladet.se | 14        |
+| expressen.se   | 12        |
+| övriga (3 st)  | 6         |
+| **Summa**      | **74**    |
+
+Cost / klick:
+
+| Feature          | $/mån | Klick/mån (outbound) | $/klick   |
+| ---------------- | ----- | -------------------- | --------- |
+| NewsClassifier   | $37   | ~26 (ortssidor)      | **$1.42** |
+| EventNewsMatcher | $18   | ~24 (event-sidor)    | **$0.75** |
+| Titel-rewrites   | $7    | — (intern UX/SEO)    | n/a       |
+| Summaries        | $5    | — (intern UX/SEO)    | n/a       |
+
+**Granskning per agent:**
+
+1. **NewsClassifier ($37/mån, $1.42/klick) — behåll, men gör om regex-prefiltret**
+    - 81 % av klassade artiklar avfärdas (non-blåljus). 14 618 anrop × 81 % = 11 840 onödiga anrop/månad.
+    - Regex-prefiltret deployat 2026-05-15 fångar bara ~50 %. Skärp det → kan halvera kostnaden till ~$18/mån.
+    - SEO-värde: omätt, men ortssidor-news-block är synligt på `/stockholm`, `/goteborg`, `/malmo`, `/uppsala` m.fl. som driver merparten av trafiken. Kan bidra till engagement/SEO på sidor som redan rankar.
+    - Outbound-klick är inte hela värdet — interna klick + dwell time + content-freshness räknas också.
+
+2. **EventNewsMatcher ($18/mån, $0.75/klick) — kandidat för avstängning**
+    - Bara **31 av 1925 events (1.61 %)** får Mediabevakning över 30d. 98 % av eventen ser ingenting.
+    - Det är fortfarande billigare per klick än NewsClassifier, men täckningen är så låg att UX-värdet är försumbart för 98 % av besökarna.
+    - **Förslag:** Stäng av tills #60-fas3 (bredare rollout) eller bättre kandidat-urval finns. Sparar $18/mån, förlorar 24 klick/mån.
+
+3. **EventTitleRewriter ($7/mån) — behåll, vänta på #36**
+    - 30.5 % av events får omskriven titel. Affecterar event-titlar i listor, meta-titles, sociala embeddings, kartmarkers.
+    - SEO-effekt mäts av [#36](36-gsc-matning-ai-titlar.md) — första check 2026-05-25, andra 2026-06-22, tredje 2026-07-27.
+    - $7/mån är ingen kostnad värd att slåss om innan #36-data finns.
+
+4. **Daily/MonthlySummary ($5/mån) — behåll**
+    - Liten kostnad, genererar text för Tier 1-ortssidor. Bidrar till content-rikedom.
+    - Inte värt en separat utvärdering.
+
+### Beslutspunkter 2026-05-17
+
+A. **Stäng av EventNewsMatcher** → sparar $18/mån, förlorar 24 klick/mån + ~1.6 % event-yta. **Rekommenderat.**
+B. **Skärp regex-prefilter på NewsClassifier** → kan halvera till ~$18/mån. Kräver stickprov för att inte rasa recall. Halvdags arbete.
+C. **Behåll allt som det är** → $67/mån är inom rimligt operativt overhead. Vänta på #36-mätning för bättre data.
+
+Min rekommendation: **A nu, B efter #36-data 2026-05-25.** Total potentiell besparing: $35–40/mån utöver befintliga $228/mån.
+
+### Nästa uppföljning
+
+7-dygns soak till 2026-05-24 (sjuden dag post-deploy) för att se hela veckans dynamik innan EventNewsMatcher stängs av — om utvecklingen håller stänger vi då.
+
+### 7d-uppföljning 2026-05-23 (orig plan)
+
+~~Verifierad i förtid 2026-05-17 efter faktura-trigger.~~ Se ovan.
 
 ## Confidence
 

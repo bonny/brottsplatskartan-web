@@ -184,16 +184,17 @@ class Kernel extends ConsoleKernel
             ->withoutOverlapping()
             ->name('news-prune');
 
-        // Event ↔ artikel-matchning (todo #63 fas 1). Plockar top-20 mest
-        // visade events senaste 7d och matchar dem mot place_news ±2d via
-        // Haiku 4.5. Var 12:e h (00:25 + 12:25) ger latens 0-12 h vilket är
-        // OK för Mediabevakning-sektionen. Tidigare: top-50 var 4:e h
-        // (todo #81: ~$4.50/dygn → ~$0.60/dygn).
-        $schedule->command('app:event-news:match --limit=20')
-            ->cron('25 */12 * * *')
-            ->withoutOverlapping()
-            ->name('event-news-match')
-            ->when($aiAllowed);
+        // Event ↔ artikel-matchning (todo #63 fas 1) — AVSTÄNGD 2026-05-17.
+        // Värdes-review #81 visade att bara 31 av 1925 events (1.6 %) får
+        // Mediabevakning, dvs 98 % av besökarna ser ingenting från agenten.
+        // Outbound-klick ~24/månad till $0.75/klick — för låg täckning för att
+        // motivera $18/månad. Återaktivera när #60 fas 3 ger bredare urval
+        // eller när bättre kandidat-filtrering finns på plats.
+        // $schedule->command('app:event-news:match --limit=20')
+        //     ->cron('25 */12 * * *')
+        //     ->withoutOverlapping()
+        //     ->name('event-news-match')
+        //     ->when($aiAllowed);
     }
 
     /**
