@@ -111,13 +111,13 @@ Route::get('/sitemap-events-{year}.xml', function ($year) {
 })->where('year', '[0-9]{4}');
 
 Route::get('/handelser/{date}', [StartController::class, 'day'])->name('startDatum');
-Route::get('/handelser/', [StartController::class, 'day'])->name('handelser');
-// Route::redirect('/handelser/', '/');
 
-/**
- * Skicka vidare gamla /datum-urlar till /handelser
- */
-Route::redirect('/datum/', '/handelser/');
+// /handelser/ (utan datum) använde StartController@day = samma data som /.
+// 301 till / för att eliminera kanibalisering på "polisen händelser"-cluster.
+// Datum-aliaset /handelser/{date} ovan är opåverkat.
+Route::redirect('/handelser/', '/', 301);
+
+Route::redirect('/datum/', '/', 301);
 Route::get('/datum/{date}', function ($date) {
     return redirect()->route('startDatum', ['date' => $date]);
 });

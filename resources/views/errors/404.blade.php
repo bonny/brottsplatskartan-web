@@ -27,7 +27,7 @@
             @endforeach
         </ul>
 
-        <p><a href="{{ route('handelser') }}">› Visa fler nya händelser</a></p>
+        <p><a href="{{ route('start') }}">› Visa fler nya händelser</a></p>
     @endif
 
     @if ($most_read_events->count())

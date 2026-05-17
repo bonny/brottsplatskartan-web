@@ -48,6 +48,7 @@ bpk*.gz
 /tmp-startsida-analys-2026-05-12/
 /tmp-konkurrent-analys/
 tmp-ai-baseline
+/tmp-gsc-46/
 .claude/scheduled_tasks.lock
 
 # Playwright MCP-loggar/snapshots — debug-artefakter, inte källkod

@@ -173,7 +173,7 @@
         </ul>
 
         <div class="VadHanderNu__footer">
-            <a href="{{ route('handelser') }}" class="VadHanderNu__footerLink">Fler händelser →</a>
+            <a href="{{ route('start') }}" class="VadHanderNu__footerLink">Fler händelser →</a>
         </div>
     </section>
 @endif

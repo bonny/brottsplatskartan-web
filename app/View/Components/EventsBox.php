@@ -28,7 +28,7 @@ class EventsBox extends Component {
             if ($eventsType === 'latest') {
                 $title = 'Senaste händelserna';
                 $containerId = 'senaste';
-                $moreEventsLink = route('handelser');
+                $moreEventsLink = route('start');
                 $events = Helper::getLatestEventsByParsedDate(10);
             } elseif ($eventsType === 'trending') {
                 $title = 'Mest lästa händelserna';

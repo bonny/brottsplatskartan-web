@@ -165,7 +165,7 @@
 
     <div class="Timeline-header">
         <h2 class="Timeline-title">
-            <a class="Timeline-titleLink" href="{{ route('handelser') }}">
+            <a class="Timeline-titleLink" href="{{ route('start') }}">
                 <span class="Timeline-title-circle"></span>
                 {{ $title }}
             </a>

@@ -4,7 +4,7 @@ Index över förbättringsarbete. Varje todo har en egen fil under
 [`todos/`](todos/) med fullständig analys. Konvention och
 mappstruktur: [`todos/README.md`](todos/README.md).
 
-Senast uppdaterad: 2026-05-16 (+#81 deployad + verifierad — tre lågrisk-spakar (EventNewsMatcher 4h→12h, limit 50→20, NewsClassifier regex-prefilter) sänkte AI-kostnaden $10.40 → $2.60/dygn (~74 %). GA4-CTR ~1.7 klick/dygn = $1.62/klick. 7d-uppföljning 2026-05-23.
+Senast uppdaterad: 2026-05-17 (+#46 minimal-fix deployad: 301 /handelser/ → /, 301 /datum/ → / direkt, "Senaste" dolt från menyn, 5 interna route('handelser') → route('start'). Full omarbetning parkerad tills #76).
 
 ## Aktiva
 
@@ -14,7 +14,6 @@ Senast uppdaterad: 2026-05-16 (+#81 deployad + verifierad — tre lågrisk-spaka
 | 29  | Audit + reducera indexerade pages                       | Datum-routes + thin singles deployat, ~22k pages noindex:as. Mätperiod 30–90d i GSC                                                                        | [todos/29-audit-indexerade-pages.md](todos/29-audit-indexerade-pages.md)                                             |
 | 36  | GSC-mätning av AI-titlars CTR-effekt                    | Mätperiod startad 2026-04-27, första check 2026-05-25                                                                                                      | [todos/36-gsc-matning-ai-titlar.md](todos/36-gsc-matning-ai-titlar.md)                                               |
 | 39  | MSB/MCF brand- och räddningsstatistik per kommun        | 14d-check 2026-05-13 — ingen attribuerbar MCF-effekt (confounded med #24/#33/#10), mätperiod förlängd till 60d (2026-06-29)                                | [todos/39-msb-brand-rakning-statistik.md](todos/39-msb-brand-rakning-statistik.md)                                   |
-| 46  | Slå samman Händelser/Senaste/Mest lästa i menyn         | Importerad från GitHub #76 — kräver design + redirect-strategi                                                                                             | [todos/46-meny-handelser-konsolidering.md](todos/46-meny-handelser-konsolidering.md)                                 |
 | 50  | Trafikverket Trafikinformation: live på kartan          | Fas 2 Tier 1 lyft 2026-05-12 — noindex borta, vägarbete-fold, sitemap. 28d-gate till 2026-06-09 + manuell GSC Request Indexing kvar                        | [todos/50-trafikverket-trafikinformation-live.md](todos/50-trafikverket-trafikinformation-live.md)                   |
 | 51  | Övriga datakällor: research-skiss                       | Live-testad 2026-05-13 — A SMHI→#69, B RTÖG pilot-klar, C Krisinfo avfärdad; F/E/G/H låg prio                                                              | [todos/51-ovriga-datakallor-research.md](todos/51-ovriga-datakallor-research.md)                                     |
 | 52  | GSC-monitor: lågrankade högvolym-queries                | Baseline klar 2026-04-30 — 7 åtgärder identifierade (A–G), ~25k clicks/90d potential                                                                       | [todos/52-gsc-low-rank-monitoring.md](todos/52-gsc-low-rank-monitoring.md)                                           |
@@ -83,6 +82,7 @@ Sorterade nyast först.
 
 | #   | Titel                                                                       | Klar       | Fil                                                                                                            |
 | --- | --------------------------------------------------------------------------- | ---------- | -------------------------------------------------------------------------------------------------------------- |
+| 46  | Meny-konsolidering — minimal-fix: 301 /handelser/ → /, dölj "Senaste"       | 2026-05-17 | [todos/done/46-meny-handelser-konsolidering.md](todos/done/46-meny-handelser-konsolidering.md)                 |
 | 59  | "Vad händer nu"-ruta — pilot bakom `?show_live=1` (3 events/120min)         | 2026-05-13 | [todos/done/59-vad-hander-nu-ruta.md](todos/done/59-vad-hander-nu-ruta.md)                                     |
 | 77  | "aktuella brott" CTR-fix — diagnos visade att title/meta redan optimerade   | 2026-05-13 | [todos/done/77-aktuella-brott-ctr-fix.md](todos/done/77-aktuella-brott-ctr-fix.md)                             |
 | 75  | Slug-aware LanController (slug-form canonical, display 301:as)              | 2026-05-13 | [todos/done/75-slug-aware-lan-controller.md](todos/done/75-slug-aware-lan-controller.md)                       |

@@ -28,14 +28,6 @@
                 </li>
                 <li @class([
                     'SiteNav__item',
-                    'SiteNav__item--latest',
-                    'is-current' => request()->routeIs('handelser'),
-                ])>
-                    <a href="{{ route('handelser', [], false) }}">Senaste</a>
-                </li>
-
-                <li @class([
-                    'SiteNav__item',
                     'SiteNav__item--mostRead',
                     'is-current' => request()->routeIs('mostRead'),
                 ])>

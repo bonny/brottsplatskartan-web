@@ -6,7 +6,7 @@
              även i den faktiska sektionen längre ner). Länken har title-
              attribut för muspekare; ticker-elementet har aria-label. --}}
         <div class="sitebar__EventsTitle">
-            <a href="{{ route('handelser') }}" title="Gå till sidan med de senaste händelserna">
+            <a href="{{ route('start') }}" title="Gå till sidan med de senaste händelserna">
                 <span class="sr-only">Senaste händelse-ticker</span>
             </a>
         </div>
