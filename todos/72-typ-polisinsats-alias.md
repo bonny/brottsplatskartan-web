@@ -1,5 +1,5 @@
-**Status:** implementerad lokalt 2026-05-13 — väntar deploy + 30d GSC-mätning
-**Senast uppdaterad:** 2026-05-13 (implementation klar, rökstest ✓, PHPStan ✓)
+**Status:** deployat 2026-05-13 (auto-deploy via GitHub Actions, verifierat live i prod) — väntar 30d GSC-mätning till 2026-06-12
+**Senast uppdaterad:** 2026-05-19 (prod-verifiering: /typ/polisinsats → 200, slash-varianten → 301)
 **Källa:** #52 GSC-monitor — åtgärd D
 
 # Todo #72 — Egen `/typ/polisinsats` (alias för Polisinsats/kommendering)
