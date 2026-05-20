@@ -1,5 +1,5 @@
-**Status:** arkiverad/uppskjuten 2026-05-13 — premature; sammanslås troligen med #76 Fas A när det startas. Se "Review 2026-05-13" nedan.
-**Senast uppdaterad:** 2026-05-13
+**Status:** arkiverad/uppskjuten 2026-05-13 — premature; sammanslås troligen med #76 Fas A när det startas. Se "Review 2026-05-13" nedan. **Rättelse 2026-05-19:** grundpremissen (identiska titlar/H1) stämmer inte — se "Rättelse 2026-05-19".
+**Senast uppdaterad:** 2026-05-19
 
 # Todo #80 — Cannibalisering startsida `/` vs `/stockholm` på "polisen händelser"
 
@@ -142,3 +142,55 @@ inte bör startas i nuvarande form:
 
 I praktiken: denna todo bör sammanslås med #76 Fas A som en av flera
 besluts-output, inte handhanteras separat.
+
+## Rättelse 2026-05-19
+
+Grundpremissen var fel. Vid faktisk inspektion av koden (efter Fas
+B-deploy) skiljer sig titel och H1 mellan startsidan och Tier 1-städer
+betydligt — de var aldrig identiska:
+
+**Startsidan `/`** (`StartController.php:76` + `start.blade.php:44`):
+
+- title: `Polisens händelser - aktuella brott & senaste blåljusen`
+- H1: `Polisens händelser i hela Sverige`
+
+**`/stockholm`** (`config/tier1-cities.php:26-28` + `city.blade.php:26-29`):
+
+- title: `Polisen händelser Stockholm idag – brott, olyckor och larm`
+- H1: `Polishändelser i Stockholm` + subline `Brott, blåljus och larm – uppdateras live från polisen.se`
+
+Intent-axeln är **redan differentierad** ("i hela Sverige" vs
+"Stockholm idag") — vilket var #80:s föreslagna fix. Senior-review-
+påståendet att Fas B skulle göra dem identiska byggde på en
+felaktig läsning av commiten (4581ef6 rörde bara `tier1-cities.php`,
+inte startsidan).
+
+### Konsekvens
+
+- **#80 är inte bara premature utan delvis lösning-utan-problem.**
+  Den cannibalisering som syns på `polisen händelser` kan finnas,
+  men inte via identiska titlar.
+- **Stockholm-stagnationen** (klick 60 → 53 i 28d-fönstret 2026-04-18
+  → 2026-05-15, trots position-lyft) har troligen andra orsaker:
+    - Stockholm rankade redan starkt → liten vinstmarginal
+    - "polisen stockholm senaste nytt" är brand-trafik (73 % CTR,
+      pos 4.6 — folk söker direkt på oss, inte generiskt)
+    - Kortare 28d-fönster = mer brus
+- **Behåll arkiverad.** Återöppna bara om #76 Fas A-auditen visar
+  riktig SERP-rotation mellan `/` och `/stockholm` på en specifik
+  fras (inte bara delad ord-matchning).
+
+### Tier 1-rollout: faktiska resultat 28d efter Fas B (2026-04-18 → 2026-05-15)
+
+| Stad        | Klick före | Klick efter | Förändring     |
+| ----------- | ---------- | ----------- | -------------- |
+| Malmö       | 4          | 26          | **+22 (6.5x)** |
+| Göteborg    | 9          | 47          | **+38 (5.2x)** |
+| Helsingborg | 6          | 12          | +6 (2x)        |
+| Stockholm   | 60         | 53          | -7             |
+| Uppsala     | 6          | 4           | -2             |
+
+Mönster: stora städer med svag pre-ranking (Malmö, Göteborg) gynnas
+mest. Stockholm + Uppsala saknar lyft — men inte pga cannibalisering
+från `/`, snarare för att de redan var nära taket (Stockholm) eller
+har för låg total volym för signifikans (Uppsala).

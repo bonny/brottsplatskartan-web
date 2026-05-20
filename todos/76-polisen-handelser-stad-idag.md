@@ -1,5 +1,5 @@
-**Status:** aktiv — Fas B klar 2026-05-13 (title/h1/meta för 5 Tier 1-städer, v2 efter senior-SEO-review). Fas A/C/D/E kvar. Soft-404 → #79, cannibalisering startsida → #80.
-**Senast uppdaterad:** 2026-05-13
+**Status:** aktiv — Fas B klar 2026-05-13. Tidig 28d-signal 2026-05-19: Malmö +6.5x klick, Göteborg +5.2x — mallen funkar (se "Tidig signal" nedan). 60d-gate 2026-07-12 står kvar. Fas A/C/D/E kvar. Soft-404 → #79, cannibalisering startsida → #80 (arkiverad).
+**Senast uppdaterad:** 2026-05-19
 
 # Todo #76 — "polisen händelser X idag" + Malmö/Göteborg
 
@@ -226,3 +226,48 @@ Brottsplatskartan`) + `og:site_name` ger redan brand-display i
 - Stockholm rankar pos 2.2 på "senaste blåljusen stockholm" (26 %
   CTR). Vi tappar "senaste blåljusen" från title (fortfarande i
   subline). Övervaka för regression de första 14 dagarna.
+
+## Tidig signal 2026-05-19 (28d post-deploy)
+
+GSC-jämförelse 2026-04-18 → 2026-05-15 mot föregående 28d
+(2026-03-21 → 2026-04-17), filter `polisen <stad>`-fraser. Klick-deltat
+är primär metrik; impressions sekundärt (split rapporteras dubbelt
+under canonical-övergång — se Uppsala-noteringen).
+
+| Stad        | Klick före | Klick efter | Delta             |
+| ----------- | ---------- | ----------- | ----------------- |
+| Malmö       | 4          | 26          | **+22 (6.5x)** ⭐ |
+| Göteborg    | 9          | 47          | **+38 (5.2x)** ⭐ |
+| Helsingborg | 6          | 12          | +6 (2x)           |
+| Stockholm   | 60         | 53          | -7 (oförändrat)   |
+| Uppsala     | 6          | 4           | -2 (mätartefakt)  |
+
+Position-lyft (utvalda fraser):
+
+- `polisen malmö händelser`: 23.9 → 8.8
+- `polisen göteborg händelser`: 9.5 → 6.2
+- `händelser polisen göteborg`: 11.5 → 3.9
+- `polisen helsingborg händelser`: 8.8 → 8.4
+
+### Tolkning
+
+- **Mallen funkar entydigt** på Malmö + Göteborg (stora städer med
+  pre-deploy pos 9-24 → klart utrymme att vinna).
+- **Helsingborg** följer trenden men låg volym → litet absolut värde.
+- **Stockholm** rankade redan starkt (pos 4-7 på de flesta fraser) →
+  liten marginal kvar. Hypotes om cannibalisering med startsidan
+  (todo #80) avfärdad vid kod-inspektion — titlarna är redan
+  differentierade.
+- **Uppsala** "tappade" 2 klick, men det är en mätartefakt: GSC
+  rapporterar impressions på den 301:ade `/lan/Uppsala län`-URL:en
+  under en övergångsperiod (4-12v). Faktiska klick går till
+  `/uppsala` via redirect. Curl bekräftar att redirecten funkar
+  (CityRedirectMiddleware:63-66, todo #35).
+
+### Implikation för 60d-gaten
+
+- Tidig signal är positiv — håller den vid 60d är detta solid
+  evidens för att rulla ut mallen till Tier 2-städer (todo #24).
+- Uppsala-signalen blir ren när Google klart bytt canonical.
+- Stockholm kommer troligen fortsätta vara svår att flytta — det är
+  inte ett title-problem utan ett "redan-nära-taket"-problem.
