@@ -91,10 +91,9 @@ class CityController extends Controller
         $events = CrimeEvent::getEventsForCity(
             lat: $city['lat'],
             lng: $city['lng'],
-            perPage: 25,
+            limit: 25,
             nearbyInKm: $city['distance'],
-            days: 365,
-            page: $request->query('page', 1),
+            days: 30,
         );
 
         // Hämta AI-sammanfattningar endast på första sidan

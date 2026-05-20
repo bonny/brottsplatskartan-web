@@ -737,53 +737,43 @@ class CrimeEvent extends Model implements Feedable {
     }
 
     /**
-     * Get events near a specific location without caching.
+     * Senaste events inom Haversine-radie runt en punkt (Tier 1-städer).
      *
-     * Uses the Haversine formula to calculate distances between coordinates.
-     * 
-     * @param float $lat Latitude of the center point
-     * @param float $lng Longitude of the center point
-     * @param int $perPage Number of items per page
-     * @param int $nearbyInKm Maximum distance in kilometers
-     * @param int|null $page Current page number (null for auto-detect)
-     * @param int $days Number of days to filter by date
-     * @return \Illuminate\Pagination\LengthAwarePaginator
+     * Returnerar Collection, inte Paginator: stadssidan paginerar inte
+     * (sida 2+ 301:as i CityController), och `paginate()`s COUNT(*) över
+     * bbox + HAVING-distance dominerade query-tiden (~1.3 s lokalt).
+     *
+     * @return \Illuminate\Database\Eloquent\Collection<int, self>
      */
     public static function getEventsForCity(
         float $lat,
         float $lng,
-        int $perPage = 10,
+        int $limit = 25,
         int $nearbyInKm = 25,
-        ?int $page = null,
         int $days = 30
     ) {
+        $cache_key = "getEventsForCity:lat{$lat}:lng{$lng}:nearby{$nearbyInKm}:limit{$limit}:days{$days}";
 
-        $cache_key = "getEventsForCity:lat{$lat}:lng{$lng}:nearby{$nearbyInKm}:perPage{$perPage}:page{$page}:days{$days}";
-
-        $query_pagination = Cache::flexible($cache_key, [5 * MINUTE_IN_SECONDS, 10 * MINUTE_IN_SECONDS], function () use ($lat, $lng, $perPage, $nearbyInKm, $page, $days) {
-            // Convert distance to degrees (approximate)
+        return Cache::flexible($cache_key, [5 * MINUTE_IN_SECONDS, 10 * MINUTE_IN_SECONDS], function () use ($lat, $lng, $limit, $nearbyInKm, $days) {
             $distanceInDegrees = $nearbyInKm / 111;
-
-            // Calculate bounding box
             $latMin = $lat - $distanceInDegrees;
             $latMax = $lat + $distanceInDegrees;
             $lngMin = $lng - $distanceInDegrees / cos(deg2rad($lat));
             $lngMax = $lng + $distanceInDegrees / cos(deg2rad($lat));
 
-            // Build query starting with the geographical bounds
-            $query = self::whereBetween('location_lat', [$latMin, $latMax])
+            return self::whereBetween('location_lat', [$latMin, $latMax])
                 ->whereBetween('location_lng', [$lngMin, $lngMax])
-                ->whereDate('parsed_date', '>=', Carbon::now()->subDays($days))
-                ->whereDate('parsed_date', '<=', Carbon::now())
+                ->where('parsed_date', '>=', Carbon::now()->subDays($days))
+                ->where('parsed_date', '<=', Carbon::now())
                 ->useIndex('idx_crime_events_location_date')
                 ->selectRaw(
                     '*,
-                    (' . self::EARTH_RADIUS_KM . ' * 
+                    (' . self::EARTH_RADIUS_KM . ' *
                         acos(
-                            cos(radians(?)) * 
-                            cos(radians(location_lat)) * 
-                            cos(radians(location_lng) - radians(?)) + 
-                            sin(radians(?)) * 
+                            cos(radians(?)) *
+                            cos(radians(location_lat)) *
+                            cos(radians(location_lng) - radians(?)) +
+                            sin(radians(?)) *
                             sin(radians(location_lat))
                         )
                     ) AS distance',
@@ -792,15 +782,10 @@ class CrimeEvent extends Model implements Feedable {
                 ->having('distance', '<=', $nearbyInKm)
                 ->orderBy('parsed_date', 'desc')
                 ->orderBy('distance', 'asc')
-                ->with('locations');
-
-            return $query->paginate(
-                perPage: $perPage,
-                page: $page
-            );
+                ->with('locations')
+                ->limit($limit)
+                ->get();
         });
-
-        return $query_pagination;
     }
 
     public function getViewportSize() {
