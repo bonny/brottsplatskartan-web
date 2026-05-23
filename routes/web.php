@@ -815,6 +815,15 @@ Route::get('/sok-blåljushändelser/', [SearchController::class, 'adsenseSearch'
 Route::get('/helikopter', [PlatsController::class, 'helicopter'])->name('helicopter');
 
 /**
+ * URL-hacking-aliases (todo #83): folkliga synonymer 301:as till
+ * canonical-sidorna. Inga nya sidor — bara förutsägbara URL-gissningar
+ * som folk skriver in manuellt.
+ */
+Route::get('/polishelikopter', fn () => redirect('/helikopter', 301));
+Route::get('/polisaktion', fn () => redirect('/typ/polisinsats', 301));
+Route::get('/polispådrag', fn () => redirect('/typ/polisinsats', 301));
+
+/**
  * Trafikverket Trafikinformation — pilot-vy (todo #50, Fas 1).
  *
  * Olänkad i menyn. noindex så sidan inte ranks. Användaren utvärderar

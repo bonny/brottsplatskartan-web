@@ -51,6 +51,11 @@ class GenerateSitemap extends Command
             '/typ' => ['freq' => Url::CHANGE_FREQUENCY_DAILY, 'priority' => 0.6],
             '/vma' => ['freq' => Url::CHANGE_FREQUENCY_HOURLY, 'priority' => 0.7],
             '/om' => ['freq' => Url::CHANGE_FREQUENCY_MONTHLY, 'priority' => 0.3],
+            // Tema-sidor — fångar 3 200+ clicks/mån sammanlagt men saknades
+            // i sitemap fram till 2026-05-23 (todo #83 Steg 0-fynd).
+            '/helikopter' => ['freq' => Url::CHANGE_FREQUENCY_HOURLY, 'priority' => 0.8],
+            '/brand' => ['freq' => Url::CHANGE_FREQUENCY_HOURLY, 'priority' => 0.8],
+            '/inbrott' => ['freq' => Url::CHANGE_FREQUENCY_DAILY, 'priority' => 0.6],
         ];
 
         foreach ($static as $path => $meta) {
