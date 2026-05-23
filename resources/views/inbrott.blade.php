@@ -2,6 +2,11 @@
 
 Template för /inbrott
 
+Layout (efter SEO-rebalansering 2026-05-23): event-listan visas FÖRST på
+start-sidan eftersom GSC visar att 90 % av trafiken (15/22 clicks/mån)
+landar på event-undersidan, inte rådgivnings-content. Rådgivning behålls
+under för djup, men är inte vad Google rankar oss för.
+
 --}}
 
 
@@ -25,7 +30,7 @@ Template för /inbrott
                     onchange="this.closest('form').submit();"
                 >
                     <optgroup label="Undersidor för inbrott...">
-                        @foreach ($inbrott_undersidor as $navKey => $navundersida)
+                        @foreach ($undersidor as $navKey => $navundersida)
                             <option
                                 value="{{$navundersida['url']}}"
                                 @if($navKey == $undersida)
@@ -46,24 +51,41 @@ Template för /inbrott
             <div class="teaser"><p>{{$pageSubtitle}}</p></div>
         @endisset
 
+        @include('parts.collectionpage-jsonld', [
+            'cpName' => $pageTitle,
+            'cpUrl' => url($canonicalLink),
+            'cpAboutType' => 'Thing',
+            'cpAboutName' => 'Inbrott i Sverige',
+            'cpDescription' => $pageSubtitle ?? null,
+        ])
+
         @if ($undersida === 'start')
-            <h2>Snabbfakta om inbrott</h2>
-            <ul>
-                <li>22 600 bostadsinbrott polisanmäldes</li>
-                <li>13 800 av bostadsinbrotten skedde i villor</li>
-                <li>8 800 av bostadsinbrotten skedde i lägenheter</li>
-                <li>14 800 inbrott i källare och på vind anmäldes</li>
-                <li>5 900 inbrott i fritidshus anmäldes</li>
-                <li>3 procent = personuppklaringsprocenten för bostadsinbrott</li>
+
+            <h2>Senaste inbrotten från Polisen</h2>
+
+            <p>De senaste händelserna som handlar om bostadsinbrott, lägenhetsinbrott,
+                källar- och vindsinbrott samt inbrottsförsök — direkt från Polisens
+                rapportering. Listan uppdateras löpande.</p>
+
+            <ul class="widget__listItems">
+                @foreach ($latestInbrottEvents as $event)
+                    <x-crimeevent.list-item :event="$event" />
+                @endforeach
             </ul>
 
-            <p>
-                Källa: <a href="https://www.bra.se/statistik/statistik-utifran-brottstyper/bostadsinbrott.html">Brås statistik om bostadsinbrott</a>.
-                Siffrorna gäller för år 2017.
-            </p>
+            {{ $latestInbrottEvents->links() }}
+
+            <hr>
+
+            <h2>Skydda dig mot inbrott</h2>
+
+            <p>Grannsamverkan minskar enligt Brå risken för inbrott med i genomsnitt 26 %.
+                <a href="/inbrott/grannsamverkan">Läs mer om grannsamverkan &rarr;</a></p>
+
+            <p>Är du själv drabbad? <a href="/inbrott/drabbad">Vad du ska göra efter ett inbrott &rarr;</a></p>
 
             <ul class="SubNav">
-                @foreach ($inbrott_undersidor as $navundersida)
+                @foreach ($undersidor as $navundersida)
                     <li>
                         <a href="{{$navundersida['url']}}">{{$navundersida['pageTitle']}}</a>
                         @isset($navundersida['pageSubtitle'])
@@ -82,7 +104,7 @@ Template för /inbrott
                     risken för inbrott.</strong></p>
 
                 <p>Enligt Brottsförebyggande Rådet (Brå) rapport <a href="https://www.bra.se/publikationer/arkiv/publikationer/2008-06-13-grannsamverkans-effekter-pa-brottsligheten.html">Grannsamverkans effekter på brottsligheten</a>
-                 så minskar grannsamverkan risken för inbrott med i genomsnitt 26 %.</p>
+                 så minskar grannsamverkan risken för inbrott med i genomsnitt 26 %.</p>
 
                 <p>
                     Grannsamverkans syfte är att göra bostadsområden mindre attraktiva
@@ -94,9 +116,6 @@ Template för /inbrott
 
             <blockquote>
                 <p>"Grannsamverkan är ett samlingsnamn för åtgärder som innebär att de boende i ett område bildar ett brottsförebyggande nätverk. Grannsamverkan innebär att grannar och närområde går samman och förebygger kriminalitet. Man vidtar åtgärder som bevakning, märkning av ägodelar, och rapportering brott till polisen och är vittnen."</p>
-                {{-- <footer>
-                    <cite><a href="https://sv.wikipedia.org/wiki/Grannsamverkan">Wikipedia</a></cite>
-                </footer> --}}
             </blockquote>
 
             <h2>Länkar</h2>
@@ -128,7 +147,7 @@ Template för /inbrott
 
             <p>
                 Det finns i Sverige tre ledande digitala grannsamverkanstjänster:
-                <a href="#safeland">Safeland</a> (f.d. Trygve)
+                <a href="#safeland">Safeland</a> (f.d. Trygve),
                 <a href="#carehood">Carehood</a>
                 och
                 <a href="#ssfgrannsamverkan">SSF Grannsamverkan</a>.
@@ -146,7 +165,7 @@ Template för /inbrott
 
             <h3 id="safeland">Safeland (tidigare Trygve)</h3>
             <div>
-                <p>Sveriges ledande trygghetsapp. Safeland är Sveriges mest använda app för grannsamverkan. Och smartaste hemlarm. Safeland är Sveriges mest använda app för grannsamverkan.</p>
+                <p>Sveriges ledande trygghetsapp. Safeland är Sveriges mest använda app för grannsamverkan. Och smartaste hemlarm.</p>
                 <p><a href="https://www.safe.land">Besök safe.land för mer info.</a></p>
             </div>
 
@@ -155,8 +174,7 @@ Template för /inbrott
                 <p>SSF Stöldskyddsföreningen har en egen app för grannsamverkan.</p>
                 <p>Såhär beskriver de själva appen:</p>
                 <blockquote>
-                    <p>Den sprider kunskap om Grannsamverkan och förenklar kommunikation. Appen förenklar för redan etablerade grupper och ger information till intresserade om hur man startar Grannsamverkan i nya område. I Appen ges aktuella råd om hur man bäst skyddar sig, sitt hem och värdesaker. Poliser kan enkelt beställa material, komma åt filmer och broschyrer, få in tips samt kommunicera ut information till sina Grannsamverkansområden. </p>
-                    <p>Appen är framtagen med stöd av intressenterna i Samverkan mot brott (SAMBO) som är en organisation bestående av Polisen, försäkringsbolagen Folksam, Länsförsäkringar, If, Trygg Hansa, Moderna Försäkringar, ICA Försäkring, SSF Stöldskyddsföreningen, Brottsförebyggande rådet (Brå), Sveriges Kommuner och Landsting (SKL), Hyresgästföreningen, Riksbyggen och Villaägarna, som alla verkar för att skapa ett tryggare boende.</p>
+                    <p>Den sprider kunskap om Grannsamverkan och förenklar kommunikation. Appen förenklar för redan etablerade grupper och ger information till intresserade om hur man startar Grannsamverkan i nya område. I Appen ges aktuella råd om hur man bäst skyddar sig, sitt hem och värdesaker.</p>
                 </blockquote>
                 <p><a href="https://www.stoldskyddsforeningen.se/privat/sakerhetsradgivning-for-privatpersoner/grannsamverkan2/app-for-grannsamverkan/">Besök stoldskyddsforeningen.se för mer info.</a></p>
             </div>
@@ -192,55 +210,46 @@ Template för /inbrott
                 </a></li>
             </ul>
 
-            <h2>Larm</h2>
+            <h2>Företag som säljer hemlarm</h2>
 
-            <h3>Tester av hemlarm</h3>
-            <p>
-                Vilket larm är smartast och passar dig bäst hemma?
-                <a href="https://pcforalla.idg.se/2.1054/1.637625/test-hemlarm/">
-                PC för alla har testat fem larmsystem och jämfört dem mot varandra.
-                </a>
+            <p class="text-sm u-color-gray-1">
+                Länkar nedan är till externa larmbolag.
             </p>
-
-            <h3>Företag som säljer hemlarm</h3>
 
             <ul>
                 <li>
-                    <a href="https://www.svenskaalarm.se">Svenska Alarm</a>
-                    Svenska Alarm är ett certifierat bolag som erbjuder smarta larm för hem och företag
+                    <a href="https://www.svenskaalarm.se" rel="sponsored noopener">Svenska Alarm</a>
+                    — certifierat bolag som erbjuder smarta larm för hem och företag.
                 </li>
                 <li>
-                    <a href="https://www.verisure.se/">Verisure</a>
-                    Verisure är Sveriges populäraste larmföretag. Vi erbjuder larm med inbrotts- och brandskydd. Larmsystemet är uppkopplat till vår larmcentral dygnet runt.
+                    <a href="https://www.verisure.se/" rel="sponsored noopener">Verisure</a>
+                    — Sveriges populäraste larmföretag. Erbjuder larm med inbrotts- och brandskydd uppkopplat till larmcentral dygnet runt.
                 </li>
                 <li>
-                    <a href="https://gardio.se/">Gardio</a>
-                    Hemlarm med kamerabevakning och HD-bilder i mobilen. Larmcentral och väktare till marknadens troligen lägsta kostnad.
+                    <a href="https://gardio.se/" rel="sponsored noopener">Gardio</a>
+                    — hemlarm med kamerabevakning och HD-bilder i mobilen. Larmcentral och väktare.
                 </li>
                 <li>
-                    <a href="https://www.alertalarm.se/">Alert Alarm</a>
-                    Hemlarm kopplade till Sveriges största larmcentral med fria väktarutryckningar. Håll full koll och styr larmet i Alert Alarm app. Alltid en bra deal!
+                    <a href="https://www.alertalarm.se/" rel="sponsored noopener">Alert Alarm</a>
+                    — hemlarm kopplade till Sveriges största larmcentral med fria väktarutryckningar.
                 </li>
                 <li>
-                    <a href="https://www.sectoralarm.se/">Sector Alarm</a>
-                    Med ett larm från Sector Alarm får också ett effektivt skydd mot inbrott.
-                    Men också vid brand. Erbjudande på larm till hem och företag.
+                    <a href="https://www.sectoralarm.se/" rel="sponsored noopener">Sector Alarm</a>
+                    — effektivt skydd mot inbrott och brand. Erbjudande på larm till hem och företag.
                 </li>
-                <li>Verisure</li>
             </ul>
         @endif
 
-        {{-- <hr /> --}}
-
-        {{-- Gemensamt block längst ner för alla sidor under /inbrott --}}
-
-        <h2>Senaste inbrotten från Polisen</h2>
-
-        <ul class="widget__listItems">
-            @foreach ($latestInbrottEvents as $event)
-                <x-crimeevent.list-item :event="$event" />
-            @endforeach
-        </ul>
+        @if ($undersida !== 'start')
+            {{-- Gemensamt event-block under-sidor utöver start --}}
+            <hr>
+            <h2>Senaste inbrotten från Polisen</h2>
+            <ul class="widget__listItems">
+                @foreach ($latestInbrottEvents as $event)
+                    <x-crimeevent.list-item :event="$event" />
+                @endforeach
+            </ul>
+        @endif
     </div>
 
 @endsection

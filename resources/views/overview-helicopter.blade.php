@@ -1,14 +1,22 @@
 {{-- Template för helikopter-översikt --}}
 
 @extends('layouts.web')
-@section('title', '🚁 Helikopter - polishelikopter eller ambulanshelikopter nära dig?')
-@section('metaDescription', e('Se senaste händelserna från Polisen som nämner helikopter'))
+@section('title', '🚁 Helikopter just nu — polishelikopter & ambulanshelikopter över Sverige')
+@section('metaDescription', e('Se polishelikoptrar och ambulanshelikoptrar över Sverige i realtid. Senaste polisnotiserna som nämner helikopter och live-karta över luftfarkoster.'))
 @section('canonicalLink', '/helikopter')
 
 @section('content')
 
     <div class="widget">
         <h1 class="widget__title">Helikopter</h1>
+
+        @include('parts.collectionpage-jsonld', [
+            'cpName' => 'Helikopter över Sverige just nu',
+            'cpUrl' => url('/helikopter'),
+            'cpAboutType' => 'Thing',
+            'cpAboutName' => 'Polishelikopter',
+            'cpDescription' => 'Polishelikoptrar och ambulanshelikoptrar över Sverige — senaste polisnotiser och live-karta över luftfarkoster.',
+        ])
 
         <p>
             Senaste händelserna som nämner ordet <em>helikopter</em>.
@@ -21,11 +29,52 @@
             som innehåller helikopter i någon form.
         </p>
 
+        @foreach ($byCity as $city => $cityEvents)
+            @if ($cityEvents->count() > 0)
+                <div class="widget" style="margin-top: 1.5em;">
+                    <h2 class="widget__title">Just nu i {{ $city }}</h2>
+                    <ul class="widget__listItems">
+                        @foreach ($cityEvents as $event)
+                            <x-crimeevent.card
+                                :event="$event"
+                                overview
+                                :highlight="['polishelikopter', 'ambulanshelikopter', 'helikopter']"
+                            />
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+        @endforeach
+
+        <div class="PlatsListing" style="margin-top: 1.5em;">
+            <h2 class="widget__title">Alla helikopter-händelser från Polisen</h2>
+            <ul class="widget__listItems">
+                @foreach ($events as $event)
+                    <x-crimeevent.card
+                        :event="$event"
+                        overview
+                        :highlight="['polishelikopter', 'ambulanshelikopter', 'helikopter']"
+                    />
+                @endforeach
+            </ul>
+
+            {{ $events->links() }}
+        </div>
+
+        <p style="margin-top: 1.5em;">
+            Den svenska polisen har nio helikoptrar och de finns
+            i <a href="{{ route('city', ['city' => 'stockholm']) }}">Stockholm</a>,
+            <a href="{{ route('city', ['city' => 'goteborg']) }}">Göteborg</a>,
+            <a href="{{ route('city', ['city' => 'malmo']) }}">Malmö</a>,
+            <a href="/plats/östersund">Östersund</a>
+            och <a href="/plats/boden">Boden</a>.
+        </p>
+
         <p>
-            Hittar du inte rätt händelse här så testa
-            <a href="https://twitter.com/search?q=helikopter">sök på Twitter efter helikopter</a>,
-            eller se aktuella luftfarkoster på kartan nedan (data från
-            <a href="https://www.adsbexchange.com/">ADS-B Exchange</a>).
+            Helikopter används för räddningsverksamhet eller när grova brott har begåtts,
+            t.ex. för att följa gärningsmännens flyktväg efter ett väpnat rån.
+            De används också för att exempelvis undsätta nödställda fjällvandrare eller för att
+            övervaka demonstrationer.
         </p>
 
         <div class="widget" style="margin-top: 2em;">
@@ -35,9 +84,11 @@
                 position via ADS-B. Klicka på en ikon för att se typ, höjd och
                 flygbana. Helikoptrar syns oftast som rundade ikoner.
             </p>
-            <div style="width: 100%; height: min(80vh, 600px); margin-top: 1em;">
+            <div style="width: 100%; aspect-ratio: 4 / 3; max-height: min(80vh, 600px); margin-top: 1em;">
                 <iframe
                     src="https://globe.adsbexchange.com/?lat=62.5&lon=16.5&zoom=5"
+                    width="800"
+                    height="600"
                     style="border: 0; width: 100%; height: 100%;"
                     loading="lazy"
                     referrerpolicy="no-referrer-when-downgrade"
@@ -55,35 +106,9 @@
         </div>
 
         <p>
-            Den svenska polisen har nio helikoptrar och de finns
-            i <a href="{{ route('city', ['city' => 'stockholm']) }}">Stockholm</a>,
-            <a href="{{ route('city', ['city' => 'goteborg']) }}">Göteborg</a>,
-            <a href="{{ route('city', ['city' => 'malmo']) }}">Malmö</a>,
-            <a href="/plats/östersund">Östersund</a>
-            och <a href="/plats/boden">Boden</a>.
+            Hittar du inte rätt händelse här? Testa
+            <a href="https://twitter.com/search?q=helikopter" rel="noopener">sök på Twitter efter helikopter</a>.
         </p>
-
-        <p>
-            Helikopter används för räddningsverksamhet eller när grova brott har begåtts,
-            t.ex. för att följa gärningsmännens flyktväg efter ett väpnat rån.
-            De används också för att exempelvis undsätta nödställda fjällvandrare eller för att
-            övervaka demonstrationer.
-        </p>
-
-        <div class="PlatsListing">
-
-            <ul class="widget__listItems">
-                @foreach ($events as $event)
-                    <x-crimeevent.card
-                        :event="$event"
-                        overview
-                        :highlight="['polishelikopter', 'ambulanshelikopter', 'helikopter']"
-                    />
-                @endforeach
-            </ul>
-
-        </div>
-
     </div>
 
 @endsection

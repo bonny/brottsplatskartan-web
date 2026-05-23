@@ -1356,33 +1356,32 @@ class PlatsController extends Controller
      * https://brottsplatskartan.test/helikopter
      */
     public function helicopter(Request $request) {
-        $events = CrimeEvent::orderBy("created_at", "desc")
-            // ->where(function ($query) {
-            //     if ($isToday) {
-            //         $query->where('created_at', '<', $dateYmdPlusOneDay);
-            //         $query->where('created_at', '>', $dateYmdMinusNumDaysBack);
-            //     } else {
-            //         $query->where('created_at', '<', $dateYmdPlusOneDay);
-            //         $query->where('created_at', '>', $dateYmd);
-            //     }
-            // })
-            #->where(function ($query) {
-                // $query->where("parsed_title_location", $plats);
-                // $query->orWhere("administrative_area_level_2", $plats);
-                // $query->orWhereHas('locations', function ($query) use ($plats) {
-                //     $query->where('name', '=', $plats);
-                // });
-            #})
-            ->where('parsed_title', 'LIKE', "%helikopter%")
-            ->orWhere('parsed_teaser', 'LIKE', "%helikopter%")
-            ->orWhere('parsed_content', 'LIKE', "%helikopter%")
-            ->limit(25)
-            ->with('locations')
-            ->get();
-        
-        $data = [
+        $cacheKey = 'helicopter:events:page:' . ($request->get('page', 1));
+        $events = \Cache::remember($cacheKey, 15 * 60, function () {
+            return CrimeEvent::orderBy('created_at', 'desc')
+                ->where(function ($q) {
+                    $q->where('parsed_title', 'LIKE', '%helikopter%')
+                      ->orWhere('parsed_teaser', 'LIKE', '%helikopter%')
+                      ->orWhere('parsed_content', 'LIKE', '%helikopter%');
+                })
+                ->with('locations')
+                ->paginate(40);
+        });
+
+        // Bucket per Tier 1-stad så vyn kan visa "Just nu i Stockholm/Göteborg/Malmö"
+        // utan extra DB-anrop — filtrerar bara den aktuella sidans 40 events.
+        $tier1Cities = ['Stockholm', 'Göteborg', 'Malmö'];
+        $byCity = [];
+        foreach ($tier1Cities as $city) {
+            $byCity[$city] = $events->filter(function ($event) use ($city) {
+                return mb_stripos((string) $event->administrative_area_level_2, $city) !== false
+                    || mb_stripos((string) $event->parsed_title_location, $city) !== false;
+            })->take(5);
+        }
+
+        return view('overview-helicopter', [
             'events' => $events,
-        ];
-        return view('overview-helicopter', $data);
+            'byCity' => $byCity,
+        ]);
     }
 }
