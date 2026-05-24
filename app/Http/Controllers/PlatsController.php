@@ -1370,12 +1370,19 @@ class PlatsController extends Controller
 
         // Bucket per Tier 1-stad så vyn kan visa "Just nu i Stockholm/Göteborg/Malmö"
         // utan extra DB-anrop — filtrerar bara den aktuella sidans 40 events.
+        // 14-dagarsfönster så rubriken "Just nu" inte visar månadsgamla events
+        // (helikopter-events är glesa → top-N utan tidsfilter sträcker sig långt bakåt).
         $tier1Cities = ['Stockholm', 'Göteborg', 'Malmö'];
+        $cutoff = now()->subDays(14);
         $byCity = [];
         foreach ($tier1Cities as $city) {
-            $byCity[$city] = $events->filter(function ($event) use ($city) {
-                return mb_stripos((string) $event->administrative_area_level_2, $city) !== false
+            $byCity[$city] = $events->filter(function ($event) use ($city, $cutoff) {
+                $matchesCity = mb_stripos((string) $event->administrative_area_level_2, $city) !== false
                     || mb_stripos((string) $event->parsed_title_location, $city) !== false;
+                if (! $matchesCity) {
+                    return false;
+                }
+                return $event->created_at && $event->created_at->gte($cutoff);
             })->take(5);
         }
 
