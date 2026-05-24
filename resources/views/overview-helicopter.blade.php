@@ -35,11 +35,7 @@
                     <h2 class="widget__title">Just nu i {{ $city }}</h2>
                     <ul class="widget__listItems">
                         @foreach ($cityEvents as $event)
-                            <x-crimeevent.card
-                                :event="$event"
-                                overview
-                                :highlight="['polishelikopter', 'ambulanshelikopter', 'helikopter']"
-                            />
+                            <x-crimeevent.list-item :event="$event" detailed />
                         @endforeach
                     </ul>
                 </div>
@@ -50,11 +46,7 @@
             <h2 class="widget__title">Alla helikopter-händelser från Polisen</h2>
             <ul class="widget__listItems">
                 @foreach ($events as $event)
-                    <x-crimeevent.card
-                        :event="$event"
-                        overview
-                        :highlight="['polishelikopter', 'ambulanshelikopter', 'helikopter']"
-                    />
+                    <x-crimeevent.list-item :event="$event" detailed />
                 @endforeach
             </ul>
 
