@@ -1,5 +1,5 @@
-**Status:** aktiv — mätperiod startad 2026-04-27, första check 2026-05-25
-**Senast uppdaterad:** 2026-04-27
+**Status:** aktiv — 4v-check 2026-05-25 inkonklusiv (DiD +39 % relativt men AI-EFTER sample 386 impr för litet; cross-section +1 % CTR, +1,4 pos). Avvaktar 8v-check 2026-06-22
+**Senast uppdaterad:** 2026-05-25
 **Beroende av:** #10 (deployat 2026-04-27)
 
 # Todo #36 — GSC-mätning av AI-titlars CTR-effekt
@@ -88,13 +88,34 @@ SEO-rapporter om SERP-titel-optimering.
 
 **2026-04-27 — startat:** ren mätperiod, inga åtgärder.
 
-**Plan:**
+**2026-05-25 — 4v-check (full rapport i `tmp-gsc-36-2026-05-25/REPORT.md`):**
 
-1. Vänta till 2026-05-25.
-2. Kör `compare_search_periods` via mcp-gsc med URL-filter ovan.
-3. Joina output mot `crime_events.title_alt_1`-flagga lokalt.
-4. Skriv resultatrapport: CTR före/efter per grupp + beslut om fas 2.
-5. Stäng denna todo + öppna fas 2-todo om motiverat.
+Två kompletterande mätningar på 28d före vs 28d efter:
+
+1. **DiD på pre-deploy event-set (samma URL-set pre/post):**
+    - AI naive: 4,95 % → 6,22 % CTR (+25,6 % relativt)
+    - CTRL naive: 5,70 % → 4,92 % CTR (−13,7 %)
+    - DiD: +2,05 pp / +39,3 % relativt → träffar tröskeln "> +20 %"
+    - Position AI: 12,71 → 10,74 (−1,97 platser)
+    - **Caveat:** AI-EFTER sample bara 23 URLs / 386 impressions. Top-URL har 87 impr (förra periodens topp hade 3 588). Mätningen för brusig.
+
+2. **Cross-section A/B inom EFTER (post-deploy events, treatment vs control):**
+    - AI: 148 URLs, 34 054 impr, 4,854 % CTR, pos 13,84
+    - CTRL: 1 202 URLs, 197 238 impr, 4,801 % CTR, pos 15,22
+    - CTR-skillnad: +1 % relativt → tröskel "−5 % till +5 %"
+    - Position: AI 1,4 platser bättre
+    - **Confound:** AI väljs av `--vague-only`-filtret (icke-slumpmässig allokering)
+
+**Tolkning:** position-förbättring konsistent i båda mätningarna (~1,4–2 platser). CTR-signalen splittrad: brusig DiD säger "fas 2", confounded cross-section säger "vänta". Det robustaste agerandet är att vänta — sample-storleken växer naturligt över tid.
+
+**Beslut:** ingen åtgärd nu. Mätperiod fortsätter passivt till 2026-06-22 (8v).
+
+**Plan framåt:**
+
+1. 2026-06-22 — andra check (8v). Treatment-set (pre-deploy AI-events) ska då ha större impressions-volym tack vare ackumulerad GSC-data. Cross-section-sample växer också (post-deploy AI-events fortsätter genereras dagligen via `--vague-only`).
+2. 2026-07-27 — tredje check (12v) + slutgiltigt beslut om fas 2.
+3. Vid 8v eller 12v: om position-signalen kvarstår + CTR-signal stabiliseras → fas 2 (auto-trigger gratis, backfill ~$27).
+4. Stäng denna todo + öppna fas 2-todo om motiverat.
 
 ## Relaterade todos
 
