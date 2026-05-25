@@ -1,5 +1,5 @@
-**Status:** aktiv — beslut B (prefilter v2) + 0a (kort prompt) implementerade och verifierade live 2026-05-25. Faktisk besparing post-deploy: input-tokens 3045 → 1900 (-38 %). Förväntad total ~$36/mån ($58 → ~$22 på NewsClassifier). Soak till 2026-06-01.
-**Senast uppdaterad:** 2026-05-25 (0a deployad — scheduler-restart krävdes för OPCache-uppdatering. Token-snitt verifierat post-restart.)
+**Status:** aktiv — prefilter v2 + 0a + MonthlySummary-optimering deployade 2026-05-25. Total prognos besparing ~$40/mån. Soak till 2026-06-01.
+**Senast uppdaterad:** 2026-05-25 (MonthlySummary — brief description -40 % XML + halverad frekvens. Lokal output-kvalitet bibehållen.)
 
 # Todo #81 — Håll koll på hur mycket AI-anropen kostar
 
@@ -482,9 +482,30 @@ Den enda diskrepansen ("Nato-kritiska protester vid mötet i Helsingborg") var O
 - Stickprov av 20 nya AI-klassade artiklar — kolla att kategorin + kommun_names är rimliga (eventuell tapp på exotiska stadsdelar).
 - Stickprov av 20 prefilter-foreign-veto-artiklar — utesluta felvetade svenska brott.
 
+### MonthlySummary-optimering 2026-05-25
+
+**Diagnos:** $10/mån (klättrat från $4). Sonnet 4.6 × 4-9 anrop/dygn × 11000 input-tokens snitt. Tokens dominerat av `<description>{$event->parsed_content}</description>` — 200+ events × ~300 chars = ~15 000 input-tokens.
+
+**Lösning — två justeringar:**
+
+1. `formatEventsForAI($events, briefDescription: true)` — ny parameter trunkerar description till första meningen (max 200 tecken) för MonthlySummary. DailySummary opåverkad (full text behålls — bara 1 dag = liten volym).
+2. `Kernel.php` — `--current` cron `0 */6 * * *` → `0 */12 * * *`. 5 städer × 4/dygn → 5 städer × 2/dygn.
+
+**Verifiering (lokal körning Stockholm 60 events):**
+
+| Mätning      | Full XML | Brief XML | Reduktion |
+| ------------ | -------- | --------- | --------- |
+| XML chars    | 37 682   | 22 479    | -40.3 %   |
+| Input-tokens | ~11 000  | ~10 200   | -7 % \*   |
+
+\* Mindre token-reduktion än char-reduktion eftersom system-prompt + task-block är oförändrade. Verkar ge ~$1-2/mån direkt på tokens + ~$3/mån på halvering av frekvens = **~$4-5/mån besparing**.
+
+**Output-kvalitet:** manuellt verifierad — sammanfattningen behåller 10+ specifika händelse-länkar, korrekt struktur (5 stycken), trendmening (-12 % jfr april), geografisk spridning. Inga uppenbara regressioner.
+
+**Soak-mätning 2026-06-01:** verifiera ~$5/mån MonthlySummary-takt + visuell kontroll på prod-stad.
+
 Återstående hävstänger om mer besparing behövs:
 
-- **MonthlySummary** ($10/mån, klättrat från $4) — sekundär granskning efter soak.
 - **0c prompt-caching** — kräver vendor-PR mot `laravel/ai`, ~$5/mån extra besparing post-0a.
 - **EventTitleRewriter** ($7/mån) — krympning av `title-rewrite.blade.php`. Marginalt.
 

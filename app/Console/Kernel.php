@@ -92,11 +92,12 @@ class Kernel extends ConsoleKernel
         // 1. Snapshot av föregående månad — körs 1:a varje månad kl 02:00 UTC.
         //    Engångsjobb per månad, månaden är slut så datan är immutabel.
         //
-        // 2. Innevarande månad — körs var 6:e timme. Behövs eftersom
-        //    månadsvyn för pågående månad är "live" (nya events tillkommer)
-        //    och sammanfattningen ska reflektera senaste data. Service har
-        //    change-detection så omkörning är gratis om events oförändrade.
-        //    5 städer × 4 körningar/dygn × ~30s = stagger-effekten OK.
+        // 2. Innevarande månad — körs var 12:e timme (sänkt från 6h
+        //    2026-05-25 för #81). Månadsvyn är "live" men 12h-färskhet
+        //    räcker — det är ändå en månadsöversikt, inte realtid.
+        //    Service har change-detection så omkörning är gratis om
+        //    events oförändrade. 5 städer × 2 körningar/dygn = max 10
+        //    AI-anrop/dygn.
         $schedule->command('summary:generate-monthly --all-tier1')
             ->monthlyOn(1, '02:00')
             ->withoutOverlapping()
@@ -104,7 +105,7 @@ class Kernel extends ConsoleKernel
             ->when($aiAllowed);
 
         $schedule->command('summary:generate-monthly --all-tier1 --current')
-            ->cron('0 */6 * * *')
+            ->cron('0 */12 * * *')
             ->withoutOverlapping()
             ->name('monthly-summary-tier1-current')
             ->when($aiAllowed);

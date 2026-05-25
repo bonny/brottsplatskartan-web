@@ -130,36 +130,67 @@ class AISummaryService
     }
 
     /**
-     * Formaterar händelser till XML-format som är lämplig för AI-prompten
-     * 
-     * @param $events Samling av händelser
-     * @return string Formaterad text med XML-taggar för varje händelse
+     * Formaterar händelser till XML-format som är lämplig för AI-prompten.
+     *
+     * @param  \Illuminate\Database\Eloquent\Collection  $events
+     * @param  bool  $briefDescription  Om true, trunkeras description till
+     *     första meningen (~max 200 tecken). Används av MonthlySummary för
+     *     att hålla nere input-tokens — månader med 200+ events sprängde
+     *     annars ~15 000 input-tokens. DailySummary skickar full text.
      */
-    private function formatEventsForAI($events): string
+    private function formatEventsForAI($events, bool $briefDescription = false): string
     {
         $formatted = ['<events>'];
-        
+
         /** @var CrimeEvent $event */
         foreach ($events as $event) {
             $time = Carbon::parse($event->created_at)->format('H:i');
             $location = $event->administrative_area_level_2 ?: $event->administrative_area_level_1;
             $type = $event->title ?: 'Händelse';
-            
+            $description = (string) $event->parsed_content;
+
+            if ($briefDescription && $description !== '') {
+                $description = $this->firstSentence($description, 200);
+            }
+
             $eventUrl = $event->getPermalink(true);
-            
+
             $formatted[] = '<event>';
             $formatted[] = "  <id>{$event->id}</id>";
             $formatted[] = "  <time>{$time}</time>";
             $formatted[] = "  <type>{$type}</type>";
             $formatted[] = "  <location>{$location}</location>";
-            $formatted[] = "  <description>{$event->parsed_content}</description>";
+            $formatted[] = "  <description>{$description}</description>";
             $formatted[] = "  <url>{$eventUrl}</url>";
             $formatted[] = '</event>';
         }
-        
+
         $formatted[] = '</events>';
 
         return implode("\n", $formatted);
+    }
+
+    /**
+     * Returnerar första meningen ur en text (slut vid första `.`, `!` eller
+     * `?` följt av mellanslag/slut), max `$maxLen` tecken som hard-cap.
+     * Bevarar avgörande detaljer för AI:n (typ + tid + plats) utan att
+     * släpa med hela artikelkroppen.
+     */
+    private function firstSentence(string $text, int $maxLen): string
+    {
+        $text = trim($text);
+        if ($text === '') {
+            return '';
+        }
+        if (preg_match('/^(.+?[.!?])(\s|$)/u', $text, $m) === 1) {
+            $sentence = $m[1];
+        } else {
+            $sentence = $text;
+        }
+        if (mb_strlen($sentence) > $maxLen) {
+            $sentence = mb_substr($sentence, 0, $maxLen - 1) . '…';
+        }
+        return $sentence;
     }
 
     /**
@@ -275,7 +306,7 @@ class AISummaryService
      */
     private function generateMonthlySummaryText($events, string $area, Carbon $monthStart, int $prevMonthCount): ?string
     {
-        $eventsText = $this->formatEventsForAI($events);
+        $eventsText = $this->formatEventsForAI($events, briefDescription: true);
         $monthLabel = $monthStart->locale('sv')->isoFormat('MMMM YYYY');
 
         $userPrompt = "<task>\n"
