@@ -55,15 +55,47 @@
                      (idag/igår). Förra månadens AI-sammanfattning hör hemma
                      på månadsvyn /<stad>/handelser/{år}/{månad}. --}}
 
-                {{-- Händelselista. --}}
+                {{-- Händelselista, grupperad per datum-bucket (#87).
+                     Sidan visar 25 events över 30d — gruppering gör tydligt
+                     när något hände, även på 0-event-dygn för tunna städer
+                     (Helsingborg/Uppsala). --}}
+                @php
+                    $today      = \Carbon\Carbon::today();
+                    $yesterday  = $today->copy()->subDay();
+                    $weekStart  = $today->copy()->subDays(7);
+                    $monthStart = $today->copy()->subDays(30);
+                    $buckets    = [
+                        'Idag'                 => [],
+                        'Igår'                 => [],
+                        'Tidigare denna vecka' => [],
+                        'Tidigare denna månad' => [],
+                    ];
+                    foreach ($events as $event) {
+                        $d = \Carbon\Carbon::parse($event->parsed_date)->startOfDay();
+                        if ($d->equalTo($today)) {
+                            $buckets['Idag'][] = $event;
+                        } elseif ($d->equalTo($yesterday)) {
+                            $buckets['Igår'][] = $event;
+                        } elseif ($d->gte($weekStart)) {
+                            $buckets['Tidigare denna vecka'][] = $event;
+                        } else {
+                            $buckets['Tidigare denna månad'][] = $event;
+                        }
+                    }
+                @endphp
                 <div class="widget">
                     <div class="widget__listItems widget__listItems--city u-margin-top">
-                        @foreach ($events as $event)
-                            <x-crimeevent.list-item
-                                :event="$event"
-                                detailed
-                                map-distance="near"
-                            />
+                        @foreach ($buckets as $label => $bucketEvents)
+                            @if (count($bucketEvents) > 0)
+                                <h3 class="widget__listItems__dateLabel">{{ $label }}</h3>
+                                @foreach ($bucketEvents as $event)
+                                    <x-crimeevent.list-item
+                                        :event="$event"
+                                        detailed
+                                        map-distance="near"
+                                    />
+                                @endforeach
+                            @endif
                         @endforeach
                     </div>
                 </div>

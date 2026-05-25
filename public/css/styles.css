@@ -1726,6 +1726,21 @@ h2.widget__title {
 .widget__listItems--city {
 }
 
+.widget__listItems__dateLabel {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-gray-3);
+    margin: 1rem 0 0.25rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--color-gray-2);
+}
+
+.widget__listItems__dateLabel:first-child {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+}
+
 .widget__listItems--city .ListEvent {
     position: relative;
 }

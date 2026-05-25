@@ -1,5 +1,5 @@
-**Status:** aktiv — utbruten från #76 senior-review (2026-05-13)
-**Senast uppdaterad:** 2026-05-13
+**Status:** avfärdad 2026-05-25 — mätning + SEO-review visade att soft-404 är teoretisk; sidan är aldrig tom (30d rullande lista). UX-vinst flyttad till [[87-datum-gruppering-tier1-handelselista]].
+**Senast uppdaterad:** 2026-05-25
 
 # Todo #79 — Soft-404-fallback för "idag"-titlar med 0 events
 
