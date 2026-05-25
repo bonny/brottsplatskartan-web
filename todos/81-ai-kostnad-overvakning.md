@@ -1,5 +1,5 @@
-**Status:** aktiv — beslut B (prefilter v2) + 0a (kort prompt) implementerade 2026-05-25. Förväntad total besparing ~$43/mån ($59 → ~$16 på NewsClassifier). Soak till 2026-06-01.
-**Senast uppdaterad:** 2026-05-25 (0a — system-prompten krymper från 149 → 61 rader, A/B 98 % agreement mot prod-historik på 50 stratifierade artiklar.)
+**Status:** aktiv — beslut B (prefilter v2) + 0a (kort prompt) implementerade och verifierade live 2026-05-25. Faktisk besparing post-deploy: input-tokens 3045 → 1900 (-38 %). Förväntad total ~$36/mån ($58 → ~$22 på NewsClassifier). Soak till 2026-06-01.
+**Senast uppdaterad:** 2026-05-25 (0a deployad — scheduler-restart krävdes för OPCache-uppdatering. Token-snitt verifierat post-restart.)
 
 # Todo #81 — Håll koll på hur mycket AI-anropen kostar
 
@@ -464,17 +464,21 @@ Den enda diskrepansen ("Nato-kritiska protester vid mötet i Helsingborg") var O
 
 **Förväntad effekt (kombinerat med prefilter v2):**
 
-| Mätning                           | Före (2026-05-24) | Efter v2 + 0a |
-| --------------------------------- | ----------------- | ------------- |
-| NewsClassifier anrop/dygn         | 518               | ~280          |
-| NewsClassifier input-tokens/anrop | 3 045             | ~1 050        |
-| NewsClassifier $/anrop            | $0.0038           | ~$0.0016      |
-| NewsClassifier $/mån              | $59               | **~$16**      |
-| Total besparing                   |                   | **~$43/mån**  |
+| Mätning                           | Före (2026-05-24) | Efter v2 + 0a (verifierat) |
+| --------------------------------- | ----------------- | -------------------------- |
+| NewsClassifier anrop/dygn         | 518               | ~280                       |
+| NewsClassifier input-tokens/anrop | 3 045             | **~1 900** (-38 %)         |
+| NewsClassifier $/anrop            | $0.0038           | ~$0.0027                   |
+| NewsClassifier $/mån              | $59               | **~$22**                   |
+| Total besparing                   |                   | **~$36/mån** (-61 %)       |
+
+**Caveat:** input-tokens minskade mindre än ~70 %-prognos baserad på rad-räkning — token-räkningen är inte rad-proportionell. Acceptabelt resultat. Soak kan ge ytterligare bild.
+
+**Operativ insikt — scheduler-cache:** Vid deploy av blade-prompter krävs `docker compose restart scheduler` på prod. `view:clear` räcker inte — scheduler-containern har egen OPCache som inte plockar upp ändrade kompilerade vyer automatiskt. Sparat som auto-memory `project_scheduler_blade_cache`.
 
 **Soak till 2026-06-01:**
 
-- Verifiera ~$16/mån NewsClassifier-takt via `ai:usage --days=7 --by=agent`.
+- Verifiera ~$22/mån NewsClassifier-takt via `ai:usage --days=7 --by=agent`.
 - Stickprov av 20 nya AI-klassade artiklar — kolla att kategorin + kommun_names är rimliga (eventuell tapp på exotiska stadsdelar).
 - Stickprov av 20 prefilter-foreign-veto-artiklar — utesluta felvetade svenska brott.
 

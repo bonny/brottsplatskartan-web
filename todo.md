@@ -4,7 +4,7 @@ Index över förbättringsarbete. Varje todo har en egen fil under
 [`todos/`](todos/) med fullständig analys. Konvention och
 mappstruktur: [`todos/README.md`](todos/README.md).
 
-Senast uppdaterad: 2026-05-25 (+#81 0a — NewsClassifier-prompt 149→61 rader, A/B 98 % agreement. Total besparing v2+0a: ~$43/mån).
+Senast uppdaterad: 2026-05-25 (+#81 0a deployad + scheduler restartad — verifierad besparing v2+0a: input-tokens 3045→1900 (-38 %), ~$36/mån).
 
 ## Aktiva
 
@@ -25,7 +25,7 @@ Senast uppdaterad: 2026-05-25 (+#81 0a — NewsClassifier-prompt 149→61 rader,
 | 76  | "polisen händelser X idag" + Malmö/Göteborg              | Fas B klar 2026-05-13. Tidig 28d-signal 2026-05-19: Malmö +6.5x klick, Göteborg +5.2x. Fas A/C/D/E kvar. 60d-mätning 2026-07-12                                                | [todos/76-polisen-handelser-stad-idag.md](todos/76-polisen-handelser-stad-idag.md)                                   |
 | 78  | Multi-plats-händelser missvisande på kartan              | Ny 2026-05-13 — sammanfattning natt/dag/kväll renderas som en cirkel fast brotten är geografiskt utspridda. Analys saknas                                                      | [todos/78-handelser-utspridda-platser-kart-missvisning.md](todos/78-handelser-utspridda-platser-kart-missvisning.md) |
 | 79  | Soft-404-fallback för "idag"-titlar med 0 events         | Utbruten från #76 senior-review (2026-05-13) — Tier 1 risk vid 0-event-dygn. Steg 1 = mätning, sannolikhet låg                                                                 | [todos/79-soft-404-idag-fallback.md](todos/79-soft-404-idag-fallback.md)                                             |
-| 81  | Håll koll på hur mycket AI-anropen kostar                | B + 0a implementerade 2026-05-25 — prefilter v2 + kort NewsClassifier-prompt (149→61 rader, A/B 98 %). Prognos -$43/mån. Soak till 2026-06-01.                                 | [todos/81-ai-kostnad-overvakning.md](todos/81-ai-kostnad-overvakning.md)                                             |
+| 81  | Håll koll på hur mycket AI-anropen kostar                | B + 0a deployade och verifierade live 2026-05-25 — input-tokens 3045→1900 (-38 %). Faktisk besparing ~$36/mån. Soak till 2026-06-01.                                           | [todos/81-ai-kostnad-overvakning.md](todos/81-ai-kostnad-overvakning.md)                                             |
 | 82  | EventNewsMatcher: mät rotorsak först, fixa minst möjliga | Ny 2026-05-18 — efter review omskriven till mät-driven plan: Fas 0 SQL-mätning av placeIds/RSS/urval → minsta-möjliga-fix → batch endast om kostnad kräver                     | [todos/82-eventnewsmatcher-omtag-prefilter-batch-cache.md](todos/82-eventnewsmatcher-omtag-prefilter-batch-cache.md) |
 | 84  | /brand/{stad} stadssidor för top-15 städer               | Ny 2026-05-23 — efter SEO-analys: GSC visar 7 stads-svans-queries (89c+63c+51c+44c+42c+41c+33c) utan dedikerade sidor; förväntad lyft 750–2 000 c/mån                          | [todos/84-brand-stad-stadssidor.md](todos/84-brand-stad-stadssidor.md)                                               |
 | 85  | /inbrott rebuild + /inbrott/{stad} stadssidor            | Ny 2026-05-23 — efter SEO-analys: intent-mismatch + content-type-konflikt; QW-fixar deployade, rebuild till /brand-form + 15 stadssidor återstår; förväntad 22 → 300–500 c/mån | [todos/85-inbrott-rebuild-stadssidor.md](todos/85-inbrott-rebuild-stadssidor.md)                                     |
