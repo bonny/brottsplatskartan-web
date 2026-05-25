@@ -4,7 +4,7 @@ Index över förbättringsarbete. Varje todo har en egen fil under
 [`todos/`](todos/) med fullständig analys. Konvention och
 mappstruktur: [`todos/README.md`](todos/README.md).
 
-Senast uppdaterad: 2026-05-25 (+#36 4v-check: DiD +39 % relativt men AI-sample för litet; cross-section +1 % CTR/+1,4 pos. Avvakta 8v 2026-06-22).
+Senast uppdaterad: 2026-05-25 (+#52 åtgärd E klar — LanController Tier 1-titel/meta; mål "senaste blåljusen [LÄN]" pos 7-8→4-5, ~1 000 c/90d).
 
 ## Aktiva
 
@@ -16,7 +16,7 @@ Senast uppdaterad: 2026-05-25 (+#36 4v-check: DiD +39 % relativt men AI-sample f
 | 39  | MSB/MCF brand- och räddningsstatistik per kommun         | 14d-check 2026-05-13 — ingen attribuerbar MCF-effekt (confounded med #24/#33/#10), mätperiod förlängd till 60d (2026-06-29)                                                    | [todos/39-msb-brand-rakning-statistik.md](todos/39-msb-brand-rakning-statistik.md)                                   |
 | 50  | Trafikverket Trafikinformation: live på kartan           | Fas 2 Tier 1 lyft 2026-05-12 — noindex borta, vägarbete-fold, sitemap. 28d-gate till 2026-06-09 + manuell GSC Request Indexing kvar                                            | [todos/50-trafikverket-trafikinformation-live.md](todos/50-trafikverket-trafikinformation-live.md)                   |
 | 51  | Övriga datakällor: research-skiss                        | Live-testad 2026-05-13 — A SMHI→#69, B RTÖG pilot-klar, C Krisinfo avfärdad; F/E/G/H låg prio                                                                                  | [todos/51-ovriga-datakallor-research.md](todos/51-ovriga-datakallor-research.md)                                     |
-| 52  | GSC-monitor: lågrankade högvolym-queries                 | Baseline klar 2026-04-30 — 7 åtgärder identifierade (A–G), ~25k clicks/90d potential                                                                                           | [todos/52-gsc-low-rank-monitoring.md](todos/52-gsc-low-rank-monitoring.md)                                           |
+| 52  | GSC-monitor: lågrankade högvolym-queries                 | Monitor — D/F/G klara (#72/#75/#77), E fixat 2026-05-25 (LanController Tier 1-titel/meta, ~1 000 c/90d-potential, mät 2026-06-25). Kvar: A/B/C                                 | [todos/52-gsc-low-rank-monitoring.md](todos/52-gsc-low-rank-monitoring.md)                                           |
 | 54  | Trafikkontroll-titlar: utöka AI-rewrite                  | Idé — utöka `isVagueTitle()` med trafikkontroll-mönster                                                                                                                        | [todos/54-trafikkontroll-titlar.md](todos/54-trafikkontroll-titlar.md)                                               |
 | 60  | Auto-länka events till nyheter via AI + RSS              | RSS-grund delas med #63 (deployad 2026-05-01); fas 3-rollout efter #63 fas 1+2                                                                                                 | [todos/60-auto-lank-nyheter-ai-rss.md](todos/60-auto-lank-nyheter-ai-rss.md)                                         |
 | 64  | Per-plats nyhetsaggregering — "Senaste nyheter i {ort}"  | Stickprov 2026-05-25: 86–90 % precision (>85 % mål). Fas 2.6-åtgärder kvar: Vara-blocklist + AI-veto-bug + source-scope. CTR/GSC-mätning till 2026-05-31                       | [todos/64-per-plats-nyhetsaggregering.md](todos/64-per-plats-nyhetsaggregering.md)                                   |
@@ -72,6 +72,7 @@ eller markera todon som klar.
 | 2026-06-22 | Tema-sidor QW 30d-mätning: /brand (pos 6.9 → ?, "brandkarta" pos 2.2 → 1.x efter karta), /helikopter (paginering indexerar historik), /inbrott (swap-effekt på 22 c/mån + "inbrott stockholm" pos 2). Mät page-vis i GSC compare_search_periods | [#84](todos/84-brand-stad-stadssidor.md) + [#85](todos/85-inbrott-rebuild-stadssidor.md) + [#86](todos/86-helikopter-stad-stadssidor.md) |
 | 2026-07-22 | Tema-sidor QW 60d-mätning + go/no-go-beslut för #84/#85/#86 stadssidor — om QW-fixarna gett < 200 c/mån lyft sammanlagt, omvärdera stadssidor-prioritet                                                                                         | [#84](todos/84-brand-stad-stadssidor.md) + [#85](todos/85-inbrott-rebuild-stadssidor.md) + [#86](todos/86-helikopter-stad-stadssidor.md) |
 | 2026-06-01 | #81 prefilter v2 soak — verifiera ~$32/mån NewsClassifier-takt + stickprov 20 foreign-veto-artiklar för att utesluta felvetade svenska brott                                                                                                    | [#81](todos/81-ai-kostnad-overvakning.md)                                                                                                |
+| 2026-06-25 | #52 åtgärd E — 30d GSC-mätning "senaste blåljusen [LÄN]" (mål: pos 7-8 → 4-5, CTR ~2 % → ~5 %, ~1 000 c/90d). Påverkar alla 21 län                                                                                                              | [#52](todos/52-gsc-low-rank-monitoring.md)                                                                                               |
 
 ### Avklarade uppföljningar
 

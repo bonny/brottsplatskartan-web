@@ -214,7 +214,7 @@ class LanController extends Controller
         $fintFormateratDatum = trim($date['date']->isoFormat('dddd D MMMM YYYY'));
 
         if ($isToday) {
-            $pageTitle = "Brott och händelser från Polisen i $lan";
+            $pageTitle = "Polisen händelser {$lan} idag – brott, olyckor och larm";
         } else {
             $pageTitle = sprintf(
                 '%2$s: %1$d händelser från Polisen i %3$s',
@@ -268,17 +268,9 @@ class LanController extends Controller
 
         $data["lanInfo"] = \App\Helper::getSingleLanWithStats($lan);
 
-        $mostCommonCrimeTypesMetaDescString = '';
-        foreach ($mostCommonCrimeTypes as $oneCrimeType) {
-            $mostCommonCrimeTypesMetaDescString .= $oneCrimeType->parsed_title . ', ';
-        }
-        $mostCommonCrimeTypesMetaDescString = trim($mostCommonCrimeTypesMetaDescString, ', ');
-
         $metaDescription = null;
         if ($isToday) {
-            $metaDescription = "Se var brott sker i närheten av {$lan}. Vanliga händelser i {$lan} är: {$mostCommonCrimeTypesMetaDescString}. Informationen kommer direkt från Polisen till vår karta.";
-        } else {
-            // $metaDescription = '';
+            $metaDescription = "Alla polisens händelser i {$lan} idag på karta – brott, trafikolyckor, bränder och larm. Aggregerat live från Polismyndigheten med 10 års arkiv.";
         }
 
         $policeStations = \App\Helper::getPoliceStationsCached()->first(function ($val, $key) use ($lan) {

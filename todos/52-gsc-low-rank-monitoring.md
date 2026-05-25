@@ -1,5 +1,5 @@
-**Status:** aktiv (research klar 2026-04-30 — väntar på beslut om vilka åtgärder som bryts ut)
-**Senast uppdaterad:** 2026-04-30
+**Status:** aktiv monitor — D/F/G klara via egna todos (#72/#75/#77), E fixat 2026-05-25, kvar: A (vänta #76 Fas B), B (utöka #76), C (#54). Nästa rapport 2026-07-30.
+**Senast uppdaterad:** 2026-05-25
 **Källa:** Inbox Brottsplatskartan (2026-04-30)
 
 # Todo #52 — Bevaka GSC-queries där vi rankar lågt på högvolym
@@ -150,3 +150,34 @@ bryta ut åtgärder A–G till egna todos när scope sätts.
    nästa rapport 2026-07-30 (~90 d efter baseline).
 3. Sätt upp `/schedule`-routine om kvartals-rapporten ska automatiseras
    (annars manuell körning).
+
+## Uppdatering 2026-05-25 — E klar
+
+**Rotorsak:** GSC drill-down (90d, 2026-02-24 → 2026-05-24) visade att
+asymmetrin inte var "Stockholm-modell saknas för övriga län" utan
+**title/meta-asymmetri** mellan Tier 1-städer och LanController:
+
+- `/stockholm` (Tier 1) titel: `Polisen händelser Stockholm idag – brott, olyckor och larm` → pos 3.0, **CTR 21.47 %**, 4 780 clicks på "senaste blåljusen stockholm".
+- `/lan/skane-lan` titel: `Brott och händelser från Polisen i Skåne län` → pos 7.3, **CTR 2.03 %**, 120 clicks på "senaste blåljusen skåne".
+
+Tier 1-meta är säljande och kompakt; län-meta var klumpig
+("närheten av Skåne län") + autogenererad lista med upprepade kategorier.
+
+**Fix:** Bytt `LanController.php`:217 + :277-282 till exakt samma
+mönster som `config/tier1-cities.php`:
+
+```php
+$pageTitle = "Polisen händelser {$lan} idag – brott, olyckor och larm";
+$metaDescription = "Alla polisens händelser i {$lan} idag på karta – brott, trafikolyckor, bränder och larm. Aggregerat live från Polismyndigheten med 10 års arkiv.";
+```
+
+Verifierat lokalt mot `/lan/skane-lan` + `/lan/kronobergs-lan`.
+PHPStan grön. Tog även bort död `$mostCommonCrimeTypesMetaDescString`-build.
+
+**Mät 30d post-deploy:** "senaste blåljusen [LÄN]"-queries —
+mål: pos 7–8 → 4–5, CTR ~2 % → ~5 %, ~1 000 extra clicks/90d.
+Påverkar alla 21 län. Uppföljning: 2026-06-25 (30d).
+
+**Risk:** kan paradoxalt boosta "polisen händelser [LÄN]"-queries på
+bekostnad av "senaste blåljusen [LÄN]" — båda är värdefulla. Mätperioden
+visar netto-effekt.
