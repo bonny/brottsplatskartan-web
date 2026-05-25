@@ -1,5 +1,46 @@
-**Status:** fas-2 implementerat 2026-05-02 — hybrid regex + AI-pipeline live, source-scope fallback, utökad vokabulär, dn-sthlm-källa, UI med "visa fler"-toggle. Mätperiod på precision + CTR pågår.
-**Senast uppdaterad:** 2026-05-02
+**Status:** fas-2 live; precision-stickprov 2026-05-25 visar 86–90 % (mål >85 %) — godkänt med två kvarvarande åtgärder: (a) Vara-verb-kollision (4/5 FPs) och (b) bug: AI:s `ai_is_blaljus=false` plockar inte bort regex-skapade place_news-rader. CTR/dwell + GSC-position mäts till 2026-05-31.
+**Senast uppdaterad:** 2026-05-25
+
+## Precisions-stickprov 2026-05-25
+
+Manuell bedömning av 50 slumpmässiga `place_news` (pool: 2 146 rader senaste 14d, alla har gått igenom regex+AI).
+
+**Resultat:**
+
+- **Strikt precision** (klart OK): 43/50 = **86 %**
+- **Generös precision** (inkl borderline aggregat-titlar/beredskap): 45/50 = **90 %**
+- Båda > målet 85 % → fas-2 godkänns.
+
+**Feltyper i de 5 verkliga FPs:**
+
+| Typ                                      | Antal | Exempel                                                         |
+| ---------------------------------------- | ----- | --------------------------------------------------------------- |
+| Vara-verb-kollision                      | 4     | "vara" (verb) matchar kommun "Vara" — pn=3819, 3614, 5694, 3656 |
+| AI-veto plockar ej bort regex place_news | 1     | pn=5694 — AI satt `ai_is_blaljus=false` men artikeln visas ändå |
+| Source-scope fel kommun                  | 1     | pn=4105 — svt-smaland → Växjö, men händelse var i Målilla       |
+
+(pn=5694 räknas dubbelt — både Vara-FP och AI-veto-bug.)
+
+**Åtgärder att deploya (fas 2.6):**
+
+1. **Vara-blocklist** — Case-sensitive `\bVara\b` (stort V) i regex för
+   kommuner som kolliderar med vanliga svenska ord. Kandidater att
+   utvärdera: Vara, Sala, Ale, Mora. Snabbtest: applicera mot historisk
+   pool och se hur många FPs som försvinner utan att tappa TPs.
+2. **AI-veto** — När `app:ai:classify-news-articles` sätter `ai_is_blaljus=false`,
+   radera tillhörande `place_news`-rader för den artikeln (eller flagga
+   så `Helper::getLatestNewsForPlace()` filtrerar bort dem). Detta blockerar
+   debatt-/opinionsartiklar som regex släpper igenom.
+3. **Source-scope-justering** — `svt-smaland` har Växjö som primary_place
+   men dess artiklar täcker hela Småland-regionen. Antingen ta bort
+   primary_place för smal/regional-källor eller kräv explicit kommun-träff
+   i blob innan fallback aktiveras.
+
+**Filer:**
+
+- `tmp-news-precision-2026-05-25/sample-raw.json` — rådata stickprov
+- `tmp-news-precision-2026-05-25/sample-50.md` — graded markdown
+- `tmp-news-precision-2026-05-25/sample-50.csv` — för spreadsheet
 
 ## Implementations-status fas 2 (2026-05-02)
 

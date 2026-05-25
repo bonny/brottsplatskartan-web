@@ -50,6 +50,20 @@ return [
     'min_place_name_length' => 4,
 
     /*
+     * Kommunnamn som kolliderar med vanliga svenska ord. Matchas
+     * case-sensitive (kräver stor bokstav) — annars triggar verbet
+     * "vara" träff på kommunen Vara. Stickprov 2026-05-25 visade att
+     * Vara stod för 80 % av plats-FPs i regex-passet.
+     *
+     * Lägg bara in namn med dokumenterad FP-volym — varje rad här
+     * gör visningen striktare och kan missa korrekt skrivna omnämnanden
+     * i sällsynta fall (t.ex. utterst gemener-skriven artikel).
+     */
+    'ambiguous_place_names' => [
+        'Vara',
+    ],
+
+    /*
      * Aggregator-källor där `description` ofta listar andra artiklar
      * (t.ex. Google News-summary). För dessa matchar vi bara mot `title`
      * — annars triggar listor av relaterade artiklar falska plats-
@@ -130,7 +144,10 @@ return [
         'svt-jamtland' => ['Östersund', 'Jämtlands län'],
         'svt-varmland' => ['Karlstad', 'Värmlands län'],
         'svt-jonkoping' => ['Jönköping', 'Jönköpings län'],
-        'svt-smaland' => ['Växjö', 'Kronobergs län'],
+        // svt-smaland: borttagen 2026-05-25 — regionen spänner 3 län
+        // (Kronoberg/Kalmar/Jönköping) så fallback till en enda stad ger
+        // fel kommun-koppling oftare än rätt. Källan får istället koppling
+        // bara när text explicit nämner en kommun i scope.
         'svt-halland' => ['Halmstad', 'Hallands län'],
         'svt-blekinge' => ['Karlskrona', 'Blekinge län'],
         'expressen-gt' => ['Göteborg', 'Västra Götalands län'],

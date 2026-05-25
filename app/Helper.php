@@ -203,11 +203,18 @@ class Helper {
 
             // Filter + sort på pn.pubdate utnyttjar idx_place_pubdate
             // (place_id, pubdate). Annars hade vi behövt join + filesort.
+            // AI-veto: regex-passet kan koppla artiklar som AI sedan
+            // avfärdar (debatt-/opinionsartiklar). Dölj rader där
+            // ai_is_blaljus=false; behåll ai_is_blaljus IS NULL för att
+            // inte fördröja visning innan AI-passet hunnit köra.
             $items = DB::table('place_news as pn')
                 ->join('news_articles as na', 'pn.news_article_id', '=', 'na.id')
                 ->whereIn('pn.place_id', $placeIds)
                 ->whereNotNull('pn.pubdate')
                 ->where('pn.pubdate', '>=', $cutoff)
+                ->where(function ($q) {
+                    $q->whereNull('na.ai_is_blaljus')->orWhere('na.ai_is_blaljus', true);
+                })
                 ->orderByDesc('pn.pubdate')
                 ->limit($limit)
                 ->select('na.id', 'na.source', 'na.url', 'na.title', 'na.summary', 'pn.pubdate')

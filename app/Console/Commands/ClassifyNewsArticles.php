@@ -24,7 +24,7 @@ class ClassifyNewsArticles extends Command
         $minPlaceLen = (int) config('news-classification.min_place_name_length', 4);
 
         $blaljusPattern = $this->buildBlaljusPattern();
-        [$placePattern, $placeMap, $placeLanById] = $this->buildPlacePattern($minPlaceLen);
+        [$placePattern, $ambiguousPattern, $placeMap, $placeLanById] = $this->buildPlacePattern($minPlaceLen);
 
         if ($placeMap === []) {
             $this->warn('Inga platser hittades i `places`-tabellen — hoppar över klassifikation.');
@@ -58,8 +58,8 @@ class ClassifyNewsArticles extends Command
             // Aggregator-källor: matcha bara mot title, inte summary.
             // Google News description listar andra artiklar → falska träffar.
             $useSummary = !isset($titleOnlySources[$article->source]);
-            $rawText = $article->title.($useSummary ? ' '.($article->summary ?? '') : '');
-            $text = mb_strtolower(trim($rawText));
+            $rawText = trim($article->title.($useSummary ? ' '.($article->summary ?? '') : ''));
+            $text = mb_strtolower($rawText);
             if ($text === '') {
                 continue;
             }
@@ -78,8 +78,8 @@ class ClassifyNewsArticles extends Command
             }
 
             $placeIds = [];
-            if (preg_match_all($placePattern, $text, $matches) > 0) {
-                foreach ($matches[1] as $matched) {
+            $collectMatches = function (array $names) use (&$placeIds, $placeMap, $placeLanById, $allowedLans): void {
+                foreach ($names as $matched) {
                     $key = mb_strtolower($matched);
                     if (!isset($placeMap[$key])) {
                         continue;
@@ -94,6 +94,14 @@ class ClassifyNewsArticles extends Command
                         $placeIds[$id] = true;
                     }
                 }
+            };
+            if ($placePattern !== '' && preg_match_all($placePattern, $text, $matches) > 0) {
+                $collectMatches($matches[1]);
+            }
+            // Ambigua kommunnamn (Vara m.fl.) matchas case-sensitive mot
+            // rå-texten — annars triggar verbet "vara" träff på kommunen.
+            if ($ambiguousPattern !== '' && preg_match_all($ambiguousPattern, $rawText, $matches) > 0) {
+                $collectMatches($matches[1]);
             }
 
             // Source-scope fallback: artikel klassad som blåljus men ingen
@@ -186,14 +194,17 @@ class ClassifyNewsArticles extends Command
     }
 
     /**
-     * Bygger en sammanslagen regex för plats-namn + två lookup-mappar:
+     * Bygger två regex-mönster för plats-namn + lookup-mappar:
+     *  - $pattern: case-insensitive mot lower-cased text (default)
+     *  - $ambiguousPattern: case-sensitive mot rå-text för kommuner som
+     *    kolliderar med vanliga ord (Vara, m.fl.)
      *  - $map: lowercased name → list of place_id (för matchning)
      *  - $lanById: place_id → lan (för källa-scope-filtrering)
      *
      * Två platser kan dela namn (samma ort i två län), så samma matchning
      * kan koppla till flera id.
      *
-     * @return array{0: string, 1: array<string, list<int>>, 2: array<int, ?string>}
+     * @return array{0: string, 1: string, 2: array<string, list<int>>, 3: array<int, ?string>}
      */
     private function buildPlacePattern(int $minLen): array
     {
@@ -219,17 +230,41 @@ class ClassifyNewsArticles extends Command
             });
 
         if ($map === []) {
-            return ['', [], []];
+            return ['', '', [], []];
+        }
+
+        $ambiguous = (array) config('news-classification.ambiguous_place_names', []);
+        $ambiguousLower = array_flip(array_map('mb_strtolower', $ambiguous));
+
+        $normalNames = [];
+        $ambiguousNames = [];
+        foreach (array_keys($map) as $name) {
+            if (isset($ambiguousLower[$name])) {
+                $ambiguousNames[] = $name;
+            } else {
+                $normalNames[] = $name;
+            }
         }
 
         // Längsta först — då matchar PCRE "Sundsvalls kommun" före "Sundsvall"
         // när båda finns i texten.
-        $names = array_keys($map);
-        usort($names, fn ($a, $b) => mb_strlen($b) - mb_strlen($a));
+        usort($normalNames, fn ($a, $b) => mb_strlen($b) - mb_strlen($a));
+        usort($ambiguousNames, fn ($a, $b) => mb_strlen($b) - mb_strlen($a));
 
-        $escaped = array_map(fn ($n) => preg_quote($n, '/'), $names);
-        $pattern = '/(?<![\p{L}])('.implode('|', $escaped).')(?![\p{L}])/iu';
+        $pattern = '';
+        if ($normalNames !== []) {
+            $escaped = array_map(fn ($n) => preg_quote($n, '/'), $normalNames);
+            $pattern = '/(?<![\p{L}])('.implode('|', $escaped).')(?![\p{L}])/iu';
+        }
 
-        return [$pattern, $map, $lanById];
+        // Ambigua namn behåller ursprunglig casing från config — matchas mot
+        // rå-text med `u`-flagga (utan `i`), så "Vara" träffar bara stort V.
+        $ambiguousPattern = '';
+        if ($ambiguousNames !== []) {
+            $originalCase = array_map(fn ($n) => preg_quote($n, '/'), $ambiguous);
+            $ambiguousPattern = '/(?<![\p{L}])('.implode('|', $originalCase).')(?![\p{L}])/u';
+        }
+
+        return [$pattern, $ambiguousPattern, $map, $lanById];
     }
 }
