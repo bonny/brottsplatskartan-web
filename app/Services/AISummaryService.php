@@ -173,12 +173,16 @@ class AISummaryService
     /**
      * Returnerar första meningen ur en text (slut vid första `.`, `!` eller
      * `?` följt av mellanslag/slut), max `$maxLen` tecken som hard-cap.
-     * Bevarar avgörande detaljer för AI:n (typ + tid + plats) utan att
-     * släpa med hela artikelkroppen.
+     * Strippar HTML-taggar först — parsed_content kan innehålla `<p>`,
+     * `<br>` m.fl. från Polisens-feed som annars passerar till AI:n.
      */
     private function firstSentence(string $text, int $maxLen): string
     {
-        $text = trim($text);
+        // Ersätt taggar med space — annars klistras `</p><p>` ihop till
+        // `slut.Start` och sentence-detection misslyckas. Kollapsa sedan
+        // upprepad whitespace innan trunkering.
+        $text = (string) preg_replace('/<[^>]+>/', ' ', $text);
+        $text = trim((string) preg_replace('/\s+/u', ' ', $text));
         if ($text === '') {
             return '';
         }

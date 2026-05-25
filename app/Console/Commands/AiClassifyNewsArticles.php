@@ -105,10 +105,14 @@ class AiClassifyNewsArticles extends Command
                 continue;
             }
 
-            // Foreign-veto: utländsk markör i titeln OCH ingen svensk markör i hela texten.
+            // Foreign-veto: utländsk markör i titeln OCH ingen svensk
+            // markör i hela texten. Swedish-check hoppas över när
+            // foreign-pattern redan failat — sparar ett preg_match per
+            // artikel som passerat term-filtret.
             $hasForeignInTitle = $foreignPattern !== ''
                 && preg_match($foreignPattern, $title) === 1;
-            $hasSwedish = $swedishPattern !== ''
+            $hasSwedish = $hasForeignInTitle
+                && $swedishPattern !== ''
                 && preg_match($swedishPattern, $text) === 1;
 
             if ($hasForeignInTitle && !$hasSwedish) {
