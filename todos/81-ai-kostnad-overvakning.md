@@ -1,5 +1,5 @@
-**Status:** aktiv — beslut B (NewsClassifier-prefilter v2) implementerad 2026-05-25. Simulering mot 7d prod: 99.0 % recall, 45.7 % skip-rate. Förväntad besparing ~$27/mån ($59 → $32 på NewsClassifier). Soak till 2026-06-01.
-**Senast uppdaterad:** 2026-05-25 (beslut B implementerad — word-boundary regex + sammansättnings-suffix + foreign-veto via titel-bara. PHPStan ren, dry-run OK lokalt.)
+**Status:** aktiv — beslut B (prefilter v2) + 0a (kort prompt) implementerade 2026-05-25. Förväntad total besparing ~$43/mån ($59 → ~$16 på NewsClassifier). Soak till 2026-06-01.
+**Senast uppdaterad:** 2026-05-25 (0a — system-prompten krymper från 149 → 61 rader, A/B 98 % agreement mot prod-historik på 50 stratifierade artiklar.)
 
 # Todo #81 — Håll koll på hur mycket AI-anropen kostar
 
@@ -436,6 +436,53 @@ V5 valt: max skip-rate utan att tappa väsentlig recall. PHP-implementation veri
 - Stickprov av 20 slumpade "foreign-veto"-artiklar för att verifiera att inga svenska brott vetade felaktigt.
 
 MonthlySummary klättrade från $4 → $10/mån — sekundär, vänta tills B-soak är klar innan eventuell granskning.
+
+### 0a implementerat 2026-05-25 — kortare system-prompt
+
+**Diagnos:** NewsClassifier-snittet är 3045 input-tokens / 150 output-tokens per anrop. System-prompten (`resources/views/ai/prompts/news-classify.blade.php`) var 149 rader / ~2700 tokens och dominerade kostnaden.
+
+**Lösning:** Skrev om prompten kompakt — bevarade kärnan av JA/NEJ-listan, stadsdels-mappning och schema. Tog bort:
+
+- Halverad rollbeskrivning (6 → 2 rader)
+- Komprimerade JA/NEJ-listorna utan att tappa täckning (30 → 12 rader)
+- Stadsdel-mappning kortad till 5 städer med exempel (Haiku 4.5 vet svenska stadsdelar — explicit lista var överkurs)
+- 4 exempel → 2 (brand-Bromma + sport-Häcken)
+
+Ny prompt: 61 rader / ~800 tokens. **Token-besparing per anrop: ~2000 tokens.**
+
+**Validering — A/B mot prod-historik:**
+
+Stratifierat sample 50 artiklar (25 AI-JA + 25 AI-NEJ från senaste 7d). Kört nya prompten lokalt mot Haiku 4.5, jämfört `is_blaljus` mot prod-svar.
+
+| Mätning                          | Antal | Andel      |
+| -------------------------------- | ----- | ---------- |
+| Agreement (samma JA/NEJ-beslut)  | 49    | **98.0 %** |
+| Old=JA, New=NEJ (recall-tapp)    | 1     | 2.0 %      |
+| Old=NEJ, New=JA (precision-tapp) | 0     | 0.0 %      |
+
+Den enda diskrepansen ("Nato-kritiska protester vid mötet i Helsingborg") var OLD=JA med MEDEL confidence och OLD-skäl "fokus är politiskt". NEW=NEJ med skäl "demonstration är politik, inte blåljus". Sannolikt en **precision-vinst** snarare än recall-tapp — gråzon som OLD själv var osäker på.
+
+**Förväntad effekt (kombinerat med prefilter v2):**
+
+| Mätning                           | Före (2026-05-24) | Efter v2 + 0a |
+| --------------------------------- | ----------------- | ------------- |
+| NewsClassifier anrop/dygn         | 518               | ~280          |
+| NewsClassifier input-tokens/anrop | 3 045             | ~1 050        |
+| NewsClassifier $/anrop            | $0.0038           | ~$0.0016      |
+| NewsClassifier $/mån              | $59               | **~$16**      |
+| Total besparing                   |                   | **~$43/mån**  |
+
+**Soak till 2026-06-01:**
+
+- Verifiera ~$16/mån NewsClassifier-takt via `ai:usage --days=7 --by=agent`.
+- Stickprov av 20 nya AI-klassade artiklar — kolla att kategorin + kommun_names är rimliga (eventuell tapp på exotiska stadsdelar).
+- Stickprov av 20 prefilter-foreign-veto-artiklar — utesluta felvetade svenska brott.
+
+Återstående hävstänger om mer besparing behövs:
+
+- **MonthlySummary** ($10/mån, klättrat från $4) — sekundär granskning efter soak.
+- **0c prompt-caching** — kräver vendor-PR mot `laravel/ai`, ~$5/mån extra besparing post-0a.
+- **EventTitleRewriter** ($7/mån) — krympning av `title-rewrite.blade.php`. Marginalt.
 
 ## Confidence
 
