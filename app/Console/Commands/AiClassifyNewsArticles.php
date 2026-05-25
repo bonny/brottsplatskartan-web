@@ -61,12 +61,15 @@ class AiClassifyNewsArticles extends Command
         // (osannolikt på kommunnivå men teoretiskt möjligt), tar vi alla.
         $kommunMap = $this->buildKommunMap();
 
-        // Pre-filter (todo #81): skippa AI-anropet helt om titel + summary
-        // inte innehåller en enda blåljus-term ur config-listan. Sparar
-        // ~30-40 % av Haiku-volymen utan att rubba blåljus-recall — listan
-        // är medvetet bred (~80 termer) och AI:n skulle ändå avfärda dessa
-        // som "ej blåljus". Loggar `prefilter-skip` i ai_reason för audit.
-        $blaljusTerms = (array) config('news-classification.blaljus_terms', []);
+        // Prefilter (todo #81 fas 2): skippa AI-anropet om titel + summary
+        // inte innehåller en blåljus-term enligt fyra mekanismer:
+        //  1. ord-prefix-stam (polis → polisens, polismannen)
+        //  2. sammansättnings-suffix (Rönningemordet, dödsolyckan)
+        //  3. foreign-veto (utländsk plats i titeln + ingen svensk markör)
+        // Mätt mot 7d prod-data 2026-05-25: 98.8 % recall, 45.8 % skip-rate.
+        // Förväntad besparing: ~$27/mån.
+        [$prefixPattern, $suffixPattern, $foreignPattern, $swedishPattern]
+            = $this->buildPrefilterPatterns();
 
         $now = Carbon::now()->toDateTimeString();
         $stats = [
@@ -75,29 +78,49 @@ class AiClassifyNewsArticles extends Command
             'no_place_match' => 0,
             'errors' => 0,
             'prefilter_skipped' => 0,
+            'prefilter_foreign_veto' => 0,
         ];
 
         foreach ($articles as $article) {
-            $haystack = mb_strtolower(($article->title ?? '') . ' ' . ($article->summary ?? ''));
+            $title = (string) ($article->title ?? '');
+            $summary = (string) ($article->summary ?? '');
+            $text = $title . ' ' . $summary;
 
-            $hasKeyword = false;
-            foreach ($blaljusTerms as $term) {
-                if (mb_strpos($haystack, mb_strtolower((string) $term)) !== false) {
-                    $hasKeyword = true;
-                    break;
-                }
+            $hasTerm = $prefixPattern !== '' && preg_match($prefixPattern, $text) === 1;
+            if (!$hasTerm && $suffixPattern !== '') {
+                $hasTerm = preg_match($suffixPattern, $text) === 1;
             }
 
-            if (!$hasKeyword) {
+            if (!$hasTerm) {
                 $stats['prefilter_skipped']++;
                 if ($dryRun) {
-                    $this->line('PREFILTER-SKIP: ' . mb_substr($article->title, 0, 80));
+                    $this->line('PREFILTER-SKIP (ingen term): ' . mb_substr($title, 0, 80));
                     continue;
                 }
                 DB::table('news_articles')->where('id', $article->id)->update([
                     'ai_classified_at' => $now,
                     'ai_is_blaljus' => false,
                     'ai_reason' => '[prefilter-skip] ingen blåljus-term i titel/summary',
+                ]);
+                continue;
+            }
+
+            // Foreign-veto: utländsk markör i titeln OCH ingen svensk markör i hela texten.
+            $hasForeignInTitle = $foreignPattern !== ''
+                && preg_match($foreignPattern, $title) === 1;
+            $hasSwedish = $swedishPattern !== ''
+                && preg_match($swedishPattern, $text) === 1;
+
+            if ($hasForeignInTitle && !$hasSwedish) {
+                $stats['prefilter_foreign_veto']++;
+                if ($dryRun) {
+                    $this->line('PREFILTER-SKIP (foreign-veto): ' . mb_substr($title, 0, 80));
+                    continue;
+                }
+                DB::table('news_articles')->where('id', $article->id)->update([
+                    'ai_classified_at' => $now,
+                    'ai_is_blaljus' => false,
+                    'ai_reason' => '[prefilter-skip] utländsk plats i titel, ingen svensk markör',
                 ]);
                 continue;
             }
@@ -174,8 +197,10 @@ class AiClassifyNewsArticles extends Command
         }
 
         $this->info(sprintf(
-            'Klart. Prefilter-skip: %d, AI-blåljus: %d, plats-rader: %d, ingen plats-match: %d, fel: %d.',
+            'Klart. Prefilter-skip: %d (utan term) + %d (foreign-veto), AI-blåljus: %d, '
+            . 'plats-rader: %d, ingen plats-match: %d, fel: %d.',
             $stats['prefilter_skipped'],
+            $stats['prefilter_foreign_veto'],
             $stats['ai_blaljus'],
             $stats['place_rows_added'],
             $stats['no_place_match'],
@@ -183,6 +208,55 @@ class AiClassifyNewsArticles extends Command
         ));
 
         return self::SUCCESS;
+    }
+
+    /**
+     * Bygger fyra regex-mönster för prefiltret:
+     *  - prefix: `(?<![\p{L}])(stam)\p{L}*` — matchar ord som börjar med stam
+     *  - suffix: `\p{L}(term)\p{L}*(?![\p{L}])` — kräver ordtecken före (sammansättning)
+     *  - foreign: `(?<![\p{L}])(land)(?![\p{L}])` — matchar utländska orter som hela ord
+     *  - swedish: `(?<![\p{L}])(markör)(?![\p{L}])` — matchar svenska markörer som hela ord
+     *
+     * Word-boundary baseras på Unicode-bokstäver (`\p{L}`) — `\b` är inte
+     * multibyte-säker.
+     *
+     * Tom sträng returneras om motsvarande config-lista är tom.
+     *
+     * @return array{0: string, 1: string, 2: string, 3: string}
+     */
+    private function buildPrefilterPatterns(): array
+    {
+        $alternation = function (array $terms): string {
+            $clean = [];
+            foreach ($terms as $term) {
+                $t = trim((string) $term);
+                if ($t === '') {
+                    continue;
+                }
+                $clean[$t] = true;
+            }
+            if ($clean === []) {
+                return '';
+            }
+            // Längsta först — PCRE matchar det första alternativet, så
+            // `polisens` föredras före `polis` när bägge listas.
+            $sorted = array_keys($clean);
+            usort($sorted, fn ($a, $b) => mb_strlen($b) - mb_strlen($a));
+            $escaped = array_map(fn ($s) => preg_quote($s, '/'), $sorted);
+            return implode('|', $escaped);
+        };
+
+        $prefixAlt = $alternation((array) config('news-classification.prefilter_prefix_stems', []));
+        $suffixAlt = $alternation((array) config('news-classification.prefilter_suffix_terms', []));
+        $foreignAlt = $alternation((array) config('news-classification.prefilter_foreign_places', []));
+        $swedishAlt = $alternation((array) config('news-classification.prefilter_swedish_markers', []));
+
+        return [
+            $prefixAlt === '' ? '' : '/(?<![\p{L}])(?:'.$prefixAlt.')\p{L}*/iu',
+            $suffixAlt === '' ? '' : '/\p{L}(?:'.$suffixAlt.')\p{L}*(?![\p{L}])/iu',
+            $foreignAlt === '' ? '' : '/(?<![\p{L}])(?:'.$foreignAlt.')(?![\p{L}])/iu',
+            $swedishAlt === '' ? '' : '/(?<![\p{L}])(?:'.$swedishAlt.')(?![\p{L}])/iu',
+        ];
     }
 
     /**

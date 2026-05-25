@@ -8,11 +8,13 @@
  */
 return [
     /*
-     * En artikel räknas som blåljus om den matchar minst ett ord ur denna
-     * lista (case-insensitive, multibyte-säker, ord-gränsen baseras på
-     * Unicode-bokstäver). Listan är medvetet bred — risken för falska
-     * negativa är värre än falska positiva eftersom plats-matchningen
-     * agerar som extra filter.
+     * Används av regex-passet (`app:news:classify`) — en artikel klassas
+     * som blåljus om något ord matchar med Unicode-ordgränser. Listan är
+     * medvetet bred eftersom plats-matchningen agerar som extra filter.
+     *
+     * OBS: detta är INTE prefiltret för AI-passet. Det styrs av nycklarna
+     * `prefilter_prefix_stems`, `prefilter_suffix_terms`,
+     * `prefilter_foreign_places` och `prefilter_swedish_markers` nedan.
      */
     'blaljus_terms' => [
         'polis', 'polisen', 'polisens', 'poliser', 'poliserna', 'polismän', 'polisinsats', 'polisman', 'gripen',
@@ -40,6 +42,220 @@ return [
         'ras', 'översvämning', 'översvämmad', 'översvämningar',
         'gänget', 'gängbråk', 'skadeskjuten', 'skottskadad',
         'skadegörelse', 'klotter', 'vandalism',
+    ],
+
+    /*
+     * Prefilter för AI-passet (`app:news:ai-classify`, todo #81 fas 2).
+     *
+     * Mätt 2026-05-25 mot 7d prod-data: 66 % av AI-anropen var brus
+     * (AI-NEJ). Nuvarande prefilter (mb_strpos, brett) saknar ordgränser
+     * och matchar "rån" i "från", "Iran"; "ras" i "krasch", "rasism";
+     * "raket" i "raketbolag". Ny prefilter använder fyra mekanismer:
+     *
+     * 1. PREFIX_STEMS — ord-prefix (matchar polisens, polismannen via
+     *    stammen "polis"). Implementerat som regex `(?<![\p{L}])stam\p{L}*`.
+     * 2. SUFFIX_OK_TERMS — sammansättnings-suffix (matchar "villabrand",
+     *    "Rönningemordet", "dödsolyckan" via `\p{L}(term)\p{L}*`).
+     *    BARA termer som är substring-säkra ("rån" är medvetet uteslutet
+     *    pga "från"; använd PREFIX_STEMS för rån istället).
+     * 3. FOREIGN_PLACES + SWEDISH_MARKERS — om titeln innehåller en
+     *    utländsk plats (som hela ord) OCH ingen svensk markör finns i
+     *    titel + summary, vetas artikeln. Skydd mot Mexiko-skjutningar
+     *    och Ukraina-explosioner som AI klassar som blåljus men inte
+     *    tillhör svenska plats-sidor.
+     *
+     * Simulering 2026-05-25 mot 3 686 prod-artiklar: 98.8 % recall,
+     * 45.8 % skip-rate (vs nuvarande 100 % recall, 0 % skip). Förväntad
+     * besparing: ~$27/mån på NewsClassifier ($59 → $32).
+     */
+    'prefilter_prefix_stems' => [
+        // Polis/myndighet/dom
+        'polis', 'gripen', 'gripit', 'gripits', 'anhåll',
+        'häkt', 'misstänk', 'åtal', 'döm',
+        // Brott (generellt + sammansättningar)
+        'brott', 'inbrott', 'brottsling', 'brottslig',
+        // Brand-stam + vanliga sammansättningar (suffix-fallet
+        // täcks separat via prefilter_suffix_terms, men vissa
+        // vanliga sammansättningar listas explicit för säkerhet)
+        'brand', 'brände', 'brann', 'brinn', 'bränn',
+        'eldsvåda', 'mordbrand', 'pyroman', 'rökutveckl',
+        'villabrand', 'lägenhetsbrand', 'lägenhetsbränder',
+        'skogsbrand', 'skogsbränder',
+        'bilbrand', 'bilbränder', 'läktarbrand', 'läktarbränder',
+        'soptunnebrand', 'soptunnebränder', 'soptunnabrand',
+        'fordonsbrand', 'fordonsbränder', 'bussbrand', 'bussbränder',
+        'containerbrand', 'containerbränder',
+        'gräsbrand', 'gräsbränder', 'skolbrand', 'skolbränder',
+        'fastighetsbrand', 'fastighetsbränder',
+        'restaurangbrand', 'restaurangbränder',
+        // Räddning
+        'räddningstjänst', 'räddningsinsats', 'räddningsledare', 'räddningsstyrka',
+        'utryckning', 'blåljus',
+        // Larm (kärna)
+        'larm', 'larmade', 'larmas', 'larmats', 'larmat', 'larmet', 'larmen',
+        // Tillgrepp
+        'rån', 'stöld', 'stulen', 'stulet', 'stulna',
+        'tillgrip', 'tillgrep', 'snatt', 'snattade', 'snatteri',
+        // Bedrägeri/bluff
+        'bedräger', 'bluffannons', 'bluffmejl', 'bluffsamtal', 'bluffmail',
+        // Våld/dödsfall
+        'mord', 'mörd', 'dråp',
+        'död', 'döda', 'dödar', 'dödat', 'dödade', 'dödlig', 'dödligt', 'dödliga',
+        'avliden', 'avlidet', 'avlidne', 'avlidna',
+        'omkom', 'omkommen', 'omkomna', 'omkommet',
+        'dog', 'döende',
+        'misshandel', 'misshandlad', 'misshandlade', 'misshandlas', 'misshandlats',
+        // Skott/skjut
+        'skottlossning', 'skottlossningar', 'skotten',
+        'skjut', 'beskjut', 'skadeskjut', 'skottskad',
+        // Sprängning/explosion
+        'sprängning', 'sprängningar', 'sprängdåd',
+        'sprängde', 'sprängdes', 'sprängt',
+        'bomb', 'attentat', 'detonation', 'detonationer',
+        'explod', 'explosion', 'explosioner', 'explosivt',
+        'granat', 'granater',
+        // Vapen/kniv
+        'kniv', 'knivhot', 'knivattack', 'knivskuren', 'knivskars',
+        'knivöverfall', 'knivskärning', 'knivvåld',
+        // Trafik/olycka + sammansättningar
+        'olycka', 'olyckan', 'olyckor', 'olyckorna',
+        'trafikolycka', 'trafikolyckor', 'trafikolyckan',
+        'singelolycka', 'singelolyckan',
+        'arbetsplatsolycka', 'arbetsolycka',
+        'fallolycka', 'fallolyckor',
+        'cykelolycka', 'mopedolycka', 'motorcykelolycka',
+        'drunkningsolycka', 'drunkningsolyckor',
+        'krock', 'krockade', 'krockat', 'frontalkrock', 'sidokrock',
+        'kollision', 'kolliderade', 'kollidera',
+        'krasch', 'kraschen', 'kraschade', 'kraschat',
+        'bilkrasch', 'bilkraschen',
+        'påkörd', 'påkörda', 'påkört', 'omkullkörd', 'omkullkörda',
+        // Försvinnande
+        'försvunn', 'försvann', 'efterlys',
+        // Evakuering/avspärrning
+        'evakuera', 'evakuering', 'evakuerad', 'evakuerade', 'evakuerats',
+        'avspärr',
+        // Narkotika
+        'narkotika', 'narkotikabrott',
+        // Vatten
+        'drunkn',
+        // Natur (sammansättningar för ras — inte bara "ras" som
+        // kolliderar med rasism/krasch)
+        'jordbävning', 'jordbävningar',
+        'översvämn',
+        'jordras', 'gruvras', 'stenras', 'snöras', 'bergras', 'takras',
+        'jordskred', 'skred',
+        // "ras" som specifika ord (matchar inte "rasism", "krasch")
+        'raset', 'rasen', 'rasade', 'rasat', 'rasar',
+        // Gäng
+        'gängbråk', 'gängskjutning', 'gängkrim',
+        // Skadegörelse
+        'skadegörelse', 'klotter', 'vandalis',
+        // Sexualbrott
+        'våldtäkt', 'våldtagen', 'våldtog',
+        'sexualbrott', 'sexuellt',
+        // Hot/bomb-skämt
+        'bombhot', 'bombskämt',
+        // Brottsutredning
+        'spaning', 'tillslag', 'razzia',
+    ],
+
+    /*
+     * Termer som accepteras även som suffix i sammansättningar.
+     * Matchas via `\p{L}(term)\p{L}*` — kräver minst ETT ordtecken före,
+     * dvs sammansättning. Välj BARA substring-säkra ord — "rån" är
+     * uteslutet (matchar "från").
+     */
+    'prefilter_suffix_terms' => [
+        'mord', 'mordet', 'morden',
+        'sprängning', 'sprängningen', 'sprängningar',
+        'olycka', 'olyckan', 'olyckor', 'olyckorna',
+        'krock', 'krocken',
+        'krasch', 'kraschen',
+        'kollision',
+        'skjutning', 'skjutningar', 'skjut', 'skjuten', 'skjutna',
+        'brand', 'branden', 'bränder',
+        'beslag',
+        'jakt',
+        'rånet', 'rånen', 'rånad',
+    ],
+
+    /*
+     * Utländska land/region-namn som triggar foreign-veto. Matchas som
+     * hela ord (Unicode-ordgränser) — så "Iran" matchar inte
+     * "Iranexperten". Vetas BARA om finns i titeln OCH ingen svensk
+     * markör finns i hela texten.
+     */
+    'prefilter_foreign_places' => [
+        'gaza', 'israel', 'palestin',
+        'ukraina', 'ukrainsk', 'kiev', 'kyiv', 'kharkiv', 'mariupol',
+        'ryssland', 'rysk', 'moskva', 'putin', 'kreml',
+        'iran', 'iransk', 'teheran',
+        'turkiet', 'turkisk',
+        'mexiko', 'mexikansk',
+        'usa', 'amerikansk', 'washington',
+        'tyskland', 'tysk', 'berlin', 'münchen',
+        'frankrike', 'fransk', 'paris',
+        'polen', 'polsk', 'warszawa',
+        'estland', 'estnisk',
+        'lettland', 'lettisk',
+        'litauen', 'litauisk',
+        'spanien', 'spansk', 'madrid', 'barcelona',
+        'italien', 'italiensk', 'rom', 'milano',
+        'grekland', 'grekisk',
+        'storbritannien', 'brittisk', 'london',
+        'belgien', 'belgisk', 'bryssel',
+        'nederländerna', 'amsterdam',
+        'schweiz', 'schweizisk',
+        'österrike', 'österrikisk',
+        'serbien', 'kroatien', 'bosnien',
+        'kina', 'kinesisk', 'peking',
+        'japan', 'japansk', 'tokyo',
+        'indien', 'indisk',
+        'pakistan',
+        'afghanistan', 'taliban',
+        'syrien', 'syrisk',
+        'libanon', 'libanesisk',
+        'jemen',
+        'sudan',
+        'nigeria',
+        'venezuela',
+        'colombia', 'colombiansk',
+        'brasilien',
+        'argentina',
+        'australien', 'australisk',
+        'kanada', 'kanadensisk',
+        'sydkorea', 'nordkorea',
+        'taiwan',
+        'maldiverna',
+        'thailand', 'thai',
+        'vietnam',
+        'indonesien',
+        'mali', 'somalia', 'libyen', 'irak', 'kongo', 'etiopien',
+        'krim', 'donbas',
+    ],
+
+    /*
+     * Svenska markörer som skyddar mot foreign-veto. Om någon av dessa
+     * matchar (som hela ord) i titel + summary, släpps artikeln igenom
+     * även om titeln nämner en utländsk plats. Innehåller stora städer,
+     * län, och svenska kontext-ord ("kommun", "tingsrätt" m.fl.).
+     */
+    'prefilter_swedish_markers' => [
+        'sverige', 'svensk',
+        'stockholm', 'göteborg', 'malmö', 'uppsala', 'västerås', 'örebro',
+        'linköping', 'helsingborg', 'jönköping', 'norrköping', 'lund',
+        'umeå', 'gävle', 'borås', 'eskilstuna', 'sundsvall', 'halmstad',
+        'karlstad', 'växjö', 'kalmar', 'luleå', 'östersund', 'falun',
+        'kristianstad', 'skellefteå', 'visby', 'karlskrona', 'trollhättan',
+        'södertälje', 'haninge', 'huddinge', 'nacka', 'solna', 'sollentuna',
+        'södermanland', 'östergötland', 'småland', 'skåne', 'blekinge',
+        'dalarna', 'gästrikland', 'hälsingland', 'jämtland', 'lappland',
+        'norrbotten', 'västerbotten', 'värmland', 'dalsland', 'bohuslän',
+        'halland', 'närke', 'västmanland', 'uppland', 'gotland', 'öland',
+        // Svenska kontext-ord
+        'kommun', 'län', 'tingsrätt', 'hovrätt', 'polisregion',
+        'försvarsmakten', 'säpo',
     ],
 
     /*

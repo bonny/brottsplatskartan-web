@@ -1,5 +1,5 @@
-**Status:** aktiv — EventNewsMatcher avstängd 2026-05-17 (-$18/månad). Soak till ~2026-05-24 för att verifiera ny dygnstakt ~$1.60.
-**Senast uppdaterad:** 2026-05-17 (kommenterade ut event-news-match-schemat i Kernel.php — 1.6 % event-täckning motiverar inte $18/mån. NewsClassifier behållen, ev. skärpa prefilter efter #36-data 2026-05-25.)
+**Status:** aktiv — beslut B (NewsClassifier-prefilter v2) implementerad 2026-05-25. Simulering mot 7d prod: 99.0 % recall, 45.7 % skip-rate. Förväntad besparing ~$27/mån ($59 → $32 på NewsClassifier). Soak till 2026-06-01.
+**Senast uppdaterad:** 2026-05-25 (beslut B implementerad — word-boundary regex + sammansättnings-suffix + foreign-veto via titel-bara. PHPStan ren, dry-run OK lokalt.)
 
 # Todo #81 — Håll koll på hur mycket AI-anropen kostar
 
@@ -340,6 +340,102 @@ Min rekommendation: **A nu, B efter #36-data 2026-05-25.** Total potentiell besp
 ### 7d-uppföljning 2026-05-23 (orig plan)
 
 ~~Verifierad i förtid 2026-05-17 efter faktura-trigger.~~ Se ovan.
+
+### Soak-uppföljning 2026-05-25 — prognosen höll inte
+
+8-dygns soak post-EventNewsMatcher-avstängning. Förväntad dygnstakt: ~$1.60. Verklighet: **$2.58/dygn snitt** (full dygn 18–24 maj).
+
+**Per dygn:**
+
+| Dag        | Anrop | $/dygn |
+| ---------- | ----- | ------ |
+| 2026-05-18 | 602   | $2.70  |
+| 2026-05-19 | 607   | $2.88  |
+| 2026-05-20 | 544   | $2.47  |
+| 2026-05-21 | 606   | $2.91  |
+| 2026-05-22 | 618   | $2.85  |
+| 2026-05-23 | 495   | $2.44  |
+| 2026-05-24 | 485   | $2.31  |
+| Snitt      | 565   | $2.65  |
+
+**Per agent (7d, ~$77/mån total):**
+
+| Agent              | Anrop/dygn | $/dygn | $/mån   |
+| ------------------ | ---------- | ------ | ------- |
+| NewsClassifier     | 518        | $1.97  | **$59** |
+| MonthlySummary     | 6.6        | $0.32  | $10     |
+| EventTitleRewriter | 28         | $0.25  | $7      |
+| DailySummary       | 10         | $0.11  | $3      |
+| EventNewsMatcher   | <1         | $0.01  | —       |
+
+**Drift-orsak:** NewsClassifier-volym har växt ~60 % över 8 dygn (322 → 518 anrop/dygn). Antingen fler RSS-artiklar inkommer eller regex-prefiltret fångar mindre andel. Inte djup-undersökt — det räcker för beslut.
+
+**Beslut: kör beslut B (NewsClassifier-prefilter-skärpning) som nästa steg.**
+
+- Halverar förmodligen kostnaden till ~$30/mån (sparar ~$30/mån = ~$360/år).
+- Halvdags arbete + stickprov för recall (samma metodik som #64 fas 2.6).
+- Mindre angeläget än kostnaden i sig, men efter +60 % volym-drift är trenden värd att bryta.
+
+MonthlySummary klättrade från $4 → $10/mån — sekundär, vänta tills B är klar innan eventuell granskning.
+
+### Beslut B implementerat 2026-05-25 — Prefilter v2
+
+**Diagnos:** SQL-stickprov mot 7d prod-data (3 686 AI-klassade artiklar): 66 % av AI-anropen var brus (AI-NEJ). Topp-läckande termer (mb_strpos utan ordgränser):
+
+| Term      | Träffar | AI-JA | Brus | Exempel-FP                                   |
+| --------- | ------- | ----- | ---- | -------------------------------------------- |
+| `rån`     | 1 363   | 213   | 84 % | "skrivits ut **från** sjukhuset", "**Iran**" |
+| `ras`     | 749     | 120   | 84 % | "att**ras**", "k**ras**ch", "publi**ras**"   |
+| `död`     | 723     | 248   | 66 % | "Tio personer ihjälskjutna i Mexiko"         |
+| `brott`   | 529     | 205   | 61 % | "Ny misstänkt spion gripen i Norge"          |
+| `raket`   | 36      | 1     | 97 % | "Musk tar **raket**bolaget Space X"          |
+| `brottet` | 153     | 5     | 97 % | spioneri-historier utomlands                 |
+
+**Lösning — fyra mekanismer i `config/news-classification.php`:**
+
+1. **PREFIX_STEMS (214 termer)** — ord-prefix-stam med Unicode-ordgränser `(?<![\p{L}])stam\p{L}*`. Matchar `polisens`/`polismannen` via stammen `polis`. Inkluderar 90+ extra termer som tidigare missades (`pistolrånad`, `bilkrasch`, `jordbävning`, `våldtäkt`, `dog`, `döende`, sammansättningar `villabrand`/`skogsbrand`/`fastighetsbrand`).
+2. **SUFFIX_OK_TERMS (28 termer)** — sammansättnings-suffix `\p{L}(term)\p{L}*` för "Rönningemordet", "dödsolyckan", "felsprängningen", "storkrock". BARA substring-säkra termer — "rån" uteslutet pga "från".
+3. **FOREIGN_PLACES (108 termer)** — utländska platser matchas som hela ord. Word-boundary fixar att "Iran" inte längre matchar "Iranexperten" eller "Polskayoutuber".
+4. **SWEDISH_MARKERS (64 termer)** — skydd mot foreign-veto. Stora städer + län + kontext-ord ("kommun", "tingsrätt", "försvarsmakten").
+
+**Foreign-veto-regel:** Vetar bara om utländsk markör finns i **titeln** OCH ingen svensk markör finns i titel+summary. Försiktig — svenska brott som nämner ett land i sammanhanget (t.ex. "ukrainsk medborgare gripen i Stockholm") släpps igenom.
+
+**Validering:**
+
+| Variant                     | Recall     | Skip-rate  | Precision  |
+| --------------------------- | ---------- | ---------- | ---------- |
+| Nuvarande (mb_strpos)       | 100.0 %    | 0.0 %      | 33.9 %     |
+| V1 (prefix-stam)            | 98.1 %     | 36.2 %     | 52.2 %     |
+| V3 (V1 + suffix)            | 99.0 %     | 34.7 %     | 51.4 %     |
+| V4 (V3 + foreign-veto-text) | 97.4 %     | 50.8 %     | 67.2 %     |
+| **V5 (V3 + foreign-titel)** | **98.8 %** | **45.8 %** | **61.9 %** |
+
+V5 valt: max skip-rate utan att tappa väsentlig recall. PHP-implementation verifierad mot samma 7d-dataset: **99.0 % recall, 45.7 % skip-rate, 61.9 % precision** — matchar Python-simulering exakt.
+
+Återstående 13 missar är mest matfusk-dubletter (8× Vaggeryds-korv) som AI klassat som blåljus med låg confidence — questionable.
+
+**Förväntad effekt:**
+
+| Mätning              | Före  | Efter v2 | Diff             |
+| -------------------- | ----- | -------- | ---------------- |
+| NewsClassifier-anrop | 518/d | ~280/d   | -46 %            |
+| NewsClassifier $/mån | $59   | ~$32     | **-$27 (-46 %)** |
+| Total AI $/mån       | ~$77  | ~$50     | -$27 (-35 %)     |
+
+**Implementation:**
+
+- `config/news-classification.php` — 4 nya nycklar (prefilter_prefix_stems, prefilter_suffix_terms, prefilter_foreign_places, prefilter_swedish_markers). Gamla `blaljus_terms` orörd (används av regex-passet i `app:news:classify`).
+- `app/Console/Commands/AiClassifyNewsArticles.php` — `buildPrefilterPatterns()` bygger 4 regex med Unicode-ordgränser. Prefilter-skip loggas i `ai_reason` med skäl ("ingen blåljus-term" / "utländsk plats i titel, ingen svensk markör").
+
+**PHPStan:** 0 errors. **Dry-run lokalt:** 12/20 prefilter-skip — rimligt.
+
+**Soak:** 7d till 2026-06-01. Mätningar:
+
+- Verifiera ~$32/mån-takt via `ai:usage --days=7 --by=agent`.
+- Kontrollera precision på prefilter-skip (om någon AI-JA-recall-tappad artikel skapar GSC/CTR-regressioner — sannolikt nej).
+- Stickprov av 20 slumpade "foreign-veto"-artiklar för att verifiera att inga svenska brott vetade felaktigt.
+
+MonthlySummary klättrade från $4 → $10/mån — sekundär, vänta tills B-soak är klar innan eventuell granskning.
 
 ## Confidence
 
