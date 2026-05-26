@@ -1,5 +1,5 @@
-**Status:** fas-2 live; precision-stickprov 2026-05-25 visar 86–90 % (mål >85 %) — godkänt med två kvarvarande åtgärder: (a) Vara-verb-kollision (4/5 FPs) och (b) bug: AI:s `ai_is_blaljus=false` plockar inte bort regex-skapade place_news-rader. CTR/dwell + GSC-position mäts till 2026-05-31.
-**Senast uppdaterad:** 2026-05-25
+**Status:** fas 2.6 deployad 2026-05-25 (commit b97580b) — Vara-blocklist (`ambiguous_place_names` case-sensitiv), AI-veto-filter i `Helper::getLatestNewsForPlace()`, svt-smaland fallback borttagen. CTR/dwell + GSC-position mäts till 2026-05-31.
+**Senast uppdaterad:** 2026-05-26
 
 ## Precisions-stickprov 2026-05-25
 

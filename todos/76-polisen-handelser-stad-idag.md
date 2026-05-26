@@ -1,5 +1,5 @@
-**Status:** aktiv — Fas B klar 2026-05-13. Tidig 28d-signal 2026-05-19: Malmö +6.5x klick, Göteborg +5.2x — mallen funkar (se "Tidig signal" nedan). 60d-gate 2026-07-12 står kvar. Fas A/C/D/E kvar. Soft-404 → #79, cannibalisering startsida → #80 (arkiverad).
-**Senast uppdaterad:** 2026-05-19
+**Status:** aktiv — Fas A+B klara. Quick-win deployad 2026-05-26: /plats/göteborg + /plats/malmö (+ alla Tier 1) 301:ar till /{city}. 60d-gate 2026-07-12. Fas C avvaktar gate. Fas D/E kvar.
+**Senast uppdaterad:** 2026-05-26
 
 # Todo #76 — "polisen händelser X idag" + Malmö/Göteborg
 
@@ -167,9 +167,16 @@ blåljusen"`. Deploy → vänta 30–60d för GSC-mätning.
 3. Sätt uppföljning 2026-07-12 (60d) — mät pos på "polisen händelser
    malmö idag", "polisen händelser göteborg idag", "polisen händelser
    stockholm" mot pre-deploy-baseline.
-4. Kör Fas A-auditen efter att Fas B-ändringarna haft tid att
-   indexeras (annars förorenar Fas B-effekten Fas A-datan).
-5. Beslut om Fas C utifrån A-resultat.
+4. ~~Kör Fas A-auditen~~ — klar 2026-05-26. Fullständig rapport:
+   `tmp-research/76-cannibalisation/fas-a-audit-2026-05-26.md`.
+   **Beslut:** Fas C (/handelser hub) avvaktar 60d-gate 2026-07-12 —
+   Fas B-titlar bör successivt flytta generisk trafik från /stockholm
+   till / utan ny hub-sida.
+5. **Ny quick-win identifierad — /plats/ canonical:** `/plats/göteborg`
+   och `/plats/malmö` tar impressions parallellt med Tier 1-sidorna.
+   Lägg `<link rel="canonical" href="/goteborg">` resp. `/malmo` på
+   /plats/-sidorna → konsoliderar authority. Låg effort (~30 min).
+6. Beslut om Fas C utifrån 60d-gate 2026-07-12.
 
 ## Fas B-implementation (2026-05-13)
 

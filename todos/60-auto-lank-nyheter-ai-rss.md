@@ -1,5 +1,5 @@
-**Status:** aktiv (RSS-grund deployad 2026-05-01 av #63 — fas-3-scope, kör efter #63 fas 1+2 visar positivt utfall)
-**Senast uppdaterad:** 2026-05-01
+**Status:** väntande — #63 fas 1 klar 2026-05-12; precision-stickprov 2026-06-11 avgör om fas 2 startar; fas 3 (detta todo) kör efter fas 2 visar positivt utfall
+**Senast uppdaterad:** 2026-05-26
 **Källa:** Inbox Brottsplatskartan (2026-04-30)
 
 # Todo #60 — Auto-länka events till nyhetsartiklar via AI + RSS
@@ -132,13 +132,13 @@ Nyheter, Aftonbladet, Expressen-familjen (3 feeds), DN.
 
 **Fas 0 (klar):** RSS/ToS-research + SEO-analys 2026-05-01.
 
-**Fas 1 — kör #63 först (4–6v):**
+**Fas 1 — #63 (klar 2026-05-12):**
 
-- Smal pilot (top-50 events från GA4) med Google News SE som pre-filter
-    - Claude Haiku-validering. Etablera UI, AI-precision-tröskel, nofollow-
-      policy. Mät CTR + dwell time på event-sidor med media-sektion vs utan.
+- Smal pilot (top-50 events från GA4) deployad. UI, AI-precision-tröskel och
+  nofollow-policy etablerade. Precision-stickprov (30 träffar, mål >80 %) sker
+  **2026-06-11** — det är avblockeringen för fas 2.
 
-**Fas 2 — mid-tier (om fas 1 visar precision >80 % och positivt CTR/dwell):**
+**Fas 2 — mid-tier (startar om fas 1 visar precision >80 % och positivt CTR/dwell):**
 
 - Top-1000 events ≥10 clicks/30d (~10 events/dygn, ~$1/dygn). Täcker
   ~70 % av event-clicks.

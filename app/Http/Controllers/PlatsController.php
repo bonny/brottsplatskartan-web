@@ -68,6 +68,13 @@ class PlatsController extends Controller
             return redirect()->route('platsSingle', $params, 301);
         }
 
+        // /plats/göteborg → /goteborg, /plats/malmö → /malmo osv.
+        // Konsoliderar SEO-authority till Tier 1-stadssidorna (todo #76 Fas A).
+        $tier1Slug = \App\Helper::toAscii($platsLowercase);
+        if (Tier1::isTier1($tier1Slug) && $dateOriginalFromArg === null) {
+            return redirect()->route('city', ['city' => $tier1Slug], 301);
+        }
+
         $date = \App\Helper::getdateFromDateSlug($date);
 
         if (!$date) {
