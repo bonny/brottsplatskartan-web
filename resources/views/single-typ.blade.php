@@ -7,8 +7,8 @@ Template för ett län
 
 @extends('layouts.web')
 
-@section('title', "$type")
-@section('metaDescription', "Brott och polishändelser av typen {$type}. Aktuella inrapporterade händelser från Polisen, sorterade efter datum.")
+@section('title', $pageTitle)
+@section('metaDescription', $metaDescription)
 @section('canonicalLink', '/typ/' . ($canonicalSlug ?? mb_strtolower($type)))
 
 @section('metaContent')

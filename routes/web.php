@@ -272,6 +272,21 @@ Route::get('/typ/{typ}', function ($typ) {
         "canonicalSlug" => $canonicalSlug,
     ];
 
+    // Type-specifika title/meta (override mot generic). Lägg till fler när
+    // GSC-data motiverar — trafikkontroll prio:as via #52 åtgärd C
+    // (CTR 0.05 % på 9 630 imp/90d).
+    $typeMetaOverrides = [
+        'trafikkontroll' => [
+            'pageTitle' => 'Trafikkontroll – senaste polisinsatserna i Sverige',
+            'metaDescription' => 'Alla polisens trafikkontroller på karta – senaste inrapporterade nykterhets-, hastighets- och fordonskontroller från hela Sverige. Live-uppdaterad med 10 års arkiv.',
+        ],
+    ];
+
+    $data['pageTitle'] = $typeMetaOverrides[$canonicalSlug]['pageTitle']
+        ?? "{$displayTitle} – polisens händelser och larm i Sverige";
+    $data['metaDescription'] = $typeMetaOverrides[$canonicalSlug]['metaDescription']
+        ?? "Alla polisens händelser av typen {$displayTitle} på karta – senaste inrapporterade brott, olyckor och larm från hela Sverige. Live-uppdaterad med 10 års arkiv.";
+
     $data["events"] = CrimeEvent::orderBy("created_at", "desc")
         ->where("parsed_title", $dbTitle)
         ->paginate(10);

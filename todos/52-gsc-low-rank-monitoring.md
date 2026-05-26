@@ -1,5 +1,5 @@
-**Status:** aktiv monitor — D/F/G klara via egna todos (#72/#75/#77), E fixat 2026-05-25, kvar: A (vänta #76 Fas B), B (utöka #76), C (#54). Nästa rapport 2026-07-30.
-**Senast uppdaterad:** 2026-05-25
+**Status:** aktiv monitor — C/D/E/F/G klara (#54/#72/#75/#77 + LanController-titlar), kvar: A (vänta #76 Fas B), B (utöka #76). Nästa rapport 2026-07-30.
+**Senast uppdaterad:** 2026-05-26
 **Källa:** Inbox Brottsplatskartan (2026-04-30)
 
 # Todo #52 — Bevaka GSC-queries där vi rankar lågt på högvolym
@@ -108,7 +108,7 @@ försumbar imp-share. Synergi med #54.
 | --- | ----------------------------------------------------------------------------------------------- | -------------- | -------------------------------------------- |
 | A   | Cannibalisation-audit "polisen händelser" → välj canonical, fixa H1/title/meta                  | ~12 800 clicks | Egen todo om scope > 1 dag                   |
 | B   | "[stad]/idag"-mönster för blåljus-queries                                                       | ~3 000 clicks  | Egen todo                                    |
-| C   | Lyfta `/typ/trafikkontroll` content + meta                                                      | ~1 470 clicks  | Synergi #54 — del av den                     |
+| C   | Lyfta `/typ/trafikkontroll` content + meta                                                      | ~1 470 clicks  | ✓ klar 2026-05-26 via #54 — mät 2026-06-25   |
 | D   | Egen `/typ/polisinsats` om den saknas                                                           | ~790 clicks    | Egen todo om bekräftat saknas                |
 | E   | "senaste blåljusen [LÄN]"-asymmetri — varför Stockholm men inte övriga?                         | ~1 000 clicks  | Stickprov-fix, sannolikt 2h                  |
 | F   | Lan-URL legacy-format (`/lan/Norrbottens län` etc.) — Stockholm-mönstret från #35 till alla län | ~1 350+ clicks | Egen todo, hög-prio (många queries påverkas) |

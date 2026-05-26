@@ -1,4 +1,4 @@
-**Status:** aktiv — bucket aktiverad 2026-05-26 (CrimeEvent::isVagueTitle); scheduler plockar nya events automatiskt. Backfill skippad (YAGNI). #52 åtgärd C (typ-listans title/meta) kvar.
+**Status:** aktiv monitor — bucket aktiverad 2026-05-26 + #52 åtgärd C (typ-listans title/meta) deployad 2026-05-26. Mätperiod 30/60/90d till 2026-06-25.
 **Senast uppdaterad:** 2026-05-26
 **Källa:** Inbox Brottsplatskartan (2026-04-30) + #52 GSC-baseline 2026-04-30
 
@@ -29,21 +29,29 @@ URL-sluggen — blir generisk.
   brödtext nämner Skellefteå, Bolidenvägen, Åsele, antal förare med
   böter — gott om material för en bra rubrik.
 
-## #52 åtgärd C — `/typ/trafikkontroll` listans title/meta (~1 470 klick/90d)
+## #52 åtgärd C — `/typ/trafikkontroll` listans title/meta — klar 2026-05-26
 
-GSC-baseline (#52, 2026-04-30) visar att `/typ/trafikkontroll` tar 89 %
+GSC-baseline (#52, 2026-04-30) visade att `/typ/trafikkontroll` tar 89 %
 av impressionerna för queryn "trafikkontroll" (9 630/10 816) men har
-**CTR 0.05 %** (5 klick på 9 630 imp). Symptom: thin/dålig title/meta
-på själva typ-listan.
+**CTR 0.05 %** (5 klick på 9 630 imp). Symptom: thin title/meta
+på själva typ-listan — `<title>` var bara "Trafikkontroll" (15 tecken).
 
-Det här är **utöver** AI-rewrite-jobbet nedan — den fixar enskilda
-event-rubriker; listsidans title/meta är en separat fix:
+**Fix (deployad 2026-05-26):**
 
-- Hugg explicit `<title>` i `single-typ.blade.php` för
-  `parsed_title === 'trafikkontroll'`-fallet (eller alla typer):
-  "Trafikkontroll i Sverige — senaste polisinsatserna | Brottsplatskartan".
-- Lägg till `<meta name="description">` med plats-/tids-vinkel.
-- Mätning: GSC CTR på "trafikkontroll"-queryn 30/60/90d post-deploy.
+- `routes/web.php`:217 — `$typeMetaOverrides`-map för typ-specifik
+  title/meta, med fallback till en förbättrad generisk variant för
+  alla andra typ-sidor (de var också thin):
+    - `pageTitle` (trafikkontroll): "Trafikkontroll – senaste polisinsatserna i Sverige"
+    - `metaDescription` (trafikkontroll): "Alla polisens trafikkontroller på karta – senaste inrapporterade nykterhets-, hastighets- och fordonskontroller från hela Sverige. Live-uppdaterad med 10 års arkiv."
+    - Generic fallback för övriga typer: "{type} – polisens händelser och larm i Sverige"
+- `resources/views/single-typ.blade.php` — läser `$pageTitle`/`$metaDescription` istället för "{type}".
+
+Verifierat lokalt mot `/typ/trafikkontroll` (override) + `/typ/skadegörelse`
+(generic fallback). PHPStan grön.
+
+**Mätning:** GSC `compare_search_periods` 30/60/90d på query "trafikkontroll"
+samt URL `/typ/trafikkontroll`. Förväntan: CTR 0.05 % → 1-3 % (~190-580 c/90d
+på 9 630 imp om CTR håller; potential ~1 470 c/90d om pos också rör sig).
 
 ## Förslag
 
