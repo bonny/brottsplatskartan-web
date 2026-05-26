@@ -568,6 +568,8 @@ Route::redirect('/mestlasta/', '/mest-last', 301);
 Route::redirect('/mest-lasta/', '/mest-last', 301);
 Route::get('/mest-last/', [MestLastController::class, 'index'])->name('mostRead');
 
+Route::redirect('/inbrott/fakta', '/inbrott', 301);
+
 /**
  * Huvudsida + undersidor för inbrott, grannsamverkan och liknande.
  */

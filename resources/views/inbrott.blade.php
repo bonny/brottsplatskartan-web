@@ -67,6 +67,11 @@ under för djup, men är inte vad Google rankar oss för.
                 källar- och vindsinbrott samt inbrottsförsök — direkt från Polisens
                 rapportering. Listan uppdateras löpande.</p>
 
+            @include('parts.month-overview-map', [
+                'events' => $latestInbrottEvents->getCollection(),
+                'monthYearTitle' => 'senaste inbrotten',
+            ])
+
             <ul class="widget__listItems">
                 @foreach ($latestInbrottEvents as $event)
                     <x-crimeevent.list-item :event="$event" />

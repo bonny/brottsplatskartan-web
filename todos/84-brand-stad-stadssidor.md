@@ -1,5 +1,5 @@
-**Status:** aktiv
-**Senast uppdaterad:** 2026-05-23
+**Status:** avvaktar QW-mätning 2026-06-22 — stadssidor-beslut skjuts tills /brand-base visar positiv trend
+**Senast uppdaterad:** 2026-05-26
 
 # Todo #84 — /brand/{stad} stadssidor för top-15 städer
 

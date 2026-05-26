@@ -1,5 +1,5 @@
-**Status:** aktiv (väntar på #50 soak-end 2026-05-10)
-**Senast uppdaterad:** 2026-05-06
+**Status:** avfärdad 2026-05-26 — off-brand för brottskarta; #50-gate motiverar inte ytterligare lager
+**Senast uppdaterad:** 2026-05-26
 **Relaterad till:** #50 (Trafikverket — samma layer-mönster), #51 (research-katalog som denna bryts ut från)
 
 # Todo #69 — SMHI vädervarningar som kart-layer

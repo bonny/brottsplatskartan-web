@@ -1,5 +1,5 @@
-**Status:** aktiv
-**Senast uppdaterad:** 2026-05-23
+**Status:** klar 2026-05-26 — Fas 1 deployad: ny title/subtitle (intent-fix), karta-component på startsidan, /inbrott/fakta → 301
+**Senast uppdaterad:** 2026-05-26
 
 # Todo #85 — /inbrott rebuild + /inbrott/{stad} stadssidor
 

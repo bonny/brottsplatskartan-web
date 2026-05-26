@@ -1813,18 +1813,10 @@ class Helper {
         // Undersidor och deras titlar.
         $undersidor = [
             'start' => [
-                'title' =>
-                'Inbrott - Fakta & information om inbrott i hus & lägenhet',
-                'pageTitle' => 'Inbrott',
-                'pageSubtitle' =>
-                'Fakta & information om inbrott i hus & lägenhet',
+                'title' => 'Senaste inbrotten i Sverige – karta & lista från Polisen',
+                'pageTitle' => 'Inbrott i Sverige',
+                'pageSubtitle' => 'De senaste bostads- och lägenhetsinbrotten från Polisen – live på karta.',
                 'url' => '/inbrott/'
-            ],
-            'fakta' => [
-                'title' => "Fakta om inbrott",
-                'pageTitle' => "Fakta om inbrott",
-                'pageSubtitle' =>
-                "Över 60 bostadsinbrott sker varje dag. (Men hur många klaras upp?)"
             ],
             'drabbad' => [
                 'title' =>

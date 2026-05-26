@@ -1,5 +1,5 @@
-**Status:** aktiv
-**Senast uppdaterad:** 2026-05-23
+**Status:** avfärdad 2026-05-26 — real-time intent-mismatch ("nu"-queries) + genuint tunn innehåll (24 events/30d totalt); stadssidor ger inga rankar
+**Senast uppdaterad:** 2026-05-26
 
 # Todo #86 — /helikopter/{stad} stadssidor
 
