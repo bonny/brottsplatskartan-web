@@ -15,25 +15,25 @@ use Illuminate\Support\Facades\Log;
  * place_news → kandidater inom event-datum ±N dagar → Haiku → sparar
  * träffar i crime_event_news.
  *
- * Top-N events väljs efter lokala crime_views (proxy för GA4 page views
- * tills GA4-pullen är byggd). Events utan kandidat-artiklar skippas.
+ * Events väljs via place_news-join (plats+datum-match) i stället för
+ * trafik-ranking — täcker alla events med nyhetskandidat, inte bara top-N.
  */
 class MatchEventNews extends Command
 {
     protected $signature = 'app:event-news:match
         {--limit=50 : Max antal events per körning}
-        {--days=7 : Trafikfönster bakåt för "mest visade"}
+        {--days=7 : Events skapade senaste N dagar}
         {--window-days=2 : Kandidat-artiklar inom event-datum ±N dagar}
         {--event= : Kör mot ett specifikt event_id (testning)}
         {--rerun : Bortse från redan-matchade par och kör om alla}
         {--dry-run : Visa vad som skulle skickas till AI utan att anropa}';
 
-    protected $description = 'Matchar top-N events mot kandidat-artiklar via Haiku 4.5 (todo #63 fas 1).';
+    protected $description = 'Matchar events (med nyhetskandidat) mot artiklar via Haiku 4.5 (todo #82 fas 1).';
 
     public function handle(): int
     {
         $limit = (int) $this->option('limit');
-        $trafficDays = (int) $this->option('days');
+        $days = (int) $this->option('days');
         $windowDays = (int) $this->option('window-days');
         $specificEvent = $this->option('event');
         $rerun = (bool) $this->option('rerun');
@@ -41,7 +41,7 @@ class MatchEventNews extends Command
 
         $eventIds = $specificEvent
             ? [(int) $specificEvent]
-            : $this->topViewedEventIds($trafficDays, $limit);
+            : $this->eventsWithCandidates($days, $windowDays, $limit);
 
         if ($eventIds === []) {
             $this->info('Inga events att matcha.');
@@ -157,26 +157,29 @@ class MatchEventNews extends Command
     }
 
     /**
-     * Top-N event_ids efter lokala visningar senaste $days dygn.
-     * Filter: bara events skapade senaste 30d (uppföljnings-fönster).
+     * Event-ids skapade senaste $days dygn som har minst en nyhetskandidat
+     * i place_news inom event-datum ±$windowDays. Sorterade nyast först.
      *
      * @return list<int>
      */
-    private function topViewedEventIds(int $days, int $limit): array
+    private function eventsWithCandidates(int $days, int $windowDays, int $limit): array
     {
         $cutoff = Carbon::now()->subDays($days);
-        $eventCutoff = Carbon::now()->subDays(30);
 
-        return DB::table('crime_views as v')
-            ->join('crime_events as e', 'v.crime_event_id', '=', 'e.id')
-            ->where('v.created_at', '>=', $cutoff)
-            ->where('e.created_at', '>=', $eventCutoff)
-            ->groupBy('v.crime_event_id')
-            ->orderByDesc(DB::raw('count(*)'))
-            ->limit($limit)
-            ->pluck('v.crime_event_id')
-            ->map(fn ($id) => (int) $id)
-            ->all();
+        $rows = DB::select(
+            'SELECT DISTINCT ce.id
+             FROM crime_events ce
+             JOIN places p ON (p.name = ce.parsed_title_location OR p.name = ce.administrative_area_level_2)
+             JOIN place_news pn ON pn.place_id = p.id
+               AND pn.pubdate BETWEEN DATE_SUB(ce.created_at, INTERVAL ? DAY)
+                                  AND DATE_ADD(ce.created_at, INTERVAL ? DAY)
+             WHERE ce.created_at >= ?
+             ORDER BY ce.created_at DESC
+             LIMIT ?',
+            [$windowDays, $windowDays, $cutoff->toDateTimeString(), $limit]
+        );
+
+        return array_map(fn ($row) => (int) $row->id, $rows);
     }
 
     /**

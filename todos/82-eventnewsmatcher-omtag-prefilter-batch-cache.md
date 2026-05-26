@@ -1,5 +1,5 @@
-**Status:** aktiv
-**Senast uppdaterad:** 2026-05-18
+**Status:** aktiv — Fas 0 klar 2026-05-26, Fas 1 deployad 2026-05-26; soak pågår
+**Senast uppdaterad:** 2026-05-26
 
 # Todo #82 — EventNewsMatcher: mät rotorsak först, fixa minst möjliga
 

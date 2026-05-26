@@ -4,7 +4,7 @@ Index över förbättringsarbete. Varje todo har en egen fil under
 [`todos/`](todos/) med fullständig analys. Konvention och
 mappstruktur: [`todos/README.md`](todos/README.md).
 
-Senast uppdaterad: 2026-05-26 (+#54/#52-C `/typ/trafikkontroll` listans title/meta deployad — generisk typ-sida-title också förbättrad, mät 2026-06-25).
+Senast uppdaterad: 2026-05-26 (+#82 Fas 0+1 klar — EventNewsMatcher återaktiverad med place_news-urval, soak till 2026-06-02).
 
 ## Aktiva
 
@@ -25,11 +25,10 @@ Senast uppdaterad: 2026-05-26 (+#54/#52-C `/typ/trafikkontroll` listans title/me
 | 76  | "polisen händelser X idag" + Malmö/Göteborg              | Fas B klar 2026-05-13. Tidig 28d-signal 2026-05-19: Malmö +6.5x klick, Göteborg +5.2x. Fas A/C/D/E kvar. 60d-mätning 2026-07-12                                                | [todos/76-polisen-handelser-stad-idag.md](todos/76-polisen-handelser-stad-idag.md)                                   |
 | 78  | Multi-plats-händelser missvisande på kartan              | Ny 2026-05-13 — sammanfattning natt/dag/kväll renderas som en cirkel fast brotten är geografiskt utspridda. Analys saknas                                                      | [todos/78-handelser-utspridda-platser-kart-missvisning.md](todos/78-handelser-utspridda-platser-kart-missvisning.md) |
 | 81  | Håll koll på hur mycket AI-anropen kostar                | v2 + 0a + Monthly-opt deployade 2026-05-25 (NewsClassifier -$36, Monthly -$5). Prognos -$40/mån total. Soak till 2026-06-01.                                                   | [todos/81-ai-kostnad-overvakning.md](todos/81-ai-kostnad-overvakning.md)                                             |
-| 82  | EventNewsMatcher: mät rotorsak först, fixa minst möjliga | Ny 2026-05-18 — efter review omskriven till mät-driven plan: Fas 0 SQL-mätning av placeIds/RSS/urval → minsta-möjliga-fix → batch endast om kostnad kräver                     | [todos/82-eventnewsmatcher-omtag-prefilter-batch-cache.md](todos/82-eventnewsmatcher-omtag-prefilter-batch-cache.md) |
+| 82  | EventNewsMatcher: mät rotorsak först, fixa minst möjliga | Fas 0 klar + Fas 1 deployad 2026-05-26: urval bytt från top-20-trafik till place_news-join; prognos 40 % täckning (~$45/mån). Soak 7d till 2026-06-02                          | [todos/82-eventnewsmatcher-omtag-prefilter-batch-cache.md](todos/82-eventnewsmatcher-omtag-prefilter-batch-cache.md) |
 | 84  | /brand/{stad} stadssidor för top-15 städer               | Ny 2026-05-23 — efter SEO-analys: GSC visar 7 stads-svans-queries (89c+63c+51c+44c+42c+41c+33c) utan dedikerade sidor; förväntad lyft 750–2 000 c/mån                          | [todos/84-brand-stad-stadssidor.md](todos/84-brand-stad-stadssidor.md)                                               |
 | 85  | /inbrott rebuild + /inbrott/{stad} stadssidor            | Ny 2026-05-23 — efter SEO-analys: intent-mismatch + content-type-konflikt; QW-fixar deployade, rebuild till /brand-form + 15 stadssidor återstår; förväntad 22 → 300–500 c/mån | [todos/85-inbrott-rebuild-stadssidor.md](todos/85-inbrott-rebuild-stadssidor.md)                                     |
 | 86  | /helikopter/{stad} stadssidor                            | Ny 2026-05-23 — efter SEO-analys: stor outexploaterad stads-svans (597+474+479+279+235+147+128 impr); förväntad lyft 300–600 c/mån                                             | [todos/86-helikopter-stad-stadssidor.md](todos/86-helikopter-stad-stadssidor.md)                                     |
-| 87  | Datum-gruppering i Tier 1-händelselistan                 | Ny 2026-05-25 — utbruten från #79 efter SEO-review. UX-fix: Idag/Igår/Tidigare-rubriker i händelselistan (~1-2h). Låg prio                                                     | [todos/87-datum-gruppering-tier1-handelselista.md](todos/87-datum-gruppering-tier1-handelselista.md)                 |
 
 ### Beroenden
 
@@ -46,6 +45,7 @@ Senast uppdaterad: 2026-05-26 (+#54/#52-C `/typ/trafikkontroll` listans title/me
 6. **#39** — passiv mätning, 14d-check klar 2026-05-13, nästa 2026-06-29 (60d)
 7. **#51** — bryt ut SMHI/räddningstjänst-källor till egna todos när prio sätts
 
+
 ## Uppföljningar — datum att komma ihåg
 
 Datum-bundna manuella åtgärder som inte går att autoschemalägga (kräver lokala
@@ -55,6 +55,7 @@ eller markera todon som klar.
 
 | Datum      | Åtgärd                                                                                                                                                                                                                                          | Todo                                                                                                                                     |
 | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-06-02 | #82 soak 7d — verifiera täckning (mål >10 % events/dag med match) + kostnad/dygn i ai_usage_logs; om >$3/dygn → Fas 2 (batch)                                                                                                                  | [#82](todos/82-eventnewsmatcher-omtag-prefilter-batch-cache.md)                                                                          |
 | 2026-06-29 | MCF räddningsstatistik — 60d-mätning (förlängd från 14d efter att 2026-05-13 inte gav attribuerbar signal)                                                                                                                                      | [#39](todos/39-msb-brand-rakning-statistik.md)                                                                                           |
 | 2026-06-01 | #64 fas 2.6 — deploya Vara-blocklist + AI-veto-fix + source-scope-justering; mät om FP-andelen sjunker nästa stickprov                                                                                                                          | [#64](todos/64-per-plats-nyhetsaggregering.md)                                                                                           |
 | 2026-05-27 | Månadsvyer-pilot — 30d-mätning Uppsala/Västerås                                                                                                                                                                                                 | [#25](todos/25-manadsvyer-datum-routes.md)                                                                                               |
@@ -93,6 +94,7 @@ Sorterade nyast först.
 
 | #   | Titel                                                                                                          | Klar       | Fil                                                                                                            |
 | --- | -------------------------------------------------------------------------------------------------------------- | ---------- | -------------------------------------------------------------------------------------------------------------- |
+| 87  | Datum-gruppering i Tier 1-händelselistan (Idag/Igår/Tidigare)                                                  | 2026-05-26 | [todos/done/87-datum-gruppering-tier1-handelselista.md](todos/done/87-datum-gruppering-tier1-handelselista.md) |
 | 83  | Tema-sidor /polisinsats + /skottlossning — Steg 0 skrotade Fas 1+2; Fas 3 aliases + sitemap-backfill deployade | 2026-05-23 | [todos/done/83-tema-sidor-polisinsats-skottlossning.md](todos/done/83-tema-sidor-polisinsats-skottlossning.md) |
 | 46  | Meny-konsolidering — minimal-fix: 301 /handelser/ → /, dölj "Senaste"                                          | 2026-05-17 | [todos/done/46-meny-handelser-konsolidering.md](todos/done/46-meny-handelser-konsolidering.md)                 |
 | 59  | "Vad händer nu"-ruta — pilot bakom `?show_live=1` (3 events/120min)                                            | 2026-05-13 | [todos/done/59-vad-hander-nu-ruta.md](todos/done/59-vad-hander-nu-ruta.md)                                     |

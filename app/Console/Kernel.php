@@ -185,17 +185,15 @@ class Kernel extends ConsoleKernel
             ->withoutOverlapping()
             ->name('news-prune');
 
-        // Event ↔ artikel-matchning (todo #63 fas 1) — AVSTÄNGD 2026-05-17.
-        // Värdes-review #81 visade att bara 31 av 1925 events (1.6 %) får
-        // Mediabevakning, dvs 98 % av besökarna ser ingenting från agenten.
-        // Outbound-klick ~24/månad till $0.75/klick — för låg täckning för att
-        // motivera $18/månad. Återaktivera när #60 fas 3 ger bredare urval
-        // eller när bättre kandidat-filtrering finns på plats.
-        // $schedule->command('app:event-news:match --limit=20')
-        //     ->cron('25 */12 * * *')
-        //     ->withoutOverlapping()
-        //     ->name('event-news-match')
-        //     ->when($aiAllowed);
+        // Event ↔ artikel-matchning (#82 fas 1) — återaktiverad 2026-05-26.
+        // Ny urvals-metod: place_news-join (plats+datum) i stället för top-20 trafik.
+        // Fas 0-mätning: 793/1966 events (40 %) har nyhetskandidat — vs 1.6 % med top-20.
+        // Prognos: ~26 events/dag × avg 16 kand = ~440 par/dag ≈ $1.50/dag = ~$45/mån.
+        $schedule->command('app:event-news:match --days=7 --limit=50')
+            ->cron('25 */12 * * *')
+            ->withoutOverlapping()
+            ->name('event-news-match')
+            ->when($aiAllowed);
     }
 
     /**

@@ -1,5 +1,5 @@
-**Status:** aktiv — låg prio, UX-fix
-**Senast uppdaterad:** 2026-05-25
+**Status:** klar 2026-05-26 — Idag/Igår/Tidigare-rubriker deployade i Tier 1-händelselistan
+**Senast uppdaterad:** 2026-05-26
 
 # Todo #87 — Datum-gruppering i Tier 1-händelselistan (Idag/Igår/Tidigare denna vecka)
 
