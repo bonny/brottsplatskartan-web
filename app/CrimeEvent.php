@@ -86,6 +86,7 @@ class CrimeEvent extends Model implements Feedable {
             preg_match('/information om polisens pressnummer/iu', $t) === 1 => 'pressnummer',
             preg_match('/(dagens )?presstalesperson/iu', $t) === 1 => 'presstalesperson',
             preg_match('/^(övrigt|annat|händelse)$/iu', $t) === 1 => 'generisk',
+            preg_match('/^trafikkontroll(er)?$/iu', $t) === 1 => 'trafikkontroll',
             mb_strlen($t) < 6 => 'för-kort',
             default => null,
         };

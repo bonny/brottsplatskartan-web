@@ -1,5 +1,5 @@
-**Status:** aktiv (idé — research saknas; utökad 2026-05-13 med #52 åtgärd C)
-**Senast uppdaterad:** 2026-05-13
+**Status:** aktiv — bucket aktiverad 2026-05-26 (CrimeEvent::isVagueTitle); scheduler plockar nya events automatiskt. Backfill skippad (YAGNI). #52 åtgärd C (typ-listans title/meta) kvar.
+**Senast uppdaterad:** 2026-05-26
 **Källa:** Inbox Brottsplatskartan (2026-04-30) + #52 GSC-baseline 2026-04-30
 
 # Todo #54 — Förbättra trafikkontroll-titlar (utöka AI-rewrite-coverage)
@@ -90,3 +90,50 @@ ovan).
    bedöm output.
 2. Om bra: utöka `isVagueTitle()` + backfill.
 3. Beslut om slug-migration (separat).
+
+## Utfall 2026-05-26
+
+**Bucket aktiverad** i `CrimeEvent::isVagueTitle()` med
+`preg_match('/^trafikkontroll(er)?$/iu', $t) === 1 => 'trafikkontroll'`.
+PHPStan grön (`composer analyse`).
+
+**Testfall (4 körda — den 5:e blockerades korrekt av `MIN_BODY_FOR_AI_REWRITE`):**
+
+| #   | Event   | Län               | Body | AI-rubrik                                                           |
+| --- | ------- | ----------------- | ---- | ------------------------------------------------------------------- |
+| 1   | #502926 | Västerbottens län | 388  | "Trafikkontroller i Västerbotten: överlast och otillåten körning"   |
+| 2   | #502929 | Jämtlands län     | 1218 | "Trafikkontroller i Jämtland – flera böter för hastighet och bälte" |
+| 3   | #331923 | Stockholms län    | 334  | "Trafikkontroller på Värmdö – bil med körförbud stoppad"            |
+| 4   | #502544 | Västerbottens län | 139  | "Trafikkontroll på Riksvägen/Tegsvägen – fem förare bötfälls"       |
+
+Samtliga 40–60 tecken, platsbunden, neutral ton — gott resultat. Befintlig
+prompt i `resources/views/ai/prompts/title-rewrite.blade.php` behövde inte
+ändras.
+
+**Volym i lokal DB (snapshot):**
+
+- 13,438 trafikkontroll-events totalt med `body >= 100` (alla år)
+- 1,196 senaste 365d
+- 93 senaste 30d
+
+**Backfill skippad (YAGNI):** Schedulern (`crimeevents:create-summaries
+--vague-only --limit=100` var 15:e min) plockar nu automatiskt upp _nya_
+trafikkontroll-events. Backfill av historiska events ändrar inte URL-slug
+(bara visningstitel) → liten SEO-marginal mot ~$9 (365d) eller ~$100
+(all-time) AI-kostnad. Om GSC-mätning visar att fresh-events redan klättrar
+i pos behöver vi inte historik-backfill.
+
+**Slug-migration ej aktuell:** URL-sluggar (`trafikkontroll-<lan>-<id>`)
+byggs från `parsed_title` + plats vid event-skapande, inte från `title_alt_1`.
+Bytet skulle kräva 301-mapping och kan göras separat om SEO-vinst kräver det.
+
+## Mätning
+
+GSC `compare_search_periods` 30/60/90d efter 2026-05-26 på URLs
+`/<lan>/trafikkontroll-<lan>-*`. Förväntad effekt: CTR-lyft på "trafikkontroll
+<ort>"-queries via specifika rubriker i SERP. Mätperioden överlappar med #36
+(samma signal-typ).
+
+**Notera:** #52 åtgärd C (typ-listans title/meta för `/typ/trafikkontroll`,
+~1 470 klick/90d via "trafikkontroll"-query, CTR 0.05 %) är en separat fix
+och kvarstår. Listsidans title/meta påverkas inte av per-event AI-rewrite.
