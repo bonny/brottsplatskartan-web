@@ -1,5 +1,5 @@
-**Status:** aktiv
-**Senast uppdaterad:** 2026-05-13
+**Status:** aktiv — volym-mätning 2026-05-27 visar ~12 events/dygn (19 % av all events-volym); titel-regex täcker ~100 % av kända fall
+**Senast uppdaterad:** 2026-05-27
 
 # Todo #78 — Hantera händelser som nämner många utspridda platser
 
@@ -106,9 +106,56 @@ nytt URL-format.
 - Kan kollidera med #50 (Trafikverket-layer) i UX om vi adderar fler
   marker-typer.
 
+## Volym-mätning (2026-05-27)
+
+Prod-DB, 90d rullande (2026-02-26 → 2026-05-27):
+
+| Mönster (`parsed_title LIKE`)      | Antal    | Per dygn |
+| ---------------------------------- | -------- | -------- |
+| `Sammanfattning natt%`             | 951      | 10.6     |
+| `Sammanfattning kväll%`            | 122      | 1.4      |
+| `Sammanfattning dag/morgon/vecka%` | 0        | –        |
+| `Sammanfattning helg%`             | 1        | –        |
+| **`Sammanfattning%`**              | **1075** | **11.9** |
+| `Lägesbild%`                       | 0        | –        |
+| `Översikt%`                        | 0        | –        |
+| **Totalt events 90d**              | 5548     | 61.6     |
+
+**Tolkning:**
+
+- ~12 sammanfattnings-events/dygn = **19 % av all events-volym** — inte
+  trivialt litet, motiverar åtgärd.
+- "Sammanfattning natt" dominerar (88 % av subset).
+- Lägesbild/Översikt = 0 → titel-regex på
+  `^Sammanfattning (natt|kväll|kväll och natt|helg)` täcker ~100 % av
+  kända multi-plats-events. Brödtext-parsing (Haiku) behövs bara för
+  edge cases utan mätbar volym (t.ex. Gävleborg-trafikolyck-eventet).
+
+## Rekommendation (post-mätning)
+
+**Fas 1 — alt C "Område"-pin (regex-baserad):**
+
+- Detektera via `parsed_title` regex (ingen AI, inget brödtext-parsing).
+- Rendering: distinkt ikon ("område"-pin) + tooltip "Flera platser i {län}".
+  Alternativt: ingen cirkel alls på den missvisande lat/lng, bara
+  län-omfattande badge i händelselistan.
+- Kostnad: timmar. Risk: liten. Påverkar inte EventsMap-API:s 1:1-relation.
+
+**Fas 2 — alt E hybrid (villkorlig på Fas 1-utfall):**
+
+- Haiku 4.5 extraherar platsnämn ur brödtext → multi-marker via ny
+  `StaticMapUrlBuilder::multiCircleUrl()` + ny route-variant.
+- Bygg bara om GA4 visar att Fas 1 inte räcker (fortsatt hög bounce /
+  låg dwell på sammanfattnings-events).
+- AI-kostnad: ~12 events/dygn × Haiku ≈ försumbart, men kräver
+  URL-budget-verifiering (nginx `large_client_header_buffers` vid 5+ markers).
+
+**Skippas:** alt B (full multi-marker utan hybrid) — bryter 1:1 utan
+proportionerlig vinst. Alt D (exkludera helt) — förlorar geografisk
+browsing helt.
+
 ## Confidence
 
-låg — problemet är tydligt men lösningsutrymmet stort. Behövs:
-volym-mätning (hur många events/dag är "spridda"?), GA4/GSC-signal
-(klagar användare? höga bounce på sammanfattnings-events?), och
-A/B på rendering-val innan vi bygger.
+medel — volym-mätning bekräftar att problemet är stort nog att åtgärda
+och att regex-detektering räcker. Lösningsutrymmet rangordnat: Fas 1
+(alt C) först, Fas 2 (alt E) bara vid mätbart kvarstående problem.
