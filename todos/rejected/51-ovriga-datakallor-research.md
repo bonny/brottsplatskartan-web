@@ -1,6 +1,6 @@
-**Status:** aktiv (research-katalog, live-testad 2026-05-13)
-**Senast uppdaterad:** 2026-05-13
-**Relaterad till:** #50 (Trafikverket live), #69 (SMHI utbruten), #38/#39/#40 (statistik per kommun)
+**Status:** avfärdad 2026-05-27 — research-fasen gav negativt utfall: A (SMHI) → #69 avfärdad som off-brand, B (räddningstjänster) täcker bara ~2 % av landet och bär samma off-brand-argument, C/E/F/G/H bortprioriterade. RTÖG-pilot bedömd för tunn för att bryta ut.
+**Senast uppdaterad:** 2026-05-27
+**Relaterad till:** #50 (Trafikverket live), #69 (SMHI avfärdad), #38/#39/#40 (statistik per kommun)
 
 # Todo #51 — Övriga datakällor: research-skiss
 
