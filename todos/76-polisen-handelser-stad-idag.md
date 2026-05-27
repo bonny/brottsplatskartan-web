@@ -1,5 +1,5 @@
-**Status:** aktiv — Fas A+B klara. Quick-win deployad 2026-05-26: /plats/göteborg + /plats/malmö (+ alla Tier 1) 301:ar till /{city}. 60d-gate 2026-07-12. Fas C avvaktar gate. Fas D/E kvar.
-**Senast uppdaterad:** 2026-05-26
+**Status:** aktiv — Fas A+B+quick-win klara. 60d-gate 2026-07-12. Fas C sannolikt avfärdas (krockar med #46:s 301 + Fas B-utfall). Fas D (Tier 2 blåljus-mönster) rullas in i #24 om gate-utfall är positivt.
+**Senast uppdaterad:** 2026-05-27
 
 # Todo #76 — "polisen händelser X idag" + Malmö/Göteborg
 
@@ -93,18 +93,30 @@ För `/malmo`, `/goteborg`, `/helsingborg`, `/uppsala`:
 
 Matchar exakt "<stad> idag polisen"- och "polisen händelser <stad>"-frasen.
 
-### Fas C — Hub-sida `/handelser` (valfri, beror på Fas A-beslut)
+### Fas C — Hub-sida `/handelser` (sannolikt avfärdad)
 
-Om Fas A beslutar att startsidan är för bred för "polisen händelser"-
-intentionen, skapa `/handelser` som dedikerad hub:
+**Status 2026-05-27:** Fas C krockar med #46 (klar 2026-05-17) som
+beslutade att `/handelser/` 301:as till `/`. För att bygga `/handelser`
+som hub-sida måste #46:s 301 backas först.
+
+Fas A-auditen + 28d-signalen från Fas B pekar dessutom mot att Fas C
+inte längre behövs:
+
+- Stockholm-cannibaliseringen mot `/` är bekräftat icke-existerande
+  (28d-mätning + kod-inspektion via avfärdade #80).
+- Fas B-titlarna flyttar generisk trafik från `/stockholm` till `/`
+  utan en separat hub-sida.
+
+**Trolig slutbedömning vid 60d-gate (2026-07-12):** Fas C avfärdas
+permanent — `/` är canonical för "polisen händelser"-intentionen, och
+#46:s 301 står kvar.
+
+Ursprungligt förslag (för historik):
 
 - H1: "Polisens händelser idag – live från hela Sverige"
 - Lista senaste 50 händelserna
 - Länkar till Tier 1-städer + alla län
 - Canonical för "polisen händelser" + "händelser polisen" + varianter
-
-Detta är delvis vad #46 ("slå samman Händelser/Senaste/Mest lästa")
-försöker lösa — koordinera scope.
 
 ### Fas D — Blåljus-idag-mönster (separat eller del av Fas B)
 
@@ -172,11 +184,15 @@ blåljusen"`. Deploy → vänta 30–60d för GSC-mätning.
    **Beslut:** Fas C (/handelser hub) avvaktar 60d-gate 2026-07-12 —
    Fas B-titlar bör successivt flytta generisk trafik från /stockholm
    till / utan ny hub-sida.
-5. **Ny quick-win identifierad — /plats/ canonical:** `/plats/göteborg`
+5. ~~**Ny quick-win identifierad — /plats/ canonical:** `/plats/göteborg`
    och `/plats/malmö` tar impressions parallellt med Tier 1-sidorna.
    Lägg `<link rel="canonical" href="/goteborg">` resp. `/malmo` på
-   /plats/-sidorna → konsoliderar authority. Låg effort (~30 min).
-6. Beslut om Fas C utifrån 60d-gate 2026-07-12.
+   /plats/-sidorna → konsoliderar authority. Låg effort (~30 min).~~ —
+   klar 2026-05-26 (commit `0efe124`). Implementerades som 301-redirect
+   `/plats/{tier1}` → `/{city}` för alla Tier 1-städer (starkare än
+   canonical-taggen).
+6. Beslut om Fas C utifrån 60d-gate 2026-07-12 — **sannolikt avfärdas**
+   (se Fas C-uppdatering nedan).
 
 ## Fas B-implementation (2026-05-13)
 

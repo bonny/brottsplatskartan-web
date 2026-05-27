@@ -4,7 +4,7 @@ Index över förbättringsarbete. Varje todo har en egen fil under
 [`todos/`](todos/) med fullständig analys. Konvention och
 mappstruktur: [`todos/README.md`](todos/README.md).
 
-Senast uppdaterad: 2026-05-27 (#25 30d-mätning klar — query-nivå grönt, Tier 1-rollout pågår).
+Senast uppdaterad: 2026-05-27 (#76 städning — quick-win markerad klar, Fas C sannolikt avfärdas pga #46-krock).
 
 ## Aktiva
 
@@ -21,7 +21,7 @@ Senast uppdaterad: 2026-05-27 (#25 30d-mätning klar — query-nivå grönt, Tie
 | 60  | Auto-länka events till nyheter via AI + RSS              | Väntande — #63 fas 1 klar 2026-05-12; precision-stickprov 2026-06-11 avgör fas 2; fas 3 (detta todo) kör efter fas 2 visar positivt utfall            | [todos/60-auto-lank-nyheter-ai-rss.md](todos/60-auto-lank-nyheter-ai-rss.md)                                         |
 | 64  | Per-plats nyhetsaggregering — "Senaste nyheter i {ort}"  | Fas 2.6 deployad 2026-05-25 (Vara-blocklist + AI-veto + svt-smaland bort). CTR/GSC-mätning till 2026-05-31                                            | [todos/64-per-plats-nyhetsaggregering.md](todos/64-per-plats-nyhetsaggregering.md)                                   |
 | 72  | `/typ/polisinsats` alias för Polisinsats/kommendering    | Deployat 2026-05-13 (verifierat live: 200 / 301 → ren slug), väntar 30d GSC-mätning till 2026-06-12                                                   | [todos/72-typ-polisinsats-alias.md](todos/72-typ-polisinsats-alias.md)                                               |
-| 76  | "polisen händelser X idag" + Malmö/Göteborg              | Fas A+B klara. Quick-win: /plats/-canonical (30 min). Fas C avvaktar 60d-gate 2026-07-12                                                              | [todos/76-polisen-handelser-stad-idag.md](todos/76-polisen-handelser-stad-idag.md)                                   |
+| 76  | "polisen händelser X idag" + Malmö/Göteborg              | Fas A+B+quick-win klara. 60d-gate 2026-07-12. Fas C sannolikt avfärdas (#46-krock). Fas D rullas in i #24 vid positivt gate-utfall                    | [todos/76-polisen-handelser-stad-idag.md](todos/76-polisen-handelser-stad-idag.md)                                   |
 | 78  | Multi-plats-händelser missvisande på kartan              | Ny 2026-05-13 — sammanfattning natt/dag/kväll renderas som en cirkel fast brotten är geografiskt utspridda. Analys saknas                             | [todos/78-handelser-utspridda-platser-kart-missvisning.md](todos/78-handelser-utspridda-platser-kart-missvisning.md) |
 | 81  | Håll koll på hur mycket AI-anropen kostar                | v2 + 0a + Monthly-opt deployade 2026-05-25 (NewsClassifier -$36, Monthly -$5). Prognos -$40/mån total. Soak till 2026-06-01.                          | [todos/81-ai-kostnad-overvakning.md](todos/81-ai-kostnad-overvakning.md)                                             |
 | 82  | EventNewsMatcher: mät rotorsak först, fixa minst möjliga | Fas 0 klar + Fas 1 deployad 2026-05-26: urval bytt från top-20-trafik till place_news-join; prognos 40 % täckning (~$45/mån). Soak 7d till 2026-06-02 | [todos/82-eventnewsmatcher-omtag-prefilter-batch-cache.md](todos/82-eventnewsmatcher-omtag-prefilter-batch-cache.md) |
