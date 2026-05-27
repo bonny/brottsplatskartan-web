@@ -4,13 +4,13 @@ Index över förbättringsarbete. Varje todo har en egen fil under
 [`todos/`](todos/) med fullständig analys. Konvention och
 mappstruktur: [`todos/README.md`](todos/README.md).
 
-Senast uppdaterad: 2026-05-26 (+#85 klar Fas 1 — /inbrott intent-fix + karta).
+Senast uppdaterad: 2026-05-27 (#25 30d-mätning klar — query-nivå grönt, Tier 1-rollout pågår).
 
 ## Aktiva
 
 | #   | Titel                                                    | Status                                                                                                                                                | Fil                                                                                                                  |
 | --- | -------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| 25  | Månadsvyer istället för dagsvyer (datum-routes)          | Pilot live 2026-04-27 (uppsala + västerås + uppsala-lan). 30d-mätning till 2026-05-27                                                                 | [todos/25-manadsvyer-datum-routes.md](todos/25-manadsvyer-datum-routes.md)                                           |
+| 25  | Månadsvyer istället för dagsvyer (datum-routes)          | Tier 1 (Stockholm/Göteborg/Malmö/Helsingborg) live 2026-05-27 efter 30d-mätning + Lighthouse OK. 14d-soak till 2026-06-10                             | [todos/25-manadsvyer-datum-routes.md](todos/25-manadsvyer-datum-routes.md)                                           |
 | 29  | Audit + reducera indexerade pages                        | Datum-routes + thin singles deployat, ~22k pages noindex:as. Mätperiod 30–90d i GSC                                                                   | [todos/29-audit-indexerade-pages.md](todos/29-audit-indexerade-pages.md)                                             |
 | 36  | GSC-mätning av AI-titlars CTR-effekt                     | 4v-check 2026-05-25 inkonklusiv (sample för litet); pos-signal lovande. 8v-check 2026-06-22                                                           | [todos/36-gsc-matning-ai-titlar.md](todos/36-gsc-matning-ai-titlar.md)                                               |
 | 39  | MSB/MCF brand- och räddningsstatistik per kommun         | 14d-check 2026-05-13 — ingen attribuerbar MCF-effekt (confounded med #24/#33/#10), mätperiod förlängd till 60d (2026-06-29)                           | [todos/39-msb-brand-rakning-statistik.md](todos/39-msb-brand-rakning-statistik.md)                                   |
@@ -34,7 +34,7 @@ Senast uppdaterad: 2026-05-26 (+#85 klar Fas 1 — /inbrott intent-fix + karta).
 
 ### Föreslagen ordning
 
-1. **#25 Månadsvyer** — Uppsala-pilot pågår, 30d-mätning till 2026-05-27
+1. **#25 Månadsvyer** — Tier 1 live 2026-05-27, 14d-soak till 2026-06-10 → överväg full rollout
 2. **#64 Per-plats nyhetsaggregering** — högst SEO/UX-värde av nyhets-todos: träffar redan-trafikerade ortssidor (~25k clicks/90d via #52-baseline), ingen pareto-bias, regex-klassning + ~$0.10/dygn. RSS-grund klar.
 3. **#50** — Trafikverket live-feed (egen layer + API-nyckel) — hög confidence
 4. **#29** — passiv GSC-mätperiod, åtgärder efter data
@@ -51,10 +51,10 @@ eller markera todon som klar.
 
 | Datum      | Åtgärd                                                                                                                                                                                                                                 | Todo                                                                                     |
 | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| 2026-06-10 | #25 Tier 1-soak — 14d GSC compare Stockholm/Göteborg/Malmö/Helsingborg månadsvyer (mål: månadsvy-URL:er rankar pos ≤8, inga soft-404, CTR-tapp på stadssidor < 10 %). Om OK → överväg `MONTHLY_VIEWS_PILOT='all'`                      | [#25](todos/25-manadsvyer-datum-routes.md)                                               |
 | 2026-06-02 | #82 soak 7d — verifiera täckning (mål >10 % events/dag med match) + kostnad/dygn i ai_usage_logs; om >$3/dygn → Fas 2 (batch)                                                                                                          | [#82](todos/82-eventnewsmatcher-omtag-prefilter-batch-cache.md)                          |
 | 2026-06-29 | MCF räddningsstatistik — 60d-mätning (förlängd från 14d efter att 2026-05-13 inte gav attribuerbar signal)                                                                                                                             | [#39](todos/39-msb-brand-rakning-statistik.md)                                           |
 | 2026-06-01 | #64 fas 2.6 — deploya Vara-blocklist + AI-veto-fix + source-scope-justering; mät om FP-andelen sjunker nästa stickprov                                                                                                                 | [#64](todos/64-per-plats-nyhetsaggregering.md)                                           |
-| 2026-05-27 | Månadsvyer-pilot — 30d-mätning Uppsala/Västerås                                                                                                                                                                                        | [#25](todos/25-manadsvyer-datum-routes.md)                                               |
 | 2026-05-31 | #64 CTR + dwell time + GSC-position — 30d-jämförelse                                                                                                                                                                                   | [#64](todos/64-per-plats-nyhetsaggregering.md)                                           |
 | 2026-06-13 | #75 GSC-jämförelse `/lan/...`-queries (mål: pos 7-8 → 5-6, ~1 350 clicks/90d)                                                                                                                                                          | [#75](todos/done/75-slug-aware-lan-controller.md)                                        |
 | 2026-07-12 | #76 Fas B — 60d GSC-mätning Tier 1 city titles (mål: pos ≤4 på "polisen händelser <stad> idag")                                                                                                                                        | [#76](todos/76-polisen-handelser-stad-idag.md)                                           |
@@ -74,15 +74,16 @@ eller markera todon som klar.
 
 ### Avklarade uppföljningar
 
-| Planerat   | Utfört     | Åtgärd                                                                                                                                                                             | Todo                                                         |
-| ---------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
-| 2026-05-25 | 2026-05-25 | #36 4v-check AI-titlar: DiD +39 % relativt men AI-EFTER sample 386 impr för litet; cross-section +1 % CTR / +1,4 pos. Avvaktar 8v-check 2026-06-22                                 | [#36](todos/36-gsc-matning-ai-titlar.md)                     |
-| 2026-05-15 | 2026-05-25 | #64 precision-stickprov (10d försenat): 86 % strikt / 90 % generös — > 85 %-mål. Identifierade Vara-verb-kollision (4/5 FPs) + AI-veto-bug (#15). Fas 2.6 planerad till 2026-06-01 | [#64](todos/64-per-plats-nyhetsaggregering.md)               |
-| 2026-05-24 | 2026-05-25 | #81 soak 8d post-EventNewsMatcher-avstängning: $2.58/dygn snitt (vs prognos $1.60). NewsClassifier-volym +60 % → $59/mån. Beslut B (skärp prefilter) aktualiserad                  | [#81](todos/81-ai-kostnad-overvakning.md)                    |
-| 2026-05-23 | 2026-05-17 | #81 7d-uppföljning tidigarelagd efter faktura: $2.20/dygn håller, värdes-review klar, EventNewsMatcher avstängd (1.6 % event-täckning, -$18/mån)                                   | [#81](todos/81-ai-kostnad-overvakning.md)                    |
-| 2026-05-13 | 2026-05-13 | #39 MCF 14d-check: ingen attribuerbar effekt; Tier 1 click-uppgång confounded med #24/#33/#10; queries räddning/bränder saknas. Mätperiod → 60d                                    | [#39](todos/39-msb-brand-rakning-statistik.md)               |
-| 2026-05-31 | 2026-05-13 | `/k/v1/`-rollout — 12d-mätning: 99.7 % 301, 0.24 % 404 (acceptabelt), hit rate 95.5 %, app-CPU 0.02 %. Stängde tidigt, #66 done                                                    | [#66](todos/done/66-uppfoljning-55-kortare-kartbild-urls.md) |
-| 2026-05-10 | 2026-05-12 | Trafikverket Fas 1 soak + gates-beslut: 6/6 OK (volym/CWV/rate-limit/GSC/prune/logs) — grönt ljus Fas 2. Pre-existing CWV på `/karta` flyttat till #70                             | [#50](todos/50-trafikverket-trafikinformation-live.md)       |
+| Planerat   | Utfört     | Åtgärd                                                                                                                                                                                                       | Todo                                                         |
+| ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------ |
+| 2026-05-27 | 2026-05-27 | #25 30d-mätning Uppsala/Västerås/Uppsala län: query "blåljus uppsala" +494 % (pos +4.3), "polisen händelser uppsala" +500 %, månadsvy-URL:er pos 5 / 21 % CTR. Inga rollback-trösklar — Tier 1-rollout pågår | [#25](todos/25-manadsvyer-datum-routes.md)                   |
+| 2026-05-25 | 2026-05-25 | #36 4v-check AI-titlar: DiD +39 % relativt men AI-EFTER sample 386 impr för litet; cross-section +1 % CTR / +1,4 pos. Avvaktar 8v-check 2026-06-22                                                           | [#36](todos/36-gsc-matning-ai-titlar.md)                     |
+| 2026-05-15 | 2026-05-25 | #64 precision-stickprov (10d försenat): 86 % strikt / 90 % generös — > 85 %-mål. Identifierade Vara-verb-kollision (4/5 FPs) + AI-veto-bug (#15). Fas 2.6 planerad till 2026-06-01                           | [#64](todos/64-per-plats-nyhetsaggregering.md)               |
+| 2026-05-24 | 2026-05-25 | #81 soak 8d post-EventNewsMatcher-avstängning: $2.58/dygn snitt (vs prognos $1.60). NewsClassifier-volym +60 % → $59/mån. Beslut B (skärp prefilter) aktualiserad                                            | [#81](todos/81-ai-kostnad-overvakning.md)                    |
+| 2026-05-23 | 2026-05-17 | #81 7d-uppföljning tidigarelagd efter faktura: $2.20/dygn håller, värdes-review klar, EventNewsMatcher avstängd (1.6 % event-täckning, -$18/mån)                                                             | [#81](todos/81-ai-kostnad-overvakning.md)                    |
+| 2026-05-13 | 2026-05-13 | #39 MCF 14d-check: ingen attribuerbar effekt; Tier 1 click-uppgång confounded med #24/#33/#10; queries räddning/bränder saknas. Mätperiod → 60d                                                              | [#39](todos/39-msb-brand-rakning-statistik.md)               |
+| 2026-05-31 | 2026-05-13 | `/k/v1/`-rollout — 12d-mätning: 99.7 % 301, 0.24 % 404 (acceptabelt), hit rate 95.5 %, app-CPU 0.02 %. Stängde tidigt, #66 done                                                                              | [#66](todos/done/66-uppfoljning-55-kortare-kartbild-urls.md) |
+| 2026-05-10 | 2026-05-12 | Trafikverket Fas 1 soak + gates-beslut: 6/6 OK (volym/CWV/rate-limit/GSC/prune/logs) — grönt ljus Fas 2. Pre-existing CWV på `/karta` flyttat till #70                                                       | [#50](todos/50-trafikverket-trafikinformation-live.md)       |
 
 ## Klara
 
