@@ -1,5 +1,42 @@
-**Status:** fas 2.6 deployad 2026-05-25 (commit b97580b) — Vara-blocklist (`ambiguous_place_names` case-sensitiv), AI-veto-filter i `Helper::getLatestNewsForPlace()`, svt-smaland fallback borttagen. CTR/dwell + GSC-position mäts till 2026-05-31.
-**Senast uppdaterad:** 2026-05-26
+**Status:** klar 2026-06-01 — 30d-mätning visade ingen mätbar SEO-/engagemangslyft. NewsClassifier pausad (−$24/mån), per-plats-partialen borttagen från ortssidorna. #82 behållen på regex-`place_news`.
+**Senast uppdaterad:** 2026-06-01
+
+## Mätresultat + beslut 2026-06-01
+
+Mätfönster: 30d före (2026-04-02→05-01) vs 30d efter (2026-05-02→05-31)
+partial-utrullning. GA4 (property 305258979) + GSC.
+
+**GA4 dwell/engagemang (DiD mot site-wide baslinje):**
+
+- Site-wide dwell-trend: 74.6s → 78.9s = **+5.7 %** (säsongstrend, kontroll).
+- /stockholm (enda URL-stabila treatment-sidan): dwell 120.3s → 113.2s =
+  **−5.9 %** → **DiD ≈ −11.6pp under trenden**. EngagementRate −2.6 %.
+- /goteborg, /malmo, /uppsala, /helsingborg: **ej jämförbara** — #75
+  slug-migrationen flyttade trafiken från `/plats/*` hit, så "före"-
+  sessions var pyttesmå (55–290) och trafik-sammansättningen helt annan
+  efter (197→2175 osv).
+
+**GSC position/klick:** ej attribuerbart — klick-lyften på stadssidorna
+drivs av URL-konsolidering (#75: `/plats/malmö` 355→0 → `/malmo`) +
+#25/#24/#33/#10 i samma fönster, inte partialen.
+
+**Slutsats:** ingen mätbar payoff. Featuren är inte värdelös (ligger under
+fold, GA4 fångar inte "såg relevant nyhetslänk"), men noll datastöd för att
+expandera (Fas 3 avfärdas) eller behålla AI-kostnaden.
+
+**Åtgärd (beslut: stäng bara NewsClassifier, behåll #82):**
+
+- `app:news:ai-classify` (NewsClassifier) pausad i `app/Console/Kernel.php`
+  — sparar ~$24/mån (störst av all AI-spend; ai_usage_logs 30d:
+  NewsClassifier $24.25, EventNewsMatcher $18.56, total $55).
+- Partial-include borttagen ur `city.blade.php` + `single-plats.blade.php`.
+- **Behållet:** `app:news:fetch-rss` + `app:news:classify` (regex, gratis)
+  fyller fortfarande `place_news`, så #82 (`app:event-news:match`) lever
+  vidare på regex-kandidater. Kod + tabeller orörda (reversibelt — av-
+  kommentera schemaraden för att återaktivera).
+- Påverkar AI-kostnadsbudgeten i [#81](81-ai-kostnad-overvakning.md).
+
+## Historik
 
 ## Precisions-stickprov 2026-05-25
 

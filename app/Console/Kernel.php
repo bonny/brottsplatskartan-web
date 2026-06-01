@@ -168,17 +168,19 @@ class Kernel extends ConsoleKernel
             ->withoutOverlapping()
             ->name('news-classify');
 
-        // AI-klassifikation (todo #64) — fångar vad regex missar
-        // (bedrägerier, stadsdelar, böjda termer). Körs 10 min efter regex,
-        // var 30:e min för rimlig latens med låg kostnad. Limit 50/körning
-        // = ~2400 art/dygn ceiling, men i praktiken bara nya artiklar
-        // (ai_classified_at IS NULL) — typiskt 50-100/körning bara vid hög
-        // RSS-aktivitet. Haiku 4.5 (~$26/år).
-        $schedule->command('app:news:ai-classify --limit=50')
-            ->cron('15,45 * * * *')
-            ->withoutOverlapping()
-            ->name('news-ai-classify')
-            ->when($aiAllowed);
+        // AI-klassifikation (todo #64) — PAUSAD 2026-06-01. 30d-mätningen
+        // visade ingen mätbar SEO-/engagemangslyft från per-plats-nyhets-
+        // partialen (DiD Stockholm −11.6pp dwell vs site-trend), medan
+        // jobbet kostade ~$24/mån (störst av all AI-spend, ai_usage_logs).
+        // Partialen är borttagen från ortssidorna. Regex-passet
+        // (app:news:classify) fyller fortfarande place_news gratis, så #82
+        // (event-news-match) lever vidare på regex-kandidater. Återaktivera
+        // raden nedan om #82 visar sig behöva AI-täckningen.
+        // $schedule->command('app:news:ai-classify --limit=50')
+        //     ->cron('15,45 * * * *')
+        //     ->withoutOverlapping()
+        //     ->name('news-ai-classify')
+        //     ->when($aiAllowed);
 
         $schedule->command('app:news:prune')
             ->dailyAt('03:45')
