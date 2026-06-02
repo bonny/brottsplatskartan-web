@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 /**
  * Klassificerar news_articles (todo #64): markerar blåljus-relaterade
@@ -62,12 +63,11 @@ class ClassifyNewsArticles extends Command
             // Samlings-/digest-sidor (svt-texttv "Inrikesnotiser",
             // "Morgonens nyheter i …") beskriver ingen enskild händelse —
             // hoppa över helt så de aldrig blir place_news-kandidater
-            // (todo #82). Markeras ändå som classified ovan → reprocessas inte.
+            // (todo #82). Markeras ändå som classified ovan (rad sätts före
+            // detta skip) → plockas inte upp i nästa batch.
             $titleLower = mb_strtolower(trim($article->title));
-            foreach ($genericTitlePrefixes as $prefix) {
-                if ($prefix !== '' && str_starts_with($titleLower, $prefix)) {
-                    continue 2;
-                }
+            if ($genericTitlePrefixes !== [] && Str::startsWith($titleLower, $genericTitlePrefixes)) {
+                continue;
             }
 
             // Aggregator-källor: matcha bara mot title, inte summary.

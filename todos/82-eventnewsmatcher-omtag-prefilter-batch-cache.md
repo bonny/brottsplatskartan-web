@@ -227,26 +227,54 @@ stories i de frigjorda platserna. Omkörd med korrekt modell
   det är **ratiot 8,6 %** som bär över på $2,25-baslinjen, inte de
   absoluta talen.
 
-### Code-review-fynd kvar att ta ställning till (2026-06-02)
+### Fas 1.6 — delad story-nyckel + visnings-dedup (gjord 2026-06-02, review-punkt b)
 
-- **Visningsvägen dedupar inte** — `Helper::getLatestNewsForPlace`
-  (rad 210–222) har `->distinct()` på en SELECT med `na.id` (no-op för
-  nästan-dubbletter), så samma texttv-story visas ×N i widgeten på t.ex.
-  /stockholm. Fas 1.5-dedupen träffade bara matchern. (Review punkt b.)
-- **Altitude:** rätt-djup fix vore dedup vid klassifikation/ingestion
-  (delad `story_key` = `source|normalizeTitle`) så matcher + visning + ev.
-  API slipper dubbletter på en gång. `content_hash` = sha256(source|url)
-  fångar inte texttv-omhämtningar (samma story, ny URL/sidnummer).
-- **Recall-risk:** `str_starts_with`-denylist skippar även en legitim
-  artikel som börjar med "morgonens nyheter: …" (Mitt i:s rubrikmall).
-- **Skörhet:** `continue 2` i `ClassifyNewsArticles` är korrekt bara för
-  att `$classifiedIds[]` ligger före loopen — `Str::startsWith($t, $arr)`
-    - vanligt `continue` vore robustare.
+Code-reviewen visade att dedupen satt på fel altitud: den användarvända
+widgeten `Helper::getLatestNewsForPlace` dedupade inte (`->distinct()` på en
+SELECT med `na.id` = no-op för nästan-dubbletter), så samma texttv-story
+visades ×N. Mätt prod (Stockholm 28–31 maj, samma filter som widgeten):
+**75 råa rader → 53 distinkta stories**; "Brand i industribyggnad i Älvsjö"
+fanns ×15 och hade (nyast först) fyllt nästan hela den synliga listan (8
+platser) med samma rubrik.
+
+Fix (minsta delade mekanism — ingen schema-migration, YAGNI):
+
+- **`NewsArticle::storyKey($source, $title)`** — delad story-nyckel (källa +
+  `normalizeTitle`). En definition, anropas av båda konsumenterna.
+- **`MatchEventNews::candidatesFor`** — bytte sin privata `normalizeTitle` +
+  manuell loop mot `->unique(fn → NewsArticle::storyKey(...))->take(20)`.
+- **`Helper::getLatestNewsForPlace`** — hämtar nu `$limit×6` med headroom,
+  dedupar på `storyKey`, kapar till `$limit`; vilseledande `->distinct()`
+  borttagen. Användaren ser en rad per story.
+- Verifierat: tinker-asserts (storyKey + dedup 4→2) pass, PHPStan grön.
+
+Skjuts till framtid (ej gjort, YAGNI): dedup vid ingestion/klassifikation
+(`story_key`-kolumn) — motiveras först om en tredje konsument (API/sök) börjar
+visa samma dubbletter. `content_hash` = sha256(source|url) fångar inte
+texttv-omhämtningar (samma story, ny URL/sidnummer).
+
+### Fas 1.7 — härdning (gjord 2026-06-02, review-punkt c)
+
+- **Recall-risk (verifierad säker, ingen kodändring):** mätt mot 60d prod —
+  _varje_ titel som börjar med prefixen är en digest: `Inrikesnotiser` (47×,
+  matchad som FP), `Morgonens nyheter i Stockholm` (19×, FP), google-news
+  "MORGONENS NYHETER …"-roundups (2×). Ingen enskild-händelse-artikel börjar
+  med prefixen. Prefix-match är t.o.m. bättre än exakt-match (fångar
+  google-roundupsen). Den hypotetiska "Morgonens nyheter: bilbrand i Solna"
+  finns inte i datan.
+- **Skörhet (fixad):** `continue 2` + manuell loop i `ClassifyNewsArticles`
+  ersatt med `Str::startsWith($titleLower, $genericTitlePrefixes)` + vanligt
+  `continue` (Laravel-helpern tar array och guardar tomma nålar). Verifierat
+  via tinker (6/6) + PHPStan grön.
+
+### Kvar (ej åtgärdat)
+
+- **Mönster 3 (AI topic/temporal-drift):** substring-koll (Fas 1 punkt 3,
+  aldrig implementerad) övervägs vid behov efter nästa soak.
 
 **Nästa steg:** ny ~7d-soak → mät om $/dygn faktiskt sjönk ~8,6 %
 (mål ~$2,06/dygn ≈ ~$62/mån) + att täckning hålls och generiska-titel-FP
-försvinner. Då beslut om #82 stängs eller om dedup flyttas till
-klassifikation (löser visningen med) / Fas 4 (caching) för slutmålet
+försvinner. Då beslut om #82 stängs eller Fas 4 (caching) för slutmålet
 $15–30/mån.
 
 ## Risker
