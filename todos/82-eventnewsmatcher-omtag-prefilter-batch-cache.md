@@ -1,4 +1,4 @@
-**Status:** aktiv — Fas 1 soak passerad 2026-06-02 (täckning 10,5 %, $2,25/dygn < $3-gate → ingen Fas 2). Fas 1.5 brus-/kostnadsfixar gjorda 2026-06-02 (väntar deploy + ny soak)
+**Status:** aktiv — Fas 1 soak passerad 2026-06-02 (täckning 10,5 %, $2,25/dygn < $3-gate → ingen Fas 2). Fas 1.5 brus-/dedup-fixar deployade 2026-06-02 (fe4726d); korrigerad besparing 8,6 % (ej 17,5 %). Ny ~7d-soak till 2026-06-09
 **Senast uppdaterad:** 2026-06-02
 
 # Todo #82 — EventNewsMatcher: mät rotorsak först, fixa minst möjliga
@@ -186,8 +186,7 @@ Headline-matchen rätt i ~54/56. Tre brus-mönster, samtliga billiga:
 2. **Dubblett-artiklar** — samma (källa, titel) återkommer som
    nästan-dubbletter (svt-texttv hämtas om vid varje sid-uppdatering;
    "Brand i industribyggnad i Älvsjö" ×15 mot ett event). Varje dubblett
-   = en redundant Haiku-call. **Mätt: 17,5 % av kandidat-callsen** (2 281
-   → 1 882 efter dedup på (källa, normaliserad titel)) ≈ ~$12/mån.
+   = en redundant Haiku-call.
 3. **Topic/temporal-drift** — enstaka AI-FP (Lessebo fick "skatt på
    drivmedel", Umeå fick åtal för gammal misshandel, 503425 Uppsala ärvde
    503332:s Björklinge-artiklar). Lägre volym, svårare/risk → ej åtgärdat.
@@ -204,10 +203,51 @@ Headline-matchen rätt i ~54/56. Tre brus-mönster, samtliga billiga:
 - **Kvar (mönster 3):** topic/temporal-drift — substring-koll (Fas 1
   punkt 3, aldrig implementerad) övervägs vid behov efter nästa soak.
 
-**Nästa steg:** deploya Fas 1.5 → ny ~7d-soak → mät om $/dygn faktiskt
-sjönk ~17 % (mål ~$1,85/dygn ≈ ~$56/mån) + att täckning hålls och
-generiska-titel-FP försvinner. Då beslut om #82 stängs eller om Fas 4
-(caching) behövs för att nå slutmålet $15–30/mån.
+### Korrigerad kostnadsmodell (code-review 2026-06-02)
+
+Första besparingssiffran (17,5 %) var fel modell — den räknade
+distinkt-_inom_-top20 (2 281 → 1 882). Men koden hämtar top-**100**,
+dedupar och fyller upp till 20 distinkta, så den drar in djupare distinkta
+stories i de frigjorda platserna. Omkörd med korrekt modell
+(`min(distinkt_i_top100, 20)` per event):
+
+| Modell                                | Anrop | Besparing  |
+| ------------------------------------- | ----- | ---------- |
+| Gammal kod `min(råa_top20, 20)`       | 2 281 | —          |
+| **Ny kod `min(distinkt_top100, 20)`** | 2 084 | **8,6 %**  |
+| ~~Felaktig (distinkt-inom-top20)~~    | 1 882 | ~~17,5 %~~ |
+
+- Bara **38 "grunda" event** (med texttv-dubbletter) sparar (533 → 336,
+  ~37 % på dem); **248 event** har inga dubbletter → oförändrat (1 748).
+- Koden är **aldrig sämre** än gamla (2 084 < 2 281). Backfillen ger bonus:
+  djupare distinkta stories → fler matchningar (täckning upp), vilket
+  medvetet äter en del av kostnadsbesparingen.
+- **Reviderat soak-mål: ~$2,06/dygn ≈ ~$62/mån** ($2,25 × (1 − 0,086)).
+  Förbehåll: candidat-pool-modellen ignorerar already-matched-filtret —
+  det är **ratiot 8,6 %** som bär över på $2,25-baslinjen, inte de
+  absoluta talen.
+
+### Code-review-fynd kvar att ta ställning till (2026-06-02)
+
+- **Visningsvägen dedupar inte** — `Helper::getLatestNewsForPlace`
+  (rad 210–222) har `->distinct()` på en SELECT med `na.id` (no-op för
+  nästan-dubbletter), så samma texttv-story visas ×N i widgeten på t.ex.
+  /stockholm. Fas 1.5-dedupen träffade bara matchern. (Review punkt b.)
+- **Altitude:** rätt-djup fix vore dedup vid klassifikation/ingestion
+  (delad `story_key` = `source|normalizeTitle`) så matcher + visning + ev.
+  API slipper dubbletter på en gång. `content_hash` = sha256(source|url)
+  fångar inte texttv-omhämtningar (samma story, ny URL/sidnummer).
+- **Recall-risk:** `str_starts_with`-denylist skippar även en legitim
+  artikel som börjar med "morgonens nyheter: …" (Mitt i:s rubrikmall).
+- **Skörhet:** `continue 2` i `ClassifyNewsArticles` är korrekt bara för
+  att `$classifiedIds[]` ligger före loopen — `Str::startsWith($t, $arr)`
+    - vanligt `continue` vore robustare.
+
+**Nästa steg:** ny ~7d-soak → mät om $/dygn faktiskt sjönk ~8,6 %
+(mål ~$2,06/dygn ≈ ~$62/mån) + att täckning hålls och generiska-titel-FP
+försvinner. Då beslut om #82 stängs eller om dedup flyttas till
+klassifikation (löser visningen med) / Fas 4 (caching) för slutmålet
+$15–30/mån.
 
 ## Risker
 
