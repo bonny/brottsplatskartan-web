@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Ai\Agents\EventNewsMatcher;
 use App\CrimeEvent;
+use App\Models\NewsArticle;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -218,41 +219,15 @@ class MatchEventNews extends Command
 
         // Samma story återkommer ofta som nästan-dubbletter — särskilt
         // svt-texttv som hämtas om vid varje sid-uppdatering (samma titel,
-        // ny content_hash → ny rad). Dedup på (källa, normaliserad titel)
-        // ger en Haiku-call per distinkt story i stället för en per
-        // dubblett (~17 % färre anrop, mätt 2026-06-02, todo #82). Behåll
-        // nyaste raden per story (pubdate desc), kapa sen till 20.
-        $rows = $query->orderByDesc('na.pubdate')->limit(100)->get();
-
-        $seen = [];
-        $deduped = collect();
-        foreach ($rows as $article) {
-            $key = $article->source . '|' . self::normalizeTitle((string) $article->title);
-            if (isset($seen[$key])) {
-                continue;
-            }
-            $seen[$key] = true;
-            $deduped->push($article);
-            if ($deduped->count() >= 20) {
-                break;
-            }
-        }
-
-        return $deduped;
-    }
-
-    /**
-     * Normaliserar en artikeltitel för dedup: lowercase, kollapsad
-     * whitespace, och borttaget trailing "…191"-mönster (svt-texttv-sidor
-     * får ofta ett sidnummer efter en ellips som annars gör annars
-     * identiska titlar unika).
-     */
-    private static function normalizeTitle(string $title): string
-    {
-        $t = mb_strtolower(trim($title));
-        $t = preg_replace('/\.{2,}[\d\s]*$/u', '', $t) ?? $t;
-
-        return trim(preg_replace('/\s+/u', ' ', $t) ?? $t);
+        // ny content_hash → ny rad). Dedup på story-nyckel (källa +
+        // normaliserad titel) ger en Haiku-call per distinkt story i stället
+        // för en per dubblett (todo #82). Behåll nyaste raden per story
+        // (pubdate desc), kapa sen till 20. Samma nyckel som visnings-
+        // widgeten (NewsArticle::storyKey) så de aldrig divergerar.
+        return $query->orderByDesc('na.pubdate')->limit(100)->get()
+            ->unique(fn ($article) => NewsArticle::storyKey($article->source, $article->title))
+            ->take(20)
+            ->values();
     }
 
     /**

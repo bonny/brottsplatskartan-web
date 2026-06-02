@@ -30,6 +30,32 @@ class NewsArticle extends Model
     ];
 
     /**
+     * Story-nyckel för dedup av nästan-dubbletter: `källa|normaliserad titel`.
+     * Samma story återkommer ofta som flera rader — särskilt svt-texttv som
+     * hämtas om vid varje sid-uppdatering (samma titel, ny content_hash → ny
+     * rad). Både AI-matchningen (`MatchEventNews`) och visnings-widgeten
+     * (`Helper::getLatestNewsForPlace`) dedupar på denna nyckel, så de aldrig
+     * divergerar (todo #82).
+     */
+    public static function storyKey(?string $source, ?string $title): string
+    {
+        return (string) $source . '|' . self::normalizeTitle((string) $title);
+    }
+
+    /**
+     * Normaliserar en artikeltitel för dedup: lowercase, kollapsad whitespace,
+     * och borttaget trailing "…191"-mönster (svt-texttv-sidor får ofta ett
+     * sidnummer efter en ellips som annars gör annars identiska titlar unika).
+     */
+    public static function normalizeTitle(string $title): string
+    {
+        $t = mb_strtolower(trim($title));
+        $t = preg_replace('/\.{2,}[\d\s]*$/u', '', $t) ?? $t;
+
+        return trim(preg_replace('/\s+/u', ' ', $t) ?? $t);
+    }
+
+    /**
      * Snyggt visningsnamn för `source`-slug:en. Föll tillbaka till slug:en
      * själv om vi inte har en mappning (för svt-{lan}-feedsen genereras
      * `SVT <Lan>`).

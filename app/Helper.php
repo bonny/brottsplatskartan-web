@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Models\CrimeView;
+use App\Models\NewsArticle;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Support\Collection;
@@ -207,6 +208,12 @@ class Helper {
             // avfärdar (debatt-/opinionsartiklar). Dölj rader där
             // ai_is_blaljus=false; behåll ai_is_blaljus IS NULL för att
             // inte fördröja visning innan AI-passet hunnit köra.
+            //
+            // Hämtar med headroom ($limit×6) och dedupar på story-nyckel
+            // (källa + normaliserad titel) innan vi kapar till $limit — annars
+            // fyller svt-texttv-omhämtningar av samma story (t.ex. "Brand i
+            // industribyggnad i Älvsjö" ×15) hela listan med samma rubrik
+            // (todo #82). Samma nyckel som AI-matchningen (NewsArticle::storyKey).
             $items = DB::table('place_news as pn')
                 ->join('news_articles as na', 'pn.news_article_id', '=', 'na.id')
                 ->whereIn('pn.place_id', $placeIds)
@@ -216,10 +223,12 @@ class Helper {
                     $q->whereNull('na.ai_is_blaljus')->orWhere('na.ai_is_blaljus', true);
                 })
                 ->orderByDesc('pn.pubdate')
-                ->limit($limit)
+                ->limit(max($limit * 6, 50))
                 ->select('na.id', 'na.source', 'na.url', 'na.title', 'na.summary', 'pn.pubdate')
-                ->distinct()
-                ->get();
+                ->get()
+                ->unique(fn ($item) => NewsArticle::storyKey($item->source, $item->title))
+                ->take($limit)
+                ->values();
 
             // Berika med event-koppling från crime_event_news (todo #63 fas 1).
             // Per artikel: ta bästa matchningen (hög > medel, senaste matched_at).
