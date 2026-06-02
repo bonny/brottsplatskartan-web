@@ -1,5 +1,5 @@
-**Status:** aktiv — Fas 0 klar 2026-05-26, Fas 1 deployad 2026-05-26; soak pågår
-**Senast uppdaterad:** 2026-05-26
+**Status:** aktiv — Fas 1 soak passerad 2026-06-02 (täckning 10,5 %, $2,25/dygn < $3-gate → ingen Fas 2). Fas 1.5 brus-/kostnadsfixar gjorda 2026-06-02 (väntar deploy + ny soak)
+**Senast uppdaterad:** 2026-06-02
 
 # Todo #82 — EventNewsMatcher: mät rotorsak först, fixa minst möjliga
 
@@ -163,6 +163,51 @@ vid 3000 calls.
 
 Slutmål: ~$15-30/månad för 5-8× täckning. Värt det jämfört med #81:s
 $18/månad för 1,6 %.
+
+## Soak-mätning 2026-06-02 (Fas 1, 8 dygn sedan deploy 2026-05-26)
+
+Mätt mot prod (read-only SQL):
+
+| Gate-kriterium                        | Mål                     | Utfall                                          | Verdikt        |
+| ------------------------------------- | ----------------------- | ----------------------------------------------- | -------------- |
+| Täckning (publika events m. ≥1 match) | >10 %/dygn              | **10,5 %** totalt (56/534), fulla dygn ~10–14 % | ✅             |
+| Kostnad                               | <$3/dygn → annars Fas 2 | **$2,25/dygn** snitt (5 289 calls, $17,96/8d)   | ✅ ingen Fas 2 |
+
+Lyft 1,6 % → 10,5 % = **~6,4×** (träffar slutmålets 5–8×). 405 match-rader
+(375 hög / 30 medel) på 88 events. **Men $2,25/dygn ≈ $67/mån > slutmålet
+$15–30** → kostnadsfråga som spåras i #81.
+
+### Precision-stickprov (eyeball på alla 56 matchade events)
+
+Headline-matchen rätt i ~54/56. Tre brus-mönster, samtliga billiga:
+
+1. **Generiska digest-titlar** — svt-texttv "Inrikesnotiser", Mitt i
+   "Morgonens nyheter i Stockholm" kopplas till specifika events.
+2. **Dubblett-artiklar** — samma (källa, titel) återkommer som
+   nästan-dubbletter (svt-texttv hämtas om vid varje sid-uppdatering;
+   "Brand i industribyggnad i Älvsjö" ×15 mot ett event). Varje dubblett
+   = en redundant Haiku-call. **Mätt: 17,5 % av kandidat-callsen** (2 281
+   → 1 882 efter dedup på (källa, normaliserad titel)) ≈ ~$12/mån.
+3. **Topic/temporal-drift** — enstaka AI-FP (Lessebo fick "skatt på
+   drivmedel", Umeå fick åtal för gammal misshandel, 503425 Uppsala ärvde
+   503332:s Björklinge-artiklar). Lägre volym, svårare/risk → ej åtgärdat.
+
+### Fas 1.5 — brus-/kostnadsfixar (gjorda 2026-06-02, ej deployade)
+
+- **Fix A (mönster 1):** `generic_title_prefixes` i
+  `config/news-classification.php` + guard i `ClassifyNewsArticles` —
+  digest-titlar klassas aldrig till place_news (blir aldrig kandidater).
+- **Fix B (mönster 2):** dedup på (källa, `normalizeTitle`) i
+  `MatchEventNews::candidatesFor` — en Haiku-call per distinkt story i
+  stället för en per dubblett. `normalizeTitle` strippar texttv-sidnummer
+  ("…191"). Verifierat med fokuserat skript (9/9 pass) + PHPStan grön.
+- **Kvar (mönster 3):** topic/temporal-drift — substring-koll (Fas 1
+  punkt 3, aldrig implementerad) övervägs vid behov efter nästa soak.
+
+**Nästa steg:** deploya Fas 1.5 → ny ~7d-soak → mät om $/dygn faktiskt
+sjönk ~17 % (mål ~$1,85/dygn ≈ ~$56/mån) + att täckning hålls och
+generiska-titel-FP försvinner. Då beslut om #82 stängs eller om Fas 4
+(caching) behövs för att nå slutmålet $15–30/mån.
 
 ## Risker
 

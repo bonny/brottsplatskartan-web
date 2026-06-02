@@ -280,6 +280,22 @@ return [
     ],
 
     /*
+     * Titel-prefix för samlings-/digest-sidor som inte beskriver EN
+     * specifik händelse. svt-texttv "Inrikesnotiser" och Mitt i:s
+     * "Morgonens nyheter i …" är index-sidor vars summary räknar upp
+     * många orelaterade notiser → de blåljus-klassas och kopplas
+     * felaktigt till en plats (todo #82, stickprov 2026-06-02).
+     *
+     * Matchas case-insensitivt mot titelns början (str_starts_with på
+     * lowercased, trimmad titel). Artiklar vars titel matchar hoppas
+     * över i klassifikationen — de blir aldrig place_news-kandidater.
+     */
+    'generic_title_prefixes' => [
+        'inrikesnotiser',
+        'morgonens nyheter',
+    ],
+
+    /*
      * Aggregator-källor där `description` ofta listar andra artiklar
      * (t.ex. Google News-summary). För dessa matchar vi bara mot `title`
      * — annars triggar listor av relaterade artiklar falska plats-

@@ -31,6 +31,10 @@ class ClassifyNewsArticles extends Command
             return self::SUCCESS;
         }
 
+        $genericTitlePrefixes = array_map(
+            'mb_strtolower',
+            (array) config('news-classification.generic_title_prefixes', [])
+        );
         $titleOnlySources = array_flip((array) config('news-classification.title_only_sources', []));
         $sourceToLan = (array) config('news-classification.source_to_lan', []);
         $sourcePrimaryPlaceId = $this->buildSourcePrimaryPlaceMap();
@@ -54,6 +58,17 @@ class ClassifyNewsArticles extends Command
 
         foreach ($articles as $article) {
             $classifiedIds[] = $article->id;
+
+            // Samlings-/digest-sidor (svt-texttv "Inrikesnotiser",
+            // "Morgonens nyheter i …") beskriver ingen enskild händelse —
+            // hoppa över helt så de aldrig blir place_news-kandidater
+            // (todo #82). Markeras ändå som classified ovan → reprocessas inte.
+            $titleLower = mb_strtolower(trim($article->title));
+            foreach ($genericTitlePrefixes as $prefix) {
+                if ($prefix !== '' && str_starts_with($titleLower, $prefix)) {
+                    continue 2;
+                }
+            }
 
             // Aggregator-källor: matcha bara mot title, inte summary.
             // Google News description listar andra artiklar → falska träffar.
