@@ -1,5 +1,5 @@
-**Status:** aktiv — prefilter v2 + 0a + MonthlySummary-optimering deployade 2026-05-25. Total prognos besparing ~$40/mån. Soak till 2026-06-01.
-**Senast uppdaterad:** 2026-05-25 (MonthlySummary — brief description -40 % XML + halverad frekvens. Lokal output-kvalitet bibehållen.)
+**Status:** aktiv (passiv monitoring) — prefilter v2 + 0a validerade 2026-06-05. NewsClassifier pausad av #64 2026-06-01 → $0/mån. Nuvarande total ~$60/mån, domineras av EventNewsMatcher (#82). Nästa kostnads-checkpoint rider på #82-gaten 2026-06-09.
+**Senast uppdaterad:** 2026-06-05 (soak-uppföljning: NewsClassifier-soak övertagen av #64-paus; foreign-veto-stickprov 20/20 rent; ny baseline ~$60/mån.)
 
 # Todo #81 — Håll koll på hur mycket AI-anropen kostar
 
@@ -508,6 +508,50 @@ Den enda diskrepansen ("Nato-kritiska protester vid mötet i Helsingborg") var O
 
 - **0c prompt-caching** — kräver vendor-PR mot `laravel/ai`, ~$5/mån extra besparing post-0a.
 - **EventTitleRewriter** ($7/mån) — krympning av `title-rewrite.blade.php`. Marginalt.
+
+### Soak-uppföljning 2026-06-05 — soaken övertagen av #64-paus; prefilter validerat
+
+7d-soaken (deploy 2026-05-25, planerad till 2026-06-01) hann aldrig mätas på
+sina egna premisser: **NewsClassifier pausades avsiktligt 2026-06-01 10:17**
+(commit `424c6ea`, #64-stängning) efter att 30d GA4/GSC-mätning inte visade
+mätbar SEO-/engagemangslyft från per-plats-nyhetspartialen. `app:news:ai-classify`
+är utkommenterad i `Kernel.php`; regex-passet (`app:news:classify`, gratis) lever
+kvar och matar `place_news` → #82.
+
+**Konsekvens för #81-uppföljningens två premisser:**
+
+1. **"~$32/mån NewsClassifier-takt"** — föråldrad. NewsClassifier kostar nu **$0/mån**.
+   Innan pausen hann prefilter v2 + 0a verka: sista veckan (25 maj–1 jun) låg
+   NewsClassifier på **$5,38 / ~181 anrop/dygn ≈ $0,49/dygn ≈ $15/mån** — under
+   både $32-målet och 0a-prognosen $22/mån. Optimeringarna fungerade alltså;
+   pipelinen pausades sedan ändå av #64.
+2. **"Stickprov 20 foreign-veto-artiklar"** — validerat mot den historiska datan
+   (prefiltret körde 25 maj–1 jun). **394** artiklar fick `[prefilter-skip] utländsk
+plats i titel, ingen svensk markör` i fönstret. 20 slumpade titlar granskade:
+   **20/20 genuint utländska** (USA, Indien, Kina, Milano, Libanon, Israel,
+   Brasilien, Turkiet, Paris, Afghanistan, Ukraina, Ryssland). **0 svenska brott
+   felvetade.** De två med svensk källa i titeln (Västerbottens-Kuriren, DN via
+   google-news-se) handlar ändå om utländska händelser — korrekt vetade.
+   Foreign-veto-regeln är därmed bekräftad säker (vetoet kan reaktiveras utan risk
+   om NewsClassifier nån gång återstartas).
+
+**Nuvarande AI-baseline (3d, 06-02→06-05, efter både #64-paus och #82 Fas 1.5):**
+
+| Agent              | $/dygn    | ~$/mån   | Ägs av      |
+| ------------------ | --------- | -------- | ----------- |
+| EventNewsMatcher   | $1,56     | ~$47     | **#82**     |
+| EventTitleRewriter | $0,25     | ~$7      | #36-mätning |
+| DailySummary       | $0,12     | ~$3,5    | behåll      |
+| MonthlySummary     | $0,09     | ~$2,6    | behåll      |
+| NewsClassifier     | $0        | $0       | pausad #64  |
+| **Total**          | **$2,01** | **~$60** |             |
+
+**Beslut:** #81:s aktiva optimerings-spår avslutat. EventNewsMatcher (~78 % av
+spenden) ägs nu av #82, vars egen soak/gate löper till **2026-06-09** ($3/dygn-gate;
+ligger på $1,56/dygn för agenten ensam, $2,01 total — under gaten). #81 fortsätter
+som passiv monitoring: nästa kostnads-review rider på #82-gaten 2026-06-09 (stäng /
+flytta dedup till klassifikation / Fas 4-caching avgör slutlig $/mån). Sonnet-trion
+(~$13/mån) är inom operativt overhead — ingen åtgärd före #36-data.
 
 ## Confidence
 
