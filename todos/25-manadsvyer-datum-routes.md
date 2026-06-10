@@ -1,5 +1,5 @@
-**Status:** Tier 1 (Stockholm/Göteborg/Malmö/Helsingborg) aktiverat på prod 2026-05-27 efter 30d-mätning + Lighthouse OK. 14d-soak till 2026-06-10.
-**Senast uppdaterad:** 2026-05-27 (Tier 1-rollout live; Lighthouse-CrUX FAST på alla 5 CWV; nästa check: 14d-soak 2026-06-10)
+**Status:** Aktiv (post-rollout-soak). 14d-gate **passerad 2026-06-10** → **full rollout `MONTHLY_VIEWS_PILOT='all'` live på prod 2026-06-10** (verifierad). Kvar: post-rollout-soak på den långa svansen (~42k vyer, småorter otestade i skala) + CityController-301-cleanup ([#88]).
+**Senast uppdaterad:** 2026-06-10 (14d-gate PASS + full rollout 'all' + verifiering; post-rollout-soak till ~2026-06-24)
 **Confidence:** Hög (30d-data validerar hypotesen — query-positioner upp, månadsvy-URL:er rankar direkt; Lighthouse CrUX FAST på alla pilot-platser)
 
 # Todo #25 — Månadsvyer istället för dagsvyer (plats/län-routes)
@@ -320,7 +320,38 @@ direkt + de övriga Tier 1-städerna (Göteborg/Malmö/Helsingborg, som inte had
 10. ✅ **Lighthouse-test** per platsstorlek (Stockholm/Uppsala/Hofors) — PSI 2026-05-27 verifierade Tier 1 (Stockholm/Göteborg/Malmö): CrUX FAST på alla 5 CWV-mätvärden, lab-CLS 0.001 på Stockholm/Göteborg.
 11. ☐ **Day-nav på enskilda event-pages** — prev/next i `Helper.php` pekar på månadsvy med dag-anchor istället för dagsvy. (Inte blocking — 301 sköter befintliga dagsvys-länkar.)
 12. ✅ **30 dagars soak** — 2026-05-27 utfall: query "blåljus uppsala" +494 % (pos +4.3), månadsvy-URL:er pos 5 / 21 % CTR. Inga rollback-trösklar triggade.
-13. 🔄 **Tier 1-rollout (in progress)** — Stockholm/Göteborg/Malmö/Helsingborg aktiva 2026-05-27. 14d-soak till 2026-06-10. Sedan ev. `MONTHLY_VIEWS_PILOT='all'`.
+13. ✅ **Tier 1-rollout** — Stockholm/Göteborg/Malmö/Helsingborg aktiva 2026-05-27.
+14. ✅ **14d-gate + full rollout** — gate PASS 2026-06-10, `MONTHLY_VIEWS_PILOT='all'` live (se nedan).
+
+### 14d-soak-gate + full rollout (2026-06-10)
+
+GSC 14d-vs-14d kring rollouten 2026-05-27 (pre 05-13→05-26, post 05-27→06-08):
+
+| Kriterium              | Mål    | Utfall                                                                                           | Verdikt |
+| ---------------------- | ------ | ------------------------------------------------------------------------------------------------ | ------- |
+| Månadsvy-URL:er rankar | pos ≤8 | Tier 1-stadsarkiv m. efterfrågan: stockholm/04 7,7 · malmo/06 5,8 · goteborg/04 7,1 · hbg/06 6,7 | ✅      |
+| Inga soft-404          | 0      | Aktuell månad 301:ar till stadssidan (canonical, fetch OK); tidigare månader indexerade pos 5–8  | ✅      |
+| CTR-tapp stadssidor    | < 10 % | Stockholm **−3,8 %** · Göteborg **+10 %** · Malmö **+32 %** — alla med förbättrad position       | ✅      |
+
+Stadssidornas klick föll 16–23 % men det är **impressions/säsong** (samma
+site-wide nedgång som #50-grävningen), inte kvalitet — CTR och position upp på
+alla tre. Confounder-noten höll: Stockholms flaggskeppsquery-drop (05-22, extern
+SERP) späds ut → bara −3,8 % CTR. Uppsala −26 % CTR (piloten, ej rollout-stad;
+impressions upp, säsong) — ej blockerande.
+
+**Beslut 2026-06-10: full rollout.** `MONTHLY_VIEWS_PILOT` `list:…` → **`all`** på
+prod. Verifierat: icke-pilot-dagsvyer 301:ar nu till månadsvy med dag-anchor
+(t.ex. `/lan/dalarnas-lan/handelser/2-juni-2026` → `…/2026/06#2026-06-02`),
+dagens datum stannar 200, månadsvy-mål 200.
+
+**Rollout-procedur (fallgrop dokumenterad):** `docker compose restart` läser inte
+om `env_file` → krävde `up -d` (recreate); `config:cache` måste köras EFTER
+recreate (annars bakas gamla värdet in). Full sekvens i AGENTS.md → "Ändra en
+env-variabel på prod" + [[project_prod_env_change_procedure]].
+
+**Kvar:** post-rollout-soak på långa svansen (~42k vyer, småorter otestade i
+skala) — 14d GSC-koll på soft-404/index-churn till ~2026-06-24 innan #25 stängs.
+CityController-301-cleanup spunnen till #88.
 
 ## Pilot-status (2026-04-27)
 
@@ -424,7 +455,7 @@ Stockholm-månadsvyn: 200 OK, 210 KB HTML, 153 ms TTFB från Hetzner. Storsta-sk
 
 ### Öppen punkt: CityController dagsvy→månadsvy-301
 
-`PlatsController` och `LanController` 301:ar `handelser/{date}` → `handelser/{year}/{month}#{date}` när `isInMonthlyViewsPilot()` är aktiv. `CityController` (Tier 1-routerna `/{city}/handelser/{date}`) har ingen motsvarande 301-logik — dagsvyerna fortsätter ge 200 i Tier 1-städer. Inte blockerande (månadsvyerna fungerar och rankar), men ger duplikat-innehåll mellan dagsvy och månadsvy för Tier 1. Cleanup-todo att skapa när vi sett 14d-soak-utfallet på Tier 1.
+`PlatsController` och `LanController` 301:ar `handelser/{date}` → `handelser/{year}/{month}#{date}` när `isInMonthlyViewsPilot()` är aktiv. `CityController` (Tier 1-routerna `/{city}/handelser/{date}`) har ingen motsvarande 301-logik — dagsvyerna fortsätter ge 200 i Tier 1-städer. Inte blockerande (månadsvyerna fungerar och rankar), men ger duplikat-innehåll mellan dagsvy och månadsvy för Tier 1. Verifierat kvar 2026-06-10 (`/stockholm/handelser/1-juni-2026` → 200). **Spunnen till egen cleanup-todo #88.**
 
 ---
 

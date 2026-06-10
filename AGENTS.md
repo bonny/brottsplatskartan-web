@@ -255,6 +255,37 @@ Kritiska variabler:
 - Cache: `CACHE_DRIVER=redis`, `RESPONSE_CACHE_DRIVER=redis`, `SESSION_DRIVER=redis`
 - API-nycklar: `CLAUDE_API_KEY`, `GOOGLE_API_KEY`, m.fl.
 
+#### Ändra en env-variabel på prod (rätt ordning)
+
+Containern får env via `env_file: .env` i `compose.yaml` (laddas vid
+container-**start**), och config är `config:cache`:ad. Två fallgropar gör att
+en naiv ändring inte slår igenom:
+
+1. **`docker compose restart app` läser INTE om `env_file`** — den startar om
+   samma container med oförändrade env-variabler. Du måste **recreate**:a med
+   `docker compose up -d app`.
+2. **`config:cache` på den gamla containern bakar in det gamla värdet** —
+   config läser `env()` ur containerns process-miljö, som ännu har gamla
+   värdet tills containern recreate:ats. Kör `config:cache` FÖRST efter `up -d`.
+
+Korrekt sekvens (exempel: `MONTHLY_VIEWS_PILOT`):
+
+```bash
+ssh deploy@brottsplatskartan.se
+cd /opt/brottsplatskartan
+cp -p .env ".env.bak-$(date +%Y%m%d-%H%M%S)"          # backup först
+sed -i 's|^MONTHLY_VIEWS_PILOT=.*|MONTHLY_VIEWS_PILOT="all"|' .env
+docker compose up -d app                               # recreate → laddar om env_file
+docker compose exec -T app printenv MONTHLY_VIEWS_PILOT # verifiera: nya värdet
+docker compose exec -T app php artisan config:cache     # rebuild MED nya env:et
+docker compose exec -T app php artisan responsecache:clear
+docker compose exec -T app php artisan config:show <key> # bekräfta effektivt värde
+```
+
+Obs: `up -d app` kan recreate:a beroende-containrar (t.ex. redis) → cache
+kallstartar (harmlös perf-blip). `responsecache:clear` ensam kan trigga
+`check-prod-tinker.sh`-hooken i en kedja — kör den som eget kommando.
+
 ### Laravel Debugbar i produktion
 
 Debugbar aktiveras via cookie (`app/Http/Middleware/DebugBarMaybeEnable.php`):
