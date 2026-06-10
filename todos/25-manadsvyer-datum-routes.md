@@ -289,6 +289,21 @@ Behåll dagsvys-routen i kod i 6 månader efter migration. Den
 301:ar bara till månadsvy under normal drift, men kan reaktiveras
 genom att avmarkera 301-logiken om rollback krävs.
 
+### ⚠️ Confounder för 14d-gaten (upptäckt 2026-06-10 via #50-domänanalys)
+
+`/stockholm` tappade query **"senaste blåljusen stockholm"** från pos **2,1 → 5,4**
+(CTR 26 % → 11 %, −1220 klick) med skarp drop **exakt 2026-05-22** — **fem dagar
+FÖRE** Tier 1-rollouten 2026-05-27. Utrett i #50-grävningen: inte vår kod
+(perf-commit c11065e friad via Malmö-korskoll — Malmö låg stabilt pos ~4 tvärs
+05-22 på samma kodväg; impressions _steg_ på Stockholm), sannolikt extern
+Google-SERP-omrankning på sajtens mest konkurrensutsatta stadsterm.
+
+**Vid 14d-gaten:** rollback-tröskeln "CTR-tapp på stadssidor < 10 %" kommer slå
+ut på Stockholm — men det är **pre-#25 och externt orsakat**, inte månadsvyerna.
+Missattribuera inte. Mät hellre månadsvy-URL:erna (`/{stad}/handelser/{år}/{mån}`)
+direkt + de övriga Tier 1-städerna (Göteborg/Malmö/Helsingborg, som inte hade
+05-22-droppen). Se [[feedback_measure_actual_code_path]].
+
 ---
 
 ## Implementation-ordning

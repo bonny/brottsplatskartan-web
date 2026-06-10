@@ -1,5 +1,5 @@
-**Status:** aktiv — Fas 1 soak passerad 2026-06-02 (täckning 10,5 %, $2,25/dygn < $3-gate → ingen Fas 2). Fas 1.5 brus-/dedup-fixar deployade 2026-06-02 (fe4726d); korrigerad besparing 8,6 % (ej 17,5 %). Ny ~7d-soak till 2026-06-09
-**Senast uppdaterad:** 2026-06-02
+**Status:** klar 2026-06-09 — Fas 1.5/1.6/1.7-soak verifierad: kvalitetsgaten passerar rent (generiska-titel-FP eliminerade, täckning hålls 10,7 %), EventNewsMatcher steady state ~$1,64/dygn ≈ ~$49/mån. Dedupens egen kostnadseffekt går ej att verifiera (confounderad av NewsClassifier-pausen 06-01). Slutmål $15–30/mån ej nått, men Fas 4 (caching) avfärdad på YAGNI/bounded-upside. Kostnad spåras vidare passivt i #81.
+**Senast uppdaterad:** 2026-06-09
 
 # Todo #82 — EventNewsMatcher: mät rotorsak först, fixa minst möjliga
 
@@ -276,6 +276,49 @@ texttv-omhämtningar (samma story, ny URL/sidnummer).
 (mål ~$2,06/dygn ≈ ~$62/mån) + att täckning hålls och generiska-titel-FP
 försvinner. Då beslut om #82 stängs eller Fas 4 (caching) för slutmålet
 $15–30/mån.
+
+## Soak-mätning 2026-06-09 (Fas 1.5/1.6/1.7, rena dygn 06-03→06-08)
+
+Deploy 2026-06-02: dedup (fe4726d, 14:08) + storyKey/härdning (4e49b7d/1172228,
+15:33). Rena soak-dygn = 06-03→06-08. Mätt mot prod (read-only `ai_usage_logs`,
+`place_news`, `crime_event_news`).
+
+| Gate                | Mål         | Utfall                                                                   | Verdikt         |
+| ------------------- | ----------- | ------------------------------------------------------------------------ | --------------- |
+| Generiska-titel-FP  | 0 nya       | **0** place_news-rader fr.o.m. 06-03 (sista 06-02, pre-deploy förmiddag) | ✅ rent         |
+| Täckning hålls      | >10 %/dygn  | **10,7 %** aggregerat (41/383), dygnssnitt 10,6 %                        | ✅              |
+| $/dygn sjönk ~8,6 % | ~$2,06/dygn | $1,64/dygn (−34 % mot $2,50-förfönster)                                  | ⚠️ confounderad |
+
+### ⚠️ Kostnadsfallet är NewsClassifier-pausen, inte dedupen
+
+`#64` pausade NewsClassifier **2026-06-01** (94 anrop 06-01 → 0 fr.o.m. 06-02),
+mitt i före/efter-fönstret. Det krymper kandidatpoolen oberoende av #82-dedupen:
+
+- `place_news`/dygn: pre-snitt **143** → post **92** = **−36 %**
+- EventNewsMatcher-anrop/dygn: **736 → 486** = **−34 %**
+- **Anrop per place_news-kandidat: 5,13 → 5,27** — i princip platt (snäppet UPP)
+
+Poolkrympningen (−36 %) förklarar nästan hela anropsfallet (−34 %). De
+modellerade 8,6 % syns inte — de ligger i bruset, konsistent med att backfillen
+medvetet äter besparingen via djupare distinkta stories (per
+[[feedback_measure_actual_code_path]]).
+
+### Vad soaken bevisar
+
+- ✅ Kvalitetsfixarna levererar rent: FP eliminerade, **täckning hålls trots
+  36 % mindre pool** — dedupen håller uppe match-kvaliteten.
+- ✅ EventNewsMatcher steady state = **~$1,64/dygn ≈ ~$49/mån** (NewsClassifier-
+  pausen är permanent → go-forward-tal). ~6,6× täckning vs #81:s legacy (1,6 %
+  för $18/mån) till ~2,7× kostnad.
+- ❌ Slutmål **$15–30/mån ej nått**; dedupens egen kostnadseffekt ej verifierbar.
+
+### Gate-beslut 2026-06-09: stäng #82
+
+Kvalitetsgaten passerar; kostnaden ~halverad mot baslinjen. **Fas 4
+(prompt-caching) avfärdad** — uppside bounded (~500-token systemprompt → ~$49→~$45)
+och YAGNI ([[feedback_yagni_simplicity]]) talar emot bygge utan tydlig drivare.
+**Flytta dedup till klassifikation** förblir YAGNI-uppskjuten (ingen tredje
+konsument). Kostnaden spåras passivt vidare i #81.
 
 ## Risker
 

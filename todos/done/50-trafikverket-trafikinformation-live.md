@@ -1,5 +1,5 @@
-**Status:** aktiv — Fas 1 klar; **Fas 2 lyft 2026-05-12** (ec9f97e): editorial intro Sthlm/VG/Skåne, noindex lyft på Tier 1, vägarbete-fold, internlänk från `/lan/{lan}` resp. `/<stad>`, sitemap-entry. Återstår: manuell GSC "Request Indexing" + 28d-gate-mätning till **2026-06-09**.
-**Senast uppdaterad:** 2026-05-12
+**Status:** klar 2026-06-10 — Fas 2 28d-gate mätt: `/trafik` Sverige-aggregatet bär (pos 8,5, 8 klick), men de 3 Tier 1 län-aggregaten missade pos<30 (34/55/33) med 0 klick på 28d. Ingen domänregression. **Beslut: kör inte Fas 3** (Trafikverket-permalinks) — svag aggregat-signal motiverar inte 270–900 thin pages. Behåller live-karta + API + `/trafik` Sverige + de 3 län-sidorna som de är. #50 stängd vid Fas 2.
+**Senast uppdaterad:** 2026-06-10
 **Relaterad till:** #40 (Trafikverket STRADA — historisk parallell), #51 (övriga live-källor)
 **XSD-källa:** `docs/Trafikverket/response_Situation_v1.6.xsd` (auktoritativ).
 
@@ -1161,6 +1161,45 @@ Commits: `92688da` (foundation), `5fb98e1` (footer-länk till /trafik).
    CTR/pos-regression). Mätperiod **2026-05-12 → 2026-06-09**.
 7. **Kvar:** GSC URL-inspektion "Request Indexing" manuellt på alla 3 slugs
    (snabbar upp Googles upptäckt — sitemap räcker i sig men ger 1-7 d delay).
+
+#### 28d-gate-utfall 2026-06-10 (mätperiod 2026-05-12 → 2026-06-08)
+
+GSC page-level på de fyra indexerbara aggregat-URL:erna (Request Indexing
+de-facto klart — alla fyra har impressions, dvs indexerade):
+
+| URL                            | Clicks | Impr | CTR    | Pos  | Pos<30? |
+| ------------------------------ | -----: | ---: | ------ | ---- | :-----: |
+| `/trafik` (Sverige)            |      8 |  413 | 1,94 % | 8,5  |   ✅    |
+| `/stockholms-lan/trafik`       |      0 |  165 | 0 %    | 34,0 |   ❌    |
+| `/vastra-gotalands-lan/trafik` |      0 |  124 | 0 %    | 54,8 |   ❌    |
+| `/skane-lan/trafik`            |      0 |  121 | 0 %    | 33,0 |   ❌    |
+
+Senaste-veckan-trend (06-01→06-08): Stockholm 33,1 (98 impr — fast på sida 4),
+VG 14,2 men bara 6 impr, Skåne 23,6 men bara 8 impr. Län-sidornas impressions
+_krymper_; "förbättringen" är brus på ensiffriga tal. Noll klick på alla tre på
+hela 28d.
+
+**Gate-kriterier:**
+
+1. Impressions > 0 (indexerade) — ✅ alla fyra.
+2. Position < 30 — ✅ `/trafik` (8,5); ❌ de 3 län-aggregaten (33–55).
+3. AdSense limited-content-flagga — ⚠️ ej mätbar via GSC; introtexter 150+ ord
+   mildrar, och utan Fas 3-permalinks är limited-content-risken låg.
+4. Domän-CTR/pos-regression — ✅ ingen attribuerbar; domän-pos förbättrades
+   (~10,5 → ~8,3 P1→P2). Domänklick −13 % P1→P2 är säsong/site-wide (sidorna har
+   0 klick → kan inte ha orsakat det); värt en separat blick men utanför #50.
+
+**Beslut 2026-06-10: kör inte Fas 3 (Trafikverket-permalinks).** Gatens
+kärnkriterium (aggregat pos < 30) missades för de 3 län-sidorna efter fulla 28d.
+Att stapla 270–900 tunnare Trafikverket-permalinks ovanpå en svag aggregat-signal
+är just den thin-content-risk #29 städar bort ([[feedback_yagni_simplicity]]).
+`/trafik` Sverige bär; de befintliga _polishändelse_-trafikolycka-permalinkarna
+går utmärkt (100–359 klick, pos 5–8) men är oförändrad data — inte Trafikverkets.
+
+Behåller live-karta + `/api/eventsMap?source=all` + `/trafik` Sverige + de 3
+län-sidorna som de är (3 sidor = försumbar thin-risk, ingen domänskada → ingen
+brådska att noindexa). #50 stängd vid Fas 2. Fas 3 kan återöppnas som egen todo
+om Trafikverket-olycksvolymen eller aggregat-rankingen ändras.
 
 ### Fas 2 — aggregat-sidor (1–2 dagar, efter gate)
 
