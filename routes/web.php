@@ -698,6 +698,24 @@ Route::get('/{lan}/trafik', [\App\Http\Controllers\TrafikController::class, 'lan
     ->name('trafikLan');
 
 /**
+ * Bare-city dagsvy → månadsvy-301 (todo #88).
+ *
+ * Tier 1-städer har ingen egen dagsvy — bara månadsvyer (todo #33).
+ * `/stockholm/handelser/1-juni-2026` 301:as därför till
+ * `/stockholm/handelser/2026/06#2026-06-01` (spegling av lanDate/platsDatum).
+ *
+ * Måste registreras FÖRE `/{lan}/{eventName}`-routern nedan: annars fångar
+ * event-routern datum-URL:en (eventName = "handelser/1-juni-2026"), tolkar
+ * årtalet (2026) som ett event-id och renderar fel händelse med 200 (todo #88).
+ *
+ * {date}-constraint = dag-månad-år-slug (utan `/`) så year-only-routern
+ * (`/{city}/handelser/{year}`) inte skuggas och inga event-slugs fångas.
+ */
+Route::get('/{city}/handelser/{date}', [CityController::class, 'day'])
+    ->where('date', '[0-9]{1,2}-[^/]+-[0-9]{4}')
+    ->name('cityDate');
+
+/**
  * single event page/en händelse/ett crimeevent
  *
  * ca. såhär:
@@ -810,9 +828,11 @@ Route::get('/{lan}/{eventName}', function ($lan, $eventName, Request $request) {
     return view('single-event', $data);
 })
     ->name("singleEvent")
-    // Constraint: event-slugs slutar alltid med -{id}. Förhindrar att
-    // routen fångar URL:er som /{city}/handelser, /lan/{lan}/handelser etc.
-    ->where('eventName', '.*-[0-9]+$')
+    // Constraint: event-slugs slutar alltid med -{id} och är ETT segment
+    // (aldrig `/`). `[^/]*` (tidigare `.*`) hindrar att routen sväljer
+    // fleersegments-URL:er som /{city}/handelser/1-juni-2026 — där spände
+    // `.*` över `/` och årtalet tolkades som event-id → fel händelse (todo #88).
+    ->where('eventName', '[^/]*-[0-9]+$')
     // Event-routen har egen custom markdown-renderer via
     // MarkdownController. Stäng av Spatie-konverteringen för denna route
     // så att ClaudeBot m.fl. får vår kurerade markdown istället.

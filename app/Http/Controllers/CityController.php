@@ -61,6 +61,56 @@ class CityController extends Controller
         return app(PlatsController::class)->month($request, $normalizedSlug, $year, $month);
     }
 
+    /**
+     * Dagsvy för Tier 1-stad (todo #88).
+     * URL: /{city}/handelser/{date}
+     *
+     * Städer har INGEN egen dagsvy — bara månadsvyer (todo #33). Routen
+     * finns enbart för att 301:a datum-URL:er till månadsvyn (spegling av
+     * LanController::day / PlatsController::day) och för att hindra att
+     * event-routern renderar fel händelse för dem (todo #88).
+     */
+    public function day(Request $request, $city, $date)
+    {
+        $normalizedSlug = $this->normalizeCitySlug($city);
+
+        // 301:a icke-normaliserad slug (Malmö → malmo) först.
+        if ($city !== $normalizedSlug) {
+            return redirect()->route('cityDate', [
+                'city' => $normalizedSlug,
+                'date' => $date,
+            ], 301);
+        }
+
+        // Bara Tier 1-städer har den här routen. Övriga 404:as (det finns
+        // ingen bare-city-dagsvy för dem).
+        if (!Tier1::isTier1($normalizedSlug)) {
+            abort(404);
+        }
+
+        $parsedDate = \App\Helper::getdateFromDateSlug($date);
+        if (!$parsedDate) {
+            abort(404);
+        }
+
+        // Icke-idag-datum 301:as till månadsvyn med dag-anchor (todo #25/#33).
+        // Idag-datum (och om piloten är inaktiv för staden) 301:as till
+        // stadens live-startsida — ingen egen dagsvy finns att rendera.
+        if (
+            !$parsedDate['date']->isToday()
+            && \App\Helper::isInMonthlyViewsPilot($normalizedSlug)
+        ) {
+            $monthUrl = route('cityMonth', [
+                'city' => $normalizedSlug,
+                'year' => $parsedDate['date']->format('Y'),
+                'month' => $parsedDate['date']->format('m'),
+            ]) . '#' . $parsedDate['date']->format('Y-m-d');
+            return redirect($monthUrl, 301);
+        }
+
+        return redirect()->route('city', ['city' => $normalizedSlug], 301);
+    }
+
     public function show($citySlug, Request $request)
     {
         $normalizedSlug = $this->normalizeCitySlug($citySlug);
