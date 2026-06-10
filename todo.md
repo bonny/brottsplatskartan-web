@@ -4,7 +4,7 @@ Index över förbättringsarbete. Varje todo har en egen fil under
 [`todos/`](todos/) med fullständig analys. Konvention och
 mappstruktur: [`todos/README.md`](todos/README.md).
 
-Senast uppdaterad: 2026-06-10 (#25 14d-gate PASS → full rollout 'all' live; +#88 CityController-301-cleanup; +#50 klar; +"senaste blåljusen stockholm"-bevakning [#52]).
+Senast uppdaterad: 2026-06-10 (#88 klar — premiss fel: event-route svalde datum-URL:er → fel-content-200; ny cityDate-301 + härdad singleEvent-constraint, deployat + verifierat live).
 
 ## Aktiva
 
@@ -22,7 +22,6 @@ Senast uppdaterad: 2026-06-10 (#25 14d-gate PASS → full rollout 'all' live; +#
 | 78  | Multi-plats-händelser missvisande på kartan           | Volym-mätt 2026-05-27: ~12 events/dygn (19 % av all volym), regex på `Sammanfattning natt/kväll/helg` täcker ~100 %. Fas 1 alt C ("Område"-pin) rekommenderad                                                                                                                   | [todos/78-handelser-utspridda-platser-kart-missvisning.md](todos/78-handelser-utspridda-platser-kart-missvisning.md) |
 | 81  | Håll koll på hur mycket AI-anropen kostar             | Passiv monitoring. NewsClassifier pausad av #64 2026-06-01 → $0/mån. #82-gaten löst 2026-06-09: EventNewsMatcher steady state uppmätt ~$1,64/dygn ≈ ~$49/mån (NewsClassifier-paus krympte poolen −36 %). AI-total nu ~$49/mån, nästan helt EventNewsMatcher. Nästa review öppen | [todos/81-ai-kostnad-overvakning.md](todos/81-ai-kostnad-overvakning.md)                                             |
 | 84  | /brand/{stad} stadssidor för top-15 städer            | Avvaktar QW-mätning 2026-06-22 — stadssidor-beslut skjuts tills /brand-base visar positiv trend                                                                                                                                                                                 | [todos/84-brand-stad-stadssidor.md](todos/84-brand-stad-stadssidor.md)                                               |
-| 88  | CityController dagsvy→månadsvy-301 (Tier 1)           | Cleanup från #25 — `/{city}/handelser/{date}` ger fortfarande 200 (duplikat mot månadsvy). Spegla 301-grenen från Lan/PlatsController. ~10 rader, hög confidence                                                                                                                | [todos/88-citycontroller-dagsvy-manadsvy-301.md](todos/88-citycontroller-dagsvy-manadsvy-301.md)                     |
 
 ### Beroenden
 
@@ -31,11 +30,10 @@ Senast uppdaterad: 2026-06-10 (#25 14d-gate PASS → full rollout 'all' live; +#
 
 ### Föreslagen ordning
 
-1. **#88 CityController-301** — liten kodfix (~10 rader), stänger #25-duplikaten — kan göras nu
-2. **#25 Månadsvyer** — full rollout 'all' live 2026-06-10; passiv post-rollout-soak till ~2026-06-24
-3. **#29** — passiv GSC-mätperiod, åtgärder efter data
-4. **#36** — passiv GSC-mätning, första check 2026-05-25
-5. **#39** — passiv mätning, 14d-check klar 2026-05-13, nästa 2026-06-29 (60d)
+1. **#25 Månadsvyer** — full rollout 'all' live 2026-06-10; passiv post-rollout-soak till ~2026-06-24
+2. **#29** — passiv GSC-mätperiod, åtgärder efter data
+3. **#36** — passiv GSC-mätning, första check 2026-05-25
+4. **#39** — passiv mätning, 14d-check klar 2026-05-13, nästa 2026-06-29 (60d)
 
 ## Uppföljningar — datum att komma ihåg
 
@@ -88,6 +86,7 @@ Sorterade nyast först.
 
 | #   | Titel                                                                                                                                                                                                                       | Klar       | Fil                                                                                                                            |
 | --- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| 88  | CityController dagsvy→månadsvy-301 — premiss fel (event-route svalde datum-URL:er → fel-content-200); ny cityDate-301 + härdad singleEvent-constraint, deployat + verifierat live                                           | 2026-06-10 | [todos/done/88-citycontroller-dagsvy-manadsvy-301.md](todos/done/88-citycontroller-dagsvy-manadsvy-301.md)                     |
 | 50  | Trafikverket live på kartan — Fas 2 28d-gate: /trafik Sverige bär (pos 8,5) men 3 län-aggregat missade pos<30 med 0 klick; Fas 3-permalinks ej körd (thin-content-risk), stängd vid Fas 2 (live-karta + API + /trafik kvar) | 2026-06-10 | [todos/done/50-trafikverket-trafikinformation-live.md](todos/done/50-trafikverket-trafikinformation-live.md)                   |
 | 82  | EventNewsMatcher prefilter/dedup — soak: kvalitetsgate ✅ (FP borta, täckning 10,7 %), kostnad ~$49/mån men dedup-effekt confounderad av NewsClassifier-paus; Fas 4 avfärdad (YAGNI), kostnad spåras i #81                  | 2026-06-09 | [todos/done/82-eventnewsmatcher-omtag-prefilter-batch-cache.md](todos/done/82-eventnewsmatcher-omtag-prefilter-batch-cache.md) |
 | 64  | Per-plats nyhetsaggregering — mätning visade ingen lyft; NewsClassifier pausad (−$24/mån), partial borttagen, #82 behållen                                                                                                  | 2026-06-01 | [todos/done/64-per-plats-nyhetsaggregering.md](todos/done/64-per-plats-nyhetsaggregering.md)                                   |

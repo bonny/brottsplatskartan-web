@@ -1,5 +1,34 @@
-**Status:** aktiv
+**Status:** klar 2026-06-10 — premissen var fel (ingen city-dagsvy fanns; event-routern `{lan}/{eventName}` svalde datum-URL:er och renderade fel händelse med 200). Full paritet vald: ny `cityDate`-route → 301 till `cityMonth#datum` + härdad `singleEvent`-constraint (`.*` → `[^/]*`). Deployat + verifierat live.
 **Senast uppdaterad:** 2026-06-10
+
+## Lösning (2026-06-10)
+
+Premissen i todon stämde inte: det finns ingen `CityController::day()` och
+ingen `/{city}/handelser/{date}`-route. `200`:an kom från catch-all-routen
+`/{lan}/{eventName}` (`web.php`, constraint `.*-[0-9]+$`) som tolkade
+`/stockholm/handelser/1-juni-2026` som `lan=stockholm`,
+`eventName=handelser/1-juni-2026` och plockade ut det avslutande **årtalet
+som event-id** → renderade fel, indexerbar händelse (t.ex. #2026
+"Ofog barn/ungdom", Västerbotten 2016). Alltså ett **fel-content-200**, inte
+duplikatinnehåll.
+
+Åtgärd (commit `ee24cbd`):
+
+1. Ny `cityDate`-route `/{city}/handelser/{date}` → `CityController::day`,
+   registrerad **före** `singleEvent`. `{date}`-constraint
+   `[0-9]{1,2}-[^/]+-[0-9]{4}` så year-only-routern inte skuggas.
+2. `CityController::day()` speglar Lan/PlatsController: normalisera slug → 301;
+   icke-Tier1 → 404; icke-idag + pilot → 301 `cityMonth#Y-m-d`; idag/pilot-av
+   → 301 `/{city}`.
+3. Härdade `singleEvent`-constraint `.*-[0-9]+$` → `[^/]*-[0-9]+$` så
+   event-routern aldrig spänner över `/` (root-cause-skydd, fixar även
+   `/foo/bar/1-juni-2026`-läckor).
+
+Verifierat live efter deploy + `responsecache:clear`:
+`/stockholm/handelser/1-juni-2026` → 301 → `…/2026/06#2026-06-01` (200, 1 hop),
+`/stockholm/handelser/15-januari-2018` → 301 → `…/2018/01#2018-01-15`,
+`/foobar/handelser/1-juni-2026` → 404, cityMonth/year-only/event-URL:er
+oförändrade. PHPStan: inga fel.
 
 # Todo #88 — CityController: dagsvy→månadsvy-301 för Tier 1-städer
 
