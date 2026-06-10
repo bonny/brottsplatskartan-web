@@ -476,7 +476,11 @@ Route::post('/{lan}/{eventName}', function (
     ]);
 
     return back()->with('status', 'Lade till media.');
-})->where('eventName', '.*-[0-9]+$');
+})
+    // Samma constraint som GET-singleEvent: `[^/]*` (inte `.*`) så routen
+    // aldrig sväljer fleersegments-URL:er och tolkar fel trailing-tal som
+    // event-id på skrivvägen (todo #88).
+    ->where('eventName', '[^/]*-[0-9]+$');
 
 /**
  * Routes för blogg

@@ -70,7 +70,7 @@ class CityController extends Controller
      * LanController::day / PlatsController::day) och för att hindra att
      * event-routern renderar fel händelse för dem (todo #88).
      */
-    public function day(Request $request, $city, $date)
+    public function day($city, $date)
     {
         $normalizedSlug = $this->normalizeCitySlug($city);
 
