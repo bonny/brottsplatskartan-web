@@ -1,8 +1,41 @@
-**Status:** väntande — #63 fas 1 klar 2026-05-12; precision-stickprov 2026-06-11 avgör om fas 2 startar; fas 3 (detta todo) kör efter fas 2 visar positivt utfall
-**Senast uppdaterad:** 2026-05-26
+**Status:** väntande — #63 precision-stickprov klart 2026-06-13: **precision-grinden PASS (28/30 = 93 %)**, men CTR/dwell-grinden **ej uppfylld** (flat/confounded, jfr #64). #60 fas 3 (bred) hålls gated på ett _demonstrerat_ GSC-positions-lyft, inte bara precision — se "Gate-utfall 2026-06-13" nedan
+**Senast uppdaterad:** 2026-06-13
 **Källa:** Inbox Brottsplatskartan (2026-04-30)
 
 # Todo #60 — Auto-länka events till nyhetsartiklar via AI + RSS
+
+## Gate-utfall 2026-06-13 (#63 fas 1 precision-stickprov)
+
+Stickprov 30 slumpade matchningar ur `crime_event_news` (prod; 871 matchningar
+över 194 events, 93 % `hög` / 7 % `medel`, fönster 2026-05-12 → 2026-06-13).
+Manuell bedömning event-titel/plats/datum/beskrivning mot artikel-titel/summary:
+
+- **Precision: 28/30 = 93 %** (mål >80 % → **PASS** med stor marginal).
+- 1 klar false positive (id 328): moped+bil-kollision Malmö matchad mot
+  svt-texttv-häktningsartikel om en _annan_ Malmö-dödsolycka som **föregick**
+  händelsen 2 dygn — svag "trafikolycka + stad + samma vecka"-matchning.
+- 1 borderline (id 377): "flertalet mordbränder i Garpenberg" mot en specifik
+  husbrand öster om Hedemora — samma serie/område, möjligen olika bränder.
+- Den enda `medel`-raden i urvalet var korrekt. Många sanna träffar är
+  legitima nästa-dags-uppföljningar (dödsbesked, häktning).
+
+**CTR/dwell-grinden:** ej uppfylld. Ingen mätbar engagemangs-lyft har kunnat
+visas — #64:s DiD (samma place_news-pipeline) gav flat/negativ dwell
+(Stockholm −11,6 pp vs +5,7 % site-trend) och var confounderad. En ren
+isolering kräver A/B-holdout vi inte har; dessutom är media-matchade events
+strukturellt storstads-tunga (högre engagemang oavsett widget).
+
+**Strukturell hake för #60-tesen:** EventNewsMatcher körs idag smalt (top-events
+via `crime_views` 7d, skapade ≤30d). SEO-tesen för #60 (bred) säger att
+positions-lyften finns i long-tail — exakt de lågtrafik-events som **inte**
+matchas nu. Den breda nyttan kan alltså inte valideras utan att faktiskt gå
+brett (≈$5/dygn ≈ $150/mån, 3× nuvarande ~$49/mån AI-spend, spårad i #81).
+
+**Rekommendation:** håll #60 fas 3. Precision är bevisad men payoff:en är det
+inte, och kan inte bevisas billigt med nuvarande smala scope. Grön­ljus bara om
+användaren vill finansiera det breda experimentet som en ren SEO-satsning, eller
+om en billigare engagemangs-/GSC-signal dyker upp. Fas 1/2 fortsätter live
+(bra precision, låg kostnad, spårad i #81).
 
 ## Sammanfattning
 
