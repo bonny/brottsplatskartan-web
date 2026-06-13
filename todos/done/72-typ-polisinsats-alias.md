@@ -1,5 +1,5 @@
-**Status:** deployat 2026-05-13 (auto-deploy via GitHub Actions, verifierat live i prod) — väntar 30d GSC-mätning till 2026-06-12
-**Senast uppdaterad:** 2026-05-19 (prod-verifiering: /typ/polisinsats → 200, slash-varianten → 301)
+**Status:** klar 2026-06-13 — alias + 301 deployat och indexerat, men 30d-GSC visar att SEO-hypotesen föll: queryn "polisinsats" stannade på pos ~8.6 (8.1→8.6, brus), CTR platt 0.27 %, och `/typ/polisinsats` får 0 impressions — Google serverar queryn till geografiska sidor (/stockholm, /, /goteborg) pga intent-mismatch. Ingen regression; alias/301 behålls (städar fula %2F-URL:en). Mål topp-3/~790 c ej uppnått.
+**Senast uppdaterad:** 2026-06-13
 **Källa:** #52 GSC-monitor — åtgärd D
 
 # Todo #72 — Egen `/typ/polisinsats` (alias för Polisinsats/kommendering)
