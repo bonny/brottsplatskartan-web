@@ -7,6 +7,8 @@
 
 @section('title', 'Trafikhändelser i Sverige just nu — olyckor, vägarbeten och störningar')
 
+@section('metaDescription', 'Aktuella trafikhändelser i Sverige från Trafikverkets öppna data — olyckor, vägarbeten, hinder och störningar på vägnätet i realtid. Uppdateras var 5:e minut.')
+
 @section('canonicalLink', route('trafik'))
 
 @section('content')
