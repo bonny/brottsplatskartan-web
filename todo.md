@@ -4,7 +4,7 @@ Index över förbättringsarbete. Varje todo har en egen fil under
 [`todos/`](todos/) med fullständig analys. Konvention och
 mappstruktur: [`todos/README.md`](todos/README.md).
 
-Senast uppdaterad: 2026-06-13 (+#89 Trafikverket-detaljsida: bättre slug + karta).
+Senast uppdaterad: 2026-06-13 (+#89 Trafikverket-detaljsida: bättre slug + karta; #63 precision-stickprov PASS 28/30 = 93 %, CTR/dwell-grind ej uppfylld → #60 fas 3 hålls gated på demonstrerat GSC-lyft).
 
 ## Aktiva
 
