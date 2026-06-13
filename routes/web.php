@@ -865,11 +865,11 @@ Route::get('/polisaktion', fn () => redirect('/typ/polisinsats', 301));
 Route::get('/polispådrag', fn () => redirect('/typ/polisinsats', 301));
 
 /**
- * Trafikverket Trafikinformation — pilot-vy (todo #50, Fas 1).
+ * Trafikverket Trafikinformation — pilot-vy (todo #50).
  *
- * Olänkad i menyn. noindex så sidan inte ranks. Användaren utvärderar
- * UX innan vi bygger Fas 2-aggregatet (mixad polishändelser + Trafikverket
- * + editorial intro-text).
+ * Olänkad i menyn men indexerbar (per #50-beslut: /trafik + /trafik/{id}
+ * indexeras). Användaren utvärderar UX innan vi bygger Fas 2-aggregatet
+ * (mixad polishändelser + Trafikverket + editorial intro-text).
  */
 Route::get('/trafik', function () {
     $cacheKey = 'trafik:pilot:v1';

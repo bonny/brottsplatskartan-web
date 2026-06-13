@@ -13,9 +13,23 @@
         ? " — {$event->road_number}"
         : ($event->administrative_area_level_1 ? " — {$event->administrative_area_level_1}" : '');
     $pageTitle = mb_strimwidth($event->message_type . ': ' . $headline . $titleSuffix, 0, 100, '…');
+
+    // Meta description: bygg en beskrivande text av platskontext + meddelandet,
+    // annars faller layouten tillbaka på sajtens generiska beskrivning.
+    $metaPrefix = $event->message_type;
+    if ($event->road_number) {
+        $metaPrefix .= ' på ' . $event->road_number;
+    }
+    if ($event->administrative_area_level_1) {
+        $metaPrefix .= ' i ' . $event->administrative_area_level_1;
+    }
+    $metaBody = $event->message ?: $event->location_descriptor ?: '';
+    $metaDescription = mb_strimwidth(trim($metaPrefix . ($metaBody ? ': ' . $metaBody : '')), 0, 160, '…');
 @endphp
 
 @section('title', $pageTitle)
+
+@section('metaDescription', e($metaDescription))
 
 @section('canonicalLink', route('trafik.show', $event->id))
 
