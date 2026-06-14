@@ -1,5 +1,5 @@
-**Status:** klar 2026-06-13 — SEO-slug (`typ-väg-län-id`) + 301 från bar id/fel slug, samt statisk kartbild (röd punkt, ingen JS) på `/trafik/{slug}`.
-**Senast uppdaterad:** 2026-06-13
+**Status:** klar 2026-06-14 — SEO-slug (`typ-väg-län-id`) + 301 från bar id/fel slug, statisk kartbild (2 uttonande ringar, ingen JS) på `/trafik/{slug}`. Utökad 2026-06-14: SEO-härdning (noindex,follow + og:image), site-wide breadcrumb-JSON-LD-fix, intern länkning (startsida/läns-/stadssidor/footer + trafik-detalj→crime), refaktor (closure→`TrafikController::show`, rensad död kod) och slug-polish (trimmar hängande bindeord). Allt deployat + prod-verifierat.
+**Senast uppdaterad:** 2026-06-14
 
 # Todo #89 — Trafikverket-detaljsida: bättre slug + karta
 
