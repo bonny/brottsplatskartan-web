@@ -120,6 +120,17 @@ class Event extends Model
             $base = rtrim(mb_substr($base, 0, 60), '-');
         }
 
+        // Trimma hängande bindeord i slutet — capen ovan klipper ofta mitt i
+        // en fras och lämnar kvar en preposition (t.ex. "...uppsala-lan-i").
+        // Slug:en är redan ascii-iserad av Str::slug (å→a, ö→o), så orden är
+        // gemena utan diakritiska tecken.
+        $stopwords = ['i', 'pa', 'vid', 'och', 'av', 'till', 'for', 'med', 'mot', 'om', 'ur', 'samt'];
+        $segments = explode('-', $base);
+        while (count($segments) > 1 && in_array(end($segments), $stopwords, true)) {
+            array_pop($segments);
+        }
+        $base = implode('-', $segments);
+
         return $base !== '' ? "{$base}-{$this->id}" : (string) $this->id;
     }
 
