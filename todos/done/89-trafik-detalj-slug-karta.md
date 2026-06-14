@@ -1,4 +1,4 @@
-**Status:** aktiv
+**Status:** klar 2026-06-13 — SEO-slug (`typ-väg-län-id`) + 301 från bar id/fel slug, samt statisk kartbild (röd punkt, ingen JS) på `/trafik/{slug}`.
 **Senast uppdaterad:** 2026-06-13
 
 # Todo #89 — Trafikverket-detaljsida: bättre slug + karta
@@ -31,14 +31,16 @@ Exempel: <https://brottsplatskartan.se/trafik/36271>
 ## Förslag
 
 ### Slug
+
 - Generera en SEO-slug av `message_type` + `road_number`/`location_descriptor`
-  + id, t.ex. `/trafik/trafikmeddelande-e4-vasterbottens-lan-36271`.
+    - id, t.ex. `/trafik/trafikmeddelande-e4-vasterbottens-lan-36271`.
 - Behåll id:t i slutet så lookup är snabb och robust (samma mönster som
   CrimeEvent-permalinks). 301:a bar `/trafik/{id}` → kanonisk slug-URL för att
   inte tappa redan indexerade/länkade URL:er.
 - Uppdatera `route('trafik.show', ...)`-anrop i listan + canonical.
 
 ### Karta
+
 - Återanvänd Leaflet-uppsättningen från single-event-vyn (eller statisk
   kartbild via tileserver-gl, jfr `getKortKartbildUrl`) med pin på lat/lng.
 - Överväg statisk kartbild för CWV/LCP (ingen JS) om en interaktiv karta är

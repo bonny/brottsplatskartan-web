@@ -4,7 +4,7 @@ Index över förbättringsarbete. Varje todo har en egen fil under
 [`todos/`](todos/) med fullständig analys. Konvention och
 mappstruktur: [`todos/README.md`](todos/README.md).
 
-Senast uppdaterad: 2026-06-13 (+#89 Trafikverket-detaljsida: bättre slug + karta; #63 precision-stickprov PASS 28/30 = 93 %, CTR/dwell-grind ej uppfylld → #60 fas 3 hålls gated på demonstrerat GSC-lyft).
+Senast uppdaterad: 2026-06-13 (#89 klar — Trafikverket-detaljsida: SEO-slug + 301 + statisk karta; #63 precision-stickprov PASS 28/30 = 93 %, CTR/dwell-grind ej uppfylld → #60 fas 3 hålls gated på demonstrerat GSC-lyft).
 
 ## Aktiva
 
@@ -21,7 +21,6 @@ Senast uppdaterad: 2026-06-13 (+#89 Trafikverket-detaljsida: bättre slug + kart
 | 78  | Multi-plats-händelser missvisande på kartan      | Volym-mätt 2026-05-27: ~12 events/dygn (19 % av all volym), regex på `Sammanfattning natt/kväll/helg` täcker ~100 %. Fas 1 alt C ("Område"-pin) rekommenderad                                                                                                                   | [todos/78-handelser-utspridda-platser-kart-missvisning.md](todos/78-handelser-utspridda-platser-kart-missvisning.md) |
 | 81  | Håll koll på hur mycket AI-anropen kostar        | Passiv monitoring. NewsClassifier pausad av #64 2026-06-01 → $0/mån. #82-gaten löst 2026-06-09: EventNewsMatcher steady state uppmätt ~$1,64/dygn ≈ ~$49/mån (NewsClassifier-paus krympte poolen −36 %). AI-total nu ~$49/mån, nästan helt EventNewsMatcher. Nästa review öppen | [todos/81-ai-kostnad-overvakning.md](todos/81-ai-kostnad-overvakning.md)                                             |
 | 84  | /brand/{stad} stadssidor för top-15 städer       | Avvaktar QW-mätning 2026-06-22 — stadssidor-beslut skjuts tills /brand-base visar positiv trend                                                                                                                                                                                 | [todos/84-brand-stad-stadssidor.md](todos/84-brand-stad-stadssidor.md)                                               |
-| 89  | Trafikverket-detaljsida: bättre slug + karta     | ny — `/trafik/{id}` bör ha SEO-slug (+301 från bar id) och Leaflet/statisk karta (lat/lng finns redan)                                                                                                                                                                          | [todos/89-trafik-detalj-slug-karta.md](todos/89-trafik-detalj-slug-karta.md)                                         |
 
 ### Beroenden
 
@@ -86,6 +85,7 @@ Sorterade nyast först.
 
 | #   | Titel                                                                                                                                                                                                                          | Klar       | Fil                                                                                                                            |
 | --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| 89  | Trafikverket-detaljsida — SEO-slug (`typ-väg-län-id`) + 301 från bar id/fel slug, samt statisk kartbild (röd punkt, ingen JS) på `/trafik/{slug}`; route flyttad före `/{lan}/{eventName}` så slug-kollision undviks           | 2026-06-13 | [todos/done/89-trafik-detalj-slug-karta.md](todos/done/89-trafik-detalj-slug-karta.md)                                         |
 | 72  | `/typ/polisinsats` alias — implementerat + indexerat, men 30d-GSC visar 0 impr på sidan + query stannar pos ~8.6 (intent-mismatch, Google serverar geografiska sidor); SEO-hypotesen föll, ingen regression, alias/301 behålls | 2026-06-13 | [todos/done/72-typ-polisinsats-alias.md](todos/done/72-typ-polisinsats-alias.md)                                               |
 | 88  | CityController dagsvy→månadsvy-301 — premiss fel (event-route svalde datum-URL:er → fel-content-200); ny cityDate-301 + härdad singleEvent-constraint, deployat + verifierat live                                              | 2026-06-10 | [todos/done/88-citycontroller-dagsvy-manadsvy-301.md](todos/done/88-citycontroller-dagsvy-manadsvy-301.md)                     |
 | 50  | Trafikverket live på kartan — Fas 2 28d-gate: /trafik Sverige bär (pos 8,5) men 3 län-aggregat missade pos<30 med 0 klick; Fas 3-permalinks ej körd (thin-content-risk), stängd vid Fas 2 (live-karta + API + /trafik kvar)    | 2026-06-10 | [todos/done/50-trafikverket-trafikinformation-live.md](todos/done/50-trafikverket-trafikinformation-live.md)                   |

@@ -118,6 +118,44 @@ class StaticMapUrlBuilder
     }
 
     /**
+     * Punktbild: karta centrerad på (lat, lng) vid fast zoom med en liten
+     * röd punkt som markör. För källor som bara har en exakt koordinat utan
+     * viewport-fält (t.ex. Trafikverket-events, todo #89) — därför rå lat/lng
+     * istället för en CrimeEvent.
+     *
+     * Fast zoom (default 12 ≈ väg-/ortnivå) ger omgivande vägnät som kontext;
+     * `static/auto/` skulle istället zooma in tajt på den lilla punkten.
+     */
+    public function pointUrl(float $lat, float $lng, int $width = 640, int $height = 360, int $scale = 1, int $zoom = 12, int $radiusMeters = 450): string
+    {
+        $suffix = $scale === 2 ? '@2x' : '';
+        $centerLng = number_format($lng, 5, '.', '');
+        $centerLat = number_format($lat, 5, '.', '');
+
+        $base = config('services.tileserver.url')
+            . 'styles/basic-preview/static/'
+            . "{$centerLng},{$centerLat},{$zoom}"
+            . "/{$width}x{$height}{$suffix}.jpg";
+
+        // Två uttonande lager: mjuk ytterhalo + tydligare kärna, båda
+        // transparenta. Ritordning bakifrån-och-fram (halo först, kärna sist).
+        $c = self::CIRCLE_COLOR_RGB;
+        $layers = [
+            "fill:rgba({$c},0.12)|stroke:rgba({$c},0)|width:0|"
+                . $this->circlePath($lat, $lng, $radiusMeters, 24),
+            "fill:rgba({$c},0.30)|stroke:rgba({$c},0.6)|width:1|linejoin:round|"
+                . $this->circlePath($lat, $lng, $radiusMeters * 0.5, 24),
+        ];
+
+        $params = ['latlng=1'];
+        foreach ($layers as $layer) {
+            $params[] = 'path=' . rawurlencode($layer);
+        }
+
+        return $base . '?' . implode('&', $params);
+    }
+
+    /**
      * Närbild: viewport-bbox som röd polygon ovanpå auto-zoomad karta.
      * Motsvarar tidigare CrimeEvent::getStaticImageSrc().
      */

@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Services\StaticMapUrlBuilder;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 /**
  * Polymorf events-tabell (todo #50, Fas 1).
@@ -94,5 +96,52 @@ class Event extends Model
     {
         $reversed = array_flip(self::COUNTY_NAMES);
         return $reversed[$lanName] ?? null;
+    }
+
+    /**
+     * SEO-slug för detaljsidan (todo #89): typ-väg-län-id, t.ex.
+     * `trafikmeddelande-e4-vasterbottens-lan-36271`. Id:t sist gör lookup
+     * snabb och robust (samma mönster som CrimeEvent-permalinks). Faller
+     * tillbaka på location_descriptor när vägnummer saknas, och på bara id:t
+     * om inget textunderlag finns.
+     */
+    public function getSlug(): string
+    {
+        $parts = array_filter([
+            $this->message_type,
+            $this->road_number ?: $this->location_descriptor,
+            $this->administrative_area_level_1,
+        ]);
+
+        $base = trim(Str::slug(implode(' ', $parts)), '-');
+
+        // Kapa långa location_descriptor-fallbacks så URL:en inte skenar.
+        if (mb_strlen($base) > 60) {
+            $base = rtrim(mb_substr($base, 0, 60), '-');
+        }
+
+        return $base !== '' ? "{$base}-{$this->id}" : (string) $this->id;
+    }
+
+    /**
+     * Kanonisk permalink till detaljsidan (todo #89).
+     */
+    public function getPermalink(bool $absolute = false): string
+    {
+        return route('trafik.show', ['slug' => $this->getSlug()], $absolute);
+    }
+
+    /**
+     * Statisk kartbild (ingen JS) med röd punkt på platsen — för CWV/LCP
+     * på detaljsidan (todo #89). Returnerar null om koordinater saknas.
+     */
+    public function getStaticMapUrl(int $width = 640, int $height = 360, int $scale = 1): ?string
+    {
+        if (!$this->lat || !$this->lng) {
+            return null;
+        }
+
+        return app(StaticMapUrlBuilder::class)
+            ->pointUrl((float) $this->lat, (float) $this->lng, $width, $height, $scale);
     }
 }

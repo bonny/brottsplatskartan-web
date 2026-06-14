@@ -702,6 +702,59 @@ Route::get('/{lan}/trafik', [\App\Http\Controllers\TrafikController::class, 'lan
     ->name('trafikLan');
 
 /**
+ * /trafik/{slug} — Trafikverket-detaljsida med SEO-slug (todo #89).
+ *
+ * Slug:en slutar alltid på event-id:t (`…-36271`). Vi plockar de avslutande
+ * siffrorna, slår upp eventet och 301:ar till den kanoniska slug:en om den
+ * inkommande URL:en inte matchar — fångar både den gamla bara-id-URL:en
+ * (`/trafik/36271`) och felstavade/utdaterade slugs så inga indexerade länkar
+ * 404:ar. Samma mönster som CrimeEvent-permalinks.
+ *
+ * Måste registreras FÖRE `/{lan}/{eventName}`-routern nedan: en slug med
+ * bindestreck (`hinder-vag-837-...-667`) matchar annars event-routern
+ * (lan="trafik"), som slår upp ett CrimeEvent med samma id och renderar fel
+ * sida med 200. Bara-id-URL:en kolliderade aldrig (eventName kräver `-` före id).
+ */
+Route::get('/trafik/{slug}', function (string $slug) {
+    if (!preg_match('!\d+$!', $slug, $matches)) {
+        abort(404);
+    }
+
+    $event = \App\Models\Event::where('source', 'trafikverket')
+        ->where('id', (int) $matches[0])
+        ->firstOrFail();
+
+    $canonical = $event->getSlug();
+    if ($slug !== $canonical) {
+        return redirect()->to(route('trafik.show', $canonical), 301);
+    }
+
+    $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs();
+    $breadcrumbs->setDivider('›');
+    $breadcrumbs->addCrumb('Hem', '/');
+    $breadcrumbs->addCrumb('Trafik', route('trafik'));
+    if ($event->administrative_area_level_1) {
+        $breadcrumbs->addCrumb(
+            e($event->administrative_area_level_1),
+            route('trafikLan', ['lan' => \App\Helper::lanSlug($event->administrative_area_level_1)])
+        );
+    }
+    $breadcrumbs->addCrumb(
+        e($event->message_type) . ($event->road_number ? ' · ' . e($event->road_number) : '')
+    );
+
+    // noindex,follow (todo #89, SEO-beslut B): detaljsidorna är tunna och
+    // efemära (raderas av TrafikverketPrune efter 30/90 d). Vi koncentrerar
+    // rankingkraften på de eviga aggregaten /trafik + /{lan}/trafik och låter
+    // länkkraften flöda vidare dit via `follow`.
+    return view('trafik-detail', [
+        'event' => $event,
+        'robotsNoindex' => true,
+        'breadcrumbs' => $breadcrumbs,
+    ]);
+})->where('slug', '[^/]*[0-9]')->name('trafik.show');
+
+/**
  * Bare-city dagsvy → månadsvy-301 (todo #88).
  *
  * Tier 1-städer har ingen egen dagsvy — bara månadsvyer (todo #33).
@@ -887,14 +940,6 @@ Route::get('/trafik', function () {
         'eventsByType' => $events,
     ]);
 })->name('trafik');
-
-Route::get('/trafik/{id}', function (int $id) {
-    $event = \App\Models\Event::where('source', 'trafikverket')
-        ->where('id', $id)
-        ->firstOrFail();
-
-    return view('trafik-detail', ['event' => $event]);
-})->where('id', '[0-9]+')->name('trafik.show');
 
 /**
  * Testsida för design, så vi lätt kan se hur rubriker
