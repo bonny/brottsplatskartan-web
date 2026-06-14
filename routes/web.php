@@ -703,64 +703,15 @@ Route::get('/{lan}/trafik', [\App\Http\Controllers\TrafikController::class, 'lan
 
 /**
  * /trafik/{slug} — Trafikverket-detaljsida med SEO-slug (todo #89).
- *
- * Slug:en slutar alltid på event-id:t (`…-36271`). Vi plockar de avslutande
- * siffrorna, slår upp eventet och 301:ar till den kanoniska slug:en om den
- * inkommande URL:en inte matchar — fångar både den gamla bara-id-URL:en
- * (`/trafik/36271`) och felstavade/utdaterade slugs så inga indexerade länkar
- * 404:ar. Samma mönster som CrimeEvent-permalinks.
+ * Slug + 301-canonicalisering + breadcrumbs hanteras i TrafikController::show().
  *
  * Måste registreras FÖRE `/{lan}/{eventName}`-routern nedan: en slug med
  * bindestreck (`hinder-vag-837-...-667`) matchar annars event-routern
  * (lan="trafik"), som slår upp ett CrimeEvent med samma id och renderar fel
  * sida med 200. Bara-id-URL:en kolliderade aldrig (eventName kräver `-` före id).
  */
-Route::get('/trafik/{slug}', function (string $slug) {
-    if (!preg_match('!\d+$!', $slug, $matches)) {
-        abort(404);
-    }
-
-    $event = \App\Models\Event::where('source', 'trafikverket')
-        ->where('id', (int) $matches[0])
-        ->firstOrFail();
-
-    $canonical = $event->getSlug();
-    if ($slug !== $canonical) {
-        return redirect()->to(route('trafik.show', $canonical), 301);
-    }
-
-    $breadcrumbs = new Creitive\Breadcrumbs\Breadcrumbs();
-    $breadcrumbs->setDivider('›');
-    $breadcrumbs->addCrumb('Hem', '/');
-    $breadcrumbs->addCrumb('Trafik', route('trafik'));
-    if ($event->administrative_area_level_1) {
-        $breadcrumbs->addCrumb(
-            e($event->administrative_area_level_1),
-            route('trafikLan', ['lan' => \App\Helper::lanSlug($event->administrative_area_level_1)])
-        );
-    }
-    $breadcrumbs->addCrumb(
-        e($event->message_type) . ($event->road_number ? ' · ' . e($event->road_number) : '')
-    );
-
-    // Polishändelser nära trafikhändelsen (todo #89, internlänkning): bygger
-    // bro trafik → crime och ger crawlbara länkar till färska CrimeEvent-sidor.
-    // Tom collection om koordinater saknas eller inget hänt i närheten nyligen.
-    $nearbyCrimeEvents = ($event->lat && $event->lng)
-        ? \App\CrimeEvent::getEventsNearLocation($event->lat, $event->lng, 5, 10)
-        : collect();
-
-    // noindex,follow (todo #89, SEO-beslut B): detaljsidorna är tunna och
-    // efemära (raderas av TrafikverketPrune efter 30/90 d). Vi koncentrerar
-    // rankingkraften på de eviga aggregaten /trafik + /{lan}/trafik och låter
-    // länkkraften flöda vidare dit via `follow`.
-    return view('trafik-detail', [
-        'event' => $event,
-        'robotsNoindex' => true,
-        'breadcrumbs' => $breadcrumbs,
-        'nearbyCrimeEvents' => $nearbyCrimeEvents,
-    ]);
-})->where('slug', '[^/]*[0-9]')->name('trafik.show');
+Route::get('/trafik/{slug}', [\App\Http\Controllers\TrafikController::class, 'show'])
+    ->where('slug', '[^/]*[0-9]')->name('trafik.show');
 
 /**
  * Bare-city dagsvy → månadsvy-301 (todo #88).
@@ -932,22 +883,7 @@ Route::get('/polispådrag', fn () => redirect('/typ/polisinsats', 301));
  * indexeras). Användaren utvärderar UX innan vi bygger Fas 2-aggregatet
  * (mixad polishändelser + Trafikverket + editorial intro-text).
  */
-Route::get('/trafik', function () {
-    $cacheKey = 'trafik:pilot:v1';
-    $events = Cache::remember($cacheKey, 5 * 60, function () {
-        return \App\Models\Event::active()
-            ->forSource('trafikverket')
-            ->orderByRaw("FIELD(message_type, 'Olycka', 'Hinder', 'Trafikmeddelande', 'Restriktion', 'Viktig trafikinformation', 'Vägarbete')")
-            ->orderByDesc('start_time')
-            ->limit(500)
-            ->get()
-            ->groupBy('message_type');
-    });
-
-    return view('trafik', [
-        'eventsByType' => $events,
-    ]);
-})->name('trafik');
+Route::get('/trafik', [\App\Http\Controllers\TrafikController::class, 'index'])->name('trafik');
 
 /**
  * Testsida för design, så vi lätt kan se hur rubriker

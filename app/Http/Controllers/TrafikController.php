@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Cache;
  *
  * Routes:
  * - GET /trafik             → index() — hela Sverige (Fas 1 pilot, indexerbar)
- * - GET /trafik/{id}        → show()  — Trafikverket-permalink (Fas 1)
+ * - GET /trafik/{slug}      → show()  — Trafikverket-detaljsida med SEO-slug (#89)
  * - GET /{lan}/trafik       → lan()   — per-län aggregat (Fas 2, noindex initialt)
  *
  * Filter:
@@ -33,21 +33,6 @@ class TrafikController extends Controller
         'vastra-gotalands-lan',
         'skane-lan',
     ];
-
-    /**
-     * Mappar länets långa namn till slug för `/{slug}/trafik`. Returnerar
-     * null om länet inte är Tier 1-indexerbart (då ska ingen internlänk
-     * från `/lan/{lan}` renderas).
-     */
-    public static function tier1LanSlug(string $lanName): ?string
-    {
-        $map = [
-            'Stockholms län' => 'stockholms-lan',
-            'Västra Götalands län' => 'vastra-gotalands-lan',
-            'Skåne län' => 'skane-lan',
-        ];
-        return $map[$lanName] ?? null;
-    }
 
     /**
      * Trafik-aggregat-slug för VALFRITT giltigt svenskt län (todo #89,
@@ -120,15 +105,64 @@ class TrafikController extends Controller
     }
 
     /**
-     * /trafik/{id} — Trafikverket-permalink (Fas 1).
+     * /trafik/{slug} — Trafikverket-detaljsida med SEO-slug (todo #89).
+     *
+     * Slug:en slutar alltid på event-id:t (`…-36271`). Vi plockar de avslutande
+     * siffrorna, slår upp eventet och 301:ar till den kanoniska slug:en om den
+     * inkommande URL:en inte matchar — fångar både den gamla bara-id-URL:en
+     * (`/trafik/36271`) och utdaterade slugs så inga indexerade länkar 404:ar.
+     * Samma mönster som CrimeEvent-permalinks.
+     *
+     * Routen MÅSTE registreras före `/{lan}/{eventName}`-catch-allen (se
+     * routes/web.php): en slug med bindestreck matchar annars event-routern
+     * (lan="trafik") och renderar fel sida med 200.
      */
-    public function show(int $id): \Illuminate\Contracts\View\View
+    public function show(string $slug): \Illuminate\Http\RedirectResponse|\Illuminate\Contracts\View\View
     {
+        if (!preg_match('!\d+$!', $slug, $matches)) {
+            abort(404);
+        }
+
         $event = Event::where('source', 'trafikverket')
-            ->where('id', $id)
+            ->where('id', (int) $matches[0])
             ->firstOrFail();
 
-        return view('trafik-detail', ['event' => $event]);
+        $canonical = $event->getSlug();
+        if ($slug !== $canonical) {
+            return redirect()->to(route('trafik.show', $canonical), 301);
+        }
+
+        $breadcrumbs = new \Creitive\Breadcrumbs\Breadcrumbs();
+        $breadcrumbs->setDivider('›');
+        $breadcrumbs->addCrumb('Hem', '/');
+        $breadcrumbs->addCrumb('Trafik', route('trafik'));
+        if ($event->administrative_area_level_1) {
+            $breadcrumbs->addCrumb(
+                e($event->administrative_area_level_1),
+                route('trafikLan', ['lan' => \App\Helper::lanSlug($event->administrative_area_level_1)])
+            );
+        }
+        $breadcrumbs->addCrumb(
+            e($event->message_type) . ($event->road_number ? ' · ' . e($event->road_number) : '')
+        );
+
+        // Polishändelser nära trafikhändelsen (todo #89, internlänkning): bygger
+        // bro trafik → crime och ger crawlbara länkar till färska CrimeEvent-sidor.
+        // Tom collection om koordinater saknas eller inget hänt i närheten nyligen.
+        $nearbyCrimeEvents = ($event->lat && $event->lng)
+            ? CrimeEvent::getEventsNearLocation($event->lat, $event->lng, 5, 10)
+            : collect();
+
+        // noindex,follow (todo #89, SEO-beslut B): detaljsidorna är tunna och
+        // efemära (raderas av TrafikverketPrune efter 30/90 d). Vi koncentrerar
+        // rankingkraften på de eviga aggregaten /trafik + /{lan}/trafik och låter
+        // länkkraften flöda vidare dit via `follow`.
+        return view('trafik-detail', [
+            'event' => $event,
+            'robotsNoindex' => true,
+            'breadcrumbs' => $breadcrumbs,
+            'nearbyCrimeEvents' => $nearbyCrimeEvents,
+        ]);
     }
 
     /**

@@ -45,6 +45,14 @@
 
     // Social-bild: den statiska kartbilden i og-format (1200×630).
     $ogImage = $event->getStaticMapUrl(1200, 630);
+
+    // Förberäkna värden som annars upprepas i mallen nedan (lanSlug 4×,
+    // kart-URL:er 2×). getStaticMapUrl/lanSlug är rena strängbyggen men
+    // gör en container-resolve resp. Str::slug per anrop.
+    $lanSlug = $lan ? \App\Helper::lanSlug($event->administrative_area_level_1) : null;
+    $hasLatLng = $event->lat && $event->lng;
+    $mapUrl = $hasLatLng ? $event->getStaticMapUrl(640, 360) : null;
+    $mapUrl2x = $hasLatLng ? $event->getStaticMapUrl(640, 360, 2) : null;
 @endphp
 
 @section('title', $pageTitle)
@@ -75,7 +83,7 @@
             <a href="{{ route('trafik') }}">Trafik</a>
             @if ($lan)
                 <span aria-hidden="true" style="color:#c0c0c0;">›</span>
-                <a href="{{ route('trafikLan', ['lan' => \App\Helper::lanSlug($event->administrative_area_level_1)]) }}">{{ $event->administrative_area_level_1 }}</a>
+                <a href="{{ route('trafikLan', ['lan' => $lanSlug]) }}">{{ $event->administrative_area_level_1 }}</a>
             @endif
             <span aria-hidden="true" style="color:#c0c0c0;">›</span>
             <span aria-current="page" style="color:#666; font-weight:600;">{{ $msgType }}@if ($road) · {{ $road }}@endif</span>
@@ -96,7 +104,7 @@
 
         <h2>Plats</h2>
 
-        @if ($event->lat && $event->lng)
+        @if ($hasLatLng)
             @php
                 $mapAlt = 'Karta som visar platsen för ' . $event->message_type
                     . ($event->road_number ? ' på ' . $event->road_number : '')
@@ -104,8 +112,8 @@
             @endphp
             <figure class="trafik-detail__map" style="margin: 0 0 1rem;">
                 <img
-                    src="{{ $event->getStaticMapUrl(640, 360) }}"
-                    srcset="{{ $event->getStaticMapUrl(640, 360) }} 1x, {{ $event->getStaticMapUrl(640, 360, 2) }} 2x"
+                    src="{{ $mapUrl }}"
+                    srcset="{{ $mapUrl }} 1x, {{ $mapUrl2x }} 2x"
                     width="640"
                     height="360"
                     alt="{{ $mapAlt }}"
@@ -129,7 +137,7 @@
             @if ($event->administrative_area_level_1)
                 <li>
                     <strong>Län:</strong>
-                    <a href="{{ route('trafikLan', ['lan' => \App\Helper::lanSlug($event->administrative_area_level_1)]) }}">
+                    <a href="{{ route('trafikLan', ['lan' => $lanSlug]) }}">
                         Trafikhändelser i {{ $event->administrative_area_level_1 }}
                     </a>
                 </li>
@@ -172,8 +180,8 @@
             </ul>
             @if ($lan)
                 <p>
-                    <a href="{{ route('trafikLan', ['lan' => \App\Helper::lanSlug($event->administrative_area_level_1)]) }}">Alla trafikhändelser i {{ $event->administrative_area_level_1 }}</a>
-                    · <a href="{{ route('lanSingle', ['lan' => \App\Helper::lanSlug($event->administrative_area_level_1)]) }}">alla polishändelser i {{ $event->administrative_area_level_1 }}</a>
+                    <a href="{{ route('trafikLan', ['lan' => $lanSlug]) }}">Alla trafikhändelser i {{ $event->administrative_area_level_1 }}</a>
+                    · <a href="{{ route('lanSingle', ['lan' => $lanSlug]) }}">alla polishändelser i {{ $event->administrative_area_level_1 }}</a>
                 </p>
             @endif
         @endif
