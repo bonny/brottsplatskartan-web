@@ -102,9 +102,11 @@ https://brottsplatskartan.localhost/lan/Stockholms%20l%C3%A4n
             @endif
         @endif
 
-        {{-- Trafik-aggregat per län (todo #50 Fas 2). Bara Tier 1 — Tier 2/3
-             ligger kvar med noindex tills editorial intro skrivs. --}}
-        @php($trafikLanSlug = \App\Http\Controllers\TrafikController::tier1LanSlug($lan))
+        {{-- Trafik-aggregat per län. Internlänk för ALLA län (todo #89): sidan
+             är en stark indexerad hub och länken matar `/{lan}/trafik` med
+             equity. Aggregaten är noindex tills editorial intro (#50 Fas 2),
+             men noindex styr indexering — inte intern länkning. --}}
+        @php($trafikLanSlug = \App\Http\Controllers\TrafikController::lanTrafikSlug($lan))
         @if ($trafikLanSlug)
             <p>
                 Se även <a href="{{ route('trafikLan', ['lan' => $trafikLanSlug]) }}">aktuella trafikhändelser

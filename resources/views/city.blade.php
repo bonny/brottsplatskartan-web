@@ -118,12 +118,12 @@
 
                 @include('parts.mcf-statistik')
 
-                {{-- Trafik-aggregat per län (todo #50 Fas 2). Bara Tier 1 —
-                     Tier 2/3 ligger kvar med noindex. För Sthlm/Uppsala når
-                     användarna lansidan via /stad-redirecten i
-                     CityRedirectMiddleware. --}}
+                {{-- Trafik-aggregat per län. Internlänk för ALLA län (todo #89):
+                     matar `/{lan}/trafik` med equity. Aggregaten är noindex tills
+                     editorial intro (#50 Fas 2) — noindex styr indexering, inte
+                     intern länkning. --}}
                 @php
-                    $trafikLanSlug = \App\Http\Controllers\TrafikController::tier1LanSlug($lan);
+                    $trafikLanSlug = \App\Http\Controllers\TrafikController::lanTrafikSlug($lan);
                 @endphp
                 @if ($trafikLanSlug)
                     <p class="u-margin-top">

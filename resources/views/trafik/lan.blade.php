@@ -42,6 +42,11 @@
             </div>
         @endif
 
+        {{-- Korslänk till crime-länssidan (todo #89 internlänkning). --}}
+        <p>
+            Se även <a href="{{ route('lanSingle', ['lan' => $lan]) }}">alla polishändelser i {{ $lanName }}</a>.
+        </p>
+
         @if (!$typ)
             <p>
                 <small>
@@ -133,6 +138,20 @@
                 <a href="{{ route('lanSingle', ['lan' => $lan]) }}">Polisens RSS</a>.
             </small>
         </p>
+
+        {{-- Internlänkning: korsnavigering till andra läns trafik-aggregat
+             (todo #89). Bryter silon mellan läns-aggregaten. --}}
+        <nav aria-label="Trafikhändelser i andra län" style="margin-top: 2rem;">
+            <h2 style="font-size: 1rem;">Trafikhändelser i andra län</h2>
+            <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: .4rem .9rem; font-size: .875rem;">
+                @foreach (\App\Models\Event::COUNTY_NAMES as $countyName)
+                    @php($otherSlug = \App\Helper::lanSlug($countyName))
+                    @if ($otherSlug !== $lan)
+                        <li><a href="{{ route('trafikLan', ['lan' => $otherSlug]) }}">{{ $countyName }}</a></li>
+                    @endif
+                @endforeach
+            </ul>
+        </nav>
     </div>
 @endsection
 

@@ -50,6 +50,24 @@ class TrafikController extends Controller
     }
 
     /**
+     * Trafik-aggregat-slug för VALFRITT giltigt svenskt län (todo #89,
+     * internlänkning). Returnerar null för okända län-namn så vi aldrig
+     * länkar till en ogiltig `/{lan}/trafik`.
+     *
+     * Till skillnad från tier1LanSlug() gäller detta alla 21 län: aggregaten
+     * förblir `noindex` tills editorial intro skrivs (#50 Fas 2), men noindex
+     * styr INDEXERING — interna länkar dit passar ändå equity och hjälper
+     * crawl/upptäckt utan att tvinga fram indexering.
+     */
+    public static function lanTrafikSlug(string $lanName): ?string
+    {
+        if (Event::getCountyNoForLanName($lanName) === null) {
+            return null;
+        }
+        return \App\Helper::lanSlug($lanName);
+    }
+
+    /**
      * Polisen-parsed-titlar som räknas som trafik-händelser.
      * Verifierat mot 90d data 2026-05-12 (todo #50, Fas 2).
      */
