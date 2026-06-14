@@ -28,7 +28,7 @@
                 nödvändigtvis kräver polisinsats (singelolyckor, vägarbeten,
                 vilthinder, broöppningar etc.). För händelser med polisinsats, se
                 <a href="{{ route('start') }}">Brottsplatskartans förstasida</a>
-                eller länssidor.
+                eller <a href="{{ route('lanOverview') }}">länssidor</a>.
             </p>
             <p>
                 <small>
