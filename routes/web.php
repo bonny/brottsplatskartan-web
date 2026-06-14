@@ -743,6 +743,13 @@ Route::get('/trafik/{slug}', function (string $slug) {
         e($event->message_type) . ($event->road_number ? ' · ' . e($event->road_number) : '')
     );
 
+    // Polishändelser nära trafikhändelsen (todo #89, internlänkning): bygger
+    // bro trafik → crime och ger crawlbara länkar till färska CrimeEvent-sidor.
+    // Tom collection om koordinater saknas eller inget hänt i närheten nyligen.
+    $nearbyCrimeEvents = ($event->lat && $event->lng)
+        ? \App\CrimeEvent::getEventsNearLocation($event->lat, $event->lng, 5, 10)
+        : collect();
+
     // noindex,follow (todo #89, SEO-beslut B): detaljsidorna är tunna och
     // efemära (raderas av TrafikverketPrune efter 30/90 d). Vi koncentrerar
     // rankingkraften på de eviga aggregaten /trafik + /{lan}/trafik och låter
@@ -751,6 +758,7 @@ Route::get('/trafik/{slug}', function (string $slug) {
         'event' => $event,
         'robotsNoindex' => true,
         'breadcrumbs' => $breadcrumbs,
+        'nearbyCrimeEvents' => $nearbyCrimeEvents,
     ]);
 })->where('slug', '[^/]*[0-9]')->name('trafik.show');
 

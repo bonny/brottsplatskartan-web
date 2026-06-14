@@ -160,6 +160,24 @@
             </ul>
         @endif
 
+        {{-- Polishändelser i samma område (todo #89, internlänkning). Bygger
+             bro trafik → crime och ger crawlbara länkar till färska
+             CrimeEvent-sidor. Visas bara när något hänt i närheten nyligen. --}}
+        @if (($nearbyCrimeEvents ?? collect())->isNotEmpty())
+            <h2>Polishändelser i samma område</h2>
+            <ul class="widget__listItems">
+                @foreach ($nearbyCrimeEvents as $nearbyEvent)
+                    <x-crimeevent.list-item :event="$nearbyEvent" />
+                @endforeach
+            </ul>
+            @if ($lan)
+                <p>
+                    <a href="{{ route('trafikLan', ['lan' => \App\Helper::lanSlug($event->administrative_area_level_1)]) }}">Alla trafikhändelser i {{ $event->administrative_area_level_1 }}</a>
+                    · <a href="{{ route('lanSingle', ['lan' => \App\Helper::lanSlug($event->administrative_area_level_1)]) }}">alla polishändelser i {{ $event->administrative_area_level_1 }}</a>
+                </p>
+            @endif
+        @endif
+
         <h2>Källa</h2>
         <p>
             Data från

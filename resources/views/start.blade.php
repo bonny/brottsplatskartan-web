@@ -112,6 +112,18 @@ samt för äldre dagar när man bläddrar i arkivet.
         </div>
     </div>
 
+    {{-- Trafik-aggregat. Internlänk från startsidan (sajtens starkaste hub)
+         till den indexerbara /trafik-vyn (todo #89). --}}
+    <div class="widget" id="trafik">
+        <h2 class="widget__title"><a href="{{ route('trafik') }}">Trafikhändelser</a></h2>
+        <div class="widget__listItem__text">
+            <p>
+                Olyckor, vägarbeten och störningar live från Trafikverket på
+                <a href="{{ route('trafik') }}">trafiksidan</a>.
+            </p>
+        </div>
+    </div>
+
     @include('parts.lan-and-cities')
     @include('parts.widget-vma-messages')
 

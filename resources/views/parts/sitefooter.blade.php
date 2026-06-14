@@ -8,6 +8,7 @@
             <li><a href="{{ route('mostRead') }}">Mest lästa händelserna</a></li>
             <li><a href="{{ route('sverigekartan') }}">Karta</a></li>
             <li><a href="{{ route('typeOverview') }}">Händelsertyper</a></li>
+            <li><a href="{{ route('platserOverview') }}">Orter och platser</a></li>
             <li><a href="{{ route('helicopter') }}">Helikopter</a></li>
             <li><a href="{{ route('polisstationer') }}">Polisstationer</a></li>
             <li><a href="{{ route('vma-overview') }}">VMA</a></li>
