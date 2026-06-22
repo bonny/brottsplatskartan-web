@@ -69,7 +69,7 @@
             @if ($other->isNotEmpty())
                 <ul style="list-style: none; padding: 0; margin: 0;">
                     @foreach ($other as $event)
-                        <li style="border-bottom: 1px solid #eee; padding: 0.75rem 0;">
+                        <x-trafik.list-item :event="$event">
                             <div style="font-weight: bold;">
                                 <a href="{{ $event->getPermalink() }}">
                                     {{ $event->message ?: $event->location_descriptor ?: $event->message_type }}
@@ -84,7 +84,7 @@
                                     · från {{ $event->start_time->format('Y-m-d H:i') }}
                                 @endif
                             </div>
-                        </li>
+                        </x-trafik.list-item>
                     @endforeach
                 </ul>
             @endif
@@ -94,7 +94,7 @@
                     <summary>Visa {{ $vagarbeten->count() }} vägarbeten</summary>
                     <ul style="list-style: none; padding: 0; margin: 0;">
                         @foreach ($vagarbeten as $event)
-                            <li style="border-bottom: 1px solid #eee; padding: 0.75rem 0;">
+                            <x-trafik.list-item :event="$event">
                                 <div style="font-weight: bold;">
                                     <a href="{{ $event->getPermalink() }}">
                                         {{ $event->message ?: $event->location_descriptor ?: $event->message_type }}
@@ -109,7 +109,7 @@
                                         · från {{ $event->start_time->format('Y-m-d H:i') }}
                                     @endif
                                 </div>
-                            </li>
+                            </x-trafik.list-item>
                         @endforeach
                     </ul>
                 </details>

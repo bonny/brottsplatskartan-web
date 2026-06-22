@@ -43,7 +43,7 @@
 
             <ul style="list-style: none; padding: 0; margin: 0;">
                 @foreach ($events as $event)
-                    <li style="border-bottom: 1px solid #eee; padding: 0.75rem 0;">
+                    <x-trafik.list-item :event="$event">
                         <div style="font-weight: bold;">
                             <a href="{{ $event->getPermalink() }}">
                                 {{ $event->message ?: $event->location_descriptor ?: $event->message_type }}
@@ -86,7 +86,7 @@
                                 · <a href="{{ $event->source_url }}" target="_blank" rel="noopener">Mer hos Trafikverket</a>
                             @endif
                         </div>
-                    </li>
+                    </x-trafik.list-item>
                 @endforeach
             </ul>
         @empty
