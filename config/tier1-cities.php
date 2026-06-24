@@ -23,9 +23,9 @@ return [
         'lng' => 18.064910,
         'mapZoom' => 10,
         'distance' => 20,
-        'pageTitle' => 'Polisen händelser Stockholm idag – brott, olyckor och larm',
+        'pageTitle' => 'Polisen & blåljus i Stockholm idag – senaste händelser, brott och larm',
         'title' => 'Brott, blåljus och larm – uppdateras live från polisen.se',
-        'description' => 'Alla polisens händelser i Stockholm idag på karta – brott, trafikolyckor, bränder och larm. Aggregerat live från Polismyndigheten med 10 års arkiv.',
+        'description' => 'Senaste blåljusen i Stockholm idag på karta – polisens händelser, brott, trafikolyckor, bränder och larm. Aggregerat live från Polismyndigheten med 10 års arkiv.',
         'wikidataQid' => 'Q1754',
     ],
     'malmo' => [

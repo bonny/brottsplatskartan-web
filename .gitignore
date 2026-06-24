@@ -51,6 +51,8 @@ tmp-ai-baseline
 /tmp-gsc-46/
 /tmp-gsc-36-2026-05-25/
 /tmp-news-precision-2026-05-25/
+/tmp-psi/
+/tmp-uppfoljning-2026-06-24/
 .claude/scheduled_tasks.lock
 
 # Playwright MCP-loggar/snapshots — debug-artefakter, inte källkod

@@ -1,5 +1,5 @@
-**Status:** Aktiv (post-rollout-soak). 14d-gate **passerad 2026-06-10** → **full rollout `MONTHLY_VIEWS_PILOT='all'` live på prod 2026-06-10** (verifierad). Kvar: post-rollout-soak på den långa svansen (~42k vyer, småorter otestade i skala) + CityController-301-cleanup ([#88]).
-**Senast uppdaterad:** 2026-06-10 (14d-gate PASS + full rollout 'all' + verifiering; post-rollout-soak till ~2026-06-24)
+**Status:** klar 2026-06-24 — post-rollout-soak (14d) PASS: småorts-månadsvyer "Submitted and indexed", inga soft-404/index-churn, friska rankningar (pos 2–9). Full rollout `='all'` (2026-06-10) verifierad ren. CityController-301 löst i #88.
+**Senast uppdaterad:** 2026-06-24
 **Confidence:** Hög (30d-data validerar hypotesen — query-positioner upp, månadsvy-URL:er rankar direkt; Lighthouse CrUX FAST på alla pilot-platser)
 
 # Todo #25 — Månadsvyer istället för dagsvyer (plats/län-routes)
@@ -352,6 +352,22 @@ env-variabel på prod" + [[project_prod_env_change_procedure]].
 **Kvar:** post-rollout-soak på långa svansen (~42k vyer, småorter otestade i
 skala) — 14d GSC-koll på soft-404/index-churn till ~2026-06-24 innan #25 stängs.
 CityController-301-cleanup spunnen till #88.
+
+## Post-rollout-soak — utfall 2026-06-24 (PASS → stängd)
+
+14d efter full rollout `='all'`. Full rapport: `tmp-uppfoljning-2026-06-24/REPORT.md`.
+
+- **GSC-impressions (06-11→06-20):** 25+ distinkta månadsvy-URL:er rankar, inkl.
+  många små `/plats/{ort}/handelser/2026/06` (Huddinge, Nyköping, Östersund,
+  Borlänge, Halmstad, Luleå, Piteå, Växjö) på **pos 2–9** med frisk CTR (4–66 %).
+  Soft-404 skulle deindexera → tappa impressions; syns inte.
+- **URL-inspektion** (Nyköping + Piteå juni-månadsvyer): båda **"Submitted and
+  indexed"**, Page Fetch SUCCESSFUL, INDEXING_ALLOWED, korrekt self-canonical,
+  Datasets-schema detekterat.
+- **Rollback-trösklar** (>5 nya soft-404): ej triggade.
+
+**Beslut: soak PASS, #25 stängd.** Liten kosmetisk not: Rich Results-breadcrumb
+visar "Unnamed item" (ej soft-404-relaterat) — ev. egen mikro-todo om man bryr sig.
 
 ## Pilot-status (2026-04-27)
 

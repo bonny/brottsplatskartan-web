@@ -1,5 +1,5 @@
-**Status:** aktiv monitor — C/D/E/F/G klara (#54/#72/#75/#77 + LanController-titlar), kvar: A (vänta #76 Fas B), B (utöka #76). Nästa rapport 2026-07-30.
-**Senast uppdaterad:** 2026-05-26
+**Status:** aktiv monitor — C/D/E/F/G klara (#54/#72/#75/#77 + LanController-titlar), kvar: A (vänta #76 Fas B), B (utöka #76). 2026-06-24-mätning: åtgärd E (LanController-titlar) gav **inget lyft** på "senaste blåljusen [LÄN]" (pos platt-till-sämre); "senaste blåljusen stockholm" **ej återhämtad** efter 30d (pos 6,7, CTR 25→5 %, strukturell extern omrankning 05-22) → SERP-inspektion gjord, riktad åtgärd: /stockholm-titel breddad (blåljus+senaste), **deployad 2026-06-24**. Mät 30d (2026-07-24). Nästa rapport 2026-07-30.
+**Senast uppdaterad:** 2026-06-24
 **Källa:** Inbox Brottsplatskartan (2026-04-30)
 
 # Todo #52 — Bevaka GSC-queries där vi rankar lågt på högvolym
@@ -181,3 +181,64 @@ Påverkar alla 21 län. Uppföljning: 2026-06-25 (30d).
 **Risk:** kan paradoxalt boosta "polisen händelser [LÄN]"-queries på
 bekostnad av "senaste blåljusen [LÄN]" — båda är värdefulla. Mätperioden
 visar netto-effekt.
+
+## Uppdatering 2026-06-24 — åtgärd E 30d-mätning + Stockholm-bevakning
+
+Full rapport: `tmp-uppfoljning-2026-06-24/REPORT.md`. Genomgående confounder:
+bred säsongsnedgång i impressions tvärs alla queries → CTR/position är renare
+signaler än absoluta klick.
+
+**Åtgärd E (LanController-titlar, deploy 2026-05-25) — lyft uteblivet.**
+≈30d före (04-25→05-24) vs efter (05-25→06-20):
+
+| Län-query | Pos (före→efter) | CTR (före→efter) | Impr        |
+| --------- | ---------------- | ---------------- | ----------- |
+| skåne     | 7,5 → 9,2        | 1,74 → 2,17 %    | 2 186→1 197 |
+| jämtland  | 8,0 → 9,4        | 1,67 → 0 %       | 659→164     |
+| blekinge  | 6,7 → 9,2        | 3,97 → 0 %       | 126→148     |
+
+Mål (pos 7-8→4-5, CTR ~2→~5 %) **ej nått** — position platt-till-sämre.
+Kontrast: "senaste blåljusen malmö" (Tier 1, **ej** åtgärd E) förbättrades
+pos 5,1→3,9, CTR 8,2→14,7 % → Tier 1-mallen funkar, men LanControllers kopia
+lyfte inte län-queries. Ingen demonstrerad vinst; fold in i kvartalsrapport.
+
+**"senaste blåljusen stockholm" (Stockholm-bevakning, drop 2026-05-22) — ej
+återhämtad.** ≈30d före drop (04-22→05-21) vs efter (05-22→06-20):
+
+| Mått  | Före   | Efter |
+| ----- | ------ | ----- |
+| Pos   | 2,3    | 6,7   |
+| CTR   | 25,4 % | 5,1 % |
+| Klick | 1 867  | 354   |
+
+Impressions stabila (7 346→6 887) → Google visar oss fortf., men position
+fastnat ~6,7 och CTR kollapsad. Per uppföljningens villkor ("kvar ~pos 6 efter
+30d → överväg riktad åtgärd") → **riktad åtgärd aktualiserad** (SERP-inspektion
+/ "senaste"-intent-refresh på /stockholm). **Användarbeslut.**
+
+### SERP-inspektion 2026-06-24 (riktad åtgärd vald + deployad)
+
+Konkurrentanalys: `tmp-uppfoljning-2026-06-24/konkurrenter-blaljus-stockholm.md`.
+
+- **Daglig tidslinje:** knivskarp cliff 2026-05-22 (pos 2,x→7,0 över en natt),
+  sedan **låst pos 6,0–7,4 varje dag i 30 dagar** — strukturell omrankning, ej
+  brus, noll passiv återhämtning. Impressions _steg_ efter dropen → Google
+  visar oss mer men demoterade oss ur topp-klustret.
+- **Teknik utesluten:** `/stockholm` crawlad 2026-06-24, "Submitted and indexed",
+  fetch OK, Rich Results PASS. **Cannibalisering utesluten:** /stockholm är klart
+  sidan Google serverar (323 klick); `/` snor bara 25.
+- **SERP-fält:** topp-aktörer (Poliskoll #1 "Blåljus Stockholm – Senaste
+  polishändelser i realtid", Polisinfo "…Senaste blåljus och brott idag") har
+  **"blåljus" + "senaste" rakt i `<title>`**. Vår titel hade varken. Dropen är
+  extern, men term-matchning är spaken vi själva styr.
+
+**Åtgärd (deployad 2026-06-24):** `config/tier1-cities.php` →
+`stockholm.pageTitle` ändrad till _"Polisen & blåljus i Stockholm idag –
+senaste händelser, brott och larm"_ (+ description "Senaste blåljusen i
+Stockholm idag …"). Behåller "polisen händelser"-orden (skydda topp-3-vinsten
+på den frasen), lägger till **blåljus + senaste**. Endast Stockholm (per-stad-
+fält). PHPStan grön. Deployets cache-warmup byggde om config-cachen.
+
+**Mät 30d (2026-07-24):** "senaste blåljusen stockholm" (mål: upp från pos 6,9)
+
+- bevaka att "polisen händelser stockholm idag" håller topp-3 (tradeoff-kollen).

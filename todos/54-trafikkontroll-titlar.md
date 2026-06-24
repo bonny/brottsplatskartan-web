@@ -1,5 +1,5 @@
-**Status:** aktiv monitor — bucket aktiverad 2026-05-26 + #52 åtgärd C (typ-listans title/meta) deployad 2026-05-26. Mätperiod 30/60/90d till 2026-06-25.
-**Senast uppdaterad:** 2026-05-26
+**Status:** aktiv monitor — 30d-mätning 2026-06-24 **PASS**: query "trafikkontroll" CTR 0,78→12,67 %, pos 9,6→6,9, klick 77→364 (4,7×); /typ/trafikkontroll CTR 0,41→1,95 %. Tydlig vinst. 60/90d-fortsättning innan stängning.
+**Senast uppdaterad:** 2026-06-24
 **Källa:** Inbox Brottsplatskartan (2026-04-30) + #52 GSC-baseline 2026-04-30
 
 # Todo #54 — Förbättra trafikkontroll-titlar (utöka AI-rewrite-coverage)
@@ -145,3 +145,23 @@ GSC `compare_search_periods` 30/60/90d efter 2026-05-26 på URLs
 **Notera:** #52 åtgärd C (typ-listans title/meta för `/typ/trafikkontroll`,
 ~1 470 klick/90d via "trafikkontroll"-query, CTR 0.05 %) är en separat fix
 och kvarstår. Listsidans title/meta påverkas inte av per-event AI-rewrite.
+
+## 2026-06-24 — 30d-mätning (PASS)
+
+GSC `get_advanced_search_analytics`, ≈30d före (2026-04-26→05-25) vs efter
+(2026-05-26→06-20):
+
+| Mått                              | Före   | Efter       |
+| --------------------------------- | ------ | ----------- |
+| Query "trafikkontroll" position   | 9,6    | **6,9**     |
+| Query "trafikkontroll" CTR        | 0,78 % | **12,67 %** |
+| Query "trafikkontroll" klick      | 77     | **364**     |
+| Sida /typ/trafikkontroll CTR      | 0,41 % | **1,95 %**  |
+| Sida /typ/trafikkontroll position | 10,0   | 9,9         |
+
+**Tydlig vinst.** Query-CTR upp ~16× och position 9,6→6,9 → klick 4,7× trots
+fallande impressions (säsong/kortare fönster). Site-nivå-vinsten är större än
+typ-listan ensam (query 364 klick vs sidan 42) — övriga trafikkontroll-event-
+sidor (AI-omskrivna rubriker via bucketen) tar resten, vilket bekräftar att
+båda fixarna (typ-listans meta + AI-bucket) bidrar. Kvalitetssignalen entydigt
+upp. **Beslut: fortsätt passiv 60/90d-mätning innan stängning; ingen åtgärd nu.**

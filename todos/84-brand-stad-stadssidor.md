@@ -1,5 +1,5 @@
-**Status:** avvaktar QW-mätning 2026-06-22 — stadssidor-beslut skjuts tills /brand-base visar positiv trend
-**Senast uppdaterad:** 2026-05-26
+**Status:** QW 30d-mätning 2026-06-24 **negativ** — /brand/ pos 7,0→11,0, CTR 14,3→11,1 %, klick/dag ~halverat, "brandkarta" pos 2,7→6,7. Inte bara säsong (kvalitetssignaler ner). Lutar mot **avfärda stadssidor**; slutbeslut 60d-grind 2026-07-22 för att separera säsong.
+**Senast uppdaterad:** 2026-06-24
 
 # Todo #84 — /brand/{stad} stadssidor för top-15 städer
 
@@ -35,6 +35,25 @@ Lägg till Bromölla, Hallsberg, Karlstad, Sundbyberg, Stockholm/Blackeberg, sam
 
 **Hög för Fas 1** — direkt GSC-bevis. Förväntad lyft 400–800 c/mån.
 **Medel för Fas 2** — beroende på event-frekvens per stad.
+
+## 2026-06-24 — QW 30d-mätning (negativ trend)
+
+GSC, ≈30d före (2026-04-26→05-25) vs efter (2026-05-26→06-20). Korrekt URL
+har trailing slash (`/brand/`):
+
+| Mått                   | Före   | Efter    |
+| ---------------------- | ------ | -------- |
+| /brand/ position       | 7,0    | **11,0** |
+| /brand/ CTR            | 14,3 % | 11,1 %   |
+| /brand/ klick          | 1 623  | 650      |
+| query "brandkarta" pos | 2,7    | 6,7      |
+
+Klick/dag ~halverat (delvis säsong + 26d vs 30d-fönster), men **position OCH
+CTR ner** = inte bara säsong, sidan har genuint försvagats. Premissen för #84
+(stadssidor) var att /brand rankar starkt (pos 6,9) — den hypotesen håller inte
+i mätningen. **Lutar mot avfärda.** Vänta på 60d-grind 2026-07-22 för att
+separera säsongseffekt innan slutgiltigt go/no-go (tröskel: QW-lyft < 100 c/mån
+→ avfärda).
 
 ## Beroenden
 

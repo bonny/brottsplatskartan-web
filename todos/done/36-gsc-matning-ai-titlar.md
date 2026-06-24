@@ -1,5 +1,5 @@
-**Status:** aktiv — 4v-check 2026-05-25 inkonklusiv (DiD +39 % relativt men AI-EFTER sample 386 impr för litet; cross-section +1 % CTR, +1,4 pos). Avvaktar 8v-check 2026-06-22
-**Senast uppdaterad:** 2026-05-25
+**Status:** klar 2026-06-24 — CTR-vinst-hypotesen **stängd som ej bekräftad** (användarbeslut: ingen 12v-check). 8v-check: friskaste mätning (cross-section A/B) AI −8,5 % CTR + 1,5 pos sämre än kontroll (tillskrivs `--vague-only`-urvalsbias). 4v:s "lovande" positionssignal var sample-artefakt. Ingen fas 2; rollback ej motiverat (AI-titlar behålls — mer informativa oavsett SEO).
+**Senast uppdaterad:** 2026-06-24
 **Beroende av:** #10 (deployat 2026-04-27)
 
 # Todo #36 — GSC-mätning av AI-titlars CTR-effekt
@@ -116,6 +116,33 @@ Två kompletterande mätningar på 28d före vs 28d efter:
 2. 2026-07-27 — tredje check (12v) + slutgiltigt beslut om fas 2.
 3. Vid 8v eller 12v: om position-signalen kvarstår + CTR-signal stabiliseras → fas 2 (auto-trigger gratis, backfill ~$27).
 4. Stäng denna todo + öppna fas 2-todo om motiverat.
+
+## 2026-06-24 — 8v-check (full rapport `tmp-uppfoljning-2026-06-24/36-report.md`)
+
+Färska data: 25k-rad GSC page-dump (EFTER 2026-05-24→06-20) + prod-DB-join
+(ej stale, 504 908 events; pre/AI=1 4 590 matchar 4v exakt → join verifierad).
+
+**Mätning 1 (DiD pre-deploy-set): diskvalificerad** — AI-EFTER kollapsade till
+12 URL:er / 114 impr; pre-deploy-events åldrades ur GSC:s 28d-fönster. Metoden
+uttömd (sample dör med tiden), CTR 12,3 % ren brus.
+
+**Mätning 2 (cross-section A/B post-deploy, friskaste signalen):**
+
+| Grupp | #URLs | Clicks | Impr   | CTR    | WPos  |
+| ----- | ----- | ------ | ------ | ------ | ----- |
+| AI    | 862   | 3 364  | 53 953 | 6,24 % | 10,33 |
+| CTRL  | 1 240 | 5 731  | 84 091 | 6,82 % | 8,81  |
+
+- CTR −0,58 pp (−8,5 % rel) → träffar regression-tröskeln; position 1,52 sämre.
+- Vid 4v låg AI marginellt över på båda; vid 8v har bägge vänt. Sannolikt
+  `--vague-only`-urvalsbias (AI väljs på vaga råtitlar) snarare än kausal skada.
+
+**Beslut (2026-06-24, användaren):** kör INTE fas 2 / auto-trigger.
+CTR-vinst-hypotesen **stängd som ej bekräftad** — ingen 12v-check (skulle bara
+bekräfta samma confounderade signal). Rollback ej motiverat (AI-titlar mer
+informativa oavsett). **#36 stängd.** Om kausalt svar någonsin behövs: en riktig
+randomiserad A/B-holdout inom vaga events (slumpa rewrite på/av) är enda sättet
+att skilja AI-effekt från `--vague-only`-urvalsbias — egen todo vid behov.
 
 ## Relaterade todos
 
