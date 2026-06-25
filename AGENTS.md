@@ -233,6 +233,13 @@ Dumpar full prod-DB till `backups/prod-YYYY-MM-DD-HHMMSS.sql.gz`
 Använd `deploy/fetch-prod-db-to-local-db.sh` istället när du vill ersätta
 lokal dev-DB direkt utan mellanfil.
 
+### Loggar och trafik-/bot-analys
+
+Se **[docs/loggar.md](docs/loggar.md)** för var access-/felloggarna ligger
+(app-containerns nginx-stdout, ej fil), loggformatet (riktig klient-IP loggas
+**sist** på raden eftersom Caddy står framför) och färdiga `awk`-recept för att
+ranka topp-IP:er och user-agents senaste timmen.
+
 ### Provisionering av ny server
 
 Se **[deploy/provision.md](deploy/provision.md)**.
