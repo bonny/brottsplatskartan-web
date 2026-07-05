@@ -5,8 +5,6 @@
 return [
     'feeds' => array_merge(
         [
-            ['source' => 'google-news-se', 'url' => 'https://news.google.com/rss?hl=sv&gl=SE&ceid=SE:sv'],
-
             ['source' => 'svt', 'url' => 'https://www.svt.se/rss.xml'],
             ['source' => 'svt-inrikes', 'url' => 'https://www.svt.se/nyheter/inrikes/rss.xml'],
         ],
