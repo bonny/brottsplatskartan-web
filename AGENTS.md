@@ -13,15 +13,8 @@ dokumentation skrivs **på svenska**.
 
 ## API-dokumentation
 
-Se **[docs/API.md](docs/API.md)** för komplett API.
-
-Snabbreferens:
-
-- `/api/events` — Hämta händelser med filtrering
-- `/api/eventsMap` — Händelser för kartvisning (cachad)
-- `/api/event/{id}` — Enskild händelse
-- `/api/eventsNearby` — Händelser nära koordinat
-- `/api/areas` — Lista över län
+Se **[docs/API.md](docs/API.md)** för komplett API. Endpoints definieras i
+`routes/api.php`.
 
 ## Analytics (GA4 + Search Console)
 
@@ -40,14 +33,14 @@ Verifiera anslutning: `claude mcp list | grep -E "analytics-mcp|mcp-gsc"`.
 
 ## Teknisk stack
 
-- **Ramverk:** Laravel 12 (PHP 8.2+)
-- **App-image:** `serversideup/php:8.4-fpm-nginx` + extra PHP-extensions (bcmath, exif, gd)
-- **Databas:** MariaDB 11
-- **Cache & sessions:** Redis 8 med `maxmemory-policy allkeys-lru`
-- **Response cache:** Spatie Laravel Response Cache (via Redis)
-- **Reverse proxy:** Caddy (auto-SSL via Let's Encrypt)
-- **Kartvisualisering (frontend):** Leaflet.js + extern OSM tiles
-- **Kartbilder (backend):** egen tileserver-gl-container (`kartbilder.brottsplatskartan.se`)
+Laravel-app i Docker. Se `composer.json`, `package.json` och `compose.yaml`
+för versioner och tjänster.
+
+Två saker som inte syns i manifesten:
+
+- **Kartvisualisering (frontend)** använder externa OSM-tiles.
+- **Kartbilder (backend)** genereras av vår egen tileserver-gl-container
+  på `kartbilder.brottsplatskartan.se`.
 
 ## Lokal utvecklingsmiljö
 
@@ -91,22 +84,7 @@ docker compose exec -u root app composer update <paketnamn>
 
 ## Systemarkitektur
 
-### Datamodeller
-
-- `CrimeEvent` — huvudmodell för brottshändelser
-- `VMAAlert` — nationella varnings- och informationsmeddelanden
-- `Place` — geografisk platsdata och koordinater
-- `Locations` — mappning av orter/kommuner/län
-- `Dictionary` — kategorisering av brottstyper
-
-### Controllers
-
-- `StartController` — startsida och primära vyer
-- `PlatsController` — platsspecifik data
-- `CityController` — stadssidor
-- `LanController` — länsövergripande data
-- `ApiController` — REST API
-- `VMAAlertsController` — varningsmeddelanden
+Modeller ligger i `app/Models/`, controllers i `app/Http/Controllers/`.
 
 ### Datakällor
 
@@ -118,26 +96,13 @@ docker compose exec -u root app composer update <paketnamn>
 
 ### Frontend
 
-```
-resources/js/app.js        → public/js/app.js        (JS-bundle)
-resources/sass/app.scss    → public/css/app.css      (stilar)
-public/js/events-map.js                              (karta)
-```
-
-### Databasstruktur för brottshändelser
-
-- Geografiska koordinater (lat/lng)
-- Administrativa nivåer (kommun, län, region)
-- Parsad platsinformation
-- Brottskategorisering (enligt Polisens taxonomi)
-- Temporal data (tidsstämplar)
-- Engagement-statistik
+Byggs med Laravel Mix — se `webpack.mix.js` för källor och utdata.
 
 ### Prestanda
 
-- **Response Cache** — Spatie, 2–30 min TTL
-- **Redis** — query cache + sessions
-- **Query-caching** för geografiska uppslag
+Response cache via Spatie (Redis), plus query-caching för geografiska
+uppslag. Se
+[docs/spatie-response-cache-implementation.md](docs/spatie-response-cache-implementation.md).
 
 ## Terminologi
 
@@ -163,148 +128,21 @@ public/js/events-map.js                              (karta)
 
 ## Produktionsmiljö (Hetzner)
 
-- **Plattform:** Hetzner Cloud (EU)
-- **Server:** CX33 (x86 AMD, 4 vCPU / 8 GB / 80 GB), Debian 13 (Trixie), Helsinki
-- **Deploy-stack:** Docker Compose (`compose.yaml` + egen `Dockerfile.app`)
-- **Reverse proxy:** Caddy med auto-Let's Encrypt
-- **Kod-plats:** `/opt/brottsplatskartan/`
-- **CI/CD:** GitHub Actions (`.github/workflows/deploy-hetzner.yml`) → SSH → `deploy/deploy.sh`
-- **Trigger:** `git push main` deployar automatiskt
+Servern körs på Hetzner Cloud, koden ligger i `/opt/brottsplatskartan/`, och
+`git push main` deployar automatiskt via GitHub Actions.
 
-### Deploy-flöde
+Fullständig driftmanual — deploy, rollback, SSH-kommandon, DB-backup,
+env-ändringar, debugbar, provisionering — finns i skillen
+**`prod-ops`** ([.claude/skills/prod-ops/SKILL.md](.claude/skills/prod-ops/SKILL.md)).
 
-1. `git push origin main`
-2. GitHub Actions triggar → SSH till Hetzner
-3. `deploy.sh` kör: `git pull` → villkorlig `composer install` (om lock ändrats) → villkorlig `artisan migrate` (om nya migrationer) → `docker compose restart app`
-4. AUTORUN i containern kör `storage:link` + cache-warmup
+Två saker som måste sitta i ryggmärgen innan du rör prod:
 
-### Manuell deploy
-
-```bash
-ssh deploy@brottsplatskartan.se /opt/brottsplatskartan/deploy/deploy.sh
-```
-
-### Rollback
-
-```bash
-ssh deploy@brottsplatskartan.se 'cd /opt/brottsplatskartan && git reset --hard HEAD~1 && ./deploy/deploy.sh'
-```
-
-### Produktionsserver – kommandon
-
-```bash
-ssh deploy@brottsplatskartan.se
-cd /opt/brottsplatskartan
-
-# Artisan
-docker compose exec app php artisan migrate
-docker compose exec app php artisan cache:clear
-docker compose exec app php artisan responsecache:clear
-docker compose exec app php artisan crimeevents:check-publicity --apply --since=365
-
-# Logs
-docker compose logs -f app
-docker compose logs --tail 100 app | grep ERROR
-
-# Redis CLI
-docker compose exec redis redis-cli -a "$REDIS_PASSWORD"
-# I redis-cli:
-#   DBSIZE
-#   KEYS laravelresponsecache-*
-#   MONITOR
-
-# MariaDB CLI
-docker compose exec mariadb mariadb -u root -p"$DB_ROOT_PASSWORD" brottsplatskartan
-
-# Container-hantering
-docker compose ps
-docker compose restart app
-docker compose down && docker compose up -d
-```
-
-### Backup av prod-DB till lokal fil
-
-```bash
-./deploy/backup-prod-db.sh
-```
-
-Dumpar full prod-DB till `backups/prod-YYYY-MM-DD-HHMMSS.sql.gz`
-(gitignored, chmod 600 — innehåller PII från `users` och liknande).
-Använd `deploy/fetch-prod-db-to-local-db.sh` istället när du vill ersätta
-lokal dev-DB direkt utan mellanfil.
-
-### Loggar och trafik-/bot-analys
-
-Se **[docs/loggar.md](docs/loggar.md)** för var access-/felloggarna ligger
-(app-containerns nginx-stdout, ej fil), loggformatet (riktig klient-IP loggas
-**sist** på raden eftersom Caddy står framför) och färdiga `awk`-recept för att
-ranka topp-IP:er och user-agents senaste timmen.
-
-### Provisionering av ny server
-
-Se **[deploy/provision.md](deploy/provision.md)**.
-
-### Uppdatera mbtiles (kartdata)
-
-Se **[deploy/update-tiles.md](deploy/update-tiles.md)** för Planetiler-pipelinen.
-Körs vid behov (~1–2 ggr/år) när kartdatan blir för gammal. Gratis och reproducerbart.
-
-### Produktions-env
-
-`.env` ligger i `/opt/brottsplatskartan/.env` på servern (chmod 600, ägd av `deploy`).
-Mall: `deploy/.env.example`. Alla secrets hanteras där — aldrig i git.
-
-Kritiska variabler:
-
-- `APP_ENV=production`, `APP_DEBUG=false`, `APP_URL=https://brottsplatskartan.se`
-- DB: `DB_HOST=mariadb`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`, `DB_ROOT_PASSWORD`
-- Redis: `REDIS_HOST=redis`, `REDIS_PASSWORD`
-- Cache: `CACHE_DRIVER=redis`, `RESPONSE_CACHE_DRIVER=redis`, `SESSION_DRIVER=redis`
-- API-nycklar: `CLAUDE_API_KEY`, `GOOGLE_API_KEY`, m.fl.
-
-#### Ändra en env-variabel på prod (rätt ordning)
-
-Containern får env via `env_file: .env` i `compose.yaml` (laddas vid
-container-**start**), och config är `config:cache`:ad. Två fallgropar gör att
-en naiv ändring inte slår igenom:
-
-1. **`docker compose restart app` läser INTE om `env_file`** — den startar om
-   samma container med oförändrade env-variabler. Du måste **recreate**:a med
-   `docker compose up -d app`.
-2. **`config:cache` på den gamla containern bakar in det gamla värdet** —
-   config läser `env()` ur containerns process-miljö, som ännu har gamla
-   värdet tills containern recreate:ats. Kör `config:cache` FÖRST efter `up -d`.
-
-Korrekt sekvens (exempel: `MONTHLY_VIEWS_PILOT`):
-
-```bash
-ssh deploy@brottsplatskartan.se
-cd /opt/brottsplatskartan
-cp -p .env ".env.bak-$(date +%Y%m%d-%H%M%S)"          # backup först
-sed -i 's|^MONTHLY_VIEWS_PILOT=.*|MONTHLY_VIEWS_PILOT="all"|' .env
-docker compose up -d app                               # recreate → laddar om env_file
-docker compose exec -T app printenv MONTHLY_VIEWS_PILOT # verifiera: nya värdet
-docker compose exec -T app php artisan config:cache     # rebuild MED nya env:et
-docker compose exec -T app php artisan responsecache:clear
-docker compose exec -T app php artisan config:show <key> # bekräfta effektivt värde
-```
-
-Obs: `up -d app` kan recreate:a beroende-containrar (t.ex. redis) → cache
-kallstartar (harmlös perf-blip). `responsecache:clear` ensam kan trigga
-`check-prod-tinker.sh`-hooken i en kedja — kör den som eget kommando.
-
-### Laravel Debugbar i produktion
-
-Debugbar aktiveras via cookie (`app/Http/Middleware/DebugBarMaybeEnable.php`):
-
-```javascript
-// Aktivera
-document.cookie = "show-debugbar=1; path=/; max-age=86400";
-// Inaktivera
-document.cookie = "show-debugbar=; path=/; max-age=0";
-```
-
-Bara den som satt cookien ser debugbar. Kräver ingen ändring av `APP_DEBUG`.
+- **Ta alltid backup före skrivande ändringar:** `./deploy/backup-prod-db.sh`
+  innan backfill, `migrate` eller `UPDATE` mot prod.
+- **`docker compose restart app` läser INTE om `.env`.** Vid env-ändring krävs
+  `docker compose up -d app` (recreate), och `php artisan config:cache` måste
+  köras EFTER det — annars bakas det gamla värdet in. Läs `prod-ops` för hela
+  sekvensen.
 
 ## Scheduler
 
@@ -343,23 +181,7 @@ Ingen CI kör detta — disciplin lokalt gäller.
 
 **URL:** https://github.com/bonny/brottsplatskartan-web/
 
-### Issues via `gh`
-
-```bash
-gh issue list              # öppna issues
-gh issue list --state all  # alla
-gh issue view <nr>
-gh issue create
-```
-
-### Övervaka GitHub Actions
-
-```bash
-gh run list
-gh run view <run-id>
-gh run view <run-id> --log
-gh run watch
-```
+Issues och GitHub Actions hanteras med `gh`.
 
 ## Händelsefiltrering (ContentFilterService)
 
