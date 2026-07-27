@@ -53,6 +53,8 @@ tmp-ai-baseline
 /tmp-news-precision-2026-05-25/
 /tmp-psi/
 /tmp-uppfoljning-2026-06-24/
+/tmp-90-kartbilder/
+/tmp-90-verifiering/
 .claude/scheduled_tasks.lock
 
 # Playwright MCP-loggar/snapshots — debug-artefakter, inte källkod
@@ -60,3 +62,6 @@ tmp-ai-baseline
 
 # SDD-scratch (superpowers subagent-driven-development)
 /.superpowers/
+
+# PHPUnit-cache (skapas av testkörningar)
+.phpunit.result.cache
