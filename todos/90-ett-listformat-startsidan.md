@@ -1,4 +1,4 @@
-**Status:** aktiv — **deployad 2026-07-27 14:48** (`3b3773b`). Mätperiod 30 dagar, gate 2026-08-26. Öppen designfråga: klampa meta till 2 rader, se "Uppmätt på prod".
+**Status:** aktiv — **deployad 2026-07-27**, meta-clamp deployad samma dag (`073601f`). Mätperiod 30 dagar, gate 2026-08-26. Inga öppna designfrågor.
 **Senast uppdaterad:** 2026-07-27
 
 # Todo #90 — Ett listformat för händelser på startsidan
@@ -294,6 +294,29 @@ Beräknad besparing ~183 px, och radhöjderna faller till två värden.
 Tidigare i den här todon rekommenderades först klampning till en rad,
 sedan ingen klampning alls. Båda byggde på mätning av `/stockholm`, där
 meta är kort. Startsidan har en annan datamix, och det var fel underlag.
+
+### Efter meta-clamp (deployad 2026-07-27, `073601f`)
+
+Meta klampad till två rader i huvudkolumnen, en rad i trång sidokolumn.
+Uppmätt på prod, mobil 390 px:
+
+| Mått                   | Ursprungligt | Efter format     | Efter clamp         |
+| ---------------------- | ------------ | ---------------- | ------------------- |
+| `Mest läst`-sektionen  | 3 741 px     | 3 405 px         | **3 209 px**        |
+| Besparing mot ursprung | —            | −9 %             | **−14 %**           |
+| Distinkta radhöjder    | —            | 5 (172–270)      | **3 (163–179)**     |
+| Största meta-höjd      | —            | 127 px (7 rader) | **36 px (2 rader)** |
+
+Radhöjderna 163/172/179 är alla benigna: 163 är första raden (ingen
+top-padding), 179 är normalrader med två meta-rader, 172 är rader med en.
+Spridningen är 16 px mot tidigare 98 px.
+
+Fördelningen efter clamp: 11 rader med 2 meta-rader, 6 med 1. Ingen rad
+kapas utom de multi-plats-sammanfattningar clampen var avsedd för.
+
+Specificiteten på båda meta-reglerna är medvetet 0,2,0 så källordningen
+avgör vilken som gäller — `@container`-blocket ligger senare och behåller
+sin 1-radsklamp. Verifierat på båda ställena efter deploy.
 
 ### Prestanda vid deploy
 
