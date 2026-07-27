@@ -157,6 +157,16 @@ blockquote {
     width: 100%;
 }
 
+/* Sidebaren är en egen container så att .ListEvent kan reagera på KOLUMNENS
+   bredd istället för viewportens. Från 667 px är sidebaren 33 % av
+   containern (~226 px vid 700 px viewport) och där kollapsar textkolumnen
+   bakom den okrympbara kartbilden. En media query hade träffat fel: det är
+   kolumnen som är trång, inte skärmen. Se @container-regeln i ListEvent. */
+.MainSidebar {
+    container-type: inline-size;
+    container-name: sidebar;
+}
+
 /* .container:after {
     content: "";
     display: table;
@@ -1087,6 +1097,38 @@ input[type="url"],
 
 .ListEvent__excerpt p {
     margin: 0;
+}
+
+/* Trång kolumn (idag bara sidebaren på single-event, ~226–300 px).
+   Kartbilden är flex: 0 0 var(--listevent-thumb), alltså okrympbar, så
+   sida-vid-sida lämnar 46 px text vid 700 px viewport — rubriker på 3 tecken.
+   För att få ≥130 px text sida vid sida hade thumben behövt ner till 56 px,
+   och då täcker den 24 px-stora kategoriikonen nästan halva kartbilden. Vi
+   stackar istället: kartbilden behåller sina 140 px och texten får hela
+   kolumnbredden.
+   Gränsen 310 px är räknad: text = kolumn − 32 px widget-padding − 8 px gap
+   − 140 px thumb ≥ 130 px ⇒ kolumn ≥ 310 px. */
+@container sidebar (max-width: 309px) {
+    .ListEvent {
+        flex-direction: column;
+    }
+
+    /* Stackat driver texten radhöjden, så rubriken reserveras till exakt
+       2 rader (2 × line-height 1.3). Annars blir raden 226 eller 248 px
+       beroende på om rubriken råkar få en eller två rader. */
+    .ListEvent__teaser {
+        min-height: 2.6em;
+    }
+
+    /* Meta klampas till en rad här. Utan den wrappar den till 2–5 rader och
+       radhöjden får fyra olika värden i samma lista. */
+    .ListEvent__meta {
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        line-clamp: 1;
+        overflow: hidden;
+    }
 }
 
 .PlatsListing__plats {
