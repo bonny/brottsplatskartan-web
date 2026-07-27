@@ -1032,6 +1032,33 @@ input[type="url"],
     display: block;
 }
 
+/* Typografi enligt formatbeslutet i todo #90: kategori 12 px uppercase,
+   rubrik 17 px/600, teaser 14 px, meta 13 px.
+
+   Reglerna är scopade till .ListEvent av två skäl:
+   1. .Event__type och .widget__listItem__title/__text delas med card-vyn på
+      single-event — bara listformatet ska påverkas.
+   2. Två klasser (0,2,0) slår .widget__listItem__title (0,1,0) oavsett
+      inbördes ordning i filen. */
+.ListEvent .Event__type {
+    font-size: 0.75rem; /* 12 px */
+    text-transform: uppercase;
+}
+
+.ListEvent .ListEvent__teaser {
+    font-size: 1.0625rem; /* 17 px */
+    font-weight: 600;
+    /* Explicit line-height så rubriken blir lika hög oavsett om den renderas
+       som <h3> (startsidan, lh 1.2 från generisk h3-regel) eller <span>
+       (övriga vyer, lh 1.4 från body). */
+    line-height: 1.3;
+    margin: 0;
+}
+
+.ListEvent .ListEvent__meta {
+    font-size: 0.8125rem; /* 13 px */
+}
+
 /* .ListEvent__teaser är RUBRIKEN (historiskt namn) — clampas till 2 rader. */
 .ListEvent__teaser {
     display: -webkit-box;
