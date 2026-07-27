@@ -1777,11 +1777,15 @@ class Helper {
      * @return Collection         [description]
      */
     public static function getLatestEvents(int $count = 5) {
-        $cacheKey = __METHOD__ . ":latestEvents";
-        $events = Cache::remember($cacheKey, 2 * 60, function () {
+        // $count ignorerades tidigare: limit var hårdkodad till 20 och
+        // cache-nyckeln saknade $count, så en anropare som bad om 5 fick 20.
+        // Det var förklaringen till att /nara?error=1 renderade 20 poster i en
+        // sektion som var tänkt att visa 5. Todo #97.
+        $cacheKey = __METHOD__ . ":{$count}";
+        $events = Cache::remember($cacheKey, 2 * 60, function () use ($count) {
             $events = CrimeEvent::orderBy("created_at", "desc")
                 ->with('locations')
-                ->limit(20)
+                ->limit($count)
                 ->get();
 
             return $events;
