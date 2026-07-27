@@ -57,3 +57,6 @@ tmp-ai-baseline
 
 # Playwright MCP-loggar/snapshots — debug-artefakter, inte källkod
 /.playwright-mcp/
+
+# SDD-scratch (superpowers subagent-driven-development)
+/.superpowers/
