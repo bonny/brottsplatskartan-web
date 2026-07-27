@@ -190,6 +190,21 @@ Template för ordlista/dictionary
 
     <hr>
 
+    {{-- Ikongrupper (todo #90) --}}
+    <section class="u-margin-top-double">
+        <h3><code>&lt;x-crimeevent.icon /&gt;</code> — alla grupper</h3>
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            @foreach (['trafik', 'sammanfattning', 'brand', 'vald', 'stold', 'person', 'olycka', 'ovrigt'] as $grupp)
+                <span style="display: inline-flex; align-items: center; gap: 0.35rem;">
+                    <span class="ListEvent__icon ListEvent__icon--{{ $grupp }}">
+                        <x-crimeevent.icon :group="$grupp" />
+                    </span>
+                    <code>{{ $grupp }}</code>
+                </span>
+            @endforeach
+        </div>
+    </section>
+
 @endsection
 
 @section('sidebar')
