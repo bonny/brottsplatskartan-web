@@ -1,4 +1,4 @@
-**Status:** aktiv
+**Status:** klar 2026-07-27 — deployad (`cd45ca9`) och bekräftad av användaren i mobil
 **Senast uppdaterad:** 2026-07-27
 
 # Todo #97 — Väntestadiet på /nara-hitta-plats
