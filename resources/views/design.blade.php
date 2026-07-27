@@ -122,25 +122,6 @@ Template för ordlista/dictionary
         </div>
     </section>
 
-    {{-- 3. x-crimeevent.hero (size=large) --}}
-    <section class="u-margin-top-double u-padding u-border u-bg-gray-light">
-        <h3><code>&lt;x-crimeevent.hero size="large" /&gt;</code></h3>
-        <p class="text-sm u-color-gray-1">Används på: Startsidan (topp 3 mest lästa). Stor hero med Sverigekartan och teaser-text.</p>
-        <div class="u-margin-top u-bg-white u-padding">
-            <x-crimeevent.hero :event="$event" size="large" :first="true" />
-            <p class="text-sm u-color-gray-1 u-margin-top-half">Första heron har <code>:first="true"</code> för LCP → <code>loading="eager"</code> + <code>fetchpriority="high"</code>.</p>
-        </div>
-    </section>
-
-    {{-- 4. x-crimeevent.hero (size=small) --}}
-    <section class="u-margin-top-double u-padding u-border u-bg-gray-light">
-        <h3><code>&lt;x-crimeevent.hero size="small" /&gt;</code></h3>
-        <p class="text-sm u-color-gray-1">Används på: Startsidan (rad 2, 6 st i 2x3 rutnät). Medium hero med kortare text.</p>
-        <div class="u-margin-top u-bg-white u-padding" style="max-width: 47%;">
-            <x-crimeevent.hero :event="$event" size="small" />
-        </div>
-    </section>
-
     {{-- 5. x-crimeevent.list-item (detailed) --}}
     <section class="u-margin-top-double u-padding u-border u-bg-gray-light">
         <h3><code>&lt;x-crimeevent.list-item detailed /&gt;</code></h3>
@@ -148,6 +129,17 @@ Template för ordlista/dictionary
         <div class="u-margin-top u-bg-white u-padding">
             <ul class="widget__listItems">
                 <x-crimeevent.list-item :event="$event" detailed />
+            </ul>
+        </div>
+    </section>
+
+    {{-- x-crimeevent.list-item med teaser (startsidans variant, todo #90) --}}
+    <section class="u-margin-top-double">
+        <h3><code>&lt;x-crimeevent.list-item detailed teaser /&gt;</code></h3>
+        <div class="widget">
+            <ul class="widget__listItems">
+                <x-crimeevent.list-item :event="$event" detailed teaser :first="true" />
+                <x-crimeevent.list-item :event="$event" detailed teaser />
             </ul>
         </div>
     </section>
