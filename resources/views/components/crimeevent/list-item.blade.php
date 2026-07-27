@@ -17,6 +17,8 @@
 
     // Thumb-storleken styrs av --listevent-thumb i styles.css. 140 här är
     // renderad storlek; srcset ger 2x för retina.
+    // ASYMMETRI: --listevent-thumb får sänkas utan motsatt åtgärd, men MÅSTE höjas
+    // tillsammans med $thumbPx. Se public/css/styles.css för motsatsen.
     $thumbPx = 140;
 
     if ($showThumb) {

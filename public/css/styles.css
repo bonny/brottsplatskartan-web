@@ -1063,6 +1063,8 @@ input[type="url"],
    behövdes för EventHero--small som låg två-i-bredd: 47 % av 358 px minus
    140 px thumb = 28 px text. Enkolumn har inte det problemet.
    ---------------------------------------------------------------------- */
+/* ASYMMETRI: --listevent-thumb får sänkas utan motsatt åtgärd, men MÅSTE höjas
+   tillsammans med $thumbPx i resources/views/components/crimeevent/list-item.blade.php. */
 .ListEvent {
     --listevent-thumb: 140px;
     display: flex;
