@@ -1,4 +1,4 @@
-**Status:** aktiv
+**Status:** aktiv — implementerad 2026-07-27 på branch `todo-90-ett-listformat`, ej merged. Öppen designfråga om radhöjd, se "Utfall".
 **Senast uppdaterad:** 2026-07-27
 
 # Todo #90 — Ett listformat för händelser på startsidan
@@ -184,6 +184,48 @@ inte används i praktiken. Grenarna slås samman.
   `MobileCollapse`-toggles med motiveringen att intern länkning inte ska
   gömmas för SEO. Vägen till överskådlighet går via densitet och
   konsekvens, inte via toggles.
+
+## Utfall (mätt 2026-07-27)
+
+Implementationen ligger på branch `todo-90-ett-listformat`, commits
+`4ce639c..9f336b1`. Full verifieringsrapport:
+`tmp-90-verifiering/REPORT.md` (gitignorerad).
+
+**Formatmålet uppnått.** Ett format, en kolumn, kartbild 140×140 med
+kategoriikon, rubrik och teaser clampade till 2 rader vardera,
+float-layouten borta. `hero.blade.php` raderad. Partialen ger
+`EventHero: 0 | ListEvent: 17 | excerpt: 17 | fetchpriority: 1` mot
+`EventHero: 9 | ListEvent: 8 | excerpt: 0` före. 34 tester gröna,
+PHPStan rent, inga regressioner på de sju konsumerande vyerna.
+
+**Höjdmålet till stor del inte uppnått.** Med teasern påslagen blir
+textblocket 168 px, alltså 28 px högre än kartbildens 140 px, så
+radhöjden drivs av texten:
+
+|                       | Prognos i denna todo | Uppmätt                    |
+| --------------------- | -------------------- | -------------------------- |
+| Radhöjd               | 156 px               | 184 px (200 med separator) |
+| 17 rader              | ~2 650 px            | ~3 384 px                  |
+| Besparing i sektionen | −1 091 px (−29 %)    | ~~−350 px (~~−9 %)         |
+
+Prognosen antog att två teaser-rader skulle fylla ut kartbildens höjd. De
+överfyller den. Två saker driver överskottet:
+
+1. Meta-raden wrappar till 2 rader (40 px) även för korta strängar, för
+   att textkolumnen bara är ~195–210 px. Clampa meta till 1 rad → −20 px.
+2. Teasern på 2 rader kostar 39 px. En rad → −20 px.
+
+Endera åtgärden ger radhöjd ~164 px; båda ger ~144 px, alltså under
+kartbildens golv och därmed 156 px konstant igen. **Öppen fråga till
+användaren** — koden gör vad designen beslutade, det är prognosen som var
+fel.
+
+**Bytevikt:** +65 kB för 17 thumbnails (73 → 138 kB), mot uppskattade
++80 kB. Under gränsen.
+
+**Kunde inte mätas lokalt:** startsidans egen `docH`. `Mest läst` bygger
+på `crime_views` senaste 20 minuterna och lokal dev saknar live-trafik.
+Mäts på prod efter deploy.
 
 ## Förväntad effekt
 
