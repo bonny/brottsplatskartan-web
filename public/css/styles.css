@@ -785,16 +785,25 @@ blockquote {
    Tidigare sr-only. Liten/diskret rubrik som ramar in sidan utan
    att konkurrera med sektions-H2:s nedanför.
    ============================================================ */
+/* UX-granskning 2026-07-27: hierarkin var inverterad. H1 låg på 18/22 px
+   medan artikelrubrikerna i listan låg på 20 px och sektionsrubrikerna
+   (h2.widget__title) på 16 px — alltså samma som brödtexten. Sidans enda
+   landmark var mindre än innehållet i den.
+
+   Kommentaren ovan motiverade det små H1:et med att det inte skulle
+   "konkurrera med sektions-H2:s nedanför". Rätt lösning är att skala hela
+   trappan i stället för att trycka ner toppen: H1 24/30 px,
+   h2.widget__title 20 px, listrubrik 17 px (satt i #90). */
 .StartPage__title {
-    font-size: 1.125rem;
-    font-weight: 600;
-    line-height: 1.3;
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.25;
     margin: 0 0 var(--default-margin-half) 0;
     color: var(--color-text, #1a1a1a);
 }
 @media (min-width: 768px) {
     .StartPage__title {
-        font-size: 1.375rem;
+        font-size: 1.875rem;
         margin-bottom: var(--default-margin);
     }
 }
@@ -1804,8 +1813,12 @@ input[type="url"],
     border-top: 1px solid var(--color-gray-2);
 }
 
+/* 20 px, inte 16. En sektionsrubrik som är exakt lika stor som brödtexten
+   läses inte som en rubrik, och den var dessutom mindre än artikelrubrikerna
+   den innehåller. Se UX-granskningen 2026-07-27 och .StartPage__title ovan. */
 h2.widget__title {
-    font-size: 1rem;
+    font-size: 1.25rem;
+    font-weight: 600;
     color: var(--color-gray-3);
 }
 
@@ -4258,6 +4271,13 @@ h2.widget__title {
     background-color: var(--color-gray-2);
     padding: var(--default-margin-double);
     font-size: var(--font-size-small);
+}
+
+/* Radlängd. Uppmätt 2026-07-27: brödtexten här var 1 536 px bred, alltså
+   omkring 215 tecken per rad — ögat tappar radbörjan långt innan dess.
+   65–75 tecken är läsbart, och ch-enheten följer typsnittet automatiskt. */
+.SiteFooter-about p {
+    max-width: 70ch;
 }
 
 .SiteFooter-cookies {
