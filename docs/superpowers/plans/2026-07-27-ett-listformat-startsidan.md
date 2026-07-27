@@ -6,7 +6,7 @@
 
 **Architecture:** `list-item.blade.php` blir det enda händelseformatet och `hero.blade.php` tas bort. Två rena PHP-funktioner byggs först med tester (`CrimeEvent::getIconGroup()` och radietaket i `StaticMapUrlBuilder`), därefter en ny ikonkomponent, sedan `list-item` med flex-layout istället för float, och sist rivs `hero` + dess CSS ut. Verifiering av de sju konsumerande sidorna ligger som eget sista steg.
 
-**Tech Stack:** Laravel 13, PHP 8.3, Blade-komponenter, PHPUnit 11, handskriven CSS i `public/css/styles.css` (INTE Laravel Mix — se Global Constraints), Docker Compose lokalt.
+**Tech Stack:** Laravel 13, PHP 8.4.20 i containern (composer kräver ^8.3), Blade-komponenter, PHPUnit 11, handskriven CSS i `public/css/styles.css` (INTE Laravel Mix — se Global Constraints), Docker Compose lokalt.
 
 Spec: [`todos/90-ett-listformat-startsidan.md`](../../../todos/90-ett-listformat-startsidan.md)
 
@@ -58,12 +58,35 @@ Textkolumnen på 206 px rymmer det bredaste vanliga ordet med marginal. Det är 
 
 ### Task 1: Få PHPUnit att köra
 
-Repot har `phpunit/phpunit ^11.0` och `composer test`, men bara `tests/ExampleTest.php` (Laravel 5-era, använder `$this->visit()` som inte finns i Laravel 13) och en `TestCase` i global namespace utan PSR-4. Suiten är trasig. Utan den kan Task 2 och 3 inte köras med TDD.
+Testsuiten är trasig. Verifierat mot körande container 2026-07-27, PHPUnit 11.5.55 / PHP 8.4.20:
+
+```
+$ docker compose exec -T app ./vendor/bin/phpunit
+Cannot open bootstrap script "/var/www/html/bootstrap/autoload.php"
+```
+
+Phpunit startar alltså inte alls. `phpunit.xml` är kvar i Laravel 5-format och behöver skrivas om helt, inte lappas:
+
+- `bootstrap="bootstrap/autoload.php"` — filen togs bort ur Laravel i 5.5, ska vara `vendor/autoload.php`
+- `backupStaticAttributes`, `convertErrorsToExceptions`, `convertNoticesToExceptions`, `convertWarningsToExceptions` — alla borttagna i PHPUnit 10
+- `<filter><whitelist>` — borttaget i PHPUnit 10, ersatt av `<source>`
+- `QUEUE_DRIVER` — heter `QUEUE_CONNECTION` sedan Laravel 5.7
+
+Med bootstrap-vägen tillfälligt rättad syns nästa fel:
+
+```
+$ docker compose exec -T app ./vendor/bin/phpunit --no-configuration --bootstrap vendor/autoload.php tests/
+1) ExampleTest::testBasicExample
+Error: Call to undefined method ExampleTest::visit()
+```
+
+Alltså tre saker att fixa: `phpunit.xml`, den döda `ExampleTest`, och `TestCase` som ligger i global namespace utan PSR-4.
 
 Detta är en medveten avvikelse från projektets nuvarande praxis (ingen CI, bara `composer analyse`). Motivering: `getIconGroup()` är ren mappningslogik med 65 möjliga indata och tre kända fallgropar — precis det tester är billigast och mest värda för. Blade/CSS-delarna testas visuellt i Task 7, inte med enhetstester.
 
 **Files:**
 
+- Modify: `phpunit.xml` (skriv om)
 - Modify: `composer.json:73-77` (autoload-dev)
 - Modify: `tests/TestCase.php` (skriv om)
 - Delete: `tests/ExampleTest.php`
@@ -74,21 +97,50 @@ Detta är en medveten avvikelse från projektets nuvarande praxis (ingen CI, bar
 - Consumes: inget
 - Produces: basklassen `Tests\TestCase` som Task 2 och 3 ärver från. Katalogen `tests/Unit/`.
 
-- [ ] **Step 1: Kontrollera att suiten är trasig i utgångsläget**
+- [ ] **Step 1: Bekräfta utgångsläget**
 
 ```bash
 docker compose exec -T app ./vendor/bin/phpunit
 ```
 
-Förväntat: fel (`Call to undefined method ... ::visit()` eller liknande), inte grönt. Om suiten oväntat är grön — notera det och hoppa till Step 3, resten av tasken gäller ändå.
+Förväntat, exakt: `Cannot open bootstrap script "/var/www/html/bootstrap/autoload.php"`.
 
-- [ ] **Step 2: Ta bort den döda testfilen**
+- [ ] **Step 2: Skriv om `phpunit.xml`**
+
+Ersätt hela filen:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+         bootstrap="vendor/autoload.php"
+         colors="true">
+    <testsuites>
+        <testsuite name="Brottsplatskartan">
+            <directory suffix="Test.php">tests</directory>
+        </testsuite>
+    </testsuites>
+    <source>
+        <include>
+            <directory>app</directory>
+        </include>
+    </source>
+    <php>
+        <env name="APP_ENV" value="testing"/>
+        <env name="CACHE_DRIVER" value="array"/>
+        <env name="SESSION_DRIVER" value="array"/>
+        <env name="QUEUE_CONNECTION" value="sync"/>
+    </php>
+</phpunit>
+```
+
+- [ ] **Step 3: Ta bort den döda testfilen**
 
 ```bash
 git rm tests/ExampleTest.php
 ```
 
-- [ ] **Step 3: Skriv om `tests/TestCase.php`**
+- [ ] **Step 4: Skriv om `tests/TestCase.php`**
 
 ```php
 <?php
@@ -113,7 +165,7 @@ abstract class TestCase extends BaseTestCase
 }
 ```
 
-- [ ] **Step 4: Lägg PSR-4-autoload för `Tests\` i `composer.json`**
+- [ ] **Step 5: Lägg PSR-4-autoload för `Tests\` i `composer.json`**
 
 Ersätt `autoload-dev`-blocket (rad 73–77) med:
 
@@ -125,14 +177,14 @@ Ersätt `autoload-dev`-blocket (rad 73–77) med:
     },
 ```
 
-- [ ] **Step 5: Skapa `tests/Unit/` och regenerera autoload**
+- [ ] **Step 6: Skapa `tests/Unit/` och regenerera autoload**
 
 ```bash
 mkdir -p tests/Unit && touch tests/Unit/.gitkeep
 docker compose exec -u root app composer dump-autoload
 ```
 
-- [ ] **Step 6: Verifiera att suiten kör grönt (0 tester)**
+- [ ] **Step 7: Verifiera att suiten kör grönt (0 tester)**
 
 ```bash
 docker compose exec -T app ./vendor/bin/phpunit
@@ -140,10 +192,10 @@ docker compose exec -T app ./vendor/bin/phpunit
 
 Förväntat: `OK (0 tests, 0 assertions)` eller `No tests executed!` — inga fel eller fatals.
 
-- [ ] **Step 7: Commit**
+- [ ] **Step 8: Commit**
 
 ```bash
-git add composer.json tests/
+git add phpunit.xml composer.json tests/
 git commit -m "test #90: modernisera phpunit-harnessen (Laravel 13, PSR-4)"
 ```
 
@@ -427,23 +479,60 @@ class StaticMapUrlBuilderThumbTest extends TestCase
         $this->assertStringContainsString('padding=0.35', $url);
     }
 
-    public function test_thumbnail_ritar_cirkel_aven_utan_precision(): void
+    public function test_thumbnail_ritar_cirkel_for_veryfar(): void
     {
-        // Utan location_viewport-fält blir precisionen far/veryfar. Förr
-        // gav det closeUpUrl() (rektangel); nu ska det bli en cirkel-URL
-        // med path-parametrar.
-        $url = $this->builder->circleUrl($this->event(), 140, 140, 1, 'low');
+        // veryfar saknar radie i PRECISION_RADIUS. Förr gav det closeUpUrl()
+        // (rektangel); nu ska det bli en cirkel-URL med path-parametrar.
+        $url = $this->builder->circleUrl($this->event('veryfar'), 140, 140, 1, 'low');
 
         $this->assertStringContainsString('path=', $url);
         $this->assertStringContainsString('static/auto/140x140.jpg', $url);
+        $this->assertStringContainsString('padding=0.6', $url);
     }
 
-    private function event(): CrimeEvent
+    public function test_precisionsfixturerna_ger_forvantad_niva(): void
     {
+        // Skyddsnät: om getViewportSize()-trösklarna ändras ska det här
+        // testet falla, inte de andra på ett förvirrande sätt.
+        $this->assertSame('closest', $this->event('closest')->getViewPortSizeAsString());
+        $this->assertSame('street', $this->event('street')->getViewPortSizeAsString());
+        $this->assertSame('town', $this->event('town')->getViewPortSizeAsString());
+        $this->assertSame('lan', $this->event('lan')->getViewPortSizeAsString());
+        $this->assertSame('veryfar', $this->event('veryfar')->getViewPortSizeAsString());
+    }
+
+    /**
+     * Precisionen räknas ut av getViewportSize() som ren aritmetik på
+     * viewport-fälten: (ne_lat - sw_lat) + (ne_lng - sw_lng). Trösklarna i
+     * getViewPortSizeAsString() är >20 veryfar, >6 far, >0.8 lan, >0.1 town,
+     * >0.05 street, annars closest.
+     *
+     * OBS: spannet för 'closest' måste vara skilt från noll. Summan exakt 0
+     * ger "veryfar" på grund av en bugg i getViewPortSizeAsString() —
+     * `switch ($size)` jämför $size mot booleanen `$size > 20`, och PHP:s
+     * lösa jämförelse gör att `0 == false` är sant. Buggen är latent i prod
+     * (2 165 events träffas men ingen av dem har koordinat, så ingen
+     * kartbild renderas) och spåras i todo #91, inte här.
+     */
+    private function event(string $precision = 'closest'): CrimeEvent
+    {
+        $span = match ($precision) {
+            'veryfar' => 13.0,  // summa 26
+            'far'     => 4.0,   // summa 8
+            'lan'     => 0.5,   // summa 1.0
+            'town'    => 0.1,   // summa 0.2
+            'street'  => 0.04,  // summa 0.08
+            'closest' => 0.01,  // summa 0.02 — se kommentaren ovan, inte 0
+        };
+
         $event = new CrimeEvent();
         $event->id = 123456;
         $event->location_lat = 59.3293;
         $event->location_lng = 18.0686;
+        $event->viewport_southwest_lat = 59.3293 - $span / 2;
+        $event->viewport_northeast_lat = 59.3293 + $span / 2;
+        $event->viewport_southwest_lng = 18.0686 - $span / 2;
+        $event->viewport_northeast_lng = 18.0686 + $span / 2;
 
         return $event;
     }
@@ -533,7 +622,7 @@ med:
 docker compose exec -T app ./vendor/bin/phpunit tests/Unit/StaticMapUrlBuilderThumbTest.php
 ```
 
-Förväntat: `OK (6 tests, ...)`.
+Förväntat: `OK (7 tests, ...)`.
 
 - [ ] **Step 6: Titta på de faktiska bilderna före/efter**
 
