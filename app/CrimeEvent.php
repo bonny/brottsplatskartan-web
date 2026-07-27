@@ -165,6 +165,77 @@ class CrimeEvent extends Model implements Feedable {
     }
 
     /**
+     * Kategori → ikongrupp. 65 distinkta parsed_title förekommer på 30 dagar,
+     * så vi matchar på substring i prioritetsordning istället för exakta
+     * värden — nya polis-kategorier hamnar då rätt automatiskt.
+     *
+     * ORDNINGEN ÄR SIGNIFIKANT. Tre överlapp måste lösas av ordningen:
+     *   - "Mordbrand" matchar både "mord" och "brand" → brand före vald
+     *   - "Rattfylleri" matchar "fylleri" → trafik före person
+     *   - "Trafikolycka" matchar "olycka" → trafik före olycka
+     *
+     * Matchning sker på ordbörjan (se getIconGroup), inte fri substring —
+     * annars fångar "rån" upp mitt i "intrång" (i-n-t-r-å-n-g) och klassar
+     * olaga intrång som våldsbrott. "mordbrand" är därför ett eget sökord
+     * här: när "brand" bara matchas vid ordbörjan hittas det inte längre
+     * som suffix i "Mordbrand".
+     *
+     * KÄND BEGRÄNSNING — matchningen är inte ankrad på högerkanten:
+     * Sökorden matchas med preg_match('/(?<!\p{L})…/u'), en negativ lookbehind
+     * på bokstav. Det ankrar ordbörjan, vilket skyddar mot prefix-kollisioner
+     * (t.ex. "rån" fångas inte längre inuti "intrång"). Men högerkanten är inte
+     * ankrad, så sökord matchar inte som suffix i sammansatta ord. Svenska
+     * formar gärna sammansättningar, och en framtida polis-kategori skriven
+     * som sammansatt ord hamnar i "ovrigt" istället för sin rätta grupp:
+     * "Bilbrand" och "Elbrand" → ovrigt (inte brand), "Cykelstöld" → ovrigt
+     * (inte stold), "Bankrån" → ovrigt (inte vald). Därför ligger "mordbrand"
+     * redan explicit i brand-gruppen — samma mönster gäller när nya
+     * sammansatta kategorier tillkommer. Lägg dem då in explicit här istället
+     * för att ändra matchningsmekanismen.
+     *
+     * @phpstan-var array<string, array<int, string>>
+     */
+    private const ICON_GROUPS = [
+        'trafik'         => ['trafikolycka', 'trafikkontroll', 'trafikbrott', 'rattfylleri', 'olovlig körning'],
+        'sammanfattning' => ['sammanfattning'],
+        'brand'          => ['brand', 'mordbrand'],
+        'vald'           => ['misshandel', 'rån', 'våldtäkt', 'mord', 'dråp', 'olaga hot'],
+        'stold'          => ['stöld', 'inbrott', 'skadegörelse'],
+        'person'         => ['försvunnen person', 'fylleri', 'omhändertagande'],
+        'olycka'         => ['arbetsplatsolycka', 'sjöolycka', 'olycka'],
+    ];
+
+    /**
+     * Ikongrupp för händelsen, används av <x-crimeevent.icon> (todo #90).
+     * Returnerar 'ovrigt' när inget matchar — det är ~16 % av volymen, så
+     * fallbacken ska vara en neutral ikon och inte läsas som ett fel.
+     *
+     * Sökorden matchas vid ordbörjan, inte som fri substring — annars
+     * matchar "rån" mitt inuti "intrång" och "Olaga intrång" felaktigt
+     * klassas som våldsbrott (se todo #90-granskning). Negativ lookbehind
+     * på \p{L} ("föregås inte av en bokstav") är Unicode-medveten och
+     * hanterar å/ä/ö korrekt.
+     */
+    public function getIconGroup(): string
+    {
+        $title = mb_strtolower($this->parsed_title ?? '');
+
+        if ($title === '') {
+            return 'ovrigt';
+        }
+
+        foreach (self::ICON_GROUPS as $group => $needles) {
+            foreach ($needles as $needle) {
+                if (preg_match('/(?<!\p{L})' . preg_quote($needle, '/') . '/u', $title) === 1) {
+                    return $group;
+                }
+            }
+        }
+
+        return 'ovrigt';
+    }
+
+    /**
      * Kort URL till statisk kartbild via /k/v1/-routen (todo #55, Alt B).
      * Returnerar 301 till tileservern, browser-cachas immutable 1 år.
      * Mode: 'circle' | 'circle-low' | 'near' | 'far'.
