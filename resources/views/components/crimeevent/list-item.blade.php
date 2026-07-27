@@ -3,7 +3,45 @@
     'detailed' => false,
     'mapDistance' => null,
     'showMap' => true,
+    // Teaser under rubriken, clampad till 2 rader. Startsidan sätter den;
+    // övriga vyer är oförändrade (todo #90).
+    'teaser' => false,
+    // Första kortet i listan — loading=eager + fetchpriority=high för LCP.
+    // Måste passas explicit eftersom $loop inte ärvs in i komponenten.
+    'first' => false,
 ])
+
+@php
+    $showThumb = $showMap && $event->hasMapImage();
+    $isFirst = (bool) $first;
+
+    // Thumb-storleken styrs av --listevent-thumb i styles.css. 140 här är
+    // renderad storlek; srcset ger 2x för retina.
+    $thumbPx = 140;
+
+    if ($showThumb) {
+        // Cirkel-stilen är default (TILESERVER_MAP_STYLE=circle) och ger samma
+        // bild oavsett $mapDistance — därför en gren istället för de två
+        // identiska som fanns före todo #90.
+        $useCircleStyle = config('services.tileserver.map_style') === 'circle';
+
+        if ($useCircleStyle) {
+            $thumbSrc = $event->getKortKartbildUrl('circle-low', $thumbPx, $thumbPx);
+            $thumbSrc2x = $event->getKortKartbildUrl('circle-low', $thumbPx, $thumbPx, 2);
+            $altVariant = 'close';
+        } elseif ($mapDistance === 'near') {
+            $thumbSrc = $event->getStaticImageSrc($thumbPx, $thumbPx);
+            $thumbSrc2x = $event->getStaticImageSrc($thumbPx, $thumbPx, 2);
+            $altVariant = 'close';
+        } else {
+            $thumbSrc = $event->getStaticImageSrcFar($thumbPx, $thumbPx);
+            $thumbSrc2x = $event->getStaticImageSrcFar($thumbPx, $thumbPx, 2);
+            $altVariant = 'far';
+        }
+    }
+
+    $iconGroup = $event->getIconGroup();
+@endphp
 
 <li
     class="
@@ -12,65 +50,53 @@
         @if (isset($event->location_geometry_type)) Event--distance_{{ $event->getViewPortSizeAsString() }} @endif
     "
 >
-
-    @php $useCircleStyle = config('services.tileserver.map_style') === 'circle'; @endphp
-    @if (!$showMap || !$event->hasMapImage())
-        {{-- Ingen karta. --}}
-    @elseif ($mapDistance === 'near')
-        @php
-            $listSrc = $useCircleStyle ? $event->getKortKartbildUrl('circle-low', 160, 160) : $event->getStaticImageSrc(160, 160);
-            $listSrc2x = $useCircleStyle ? $event->getKortKartbildUrl('circle-low', 160, 160, 2) : $event->getStaticImageSrc(160, 160, 2);
-        @endphp
-        <a class="ListEvent__imageLink " href="{{ $event->getPermalink() }}">
+    @if ($showThumb)
+        <a class="ListEvent__imageLink" href="{{ $event->getPermalink() }}">
             <img
-                loading="lazy"
-                alt="{{ $event->getMapAltText() }}"
+                loading="{{ $isFirst ? 'eager' : 'lazy' }}"
+                @if ($isFirst) fetchpriority="high" @endif
+                alt="{{ $event->getMapAltText($altVariant) }}"
                 class="ListEvent__image"
-                src="{{ $listSrc }}"
-                srcset="{{ $listSrc }} 1x, {{ $listSrc2x }} 2x"
-                width="90"
-                height="90"
-                layout="fixed"
+                src="{{ $thumbSrc }}"
+                srcset="{{ $thumbSrc }} 1x, {{ $thumbSrc2x }} 2x"
+                width="{{ $thumbPx }}"
+                height="{{ $thumbPx }}"
             />
-        </a>
-    @else
-        @php
-            $listSrc = $useCircleStyle ? $event->getKortKartbildUrl('circle-low', 160, 160) : $event->getStaticImageSrcFar(160, 160);
-            $listSrc2x = $useCircleStyle ? $event->getKortKartbildUrl('circle-low', 160, 160, 2) : $event->getStaticImageSrcFar(160, 160, 2);
-        @endphp
-        <a class="ListEvent__imageLink " href="{{ $event->getPermalink() }}">
-            <img
-                loading="lazy"
-                alt="{{ $event->getMapAltText('far') }}"
-                class="ListEvent__image"
-                src="{{ $listSrc }}"
-                srcset="{{ $listSrc }} 1x, {{ $listSrc2x }} 2x"
-                width="90"
-                height="90"
-                layout="fixed"
-            />
+            <span class="ListEvent__icon ListEvent__icon--{{ $iconGroup }}">
+                <x-crimeevent.icon :group="$iconGroup" />
+            </span>
         </a>
     @endif
 
-    <div class="ListEvent__title">
-        <a class="ListEvent__titleLink " href="{{ $event->getPermalink() }}">
-            @if ($detailed)
-                <span class="Event__parsedTitle Event__type">{{ $event->parsed_title }}</span>
-            @endif
-            <span class="ListEvent__teaser widget__listItem__title">{!! $event->getHeadline() !!}</span>
-        </a>
-    </div>
+    <div class="ListEvent__body">
+        <div class="ListEvent__title">
+            <a class="ListEvent__titleLink" href="{{ $event->getPermalink() }}">
+                @if ($detailed)
+                    <span class="Event__parsedTitle Event__type">{{ $event->parsed_title }}</span>
+                @endif
+                <span class="ListEvent__teaser widget__listItem__title">{!! $event->getHeadline() !!}</span>
+            </a>
+        </div>
 
-    <div class="ListEvent__meta widget__listItem__text">
-        <p>
-            <span class="ListEvent__dateHuman">
-                <time class="Event__dateHuman__time"
-                    title="Tidpunkt då Polisen anger att händelsen inträffat"
-                    datetime="{{ $event->getParsedDateISO8601() }}">
-                    {{ $event->getParsedDateFormattedForHumans() }}
-                </time>
-                &middot; {{ $event->getLocationString(includePrioLocations: true, includeParsedTitleLocation: true, includeAdministrativeAreaLevel1Locations: false) }}
-            </span>
-        </p>
+        @if ($teaser)
+            <div class="ListEvent__excerpt">
+                {{-- Generös teckenlängd; CSS clampar till exakt 2 rader så
+                     radhöjden blir konstant oavsett glyfbredd. --}}
+                {!! $event->getParsedContentTeaser(220) !!}
+            </div>
+        @endif
+
+        <div class="ListEvent__meta widget__listItem__text">
+            <p>
+                <span class="ListEvent__dateHuman">
+                    <time class="Event__dateHuman__time"
+                        title="Tidpunkt då Polisen anger att händelsen inträffat"
+                        datetime="{{ $event->getParsedDateISO8601() }}">
+                        {{ $event->getParsedDateFormattedForHumans() }}
+                    </time>
+                    &middot; {{ $event->getLocationString(includePrioLocations: true, includeParsedTitleLocation: true, includeAdministrativeAreaLevel1Locations: false) }}
+                </span>
+            </p>
+        </div>
     </div>
 </li>

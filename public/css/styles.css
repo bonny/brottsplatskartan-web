@@ -17,6 +17,10 @@
     --color-white: #eee;
     --color-black: #000;
     --color-yellow: #ffcc33;
+    /* Kategoriikoner (todo #90) — orange för brand, violett för stöld.
+       Övriga grupper återanvänder befintliga variabler. */
+    --color-orange: #e8710a;
+    --color-violet: #6b4fa8;
     --color-green: #a4dd9e;
     --default-margin: 1rem;
     --default-margin-half: calc(var(--default-margin) / 2);
@@ -1043,26 +1047,130 @@ input[type="url"],
     font-weight: 500;
 }
 
+/* ----------------------------------------------------------------------
+   ListEvent — det enda händelseformatet (todo #90).
+
+   En rad: 140 px kartbild med kategoriikon i nedre vänstra hörnet, sedan
+   kategori, rubrik (max 2 rader), teaser (max 2 rader) och meta.
+
+   Rubrik och teaser clampas med line-clamp, INTE med teckenlängd —
+   teckenbaserad trunkering ger olika radantal beroende på glyfbredd, och
+   konstant radhöjd är hela poängen med formatet.
+
+   Ingen stackning på små skärmar. Vid 390 px viewport är raden 358 px, så
+   en 140 px thumb lämnar 206 px textkolumn och det bredaste vanliga ordet
+   ("Sammanfattning", 17 px/600) är 132 px. Den gamla stackningsregeln
+   behövdes för EventHero--small som låg två-i-bredd: 47 % av 358 px minus
+   140 px thumb = 28 px text. Enkolumn har inte det problemet.
+   ---------------------------------------------------------------------- */
 .ListEvent {
-    overflow: auto;
+    --listevent-thumb: 140px;
+    display: flex;
+    gap: var(--default-margin-half);
+    align-items: flex-start;
     flex-basis: 100%;
 }
 
 .ListEvent__imageLink {
-    float: left;
+    position: relative;
+    flex: 0 0 var(--listevent-thumb);
+    width: var(--listevent-thumb);
+    height: var(--listevent-thumb);
     overflow: hidden;
-    width: 90px;
-    height: 90px;
-    margin-right: var(--default-margin);
     border-radius: var(--border-radius-normal);
+    line-height: 0;
+}
+
+.ListEvent__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Kategoriikon som overlay i kartbildens nedre vänstra hörn. Underordnad
+   kartan — den ska svara "vad hände" utan att konkurrera om blicken. */
+.ListEvent__icon {
+    position: absolute;
+    bottom: 6px;
+    left: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    color: #fff;
+    background: var(--color-gray-1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+}
+
+.ListEvent__iconSvg {
+    display: block;
+}
+
+.ListEvent__icon--trafik {
+    background: var(--color-blue-police);
+}
+.ListEvent__icon--sammanfattning {
+    background: var(--color-gray-3);
+}
+.ListEvent__icon--brand {
+    background: var(--color-orange);
+}
+.ListEvent__icon--vald {
+    background: var(--color-red-3);
+}
+.ListEvent__icon--stold {
+    background: var(--color-violet);
+}
+.ListEvent__icon--person {
+    background: var(--color-blue-police-active);
+}
+.ListEvent__icon--olycka {
+    background: var(--color-red-2);
+}
+.ListEvent__icon--ovrigt {
+    background: var(--color-gray-1);
+}
+
+.ListEvent__body {
+    flex: 1 1 auto;
+    min-width: 0;
 }
 
 .ListEvent__titleLink {
     display: block;
 }
 
-.ListEvent__image {
-    display: block;
+/* .ListEvent__teaser är RUBRIKEN (historiskt namn) — clampas till 2 rader. */
+.ListEvent__teaser {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    line-clamp: 2;
+    overflow: hidden;
+    /* Svenska sammansatta ord ("industriområde") får brytas snyggare när
+       kolumnen är trång, istället för ord-mitt-brott. */
+    overflow-wrap: anywhere;
+    hyphens: auto;
+}
+
+/* Den faktiska teasern — separat klass eftersom __teaser är upptaget. */
+.ListEvent__excerpt {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    line-clamp: 2;
+    overflow: hidden;
+    margin-top: 0.15rem;
+    font-size: var(--font-size-small);
+    line-height: 1.35;
+    color: var(--color-gray-1);
+}
+
+.ListEvent__excerpt p {
+    margin: 0;
 }
 
 .PlatsListing__plats {
