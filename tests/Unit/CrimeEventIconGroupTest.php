@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use App\CrimeEvent;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class CrimeEventIconGroupTest extends TestCase
@@ -57,6 +58,12 @@ class CrimeEventIconGroupTest extends TestCase
             // Olycka — 3 %
             'arbetsplatsolycka'       => ['Arbetsplatsolycka', 'olycka'],
 
+            // Fallgrop (granskningsfynd todo #90): "rån" matchar inuti
+            // "intrång" vid fri substring-matchning. Word-start-matchning
+            // löser detta — olaga intrång är inte ett rån.
+            'olaga intrang'           => ['Olaga intrång', 'ovrigt'],
+            'olaga intrang hemfrid'   => ['Olaga intrång/hemfridsbrott', 'ovrigt'],
+
             // Fallback — ~16 %
             'knivlagen'               => ['Knivlagen', 'ovrigt'],
             'vapenlagen'              => ['Vapenlagen', 'ovrigt'],
@@ -67,9 +74,7 @@ class CrimeEventIconGroupTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider kategoriProvider
-     */
+    #[DataProvider('kategoriProvider')]
     public function test_kategori_mappas_till_ratt_ikongrupp(?string $parsedTitle, string $forvantad): void
     {
         $this->assertSame($forvantad, $this->grupp($parsedTitle));

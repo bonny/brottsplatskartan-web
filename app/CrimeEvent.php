@@ -174,12 +174,18 @@ class CrimeEvent extends Model implements Feedable {
      *   - "Rattfylleri" matchar "fylleri" → trafik före person
      *   - "Trafikolycka" matchar "olycka" → trafik före olycka
      *
-     * @var array<string, array<int, string>>
+     * Matchning sker på ordbörjan (se getIconGroup), inte fri substring —
+     * annars fångar "rån" upp mitt i "intrång" (i-n-t-r-å-n-g) och klassar
+     * olaga intrång som våldsbrott. "mordbrand" är därför ett eget sökord
+     * här: när "brand" bara matchas vid ordbörjan hittas det inte längre
+     * som suffix i "Mordbrand".
+     *
+     * @phpstan-var array<string, array<int, string>>
      */
     private const ICON_GROUPS = [
         'trafik'         => ['trafikolycka', 'trafikkontroll', 'trafikbrott', 'rattfylleri', 'olovlig körning'],
         'sammanfattning' => ['sammanfattning'],
-        'brand'          => ['brand'],
+        'brand'          => ['brand', 'mordbrand'],
         'vald'           => ['misshandel', 'rån', 'våldtäkt', 'mord', 'dråp', 'olaga hot'],
         'stold'          => ['stöld', 'inbrott', 'skadegörelse'],
         'person'         => ['försvunnen person', 'fylleri', 'omhändertagande'],
@@ -190,6 +196,12 @@ class CrimeEvent extends Model implements Feedable {
      * Ikongrupp för händelsen, används av <x-crimeevent.icon> (todo #90).
      * Returnerar 'ovrigt' när inget matchar — det är ~16 % av volymen, så
      * fallbacken ska vara en neutral ikon och inte läsas som ett fel.
+     *
+     * Sökorden matchas vid ordbörjan, inte som fri substring — annars
+     * matchar "rån" mitt inuti "intrång" och "Olaga intrång" felaktigt
+     * klassas som våldsbrott (se todo #90-granskning). Negativ lookbehind
+     * på \p{L} ("föregås inte av en bokstav") är Unicode-medveten och
+     * hanterar å/ä/ö korrekt.
      */
     public function getIconGroup(): string
     {
@@ -201,7 +213,7 @@ class CrimeEvent extends Model implements Feedable {
 
         foreach (self::ICON_GROUPS as $group => $needles) {
             foreach ($needles as $needle) {
-                if (str_contains($title, $needle)) {
+                if (preg_match('/(?<!\p{L})' . preg_quote($needle, '/') . '/u', $title) === 1) {
                     return $group;
                 }
             }
