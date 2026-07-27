@@ -1066,6 +1066,24 @@ input[type="url"],
 
 .ListEvent .ListEvent__meta {
     font-size: 0.8125rem; /* 13 px */
+
+    /* Klampas till 2 rader. Uppmätt på prod 2026-07-27: tio av sjutton rader
+       på startsidan har redan exakt 2 meta-rader och rörs inte av clampen,
+       fyra har 1 rad. Men tre multi-plats-sammanfattningar (samma typ som
+       #78 handlar om) hade 4, 5 och 7 rader — den värsta dumpar tolv ortnamn
+       på 127 px. Det gav fem olika radhöjder i samma lista (172–270 px).
+       Tolv ortnamn i en listrad är brus, inte information; hela listan finns
+       på händelsesidan.
+
+       OBS specificitet: @container-regeln längre ner klampar till 1 rad i
+       trång kolumn och måste vinna över den här. Båda är 0,2,0, så
+       källordningen avgör — den här regeln MÅSTE ligga före @container-
+       blocket. Flyttar du den, höj specificiteten där i stället. */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    line-clamp: 2;
+    overflow: hidden;
 }
 
 /* .ListEvent__teaser är RUBRIKEN (historiskt namn) — clampas till 2 rader. */
@@ -1115,14 +1133,13 @@ input[type="url"],
         min-height: 2.6em;
     }
 
-    /* Meta klampas till en rad här. Utan den wrappar den till 2–5 rader och
-       radhöjden får fyra olika värden i samma lista. */
-    .ListEvent__meta {
-        display: -webkit-box;
+    /* Meta klampas till en rad här, mot huvudkolumnens två. Utan den wrappar
+       den till 2–5 rader och radhöjden får fyra olika värden i samma lista.
+       Specificiteten (0,2,0) matchar huvudkolumnens regel medvetet — den här
+       ligger senare i filen och vinner därför. */
+    .ListEvent .ListEvent__meta {
         -webkit-line-clamp: 1;
-        -webkit-box-orient: vertical;
         line-clamp: 1;
-        overflow: hidden;
     }
 }
 
