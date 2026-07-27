@@ -1,4 +1,4 @@
-**Status:** aktiv — implementerad 2026-07-27 på branch `todo-90-ett-listformat`, ej merged. Slutgranskningens fynd åtgärdade 2026-07-27, se "Utfall". Öppen designfråga om radhöjd kvarstår (meta-raden).
+**Status:** aktiv — **deployad 2026-07-27 14:48** (`3b3773b`). Mätperiod 30 dagar, gate 2026-08-26. Öppen designfråga: klampa meta till 2 rader, se "Uppmätt på prod".
 **Senast uppdaterad:** 2026-07-27
 
 # Todo #90 — Ett listformat för händelser på startsidan
@@ -251,6 +251,59 @@ Både storleken (90×90 → 140×140) och destinations-URL:en (`padding`
 timmen** (`prod-health`-skillen, `docker stats tileserver`).
 
 ## Utfall (mätt 2026-07-27, efter slutgranskningens fixar)
+
+### Uppmätt på prod efter deploy (2026-07-27, mobil 390 px)
+
+| Mått                   | Före               | Efter                        |
+| ---------------------- | ------------------ | ---------------------------- |
+| `Mest läst`-sektionen  | 3 741 px           | **3 405 px** (−336 px, −9 %) |
+| Rader                  | 3+6+8 i tre format | 17 i ett format              |
+| Rubrikelement          | 9 `h3`             | 17 `h3`, 17 px/600           |
+| `EventHero`            | 9                  | 0                            |
+| `fetchpriority="high"` | 1                  | 1                            |
+
+Ikonfördelning i skarp rendering: sammanfattning 6, trafik 5, person 2,
+ovrigt 2, brand 1, vald 1. Kartbilderna visar nu läsbara ortnamn
+("Nacksta", "Dundret, Gällivare") — padding-fixen gjorde sitt.
+
+**Nytt fynd som ändrar den öppna designfrågan.** Lokalt syntes bara två
+radhöjder. På prod är de fem: 172, 179, 215, 217, 270 px. Orsaken är
+meta-raden, och fördelningen är skev:
+
+| Meta-rader | Antal rader | Meta-höjd  |
+| ---------- | ----------- | ---------- |
+| 1          | 4           | 18 px      |
+| 2          | 10          | 36 px      |
+| 4          | 1           | 73 px      |
+| 5          | 1           | 91 px      |
+| 7          | 1           | **127 px** |
+
+Den värsta raden är en multi-plats-sammanfattning som dumpar tolv
+ortnamn: "7 timmar sedan · Västernorrland, Örnsköldsvik, Gideå,
+Härnösand, Kittjärn, Sundsvall, Kontorsvägen, Landsvägsallén,
+Kubikenborg, Bergsgatan, Nacksta, Västernorrlands län". Samma
+händelsetyp som [#78](78-handelser-utspridda-platser-kart-missvisning.md)
+handlar om (~19 % av volymen).
+
+**Rätt åtgärd är att klampa meta till TVÅ rader, inte en.** Tio av
+sjutton rader har redan exakt två rader, så clampen rör dem inte, och de
+fyra med en rad påverkas inte heller. Bara de tre multi-plats-raderna
+kapas — där tolv ortnamn i en listrad är brus, inte information.
+Beräknad besparing ~183 px, och radhöjderna faller till två värden.
+
+Tidigare i den här todon rekommenderades först klampning till en rad,
+sedan ingen klampning alls. Båda byggde på mätning av `/stockholm`, där
+meta är kort. Startsidan har en annan datamix, och det var fel underlag.
+
+### Prestanda vid deploy
+
+Första anropet till `/stockholm` efter deploy tog **39,8 s**. Varmt
+0,13–0,26 s. Flaskhalsen var `mariadbd` på 152 % CPU, inte `tileserver`
+(18 %) — alltså kall response-cache och kalla DB-frågor, inte
+kartbildsrendering. Load average toppade 5,27 på 4 vCPU, RAM oberört
+(5,0 GB available). Kartbilds-oron i riskanalysen var överdriven; den
+verkliga kostnaden är response-cachen, som rensas vid varje deploy
+oavsett.
 
 Implementationen ligger på branch `todo-90-ett-listformat`. Full
 verifieringsrapport: `tmp-90-verifiering/REPORT.md` (gitignorerad),
