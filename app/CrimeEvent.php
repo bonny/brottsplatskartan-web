@@ -180,6 +180,19 @@ class CrimeEvent extends Model implements Feedable {
      * här: när "brand" bara matchas vid ordbörjan hittas det inte längre
      * som suffix i "Mordbrand".
      *
+     * KÄND BEGRÄNSNING — matchningen är inte ankrad på högerkanten:
+     * Sökorden matchas med preg_match('/(?<!\p{L})…/u'), en negativ lookbehind
+     * på bokstav. Det ankrar ordbörjan, vilket skyddar mot prefix-kollisioner
+     * (t.ex. "rån" fångas inte längre inuti "intrång"). Men högerkanten är inte
+     * ankrad, så sökord matchar inte som suffix i sammansatta ord. Svenska
+     * formar gärna sammansättningar, och en framtida polis-kategori skriven
+     * som sammansatt ord hamnar i "ovrigt" istället för sin rätta grupp:
+     * "Bilbrand" och "Elbrand" → ovrigt (inte brand), "Cykelstöld" → ovrigt
+     * (inte stold), "Bankrån" → ovrigt (inte vald). Därför ligger "mordbrand"
+     * redan explicit i brand-gruppen — samma mönster gäller när nya
+     * sammansatta kategorier tillkommer. Lägg dem då in explicit här istället
+     * för att ändra matchningsmekanismen.
+     *
      * @phpstan-var array<string, array<int, string>>
      */
     private const ICON_GROUPS = [
