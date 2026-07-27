@@ -32,11 +32,22 @@
             text-wrap: pretty;
         }
 
+        /* De fem flikarna med 1rem padding-inline var 60 px bredare än
+           sidokolumnen vid 390 px viewport, och raden saknade
+           overflow-hantering. Resultatet var att HELA sidan scrollade
+           horisontellt 60 px på mobil — uppmätt 2026-07-27, enda orsaken
+           på startsidan.
+
+           Smalare padding-inline räcker för att raden ska rymmas (5 × 1rem
+           sparat = 80 px), och flex-wrap är skyddsnätet om ett flieknamn
+           skulle bli längre. padding-block behålls på 1rem så tap-targeten
+           stannar över 44 px enligt iOS HIG. */
         .TextTVBox-pages {
             list-style: none;
             padding: 0;
             margin: 0;
             display: flex;
+            flex-wrap: wrap;
             justify-content: space-evenly;
             border-top: 1px solid var(--color-gray-1);
             border-bottom: 1px solid var(--color-gray-1);
@@ -44,7 +55,7 @@
 
             a {
                 display: block;
-                padding: 1rem;
+                padding: 1rem 0.5rem;
             }
         }
     </style>

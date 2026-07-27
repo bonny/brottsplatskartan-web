@@ -888,7 +888,12 @@ class CrimeEvent extends Model implements Feedable {
 
         $sizeAsString = "";
 
-        switch ($size) {
+        // switch (true), inte switch ($size) — casen är booleska uttryck.
+        // Med switch ($size) jämfördes $size mot resultatet av "$size > 20",
+        // och PHP:s lösa jämförelse gör att 0 == false är sant. Summan exakt 0
+        // matchade därför första caset och gav "veryfar" i stället för
+        // "closest". Se todo #91.
+        switch (true) {
             case $size > 20:
                 $sizeAsString = "veryfar";
                 break;

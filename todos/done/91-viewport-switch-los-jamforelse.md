@@ -1,4 +1,4 @@
-**Status:** aktiv
+**Status:** klar 2026-07-27
 **Senast uppdaterad:** 2026-07-27
 
 # Todo #91 — `getViewPortSizeAsString()`: viewport-summa 0 ger "veryfar"
@@ -89,4 +89,18 @@ att #90 är merged.
 
 ## Beroende
 
-**Blockerad av:** #90 Task 1 (phpunit-harnessen måste köra först).
+## Åtgärdad 2026-07-27
+
+`switch ($size)` → `switch (true)` i `getViewPortSizeAsString()`, plus
+`tests/Unit/CrimeEventViewPortSizeTest.php` med nio testfall: en
+dataprovider över alla sex precisionsnivåer, samt tre regressionstester
+för summan exakt 0, event helt utan viewport-fält, och negativ summa.
+
+Testet kördes rött först — två fall gav `veryfar` där `closest`
+förväntades — och grönt efter fixen. Hela sviten 43 tester, PHPStan rent.
+
+Ingen synlig effekt i prod: de 2 165 berörda händelserna saknar
+koordinat, så ingen kartbild ändras. Effekten är att CSS-klassen blir
+`Event--distance_closest` i stället för `Event--distance_veryfar` på de
+raderna, och att framtida geokodning av dem inte längre ger fel
+kartbild.

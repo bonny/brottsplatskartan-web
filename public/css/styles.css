@@ -308,17 +308,44 @@ blockquote {
     list-style-type: none;
     overflow-x: auto;
 }
-/* 
-.SiteNav::after {
-    content: "";
-    display: block;
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    width: 20px;
-    pointer-events: none;
-} */
+/* Scroll-affordance för navet. Navet ÄR scrollbart (overflow-x: auto ovan),
+   men vid 390 px viewport ligger 115 px utanför kanten utan att något antyder
+   det — "Karta" och "Sök" ser ut att inte finnas. Uppmätt 2026-07-27:
+   scrollWidth 473 mot clientWidth 358.
+
+   En toning i högerkanten visar att raden fortsätter. Den ritas bara under
+   520 px, eftersom navet rymms utan scroll däröver (473 px innehåll + 32 px
+   padding ≈ 505 px) och en toning då hade varit en lögn om dolt innehåll. */
+@media (max-width: 520px) {
+    /* Pil, inte toning. Två saker gjorde en ren toning verkningslös här:
+       punkternas bredder summerar av en slump till exakt containerbredden
+       (343 px), så "Karta" får 1 px synligt och toningen har ingen text att
+       tona bort. Pilen fungerar oavsett var snittet hamnar. Toningen ligger
+       kvar bakom pilen så text som scrollas in under den inte kolliderar
+       med glyfen.
+
+       Scrollen kan inte designas bort: de sex punkterna kräver 472 px
+       (281 px text + 6 × 32 px padding) mot 343 px tillgängligt, och att få
+       dem att rymmas kräver 5 px padding-inline vilket ger under 44 px
+       tap-target. Uppmätt 2026-07-27. */
+    .SiteNav::after {
+        content: "›";
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 1px; /* lämna underkantens border synlig */
+        width: 36px;
+        padding-right: 6px;
+        font-size: 1.4rem;
+        line-height: 1;
+        color: var(--color-gray-1);
+        background: linear-gradient(to right, rgba(245, 245, 245, 0), #f5f5f5 45%);
+        pointer-events: none;
+    }
+}
 
 .SiteNav__item {
     /* display: inline-block; */
