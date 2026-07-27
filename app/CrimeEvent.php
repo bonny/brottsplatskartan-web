@@ -165,6 +165,52 @@ class CrimeEvent extends Model implements Feedable {
     }
 
     /**
+     * Kategori → ikongrupp. 65 distinkta parsed_title förekommer på 30 dagar,
+     * så vi matchar på substring i prioritetsordning istället för exakta
+     * värden — nya polis-kategorier hamnar då rätt automatiskt.
+     *
+     * ORDNINGEN ÄR SIGNIFIKANT. Tre överlapp måste lösas av ordningen:
+     *   - "Mordbrand" matchar både "mord" och "brand" → brand före vald
+     *   - "Rattfylleri" matchar "fylleri" → trafik före person
+     *   - "Trafikolycka" matchar "olycka" → trafik före olycka
+     *
+     * @var array<string, array<int, string>>
+     */
+    private const ICON_GROUPS = [
+        'trafik'         => ['trafikolycka', 'trafikkontroll', 'trafikbrott', 'rattfylleri', 'olovlig körning'],
+        'sammanfattning' => ['sammanfattning'],
+        'brand'          => ['brand'],
+        'vald'           => ['misshandel', 'rån', 'våldtäkt', 'mord', 'dråp', 'olaga hot'],
+        'stold'          => ['stöld', 'inbrott', 'skadegörelse'],
+        'person'         => ['försvunnen person', 'fylleri', 'omhändertagande'],
+        'olycka'         => ['arbetsplatsolycka', 'sjöolycka', 'olycka'],
+    ];
+
+    /**
+     * Ikongrupp för händelsen, används av <x-crimeevent.icon> (todo #90).
+     * Returnerar 'ovrigt' när inget matchar — det är ~16 % av volymen, så
+     * fallbacken ska vara en neutral ikon och inte läsas som ett fel.
+     */
+    public function getIconGroup(): string
+    {
+        $title = mb_strtolower($this->parsed_title ?? '');
+
+        if ($title === '') {
+            return 'ovrigt';
+        }
+
+        foreach (self::ICON_GROUPS as $group => $needles) {
+            foreach ($needles as $needle) {
+                if (str_contains($title, $needle)) {
+                    return $group;
+                }
+            }
+        }
+
+        return 'ovrigt';
+    }
+
+    /**
      * Kort URL till statisk kartbild via /k/v1/-routen (todo #55, Alt B).
      * Returnerar 301 till tileservern, browser-cachas immutable 1 år.
      * Mode: 'circle' | 'circle-low' | 'near' | 'far'.
