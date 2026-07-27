@@ -76,7 +76,17 @@
                 @if ($detailed)
                     <span class="Event__parsedTitle Event__type">{{ $event->parsed_title }}</span>
                 @endif
-                <span class="ListEvent__teaser widget__listItem__title">{!! $event->getHeadline() !!}</span>
+                {{-- Rubriken renderas som h3 där listan är sidans huvudinnehåll
+                     (startsidan, som är den enda vy som sätter $teaser). Gamla
+                     hero-komponenten gav 9 h3 där; utan detta har startsidans
+                     "Mest läst" noll rubrikelement för 17 händelser. Sidebar-
+                     och kompaktlistor behåller <span> så de inte förorenar
+                     rubrikhierarkin. --}}
+                @if ($teaser)
+                    <h3 class="ListEvent__teaser widget__listItem__title">{!! $event->getHeadline() !!}</h3>
+                @else
+                    <span class="ListEvent__teaser widget__listItem__title">{!! $event->getHeadline() !!}</span>
+                @endif
             </a>
         </div>
 

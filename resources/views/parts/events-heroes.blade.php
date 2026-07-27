@@ -9,10 +9,6 @@ två gånger i samma lista.
     // intern länkning, inte ett formatbeslut — hålls därför oförändrat.
     $numEventsToShow = 17;
 
-    if (empty($eventsMostViewedRecentlyCrimeEvents)) {
-        return;
-    }
-
     $eventsToShow = $eventsMostViewedRecentlyCrimeEvents->take($numEventsToShow);
 @endphp
 
