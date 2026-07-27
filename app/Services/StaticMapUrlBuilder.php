@@ -31,6 +31,29 @@ class StaticMapUrlBuilder
     ];
 
     /**
+     * Takradie för thumbnails (todo #90). `lan` är 5 000 m vilket auto-zoomar
+     * ut till ren skog i 140 px, och far/veryfar saknar radie helt och föll
+     * förr igenom till closeUpUrl() som ritar en rektangel — annat visuellt
+     * språk mitt i en lista med cirklar.
+     *
+     * Cirkeln blir mindre sann för de ~6 % som kapas: den visar ett snävare
+     * område än precisionen motiverar. Avsiktligt — alternativet för
+     * far-fallet var en rektangel över halva Sverige, vilket inte är
+     * ärligare, bara oläsligt. getMapAltText() och bildtexten på
+     * single-event bär det egentliga "ungefär här"-förbehållet.
+     */
+    private const THUMB_MAX_RADIUS_METERS = 1500;
+
+    /**
+     * Radie att använda för en thumbnail: kapad vid takvärdet, och
+     * takvärdet även när precisionen saknas helt.
+     */
+    public function thumbRadius(?int $radius): int
+    {
+        return min($radius ?? self::THUMB_MAX_RADIUS_METERS, self::THUMB_MAX_RADIUS_METERS);
+    }
+
+    /**
      * Cirkel-variant: röd tonad cirkel runt eventets koordinat, radie från precision.
      * Faller tillbaka på closeUpUrl() om precisionen är för grov (far/veryfar)
      * eller om eventet saknar location_lat.
@@ -49,7 +72,13 @@ class StaticMapUrlBuilder
         }
 
         $radius = self::PRECISION_RADIUS[$event->getViewPortSizeAsString()] ?? null;
-        if ($radius === null) {
+
+        if ($density === 'low') {
+            // Thumbnails: kapa radien och ge cirkeln en garanterad radie även
+            // när precisionen saknas, så vi aldrig hamnar i closeUpUrl():s
+            // rektangel mitt i en cirkel-lista (todo #90).
+            $radius = $this->thumbRadius($radius);
+        } elseif ($radius === null) {
             return $this->closeUpUrl($event, $width, $height, $scale);
         }
 
@@ -61,7 +90,9 @@ class StaticMapUrlBuilder
         $lat = (float) $event->location_lat;
         $lng = (float) $event->location_lng;
 
-        $params = ['latlng=1', 'padding=0.35'];
+        // Högre padding på thumbnails så cirkeln inte fyller rutan och
+        // ortnamnen slutar klippas vid bildkanten. Storbilder är oförändrade.
+        $params = ['latlng=1', 'padding=' . ($density === 'low' ? '0.6' : '0.35')];
         foreach ($this->edgeFadedCirclePaths($lat, $lng, $radius, density: $density) as $path) {
             $params[] = 'path=' . rawurlencode($path);
         }
