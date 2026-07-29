@@ -101,9 +101,8 @@ samma skydd utan att tappa dem.
 brödtexten blev `''` och metoden svarade false. Byten skrubbas nu med
 `mb_convert_encoding()` före normaliseringen.
 
-Utfall efter ändringarna, hela historiken: **4 240** fångade — 4 238 `ovrigt`
-
-- 2 `sammanfattning`, **noll** brottskategorier.
+Utfall efter ändringarna, hela historiken: **4 240** fångade, fördelat på
+`ovrigt` (4 238) och `sammanfattning` (2) — **noll** brottskategorier.
 
 ## Utfört
 
@@ -113,6 +112,9 @@ Utfall efter ändringarna, hela historiken: **4 240** fångade — 4 238 `ovrigt
 - [x] Backfill på prod: backup `prod-2026-07-29-092228.sql.gz` → dry-run
       `--since=400` (191 träffar, samtliga "Mediecenter-information") → `--apply`
 - [x] `responsecache:clear`
+- [x] Code-review-uppföljning deployad `980540a`, andra backfillen
+      (`prod-2026-07-29-104020.sql.gz`) tog **6** till — två press-meddelanden
+      × tre län, varav ett med tom `parsed_content`
 
 ## Resultat på prod (2026-07-29)
 
