@@ -1,6 +1,6 @@
 # 98 – Filtrera bort mediecenter-/press-administrativa händelser
 
-**Status:** aktiv
+**Status:** klar 2026-07-29
 **Senast uppdaterad:** 2026-07-29
 
 ## Problem
@@ -66,9 +66,36 @@ två gränsfall hamnade på fel sida. Rätt konvertering är
 `mb_strlen(substr($text, 0, $byteOffset))`. Implementationen gör så, och
 mätskriptet speglar kodvägen exakt.
 
-## Kvar att göra
+## Utfört
 
-- [x] `isMediaCenterInfo()` + test med verkliga prod-texter
+- [x] `isMediaCenterInfo()` + test med verkliga prod-texter (15 tester)
 - [x] `getFilterReason()` publik, `CheckEventPublicity` slutar duplicera kedjan
-- [ ] Backfill på prod: backup → `--since=400` dry-run → `--apply`
-- [ ] `responsecache:clear` så cachade 200-svar inte fortsätter serveras
+- [x] Deployad `2c9b063`
+- [x] Backfill på prod: backup `prod-2026-07-29-092228.sql.gz` → dry-run
+      `--since=400` (191 träffar, samtliga "Mediecenter-information") → `--apply`
+- [x] `responsecache:clear`
+
+## Resultat på prod (2026-07-29)
+
+**191 sidor** markerade `is_public = false` — 107 `Övrigt`, 82 `Information`,
+2 `Sammanfattning natt`. Ingen brottskategori i listan.
+
+Verifierat efter backfill:
+
+- De tre startsidorna för RMC-meddelandet ger nu **404**
+- Samtliga tio stickprovade riktiga händelser är kvar publika (mordet vid
+  moskén, rånen i Huskvarna, Junegatan-branden, misshandeln på anstalten,
+  Södermanland-stölderna, nattsammanfattningarna, trafikkontrollveckan)
+- **22** publika träffar på pressfrasen återstår över 400 dagar — alla riktiga
+  händelser med press-fotnot, plus två nattsammanfattningar där press-texten
+  står först men riktiga händelser följer efter
+
+Nya händelser filtreras automatiskt: `crimeevents:fetch` kör
+`markEventsAsNonPublic(1)` efter varje hämtning.
+
+## Uppföljning
+
+Volymen är ~0,5 press-meddelanden per dygn (3 län × varannan dag). Om polisen
+byter formulering slutar filtret träffa utan att något larmar. Kontrollera vid
+nästa GSC-genomgång att `Information`/`Övrigt` inte kryper tillbaka i
+indexerade sidor (hör ihop med #29).
