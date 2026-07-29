@@ -71,17 +71,11 @@ class CheckEventPublicity extends Command
                 $event->save();
                 
                 $updatedCount++;
-                $reason = 'Okänd anledning';
-                if ($contentFilterService->isPressNotice($event)) {
-                    $reason = 'Presstalesperson-meddelande';
-                } elseif ($contentFilterService->isPhoneNumberInfo($event)) {
-                    $reason = 'Pressnummer-information';
-                }
-                
+
                 $updatedEvents[] = [
                     'id' => $event->id,
                     'title' => $event->title,
-                    'reason' => $reason
+                    'reason' => $contentFilterService->getFilterReason($event)
                 ];
             }
             
@@ -138,17 +132,10 @@ class CheckEventPublicity extends Command
                 $this->table(
                     ['ID', 'Titel', 'Anledning'],
                     $eventsToUpdate->map(function ($event) use ($contentFilterService) {
-                        $reason = 'Okänd';
-                        if ($contentFilterService->isPressNotice($event)) {
-                            $reason = 'Presstalesperson-meddelande';
-                        } elseif ($contentFilterService->isPhoneNumberInfo($event)) {
-                            $reason = 'Pressnummer-information';
-                        }
-                        
                         return [
                             $event->id,
                             Str::limit($event->title, 50),
-                            $reason
+                            $contentFilterService->getFilterReason($event)
                         ];
                     })->toArray()
                 );

@@ -29,9 +29,71 @@ class ContentFilterService
             return false;
         }
 
+        if ($this->isMediaCenterInfo($event)) {
+            return false;
+        }
+
         // Lägg till fler filter här i framtiden
 
         return true;
+    }
+
+    /**
+     * Frasen måste stå inom så här många tecken från början av brödtexten.
+     * Rena press-meddelanden inleds med den; riktiga händelser har den som
+     * fotnot (mordet vid moskén i Örebro: offset 834).
+     *
+     * 300 ligger mitt i en glugg: allt skräp vi hittat har offset <= 269,
+     * närmaste riktiga händelse ligger på 483. Mätt på prod 2026-07-29 gav
+     * 300, 350 och 400 identiskt utfall — gränsen är alltså inte känslig.
+     */
+    private const MEDIA_CENTER_MAX_OFFSET = 300;
+
+    /**
+     * Brödtext längre än så här är en riktig händelse. Uppmätt på prod
+     * 2026-07-29: rena press-meddelanden är 42–554 tecken, riktiga
+     * händelser med press-fotnot 630–2 473.
+     */
+    private const MEDIA_CENTER_MAX_LENGTH = 600;
+
+    /**
+     * Identifierar meddelanden om polisens regionala mediecenter (RMC) —
+     * öppettider, telefonnummer, mejladresser. Ingen händelse, ingen plats,
+     * inget av värde för besökaren.
+     *
+     * OBS: fraserna räcker INTE som ensamt kriterium. Riktiga händelser
+     * avslutas ofta med "Frågor hänvisas till media.ost@polisen.se" —
+     * verifierat på mordet i Örebro, rånen i Huskvarna och branden på
+     * Junegatan. Därför krävs dessutom att frasen står tidigt OCH att
+     * brödtexten är kort. Se tests/Unit/ContentFilterServiceTest.php.
+     */
+    public function isMediaCenterInfo(CrimeEvent $event): bool
+    {
+        $text = trim(preg_replace('/\s+/u', ' ', strip_tags($event->parsed_content ?? '')) ?? '');
+
+        if ($text === '') {
+            return false;
+        }
+
+        if (mb_strlen($text) >= self::MEDIA_CENTER_MAX_LENGTH) {
+            return false;
+        }
+
+        $pattern = '/(regionalt|regionala) media(c|ec)ent'
+            . '|\bRMC\b'
+            . '|media\.[a-z]+@polisen\.se'
+            . '|mediafrågor'
+            . '|medieförfrågningar/iu';
+
+        if (preg_match($pattern, $text, $matches, PREG_OFFSET_CAPTURE) !== 1) {
+            return false;
+        }
+
+        // PREG_OFFSET_CAPTURE ger byte-offset, inte tecken — åäö gör dem
+        // olika och gränsen ovan är räknad i tecken.
+        $offset = mb_strlen(substr($text, 0, $matches[0][1]));
+
+        return $offset < self::MEDIA_CENTER_MAX_OFFSET;
     }
 
     /**
@@ -195,11 +257,12 @@ class ContentFilterService
 
     /**
      * Returnerar anledning till varför en händelse filtrerades.
+     * Publik så att CheckEventPublicity slipper duplicera kedjan.
      *
      * @param CrimeEvent $event
      * @return string
      */
-    private function getFilterReason(CrimeEvent $event): string
+    public function getFilterReason(CrimeEvent $event): string
     {
         if ($this->isPressNotice($event)) {
             return 'Presstalesperson-meddelande';
@@ -207,6 +270,10 @@ class ContentFilterService
 
         if ($this->isPhoneNumberInfo($event)) {
             return 'Pressnummer-information';
+        }
+
+        if ($this->isMediaCenterInfo($event)) {
+            return 'Mediecenter-information';
         }
 
         return 'Okänd anledning';
