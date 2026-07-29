@@ -43,7 +43,7 @@ i `ContentFilterService` redan varnar för (`undvik breda mönster som
 
 ## Lösning
 
-`ContentFilterService::isMediaCenterInfo()` kräver **alla tre**:
+`ContentFilterService::isMediaCenterInfo()` kräver **alla fyra**:
 
 1. Ikongruppen är `ovrigt` eller `sammanfattning` — aldrig en brottskategori
 2. Pressfras matchar: `regionalt/regionala media(c|ec)ent`, `\bRMC\b`,
@@ -118,8 +118,10 @@ Utfall efter ändringarna, hela historiken: **4 240** fångade, fördelat på
 
 ## Resultat på prod (2026-07-29)
 
-**191 sidor** markerade `is_public = false` — 107 `Övrigt`, 82 `Information`,
-2 `Sammanfattning natt`. Ingen brottskategori i listan.
+**197 sidor** markerade `is_public = false` totalt: 191 i första passet
+(107 `Övrigt`, 82 `Information`, 2 `Sammanfattning natt`) plus 6 i andra passet
+efter code-review-fixarna (samtliga `Övrigt`). Ingen brottskategori i någon
+av listorna.
 
 Verifierat efter backfill:
 
