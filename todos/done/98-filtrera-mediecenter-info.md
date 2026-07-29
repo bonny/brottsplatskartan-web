@@ -45,10 +45,13 @@ i `ContentFilterService` redan varnar för (`undvik breda mönster som
 
 `ContentFilterService::isMediaCenterInfo()` kräver **alla tre**:
 
-1. Pressfras matchar: `regionalt/regionala media(c|ec)ent`, `\bRMC\b`,
+1. Ikongruppen är `ovrigt` eller `sammanfattning` — aldrig en brottskategori
+2. Pressfras matchar: `regionalt/regionala media(c|ec)ent`, `\bRMC\b`,
    `media.x@polisen.se`, `mediafrågor`, `medieförfrågningar`
-2. Första träffen inom **300 tecken** från textens början
-3. Brödtexten (efter `strip_tags` + kollapsad whitespace) **< 600 tecken**
+3. Första träffen inom **300 tecken** från textens början
+4. Brödtexten (efter `strip_tags` + kollapsad whitespace) **< 600 tecken**
+
+Testet körs mot `parsed_content` och, om det inte träffar, mot `description`.
 
 Utfall: **182 av 203** filtreras, **noll** falska positiva mot 17 manuellt
 verifierade riktiga händelser. Trösklarna ligger i en glugg — allt uppmätt
@@ -65,6 +68,42 @@ med `mb_substr()`, som räknar tecken. Med åäö blir offseten övervärderad, 
 två gränsfall hamnade på fel sida. Rätt konvertering är
 `mb_strlen(substr($text, 0, $byteOffset))`. Implementationen gör så, och
 mätskriptet speglar kodvägen exakt.
+
+## Efter code-review (2026-07-29)
+
+Granskningen hittade tre saker. Alla mätta mot hela lokala datasetet
+(~500 k events, hela historiken) genom att anropa `isMediaCenterInfo()`
+direkt i stället för att skriva om logiken i mätskriptet.
+
+**1. `parsed_content` ensamt räckte inte.** Fältet skrapas från polisen.se och
+blir NULL för alltid om skrapningen fallerar en gång: `parseItem()` ignorerar
+`'ERROR'` från `parseItemContentAndUpdateIfChanges()`
+(`FeedController.php:414`), `parseItemForLocations()` sätter
+`scanned_for_locations = true` ändå (`:369`), och `FetchEvents.php:61`
+plockar bara upp rader med `scanned_for_locations = 0`. `description` sätts
+vid insert från JSON-API:t (`FeedController.php:514`) och finns alltid.
+Fallback dit fångar **125** fler, varav 64 har tom `parsed_content`. Att också
+skanna `title` gav noll extra träffar — utelämnat.
+
+**2. Korta riktiga händelser med mediefotnot kunde döljas.** Ett verkligt fall
+i historiken: event 152427 (`Brand`, Ullevigaraget, 348 tecken, frasen på
+offset 240) föll innanför båda gränserna. Skyddet är brottskategorin — polisen
+filar press-meddelanden som Information/Övrigt eller Sammanfattning, aldrig som
+Brand. `getIconGroup()` måste nu vara `ovrigt` eller `sammanfattning`.
+
+Granskaren föreslog i stället att stryka `mediafrågor`/`medieförfrågningar`
+som "minst nytta, mest risk". Mätningen säger emot: de är ensam bärare för
+**128** träffar (125 + 3) över hela historiken, inte 17. Kategorigrinden ger
+samma skydd utan att tappa dem.
+
+**3. Ogiltig UTF-8 gjorde kontrollen tyst verkningslös.** `preg_replace` och
+`preg_match` med `/u` returnerar `null`/`false` på en enda latin-1-byte →
+brödtexten blev `''` och metoden svarade false. Byten skrubbas nu med
+`mb_convert_encoding()` före normaliseringen.
+
+Utfall efter ändringarna, hela historiken: **4 240** fångade — 4 238 `ovrigt`
+
+- 2 `sammanfattning`, **noll** brottskategorier.
 
 ## Utfört
 

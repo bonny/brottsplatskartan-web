@@ -57,6 +57,19 @@ class ContentFilterService
     private const MEDIA_CENTER_MAX_LENGTH = 600;
 
     /**
+     * Ikongrupper där press-meddelanden får förekomma. Polisen filar dem
+     * som Information/Övrigt (→ `ovrigt`) eller Sammanfattning natt.
+     *
+     * Allt annat är en brottskategori och undantas: en kort riktig händelse
+     * som avslutas med "Mediafrågor hänvisas till …" hamnar annars innanför
+     * både längd- och positionsgränsen. Verkligt fall är event 152427
+     * (Brand, Ullevigaraget, 348 tecken, frasen på offset 240).
+     *
+     * @var array<int, string>
+     */
+    private const MEDIA_CENTER_ALLOWED_GROUPS = ['ovrigt', 'sammanfattning'];
+
+    /**
      * Identifierar meddelanden om polisens regionala mediecenter (RMC) —
      * öppettider, telefonnummer, mejladresser. Ingen händelse, ingen plats,
      * inget av värde för besökaren.
@@ -64,18 +77,38 @@ class ContentFilterService
      * OBS: fraserna räcker INTE som ensamt kriterium. Riktiga händelser
      * avslutas ofta med "Frågor hänvisas till media.ost@polisen.se" —
      * verifierat på mordet i Örebro, rånen i Huskvarna och branden på
-     * Junegatan. Därför krävs dessutom att frasen står tidigt OCH att
-     * brödtexten är kort. Se tests/Unit/ContentFilterServiceTest.php.
+     * Junegatan. Därför krävs dessutom att brottskategorin är neutral, att
+     * frasen står tidigt OCH att brödtexten är kort.
+     * Se tests/Unit/ContentFilterServiceTest.php.
      */
     public function isMediaCenterInfo(CrimeEvent $event): bool
     {
-        $text = trim(preg_replace('/\s+/u', ' ', strip_tags($event->parsed_content ?? '')) ?? '');
-
-        if ($text === '') {
+        if (! in_array($event->getIconGroup(), self::MEDIA_CENTER_ALLOWED_GROUPS, true)) {
             return false;
         }
 
-        if (mb_strlen($text) >= self::MEDIA_CENTER_MAX_LENGTH) {
+        // parsed_content skrapas från polisen.se och blir NULL för alltid om
+        // skrapningen fallerar en gång: parseItem() ignorerar 'ERROR' från
+        // parseItemContentAndUpdateIfChanges() och parseItemForLocations()
+        // sätter scanned_for_locations ändå, så raden plockas aldrig upp
+        // igen. description kommer från JSON-API:t och finns alltid.
+        foreach ([$event->parsed_content, $event->description] as $rått) {
+            if ($this->ärMediecenterText($rått)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Kärnan i mediecenter-testet, körd mot ett enskilt textfält.
+     */
+    private function ärMediecenterText(?string $rått): bool
+    {
+        $text = $this->normalisera($rått);
+
+        if ($text === '' || mb_strlen($text) >= self::MEDIA_CENTER_MAX_LENGTH) {
             return false;
         }
 
@@ -94,6 +127,18 @@ class ContentFilterService
         $offset = mb_strlen(substr($text, 0, $matches[0][1]));
 
         return $offset < self::MEDIA_CENTER_MAX_OFFSET;
+    }
+
+    /**
+     * Tar bort HTML och kollapsar whitespace. Ogiltiga byte skrubbas först —
+     * annars returnerar både preg_replace och preg_match med /u null/false
+     * på en enda latin-1-byte, och hela kontrollen blir tyst verkningslös.
+     */
+    private function normalisera(?string $rått): string
+    {
+        $text = mb_convert_encoding(strip_tags($rått ?? ''), 'UTF-8', 'UTF-8');
+
+        return trim(preg_replace('/\s+/u', ' ', $text) ?? '');
     }
 
     /**

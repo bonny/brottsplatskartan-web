@@ -26,6 +26,11 @@ class ContentFilterServiceTest extends TestCase
         return (new ContentFilterService())->isMediaCenterInfo($event);
     }
 
+    private function filtrerasHändelse(CrimeEvent $event): bool
+    {
+        return (new ContentFilterService())->isMediaCenterInfo($event);
+    }
+
     /**
      * Rena press-administrativa meddelanden — ingen händelse, bara
      * mediecentrets öppettider. Ska döljas.
@@ -182,6 +187,69 @@ class ContentFilterServiceTest extends TestCase
             . 'media.bergslagen@polisen.se';
 
         $this->assertFalse((new ContentFilterService())->shouldBePublic($event));
+    }
+
+    /**
+     * En kort riktig händelse som avslutas med en mediehänvisning hamnar
+     * innanför både längd- och positionsgränsen. Skyddet är brottskategorin:
+     * pressmeddelanden filas alltid som Information/Övrigt, aldrig som Brand.
+     *
+     * Verkligt fall, event 152427 — hela texten är 348 tecken och frasen
+     * står på offset 240.
+     */
+    public function testKortBrandhändelseMedMediehänvisningSläppsIgenom(): void
+    {
+        $event = new CrimeEvent();
+        $event->parsed_title = 'Brand';
+        $event->parsed_content = 'Enligt SOS så är det rökutveckling/brand från '
+            . 'Ullevigaraget. Räddningstjänst och polis larmas till platsen. Ännu '
+            . 'oklart om det finns personer i garaget eller personskador. Kl 12.43: '
+            . 'Polis på plats. Lyder under räddningstjänsten i insatsen. Mediafrågor '
+            . 'hänvisas till räddningstjänsten. Det visar sig röra sig om en bil med '
+            . 'motorproblem, ingen brand.';
+
+        $this->assertFalse($this->filtrerasHändelse($event));
+    }
+
+    public function testNattsammanfattningFårFortfarandeFiltreras(): void
+    {
+        $event = new CrimeEvent();
+        $event->parsed_title = 'Sammanfattning natt';
+        $event->parsed_content = 'Idag, onsdag den 29 juli, är RMC stängt. Det går '
+            . 'alltid att mejla till media.bergslagen@polisen.se.';
+
+        $this->assertTrue($this->filtrerasHändelse($event));
+    }
+
+    /**
+     * parsed_content skrapas från polisen.se och blir NULL för alltid om
+     * skrapningen fallerar en gång — parseItem() ignorerar 'ERROR' och
+     * parseItemForLocations() sätter scanned_for_locations ändå, så raden
+     * plockas aldrig upp igen. description kommer från JSON-API:t och
+     * finns alltid.
+     */
+    public function testFallerTillbakaPåDescriptionNärParsedContentSaknas(): void
+    {
+        $event = new CrimeEvent();
+        $event->parsed_title = 'Information';
+        $event->parsed_content = null;
+        $event->description = 'Idag är RMC, Regionalt mediecenter, stängt. '
+            . 'Det går alltid att mejla till media.bergslagen@polisen.se.';
+
+        $this->assertTrue($this->filtrerasHändelse($event));
+    }
+
+    /**
+     * preg_replace med /u returnerar null på ogiltig UTF-8. Utan fallback
+     * blir brödtexten tom och hela kontrollen tyst verkningslös.
+     */
+    public function testOgiltigUtf8VoidarInteKontrollen(): void
+    {
+        $event = new CrimeEvent();
+        $event->parsed_title = 'Information';
+        $event->parsed_content = "Idag är RMC st\xE4ngt. Mejla media.bergslagen@polisen.se";
+
+        $this->assertTrue($this->filtrerasHändelse($event));
     }
 
     public function testFilteranledningNämnerMediecenter(): void
