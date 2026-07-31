@@ -60,16 +60,56 @@ if [ "$TILES_CHANGED" = "1" ]; then
 	$DC restart tileserver
 fi
 
-# Restart Caddy (Caddyfile är bind-mount → up -d recreatar inte
-# containern när filen ändrats, och 'caddy reload' har visat sig
-# opålitligt i vår setup). Hård restart tar <1s och är säker.
-echo "→ docker compose restart caddy"
-$DC restart caddy
+# Caddy startas om BARA när dess konfiguration faktiskt ändrats.
+#
+# Tidigare kördes restart vid varje deploy. Caddy terminerar all trafik,
+# så under omstarten svarar sajten inte alls — connection refused, inte
+# 502. Uppmätt i Caddy-loggen: 2–13 s per deploy, 16 avbrott på sju dygn
+# (2026-07-31). Kommentaren som stod här påstod "<1s", vilket inte stämde.
+#
+# Caddyfile är bind-mount, så 'up -d' ovan recreatar inte containern när
+# filen ändrats — därför behövs restart när den gör det. Två källor kan
+# ändra konfigurationen:
+#
+#   1. deploy/Caddyfile i det här repot.
+#   2. /opt/caddy-sites.d/*.caddy, som deployas av static-sites-repots
+#      egen GitHub Action. Den rör inte vår container, så den ovillkorliga
+#      omstarten var i praktiken det som fick nya snippets att slå igenom.
+#      Checksumman nedan bevarar den effekten utan att kosta nertid varje
+#      deploy (snippets ändras ett par gånger om året).
+CADDY_SITES_STATE=/opt/brottsplatskartan/.caddy-sites.sha256
+CADDY_SITES_SUM=$( { find /opt/caddy-sites.d -maxdepth 1 -name '*.caddy' -type f \
+	-exec sha256sum {} + 2>/dev/null || true; } | sort | sha256sum | cut -d' ' -f1)
 
-# Restart nginx-tiles alltid (samma logik som caddy — bind-mount +
-# reload har visat sig opålitligt).
-echo "→ docker compose restart nginx-tiles"
-$DC restart nginx-tiles
+CADDY_NEEDS_RESTART=0
+CADDY_REASON=""
+if [ "$PREV_SHA" = "none" ]; then
+	CADDY_NEEDS_RESTART=1
+	CADDY_REASON="okänt föregående commit"
+elif ! git diff "$PREV_SHA" "$NEW_SHA" --quiet -- deploy/Caddyfile; then
+	CADDY_NEEDS_RESTART=1
+	CADDY_REASON="deploy/Caddyfile ändrad"
+elif [ "$CADDY_SITES_SUM" != "$(cat "$CADDY_SITES_STATE" 2>/dev/null || true)" ]; then
+	CADDY_NEEDS_RESTART=1
+	CADDY_REASON="/opt/caddy-sites.d ändrad"
+fi
+
+if [ "$CADDY_NEEDS_RESTART" = "1" ]; then
+	echo "→ docker compose restart caddy ($CADDY_REASON)"
+	$DC restart caddy
+else
+	echo "→ Skippar caddy-restart (ingen konfigändring — noll nertid)"
+fi
+printf '%s\n' "$CADDY_SITES_SUM" >"$CADDY_SITES_STATE"
+
+# Samma logik för nginx-tiles: bind-mountad config, reload opålitlig.
+# Enda källan är repot, så ingen checksumma behövs.
+if [ "$PREV_SHA" = "none" ] || ! git diff "$PREV_SHA" "$NEW_SHA" --quiet -- deploy/nginx-tiles.conf; then
+	echo "→ docker compose restart nginx-tiles (config ändrad)"
+	$DC restart nginx-tiles
+else
+	echo "→ Skippar nginx-tiles-restart (ingen konfigändring)"
+fi
 
 # AUTORUN fixar config/route/view cache vid restart
 echo "→ docker compose restart app scheduler"

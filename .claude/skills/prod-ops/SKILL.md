@@ -23,22 +23,36 @@ description: Drift av produktionsservern på Hetzner — deploy, rollback, artis
    `restart app scheduler` → skriver `deploy.json` → `responsecache:clear`
 4. AUTORUN i containern kör `storage:link` + cache-warmup
 
-### ⚠️ Varje deploy ger 2–13 sekunders nertid
+### Nertid vid deploy — åtgärdat 2026-07-31
 
-`deploy.sh` kör `docker compose restart caddy` **ovillkorligt** vid varje
-deploy. Caddy terminerar all trafik, så under omstarten svarar sajten inte
-alls (connection refused — inte 502). Mätt utfall: 2–13 s per deploy.
+Fram till `c468ccd` startade `deploy.sh` om Caddy **ovillkorligt** vid
+varje deploy. Caddy terminerar all trafik, så sajten svarade inte alls
+under omstarten — connection refused, inte 502. Uppmätt i Caddy-loggen:
+**2–13 s per deploy, 16 avbrott på sju dygn**.
 
-Dessutom körs `responsecache:clear` sist, så cachen är kall efter varje
-deploy och första trafiken går rakt på DB.
+Numera startas Caddy och nginx-tiles om **bara när deras konfiguration
+ändrats** (`deploy/Caddyfile`, `deploy/nginx-tiles.conf`, eller snippets i
+`/opt/caddy-sites.d` — det sista via en checksumma i
+`/opt/brottsplatskartan/.caddy-sites.sha256`). En vanlig kod- eller
+docs-deploy ger därför **noll** nertid från Caddy.
 
-**Konsekvens:** många små pushar i rad = många korta avbrott. Under en dag
-med 10 deployer ligger sajten nere 10 gånger. Samla ihop ändringar till
-färre deployer, eller deploya utanför trafiktopp, när det går.
+Deployen loggar vilket den valde:
 
-Kommentaren i `deploy.sh` påstår "<1s" — det stämmer inte, mät i
-Caddy-loggen (se [docs/loggar.md](../../../docs/loggar.md), receptet för
-nertidsfönster) innan du litar på siffran.
+```
+→ Skippar caddy-restart (ingen konfigändring — noll nertid)
+→ docker compose restart caddy (deploy/Caddyfile ändrad)
+```
+
+Kvar att veta:
+
+- `restart app scheduler` körs fortfarande alltid — nödvändigt för att ny
+  PHP-kod ska laddas. Det ger kortvariga 502:or via Caddy, inte
+  connection refused.
+- `responsecache:clear` körs sist, så cachen är kall efter varje deploy
+  och första trafiken går rakt på DB.
+
+Mät alltid i Caddy-loggen innan du litar på en siffra om nertid — se
+[docs/loggar.md](../../../docs/loggar.md), receptet för nertidsfönster.
 
 ## Manuell deploy
 
