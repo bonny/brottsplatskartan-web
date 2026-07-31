@@ -33,4 +33,28 @@ class RedisCompressionConfigTest extends TestCase
             . 'och INCRBY returnerar false. RateLimiter slutar då räkna — tyst.'
         );
     }
+
+    /**
+     * Konfigurationen ovan räcker inte — phpredis måste också stödja
+     * optionerna. Laravels PhpRedisConnector sätter bara
+     * OPT_PACK_IGNORE_NUMBERS om konstanten finns (phpredis ≥ 6.0):
+     * med en äldre phpredis i basimagen slås komprimeringen på medan
+     * pack_ignore_numbers tyst hoppas över — exakt scenariot som dödar
+     * rate limiting. Utan ZSTD i bygget kraschar dessutom
+     * config/database.php redan vid inläsning.
+     */
+    public function test_phpredis_stodjer_optionerna(): void
+    {
+        $this->assertTrue(
+            defined('Redis::COMPRESSION_ZSTD'),
+            'phpredis är byggt utan ZSTD — config/database.php går inte att läsa in.'
+        );
+
+        $this->assertTrue(
+            defined('Redis::OPT_PACK_IGNORE_NUMBERS'),
+            'phpredis saknar OPT_PACK_IGNORE_NUMBERS (kräver ≥ 6.0). Laravel '
+            . 'hoppar då tyst över optionen medan komprimeringen är på — '
+            . 'INCRBY slutar fungera och rate limiting dör utan felmeddelande.'
+        );
+    }
 }

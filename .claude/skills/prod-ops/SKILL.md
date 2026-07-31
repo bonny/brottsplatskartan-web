@@ -19,7 +19,8 @@ description: Drift av produktionsservern på Hetzner — deploy, rollback, artis
 2. GitHub Actions triggar → SSH till Hetzner
 3. `deploy.sh` kör: `git fetch/checkout main` → villkorlig `composer install`
    (om lock ändrats) → villkorlig `artisan migrate` (om nya migrationer) →
-   `docker compose up -d` → **`restart caddy`** → `restart nginx-tiles` →
+   `docker compose up -d` → **villkorlig** `restart caddy` +
+   `restart nginx-tiles` (bara vid konfigändring, se nästa avsnitt) →
    `restart app scheduler` → skriver `deploy.json` → `responsecache:clear`
 4. AUTORUN i containern kör `storage:link` + cache-warmup
 

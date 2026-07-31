@@ -107,7 +107,11 @@ Varje STOPP→START-par är ett avbrott (typiskt 2–13 s). Tidsstämplarna är 
 Skilj på orsakerna:
 
 - **Par som matchar commit-tider (+2 h)** → deployen själv, se
-  `deploy/deploy.sh` som kör `docker compose restart caddy` vid varje push.
+  `deploy/deploy.sh`. Fram till 2026-07-31 kördes
+  `docker compose restart caddy` vid _varje_ push; numera bara när
+  `deploy/Caddyfile` eller `/opt/caddy-sites.d` ändrats. Ser du ett par vid
+  en vanlig kod-deploy efter det datumet är det alltså inte deployen —
+  leta vidare bland orsakerna nedan.
 - **Alla containrar startade samtidigt, `RestartCount=0`** → docker-daemonen
   startade om (t.ex. paketuppgradering). Verifiera med
   `sudo journalctl -u docker.service --since "8 days ago" | grep -i "Stopping\|Starting"`.
