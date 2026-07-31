@@ -1,4 +1,5 @@
-**Status:** aktiv — implementerad 2026-07-31, ej deployad. Uppföljning 2026-08-07.
+**Status:** aktiv — **deployad 2026-07-31** (`f5bd1c7`), verifierad på prod.
+Uppföljning 2026-08-07.
 **Senast uppdaterad:** 2026-07-31
 
 # Todo #99 — Komprimera responscachen + undanta sitemaps
@@ -140,16 +141,20 @@ bara komprimering — den beniga delmängden — och phpredis fallback är
 verifierad.
 
 **Men luta dig inte på fallbacken när auktoritativa källor säger flusha.**
-`deploy/deploy.sh` kör redan `responsecache:clear` (täcker ~78 %). Kör
-dessutom en engångs-`cache:clear` direkt efter den här deployen:
+
+**Åtgärdat vid deploy 2026-07-31 21:15** — deployen körde en full
+cache-rensning (både `cache:clear` och `responsecache:clear`, bekräftat i
+`redis:health`: använt minne föll till 3,67 MB). Vi lutar oss alltså inte
+på fallbacken; hela cachen byggdes upp komprimerad från noll.
+
+Om komprimeringen någon gång ändras igen — annan algoritm, eller en
+serializer läggs till — gör samma sak medvetet:
 
 ```bash
 ssh deploy@brottsplatskartan.se
 cd /opt/brottsplatskartan
 docker compose exec -T app php artisan cache:clear
 ```
-
-Kostar en kall cache i några minuter och tar bort hela frågan.
 
 ### 2. Undanta sitemaps från responscachen
 
