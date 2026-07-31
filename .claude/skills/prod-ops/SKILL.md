@@ -54,6 +54,24 @@ Kvar att veta:
 Mät alltid i Caddy-loggen innan du litar på en siffra om nertid — se
 [docs/loggar.md](../../../docs/loggar.md), receptet för nertidsfönster.
 
+### ⚠️ Ändringar i `deploy.sh` gäller först vid NÄSTA deploy
+
+`deploy.sh` uppdaterar sig själv mitt i sin egen körning: GitHub Actions
+startar den version som ligger på servern, och scriptets `git checkout`
+byter sedan ut filen. Git skriver en ny fil och byter namn (ny inode), så
+den körande bash-processen behåller sin filedeskriptor mot den **gamla**
+filen och kör den klart.
+
+Konsekvens: en deploy som ändrar `deploy.sh` kör fortfarande gammal logik.
+Den nya gäller från deployen därefter. Verifierat 2026-07-31 (`2fdbc89`)
+— loggen visade gamla meddelanden trots att nya scriptet låg på disk.
+
+Slutsatsen när du felsöker: läs alltid **loggen** från körningen, inte bara
+filen på disk. De kan visa olika saker precis efter en ändring av scriptet.
+
+(Att git byter inode är för övrigt tur — hade filen skrivits över på plats
+kunde bash läst vidare från fel byteoffset i den nya koden.)
+
 ## Manuell deploy
 
 ```bash
