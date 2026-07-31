@@ -229,12 +229,29 @@ cd /opt/brottsplatskartan
 docker compose exec -T app php artisan redis:health
 ```
 
-| Mått         | Före (2026-07-31) | Mål      |
-| ------------ | ----------------- | -------- |
-| Använt minne | 1,93 GB           | < 800 MB |
-| Peak / max   | 105,1 %           | < 40 %   |
-| Evicted keys | 135 979 / 26 h    | 0        |
-| Hit rate     | 95,2 %            | ≥ 96 %   |
+Räknarna nollställdes med `CONFIG RESETSTAT` direkt efter deploy
+2026-07-31 21:17, så allt nedan mäter **enbart perioden efter ändringen**.
+Ingen Redis-omstart gjordes — den hade kostat ett kort avbrott (30 juli
+gav en omstart 35 `LOADING`-fel mot riktiga requests) och `RESETSTAT`
+räcker för de mått som betyder något. Verifierat att den nollställer
+eviction-räknaren: 133 → 0 i lokalt test med påtvingad eviction.
+
+| Mått             | Utgångsläge (före ändring)  | Grind 2026-08-07 |
+| ---------------- | --------------------------- | ---------------- |
+| **Använt nu**    | 1,93 GB                     | **< 800 MB**     |
+| **Evicted keys** | 135 979 / 26 h → nollställd | **0**            |
+| Hit rate         | 95,2 % (utspädd)            | ≥ 96 %           |
+| Peak / max       | 105,1 %                     | **ignoreras**    |
+
+`Använt nu` är huvudmåttet. `Evicted keys` ska vara ett rent nollvärde —
+allt annat betyder att taket fortfarande nås.
+
+**Peak/max och fragmentation ratio ska ignoreras.** `used_memory_peak`
+nollställs inte av `RESETSTAT` utan bara av en omstart, så
+`redis:health` kommer fortsätta varna om 105,1 % tills Redis startar om
+naturligt. Fragmentation ratio var 11,26 direkt efter cache-rensningen —
+en artefakt av att allokatorn ännu inte lämnat tillbaka minne, den
+normaliseras när cachen fyllts på.
 
 Kolla även att inga cache-/serialiseringsfel dykt upp sedan deploy:
 
