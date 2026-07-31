@@ -35,6 +35,14 @@ class BrottsplatskartanCacheProfile extends CacheAllSuccessfulGetRequests
      */
     public function shouldCacheRequest(Request $request): bool
     {
+        // Sitemaps cachas redan i Redis av sitemap:generate och servas
+        // därifrån av SitemapController::serveCached(). Responscachen
+        // lagrade en andra kopia av samma XML — den största posten var
+        // 26 MB, vilket ensamt motsvarade ~1,4 % av Redis-taket.
+        if ($request->is('sitemap.xml') || $request->is('sitemap-*.xml')) {
+            return false;
+        }
+
         if ($request->is('plats/*/handelser/*') || $request->is('lan/*/handelser/*')) {
             $date = $this->extractDateFromUrl($request->path());
             if (!$date || $date->diffInDays(now()) > 30) {

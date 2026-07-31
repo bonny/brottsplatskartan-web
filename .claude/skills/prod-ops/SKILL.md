@@ -17,8 +17,28 @@ description: Drift av produktionsservern på Hetzner — deploy, rollback, artis
 
 1. `git push origin main`
 2. GitHub Actions triggar → SSH till Hetzner
-3. `deploy.sh` kör: `git pull` → villkorlig `composer install` (om lock ändrats) → villkorlig `artisan migrate` (om nya migrationer) → `docker compose restart app`
+3. `deploy.sh` kör: `git fetch/checkout main` → villkorlig `composer install`
+   (om lock ändrats) → villkorlig `artisan migrate` (om nya migrationer) →
+   `docker compose up -d` → **`restart caddy`** → `restart nginx-tiles` →
+   `restart app scheduler` → skriver `deploy.json` → `responsecache:clear`
 4. AUTORUN i containern kör `storage:link` + cache-warmup
+
+### ⚠️ Varje deploy ger 2–13 sekunders nertid
+
+`deploy.sh` kör `docker compose restart caddy` **ovillkorligt** vid varje
+deploy. Caddy terminerar all trafik, så under omstarten svarar sajten inte
+alls (connection refused — inte 502). Mätt utfall: 2–13 s per deploy.
+
+Dessutom körs `responsecache:clear` sist, så cachen är kall efter varje
+deploy och första trafiken går rakt på DB.
+
+**Konsekvens:** många små pushar i rad = många korta avbrott. Under en dag
+med 10 deployer ligger sajten nere 10 gånger. Samla ihop ändringar till
+färre deployer, eller deploya utanför trafiktopp, när det går.
+
+Kommentaren i `deploy.sh` påstår "<1s" — det stämmer inte, mät i
+Caddy-loggen (se [docs/loggar.md](../../../docs/loggar.md), receptet för
+nertidsfönster) innan du litar på siffran.
 
 ## Manuell deploy
 
@@ -83,6 +103,50 @@ Se **[docs/loggar.md](docs/loggar.md)** för var access-/felloggarna ligger
 (app-containerns nginx-stdout, ej fil), loggformatet (riktig klient-IP loggas
 **sist** på raden eftersom Caddy står framför) och färdiga `awk`-recept för att
 ranka topp-IP:er och user-agents senaste timmen.
+
+## Felsöka Redis-minne (vad äter taket?)
+
+`artisan redis:health` ger översikt. När den varnar för eviction räcker inte
+nyckel*antal* — mät **bytes per prefix**, annars drar man fel slutsats
+(småcacher är många men bidrar marginellt).
+
+```bash
+cd /opt/brottsplatskartan
+set -a; . ./.env; set +a
+
+# 1. Sampla nycklar (SCAN, ej KEYS — KEYS blockerar servern)
+docker compose exec -T redis sh -c \
+  "redis-cli -a \"$REDIS_PASSWORD\" --no-auth-warning --scan --count 1000" \
+  | head -20000 > /tmp/bpk_keys.txt
+
+# 2. Mät MEMORY USAGE per nyckel, gruppera på normaliserat prefix
+awk '{ printf "MEMORY USAGE \"%s\"\n", $0 }' /tmp/bpk_keys.txt \
+  | docker compose exec -T redis redis-cli -a "$REDIS_PASSWORD" --no-auth-warning \
+  > /tmp/bpk_sizes.txt
+paste -d' ' /tmp/bpk_keys.txt /tmp/bpk_sizes.txt \
+  | awk '{ k=$1; gsub(/[0-9a-f]{16,}.*/, "<HASH>", k); gsub(/[0-9]+/, "<N>", k);
+           n[k]++; s[k]+=$2 }
+         END { for (i in n) printf "%-55s %7d %9.1f MB %8.1f KB\n",
+                 substr(i,1,55), n[i], s[i]/1048576, s[i]/n[i]/1024 }' \
+  | sort -k3 -rn | head -20
+```
+
+### ⚠️ `docker compose exec -T` äter loopens stdin
+
+I en `while read` -loop slukar `docker compose exec -T` resten av indata och
+loopen kör bara **ett** varv. Symptomet är att du får en enda rad utdata och
+tror att kommandot misslyckades. Lägg alltid `</dev/null` på exec:en:
+
+```bash
+while read -r key; do
+  docker compose exec -T redis redis-cli … GET "$key" </dev/null
+done < /tmp/nycklar.txt
+```
+
+Samma fälla gäller `docker compose exec` i alla loopar, inte bara Redis.
+
+Andra fallgropar: `bc` finns **inte** i containrarna — räkna med `awk`.
+MEMORY USAGE, SCAN, TTL och GET är read-only och säkra att köra mot prod.
 
 ## Provisionering av ny server
 

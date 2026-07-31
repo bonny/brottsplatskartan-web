@@ -14,14 +14,28 @@
         </include>
     </source>
     <php>
-        <env name="APP_ENV" value="testing"/>
-        <env name="CACHE_DRIVER" value="array"/>
-        <env name="SESSION_DRIVER" value="array"/>
-        <env name="QUEUE_CONNECTION" value="sync"/>
+        <!-- OBS: <server>, inte <env>. I Docker sätter compose.yaml APP_ENV,
+             CACHE_DRIVER, DB_CONNECTION m.fl. som riktiga miljövariabler, och
+             Laravels env()-helper läser $_SERVER FÖRE $_ENV. PHPUnits <env>
+             skriver bara $_ENV och blev därför överskuggad — testerna kördes
+             mot dev-MariaDB och dev-Redis trots raderna nedan.
+             force="true" krävs för att skriva över befintligt värde. -->
+        <server name="APP_ENV" value="testing" force="true"/>
+        <server name="CACHE_DRIVER" value="array" force="true"/>
+        <server name="SESSION_DRIVER" value="array" force="true"/>
+        <!-- OBS: config/queue.php läser QUEUE_DRIVER, inte QUEUE_CONNECTION —
+             sätter man bara det senare blir raden verkningslös. -->
+        <server name="QUEUE_DRIVER" value="sync" force="true"/>
+        <!-- Responscachen har egen store-config (config/responsecache.php) och
+             ärver inte CACHE_DRIVER. Utan detta skriver feature-tester
+             cache-poster i dev-Redis under samma nycklar som webbläsaren
+             använder — testrenderade sidor serveras då till utvecklaren, och
+             tester får cachade svar i stället för färska renderingar. -->
+        <server name="RESPONSE_CACHE_DRIVER" value="array" force="true"/>
         <!-- DB-isolering: Tests\TestCase bootar hela appen, så utan detta kör
              ett framtida test med RefreshDatabase eller en factory mot
              dev-databasen och kan trunkera den. -->
-        <env name="DB_CONNECTION" value="sqlite"/>
-        <env name="DB_DATABASE" value=":memory:"/>
+        <server name="DB_CONNECTION" value="sqlite" force="true"/>
+        <server name="DB_DATABASE" value=":memory:" force="true"/>
     </php>
 </phpunit>

@@ -119,6 +119,31 @@ return [
 
         'cluster' => false,
 
+        /*
+         * Transparent komprimering i phpredis. Responscachen lagrade
+         * okomprimerad HTML och stod för ~78 % av Redis minne (1,93 GB,
+         * peak 105 % av 3 GB-taket, ~136 000 evictions/dygn).
+         *
+         * ZSTD nivå 3 mätt på riktig sid-HTML: 6,1× mindre, 0,34 ms att
+         * packa, 0,13 ms att packa upp. Klart bättre än LZF (4,1×) och
+         * LZ4 (4,2×); nivå 9 ger bara 6,6× men fyrdubblar skrivtiden.
+         *
+         * pack_ignore_numbers är INTE valfritt: utan den komprimeras även
+         * numeriska värden, och då returnerar INCRBY false. RateLimiter
+         * bygger på Cache::increment(), så `throttle:500,1` på API:t skulle
+         * sluta räkna — utan felmeddelande. Verifierat 2026-07-31.
+         *
+         * Att slå PÅ komprimering är bakåtkompatibelt (befintliga
+         * okomprimerade nycklar läses korrekt). Att slå AV den igen är det
+         * inte — nycklar skrivna under tiden blir oläsbara tills de löper
+         * ut (alla har TTL, snitt ~2 dygn).
+         */
+        'options' => [
+            'compression' => Redis::COMPRESSION_ZSTD,
+            'compression_level' => 3,
+            'pack_ignore_numbers' => true,
+        ],
+
         'default' => [
             'host' => env('REDIS_HOST', 'localhost'),
             'password' => env('REDIS_PASSWORD', null),
