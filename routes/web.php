@@ -451,6 +451,16 @@ Route::get('/ordlista/', function (Request $request) {
 
 /**
  * Uppdatera saker kring ett single event
+ *
+ * Kräver inloggning (todo #100). Formuläret har alltid legat bakom
+ * `Auth::check()` i parts/admin-crime.blade.php, men routen saknade
+ * kontroll — vem som helst kunde posta nyhetsartiklar till valfri
+ * händelse. CSRF-token räcker inte som skydd: en angripare hämtar sin
+ * egen token från vilken sida som helst.
+ *
+ * URL:en valideras dessutom till http/https. `javascript:`-URL:er gav
+ * lagrad XSS via href i parts/crimeevent/newsarticles.blade.php, och
+ * URL:er utan host kraschade Newsarticle::getSourceName().
  */
 Route::post('/{lan}/{eventName}', function (
     $lan,
@@ -466,7 +476,7 @@ Route::post('/{lan}/{eventName}', function (
 
     $request->validate([
         'title' => 'required',
-        'url' => 'required',
+        'url' => ['required', 'url', 'starts_with:http://,https://'],
     ]);
 
     \App\Newsarticle::create([
@@ -479,6 +489,7 @@ Route::post('/{lan}/{eventName}', function (
 
     return back()->with('status', 'Lade till media.');
 })
+    ->middleware('auth')
     // Samma constraint som GET-singleEvent: `[^/]*` (inte `.*`) så routen
     // aldrig sväljer fleersegments-URL:er och tolkar fel trailing-tal som
     // event-id på skrivvägen (todo #88).

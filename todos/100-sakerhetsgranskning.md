@@ -17,7 +17,8 @@ prod innan nästa påbörjas.
 
 ## Åtgärdslista
 
-- [ ] **1. KRITISK — `/debug/phpinfo` läcker alla prod-hemligheter**
+- [x] **1. KRITISK — `/debug/phpinfo` läcker alla prod-hemligheter**
+      _Fixad `be7802f`, deployad + verifierad på prod 2026-08-01 (404)._
       `routes/web.php:36` → `DebugController.php:30`. Publik route utan
       auth eller env-guard. Verifierat: prod svarar 200 med 104 kB
       phpinfo, som innehåller `APP_KEY`, `DB_PASSWORD`, `REDIS_PASSWORD`,
@@ -32,12 +33,15 @@ prod innan nästa påbörjas.
       `up -d` + `config:cache` i rätt ordning enligt `prod-ops`.
       Kolla även access-loggarna bakåt efter träffar på `/debug/`.
 
-- [ ] **3. HÖG — Reflekterad XSS i `/debug/urls`**
+- [x] **3. HÖG — Reflekterad XSS i `/debug/urls`**
+      _Fixad `be7802f`, deployad + verifierad på prod 2026-08-01 (404)._
       `DebugController.php:69-73` echoar `$request->get('url')` rått.
       Verifierat lokalt: `?url=<img src=x onerror=alert(1)>` renderas
       oescapat. Åtgärdas av samma borttagning som #1.
 
-- [ ] **4. HÖG — Vem som helst kan posta nyhetsartiklar till valfri händelse**
+- [x] **4. HÖG — Vem som helst kan posta nyhetsartiklar till valfri händelse**
+      _Fixad, deployad + verifierad 2026-08-01: POST utan inloggning ger
+      302 → `/login`, ingen rad skapas._
       `routes/web.php:453`. POST-routen saknar auth helt; formuläret
       ligger bakom `Auth::check()` men routen gör ingen kontroll.
       CSRF skyddar inte — angriparen hämtar sin egen token.
@@ -46,7 +50,11 @@ prod innan nästa påbörjas.
       `allow: GET,HEAD,POST`.
       **Fix:** `->middleware('auth')`.
 
-- [ ] **5. HÖG — Lagrad XSS via `javascript:`-URL i nyhetslänk**
+- [x] **5. HÖG — Lagrad XSS via `javascript:`-URL i nyhetslänk**
+      _Fixad 2026-08-01. Validering vid POST **och** filter på
+      renderingssidan i både `newsarticles.blade.php` och
+      `place-news.blade.php` — de AI-matchade artiklarna kommer från
+      externa RSS-flöden och täcks inte av POST-valideringen._
       `parts/crimeevent/newsarticles.blade.php:57` gör
       `href="{{ $item->url }}"`. Blade escapar tecken men validerar inte
       schema. Verifierat renderat:
@@ -55,7 +63,10 @@ prod innan nästa påbörjas.
       vektorn.)
       **Fix:** validera `'url' => ['required', 'url', 'starts_with:http://,https://']`.
 
-- [ ] **6. HÖG — Permanent 500 på händelsesida via URL utan host**
+- [x] **6. HÖG — Permanent 500 på händelsesida via URL utan host**
+      _Fixad 2026-08-01. Engångskollen körd lokalt: 0 rader med
+      icke-http-URL i både `newsarticles` och `news_articles`.
+      Kör samma koll mot prod._
       `Newsarticle.php:89` gör `parse_url($url)['host']` utan `isset`.
       En postad URL utan host (`javascript:alert(1)`, `foo`) ger
       `Undefined array key "host"` → sidan är nere tills raden städas i
@@ -102,7 +113,8 @@ prod innan nästa påbörjas.
       → inte exploaterbart idag, men enda `whereRaw` utan bindning.
       **Fix:** `whereRaw('FIND_IN_SET(?, ...)', [$oneMatchedWord])`.
 
-- [ ] **11. LÅG — `/debug-response-cache` exponerar konfiguration**
+- [x] **11. LÅG — `/debug-response-cache` exponerar konfiguration**
+      _Fixad `be7802f`, deployad + verifierad på prod 2026-08-01 (404)._
       `routes/web.php:934`. Publik route som returnerar
       `app()->environment()`, responsecache-config och request-headers.
       **Fix:** ta bort.

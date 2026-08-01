@@ -34,7 +34,14 @@
             ])
         : collect();
 
-    $mediaItems = $legacyItems->concat($aiItems);
+    // Sista spärren mot lagrad XSS (todo #100): Blade escapar tecken i
+    // href men stoppar inte schemat, så en `javascript:`-URL i databasen
+    // blir körbar JS vid klick. Legacy-artiklar valideras numera vid
+    // POST, men AI-matchade artiklar kommer från externa RSS-flöden —
+    // filtrera på renderingssidan så båda källorna täcks.
+    $mediaItems = $legacyItems->concat($aiItems)->filter(
+        fn ($item) => \Illuminate\Support\Str::startsWith($item->url, ['http://', 'https://'])
+    );
 @endphp
 
 @if ($mediaItems->isNotEmpty())

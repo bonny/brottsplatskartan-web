@@ -85,8 +85,15 @@ class Newsarticle extends Model
             return '';
         }
 
-        $urlParsed = parse_url($url);
-        $urlHost = $urlParsed['host'];
+        // Bail om URL:en saknar host. Utan den här kontrollen kastade
+        // parse_url()['host'] "Undefined array key" och sänkte hela
+        // händelsesidan permanent på t.ex. "javascript:alert(1)" — se
+        // todo #100.
+        $urlHost = parse_url($url, PHP_URL_HOST);
+
+        if (empty($urlHost)) {
+            return '';
+        }
 
         $source = null;
 

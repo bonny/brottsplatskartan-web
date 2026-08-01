@@ -25,6 +25,15 @@
         (int) ($newsHours ?? config('news-classification.display_window_hours', 72))
     );
 
+    // Artiklarna kommer från externa RSS-flöden och länkas med
+    // href="{{ $item->url }}". Blade escapar tecken men inte schemat, så
+    // en `javascript:`-URL skulle bli körbar JS vid klick — filtrera bort
+    // allt som inte är http(s). Samma spärr som i
+    // parts/crimeevent/newsarticles.blade.php (todo #100).
+    $placeNewsItems = $placeNewsItems->filter(
+        fn ($item) => \Illuminate\Support\Str::startsWith($item->url, ['http://', 'https://'])
+    );
+
     $visibleItems = $placeNewsItems->take($visibleLimit);
     $hiddenItems = $placeNewsItems->slice($visibleLimit);
 @endphp
