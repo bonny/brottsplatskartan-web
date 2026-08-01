@@ -1,4 +1,5 @@
-**Status:** aktiv
+**Status:** blockerad — allt utom nyckelrotationen (punkt 2) är fixat,
+deployat och verifierat på prod
 **Senast uppdaterad:** 2026-08-01
 
 # 100 – Säkerhetsgranskning 2026-08-01
@@ -64,9 +65,10 @@ prod innan nästa påbörjas.
       **Fix:** validera `'url' => ['required', 'url', 'starts_with:http://,https://']`.
 
 - [x] **6. HÖG — Permanent 500 på händelsesida via URL utan host**
-      _Fixad 2026-08-01. Engångskollen körd lokalt: 0 rader med
-      icke-http-URL i både `newsarticles` och `news_articles`.
-      Kör samma koll mot prod._
+      _Fixad 2026-08-01. Engångskollen körd mot både lokal DB och prod:
+      0 rader med icke-http-URL i `newsarticles` och `news_articles` —
+      ingen händelsesida är alltså trasig och inga `javascript:`-URL:er
+      ligger lagrade sedan tidigare._
       `Newsarticle.php:89` gör `parse_url($url)['host']` utan `isset`.
       En postad URL utan host (`javascript:alert(1)`, `foo`) ger
       `Undefined array key "host"` → sidan är nere tills raden städas i
