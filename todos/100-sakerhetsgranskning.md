@@ -116,7 +116,9 @@ prod innan nästa påbörjas.
       `breadcrumb:53`, `itemlist-jsonld:19`, `statistik:44`,
       `single-plats-month:134`) + `abort(404)` i län-grenen.
 
-- [ ] **10. LÅG — SQL-interpolering i ordlistan**
+- [x] **10. LÅG — SQL-interpolering i ordlistan**
+      _Fixad 2026-08-01. Verifierat att ordlisteuppslaget fortfarande
+      matchar (5 ord på en testtext)._
       `Dictionary.php:99` interpolerar `$oneMatchedWord` direkt i
       `FIND_IN_SET`. Kommer från `dictionary`-tabellen, inte från request
       → inte exploaterbart idag, men enda `whereRaw` utan bindning.
@@ -128,12 +130,12 @@ prod innan nästa påbörjas.
       `app()->environment()`, responsecache-config och request-headers.
       **Fix:** ta bort.
 
-- [ ] **12. LÅG — Session-cookie saknar `same_site`**
-      `config/session.php` saknar nyckeln helt; `secure` är
-      `env(..., null)`. Browsers defaultar till `Lax` så det är inte
-      akut.
-      **Fix:** `'same_site' => 'lax'` + `SESSION_SECURE_COOKIE=true` i
-      prod-env.
+- [x] **12. ~~LÅG — Session-cookie saknar `same_site`~~ — inget problem**
+      Baserades på att nyckeln saknas i `config/session.php`. Kollade
+      faktiska svarsheaders från prod i stället, och Laravel sätter redan
+      rätt attribut:
+      `laravel_session=...; path=/; secure; httponly; samesite=lax`.
+      Ingen åtgärd behövs.
 
 - [x] **13. HÖG — `X-Forwarded-For` var spoofbar → all rate limiting kunde kringgås**
       _Hittad 2026-08-01 när throttlingen i #7 skulle verifieras._
@@ -187,6 +189,11 @@ pixelkvoten.
 - **JSONP** (`->withCallback()`): Symfony validerar callback-namnet.
 - **Auth:** `register => false`, `/home` är `auth`-skyddad,
   admin-partialen är `Auth::check()`-gated.
+
+## Kvar att göra
+
+Bara **punkt 2** — rotera nycklarna. Allt annat är fixat, deployat och
+verifierat på prod. Punkt 12 visade sig vara ett icke-problem.
 
 ## Ordning
 

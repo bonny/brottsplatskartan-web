@@ -96,8 +96,14 @@ class Dictionary extends Model
         $wordsCollection = collect();
         foreach ($arrMatchingWords as $oneMatchedWord) {
             $wordsCollection = $wordsCollection->merge(
+                // Bindning i stället för interpolering (todo #100). Orden
+                // kommer från dictionary-tabellen och inte från request,
+                // så det var inte exploaterbart — men det här var enda
+                // whereRaw i kodbasen utan bindning, och blir direkt SQLi
+                // den dag ordlistan får ett skrivbart gränssnitt.
                 self::whereRaw(
-                    'FIND_IN_SET("' . $oneMatchedWord . '", CONCAT_WS(",", word, synonyms))'
+                    'FIND_IN_SET(?, CONCAT_WS(",", word, synonyms))',
+                    [$oneMatchedWord]
                 )->get()
             );
         }
