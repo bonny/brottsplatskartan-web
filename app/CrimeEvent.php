@@ -1350,10 +1350,15 @@ class CrimeEvent extends Model implements Feedable {
             ];
         }
 
+        // JSON_HEX_TAG är inte kosmetik: JSON_UNESCAPED_SLASHES stänger av
+        // `\/`-escapingen, och då är `</script>` i ett värde det enda som
+        // krävs för att bryta ut ur script-blocket. HEX_TAG kodar `<` och
+        // `>` som </> och gör utbrytning omöjlig oavsett källa
+        // (todo #100). Google parsar \u-escapade JSON-strängar utan problem.
         $str = '<script type="application/ld+json">' .
             json_encode(
                 $jsonData,
-                JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
+                JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG
             ) .
             '</script>';
 

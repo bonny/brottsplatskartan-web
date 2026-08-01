@@ -96,7 +96,12 @@ prod innan nästa påbörjas.
       besökares sökfrågor 3 dygn bakåt.
       **Fix:** ta bort `show-setting`-grenen, throttla routen.
 
-- [ ] **9. MEDEL — Angriparstyrd text hamnar rå i JSON-LD**
+- [x] **9. MEDEL — Angriparstyrd text hamnar rå i JSON-LD**
+      _Fixad 2026-08-01. `JSON_HEX_TAG` på alla åtta sinkar (de sju
+      bladesarna + `CrimeEvent::buildLdJson`) och existenskontroll i
+      län-grenen. Verifierat lokalt: `/plats/<skräp>-stockholms-lan` →
+      404, `/plats/orminge-stockholms-lan` → 200, och samtliga
+      ld+json-block parsar fortfarande som giltig JSON._
       `PlatsController.php:169` saknar den `abort(404)`-kontroll som
       finns i den andra grenen (rad 189), så
       `/plats/<godtyckligt>-stockholms-lan` ger 200. Texten hamnar sedan

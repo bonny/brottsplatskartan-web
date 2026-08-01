@@ -158,6 +158,28 @@ class PlatsController extends Controller
             // t.ex. "Stockholm" i "Stockholms län"
             $events = $this->getEventsInPlatsWithLan($platsWithoutLan, $matchingLanName, $date, 7, $isToday);
 
+            // Om inga events för vald period, kolla om något finns alls.
+            // Samma kontroll som i else-grenen nedan — den saknades här,
+            // så /plats/<vad-som-helst>-stockholms-lan svarade 200 och
+            // renderade angriparens sträng i sidan (todo #100). Gav både
+            // obegränsat med indexerbara skräpsidor och rå input i
+            // JSON-LD-blocken.
+            if (!$events->count()) {
+                $eventsExists = CrimeEvent::where("administrative_area_level_1", $matchingLanName)
+                    ->where(function ($query) use ($platsWithoutLan) {
+                        $query->where("parsed_title_location", $platsWithoutLan);
+                        $query->orWhere("administrative_area_level_2", $platsWithoutLan);
+                        $query->orWhereHas('locations', function ($query) use ($platsWithoutLan) {
+                            $query->where('name', '=', $platsWithoutLan);
+                        });
+                    })
+                    ->exists();
+
+                if (!$eventsExists) {
+                    abort(404);
+                }
+            }
+
             // Hämta mest vanligt förekommande händelsetyperna
             $mostCommonCrimeTypes = $this->getMostCommonCrimeTypesInPlatsWithLan($platsWithoutLan, $matchingLanName, $dateYMD);
 
