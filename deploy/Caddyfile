@@ -11,7 +11,18 @@ www.brottsplatskartan.se {
 }
 
 brottsplatskartan.se {
-	reverse_proxy app:8080
+	reverse_proxy app:8080 {
+		# Skriv ÖVER X-Forwarded-For i stället för att lägga till.
+		# Caddy default-beteende är att appenda, och eftersom Laravel
+		# litar på alla proxyer (TrustProxies::$proxies = '*') plockade
+		# Symfony då den vänstra — alltså klientens egen, spoofbara,
+		# header. Följden var att request()->ip() var angriparstyrd och
+		# all IP-baserad rate limiting kunde kringgås med en godtycklig
+		# X-Forwarded-For, inklusive login-throttlingen. Caddy är edge
+		# (ingen CDN framför), så {remote_host} är den verkliga
+		# klient-IP:n. Se todo #100.
+		header_up X-Forwarded-For {remote_host}
+	}
 	encode gzip zstd
 	# Security headers sätts av serversideup/php nginx (security.conf) —
 	# dubblera inte här. X-Frame-Options sätts också där.

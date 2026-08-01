@@ -68,8 +68,16 @@ Route::get('/sverigekartan-iframe/{location?}', [FullScreenMapController::class,
 
 // Tracking-pixlar via POST (navigator.sendBeacon) så Googlebot inte hittar
 // dem under JS-rendering. Body innehåller "path" (eller "q"+"c" för sök).
-Route::post('/pixel', [PixelController::class, 'pixel']);
-Route::post('/pixel-sok', [PixelController::class, 'pixelSok'])->name('pixel-sok');
+//
+// Båda är oautentiserade och CSRF-undantagna (sendBeacon skickar ingen
+// token), så de throttlas per IP — annars kan vem som helst pumpa upp
+// "Mest lästa" eller fylla `searches3` med skräp (todo #100). 60/min
+// räcker med marginal för en verklig besökare: en pixel per sidvisning.
+Route::post('/pixel', [PixelController::class, 'pixel'])
+    ->middleware('throttle:60,1');
+Route::post('/pixel-sok', [PixelController::class, 'pixelSok'])
+    ->middleware('throttle:60,1')
+    ->name('pixel-sok');
 
 Route::get('/polisstationer', [PolisstationerController::class, 'index'])->name(
     'polisstationer'

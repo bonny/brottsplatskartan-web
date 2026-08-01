@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\CrimeEvent;
 use App\Models\CrimeView;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -27,12 +28,10 @@ class PixelController extends Controller {
 
         $settingsKey = 'searches3';
 
-        // Om show-setting finns så visa sökningar.
-        // Exempel: POST https://brottsplatskartan.se/pixel-sok body: show-setting=1
-        if ($req->has('show-setting')) {
-            $searches = \Setting::get($settingsKey, []);
-            return $this->noindexJson(is_array($searches) ? $searches : []);
-        }
+        // `show-setting=1` returnerade hela sökhistoriken till vem som
+        // helst — alla besökares sökfrågor 3 dygn bakåt. Borttagen
+        // 2026-08-01 (todo #100). Behövs listan: läs settingen
+        // `searches3` via `artisan tinker`.
 
         // Bail on query är tom.
         if (empty($query)) {
@@ -43,6 +42,10 @@ class PixelController extends Controller {
         // Ändra antal för varje sökning
         // Ta bort de äldsta när de är för många.
         $searches = \Setting::get($settingsKey, []);
+
+        if (!is_array($searches)) {
+            $searches = [];
+        }
 
         // Lägg till key med aktuell sökning om den inte redan finns.
         if (!isset($searches[$query]) || !is_array($searches[$query])) {
@@ -98,7 +101,16 @@ class PixelController extends Controller {
             if (strlen((string) $eventId) === 4) {
                 // Verkar vara år.
             } else {
-                // Inte år, förhoppningsvis event. Spara.
+                // Inte år, förhoppningsvis event. Spara — men bara om
+                // eventet faktiskt finns. Endpointen är oautentiserad och
+                // CSRF-undantagen, så utan kontrollen kunde vem som helst
+                // fylla crime_views med rader för påhittade id:n
+                // (todo #100). Primärnyckelslookup, försumbar kostnad
+                // bredvid INSERT:en.
+                if (!CrimeEvent::whereKey($eventId)->exists()) {
+                    return $this->noindexJson($data);
+                }
+
                 $data['eventId'] = $eventId;
                 $view = new CrimeView;
                 $view->crime_event_id = $eventId;

@@ -75,7 +75,8 @@ prod innan nästa påbörjas.
       Kör även engångskoll:
       `SELECT id, url FROM newsarticles WHERE url NOT LIKE 'http%'`.
 
-- [ ] **7. MEDEL — Oautentiserad manipulation av "Mest lästa"**
+- [x] **7. MEDEL — Oautentiserad manipulation av "Mest lästa"**
+      _Fixad 2026-08-01. Verifierat lokalt: 60 requests går igenom, sedan 429._
       `PixelController.php:94-101`, CSRF-undantagen i
       `VerifyCsrfToken.php:19`. `POST /pixel` skriver en `crime_views`-rad
       för godtyckligt event-id, utan kontroll att eventet finns, utan
@@ -83,7 +84,8 @@ prod innan nästa påbörjas.
       Full auth vore fel (det är en öppen trackingpixel).
       **Fix:** verifiera att `crime_event_id` existerar + `throttle:60,1`.
 
-- [ ] **8. MEDEL — Oautentiserad skrivning till publika "Vanliga sökningar"**
+- [x] **8. MEDEL — Oautentiserad skrivning till publika "Vanliga sökningar"**
+      _Fixad 2026-08-01. `show-setting` borttagen, throttle på routen._
       `PixelController.php:36-69` → `SearchController::getSearches()` →
       `adsenseSearch.blade.php:26`. Godtycklig text kan skrivas till
       settingen `searches3` och visas publikt efter två count-inkrement.
@@ -125,6 +127,23 @@ prod innan nästa påbörjas.
       akut.
       **Fix:** `'same_site' => 'lax'` + `SESSION_SECURE_COOKIE=true` i
       prod-env.
+
+- [x] **13. HÖG — `X-Forwarded-For` var spoofbar → all rate limiting kunde kringgås**
+      _Hittad 2026-08-01 när throttlingen i #7 skulle verifieras._
+      Caddys `reverse_proxy` **appendar** till `X-Forwarded-For` i stället
+      för att skriva över, och `TrustProxies::$proxies = '*'` gör att
+      Symfony litar på hela kedjan och plockar den vänstra posten —
+      alltså klientens egen header. `request()->ip()` var därmed
+      angriparstyrd.
+      Verifierat lokalt: efter 60 requests svarade `/pixel` 429, men med
+      `X-Forwarded-For: 1.2.3.4` gick den direkt till 200 igen. Träffar
+      inte bara pixel-throttlingen utan även `api`-gruppens
+      `throttle:500,1` och Laravels login-throttle — alltså
+      brute-force-skyddet på `/login`.
+      **Fix:** `header_up X-Forwarded-For {remote_host}` i
+      `deploy/Caddyfile`. Caddy är edge (ingen CDN framför), så
+      `{remote_host}` är den verkliga klient-IP:n.
+      _Kan inte verifieras lokalt — Caddy körs bara i prod-stacken._
 
 ## Kontrollerat och OK
 
