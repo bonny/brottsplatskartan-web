@@ -76,7 +76,9 @@ prod innan nästa påbörjas.
       `SELECT id, url FROM newsarticles WHERE url NOT LIKE 'http%'`.
 
 - [x] **7. MEDEL — Oautentiserad manipulation av "Mest lästa"**
-      _Fixad 2026-08-01. Verifierat lokalt: 60 requests går igenom, sedan 429._
+      _Fixad 2026-08-01. Egen namngiven limiter `pixel` (120/min per IP) +
+      existenskontroll på event-id. Verifierat lokalt: exakt 120 släpps
+      igenom, 0 rader skapade för okänt id._
       `PixelController.php:94-101`, CSRF-undantagen i
       `VerifyCsrfToken.php:19`. `POST /pixel` skriver en `crime_views`-rad
       för godtyckligt event-id, utan kontroll att eventet finns, utan
@@ -143,7 +145,19 @@ prod innan nästa påbörjas.
       **Fix:** `header_up X-Forwarded-For {remote_host}` i
       `deploy/Caddyfile`. Caddy är edge (ingen CDN framför), så
       `{remote_host}` är den verkliga klient-IP:n.
-      _Kan inte verifieras lokalt — Caddy körs bara i prod-stacken._
+      _Verifierat på prod 2026-08-01: 65 POST mot `/pixel` med 65 olika
+      spoofade `X-Forwarded-For` bröts ändå vid exakt 60 — throttlingen
+      nycklar nu på verklig klient-IP._
+
+### Lärdom: namnge alltid throttle-limitrar
+
+`throttle:60,1` utan namn nycklar på `domain|ip` — **samma nyckel för
+alla namnlösa throttles i appen**. Pixelkvoten delade alltså räknare med
+`api`-gruppens `throttle:500,1`, så kartans `/api/eventsMap`-anrop från
+samma besökare åt upp pixelkvoten. Löst med en namngiven limiter
+(`RateLimiter::for('pixel', ...)` i `RouteServiceProvider`), som får eget
+prefix och därmed egen bucket. Verifierat: 70 API-anrop påverkar inte
+pixelkvoten.
 
 ## Kontrollerat och OK
 

@@ -71,12 +71,13 @@ Route::get('/sverigekartan-iframe/{location?}', [FullScreenMapController::class,
 //
 // Båda är oautentiserade och CSRF-undantagna (sendBeacon skickar ingen
 // token), så de throttlas per IP — annars kan vem som helst pumpa upp
-// "Mest lästa" eller fylla `searches3` med skräp (todo #100). 60/min
-// räcker med marginal för en verklig besökare: en pixel per sidvisning.
+// "Mest lästa" eller fylla `searches3` med skräp (todo #100).
+// `pixel`-limitern är definierad i RouteServiceProvider; den måste vara
+// namngiven för att inte dela nyckel med api-gruppens throttle.
 Route::post('/pixel', [PixelController::class, 'pixel'])
-    ->middleware('throttle:60,1');
+    ->middleware('throttle:pixel');
 Route::post('/pixel-sok', [PixelController::class, 'pixelSok'])
-    ->middleware('throttle:60,1')
+    ->middleware('throttle:pixel')
     ->name('pixel-sok');
 
 Route::get('/polisstationer', [PolisstationerController::class, 'index'])->name(
