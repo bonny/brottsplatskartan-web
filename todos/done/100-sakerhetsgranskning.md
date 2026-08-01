@@ -1,5 +1,4 @@
-**Status:** blockerad — allt utom nyckelrotationen (punkt 2) är fixat,
-deployat och verifierat på prod
+**Status:** klar 2026-08-01
 **Senast uppdaterad:** 2026-08-01
 
 # 100 – Säkerhetsgranskning 2026-08-01
@@ -28,11 +27,15 @@ prod innan nästa påbörjas.
       unserialize → sessionsförfalskning och potentiell RCE.
       **Fix:** ta bort `/debug`-routen + `DebugController::debug()`.
 
-- [ ] **2. KRITISK — Rotera samtliga läckta nycklar** _(manuell, efter #1)_
-      `APP_KEY` (`key:generate`, loggar ut alla sessioner), DB-lösenord,
-      Redis-lösenord, mail-lösenord, Anthropic-nyckel. Kom ihåg
-      `up -d` + `config:cache` i rätt ordning enligt `prod-ops`.
-      Kolla även access-loggarna bakåt efter träffar på `/debug/`.
+- [x] **2. ~~KRITISK — Rotera samtliga läckta nycklar~~ — avfärdad 2026-08-01**
+      Rekommendationen var att rotera `APP_KEY`, DB-, Redis-, mail- och
+      Anthropic-nyckeln eftersom `/debug/phpinfo` exponerade dem publikt
+      i okänd tid. **Pär bedömer att inget läckt och avstår.** Beslutet
+      ligger hos honom; routen är borta sedan `be7802f` så exponeringen
+      är stoppad framåt.
+      Om något senare tyder på att nycklarna använts: rotera då, med
+      `up -d` + `config:cache` i rätt ordning enligt `prod-ops`
+      (`key:generate` loggar ut alla sessioner).
 
 - [x] **3. HÖG — Reflekterad XSS i `/debug/urls`**
       _Fixad `be7802f`, deployad + verifierad på prod 2026-08-01 (404)._
@@ -194,8 +197,9 @@ pixelkvoten.
 
 ## Kvar att göra
 
-Bara **punkt 2** — rotera nycklarna. Allt annat är fixat, deployat och
-verifierat på prod. Punkt 12 visade sig vara ett icke-problem.
+Inget. Alla kodfixar är deployade och verifierade på prod. Punkt 2
+avfärdad (Pärs beslut — bedömer att inget läckt), punkt 12 visade sig
+vara ett icke-problem.
 
 ## Ordning
 
