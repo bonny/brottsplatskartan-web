@@ -357,4 +357,56 @@ noindex via `isThinForSeo()`, vilket är avsett (#29).
 `sitemap-main.xml` (`GenerateSitemap.php:53`) men svarar **404**. Vi
 skickar alltså en död URL till Google.
 
-**Kvarstår att mäta:** GSC-effekten, 2026-09-01. Se raden i `todo.md`.
+## Kalibrering mot GSC (2026-08-02)
+
+Tröskelvärdet 5 valdes ursprungligen på fördelningen, inte på uppmätt
+trafik, eftersom `mcp-gsc` låg nere. Servern blev åtkomlig samma kväll
+(krävde `mcp[cli]<2`), så kalibreringen kunde göras i efterhand.
+
+Underlag: 90 dagar, 2026-05-04 – 2026-08-01 — alltså **före** deployen,
+vilket gör den till en ren baslinje. 9 527 platssidor med klick matchades
+mot händelseantal; 31 klick (0,1 %) gick inte att matcha och är bortsedda
+från. Metoden speglar routens matchning, inklusive kapning av
+läns-suffix i `/plats/{plats}-{län}`.
+
+| Tröskel        | Sidor m. klick som tappas | Klick/90d | % av platsklick | % av sajtens klick | Klick/mån |
+| -------------- | ------------------------: | --------: | --------------: | -----------------: | --------: |
+| < 2            |                       612 |       564 |           1,9 % |             0,43 % |       188 |
+| < 3            |                     1 060 |     1 093 |           3,6 % |             0,82 % |       364 |
+| **< 5 (live)** |                 **1 709** | **1 667** |       **5,5 %** |         **1,26 %** |   **556** |
+| < 10           |                     2 972 |     3 347 |          11,0 % |             2,52 % |     1 116 |
+
+Referensvärden för perioden: sajten 132 692 klick totalt, platssidorna
+30 332 (22,9 % av sajten). Klick per händelseantal faller brant men har
+lång svans: 1 händelse 564 klick, 2 händelser 529, 3 händelser 329.
+
+**Bedömning.** Kostnaden ligger i övre kanten av precedensen —
+`isThinForSeo()` kalibrerades mot ~1 % klickförlust, här är det 1,26 % av
+sajtens totala klick.
+
+Men siffrorna är ett **tak, inte en prognos**: de mäter vad sidorna drog
+när de var indexerade, inte vad som faktiskt går förlorat. En del av
+intentionen bör fångas av stads- och länssidorna som är kvar i indexet.
+
+**Viktig observation:** soft-404-problemet löses av **fallbacken**, inte
+av tröskeln. Varje platssida med minst en händelse visar nu riktigt
+innehåll oavsett tröskel. Tröskelns kvarvarande motivering är enbart
+kvalitetssignalen från tunt innehåll. Delarna är alltså separerbara — går
+det att sänka tröskeln senare kommer soft-404 inte tillbaka.
+
+**Beslut 2026-08-02:** behåll 5 och mät. Att sänka nu vore att agera på
+ett tak. Grinden 2026-09-01 avgör.
+
+## Kvarstår att mäta
+
+**2026-09-01, 30 d efter deploy.** Jämför mot baslinjen ovan:
+
+1. Drar platssidorna fortfarande ~30 332 klick/90d, eller har de tappat
+   nära de 1 667 som de understa 1 709 sidorna stod för? Tappet ska vara
+   **mindre** än 1 667 om stads- och länssidorna fångar upp intentionen.
+2. Har GSC:s "Exkluderad av noindex-tagg" stigit med ~20 800?
+3. Har soft-404-rapporten sjunkit?
+
+Om tappet ligger nära hela 1 667 fångades ingenting upp — överväg då att
+sänka tröskeln till 3, vilket enligt tabellen återför ~192 klick/mån och
+ändå håller 16 118 sidor utanför indexet.
