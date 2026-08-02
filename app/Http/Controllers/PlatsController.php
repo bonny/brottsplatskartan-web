@@ -20,6 +20,23 @@ use Illuminate\Support\Str;
 class PlatsController extends Controller
 {
     /**
+     * Antal händelser (all-time) en plats behöver för att sidan ska
+     * indexeras. Under tröskeln blir sidan noindex,follow.
+     *
+     * Why: 31 477 av 32 275 platssidor renderade tom sida men svarade 200
+     * — soft-404 i stor skala. 65 % av platsnamnen är gatunamn med ≤4
+     * händelser, ofta från 2016–2019. Se
+     * docs/superpowers/specs/2026-08-02-plats-indexeringstroskel-design.md
+     */
+    private const INDEXERAS_FRAN_ANTAL_HANDELSER = 5;
+
+    /**
+     * Hur många av de senaste händelserna vi hämtar. Används både för att
+     * avgöra antalet (tröskeln) och som innehåll när datumfönstret är tomt.
+     */
+    private const SENASTE_LIMIT = 10;
+
+    /**
      * Översikt, lista alla platser/orter
      *
      * Exempel på URL:
@@ -153,31 +170,32 @@ class PlatsController extends Controller
             return redirect()->route('platsSingle', ['plats' => $plats], 301);
         }
 
+        // Hämta alltid minst tröskeln — annars går antalet inte att avgöra.
+        $senasteLimit = max(self::SENASTE_LIMIT, self::INDEXERAS_FRAN_ANTAL_HANDELSER);
+
+        // Sätts i respektive gren nedan.
+        $platsArIndexerbar = true;
+
         if ($foundMatchingLan) {
             // Hämta events där vi vet både plats och län
             // t.ex. "Stockholm" i "Stockholms län"
             $events = $this->getEventsInPlatsWithLan($platsWithoutLan, $matchingLanName, $date, 7, $isToday);
 
-            // Om inga events för vald period, kolla om något finns alls.
-            // Samma kontroll som i else-grenen nedan — den saknades här,
-            // så /plats/<vad-som-helst>-stockholms-lan svarade 200 och
-            // renderade angriparens sträng i sidan (todo #100). Gav både
-            // obegränsat med indexerbara skräpsidor och rå input i
-            // JSON-LD-blocken.
-            if (!$events->count()) {
-                $eventsExists = CrimeEvent::where("administrative_area_level_1", $matchingLanName)
-                    ->where(function ($query) use ($platsWithoutLan) {
-                        $query->where("parsed_title_location", $platsWithoutLan);
-                        $query->orWhere("administrative_area_level_2", $platsWithoutLan);
-                        $query->orWhereHas('locations', function ($query) use ($platsWithoutLan) {
-                            $query->where('name', '=', $platsWithoutLan);
-                        });
-                    })
-                    ->exists();
+            // Senaste händelserna oavsett datum — tröskel, fallback och
+            // 404-kontroll i ett svep. Ersätter tidigare exists(), som
+            // lades till i #100 för att stoppa indexerbara skräpsidor:
+            // /plats/<vad-som-helst>-stockholms-lan svarade 200 och
+            // renderade angriparens sträng i sidan.
+            $senaste = $this->getSenasteEventsInPlatsWithLan($platsWithoutLan, $matchingLanName, $senasteLimit);
 
-                if (!$eventsExists) {
-                    abort(404);
-                }
+            if ($senaste->isEmpty()) {
+                abort(404);
+            }
+
+            $platsArIndexerbar = $senaste->count() >= self::INDEXERAS_FRAN_ANTAL_HANDELSER;
+
+            if ($events->isEmpty() && $dateOriginalFromArg === null) {
+                $events = $senaste;
             }
 
             // Hämta mest vanligt förekommande händelsetyperna
@@ -197,20 +215,21 @@ class PlatsController extends Controller
             // https://brottsplatskartan.localhost/plats/bananskal
             $events = $this->getEventsInPlats($plats, $date, 14, $isToday);
 
-            // Om inga events för vald period, kolla om något finns alls.
-            if (!$events->count()) {
-                $eventsExists = CrimeEvent::where(function ($query) use ($plats) {
-                    $query->where("parsed_title_location", $plats);
-                    $query->orWhere("administrative_area_level_2", $plats);
-                    $query->orWhereHas('locations', function ($query) use ($plats) {
-                        $query->where('name', '=', $plats);
-                    });
-                })
-                ->exists();
+            // Senaste händelserna oavsett datum. Ger tröskeln, fallback
+            // och 404-kontrollen i ett svep — ersätter tidigare exists().
+            $senaste = $this->getSenasteEventsInPlats($plats, $senasteLimit);
 
-                if (!$eventsExists) {
-                    abort(404);
-                }
+            if ($senaste->isEmpty()) {
+                abort(404);
+            }
+
+            $platsArIndexerbar = $senaste->count() >= self::INDEXERAS_FRAN_ANTAL_HANDELSER;
+
+            // Fallback bara på den datumlösa URL:en. På en explicit
+            // datum-URL vore det vilseledande att visa andra dagars
+            // händelser under det datumets rubrik.
+            if ($events->isEmpty() && $dateOriginalFromArg === null) {
+                $events = $senaste;
             }
 
             // Gör så att plats blir "Västra Hejsan Hoppsan" och inte "västra hejsan hoppsan".
@@ -221,9 +240,8 @@ class PlatsController extends Controller
             $mostCommonCrimeTypes = collect();
 
             // Debugbar::info('Hämta events där vi bara vet platsnamn');
-            // Indexera inte denna sida om det är en gata, men indexera om det är en ort osv.
-            // Får avvakta med denna pga vet inte exakt vad en plats är för en..eh..plats.
-            // $data['robotsNoindex'] = true;
+            // Frågan om gata vs ort löstes med en volymtröskel i stället för
+            // att försöka klassificera platstypen — se $platsArIndexerbar ovan.
         }
 
         // Group events by day
@@ -386,7 +404,10 @@ class PlatsController extends Controller
             'nextDayLink' => $nextDayLink,
             'dateForTitle' => $date['date']->isoFormat('D MMMM YYYY'),
             'mapDistance' => 'near',
-            'robotsNoindex' => \App\Helper::shouldNoindexForDateRoute($dateOriginalFromArg, $date['date']),
+            // Två oberoende skäl till noindex: platsen är för tunn, eller
+            // datum-routen är för gammal (befintlig regel).
+            'robotsNoindex' => !$platsArIndexerbar
+                || \App\Helper::shouldNoindexForDateRoute($dateOriginalFromArg, $date['date']),
             'bra' => $bra,
             'braLanGrannar' => $braLanGrannar,
             'braRikssnitt' => $braRikssnitt,
@@ -1000,6 +1021,32 @@ class PlatsController extends Controller
     }
 
     /**
+     * De senaste händelserna för en plats i ett visst län, oavsett datum.
+     * Län-grenens motsvarighet till getSenasteEventsInPlats().
+     *
+     * OBS: villkoren speglar exists()-kontrollen den ersatte, vilken
+     * inkluderar administrative_area_level_2. Datumfönstrets query
+     * (getEventsInPlatsWithLanUncached) gör INTE det. Skillnaden är
+     * medveten — 404-beteendet måste vara oförändrat, och fallbacken blir
+     * då konsekvent med den vanliga grenen.
+     *
+     * @return Collection
+     */
+    public function getSenasteEventsInPlatsWithLan(string $platsWithoutLan, string $oneLanName, int $limit): Collection
+    {
+        if ($platsWithoutLan === '') {
+            return collect();
+        }
+
+        $cacheKey = 'getSenasteEventsInPlatsWithLan:' . md5("{$platsWithoutLan}:{$oneLanName}:{$limit}");
+        $cacheTTL = 24 * 60 * 60;
+
+        return Cache::remember($cacheKey, $cacheTTL, function () use ($platsWithoutLan, $oneLanName, $limit) {
+            return $this->hamtaSenasteViaKandidatIds($platsWithoutLan, $limit, $oneLanName);
+        });
+    }
+
+    /**
      * Hämta de mest vanliga brotten för en plats, som inkluderar län i urlen.
      *
      * @param string $platsWithoutLan
@@ -1104,6 +1151,104 @@ class PlatsController extends Controller
             ->with('locations')
             ->get();
         return $events;
+    }
+
+    /**
+     * De senaste händelserna för en plats, oavsett datum.
+     *
+     * Ger tre saker på en gång: antalet (för indexeringströskeln),
+     * innehåll att falla tillbaka på när datumfönstret är tomt, och
+     * 404-kontrollen — tom collection betyder att platsen inte finns.
+     *
+     * Villkoren speglar exakt den exists()-kontroll metoden ersatte.
+     * Ändras de ändras vilka platser som 404:ar.
+     *
+     * Cachas 24 h — en plats all-time-lista ändras sällan, och när nya
+     * händelser kommer in plockas de upp av datumfönstret (60 s TTL) som
+     * då inte längre är tomt.
+     *
+     * @return Collection
+     */
+    public function getSenasteEventsInPlats(string $plats, int $limit): Collection
+    {
+        // locations har 445 203 rader med tomt namn. Tom sträng skulle
+        // matcha 88 % av tabellen — släpp aldrig in den i queryn.
+        if ($plats === '') {
+            return collect();
+        }
+
+        $cacheKey = 'getSenasteEventsInPlats:' . md5("{$plats}:{$limit}");
+        $cacheTTL = 24 * 60 * 60;
+
+        return Cache::remember($cacheKey, $cacheTTL, function () use ($plats, $limit) {
+            return $this->hamtaSenasteViaKandidatIds($plats, $limit);
+        });
+    }
+
+    /**
+     * Löser upp de senaste händelserna för en plats via kandidat-ID:n.
+     *
+     * Why: en enda query med OR + `ORDER BY created_at DESC` + `LIMIT` får
+     * MySQL att vandra created_at-indexet baklänges och filtrera rad för
+     * rad tills gränsen är fylld. För ovanliga platsnamn innebär det
+     * nästan hela tabellen på 507 000 rader — uppmätt 6–15 s på prod, och
+     * ensam orsak till att första försöket rullades tillbaka 2026-08-02
+     * (`e6821ab` → `7060830`).
+     *
+     * Genom att lösa upp varje matchningsväg för sig mot sitt eget index
+     * och sortera den lilla mängden efteråt hamnar samma resultat på
+     * tiotals millisekunder. Uppmätt per steg på prod: locations 3–31 ms,
+     * adm2 2–22 ms, parsed_title_location 0,2–19 ms (efter att
+     * prefixindexet lades till), slutlig whereIn 4–21 ms.
+     *
+     * @param string|null $lan Sätts bara från län-grenen, som dessutom
+     *                         kräver administrative_area_level_1.
+     */
+    private function hamtaSenasteViaKandidatIds(string $plats, int $limit, ?string $lan = null): Collection
+    {
+        // locations har ett täckande index (name, crime_event_id).
+        // crime_event_id växer med tiden, så DESC på den är en bra proxy
+        // för "nyast först" — den slutliga sorteringen sker ändå på
+        // created_at nedan.
+        $franLocations = DB::table('locations')
+            ->join('crime_events', 'crime_events.id', '=', 'locations.crime_event_id')
+            ->where('locations.name', $plats)
+            ->where('crime_events.is_public', 1)
+            ->when($lan !== null, function ($query) use ($lan) {
+                $query->where('crime_events.administrative_area_level_1', $lan);
+            })
+            ->orderByDesc('locations.crime_event_id')
+            ->limit($limit)
+            ->pluck('locations.crime_event_id');
+
+        // De två nedan går via CrimeEvent och får is_public-scopet gratis.
+        $franAdm2 = CrimeEvent::where('administrative_area_level_2', $plats)
+            ->when($lan !== null, function ($query) use ($lan) {
+                $query->where('administrative_area_level_1', $lan);
+            })
+            ->orderByDesc('created_at')
+            ->limit($limit)
+            ->pluck('id');
+
+        $franTitelplats = CrimeEvent::where('parsed_title_location', $plats)
+            ->when($lan !== null, function ($query) use ($lan) {
+                $query->where('administrative_area_level_1', $lan);
+            })
+            ->orderByDesc('created_at')
+            ->limit($limit)
+            ->pluck('id');
+
+        $ids = $franLocations->merge($franAdm2)->merge($franTitelplats)->unique()->values()->all();
+
+        if (empty($ids)) {
+            return collect();
+        }
+
+        return CrimeEvent::whereIn('id', $ids)
+            ->orderByDesc('created_at')
+            ->with('locations')
+            ->limit($limit)
+            ->get();
     }
 
     /**
