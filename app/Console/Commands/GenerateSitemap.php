@@ -53,9 +53,15 @@ class GenerateSitemap extends Command
             '/plats' => ['freq' => Url::CHANGE_FREQUENCY_DAILY, 'priority' => 0.7],
             '/typ' => ['freq' => Url::CHANGE_FREQUENCY_DAILY, 'priority' => 0.6],
             '/vma' => ['freq' => Url::CHANGE_FREQUENCY_HOURLY, 'priority' => 0.7],
-            // Rättad 2026-08-02: '/om' fanns inte och svarade 404 — sidan
-            // ligger under /sida/{pagename}.
+            // Statiska sidor under /sida/{pagename}. Rättade/tillagda
+            // 2026-08-02: '/om' pekade fel och svarade 404, och de tre
+            // övriga saknades trots att de har riktigt innehåll
+            // (69–416 ord). '/sida/stockholm' hör INTE hit — den 301:ar
+            // till /stockholm.
             '/sida/om' => ['freq' => Url::CHANGE_FREQUENCY_MONTHLY, 'priority' => 0.3],
+            '/sida/api' => ['freq' => Url::CHANGE_FREQUENCY_MONTHLY, 'priority' => 0.4],
+            '/sida/appar' => ['freq' => Url::CHANGE_FREQUENCY_MONTHLY, 'priority' => 0.3],
+            '/sida/cookies' => ['freq' => Url::CHANGE_FREQUENCY_YEARLY, 'priority' => 0.2],
             // Tema-sidor — fångar 3 200+ clicks/mån sammanlagt men saknades
             // i sitemap fram till 2026-05-23 (todo #83 Steg 0-fynd).
             '/helikopter' => ['freq' => Url::CHANGE_FREQUENCY_HOURLY, 'priority' => 0.8],
