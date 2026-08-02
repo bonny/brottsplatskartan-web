@@ -181,26 +181,21 @@ class PlatsController extends Controller
             // t.ex. "Stockholm" i "Stockholms län"
             $events = $this->getEventsInPlatsWithLan($platsWithoutLan, $matchingLanName, $date, 7, $isToday);
 
-            // Om inga events för vald period, kolla om något finns alls.
-            // Samma kontroll som i else-grenen nedan — den saknades här,
-            // så /plats/<vad-som-helst>-stockholms-lan svarade 200 och
-            // renderade angriparens sträng i sidan (todo #100). Gav både
-            // obegränsat med indexerbara skräpsidor och rå input i
-            // JSON-LD-blocken.
-            if (!$events->count()) {
-                $eventsExists = CrimeEvent::where("administrative_area_level_1", $matchingLanName)
-                    ->where(function ($query) use ($platsWithoutLan) {
-                        $query->where("parsed_title_location", $platsWithoutLan);
-                        $query->orWhere("administrative_area_level_2", $platsWithoutLan);
-                        $query->orWhereHas('locations', function ($query) use ($platsWithoutLan) {
-                            $query->where('name', '=', $platsWithoutLan);
-                        });
-                    })
-                    ->exists();
+            // Senaste händelserna oavsett datum — tröskel, fallback och
+            // 404-kontroll i ett svep. Ersätter tidigare exists(), som
+            // lades till i #100 för att stoppa indexerbara skräpsidor:
+            // /plats/<vad-som-helst>-stockholms-lan svarade 200 och
+            // renderade angriparens sträng i sidan.
+            $senaste = $this->getSenasteEventsInPlatsWithLan($platsWithoutLan, $matchingLanName, $senasteLimit);
 
-                if (!$eventsExists) {
-                    abort(404);
-                }
+            if ($senaste->isEmpty()) {
+                abort(404);
+            }
+
+            $platsArIndexerbar = $senaste->count() >= self::INDEXERAS_FRAN_ANTAL_HANDELSER;
+
+            if ($events->isEmpty() && $dateOriginalFromArg === null) {
+                $events = $senaste;
             }
 
             // Hämta mest vanligt förekommande händelsetyperna
@@ -1023,6 +1018,43 @@ class PlatsController extends Controller
             ->get();
 
         return $events;
+    }
+
+    /**
+     * De senaste händelserna för en plats i ett visst län, oavsett datum.
+     * Län-grenens motsvarighet till getSenasteEventsInPlats().
+     *
+     * OBS: villkoren speglar exists()-kontrollen den ersatte, vilken
+     * inkluderar administrative_area_level_2. Datumfönstrets query
+     * (getEventsInPlatsWithLanUncached) gör INTE det. Skillnaden är
+     * medveten — 404-beteendet måste vara oförändrat, och fallbacken blir
+     * då konsekvent med den vanliga grenen.
+     *
+     * @return Collection
+     */
+    public function getSenasteEventsInPlatsWithLan(string $platsWithoutLan, string $oneLanName, int $limit): Collection
+    {
+        if ($platsWithoutLan === '') {
+            return collect();
+        }
+
+        $cacheKey = 'getSenasteEventsInPlatsWithLan:' . md5("{$platsWithoutLan}:{$oneLanName}:{$limit}");
+        $cacheTTL = 24 * 60 * 60;
+
+        return Cache::remember($cacheKey, $cacheTTL, function () use ($platsWithoutLan, $oneLanName, $limit) {
+            return CrimeEvent::orderBy('created_at', 'desc')
+                ->where('administrative_area_level_1', $oneLanName)
+                ->where(function ($query) use ($platsWithoutLan) {
+                    $query->where('parsed_title_location', $platsWithoutLan);
+                    $query->orWhere('administrative_area_level_2', $platsWithoutLan);
+                    $query->orWhereHas('locations', function ($query) use ($platsWithoutLan) {
+                        $query->where('name', '=', $platsWithoutLan);
+                    });
+                })
+                ->with('locations')
+                ->limit($limit)
+                ->get();
+        });
     }
 
     /**
