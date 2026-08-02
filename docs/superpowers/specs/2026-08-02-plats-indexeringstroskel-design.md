@@ -279,3 +279,61 @@ datamängd men utan samtidig last, och `verifiera.sh` mäter bara HTTP-kod,
 robots-tagg och ordantal. Nästa försök måste mäta **svarstid på kall
 sida** före deploy, inte bara korrekthet. Lägg till `%{time_total}` i
 verifieringsskriptet och sätt en gräns.
+
+## Försök 2 (2026-08-02) — deployad
+
+Migration `ee7b29a`, kod `782ddd6`. Två ändringar mot försök 1.
+
+**1. Prefixindex på `crime_events.parsed_title_location`.** Kolumnen är
+TEXT (max 20 tecken, snitt 11,2) och saknade index helt. Prefix 50 ger
+fyra gångers marginal. Deployades ensamt före koden så effekten kunde
+mätas isolerat.
+
+**2. Kandidat-ID:n i stället för ett stort OR.**
+`hamtaSenasteViaKandidatIds()` löser upp varje matchningsväg mot sitt
+eget index, slår ihop ID:na och sorterar den lilla mängden:
+
+| Steg                                  | Tid på prod |
+| ------------------------------------- | ----------- |
+| `locations` (täckande index)          | 3–31 ms     |
+| `administrative_area_level_2`         | 2–22 ms     |
+| `parsed_title_location` (efter index) | 1,5–45,9 ms |
+| Slutlig `whereIn` på primärnyckel     | 4–21 ms     |
+
+`locations`-steget filtrerar `is_public` explicit i joinen; de två
+CrimeEvent-stegen får det globala scopet gratis. Utan det hade en plats
+vars senaste händelser är dolda kunnat 404:a trots att äldre synliga
+finns.
+
+**Uppmätt hela queryn på prod före deploy** (grinden som saknades förra
+gången):
+
+| Plats         | Försök 1  | Försök 2    |
+| ------------- | --------- | ----------- |
+| `kviberg`     | 6 442 ms  | 72,8 ms     |
+| `abborrvagen` | 14 715 ms | 11,2 ms     |
+| `portgatan`   | 13 261 ms | 7,7 ms      |
+| Län-varianten | —         | 5,1–16,7 ms |
+
+**Utfall på prod efter deploy:** alla fem verifieringsfallen korrekta,
+kalla sidladdningar 191–309 ms. Jämförelse: 12 800–16 900 ms med försök
+1, och **3 500–4 800 ms med den ursprungliga koden** — indexet gör alltså
+platssidorna snabbare än de var innan hela det här arbetet började,
+eftersom även den gamla `exists()`-vägen låg på samma oindexerade kolumn.
+Load average föll från 10,5 till 2,66.
+
+**Svep över 200 slumpade platssidor på prod:**
+
+| Mätning       | Försök 1 | Försök 2 | Mål      |
+| ------------- | -------- | -------- | -------- |
+| noindex       | 109      | 125      | —        |
+| index         | 64       | 75       | —        |
+| Andel noindex | 63 %     | **62 %** | ~64 %    |
+| 404           | 1        | **0**    | 0 / lågt |
+| Timeout       | **26**   | **0**    | 0        |
+
+De 26 timeouterna i försök 1 var symptomet vi missade före deploy. Att de
+är borta, och att 404-räknaren står på noll, bekräftar både prestandan
+och att queryn träffar samma platser som den gamla `exists()`-kontrollen.
+
+**Kvarstår att mäta:** GSC-effekten, 2026-09-01. Se raden i `todo.md`.
