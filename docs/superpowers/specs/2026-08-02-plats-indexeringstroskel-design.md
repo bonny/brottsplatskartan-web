@@ -225,3 +225,57 @@ vid deploy för att noindex ska slå igenom direkt.
   är valt på fördelningen, inte på uppmätt trafik.
 - Innehållsdjupet på de sidor som behålls. `/plats/kviberg` har 58 händelser
   och en färsk igår, men renderar ändå bara 29 ord i `<main>`.
+
+## Försök 1 (2026-08-02) — deployad och återställd samma dag
+
+Deployad som `e6821ab`, återställd som `7060830` efter ~1 timme.
+Funktionellt korrekt, prestandamässigt oacceptabel.
+
+**Vad som fungerade:** alla fem verifieringsfallen på prod, svep över 200
+sidor gav 63 % noindex (mål ~64 %), 404-beteendet oförändrat.
+
+**Varför den rullades tillbaka:** `getSenasteEventsInPlats()` mättes till
+6–15 s på prod. Kalla platssidor gick från 3,5–4,8 s till 12,8–16,9 s och
+load average steg 8,7 → 10,5 på fyra kärnor.
+
+**Rotorsak, från EXPLAIN på prod:**
+
+```
+tabell=crime_events  typ=index  nyckel=crime_events_created_at_index
+rader=10  extra=Using where
+```
+
+MySQL valde att vandra `created_at`-indexet baklänges och filtrera rad för
+rad tills `LIMIT 10` var fylld. För ett ovanligt platsnamn innebär det
+nästan hela tabellen på 507 000 rader. Därför var _ovanligare_ platser
+långsammare: `abborrvagen` (4 händelser) 14,7 s mot `kviberg` (10
+händelser) 6,4 s. Gamla `exists()` slapp detta eftersom den kunde stanna
+vid första träffen.
+
+Bidragande: **det finns inget index på `parsed_title_location`**, så den
+OR-grenen är ett filter och inte en uppslagning.
+
+**Vad nästa försök behöver göra annorlunda:** lös upp kandidaterna via de
+indexerade vägarna först och sortera sedan en liten mängd, i stället för
+att låta optimeraren para ihop `ORDER BY created_at` med ett OR-villkor:
+
+```php
+$ids = collect()
+    ->merge(DB::table('locations')->where('name', $plats)
+        ->orderByDesc('crime_event_id')->limit($limit)->pluck('crime_event_id'))
+    ->merge(CrimeEvent::where('administrative_area_level_2', $plats)
+        ->orderByDesc('created_at')->limit($limit)->pluck('id'))
+    ->unique();
+
+CrimeEvent::whereIn('id', $ids)->orderByDesc('created_at')->limit($limit)->get();
+```
+
+`locations(name, crime_event_id)` är täckande och `crime_event_id` är
+stigande med tiden, så DESC på den är en bra proxy för nyast först. Ska
+`parsed_title_location` ingå effektivt krävs ett index på den kolumnen.
+
+**Lärdom om verifieringen:** lokal miljö dolde problemet helt — samma
+datamängd men utan samtidig last, och `verifiera.sh` mäter bara HTTP-kod,
+robots-tagg och ordantal. Nästa försök måste mäta **svarstid på kall
+sida** före deploy, inte bara korrekthet. Lägg till `%{time_total}` i
+verifieringsskriptet och sätt en gräns.
