@@ -44,13 +44,18 @@ class GenerateSitemap extends Command
 
         $static = [
             '/' => ['freq' => Url::CHANGE_FREQUENCY_HOURLY, 'priority' => 1.0],
-            '/handelser' => ['freq' => Url::CHANGE_FREQUENCY_HOURLY, 'priority' => 0.9],
+            // OBS: '/handelser' hörde hemma här men togs bort 2026-08-02 —
+            // routen 301:ar till '/' (för att inte kannibalisera
+            // "polisen händelser"-klustret) och en sitemap ska inte peka
+            // på omdirigerande URL:er. Målet '/' ligger redan först.
             '/statistik' => ['freq' => Url::CHANGE_FREQUENCY_DAILY, 'priority' => 0.7],
             '/lan' => ['freq' => Url::CHANGE_FREQUENCY_DAILY, 'priority' => 0.8],
             '/plats' => ['freq' => Url::CHANGE_FREQUENCY_DAILY, 'priority' => 0.7],
             '/typ' => ['freq' => Url::CHANGE_FREQUENCY_DAILY, 'priority' => 0.6],
             '/vma' => ['freq' => Url::CHANGE_FREQUENCY_HOURLY, 'priority' => 0.7],
-            '/om' => ['freq' => Url::CHANGE_FREQUENCY_MONTHLY, 'priority' => 0.3],
+            // Rättad 2026-08-02: '/om' fanns inte och svarade 404 — sidan
+            // ligger under /sida/{pagename}.
+            '/sida/om' => ['freq' => Url::CHANGE_FREQUENCY_MONTHLY, 'priority' => 0.3],
             // Tema-sidor — fångar 3 200+ clicks/mån sammanlagt men saknades
             // i sitemap fram till 2026-05-23 (todo #83 Steg 0-fynd).
             '/helikopter' => ['freq' => Url::CHANGE_FREQUENCY_HOURLY, 'priority' => 0.8],
