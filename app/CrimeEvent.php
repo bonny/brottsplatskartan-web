@@ -663,13 +663,21 @@ class CrimeEvent extends Model implements Feedable {
      *
      * Why: GSC 16-mån click-data 2026-04-26 visade att tröskeln måste
      * vara försiktig — många gamla events drar 1-3 clicks per 16 månader
-     * (long-tail). Default ≥365d + <10 ord markerar 13 733 events (4 %
-     * av 328 065 totala) och förlorar bara ~1 % click-trafik på single
-     * events. Mer aggressiva trösklar (<30 ord) tar bort ~76k events
-     * men förlorar ~4 % klick-trafik.
+     * (long-tail). Default ≥365d + <10 ord förlorar bara ~1 % click-
+     * trafik på single events. Mer aggressiva trösklar (<30 ord) tar bort
+     * ~76k events men förlorar ~4 % klick-trafik.
+     *
+     * Uppmätt på prod 2026-08-02 efter ordräkningsfixen: 19 723 av
+     * 310 456 events äldre än 365 d markeras thin (6,4 %).
      *
      * Beräknas on-the-fly vid varje sidladdning. Trivial cost; respons-
      * cachen täcker varma sidor ändå. Ingen DB-flagga behövs.
+     *
+     * OBS om ordräkningen: tidigare användes str_word_count(), som inte är
+     * UTF-8-säker. å/ä/ö räknas som ordavskiljare, så "Räddningstjänsten"
+     * blev tre ord ("R", "ddningstj", "nsten") och texter såg längre ut än
+     * de var. Funktionen räknar dessutom inte siffror som ord, vilket drar
+     * åt andra hållet. Rättat 2026-08-02 — se räknaren nedan.
      */
     public function isThinForSeo(int $minAgeDays = 365, int $minWords = 10): bool
     {
@@ -682,8 +690,23 @@ class CrimeEvent extends Model implements Feedable {
             return false;
         }
         $body = $this->getParsedContentAsPlainText();
-        $words = str_word_count($body);
-        return $words < $minWords;
+        return self::raknaOrd($body) < $minWords;
+    }
+
+    /**
+     * UTF-8-säker ordräkning: allt som skiljs av blanktecken är ett ord.
+     *
+     * Ersätter str_word_count(), som behandlar å/ä/ö som ordgränser och
+     * hoppar över siffror. Uppmätt på prod 2026-08-02: bytet flyttar
+     * 5 432 events (av 310 456 äldre än 365 d) till thin som tidigare
+     * undgick regeln, och 62 åt andra hållet. De 5 432 drog tillsammans
+     * 14 klick på 90 dagar — 0,01 % av sajtens söktrafik.
+     */
+    private static function raknaOrd(string $text): int
+    {
+        $ord = preg_split('/\s+/u', trim($text), -1, PREG_SPLIT_NO_EMPTY);
+
+        return $ord === false ? 0 : count($ord);
     }
 
     /**
