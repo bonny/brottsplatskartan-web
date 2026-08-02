@@ -20,6 +20,23 @@ use Illuminate\Support\Str;
 class PlatsController extends Controller
 {
     /**
+     * Antal händelser (all-time) en plats behöver för att sidan ska
+     * indexeras. Under tröskeln blir sidan noindex,follow.
+     *
+     * Why: 31 477 av 32 275 platssidor renderade tom sida men svarade 200
+     * — soft-404 i stor skala. 65 % av platsnamnen är gatunamn med ≤4
+     * händelser, ofta från 2016–2019. Se
+     * docs/superpowers/specs/2026-08-02-plats-indexeringstroskel-design.md
+     */
+    private const INDEXERAS_FRAN_ANTAL_HANDELSER = 5;
+
+    /**
+     * Hur många av de senaste händelserna vi hämtar. Används både för att
+     * avgöra antalet (tröskeln) och som innehåll när datumfönstret är tomt.
+     */
+    private const SENASTE_LIMIT = 10;
+
+    /**
      * Översikt, lista alla platser/orter
      *
      * Exempel på URL:
@@ -153,6 +170,12 @@ class PlatsController extends Controller
             return redirect()->route('platsSingle', ['plats' => $plats], 301);
         }
 
+        // Hämta alltid minst tröskeln — annars går antalet inte att avgöra.
+        $senasteLimit = max(self::SENASTE_LIMIT, self::INDEXERAS_FRAN_ANTAL_HANDELSER);
+
+        // Sätts i respektive gren nedan.
+        $platsArIndexerbar = true;
+
         if ($foundMatchingLan) {
             // Hämta events där vi vet både plats och län
             // t.ex. "Stockholm" i "Stockholms län"
@@ -197,20 +220,21 @@ class PlatsController extends Controller
             // https://brottsplatskartan.localhost/plats/bananskal
             $events = $this->getEventsInPlats($plats, $date, 14, $isToday);
 
-            // Om inga events för vald period, kolla om något finns alls.
-            if (!$events->count()) {
-                $eventsExists = CrimeEvent::where(function ($query) use ($plats) {
-                    $query->where("parsed_title_location", $plats);
-                    $query->orWhere("administrative_area_level_2", $plats);
-                    $query->orWhereHas('locations', function ($query) use ($plats) {
-                        $query->where('name', '=', $plats);
-                    });
-                })
-                ->exists();
+            // Senaste händelserna oavsett datum. Ger tröskeln, fallback
+            // och 404-kontrollen i ett svep — ersätter tidigare exists().
+            $senaste = $this->getSenasteEventsInPlats($plats, $senasteLimit);
 
-                if (!$eventsExists) {
-                    abort(404);
-                }
+            if ($senaste->isEmpty()) {
+                abort(404);
+            }
+
+            $platsArIndexerbar = $senaste->count() >= self::INDEXERAS_FRAN_ANTAL_HANDELSER;
+
+            // Fallback bara på den datumlösa URL:en. På en explicit
+            // datum-URL vore det vilseledande att visa andra dagars
+            // händelser under det datumets rubrik.
+            if ($events->isEmpty() && $dateOriginalFromArg === null) {
+                $events = $senaste;
             }
 
             // Gör så att plats blir "Västra Hejsan Hoppsan" och inte "västra hejsan hoppsan".
@@ -221,9 +245,8 @@ class PlatsController extends Controller
             $mostCommonCrimeTypes = collect();
 
             // Debugbar::info('Hämta events där vi bara vet platsnamn');
-            // Indexera inte denna sida om det är en gata, men indexera om det är en ort osv.
-            // Får avvakta med denna pga vet inte exakt vad en plats är för en..eh..plats.
-            // $data['robotsNoindex'] = true;
+            // Frågan om gata vs ort löstes med en volymtröskel i stället för
+            // att försöka klassificera platstypen — se $platsArIndexerbar ovan.
         }
 
         // Group events by day
@@ -386,7 +409,10 @@ class PlatsController extends Controller
             'nextDayLink' => $nextDayLink,
             'dateForTitle' => $date['date']->isoFormat('D MMMM YYYY'),
             'mapDistance' => 'near',
-            'robotsNoindex' => \App\Helper::shouldNoindexForDateRoute($dateOriginalFromArg, $date['date']),
+            // Två oberoende skäl till noindex: platsen är för tunn, eller
+            // datum-routen är för gammal (befintlig regel).
+            'robotsNoindex' => !$platsArIndexerbar
+                || \App\Helper::shouldNoindexForDateRoute($dateOriginalFromArg, $date['date']),
             'bra' => $bra,
             'braLanGrannar' => $braLanGrannar,
             'braRikssnitt' => $braRikssnitt,
@@ -1104,6 +1130,48 @@ class PlatsController extends Controller
             ->with('locations')
             ->get();
         return $events;
+    }
+
+    /**
+     * De senaste händelserna för en plats, oavsett datum.
+     *
+     * Ger tre saker på en gång: antalet (för indexeringströskeln),
+     * innehåll att falla tillbaka på när datumfönstret är tomt, och
+     * 404-kontrollen — tom collection betyder att platsen inte finns.
+     *
+     * Villkoren speglar exakt den exists()-kontroll metoden ersatte.
+     * Ändras de ändras vilka platser som 404:ar.
+     *
+     * Cachas 24 h — en plats all-time-lista ändras sällan, och när nya
+     * händelser kommer in plockas de upp av datumfönstret (60 s TTL) som
+     * då inte längre är tomt.
+     *
+     * @return Collection
+     */
+    public function getSenasteEventsInPlats(string $plats, int $limit): Collection
+    {
+        // locations har 445 203 rader med tomt namn. Tom sträng skulle
+        // matcha 88 % av tabellen — släpp aldrig in den i queryn.
+        if ($plats === '') {
+            return collect();
+        }
+
+        $cacheKey = 'getSenasteEventsInPlats:' . md5("{$plats}:{$limit}");
+        $cacheTTL = 24 * 60 * 60;
+
+        return Cache::remember($cacheKey, $cacheTTL, function () use ($plats, $limit) {
+            return CrimeEvent::orderBy('created_at', 'desc')
+                ->where(function ($query) use ($plats) {
+                    $query->where('parsed_title_location', $plats);
+                    $query->orWhere('administrative_area_level_2', $plats);
+                    $query->orWhereHas('locations', function ($query) use ($plats) {
+                        $query->where('name', '=', $plats);
+                    });
+                })
+                ->with('locations')
+                ->limit($limit)
+                ->get();
+        });
     }
 
     /**
