@@ -336,4 +336,25 @@ De 26 timeouterna i försök 1 var symptomet vi missade före deploy. Att de
 är borta, och att 404-räknaren står på noll, bekräftar både prestandan
 och att queryn träffar samma platser som den gamla `exists()`-kontrollen.
 
+**Fälla vid mätning av svarstid:** `?nocache=` bryter **inte** responscachen
+— parametern står i `ignored_query_parameters` i `config/responsecache.php`
+(tillsammans med `t`, `_`, `timestamp`, `utm_*`, `gclid`, `fbclid`).
+Cache-nyckeln blir densamma och ett cachat svar returneras, så mätningen
+visar cache-träffar och inte rendering. Använd en parameter utanför den
+listan, t.ex. `?kallmatning=$RANDOM`. Detta gav först felaktigt låga
+"kalla" tider i verifieringen av försök 2; ommätt med rätt parameter
+landar sidorna på 0,15–0,28 s, så slutsatsen stod sig — men mätningen
+gjorde det inte.
+
+**Indexerbarhet kontrollerad på live efter deploy** (att inget annat än de
+tunna platssidorna blev noindex): `/`, `/stockholm`, `/goteborg`,
+`/malmo`, `/uppsala`, `/lan/skane-lan`, `/lan`, `/statistik`, `/brand`,
+`/inbrott`, `/plats/`, `/nara`, `/vma`, `/helikopter` samt färska
+eventsidor — samtliga indexerbara. Gamla tunna eventsidor är fortsatt
+noindex via `isThinForSeo()`, vilket är avsett (#29).
+
+**Sidofynd, ej relaterat till den här ändringen:** `/om` ligger i
+`sitemap-main.xml` (`GenerateSitemap.php:53`) men svarar **404**. Vi
+skickar alltså en död URL till Google.
+
 **Kvarstår att mäta:** GSC-effekten, 2026-09-01. Se raden i `todo.md`.
