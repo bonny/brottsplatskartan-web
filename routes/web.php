@@ -359,33 +359,32 @@ Route::get('/plats/{plats}/handelser/{date}', [PlatsController::class, 'day'])->
  * Sida, med text typ, t.ex. "om brottsplatskartan" eller "api"
  */
 Route::get('/sida/{pagename}', function ($pagename = null) {
-    $pagetitle = "Sidan $pagename";
+    // Vitlista över sidor som page.blade.php faktiskt renderar innehåll
+    // för. Utan den svarade /sida/vad-som-helst 200 med rubriken
+    // "Sidan vad-som-helst" — obegränsat med indexerbara skräpsidor
+    // (SEO-granskning 2026-08-02).
+    //
+    // 'stockholm' saknas med flit: CityRedirectMiddleware 301:ar den
+    // till /stockholm, så den får aldrig nå hit.
+    $giltigaSidor = [
+        'om' => 'Om Brottsplatskartan',
+        'api' => 'Brottsplatskartans API för att hämta brott från Polisen',
+        'appar' => 'Brottsplatskartans app för Iphone och Android',
+        'cookies' => 'Om cookies på webbplatsen',
+        'press' => 'Brottsplatskartan för press: logotyp, fakta och kontakt',
+        'sekretesspolicy' => 'Sekretesspolicy för Brottsplatskartan',
+    ];
 
-    switch ($pagename) {
-        case "om":
-            $pagetitle = "Om Brottsplatskartan";
-            break;
-        case "api":
-            $pagetitle =
-                "Brottsplatskartans API för att hämta brott från Polisen";
-            break;
-        case "appar":
-            $pagetitle = "Brottsplatskartans app för Iphone och Android";
-            break;
-        case "stockholm":
-            $pagetitle = "Senaste händelserna från Polisen i Stockholm";
-            break;
-        case "cookies":
-            $pagetitle = "Om cookis på webbplatsen";
-            break;
+    $slug = mb_strtolower((string) $pagename);
+
+    if (!isset($giltigaSidor[$slug])) {
+        abort(404);
     }
 
     $data = [
-        "pagename" => $pagename,
-        "pageTitle" => $pagetitle,
-        "canonicalLink" => route('page', [
-            'pagename' => mb_strtolower($pagename)
-        ])
+        "pagename" => $slug,
+        "pageTitle" => $giltigaSidor[$slug],
+        "canonicalLink" => route('page', ['pagename' => $slug]),
     ];
 
     return view('page', $data);

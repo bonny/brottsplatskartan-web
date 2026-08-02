@@ -58,9 +58,12 @@ class GenerateSitemap extends Command
             // övriga saknades trots att de har riktigt innehåll
             // (69–416 ord). '/sida/stockholm' hör INTE hit — den 301:ar
             // till /stockholm.
+            // Listan speglar vitlistan i routen /sida/{pagename}.
             '/sida/om' => ['freq' => Url::CHANGE_FREQUENCY_MONTHLY, 'priority' => 0.3],
             '/sida/api' => ['freq' => Url::CHANGE_FREQUENCY_MONTHLY, 'priority' => 0.4],
             '/sida/appar' => ['freq' => Url::CHANGE_FREQUENCY_MONTHLY, 'priority' => 0.3],
+            '/sida/press' => ['freq' => Url::CHANGE_FREQUENCY_YEARLY, 'priority' => 0.3],
+            '/sida/sekretesspolicy' => ['freq' => Url::CHANGE_FREQUENCY_YEARLY, 'priority' => 0.2],
             '/sida/cookies' => ['freq' => Url::CHANGE_FREQUENCY_YEARLY, 'priority' => 0.2],
             // Tema-sidor — fångar 3 200+ clicks/mån sammanlagt men saknades
             // i sitemap fram till 2026-05-23 (todo #83 Steg 0-fynd).
