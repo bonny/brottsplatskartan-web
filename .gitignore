@@ -69,3 +69,4 @@ tmp-ai-baseline
 # Checksumma över /opt/caddy-sites.d, skrivs av deploy.sh på servern för
 # att avgöra om Caddy behöver startas om. Bara serverns lokala tillstånd.
 /.caddy-sites.sha256
+/tmp-plats-troskel/
