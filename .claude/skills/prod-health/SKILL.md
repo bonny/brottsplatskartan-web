@@ -1,6 +1,6 @@
 ---
 name: prod-health
-description: "Kolla produktionsserverns hälsa — CPU, minne, disk, Docker-containrar och Redis — via SSH till Hetzner. Använd när användaren frågar saker som 'hur mår prod', 'kolla cpu på prod', 'redis health', 'är allt OK på servern', 'docker stats prod'. Subkommandon: (tomt)/all, cpu, mem, disk, docker, redis."
+description: "Kolla produktionsserverns hälsa — CPU, minne, disk, Docker-containrar, Redis och php-fpm-poolen — via SSH till Hetzner. Använd när användaren frågar saker som 'hur mår prod', 'kolla cpu på prod', 'redis health', 'är allt OK på servern', 'docker stats prod', eller när sajten är långsam/nere och orsaken ska hittas. Subkommandon: (tomt)/all, cpu, mem, disk, docker, redis, fpm."
 ---
 
 # /prod-health — produktionsserver-hälsa
@@ -20,6 +20,7 @@ Argumentet efter `/prod-health` (ord 1) avgör vad som körs:
 | `disk`                  | Diskutrymme                                                    |
 | `docker` / `containers` | `docker compose ps` + `docker stats --no-stream`               |
 | `redis`                 | `php artisan redis:health` (rikare output, tabell + varningar) |
+| `fpm`                   | php-fpm-poolen: workers, listen-kö, mättnadsräknare            |
 
 ## Kommandon
 
@@ -90,6 +91,67 @@ Tolka utdata:
 - **Uptime** — om mycket lägre än serverns systemuptime betyder det att
   Redis-containern startat om. Värt att fråga varför (`docker compose logs redis`).
 
+### fpm
+
+**Kolla alltid den här när sajten är långsam eller nere.** Det är php-fpm
+som tar slut först — inte CPU, RAM eller MariaDB.
+
+```bash
+ssh deploy@brottsplatskartan.se 'docker exec -i -e SCRIPT_NAME=/status -e SCRIPT_FILENAME=/status -e REQUEST_METHOD=GET brottsplatskartan-app-1 cgi-fcgi -bind -connect 127.0.0.1:9000'
+```
+
+Tolka:
+
+| Nyckel                 | Betydelse                                      |
+| ---------------------- | ---------------------------------------------- |
+| `max children reached` | Antal gånger poolen slagit i taket sedan start |
+| `max active processes` | Högsta samtidiga workers sedan start           |
+| `max listen queue`     | Djupaste kön av väntande anslutningar          |
+| `listen queue len`     | Backlog-taket (4096)                           |
+| `slow requests`        | Requests över `request_slowlog_timeout`        |
+
+Trösklar:
+
+- `max children reached` > 0 → poolen har varit full. Requests köade.
+- `max active processes` nära `PHP_FPM_PM_MAX_CHILDREN` (40, satt i
+  `compose.yaml`) → taket är på väg att ta slut igen.
+- **`max listen queue` nära `listen queue len` (4096) → kön har svämmat
+  över.** Då vägrar php-fpm nya anslutningar, och utifrån ser det ut som
+  att servern är helt nere: ingen HTTP-statuskod alls, inte 502/503.
+  Uptime-tjänster rapporterar det som "no response code".
+- Alla värden är **kumulativa sedan containerstart**. De säger _att_ det
+  hänt, inte _när_. Tidsstämpla mot något annat (se nedan).
+
+`pm` är `ondemand`, så `total processes` varierar med last — det är inte
+ett problem i sig att den ligger nära taket en stund.
+
+## Responstid över tid — `cache:warm` som gratis mätpunkt
+
+Prod saknar historisk responstidsmätning, men `cache:warm` (schemalagd
+`:08 :23 :38 :53`) pingar ~26 sidor över HTTP mot sajten själv och
+schedulern loggar körtiden. Det ger en **tidsstämplad responstidsserie
+som redan finns**, utan att något behöver installeras.
+
+```bash
+ssh deploy@brottsplatskartan.se "cd /opt/brottsplatskartan && docker compose logs --since 3h --timestamps scheduler 2>&1 | grep -A1 'cache:warm' | grep -E 'cache:warm|s DONE|FAIL'"
+```
+
+Tolka:
+
+- **2–5 s = normalt.** Så ser de allra flesta körningar ut.
+- **15 s+ = sajten är trög för riktiga besökare just då.**
+- **30 s+ eller `FAIL` = något är allvarligt fel.** Kommandot returnerar
+  exit 1 när en URL timeoutar (`Http::timeout(15)`), vilket också ger en
+  `ERROR: Scheduled command ... failed` i `laravel.log`.
+
+Under nedtiden 2026-08-03 gick serien 6 s → 16 s → 40 s (failade) och var
+det som knöt incidenten till en exakt tidpunkt.
+
+**Fälla:** första körningen efter varje deploy är alltid dyr (30 s+) —
+deployen rensar responscachen, så sidorna regenereras kallt. Det är
+förväntat och inget larm. Kolla nästa körning innan du drar slutsatser.
+Samma sak gäller om du curl:ar `/stockholm` direkt efter en deploy.
+
 ## all / (tomt)
 
 Kör allt i **en enda SSH-anslutning** för att minimera handshake-overhead.
@@ -106,6 +168,8 @@ ssh deploy@brottsplatskartan.se '
   # docker stats sätter golvet (~2 s, inneboende sampling).
   docker stats --no-stream > /tmp/_bpk_stats.txt &
   docker exec -i brottsplatskartan-redis-1 redis-cli INFO memory stats server > /tmp/_bpk_redis.txt &
+  docker exec -i -e SCRIPT_NAME=/status -e SCRIPT_FILENAME=/status -e REQUEST_METHOD=GET \
+    brottsplatskartan-app-1 cgi-fcgi -bind -connect 127.0.0.1:9000 > /tmp/_bpk_fpm.txt 2>/dev/null &
   du -sh /opt/brottsplatskartan > /tmp/_bpk_du.txt 2>/dev/null &
 
   uptime
@@ -126,7 +190,9 @@ ssh deploy@brottsplatskartan.se '
   cat /tmp/_bpk_stats.txt
   echo === REDIS INFO ===
   cat /tmp/_bpk_redis.txt
-  rm -f /tmp/_bpk_stats.txt /tmp/_bpk_redis.txt /tmp/_bpk_du.txt
+  echo === PHP-FPM ===
+  cat /tmp/_bpk_fpm.txt
+  rm -f /tmp/_bpk_stats.txt /tmp/_bpk_redis.txt /tmp/_bpk_du.txt /tmp/_bpk_fpm.txt
 '
 ```
 
@@ -191,6 +257,8 @@ top-output. Visa det viktigaste:
 - Disk: `/` raden
 - Docker: bara containrar som **inte** är `Up`/`running` (om alla är OK, säg det)
 - Redis: minne använt / max + evictions + hit rate
+- php-fpm: `max children reached` + `max active processes` / taket +
+  `max listen queue`. Är alla noll/låga räcker det med "poolen mår bra".
 
 ## Konventioner
 
@@ -212,3 +280,19 @@ top-output. Visa det viktigaste:
   in permission-regel.
 - **Container nere** — visa `docker compose logs --tail 50 <namn>` som
   nästa steg, men kör det inte automatiskt.
+- **`docker compose logs` är för långsam för incidentanalys.** Den läser
+  hela JSON-loggen innan den filtrerar, så anrop med `--since 12h` eller
+  breda grep:ar tar flera minuter och timeoutar. Håll fönstren korta
+  (`--since 30m`, eller `--since`/`--until` runt en känd minut) och kör i
+  bakgrunden. Vill du räkna trafik: skriv först till en fil på servern
+  (`> /tmp/x.log 2>&1`, i den ordningen) och greppa den — inte via pipe
+  genom SSH.
+- **Access-loggning är delvis avstängd.** nginx har `access_log off` i
+  sina location-block och Caddy loggar bara warn/error, inte access.
+  nginx server-nivå loggar ändå requests till stdout, så
+  `docker compose logs app` innehåller dem — men Caddy-loggen visar bara
+  fel, så den duger inte för att mäta trafikvolym.
+- **Kumulativa räknare ≠ tidsstämplar.** php-fpm-status och Redis `INFO`
+  räknar sedan containerstart. En `max listen queue: 4098` säger att kön
+  svämmat över någon gång, inte att det sker nu. Knyt till en tidpunkt
+  via `cache:warm`-serien eller schedulerloggen.
