@@ -24,6 +24,26 @@ class Kernel extends ConsoleKernel
         $aiAllowed = static fn (): bool => app()->environment('production')
             || filter_var(config('services.scheduler.ai_local'), FILTER_VALIDATE_BOOLEAN);
 
+        // Minutkarta för de återkommande jobben.
+        //
+        // Tidigare låg allt som gick var 15:e/30:e minut på :00 och :30.
+        // Följden var att tio jobb startade samtidigt: 2026-08-03 körde
+        // schedulern sammanhängande 21:00:00-21:02:19, och mitt i det
+        // fönstret slutade sajten svara utåt (php-fpm-poolen tog slut).
+        // cache:warm, som pingar sajten över HTTP, gick från sina normala
+        // 2-5 s till 40 s och failade.
+        //
+        // Jobben ligger nu utspridda på udda minuter. De som går var 5:e
+        // minut (trafikverket, VMA, texttv, Stockholm-summaries) står kvar
+        // på :00/:05/:10/... — de är korta, och att sprida dem skulle ge
+        // marginell nytta för mycket krångel.
+        //
+        //   :08 :23 :38 :53   cache:warm
+        //   :09 :24 :39 :54   news-fetch-rss
+        //   :11 :26 :41 :56   create-summaries --vague-only
+        //   :13 :43           summary:generate --all-tier1
+        //   :14 :29 :44 :59   news-classify (5 min efter fetch)
+        //   :18 :48           sitemap:generate (tyngst, ~1 min)
         $schedule->command('model:prune')->daily();
 
         // Hämta nya polishändelser (tidigare host-cron, */12 * * * *).
@@ -67,7 +87,7 @@ class Kernel extends ConsoleKernel
         // mönster (sammanfattning natt / brand / stöld / övrigt / mfl).
         // Rate-limit-säkert: ~20-30 nya vaga events/dag i hela landet.
         $schedule->command('crimeevents:create-summaries --vague-only --limit=100')
-            ->everyFifteenMinutes()
+            ->cron('11,26,41,56 * * * *')
             ->withoutOverlapping()
             ->when($aiAllowed);
 
@@ -81,7 +101,7 @@ class Kernel extends ConsoleKernel
             ->when($aiAllowed);
 
         $schedule->command('summary:generate --all-tier1')
-            ->everyThirtyMinutes()
+            ->cron('13,43 * * * *')
             ->withoutOverlapping()
             ->name('daily-summary-tier1-today')
             ->when($aiAllowed);
@@ -115,7 +135,7 @@ class Kernel extends ConsoleKernel
         // requests/15 min mot oss själva. Viktigt tills responsecache
         // 8.x (SWR) är i produktion.
         $schedule->command('cache:warm')
-            ->everyFifteenMinutes()
+            ->cron('8,23,38,53 * * * *')
             ->withoutOverlapping()
             ->name('warm-cache');
 
@@ -124,7 +144,7 @@ class Kernel extends ConsoleKernel
         // mycket tid innan nya URL:er dyker upp för sökmotorer.
         // ~1-2s att generera (cachade counts + 90 dagar events).
         $schedule->command('sitemap:generate')
-            ->everyThirtyMinutes()
+            ->cron('18,48 * * * *')
             ->withoutOverlapping()
             ->name('sitemap');
 
@@ -157,14 +177,14 @@ class Kernel extends ConsoleKernel
             ->name('mcf-import');
 
         $schedule->command('app:news:fetch-rss')
-            ->everyFifteenMinutes()
+            ->cron('9,24,39,54 * * * *')
             ->withoutOverlapping()
             ->name('news-fetch-rss');
 
         // Klassifikation följer fetch men förskjuten 5 min så fetch hinner
         // skriva färdigt nya rader innan vi läser dem.
         $schedule->command('app:news:classify')
-            ->cron('5,20,35,50 * * * *')
+            ->cron('14,29,44,59 * * * *')
             ->withoutOverlapping()
             ->name('news-classify');
 

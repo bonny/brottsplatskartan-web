@@ -18,6 +18,17 @@ services:
       AUTORUN_LARAVEL_VIEW_CACHE: "true"
       AUTORUN_LARAVEL_EVENT_CACHE: "true"
       PHP_OPCACHE_ENABLE: "1"
+      # Taket för php-fpm-workers. Imagens default är 20, vilket tog slut
+      # under nedtiden 2026-08-03 21:00: php-fpm-statusen visade
+      # "max active processes: 20" och en listen-kö som svämmat över
+      # (max listen queue 4098 mot backlog 4096) — då vägras nya
+      # anslutningar, vilket ger uppmätt "no response code" utifrån.
+      #
+      # pm är ondemand, så det här är ett TAK, inte konstant förbrukning:
+      # workers startas vid behov och dör när de blir idle. Mätt åtgång är
+      # ~19 MB/worker (378 MB / 20), så 40 workers ≈ 760 MB i värsta fall.
+      # Ryms i de ~4,1 GB som var lediga (Redis har cap 3 GB av 8 GB totalt).
+      PHP_FPM_PM_MAX_CHILDREN: "40"
     volumes:
       - ./:/var/www/html
     depends_on:

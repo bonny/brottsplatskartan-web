@@ -11,6 +11,20 @@ www.brottsplatskartan.se {
 }
 
 brottsplatskartan.se {
+	# Döda kartbilds-URL:er från en tidigare URL-struktur, t.ex.
+	# /12/100x100.jpg?latlng=1&path=... och /stockholms-lan/12/100x100@2x.jpg.
+	# Bingbot crawlar dem i massor och varje träff renderade en full 43 KB
+	# Laravel-404 — alltså en php-fpm-worker per skräprequest. Det bidrog
+	# till nedtiden 2026-08-03 21:00 (poolen tog slut, listen-kön svämmade
+	# över). Svaras nu i Caddy: inget Laravel-anrop alls.
+	#
+	# 410 i stället för 404 — URL:erna är permanent borta, och sökmotorer
+	# slutar fråga snabbare på 410. Nuvarande kartbilds-route är
+	# /k/v1/{spec}.jpg (routes/web.php) och matchas inte av regexen:
+	# den kräver siffror i näst sista segmentet och NNNxNNN i filnamnet.
+	@dodaKartbilder path_regexp doda_kartbilder ^(/[a-z0-9-]+)?/\d+/\d+x\d+(@2x)?\.jpg$
+	respond @dodaKartbilder 410
+
 	reverse_proxy app:8080 {
 		# Skriv ÖVER X-Forwarded-For i stället för att lägga till.
 		# Caddy default-beteende är att appenda, och eftersom Laravel
