@@ -118,6 +118,12 @@ class CrimeEvent extends Model implements Feedable {
         static::addGlobalScope('public', function (Builder $builder) {
             $builder->where('is_public', true);
         });
+
+        // Koordinatcachen för kartbilds-routen lever ett dygn. Släng den vid
+        // save så en omgeokodning inte ger kartbilder på fel plats så länge.
+        static::saved(function (self $event): void {
+            Cache::forget("kartbild:coords:{$event->id}");
+        });
     }
 
     /**
@@ -881,6 +887,63 @@ class CrimeEvent extends Model implements Feedable {
                 ->limit($limit)
                 ->get();
         });
+    }
+
+    /**
+     * Kolumnerna StaticMapUrlBuilder faktiskt läser. Håll listan i synk med
+     * circleUrl()/closeUpUrl()/farUrl() — getViewPortSizeAsString() räknar
+     * bara på viewport-fälten, så det är hela beroendet.
+     */
+    private const KARTBILD_COLUMNS = [
+        'id',
+        'location_lat',
+        'location_lng',
+        'viewport_northeast_lat',
+        'viewport_northeast_lng',
+        'viewport_southwest_lat',
+        'viewport_southwest_lng',
+    ];
+
+    /**
+     * Uppslag för kartbilds-routen (/k/v1/{spec}.jpg), cachat.
+     *
+     * Routen svarar bara 301 men gjorde en full CrimeEvent::find() per
+     * anrop. Bottar crawlar den ~250 gånger/minut nattetid, så det blev
+     * lika många DB-queries efter data som aldrig ändras: koordinaterna
+     * sätts vid geokodning och ligger sedan still.
+     *
+     * Cachar bara de sju kolumner buildern behöver — inte den färdiga
+     * URL:en. Den är ~820 tecken och finns i ett tiotal storleksvarianter
+     * per event, vilket för ~507k events hade blivit flera GB och trängt
+     * ut responscachen (Redis kör allkeys-lru och evictar urskillningslöst).
+     * Koordinaterna är ~150 byte per event oavsett antal varianter.
+     */
+    public static function findForKartbild(int $id): ?self
+    {
+        $key = "kartbild:coords:{$id}";
+
+        // Cache::remember duger inte här: den cachar inte null, så varje
+        // gissning på ett id som inte finns hade blivit en ny DB-query.
+        // Tom array är sentinel för "finns inte".
+        $attributes = Cache::get($key);
+
+        if ($attributes === null) {
+            $attributes = static::query()
+                ->select(self::KARTBILD_COLUMNS)
+                ->find($id)
+                ?->getAttributes() ?? [];
+
+            // Saknade id:n cachas kort. Id:n är auto-increment, så ett id
+            // som inte finns nu kan finnas om en stund — cachar vi "saknas"
+            // i ett dygn blir nya events utan kartbild lika länge.
+            Cache::put($key, $attributes, $attributes ? now()->addDay() : now()->addMinutes(10));
+        }
+
+        if (!$attributes) {
+            return null;
+        }
+
+        return (new self())->forceFill($attributes);
     }
 
     public function getViewportSize() {

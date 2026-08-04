@@ -44,7 +44,7 @@ class KartbildController extends Controller
 
         $scale = !empty($m['retina']) ? 2 : 1;
 
-        $event = CrimeEvent::find((int) $m['id']);
+        $event = CrimeEvent::findForKartbild((int) $m['id']);
         if (!$event) {
             abort(404);
         }
