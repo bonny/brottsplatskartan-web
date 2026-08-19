@@ -12,15 +12,45 @@ uppdateras var 12:e minut.
 
 - [Startsida](https://brottsplatskartan.se/): Senaste händelser, karta, topplistor.
 - [Län](https://brottsplatskartan.se/lan): Översikt över alla 21 svenska län.
-- [Händelser per datum](https://brottsplatskartan.se/handelser): Kronologiskt arkiv.
+- [Statistik](https://brottsplatskartan.se/statistik): Brottsstatistik över tid och per område.
 - [VMA](https://brottsplatskartan.se/vma): Nationella varnings- och informationsmeddelanden.
-- [Om sajten](https://brottsplatskartan.se/om): Bakgrund, datakällor, integritet.
+- [Ordlista](https://brottsplatskartan.se/ordlista): Förklaringar av polisens brottsrubriceringar.
+- [Om sajten](https://brottsplatskartan.se/sida/om): Bakgrund, datakällor, integritet.
+- [API-dokumentation](https://brottsplatskartan.se/sida/api)
+- [För press](https://brottsplatskartan.se/sida/press): Logotyp, fakta, kontakt.
+
+## URL-mönster
+
+- Län: `/lan/{län-slug}` — t.ex. https://brottsplatskartan.se/lan/skane-lan
+- Kommun/ort: `/{ort}` — t.ex. https://brottsplatskartan.se/uppsala
+- Enskild händelse: `/{län-slug}/{brottstyp}-{ort}-{id}` — t.ex.
+  https://brottsplatskartan.se/kronobergs-lan/brand-almhult-508138
+- Händelser ett visst datum, hela landet: `/handelser/{datum}` — t.ex.
+  https://brottsplatskartan.se/handelser/18-augusti-2026
+- Per område används månadsvyer:
+  `/lan/{län-slug}/handelser/{år}/{månad}` och `/{ort}/handelser/{år}/{månad}`.
+  Dagsformen `/lan/{län-slug}/handelser/{datum}` finns men 301:ar till
+  månadsvyn med ett ankare för dagen.
+
+Två fällor:
+
+- `/handelser` utan datum finns inte — den 301:ar till startsidan, som
+  visar samma data.
+- Stockholm är ett specialfall: `/lan/stockholms-lan` 301:ar till
+  https://brottsplatskartan.se/stockholm.
 
 ## Dataformat
 
 - RSS/Atom-feed: https://brottsplatskartan.se/rss
-- JSON API: https://brottsplatskartan.se/api/events
-- Se även /api-docs för komplett API-referens.
+- JSON API (se /sida/api för parametrar och gränser):
+  - `GET /api/events` — händelser, filtrerbara på område och tid.
+  - `GET /api/event/{id}` — en enskild händelse.
+  - `GET /api/eventsNearby?lat={lat}&lng={lng}` — händelser nära en punkt.
+    Kräver koordinater; utan dem svarar den 404.
+  - `GET /api/eventsMap` — händelser i kartformat.
+  - `GET /api/eventsInMedia` — händelser som omnämnts i media.
+  - `GET /api/mostViewedRecently` — mest visade händelserna nyligen.
+  - `GET /api/areas` — tillgängliga områden (län, kommuner, orter).
 
 ## Markdown-variant av alla sidor
 
@@ -55,7 +85,9 @@ automatiskt från HTML till markdown via
 
 ## Sitemap
 
-- https://brottsplatskartan.se/sitemap.xml
+- https://brottsplatskartan.se/sitemap.xml (index)
+- https://brottsplatskartan.se/sitemap-main.xml (sektionssidor)
+- `sitemap-events-{år}.xml` för händelsearkivet per år.
 
 ## Användning av innehåll
 
@@ -69,4 +101,5 @@ användare kan klicka vidare.
 
 ## Kontakt
 
-Sajten drivs av Pär Thernström. För frågor om dataanvändning, se /om.
+Sajten drivs av Pär Thernström. För frågor om dataanvändning, se
+https://brottsplatskartan.se/sida/om.
