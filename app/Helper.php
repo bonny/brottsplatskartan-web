@@ -236,6 +236,7 @@ class Helper {
             if ($articleIds->isNotEmpty()) {
                 $couplings = DB::table('crime_event_news')
                     ->whereIn('news_article_id', $articleIds)
+                    ->where('is_match', true)
                     ->orderByRaw("FIELD(confidence, 'hög', 'medel') ASC")
                     ->orderByDesc('matched_at')
                     ->get(['news_article_id', 'crime_event_id'])

@@ -357,3 +357,55 @@ vi till samma gissningsproblem som första utkastet hade.
 - **#81 soak** (2026-05-24) — vänta in det beslutet innan Fas 1 deployas
   så vi inte rullar tillbaka avstängningen för att direkt ändra design.
 - **Fas 0 mätningar** — blockerar all kod-aktion. ~1-2 h SQL.
+
+## Uppföljning 2026-08-21 — färskt pass var 15:e minut + negativ cache
+
+Utlöst av att [Larm från skola, Fagersta](https://brottsplatskartan.se/vastmanlands-lan/ovrigt-fagersta-508299)
+(svärdattacken på Brinellskolan, dagens största nyhet) stod utan nyheter
+timmarna efter händelsen.
+
+**Rotorsak:** kadensen, inte urvalet. `event-news-match` gick `25 */12 * * *`.
+Eventet skapades 15:11, kandidat-artiklar fanns i `place_news` ~20 minuter
+senare — men nästa schemalagda pass låg 00:25, nio timmar bort. Precis de
+timmar sidan har mest trafik var sektionen tom.
+
+**Ändringar:**
+
+- **Nytt smalt pass:** `app:event-news:match --hours=8 --limit=20` på
+  `16,31,46,1` (två minuter efter `news-classify`). Nya `--hours` överskuggar
+  `--days`. 12-timmarspasset ligger kvar för svansen.
+- **Negativ cache:** `crime_event_news.is_match` — även avslag sparas.
+  Utan den hade varje pass betalat om för alla tidigare nej, vilket är det
+  som gjorde tät kadens omöjlig. Ger dessutom det negativ-set som
+  eval-avsnittet ovan efterlyser.
+- **Urvalet räknar bara okontrollerat arbete:** `eventsWithCandidates()`
+  filtrerar bort events vars alla kandidater redan kontrollerats. Utan det
+  äter färdiga events upp `LIMIT` och ett event kan tryckas permanent ur
+  fönstret av nyare events — vilket hände i test: Fagersta-eventet föll ur
+  en `LIMIT 20`.
+- **Tidszonsfix:** `pubdate` lagrades i UTC (`Carbon::createFromTimestamp`
+  defaultar till UTC) medan resten av appen kör Europe/Stockholm. Varje
+  artikel visades som två timmar äldre än den var i
+  `diffForHumans()`-etiketterna, och tidsfönster jämfördes mot fel klocka.
+  Fixat i `FetchNewsRss` + DST-medveten migration av `news_articles` och
+  `place_news`.
+- **Term-lucka i `blaljus_terms`:** _attack, överfall, svärd, yxa, machete,
+  hot, skadad, livshotande_ m.fl. saknades. Med AI-passet pausat sedan
+  2026-06-01 är regex-listan enda grinden. Efter tillägget gick
+  Fagersta-artiklarna i `place_news` från 6 till 12 — bland de tillkomna
+  fanns SVT:s och Expressens huvudrubriker.
+
+**Verifierat lokalt mot samma händelse** (lokalt event-id 506930): 14
+kandidater → 12 träffar, 2 avslag, sidan renderar åtta artiklar under
+Nyheter om händelsen. Omkörning ger 0 Haiku-anrop. Migrationens up/down är
+roundtrip-exakt och DST-korrekt. PHPStan level 5: 0 errors.
+
+**Kostnad:** de 47 extra körningarna per dygn betalar bara för nytillkomna
+artiklar tack vare cachen. Netto väntas kostnaden _sjunka_ mot dagens
+~$1,64/dygn, eftersom 12-timmarspasset idag betalar om för samma avslag
+varje gång. Följ upp i #81:s kostnadsspårning om en vecka.
+
+**Kvarstår:** nya blåljus-termer gäller bara artiklar som ännu inte
+klassats. Retroaktivt på färska artiklar:
+`UPDATE news_articles SET classified_at = NULL WHERE fetched_at > NOW() - INTERVAL 2 DAY;`
+och låt `app:news:classify` gå om.

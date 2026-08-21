@@ -1295,7 +1295,8 @@ class CrimeEvent extends Model implements Feedable {
             'crime_event_news',
             'crime_event_id',
             'news_article_id'
-        )->withPivot(['confidence', 'ai_reason', 'matched_at']);
+        )->withPivot(['is_match', 'confidence', 'ai_reason', 'matched_at'])
+            ->wherePivot('is_match', true);
     }
 
     /**

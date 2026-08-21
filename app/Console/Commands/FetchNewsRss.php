@@ -106,8 +106,13 @@ class FetchNewsRss extends Command
             $rawSummary = (string) ($item->get_description() ?? '');
             $summary = trim(strip_tags(html_entity_decode($rawSummary, ENT_QUOTES | ENT_HTML5, 'UTF-8')));
 
+            // Explicit app-tidszon: Carbon::createFromTimestamp defaultar till
+            // UTC, vilket gav pubdate två timmar bakom created_at/fetched_at
+            // och "för N timmar sedan"-etiketter som visade fel ålder.
             $pubTs = $item->get_date('U');
-            $pubdate = is_numeric($pubTs) ? Carbon::createFromTimestamp((int) $pubTs)->toDateTimeString() : null;
+            $pubdate = is_numeric($pubTs)
+                ? Carbon::createFromTimestamp((int) $pubTs, config('app.timezone'))->toDateTimeString()
+                : null;
 
             $rows[] = [
                 'source' => $source,

@@ -32,6 +32,14 @@ return [
         'sprängning', 'sprängdåd', 'bombdåd', 'attentat', 'detonation', 'explosion', 'explosioner',
         'granat', 'granater', 'raket', 'raketer',
         'kniv', 'knivhot', 'knivattack', 'knivskuren', 'knivskars', 'knivöverfall',
+        // Tillagt 2026-08-21: svärdattacken i Fagersta klassades bara tack
+        // vare att sammanfattningen råkade innehålla "polis" — rubrikerna
+        // ("Svärdattack på Brinellskolan", "Flera skadade efter attack")
+        // innehöll inte en enda term ur listan.
+        'attack', 'attacken', 'attackerad', 'attackerade', 'överfall', 'överfallen',
+        'svärd', 'yxa', 'machete', 'våldsdåd', 'våldsbrott',
+        'hot', 'hotad', 'hotade', 'hotfull', 'bombhot', 'skolattack',
+        'skadad', 'skadade', 'livshotande',
         'olycka', 'olyckan', 'olyckor', 'trafikolycka', 'krock', 'krockade',
         'frontalkrock', 'kollision', 'kolliderade', 'kollidera', 'singelolycka',
         'påkörd', 'påkörda', 'omkullkörd',

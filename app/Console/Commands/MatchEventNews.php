@@ -18,15 +18,27 @@ use Illuminate\Support\Facades\Log;
  *
  * Events väljs via place_news-join (plats+datum-match) i stället för
  * trafik-ranking — täcker alla events med nyhetskandidat, inte bara top-N.
+ *
+ * Två körningar i schemat: ett brett pass var 12:e timme (`--days=7`) och ett
+ * smalt pass var 15:e minut för färska events (`--hours=8`). Det smala passet
+ * finns för att stora händelser får sin mediebevakning inom en timme — att
+ * vänta till nästa 12-timmarspass gör sektionen tom just när trafiken är som
+ * störst.
+ *
+ * Både träffar och avslag sparas i crime_event_news (`is_match`) så att samma
+ * par aldrig skickas till Haiku två gånger. Utan den negativa cachen skulle
+ * varje pass betala om för alla tidigare avslag — vilket är vad som gör den
+ * täta kadensen möjlig.
  */
 class MatchEventNews extends Command
 {
     protected $signature = 'app:event-news:match
         {--limit=50 : Max antal events per körning}
         {--days=7 : Events skapade senaste N dagar}
+        {--hours= : Events skapade senaste N timmar (överskuggar --days)}
         {--window-days=2 : Kandidat-artiklar inom event-datum ±N dagar}
         {--event= : Kör mot ett specifikt event_id (testning)}
-        {--rerun : Bortse från redan-matchade par och kör om alla}
+        {--rerun : Bortse från redan kontrollerade par och kör om alla}
         {--dry-run : Visa vad som skulle skickas till AI utan att anropa}';
 
     protected $description = 'Matchar events (med nyhetskandidat) mot artiklar via Haiku 4.5 (todo #82 fas 1).';
@@ -34,15 +46,19 @@ class MatchEventNews extends Command
     public function handle(): int
     {
         $limit = (int) $this->option('limit');
-        $days = (int) $this->option('days');
         $windowDays = (int) $this->option('window-days');
         $specificEvent = $this->option('event');
         $rerun = (bool) $this->option('rerun');
         $dryRun = (bool) $this->option('dry-run');
 
+        $hours = $this->option('hours');
+        $cutoff = $hours !== null
+            ? Carbon::now()->subHours((int) $hours)
+            : Carbon::now()->subDays((int) $this->option('days'));
+
         $eventIds = $specificEvent
             ? [(int) $specificEvent]
-            : $this->eventsWithCandidates($days, $windowDays, $limit);
+            : $this->eventsWithCandidates($cutoff, $windowDays, $limit, $rerun);
 
         if ($eventIds === []) {
             $this->info('Inga events att matcha.');
@@ -57,6 +73,7 @@ class MatchEventNews extends Command
             'candidates_total' => 0,
             'haiku_calls' => 0,
             'matches_saved' => 0,
+            'rejections_saved' => 0,
             'errors' => 0,
         ];
 
@@ -125,13 +142,13 @@ class MatchEventNews extends Command
                     ));
                 }
 
-                if (!$isMatch) {
-                    continue;
-                }
-
+                // Avslag sparas också — raden är kvittot på att paret är
+                // kontrollerat, så nästa körning hoppar över det i stället
+                // för att betala för samma nej igen.
                 $inserted = DB::table('crime_event_news')->insertOrIgnore([
                     'crime_event_id' => $event->id,
                     'news_article_id' => $article->id,
+                    'is_match' => $isMatch,
                     'confidence' => $confidence,
                     'ai_reason' => $reason,
                     'ai_model' => 'claude-haiku-4-5',
@@ -140,17 +157,19 @@ class MatchEventNews extends Command
                     'updated_at' => $now,
                 ]);
 
-                $stats['matches_saved'] += $inserted;
+                $stats[$isMatch ? 'matches_saved' : 'rejections_saved'] += $inserted;
             }
         }
 
         $this->info(sprintf(
-            'Klart. Events: %d (varav %d utan kandidater), kandidater: %d, Haiku-anrop: %d, matchningar sparade: %d, fel: %d.',
+            'Klart. Events: %d (varav %d utan kandidater), kandidater: %d, Haiku-anrop: %d, '
+                . 'matchningar: %d, avslag: %d, fel: %d.',
             $stats['events_processed'],
             $stats['events_no_candidates'],
             $stats['candidates_total'],
             $stats['haiku_calls'],
             $stats['matches_saved'],
+            $stats['rejections_saved'],
             $stats['errors']
         ));
 
@@ -158,14 +177,25 @@ class MatchEventNews extends Command
     }
 
     /**
-     * Event-ids skapade senaste $days dygn som har minst en nyhetskandidat
-     * i place_news inom event-datum ±$windowDays. Sorterade nyast först.
+     * Event-ids skapade efter $cutoff som har minst en nyhetskandidat i
+     * place_news inom event-datum ±$windowDays. Sorterade nyast först.
+     *
+     * Events vars samtliga kandidater redan kontrollerats filtreras bort —
+     * annars äter färdigbehandlade events upp $limit och ett event kan
+     * hamna permanent utanför fönstret när nyare events trycker på. (Det
+     * hände i test: Fagersta-eventet föll ur en LIMIT 20 för att tjugo
+     * nyare events hann emellan.)
      *
      * @return list<int>
      */
-    private function eventsWithCandidates(int $days, int $windowDays, int $limit): array
+    private function eventsWithCandidates(Carbon $cutoff, int $windowDays, int $limit, bool $rerun = false): array
     {
-        $cutoff = Carbon::now()->subDays($days);
+        $unchecked = $rerun ? '' : '
+               AND NOT EXISTS (
+                   SELECT 1 FROM crime_event_news cen
+                   WHERE cen.crime_event_id = ce.id
+                     AND cen.news_article_id = pn.news_article_id
+               )';
 
         $rows = DB::select(
             'SELECT DISTINCT ce.id
@@ -173,7 +203,7 @@ class MatchEventNews extends Command
              JOIN places p ON (p.name = ce.parsed_title_location OR p.name = ce.administrative_area_level_2)
              JOIN place_news pn ON pn.place_id = p.id
                AND pn.pubdate BETWEEN DATE_SUB(ce.created_at, INTERVAL ? DAY)
-                                  AND DATE_ADD(ce.created_at, INTERVAL ? DAY)
+                                  AND DATE_ADD(ce.created_at, INTERVAL ? DAY)' . $unchecked . '
              WHERE ce.created_at >= ?
              ORDER BY ce.created_at DESC
              LIMIT ?',
@@ -185,7 +215,8 @@ class MatchEventNews extends Command
 
     /**
      * Kandidat-artiklar för ett event: blåljus-klassade place_news-rader
-     * vars place matchar event-platsen, inom event-datum ±N dagar.
+     * vars place matchar event-platsen, inom event-datum ±N dagar. Par som
+     * redan kontrollerats av Haiku (träff eller avslag) hoppas över.
      */
     private function candidatesFor(CrimeEvent $event, int $windowDays, bool $rerun)
     {

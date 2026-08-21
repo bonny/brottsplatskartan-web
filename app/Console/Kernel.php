@@ -43,6 +43,7 @@ class Kernel extends ConsoleKernel
         //   :11 :26 :41 :56   create-summaries --vague-only
         //   :13 :43           summary:generate --all-tier1
         //   :14 :29 :44 :59   news-classify (5 min efter fetch)
+        //   :16 :31 :46 :01   event-news-match --hours=8 (2 min efter classify)
         //   :18 :48           sitemap:generate (tyngst, ~1 min)
         $schedule->command('model:prune')->daily();
 
@@ -215,6 +216,21 @@ class Kernel extends ConsoleKernel
             ->cron('25 */12 * * *')
             ->withoutOverlapping()
             ->name('event-news-match')
+            ->when($aiAllowed);
+
+        // Smalt pass för färska events var 15:e minut. Stora händelser får
+        // sin mediebevakning inom en timme — 12-timmarspasset ovan lämnade
+        // "Nyheter om händelsen" tom just när trafiken är som störst
+        // (svärdattacken i Fagersta 2026-08-21: artiklar i place_news efter
+        // 20 min, nästa schemalagda match 9 timmar senare).
+        //
+        // Kostnaden hålls nere av den negativa cachen (is_match): bara par
+        // som aldrig kontrollerats kostar Haiku-anrop, så de 47 extra
+        // körningarna per dygn betalar bara för nytillkomna artiklar.
+        $schedule->command('app:event-news:match --hours=8 --limit=20')
+            ->cron('16,31,46,1 * * * *')
+            ->withoutOverlapping()
+            ->name('event-news-match-fresh')
             ->when($aiAllowed);
     }
 
