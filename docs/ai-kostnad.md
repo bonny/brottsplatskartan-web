@@ -109,6 +109,15 @@ Om det ändå ska göras: mät om N först. Ratiot beror på hur mycket
 - **Rätt felriktning.** Prompten föreskriver `is_match=false` vid tvekan —
   bättre missa en match än visa en felaktig länk. En eval som byter en falsk
   positiv mot en falsk negativ är ett godkänt byte.
+- **Exemplen behöver inte spegla indataformatet.** En code-review 2026-08-24
+  invände att few-shot-exemplen använder en kompakt form
+  (`HÄNDELSE: Skottlossning, Rinkeby | 2026-05-10 | …`) medan `formatEventBlock()`
+  skickar radbrutna `Titel:`/`Datum:`/`Plats:`-fält. Provat: exempel i det
+  riktiga formatet kostar **+317 tokens/anrop (~$2,9/mån)** och gav 97,5 %
+  samstämmighet mot den kompakta formens 98,8 % — alltså ingen förbättring,
+  möjligen sämre (skillnaden är ett par av 80 och agenten har ingen fast
+  temperatur, så det ligger inom brus). Återställt. Gör inte om det utan att
+  mäta.
 - **Scheduler-cachen.** Vid deploy av blade-promptar krävs
   `docker compose restart scheduler` på prod. `view:clear` räcker inte —
   scheduler-containern plockar inte upp ändrade kompilerade vyer automatiskt.
