@@ -26,8 +26,10 @@ description: Drift av produktionsservern på Hetzner — deploy, rollback, artis
 
 ### Efter deploy: två saker som ser ut som fel men inte är det
 
-Verifierat 2026-08-24 (#102). Rulla **inte** tillbaka på något av det här
-utan att först kolla tidsstämplarna mot deployens fönster.
+Verifierat 2026-08-24 (#102) — jag gick på både 1 och 2 själv, dagen efter
+att jag skrev det här avsnittet. Rulla **inte** tillbaka på något av det här
+utan att först kolla tidsstämplarna mot `deployed_at` i
+`storage/app/deploy.json`.
 
 **1. Fatala fel i loggen under `composer install`.** När lockfilen ändrats
 byts `vendor/` ut under fötterna på körande php-fpm-processer. Det ger en
@@ -53,7 +55,16 @@ såg ut som en trasig uppgradering, men `guzzlehttp/psr7` var **oförändrad**
 2.13.1 före och efter — felen låg i ett 4-sekundersfönster och `vma_alerts:import`
 körde rent direkt efteråt.
 
-**2. Sidor tar 10–60 s de första minuterna.** `deploy.sh` avslutar med
+**2. Kortvarig 502 på allt.** `deploy.sh` kör `restart app scheduler`. Under
+den omstarten kan Caddy inte nå upstream och svarar **502 på varje sida** —
+snabbt (~0,05 s), vilket skiljer det från en verklig överbelastning. Alla
+containrar rapporterar samtidigt `running`, vilket gör det extra vilseledande.
+
+Fönstret är sekunder. Jämför tidsstämpeln mot `deployed_at` i
+`storage/app/deploy.json` innan du gör något — och kolla `docker compose logs
+--tail=25 app`, där riktig trafik syns fortsätta med 200 direkt efteråt.
+
+**3. Sidor tar 10–60 s de första minuterna.** `deploy.sh` avslutar med
 `responsecache:clear`, så _hela_ cachen är tom samtidigt som app-containern
 just startat om (kall opcache). Requests köar bakom varandras omrenderingar.
 
