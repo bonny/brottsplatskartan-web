@@ -116,6 +116,13 @@ embeddings-/transcription-builders. Vi använder ingetdera: tabellerna
 publicerade migrationen men har **0 rader på prod** och ingen kod rör dem.
 Rimligast är att droppa de oanvända tabellerna istället för att migrera dem.
 
+> **Åtgärdat 2026-08-24** efter code-review (fynd 3). Att bara lämna dem var
+> fel: den publicerade kopian låstes till 0.6.x-schemat, och eftersom paketets
+> egen migration har samma filnamn kör den aldrig igen. Tabellerna hade legat
+> kvar i fel form och fallit först den dag någon använder conversation-flödet.
+> Borttagna i `2026_08_24_190000_drop_unused_agent_conversation_tables`, den
+> publicerade migrationen raderad. Behövs de: `vendor:publish` + `migrate`.
+
 ### Fas 3 — Batcha kandidater per event ($8–13/mån, hög insats)
 
 `MatchEventNews.php:106` är en nästlad loop med ett `->prompt()` per
