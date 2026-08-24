@@ -29,7 +29,7 @@ Stämmer rimligt med fakturans $10/dygn (vi kan missa något, t.ex. failover-ret
 
 **Stora spakar (ordnade efter förväntad effekt):**
 
-1. **Prompt-caching av system-prompt** → 90 % besparing på Haiku-input. Cache-read är $0.10/MTok vs input $1/MTok. Men: `laravel/ai` Anthropic-gateway **saknar write-stöd för `cache_control`** — vi kan bara läsa cache-tokens från response, inte sätta dem på request. Kräver PR mot `laravel/ai` eller bypass.
+1. ~~**Prompt-caching av system-prompt**~~ → **AVFÄRDAD 2026-08-24 (#102), två felaktiga premisser i den ursprungliga texten.** (a) Caching är omöjlig oavsett SDK: **Haiku 4.5 kräver 4 096 tokens cachebart prefix** och hela vår request toppar på ~1 300 — prefix under gränsen cachas tyst. (b) Blockeraren nedan stämmer inte: gatewayen sätter visserligen aldrig `cache_control`, men `BuildsTextRequests.php` avslutar med `array_merge($body, $providerOptions)`, så en agent som implementerar `HasProviderOptions` kan skriva över `system`. **Ingen vendor-PR behövs.** Total upside där caching _går_ (Daily/Monthly) är ~$0,83/mån. Se [docs/ai-kostnad.md](../docs/ai-kostnad.md).
 2. **Krympa system-prompterna** → om 149-rads prompt går att korta till ~30 rader: 80 % besparing. Behöver inget kachande, behöver bara prompt-engineering.
 3. **Pre-filtrera bättre** → om regex/keyword-filter kan kasta uppenbart irrelevanta artiklar innan AI: minskar volymen direkt.
 4. **Loggern (fas 1)** är fortfarande nödvändig för att bekräfta vad som faktiskt händer + fånga framtida ändringar.
@@ -127,7 +127,7 @@ Stockholm-jobbet är skyddat av `WHERE title_alt_1 IS NULL` — varje event AI-a
 
 **0c. Aktivera prompt-caching** (kräver vendor-PR, ~halv dag)
 
-- `vendor/laravel/ai/src/Gateway/Anthropic/Concerns/ParsesTextResponses.php:331` läser `cache_creation_input_tokens` från response, men ingen kod i `vendor/laravel/ai/src/Gateway/Anthropic/` **sätter** `cache_control: {type: "ephemeral"}` på request-meddelanden. Verifierat 2026-05-15.
+- `vendor/laravel/ai/src/Gateway/Anthropic/Concerns/ParsesTextResponses.php:331` läser `cache_creation_input_tokens` från response, men ingen kod i `vendor/laravel/ai/src/Gateway/Anthropic/` **sätter** `cache_control: {type: "ephemeral"}` på request-meddelanden. Verifierat 2026-05-15, fortfarande sant i v0.11.0. **Men slutsatsen "kräver vendor-PR eller bypass" är fel** — `providerOptions` array_merge:as sist in i request-body och kan skriva över `system`. Se #102. (Akademiskt: caching går ändå inte på Haiku 4.5.)
 - Två vägar:
     - **PR mot `laravel/ai`** för att lägga till `->withCache()` på prompts → påverkar uppströms, ren lösning men beroende av merge.
     - **Bypass `laravel/ai` för Haiku-anropen** — använd Anthropic-SDK direkt med cache_control på system-prompt. Mer kod, men oberoende av uppströms.
@@ -498,7 +498,7 @@ Den enda diskrepansen ("Nato-kritiska protester vid mötet i Helsingborg") var O
 | XML chars    | 37 682   | 22 479    | -40.3 %   |
 | Input-tokens | ~11 000  | ~10 200   | -7 % \*   |
 
-\* Mindre token-reduktion än char-reduktion eftersom system-prompt + task-block är oförändrade. Verkar ge ~$1-2/mån direkt på tokens + ~$3/mån på halvering av frekvens = **~$4-5/mån besparing**.
+\* Mindre token-reduktion än char-reduktion eftersom system-prompt + task-block är oförändrade. Verkar ge ~~$1-2/mån direkt på tokens + ~$3/mån på halvering av frekvens = **~~$4-5/mån besparing**.
 
 **Output-kvalitet:** manuellt verifierad — sammanfattningen behåller 10+ specifika händelse-länkar, korrekt struktur (5 stycken), trendmening (-12 % jfr april), geografisk spridning. Inga uppenbara regressioner.
 
@@ -546,12 +546,12 @@ plats i titel, ingen svensk markör` i fönstret. 20 slumpade titlar granskade:
 | NewsClassifier     | $0        | $0       | pausad #64  |
 | **Total**          | **$2,01** | **~$60** |             |
 
-**Beslut:** #81:s aktiva optimerings-spår avslutat. EventNewsMatcher (~78 % av
+**Beslut:** #81:s aktiva optimerings-spår avslutat. EventNewsMatcher (~~78 % av
 spenden) ägs nu av #82, vars egen soak/gate löper till **2026-06-09** ($3/dygn-gate;
 ligger på $1,56/dygn för agenten ensam, $2,01 total — under gaten). #81 fortsätter
 som passiv monitoring: nästa kostnads-review rider på #82-gaten 2026-06-09 (stäng /
 flytta dedup till klassifikation / Fas 4-caching avgör slutlig $/mån). Sonnet-trion
-(~$13/mån) är inom operativt overhead — ingen åtgärd före #36-data.
+(~~$13/mån) är inom operativt overhead — ingen åtgärd före #36-data.
 
 ## Confidence
 

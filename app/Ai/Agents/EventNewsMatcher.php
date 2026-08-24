@@ -18,6 +18,10 @@ use Laravel\Ai\Promptable;
  * is_match + confidence + kort motivering.
  *
  * Modell: Haiku 4.5 — klassifikation, inte resonemang.
+ *
+ * Prompt-caching är INTE möjlig här: Haiku 4.5 kräver 4 096 tokens cachebart
+ * prefix och hela requesten toppar på ~1 300. Se docs/ai-kostnad.md innan du
+ * utreder det igen — modellbyte hjälper inte heller.
  */
 #[Provider(Lab::Anthropic)]
 #[Model('claude-haiku-4-5')]

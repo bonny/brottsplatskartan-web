@@ -104,6 +104,13 @@ Response cache via Spatie (Redis), plus query-caching för geografiska
 uppslag. Se
 [docs/spatie-response-cache-implementation.md](docs/spatie-response-cache-implementation.md).
 
+### AI-kostnad
+
+Fem agenter i `app/Ai/Agents/` anropar Anthropic via `laravel/ai`. Innan du
+utreder prompt-caching eller batchning: läs
+**[docs/ai-kostnad.md](docs/ai-kostnad.md)** — båda är redan utredda och
+avfärdade på mätning, och filen förklarar varför så vi slipper göra om det.
+
 ## Terminologi
 
 ### Brottskategorier

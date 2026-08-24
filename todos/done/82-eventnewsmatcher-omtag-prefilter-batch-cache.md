@@ -317,8 +317,14 @@ medvetet äter besparingen via djupare distinkta stories (per
 Kvalitetsgaten passerar; kostnaden ~halverad mot baslinjen. **Fas 4
 (prompt-caching) avfärdad** — uppside bounded (~500-token systemprompt → ~$49→~$45)
 och YAGNI ([[feedback_yagni_simplicity]]) talar emot bygge utan tydlig drivare.
-**Flytta dedup till klassifikation** förblir YAGNI-uppskjuten (ingen tredje
-konsument). Kostnaden spåras passivt vidare i #81.
+
+> **Rättelse 2026-08-24 (#102):** systemprompten var **1 885 token**, inte ~500 —
+> 3,8× antagandet här. Slutsatsen (skippa caching) var ändå rätt, men av fel
+> skäl: Haiku 4.5 kräver 4 096 tokens cachebart prefix, så caching var aldrig
+> möjlig oavsett upside. Samma felaktiga premiss underskattade Fas 2 (batch) —
+> som dock avfärdats igen 2026-08-24 på uppmätt N=1,56 kandidater/event.
+> **Flytta dedup till klassifikation** förblir YAGNI-uppskjuten (ingen tredje
+> konsument). Kostnaden spåras passivt vidare i #81.
 
 ## Risker
 
