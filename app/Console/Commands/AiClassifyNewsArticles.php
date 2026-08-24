@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Laravel\Ai\Responses\StructuredAgentResponse;
 
 /**
  * AI-klassifikation av news_articles (todo #64). Körs efter regex-passet
@@ -147,6 +148,18 @@ class AiClassifyNewsArticles extends Command
                 $stats['errors']++;
                 Log::warning("NewsClassifier fel artikel-{$article->id}: " . $e->getMessage());
                 $this->warn("Fel artikel-{$article->id}: " . $e->getMessage());
+                continue;
+            }
+
+            // Se MatchEventNews: ett oavkodbart svar ger [] utan att kasta.
+            // `ai_classified_at` nedan stämplas permanent, så ett tomt svar
+            // skulle låsa artikeln som icke-blåljus utan omprövning.
+            $structured = $response instanceof StructuredAgentResponse ? $response->toArray() : [];
+
+            if (!array_key_exists('is_blaljus', $structured)) {
+                $stats['errors']++;
+                Log::warning("NewsClassifier tomt/oavkodbart svar artikel-{$article->id}");
+                $this->warn("Tomt AI-svar artikel-{$article->id} — hoppar över");
                 continue;
             }
 

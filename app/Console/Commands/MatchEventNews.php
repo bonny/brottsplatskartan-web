@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Laravel\Ai\Responses\StructuredAgentResponse;
 
 /**
  * Matchar Brottsplatskartan-events mot kandidat-nyhetsartiklar via Haiku 4.5
@@ -123,6 +124,23 @@ class MatchEventNews extends Command
                     $stats['errors']++;
                     Log::warning("EventNewsMatcher fel event-{$event->id} article-{$article->id}: " . $e->getMessage());
                     $this->warn("Fel event-{$event->id} article-{$article->id}: " . $e->getMessage());
+                    continue;
+                }
+
+                // Ett oavkodbart svar (trunkerat av MaxTokens, prosa runt
+                // JSON:en) kastar inte — laravel/ai:s decodeStructuredOutput()
+                // returnerar [] och `?? false` skulle då tolkas som ett avslag.
+                // Raden vi skriver nedan ÄR den negativa cachen, så ett sådant
+                // avslag skulle aldrig omprövas och en äkta träff försvinna
+                // tyst. Hoppa över paret i stället — nästa körning tar om det.
+                $structured = $response instanceof StructuredAgentResponse ? $response->toArray() : [];
+
+                if (!array_key_exists('is_match', $structured)) {
+                    $stats['errors']++;
+                    Log::warning(
+                        "EventNewsMatcher tomt/oavkodbart svar event-{$event->id} article-{$article->id}"
+                    );
+                    $this->warn("Tomt AI-svar event-{$event->id} article-{$article->id} — hoppar över");
                     continue;
                 }
 
