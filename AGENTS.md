@@ -77,11 +77,16 @@ docker compose exec app php artisan tinker
 `php artisan tinker --execute` och `tinker < fil.php` går genom psysh, som
 har två begränsningar som lätt äter en halvtimme:
 
-1. **Hooken `check-prod-tinker.sh` blockerar skriv-PHP** (`file_put_contents`,
-   `::create`, `DB::insert`, `Schema::` m.fl.) — **även mot den lokala
-   containern**, den skiljer inte på lokalt och prod.
-2. **psysh parsar rad för rad** och faller på flerradiga `try`/`catch`
+1. **psysh parsar rad för rad** och faller på flerradiga `try`/`catch`
    (`Cannot use try without catch or finally`).
+2. **Radvis `echo` inuti `foreach` kommer tillbaka mangleat** — psysh ekar
+   källraderna blandat med utdata.
+
+Hooken `check-prod-tinker.sh` blockerar skriv-PHP, men **bara mot prod**:
+båda registreringarna i `.claude/settings.local.json` är `if`-låsta till
+`ssh deploy@brottsplatskartan.se '...tinker --execute=*`. Lokal tinker med
+`file_put_contents` går igenom — verifierat 2026-08-24 för både `--execute`
+och stdin-formen.
 
 För allt som är mer än en enkel läsfråga: skriv ett fristående skript som
 bootar Laravel själv och kör det med `php`, inte `tinker`.
@@ -102,8 +107,7 @@ docker compose exec -T app php /tmp/skript.php
 ```
 
 Behöver du ändå tinker och vill ha strukturerad output tillbaka: echo:a en
-enda sträng med markörer (`###J###...###E###`) och plocka ut den med `grep -o`
-— radvis `echo` inuti `foreach` kommer tillbaka mangleat.
+enda sträng med markörer (`###J###...###E###`) och plocka ut den med `grep -o`.
 
 ### Composer
 
