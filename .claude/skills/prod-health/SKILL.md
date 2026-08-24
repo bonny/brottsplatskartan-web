@@ -8,6 +8,32 @@ description: "Kolla produktionsserverns hälsa — CPU, minne, disk, Docker-cont
 Snabb hälsokoll mot prod (Hetzner CX33, `deploy@brottsplatskartan.se`,
 kod i `/opt/brottsplatskartan/`). Allt är read-only — inga ändringar.
 
+## Först vid "sajten är långsam": har det just deployats?
+
+Kolla **alltid** detta innan du gräver i CPU, Redis eller fpm. `deploy.sh`
+avslutar med `responsecache:clear` samtidigt som app-containern startar om,
+så de första minuterna efter en deploy köar requests bakom varandras
+omrenderingar. Uppmätt: `/stockholm` 56 s och load 4,05 direkt efter deploy,
+0,22 s och load 2,73 fem minuter senare.
+
+```bash
+ssh deploy@brottsplatskartan.se 'cd /opt/brottsplatskartan && \
+  cat storage/app/deploy.json; echo; git log -1 --format="%h %cr %s"'
+```
+
+`deploy.json` ger `deployed_at` **med tidszonsoffset**
+(`2026-08-24T16:39:43+02:00`) — använd den, inte loggtidsstämplar, när du
+jämför mot något. Prod loggar i svensk tid medan `gh run` rapporterar UTC,
+och två timmars förskjutning gör att man lätt läser _före_-data som
+_efter_-data.
+
+Är deployen yngre än ~5–10 minuter: vänta och mät om. Se `prod-ops`
+(“Efter deploy: två saker som ser ut som fel men inte är det”) för hur du
+skiljer kön från ett verkligt problem. **Äkta kallrendering är 0,2–0,3 s.**
+
+Mät kallrendering med `?v=<slump>` — `?nocache=` ligger i
+`ignored_query_parameters` och ger samma cache-nyckel som utan parameter.
+
 ## Tolka argumentet
 
 Argumentet efter `/prod-health` (ord 1) avgör vad som körs:

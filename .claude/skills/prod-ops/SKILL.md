@@ -24,6 +24,69 @@ description: Drift av produktionsservern på Hetzner — deploy, rollback, artis
    `restart app scheduler` → skriver `deploy.json` → `responsecache:clear`
 4. AUTORUN i containern kör `storage:link` + cache-warmup
 
+### Efter deploy: två saker som ser ut som fel men inte är det
+
+Verifierat 2026-08-24 (#102). Rulla **inte** tillbaka på något av det här
+utan att först kolla tidsstämplarna mot deployens fönster.
+
+**1. Fatala fel i loggen under `composer install`.** När lockfilen ändrats
+byts `vendor/` ut under fötterna på körande php-fpm-processer. Det ger en
+skur av `Class not found`, `Call to undefined method` och
+`headers already sent` — alla inom samma fåtal sekunder.
+
+Så här skiljer du transient från äkta:
+
+```bash
+# 1. Ligger alla fel i ett fönster på några sekunder? Då är det vendor-swappen.
+ssh deploy@brottsplatskartan.se 'cd /opt/brottsplatskartan && docker compose exec -T app sh -c \
+  "ls -t storage/logs/*.log | head -1 | xargs grep -hE \"ERROR|CRITICAL\"" ' | \
+  sed -E "s/^(\[[^]]+\]).*/\1/" | uniq -c
+
+# 2. Ändrades paketet som klagar överhuvudtaget?
+git diff HEAD~1 composer.lock | grep -A2 '"name": "<paketet>"'
+
+# 3. Kör kommandot som föll igen — går det rent nu är det avklarat.
+```
+
+Exempel: `Call to undefined method GuzzleHttp\Psr7\Response::assertProtocolVersion()`
+såg ut som en trasig uppgradering, men `guzzlehttp/psr7` var **oförändrad**
+2.13.1 före och efter — felen låg i ett 4-sekundersfönster och `vma_alerts:import`
+körde rent direkt efteråt.
+
+**2. Sidor tar 10–60 s de första minuterna.** `deploy.sh` avslutar med
+`responsecache:clear`, så _hela_ cachen är tom samtidigt som app-containern
+just startat om (kall opcache). Requests köar bakom varandras omrenderingar.
+
+Uppmätt efter en deploy: `/stockholm` 56 s → load 4,05. Fem minuter senare:
+kallrendering 0,22 s, load 2,73. **Äkta kallrendering är 0,2–0,3 s** — allt
+över det är kön, inte sidan.
+
+Vänta ut det och mät om innan du felsöker:
+
+```bash
+# Följ load och kallrendering ihop — de sjunker tillsammans.
+for i in 1 2 3; do
+  L=$(ssh deploy@brottsplatskartan.se 'cut -d" " -f1 /proc/loadavg')
+  T=$(curl -s -o /dev/null -w '%{time_total}' "https://brottsplatskartan.se/malmo?v=$RANDOM$i")
+  echo "load=$L kallrendering=${T}s"
+done
+```
+
+`?v=` fungerar för att tvinga fram kallrendering — `?nocache=` gör det
+**inte**, den ligger i `ignored_query_parameters` (config/responsecache.php)
+och ger samma cache-nyckel som utan parameter.
+
+### ⚠️ Prod loggar i svensk tid, GitHub Actions i UTC
+
+`ai_usage_logs`, `storage/logs/` och `date` på servern är Europe/Stockholm
+(UTC+2 sommartid). Deploy-tidpunkten från `gh run` är UTC. Två timmars
+förskjutning gör att man lätt läser _före_-data som _efter_-data och tror
+att en ändring inte slog igenom. Jämför alltid mot:
+
+```bash
+ssh deploy@brottsplatskartan.se 'date -u "+UTC: %H:%M"; TZ=Europe/Stockholm date "+Lokal: %H:%M"'
+```
+
 ### Nertid vid deploy — åtgärdat 2026-07-31
 
 Fram till `c468ccd` startade `deploy.sh` om Caddy **ovillkorligt** vid
