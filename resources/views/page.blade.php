@@ -120,11 +120,10 @@
             <h2>Kontakta brottsplatskartan</h2>
 
             <p>Har du frågor om webbplatsen eller av annan anledning
-                vill komma i kontakt med oss så nås vi via Twitter på <a
-                    href="https://twitter.com/brottsplatser">https://twitter.com/brottsplatser</a>,
-                via Facebook på <a
-                    href="https://www.facebook.com/Brottsplatskartan/">https://www.facebook.com/Brottsplatskartan/</a>
-                eller via e-post på <a href="mailto:kontakt@brottsplatskartan.se">kontakt@brottsplatskartan.se</a>.
+                vill komma i kontakt med oss så nås vi via e-post på
+                <a href="mailto:kontakt@brottsplatskartan.se">kontakt@brottsplatskartan.se</a>
+                eller via Facebook på <a
+                    href="https://www.facebook.com/Brottsplatskartan/">https://www.facebook.com/Brottsplatskartan/</a>.
                 Vänligen observera att vi inte kan svara på frågor om Polisens arbete
                 eller om de händelser som presenteras här på sajten.
             </p>
@@ -132,7 +131,7 @@
             <h2>Om tjänstens skapare</h2>
 
             <p>
-                Brottsplatskartans grundare är den kartintresserad webbutvecklaren <a href="https://twitter.com/eskapism">Pär
+                Brottsplatskartans grundare är den kartintresserad webbutvecklaren <a href="https://eskapism.se/">Pär
                     Thernström</a>.
             </p>
             <p>
