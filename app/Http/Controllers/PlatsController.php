@@ -506,7 +506,9 @@ class PlatsController extends Controller
                 }
             }
 
-            $platsDisplay = title_case($plats);
+            // Tier 1-slugs är ASCII ("malmo") — visa display-formen ("Malmö")
+            // i titel, breadcrumbs och meta, inte slugen.
+            $platsDisplay = title_case(Tier1::displayName($plats));
         }
 
         // Tomma månader: 301 till plats-startsidan (#25-policy).

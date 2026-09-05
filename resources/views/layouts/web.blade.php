@@ -142,10 +142,8 @@ Layout template for web
     <meta name="twitter:site" content="@brottsplatser">
     <meta name="twitter:title" content="@yield('title')">
 
-    <title>@yield('title')@hasSection('showTitleTagline')
-            → Brottsplatskartan
-        @endif
-    </title>
+    {{-- Allt på en rad utan whitespace: annars hamnar radbrytningar inuti <title>. --}}
+    <title>@yield('title')@hasSection('showTitleTagline'){{ ' → Brottsplatskartan' }}@endif</title>
 
     @hasSection('metaContent')
         @yield('metaContent', '')
