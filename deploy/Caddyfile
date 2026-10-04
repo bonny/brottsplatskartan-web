@@ -45,7 +45,8 @@ brottsplatskartan.se {
 	# header som skiljer den från riktiga Linux-användare innan vi blockar.
 	# Allt annat skippas. Läs: docker compose exec caddy cat /data/headless-diag.log
 	# Ta bort blocket när analysen är klar.
-	@inteHeadless not header_regexp User-Agent ^Mozilla/5\.0 \(X11; Linux x86_64\) AppleWebKit/537\.36 \(KHTML, like Gecko\) Chrome/154\.0\.0\.0 Safari/537\.36$
+	# Regexen måste citeras — den innehåller mellanslag.
+	@inteHeadless not header_regexp User-Agent "^Mozilla/5\.0 \(X11; Linux x86_64\) AppleWebKit/537\.36 \(KHTML, like Gecko\) Chrome/154\.0\.0\.0 Safari/537\.36$"
 	log_skip @inteHeadless
 	log {
 		output file /data/headless-diag.log {
