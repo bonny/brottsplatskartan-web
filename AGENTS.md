@@ -74,40 +74,10 @@ docker compose exec app php artisan tinker
 
 ### Köra engångs-PHP mot appen — två tinker-fällor
 
-`php artisan tinker --execute` och `tinker < fil.php` går genom psysh, som
-har två begränsningar som lätt äter en halvtimme:
-
-1. **psysh parsar rad för rad** och faller på flerradiga `try`/`catch`
-   (`Cannot use try without catch or finally`).
-2. **Radvis `echo` inuti `foreach` kommer tillbaka mangleat** — psysh ekar
-   källraderna blandat med utdata.
-
-Hooken `check-prod-tinker.sh` blockerar skriv-PHP, men **bara mot prod**:
-båda registreringarna i `.claude/settings.local.json` är `if`-låsta till
-`ssh deploy@brottsplatskartan.se '...tinker --execute=*`. Lokal tinker med
-`file_put_contents` går igenom — verifierat 2026-08-24 för både `--execute`
-och stdin-formen.
-
 För allt som är mer än en enkel läsfråga: skriv ett fristående skript som
-bootar Laravel själv och kör det med `php`, inte `tinker`.
-
-```php
-<?php // /tmp/skript.php
-require '/var/www/html/vendor/autoload.php';
-$app = require_once '/var/www/html/bootstrap/app.php';
-$app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
-
-// ... vanlig PHP här, inga psysh-begränsningar ...
-echo json_encode($resultat, JSON_UNESCAPED_UNICODE);
-```
-
-```bash
-docker compose cp /tmp/skript.php app:/tmp/skript.php
-docker compose exec -T app php /tmp/skript.php
-```
-
-Behöver du ändå tinker och vill ha strukturerad output tillbaka: echo:a en
-enda sträng med markörer (`###J###...###E###`) och plocka ut den med `grep -o`.
+bootar Laravel själv och kör det med `php`, inte `tinker` — psysh har
+fällor med flerradig kod och echo. Mönster och detaljer:
+**[docs/engangs-php.md](docs/engangs-php.md)**.
 
 ### Composer
 
@@ -121,8 +91,6 @@ docker compose exec -u root app composer update <paketnamn>
 
 ## Systemarkitektur
 
-Modeller ligger i `app/Models/`, controllers i `app/Http/Controllers/`.
-
 ### Datakällor
 
 - **Polisens JSON-API** — `https://polisen.se/api/events`. Se
@@ -130,10 +98,6 @@ Modeller ligger i `app/Models/`, controllers i `app/Http/Controllers/`.
   och hur vi använder det.
 - **TextTV** — kompletterande nyhetstext
 - **OpenStreetMap** — geografisk tile-data
-
-### Frontend
-
-Byggs med Laravel Mix — se `webpack.mix.js` för källor och utdata.
 
 ### Prestanda
 
@@ -206,7 +170,6 @@ docker compose logs -f scheduler
 ## Utvecklingsriktlinjer
 
 - Kortfattade funktionskommentarer när _varför_ inte är uppenbart
-- Prioritera tydlig, välstrukturerad kod
 - Konsekvent svensk terminologi i kommentarer och dokumentation
 
 ### Statisk analys efter kodändringar
@@ -221,12 +184,6 @@ docker compose exec app composer analyse
 
 Ingen CI kör detta — disciplin lokalt gäller.
 
-## GitHub-projektet
-
-**URL:** https://github.com/bonny/brottsplatskartan-web/
-
-Issues och GitHub Actions hanteras med `gh`.
-
 ## Händelsefiltrering (ContentFilterService)
 
 Filtrerar bort icke-relevanta händelser (presstalesperson-info, pressnummer):
@@ -235,15 +192,7 @@ Filtrerar bort icke-relevanta händelser (presstalesperson-info, pressnummer):
 - Global Scope döljer icke-publika händelser (inte raderas)
 - Händelser markeras `is_public = false`
 
-Manuell körning:
-
-```bash
-# Dry-run
-docker compose exec app php artisan crimeevents:check-publicity --since=365
-
-# Applicera
-docker compose exec app php artisan crimeevents:check-publicity --apply --since=365
-```
+Manuell körning: [docs/content-filter.md](docs/content-filter.md).
 
 ## Övrigt
 
