@@ -140,10 +140,15 @@ vecka 40.
 
 1. `public/robots.txt`: Disallow för Baiduspider, Baiduspider-render,
    DataForSeoBot, MJ12bot.
-2. `deploy/Caddyfile`: tillfällig loggning av hela requesten (med headers)
-   för headless-UA:n till `/data/headless-diag.log` i caddy-containern.
-   Nästa steg: hitta en header som saknas/skiljer sig mot riktiga
-   webbläsare (`Accept-Language`, `Sec-CH-UA`, `Sec-Fetch-*`) och blocka
-   på UA + den signalen i Caddy. Riktiga svenska Linux-användare är ~105
-   sessioner/vecka, så ren UA-blockering är inte ok.
+2. `deploy/Caddyfile`: loggade hela requesten för headless-UA:n en
+   förmiddag. 1 977 requests från 174 IP:n (77 % USA, 1 % Singapore,
+   ingen Kina — ett landsblock hade alltså inte hjälpt). Alla såg ut som
+   riktig Chrome 154 (`Sec-Ch-Ua`, `Sec-Fetch-*`, HTTP/2, cookies) men
+   **alla** hade `Accept-Language: en-US,en;q=0.9` utan `sv`.
+   Diagnostiken ersattes av ett block: Caddy svarar 403 när UA:n är
+   exakt `X11; Linux x86_64 … Chrome/154.0.0.0` **och**
+   `Accept-Language` saknar `sv`. Testat lokalt: farm → 403, Linux med
+   `sv-SE` eller `en-US,…,sv` → 200, Windows/Googlebot → 200.
+   **Blocket slutar gälla när farmen byter Chrome-version** — kolla vid
+   uppföljningen.
 3. Senare, om det behövs: svara `/k/v1`-301:an utan en PHP-worker.
