@@ -1,6 +1,6 @@
 **Status:** öppen — kräver konfiguration i GA4:s gränssnitt, går inte att
 göra i kod eller via API:t.
-**Senast uppdaterad:** 2026-08-02
+**Senast uppdaterad:** 2026-10-04
 **Källa:** SEO-granskning 2026-08-02 (fynd 1)
 
 # Todo #101 — Filtrera bort botttrafik i GA4
@@ -102,3 +102,48 @@ hjälper för den perioden.
 Kolla månadsvis om Singapore-volymen återkommer. Enkel indikator:
 desktop-sessioner utanför Sverige med avvisning > 90 % och
 sidor/session ≈ 1,0.
+
+**2026-09-16: volymen är tillbaka.** GA4 realtid visade 2 431 av 2 468
+aktiva användare (senaste 30 min) från Singapore, mot 34 från Sverige
+(`![[Screenshot_20260916-131226.png]]` i Obsidian). Från Inbox
+Brottsplatskartan (2026-10-04): "Det här är inte hållbart. Extremt mkt
+trafik från Singapore hela tiden".
+
+## Serverlast 2026-10-04
+
+Access-loggen för en timme (48 228 requests, load 2,5–3 på 4 kärnor; app
+65 % CPU, MariaDB 31 %, tileserver 23 %):
+
+| Källa                                     | Req/h   | Andel |
+| ----------------------------------------- | ------- | ----- |
+| Headless Chrome `X11; Linux … Chrome/154` | 13 518  | 28 %  |
+| Baidu (`116.179.0.0/16`, inkl. -render)   | ~5 900  | 12 %  |
+| Google, Bing, Apple, Amazon               | ~10 000 | ~20 % |
+| Ahrefs, DataForSeo, MJ12, Semrush         | ~3 350  | 7 %   |
+
+**Headless Chrome-farmen** kommer från 527 IP:n (median 29 req/IP/h, max
+58), alltså en roterande proxypool. 89 % av requesterna är
+`/k/v1/…jpg`: den hämtar gamla händelser (median-id ~307 000) och laddar
+alla kartbilder utan cache. Varje bild kostar ett PHP-anrop för 301:an
+plus en tileserver-rendering eftersom gamla bilder sällan är cachade.
+Går inte att blocka på IP och respekterar knappast robots.txt. Den syns
+nästan inte i GA4 (~230 Linux-sessioner/vecka totalt), så det är
+**inte** samma bot som Singapore-trafiken.
+
+**GA4-"Kina desktop"** (vecka 40: 10 823 sessioner) är med största
+sannolikhet Baiduspider-render, som kör JS och därmed gtag.
+
+**Singapore** toppade vecka 38 (168 923 sessioner) och är nere i 6 896
+vecka 40.
+
+### Åtgärder 2026-10-04
+
+1. `public/robots.txt`: Disallow för Baiduspider, Baiduspider-render,
+   DataForSeoBot, MJ12bot.
+2. `deploy/Caddyfile`: tillfällig loggning av hela requesten (med headers)
+   för headless-UA:n till `/data/headless-diag.log` i caddy-containern.
+   Nästa steg: hitta en header som saknas/skiljer sig mot riktiga
+   webbläsare (`Accept-Language`, `Sec-CH-UA`, `Sec-Fetch-*`) och blocka
+   på UA + den signalen i Caddy. Riktiga svenska Linux-användare är ~105
+   sessioner/vecka, så ren UA-blockering är inte ok.
+3. Senare, om det behövs: svara `/k/v1`-301:an utan en PHP-worker.

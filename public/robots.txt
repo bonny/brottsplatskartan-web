@@ -14,6 +14,25 @@ User-agent: *
 Allow: /
 
 # -----------------------------------------------------------------
+# Crawlers som kostar serverlast utan att ge svensk söktrafik.
+# 2026-10-04: Baidu (inkl. Baiduspider-render, som kör JS och syns
+# som "Kina desktop" i GA4) stod för 12 % av alla requests, SEO-
+# crawlers för ytterligare ~3 %. Se todo #101.
+# -----------------------------------------------------------------
+
+User-agent: Baiduspider
+Disallow: /
+
+User-agent: Baiduspider-render
+Disallow: /
+
+User-agent: DataForSeoBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+# -----------------------------------------------------------------
 # AI-träningsbotar — inte tillåtna (vi vill inte bli träningsdata
 # utan kompensation).
 # -----------------------------------------------------------------
