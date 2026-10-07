@@ -1,5 +1,5 @@
-**Status:** aktiv
-**Senast uppdaterad:** 2026-10-04
+**Status:** klar 2026-10-07 — nyhetslistan dedupar på `NewsArticle::storyKey`; MatchEventNews kopierar beslutet för redan bedömda storys i stället för nytt Haiku-anrop (35 % av anropen). Verifierat på prod på event 509606 (`1889bef7`).
+**Senast uppdaterad:** 2026-10-07
 **Källa:** Inbox Brottsplatskartan (2026-10-04)
 
 # Todo #103 — Text TV-dubbletter på händelsesidans nyhetslista

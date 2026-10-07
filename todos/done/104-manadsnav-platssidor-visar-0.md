@@ -1,5 +1,5 @@
-**Status:** aktiv
-**Senast uppdaterad:** 2026-10-04
+**Status:** klar 2026-10-07 — widgeten jämförde hela slugen "husum-västernorrlands-län" mot `parsed_title_location`. Ny `Helper::splitPlatsSlugWithLan()` delar slugen, samma urval som månadssidan. Verifierat på prod: Husum okt 2023 visar 4 (`8d18f265`).
+**Senast uppdaterad:** 2026-10-07
 **Källa:** Inbox Brottsplatskartan (2026-10-04)
 
 # Todo #104 — Månadsnav på platssidor visar 0 händelser
