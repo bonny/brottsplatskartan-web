@@ -17,13 +17,18 @@
         'embed_markup' => $a->isEmbeddable() ? $a->getEmbedMarkup() : null,
     ]);
 
+    // Samma Text TV-story ligger ofta som många rader (sidan hämtas om
+    // vid varje uppdatering) — upp till 18 träffar på samma titel per
+    // event. Dedupa på story-nyckeln innan kapningen till 8, annars kan
+    // en enda story fylla hela listan (todo #103).
     /** @var \Illuminate\Support\Collection $aiItems */
     $aiItems = isset($event)
         ? $event->relatedNews()
             ->wherePivot('confidence', '!=', 'låg')
             ->orderByDesc('pubdate')
-            ->limit(8)
             ->get()
+            ->unique(fn ($a) => \App\Models\NewsArticle::storyKey($a->source, $a->title))
+            ->take(8)
             ->map(fn ($a) => (object) [
                 'kind' => 'ai',
                 'source' => $a->getSourceDisplayName(),

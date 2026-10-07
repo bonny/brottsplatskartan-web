@@ -75,6 +75,7 @@ class MatchEventNews extends Command
             'haiku_calls' => 0,
             'matches_saved' => 0,
             'rejections_saved' => 0,
+            'verdicts_copied' => 0,
             'errors' => 0,
         ];
 
@@ -90,6 +91,9 @@ class MatchEventNews extends Command
             $stats['events_processed']++;
 
             $candidates = $this->candidatesFor($event, $windowDays, $rerun);
+            if (!$rerun) {
+                $candidates = $this->copyVerdictsForJudgedStories($event, $candidates, $now, $dryRun, $stats);
+            }
             if ($candidates->isEmpty()) {
                 $stats['events_no_candidates']++;
                 continue;
@@ -181,13 +185,14 @@ class MatchEventNews extends Command
 
         $this->info(sprintf(
             'Klart. Events: %d (varav %d utan kandidater), kandidater: %d, Haiku-anrop: %d, '
-                . 'matchningar: %d, avslag: %d, fel: %d.',
+                . 'matchningar: %d, avslag: %d, kopierade story-beslut: %d, fel: %d.',
             $stats['events_processed'],
             $stats['events_no_candidates'],
             $stats['candidates_total'],
             $stats['haiku_calls'],
             $stats['matches_saved'],
             $stats['rejections_saved'],
+            $stats['verdicts_copied'],
             $stats['errors']
         ));
 
@@ -277,6 +282,68 @@ class MatchEventNews extends Command
             ->unique(fn ($article) => NewsArticle::storyKey($article->source, $article->title))
             ->take(20)
             ->values();
+    }
+
+    /**
+     * Kandidater vars story redan bedömts för eventet får samma beslut
+     * kopierat i stället för ett nytt Haiku-anrop, och plockas ur listan.
+     *
+     * candidatesFor() dedupar bara inom en körning och utesluter tidigare
+     * bedömda par på artikel-id. Text TV hämtas om vid varje sid-
+     * uppdatering (ny rad, samma titel), så nästa körning såg samma story
+     * som ny kandidat — ~35 % av Haiku-anropen 30 dagar till 2026-10-07,
+     * och upp till 18 dubbletter per event i nyhetslistan (todo #103).
+     * Den kopierade raden blir kvittot som gör att eventsWithCandidates()
+     * inte väljer eventet igen för samma story.
+     *
+     * @param  array<string, int>  $stats
+     */
+    private function copyVerdictsForJudgedStories(
+        CrimeEvent $event,
+        \Illuminate\Support\Collection $candidates,
+        string $now,
+        bool $dryRun,
+        array &$stats
+    ): \Illuminate\Support\Collection {
+        if ($candidates->isEmpty()) {
+            return $candidates;
+        }
+
+        // Ett beslut per story räcker; vid flera, föredra en träff.
+        $verdicts = DB::table('crime_event_news as cen')
+            ->join('news_articles as na', 'cen.news_article_id', '=', 'na.id')
+            ->where('cen.crime_event_id', $event->id)
+            ->orderByDesc('cen.is_match')
+            ->get(['na.source', 'na.title', 'cen.is_match', 'cen.confidence', 'cen.ai_reason'])
+            ->unique(fn ($row) => NewsArticle::storyKey($row->source, $row->title))
+            ->keyBy(fn ($row) => NewsArticle::storyKey($row->source, $row->title));
+
+        if ($verdicts->isEmpty()) {
+            return $candidates;
+        }
+
+        return $candidates->reject(function ($article) use ($event, $verdicts, $now, $dryRun, &$stats) {
+            $verdict = $verdicts->get(NewsArticle::storyKey($article->source, $article->title));
+            if ($verdict === null) {
+                return false;
+            }
+
+            if (!$dryRun) {
+                $stats['verdicts_copied'] += DB::table('crime_event_news')->insertOrIgnore([
+                    'crime_event_id' => $event->id,
+                    'news_article_id' => $article->id,
+                    'is_match' => $verdict->is_match,
+                    'confidence' => $verdict->confidence,
+                    'ai_reason' => $verdict->ai_reason,
+                    'ai_model' => 'story-kopia',
+                    'matched_at' => $now,
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ]);
+            }
+
+            return true;
+        })->values();
     }
 
     /**
