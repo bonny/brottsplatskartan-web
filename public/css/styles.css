@@ -744,6 +744,12 @@ blockquote {
 .Event__mapImageWrap {
     display: block;
     float: left;
+    /* Samma tak som .Event__map, så bildtexten (absolut, längst ned)
+       hamnar i den synliga delen. Tidigare låg den under bilden och
+       klipptes bort av .Event__map:s overflow: hidden (todo #78). */
+    position: relative;
+    max-height: 309px;
+    overflow: hidden;
 }
 .Event__mapImageWrap--near {
     /* width: 100%; */
@@ -761,6 +767,10 @@ blockquote {
 
 .Event__mapCaption {
     display: block;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
     padding: 0.35rem 0.6rem;
     font-size: 0.75rem;
     line-height: 1.3;
