@@ -1,5 +1,5 @@
-**Status:** aktiv
-**Senast uppdaterad:** 2026-10-07 (paket uppgraderat, modellbyte avvisat)
+**Status:** klar 2026-10-07 — laravel/ai 0.11.0 → 1.1.0 deployad, LogAiUsage anpassad till nya TextUsage; Sonnet 5.5 utvärderad och avvisad
+**Senast uppdaterad:** 2026-10-07
 **Källa:** Pär, 2026-10-07
 
 # Todo #107 — Uppgradera AI-paket och modeller

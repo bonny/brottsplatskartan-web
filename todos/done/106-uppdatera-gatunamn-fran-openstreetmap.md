@@ -1,4 +1,4 @@
-**Status:** aktiv
+**Status:** klar 2026-10-07 — gamla listan ∪ filtrerade gatunamn från OSM (+42 179), 27 av 2 000 events får nya träffar, alla riktiga gator. Skript: `deploy/uppdatera-osm-gatunamn.sh`
 **Senast uppdaterad:** 2026-10-07
 **Källa:** Inbox Brottsplatskartan (2026-10-04)
 

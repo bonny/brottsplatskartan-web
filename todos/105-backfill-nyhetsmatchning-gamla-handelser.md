@@ -1,4 +1,4 @@
-**Status:** aktiv
+**Status:** utredd 2026-10-07 — backfill avrådd; väntar på beslut om att behålla matchade artiklar efter 90-dagarsrensningen
 **Senast uppdaterad:** 2026-10-07
 **Källa:** Inbox Brottsplatskartan (2026-10-04)
 

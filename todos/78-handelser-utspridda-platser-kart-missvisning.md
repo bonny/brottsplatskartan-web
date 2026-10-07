@@ -1,4 +1,4 @@
-**Status:** Fas 1 implementerad 2026-10-07 (ej deployad) — Fas 2 villkorlig på mätning
+**Status:** Fas 1 deployad 2026-10-07 (`f54b145f` + bildtextfix `26fbf344`), verifierad på prod — Fas 2 villkorlig på mätning
 **Senast uppdaterad:** 2026-10-07
 
 # Todo #78 — Hantera händelser som nämner många utspridda platser
