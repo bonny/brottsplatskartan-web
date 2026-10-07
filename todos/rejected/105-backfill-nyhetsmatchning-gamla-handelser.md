@@ -1,4 +1,4 @@
-**Status:** utredd 2026-10-07 — backfill avrådd; väntar på beslut om att behålla matchade artiklar efter 90-dagarsrensningen
+**Status:** avfärdad 2026-10-07 — Pär: ingen backfill. Gamla artiklar rensas efter 90 d, så de flesta gamla events går inte att matcha och träffarna skulle ändå försvinna. Idén att låta `app:news:prune` behålla matchade artiklar står kvar nedan om den blir aktuell
 **Senast uppdaterad:** 2026-10-07
 **Källa:** Inbox Brottsplatskartan (2026-10-04)
 
