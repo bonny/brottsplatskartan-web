@@ -46,17 +46,49 @@ class MultiPlaceSummaryTest extends TestCase
     {
         $event = $this->event('Sammanfattning natt');
 
-        $this->assertSame('/k/v1/area-123-140x140.jpg', $event->getKortKartbildUrl('circle-low', 140, 140));
-        $this->assertSame('/k/v1/area-123-617x463@2x.jpg', $event->getKortKartbildUrl('circle', 617, 463, 2));
+        $this->assertSame('/k/v1/omrade-123-140x140.jpg', $event->getKortKartbildUrl('circle-low', 140, 140));
+        $this->assertSame('/k/v1/omrade-123-617x463@2x.jpg', $event->getKortKartbildUrl('circle', 617, 463, 2));
         $this->assertSame('/k/v1/far-123-213x332.jpg', $event->getKortKartbildUrl('far', 213, 332));
         $this->assertSame('/k/v1/circle-123-617x463.jpg', $this->event('Inbrott')->getKortKartbildUrl('circle', 617, 463));
     }
 
-    public function test_area_url_saknar_markering_och_zoomar_ut(): void
+    public function test_area_url_utan_lan_saknar_markering_och_zoomar_ut(): void
     {
         $url = (new StaticMapUrlBuilder())->areaUrl($this->event('Sammanfattning natt'), 140, 140, 2);
 
         $this->assertStringNotContainsString('path=', $url);
         $this->assertStringContainsString('/static/14.34392,57.37084,6.3/140x140@2x.jpg', $url);
+    }
+
+    public function test_area_url_med_lan_ritar_lanscirkeln(): void
+    {
+        $event = $this->event('Sammanfattning natt')->forceFill(['administrative_area_level_1' => 'Jönköpings län']);
+        $cirkel = \App\Lansgeometri::cirkel('Jönköpings län');
+        $this->assertNotNull($cirkel);
+
+        $builder = new StaticMapUrlBuilder();
+        $url = $builder->areaUrl($event, 617, 463, 1);
+
+        $this->assertStringContainsString('/static/auto/617x463.jpg?latlng=1', $url);
+        // Cirkeln ritas runt länets mitt, inte Polisens koordinat.
+        $this->assertStringContainsString(
+            rawurlencode($builder->circlePath($cirkel['lat'], $cirkel['lng'], $cirkel['radie_m'], 40)),
+            $url
+        );
+
+        // Thumbnails får färre punkter.
+        $this->assertStringContainsString(
+            rawurlencode($builder->circlePath($cirkel['lat'], $cirkel['lng'], $cirkel['radie_m'], 24)),
+            $builder->areaUrl($event, 140, 140, 2)
+        );
+    }
+
+    public function test_alla_lan_har_cirkel(): void
+    {
+        foreach (\App\Helper::getAllLan() as $lan) {
+            $this->assertNotNull(\App\Lansgeometri::cirkel($lan), $lan);
+        }
+        $this->assertNull(\App\Lansgeometri::cirkel(null));
+        $this->assertNull(\App\Lansgeometri::cirkel('Okänt län'));
     }
 }

@@ -1,0 +1,107 @@
+{
+  "Blekinge län": {
+    "lat": 56.1181,
+    "lng": 15.3363,
+    "radie_m": 47000
+  },
+  "Dalarnas län": {
+    "lat": 60.9598,
+    "lng": 14.3475,
+    "radie_m": 117000
+  },
+  "Gotlands län": {
+    "lat": 57.6142,
+    "lng": 18.6841,
+    "radie_m": 47000
+  },
+  "Gävleborgs län": {
+    "lat": 61.4423,
+    "lng": 16.5699,
+    "radie_m": 93000
+  },
+  "Hallands län": {
+    "lat": 56.9796,
+    "lng": 12.6012,
+    "radie_m": 65000
+  },
+  "Jämtlands län": {
+    "lat": 63.2575,
+    "lng": 14.3114,
+    "radie_m": 123000
+  },
+  "Jönköpings län": {
+    "lat": 57.5334,
+    "lng": 14.4077,
+    "radie_m": 57000
+  },
+  "Kalmar län": {
+    "lat": 57.1236,
+    "lng": 16.438,
+    "radie_m": 77000
+  },
+  "Kronobergs län": {
+    "lat": 56.794,
+    "lng": 14.5712,
+    "radie_m": 56000
+  },
+  "Norrbottens län": {
+    "lat": 66.8643,
+    "lng": 20.2474,
+    "radie_m": 179000
+  },
+  "Skåne län": {
+    "lat": 55.8618,
+    "lng": 13.5333,
+    "radie_m": 59000
+  },
+  "Stockholms län": {
+    "lat": 59.3853,
+    "lng": 18.5934,
+    "radie_m": 50000
+  },
+  "Södermanlands län": {
+    "lat": 58.9918,
+    "lng": 16.8427,
+    "radie_m": 48000
+  },
+  "Uppsala län": {
+    "lat": 60.2053,
+    "lng": 17.8468,
+    "radie_m": 75000
+  },
+  "Värmlands län": {
+    "lat": 59.7739,
+    "lng": 13.1528,
+    "radie_m": 74000
+  },
+  "Västerbottens län": {
+    "lat": 64.7621,
+    "lng": 18.1891,
+    "radie_m": 149000
+  },
+  "Västernorrlands län": {
+    "lat": 63.0333,
+    "lng": 17.4746,
+    "radie_m": 82000
+  },
+  "Västmanlands län": {
+    "lat": 59.7475,
+    "lng": 16.1636,
+    "radie_m": 36000
+  },
+  "Västra Götalands län": {
+    "lat": 58.3,
+    "lng": 12.5686,
+    "radie_m": 83000
+  },
+  "Örebro län": {
+    "lat": 59.3579,
+    "lng": 14.9722,
+    "radie_m": 46000
+  },
+  "Östergötlands län": {
+    "lat": 58.3496,
+    "lng": 15.9021,
+    "radie_m": 54000
+  }
+}

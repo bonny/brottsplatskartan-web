@@ -1,4 +1,4 @@
-**Status:** Fas 1 deployad 2026-10-07 (`f54b145f` + bildtextfix `26fbf344`), verifierad på prod — Fas 2 villkorlig på mätning
+**Status:** Fas 1 deployad 2026-10-07; områdescirkel (alt A) över länet tillagd samma dag — Fas 2 villkorlig på mätning
 **Senast uppdaterad:** 2026-10-07
 
 # Todo #78 — Hantera händelser som nämner många utspridda platser
@@ -193,3 +193,25 @@ mitt i ett län. Det var den egentliga missvisningen.
 Inte gjort: Gävleborg-fallet (trafikolyckor i hela Hälsingland) fångas inte av
 titel-regexen — det är Fas 2-materialet. Fas 2 byggs bara om GA4 visar att
 Fas 1 inte räcker.
+
+## Uppföljning 2026-10-07: områdescirkel (alt A)
+
+Kartbilden utan markering upplevdes tom. Pär jämförde tre alternativ på en
+riktig sammanfattning (Västra Götaland, event 510099): A stor svag cirkel
+över länet, B länsgränsen, C prickar på orterna i texten. Valet blev **A**.
+C fungerar bara för län som skriver orter i fast format ("02:17, misshandel
+– Göteborg"); Södermanlands sammanfattningar nämner inga orter alls.
+
+- `StaticMapUrlBuilder::areaUrl()`: med känt län en cirkel från
+  `resources/geo/lanscirklar.json` (mitt = länets tyngdpunkt, radie = 90 %
+  av länets händelseplatser). Utan län: som förut, ingen markering.
+- Nytt läges-namn `/k/v1/omrade-…` — `area-…` låg ute några timmar med den
+  tomma kartan och 301:an cachas `immutable` ett år. `area` finns kvar som
+  alias.
+- `KARTBILD_COLUMNS` fick `administrative_area_level_1`, cachenyckeln
+  bumpad till `kartbild:coords:v2:`.
+- `/api/eventsMap`: område-pinnen ligger i länets mitt i stället för på
+  Polisens punkt.
+- Länsgränserna (alt B) sparade som polygoner i
+  `resources/geo/lansgranser.geojson` för framtida bruk — de inkluderar
+  havsområdet. Se [docs/lansgeometri.md](../docs/lansgeometri.md).

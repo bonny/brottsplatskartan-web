@@ -51,7 +51,7 @@ Route::get('/karta/{location?}', [FullScreenMapController::class, 'index'])->nam
 // dels för att Spatie Response Cache inte cachar svar med cookies, dels
 // för att browser/CDN ska kunna lagra redirect:en permanent.
 Route::get('/k/v1/{spec}.jpg', [KartbildController::class, 'show'])
-    ->where('spec', '(circle-low|circle|near|far|area)-\d+-\d+x\d+(@2x)?')
+    ->where('spec', '(circle-low|circle|near|far|omrade|area)-\d+-\d+x\d+(@2x)?')
     ->withoutMiddleware([
         \Illuminate\Session\Middleware\StartSession::class,
         \Illuminate\Cookie\Middleware\EncryptCookies::class,

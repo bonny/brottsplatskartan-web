@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\CrimeEvent;
+use App\Lansgeometri;
 
 /**
  * Bygger URL:er till egen tileserver-gl för statiska kartbilder.
@@ -194,17 +195,38 @@ class StaticMapUrlBuilder
 
     /**
      * Områdesbild för sammanfattningshändelser som nämner många utspridda
-     * platser (todo #78): karta över trakten runt eventets koordinat utan
-     * någon markering alls. Polisen plottar "Sammanfattning natt" på en
-     * samordningspunkt (ofta länets centrum eller en polisstation) och
-     * viewporten är ofta en punkt, så cirkeln blev en skarp prick på en
-     * plats där inget hänt. Hellre en översikt av länet än en falsk prick.
+     * platser (todo #78). Polisen plottar "Sammanfattning natt" på en
+     * samordningspunkt (ofta en polisstation) och viewporten är ofta en
+     * punkt, så cirkeln blev en skarp prick på en plats där inget hänt.
      *
+     * Med känt län: en stor, svag cirkel över länet (Lansgeometri::cirkel —
+     * länets geometriska mitt, radie som täcker 90 % av länets
+     * händelseplatser) och auto-zoom runt den. En karta helt utan markering
+     * upplevdes tom.
+     *
+     * Utan län (fallback): översikt runt eventets koordinat utan markering.
      * Zoom räknas fram så bilden täcker ungefär AREA_SPAN_METERS i bredd
      * oavsett bildstorlek. tileserver-gl tar decimal-zoom.
      */
     public function areaUrl(CrimeEvent $event, int $width = 320, int $height = 320, int $scale = 1): string
     {
+        $suffix = $scale === 2 ? '@2x' : '';
+
+        $cirkel = Lansgeometri::cirkel($event->administrative_area_level_1);
+        if ($cirkel !== null) {
+            // Thumbnails: färre punkter (kortare URL) och tunnare kontur —
+            // ser likadant ut i 140 px.
+            $isThumb = $width <= 200;
+            $c = self::CIRCLE_COLOR_RGB;
+            $path = "fill:rgba({$c},0.10)|stroke:rgba({$c},0.55)|width:" . ($isThumb ? '1.2' : '2') . '|'
+                . $this->circlePath($cirkel['lat'], $cirkel['lng'], $cirkel['radie_m'], $isThumb ? 24 : 40);
+
+            return config('services.tileserver.url')
+                . 'styles/basic-preview/static/auto/'
+                . "{$width}x{$height}{$suffix}.jpg"
+                . '?latlng=1&padding=0.12&path=' . rawurlencode($path);
+        }
+
         if (!$event->location_lat || !$event->location_lng) {
             return '';
         }
@@ -215,8 +237,6 @@ class StaticMapUrlBuilder
         // Web Mercator: meter per pixel vid zoom 0 är 156 543 × cos(lat).
         $zoom = log($width * 156543.03 * cos(deg2rad($lat)) / self::AREA_SPAN_METERS, 2);
         $zoom = number_format(max(4, min(9, $zoom)), 1, '.', '');
-
-        $suffix = $scale === 2 ? '@2x' : '';
 
         return config('services.tileserver.url')
             . 'styles/basic-preview/static/'

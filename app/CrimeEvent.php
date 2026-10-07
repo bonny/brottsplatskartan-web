@@ -134,7 +134,7 @@ class CrimeEvent extends Model implements Feedable {
         // Koordinatcachen för kartbilds-routen lever ett dygn. Släng den vid
         // save så en omgeokodning inte ger kartbilder på fel plats så länge.
         static::saved(function (self $event): void {
-            Cache::forget("kartbild:coords:{$event->id}");
+            Cache::forget(self::kartbildCacheKey($event->id));
         });
     }
 
@@ -260,9 +260,9 @@ class CrimeEvent extends Model implements Feedable {
     /**
      * Kort URL till statisk kartbild via /k/v1/-routen (todo #55, Alt B).
      * Returnerar 301 till tileservern, browser-cachas immutable 1 år.
-     * Mode: 'circle' | 'circle-low' | 'near' | 'far' | 'area'.
+     * Mode: 'circle' | 'circle-low' | 'near' | 'far' | 'omrade'.
      *
-     * Sammanfattningar (isMultiPlaceSummary) får 'area' istället för
+     * Sammanfattningar (isMultiPlaceSummary) får 'omrade' istället för
      * närbildslägena — en prick vid samordningspunkten är missvisande
      * (todo #78). 'far' lämnas orörd: den är en Sverige-översikt.
      *
@@ -273,7 +273,7 @@ class CrimeEvent extends Model implements Feedable {
     public function getKortKartbildUrl(string $mode, int $width, int $height, int $scale = 1, bool $absolute = false): string
     {
         if ($mode !== 'far' && $this->isMultiPlaceSummary()) {
-            $mode = 'area';
+            $mode = 'omrade';
         }
         $retina = $scale === 2 ? '@2x' : '';
         $path = "/k/v1/{$mode}-{$this->id}-{$width}x{$height}{$retina}.jpg";
@@ -925,7 +925,15 @@ class CrimeEvent extends Model implements Feedable {
         'viewport_northeast_lng',
         'viewport_southwest_lat',
         'viewport_southwest_lng',
+        // Områdescirkeln för sammanfattningar slås upp på länet (todo #78).
+        'administrative_area_level_1',
     ];
+
+    private static function kartbildCacheKey(int $id): string
+    {
+        // v2: KARTBILD_COLUMNS fick administrative_area_level_1 (todo #78).
+        return "kartbild:coords:v2:{$id}";
+    }
 
     /**
      * Uppslag för kartbilds-routen (/k/v1/{spec}.jpg), cachat.
@@ -935,7 +943,7 @@ class CrimeEvent extends Model implements Feedable {
      * lika många DB-queries efter data som aldrig ändras: koordinaterna
      * sätts vid geokodning och ligger sedan still.
      *
-     * Cachar bara de sju kolumner buildern behöver — inte den färdiga
+     * Cachar bara de kolumner buildern behöver — inte den färdiga
      * URL:en. Den är ~820 tecken och finns i ett tiotal storleksvarianter
      * per event, vilket för ~507k events hade blivit flera GB och trängt
      * ut responscachen (Redis kör allkeys-lru och evictar urskillningslöst).
@@ -943,7 +951,7 @@ class CrimeEvent extends Model implements Feedable {
      */
     public static function findForKartbild(int $id): ?self
     {
-        $key = "kartbild:coords:{$id}";
+        $key = self::kartbildCacheKey($id);
 
         // Cache::remember duger inte här: den cachar inte null, så varje
         // gissning på ett id som inte finns hade blivit en ny DB-query.
