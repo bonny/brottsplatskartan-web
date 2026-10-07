@@ -170,4 +170,7 @@ App-accessloggen, en timme (34 476 requests):
 - DataForSeo och MJ12 borta (0 requests).
 - Nya stora källor: ExaSearchBot ~2 400 req/h och AhrefsBot ~1 900
   req/h. **Åtgärd:** Disallow i `public/robots.txt`. python-requests
-  ~1 900 req/h är kvar och inte utredd.
+  ~1 900 req/h är **legitim**: Home Assistants inbyggda
+  `brottsplatskartan`-integration (`app=ha-…` i `/api/events` och
+  `/api/eventsNearby`, `SCAN_INTERVAL` 30 min). ~810 installationer från
+  ~800 svenska hem-IP:n, nästan alla 2 req/h, alla 200. Blockas inte.
