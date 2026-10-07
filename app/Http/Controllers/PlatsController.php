@@ -452,25 +452,10 @@ class PlatsController extends Controller
         }
 
         // Plats med matchande län-suffix.
-        $allLansNames = \App\Helper::getAllLan();
-        $foundMatchingLan = false;
-        $matchingLanName = null;
-        $platsWithoutLan = null;
-        $platsSluggified = \App\Helper::toAscii($plats);
-
-        foreach ($allLansNames as $oneLanName) {
-            $lanSlug = \App\Helper::toAscii($oneLanName);
-            if (ends_with($platsSluggified, "-" . $lanSlug)) {
-                $foundMatchingLan = true;
-                $matchingLanName = $oneLanName;
-                $lanStrLen = mb_strlen($oneLanName);
-                $platsStrLen = mb_strlen($plats);
-                $platsWithoutLan = mb_substr($plats, 0, $platsStrLen - $lanStrLen);
-                $platsWithoutLan = str_replace("-", " ", $platsWithoutLan);
-                $platsWithoutLan = trim($platsWithoutLan);
-                break;
-            }
-        }
+        $platsMedLan = \App\Helper::splitPlatsSlugWithLan($plats);
+        $foundMatchingLan = $platsMedLan !== null;
+        $platsWithoutLan = $platsMedLan['plats'] ?? null;
+        $matchingLanName = $platsMedLan['lan'] ?? null;
 
         if ($foundMatchingLan) {
             $events = $this->getEventsInPlatsWithLanForMonth(

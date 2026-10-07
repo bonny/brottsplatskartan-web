@@ -324,7 +324,8 @@ class Helper {
         string $slug,
         int $monthsBack = 12
     ): array {
-        $cacheKey = "monthly-counts:{$type}:{$slug}:m{$monthsBack}";
+        // v2: plats-med-län-slugs räknades som 0 före todo #104.
+        $cacheKey = "monthly-counts:v2:{$type}:{$slug}:m{$monthsBack}";
 
         return Cache::remember($cacheKey, 24 * 60 * 60, function () use ($type, $slug, $monthsBack) {
             $startDate = Carbon::now()->subMonths($monthsBack)->startOfMonth();
@@ -339,6 +340,23 @@ class Helper {
 
             if ($type === 'lan') {
                 $query->where('administrative_area_level_1', self::resolveLanDisplayName($slug));
+            } elseif ($platsMedLan = self::splitPlatsSlugWithLan($slug)) {
+                // "husum-västernorrlands-län": samma urval som månadssidan
+                // (PlatsController::getEventsInPlatsWithLanForMonth), annars
+                // visar navet 0 där sidan listar händelser (todo #104).
+                // locations-träffarna hämtas som id:n först: en korrelerad
+                // EXISTS över 36 månader tog ~1 s, id-listan via
+                // (name, crime_event_id)-indexet några ms.
+                $needle = $platsMedLan['plats'];
+                $locationEventIds = DB::table('locations')
+                    ->where('name', $needle)
+                    ->pluck('crime_event_id');
+                $query->where('administrative_area_level_1', $platsMedLan['lan'])
+                    ->where(function ($q) use ($needle, $locationEventIds) {
+                        $q->where('parsed_title_location', $needle)
+                          ->orWhere('administrative_area_level_2', $needle)
+                          ->orWhereIn('id', $locationEventIds);
+                    });
             } else {
                 // 'plats' (Tier 1-städer routar också via plats-pipeline)
                 $needle = \App\Tier1::displayName($slug);
@@ -666,6 +684,32 @@ class Helper {
         self::$allLanWithStatsCache = $lan;
 
         return $lan;
+    }
+
+    /**
+     * Dela en plats-slug med län-suffix i plats + län, t.ex.
+     * "husum-västernorrlands-län" → ['plats' => 'husum', 'lan' =>
+     * 'Västernorrlands län']. Returnerar null om slugen inte slutar på
+     * ett län — då är det en ren plats ("uppsala").
+     *
+     * @return array{plats: string, lan: string}|null
+     */
+    public static function splitPlatsSlugWithLan(string $plats): ?array
+    {
+        $platsSluggified = self::toAscii($plats);
+
+        foreach (self::getAllLan() as $oneLanName) {
+            if (ends_with($platsSluggified, '-' . self::toAscii($oneLanName))) {
+                $platsWithoutLan = mb_substr($plats, 0, mb_strlen($plats) - mb_strlen($oneLanName));
+
+                return [
+                    'plats' => trim(str_replace('-', ' ', $platsWithoutLan)),
+                    'lan' => $oneLanName,
+                ];
+            }
+        }
+
+        return null;
     }
 
     public static function getAllLan() {
