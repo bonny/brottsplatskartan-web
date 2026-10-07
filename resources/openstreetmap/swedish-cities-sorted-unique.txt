@@ -2,24 +2,31 @@ Aapua
 Abbekås
 Abborrträsk
 Abisko
+Acksjön
+Adak
 Adelöv
+Adolfsfors
 Adriansnäs
+Agnäs
 Agunnaryd
+Airivaara
+Alafors
 Alarp
 Albacken
 Alberga
 Alby
-Ale
 Alfta
 Algutsboda
+Algutsrum
 Alingsås
 Allerum
+Allsta
+Almbro
 Almunge
 Almvik
 Alsike
 Alstad
 Alster
-Alsterbro
 Alstermo
 Alsvik
 Alunda
@@ -38,13 +45,15 @@ Ankarsrum
 Ankarsund
 Ankarsvik
 Anneberg
-Annefors
 Annelund
 Annelöv
 Ansmark
+Antinrova
 Antjärn
 Antnäs
+Anttis
 Anumark
+Aplared
 Arboga
 Arbrå
 Ardala
@@ -64,11 +73,10 @@ Askeby
 Askersby
 Askersund
 Asmundtorp
-Aspa
 Asperö
-Aspeå
 Aspås
-Ava
+Attersta
+Avan
 Avasjö
 Avaträsk
 Avesta
@@ -78,8 +86,12 @@ Backa
 Backaryd
 Backberg
 Backe
+Backen
 Baggböle
 Baggetorp
+Baksjöliden
+Baldersnäs
+Balingsta
 Ballingslöv
 Balsby
 Bammarboda
@@ -90,6 +102,10 @@ Barkarö
 Barsebäck
 Barsebäckshamn
 Barsele
+Bashult
+Baskemölla
+Bastaremåla
+Bastfallet
 Bastuträsk
 Beddingestrand
 Bellö
@@ -113,9 +129,8 @@ Bergsjö
 Bergsviken
 Bergsäng
 Bergvik
-Bersbo
 Bestorp
-Bet
+Betsele
 Bettna
 Bie
 Billeberga
@@ -124,22 +139,22 @@ Billinge
 Billingsfors
 Billsta
 Bispgården
-Bjurfors
 Bjurholm
 Bjursås
 Bjuråker
+Bjuröklubb
 Bjuv
 Bjännsjö
-Bjärka Säby
+Bjärlanda
 Bjärnum
 Bjärred
 Bjärsjölagård
 Bjärtrå
 Bjästa
+Bjäsätter
 Björbo
 Björboholm
 Björke
-Björkeberg
 Björkenäs
 Björkeryd
 Björketorp
@@ -147,14 +162,13 @@ Björkfors
 Björklinge
 Björknäset
 Björksele
-Björksta
 Björkvik
 Björkviken
 Björkäng
+Björkås
 Björkö
 Björköby
 Björkön
-Björlanda
 Björna
 Björneborg
 Björnhuvud
@@ -166,34 +180,33 @@ Björsjö
 Björsäter
 Blackstad
 Blackstalund
-Blaikliden
+Bladåkersby
 Blattnicksele
 Bleket
 Blentarp
+Blia
 Blidsberg
 Blikstorp
-Blisterliden
 Blombacka
 Blomstermåla
 Blomåker
 Blyberg
 Blåvik
+Blåviksjön
 Blötberget
-Bo
 Bockara
 Boda
 Boda Glasbruk
 Bodafors
 Bodbyn
-Bodbysund
 Boden
 Bodträskfors
 Boholmarna
+Bohus
 Boliden
 Bollebygd
 Bollnäs
 Bollstabruk
-Bollstanäs
 Bolmen
 Bolmsö kyrkby
 Bonäs
@@ -205,12 +218,13 @@ Borgeby
 Borggård
 Borghamn
 Borgholm
+Borgsjö
 Borgstena
+Borgunda
 Borlänge
 Borrby
 Borås
 Bosnäs
-Bossflaten
 Botsmark
 Bottnaryd
 Bovallstrand
@@ -219,6 +233,7 @@ Brandstorp
 Brantevik
 Brastad
 Brattby
+Bratten
 Brattfors
 Brattås
 Braås
@@ -226,17 +241,15 @@ Bredared
 Bredaryd
 Bredbyn
 Bredsand
-Bredåker
 Brevens bruk
 Brevik
 Brevikshalvön
 Brittatorp
 Bro
+Broakulla
 Broaryd
 Broby
 Broddbo
-Broddebo
-Brokared
 Brokind
 Bromölla
 Brotorp
@@ -250,22 +263,21 @@ Brytte
 Bräcke
 Bräkne-Hoby
 Brändön
-Bränn Ekeby
+Bränn-Ekeby
 Brännberg
 Brännland
 Brännö
 Brålanda
 Brån
 Bröms
+Brömsebro
 Brömsebro Norra
 Brömsebro Södra
 Brösarp
 Bua
 Buerås
-Bullandö
 Bullmark
 Bunkeflostrand
-Bunäs
 Bureå
 Burge
 Burgsvik
@@ -277,7 +289,6 @@ Buskhyttan
 Butbro
 By
 Byarum
-Bye
 Bygdeå
 Bygdsiljum
 Byske
@@ -289,6 +300,8 @@ Bäckefors
 Bäckhammar
 Bälgviken
 Bälinge
+Bällefors
+Bärbo
 Bärby
 Bäsksele
 Bäsna
@@ -305,33 +318,33 @@ Börje
 Börjelsbyn
 Campus Roslagen
 Charlottenberg
-Dagsås
-Dal
+Daglösten
+Dala
 Dala-Floda
 Dalarö
 Dalasjö
 Dalby
-Dalhem
+Dalfors
 Dalkarlså
 Dals Långed
 Dals Rostock
 Dalsjöfors
 Dalstorp
 Dalum
+Dammen
 Danderyd
 Danholn
 Danmark
 Dannemora
 Dannike
-Dartsel
 Degeberga
 Degerfors
 Degerhamn
-Degernäs
 Degerås
 Deje
 Delary
 Delsbo
+Derome
 Dikanäs
 Dingelsundet
 Dingersjö
@@ -346,17 +359,16 @@ Djurmo
 Djursholm
 Djursvik
 Djurås
-Djurö
-Djäkneboda
+Djurön
 Docksta
 Dokkas
 Domsten
 Donsö
 Dorotea
 Drag
-Dragedet
 Drevviksstrand
 Drottningholm
+Drottningskär
 Drängsmark
 Dunö
 Duvberg
@@ -365,7 +377,6 @@ Duvesjön
 Duvetorp
 Dvärsätt
 Dynäs
-Dyrön
 Dyvelsten
 Dyvik
 Dädesjö
@@ -373,37 +384,39 @@ Dösjebro
 Döviken
 Ebbarp
 Ed
-Eda glasbruk
+Eda Glasbruk
 Edane
+Edebo
 Edebäck
 Edenberga
 Edenryd
-Edsberg
 Edsbro
 Edsbruk
 Edsbyn
 Edsele
 Edsvalla
 Edsåsdalen
+Edsåsen
+Edvalla
 Eggby
-Eke
 Ekeby
 Ekeby-Almby
 Ekedalen
-Ekekull
 Ekenässjön
 Ekerö
 Ekerö sommarstad
 Ekeskog
 Eket
+Ekilla
 Eknäs
+Ekorrträsk
 Ekshärad
 Eksjö
 Ekskogen
 Eksund
 Ekängen
+Ekås
 Eldsberga
-Ellringe
 Ellös
 Emmaboda
 Emmaljunga
@@ -419,7 +432,6 @@ Enstaberga
 Enviken
 Enåker
 Enånger
-Epa
 Eriksberg
 Erikslund
 Eriksmåla
@@ -430,10 +442,11 @@ Ersmark
 Ersnäs
 Ervalla
 Eskilsby
+Eskilsryd
 Eskilstuna
+Eskilsäter
 Eslöv
 Essvik
-Estersmark
 Evertsberg
 Everöd
 Evlinge och Ramsdalen
@@ -445,6 +458,7 @@ Fagerås
 Falerum
 Falkenberg
 Falköping
+Falla
 Falun
 Fanbyn
 Fellingsbro
@@ -459,10 +473,10 @@ Finkarby
 Finneby
 Finnerödja
 Finnshyttan
-Finnsved
 Finsjö
 Finspång
 Fiskarhagen
+Fiskartorpet
 Fiskebäckskil
 Fisksätra
 Fjugesta
@@ -472,10 +486,11 @@ Fjällnora
 Fjällnäs
 Fjällsta
 Fjärdhundra
-Fjärås Kyrkby
-Flemingsberg
+Fjärås kyrkby
+Flakaberg
+Flakaträsk
+Flemmingeland
 Flen
-Flerohopp
 Flisby
 Fliseryd
 Floby
@@ -483,12 +498,12 @@ Floda
 Flurkmark
 Flygsfors
 Flyinge
+Flyinge Kungsgård
 Fläckebo
 Flädie
-Flötemarksön
+Forkarby
 Fornåsa
 Fors
-Forsa
 Forsbacka
 Forsby
 Forsbäck
@@ -497,10 +512,11 @@ Forshaga
 Forsheda
 Forsliden
 Forsmark
+Forsmo
 Forssjö
 Forsvik
+Fotskäl
 Fotö
-Frebro
 Fredrika
 Fredriksberg
 Fredriksdal
@@ -517,12 +533,14 @@ Frändefors
 Fränsta
 Frånö
 Frödinge
-Frödingehult
 Frösakull
 Frösthult
+Frösunda
 Frövi
-Fundshult
+Fullerö hage
+Funbo
 Funäsdalen
+Furingstad
 Furuby
 Furudal
 Furulund
@@ -535,8 +553,8 @@ Färgelanda
 Färila
 Färjestaden
 Färlöv
+Färmanstorp och Skavkulla brygga
 Färna
-Färnäs
 Fågelfors
 Fågelmara
 Fågelsta
@@ -551,9 +569,12 @@ Förola
 Förslöv
 Gagnef
 Galtström
+Gamla Köpstad
 Gamleby
 Gammelgården
+Gammelstilla
 Gantofta
+Gargnäs
 Garpenberg
 Garphyttan
 Garsås
@@ -566,15 +587,16 @@ Gesunda
 Getinge
 Gevåg
 Gideå
-Gillhov
 Gimmersta
 Gimo
 Gislaved
 Gissebo
 Gistad
+Gladhammar
 Gladö kvarn
 Glanshammar
 Glassvik
+Glava
 Glemmingebro
 Glimåkra
 Glissjöberg
@@ -584,28 +606,25 @@ Glumslöv
 Glössbo
 Gnarp
 Gnesta
-Gnistring
 Gnosjö
 Godegård
 Gonäs
-Gorkuträsk
 Gottne
 Gottskär
 Grana
-Granberget
 Granbergsdal
 Granby
 Grangärde
+Granhult
 Granshult
+Granträsk
 Granåsen
 Granö
 Graversfors
 Grebbestad
 Grebo
 Grevie
-Grevie och Beden
 Grillby
-Grimeton
 Grimslöv
 Grimstorp
 Grimsättra
@@ -618,21 +637,22 @@ Grums
 Grundfors
 Grundsund
 Grycksbo
+Gryt
 Grytgöl
 Grythyttan
 Gräddö
 Gräfsnäs
-Gräftåvallen
 Grängesberg
+Grängesberg västra
 Gränna
+Gränsta
 Gränum
 Gräsmyr
 Grästorp
 Gråbo
+Gråshult
 Grönbo
-Grönskan, Vedhamn och Baldersnäs
-Grönsta
-Grönviken
+Grönhult
 Gualöv
 Gubbo
 Gubböle
@@ -641,25 +661,25 @@ Gullabo
 Gullbrandstorp
 Gullbranna
 Gulleråsen
+Gullringen
 Gullspång
 Gulsele
-Gumboda
 Gunnarn
-Gunnars
 Gunnarskog
 Gunnarstorp
 Gunnebo
 Gunnedet
+Gunnesgården
 Gunsta
 Gusselby
 Gustafs
 Gustavsberg
 Gustavsfors
 Gusum
-Gute
 Gysinge
 Gyttorp
 Gäddede
+Gäddträsk
 Gällared
 Gällaryd
 Gällivare
@@ -667,20 +687,20 @@ Gällstad
 Gällö
 Gängletorp
 Gärds Köpinge
+Gärdsvik
 Gärsnäs
-Gästrike-Hammarby
 Gävle
 Gånsvik
 Gånsvikshamn
 Gårdby
+Gårdsby
 Gårdskär
 Gårdstånga
-Gårelesele
-Gåshaga
 Gåsnäs
 Gåvsta
 Gö
 Görvik
+Gössäter
 Göta
 Göteborg
 Götene
@@ -695,6 +715,7 @@ Hagby
 Hagfors
 Hagge
 Hagryd-Dala
+Hagshult
 Hagsta
 Hajom
 Hakkas
@@ -703,6 +724,7 @@ Halla Heberg
 Hallabro
 Hallen
 Hallerna
+Hallingeberg
 Hallsberg
 Hallstahammar
 Hallstavik
@@ -712,6 +734,8 @@ Halmstad
 Halvarsgårdarna
 Hamburgsund
 Hammar
+Hammarby
+Hammarn
 Hammarslund
 Hammarstrand
 Hammenhög
@@ -724,12 +748,14 @@ Hamrångefjärden
 Hanaskog
 Handen
 Handöl
+Hangelösa
 Hanskroka
 Haparanda
 Harads
 Harbo
 Harg
 Hargshamn
+Harkie
 Harlösa
 Harmånger
 Harplinge
@@ -742,7 +768,6 @@ Hasslö
 Hasslöv
 Havdhem
 Haverdal
-Haxäng
 Heberg
 Heby
 Hedared
@@ -753,27 +778,28 @@ Hedenäset
 Hedeskoga
 Hedesunda
 Hedeviken
-Hedåker
+Hedåsen
 Helsingborg
 Hemavan
+Hemmesjö
 Hemmesta
 Hemmingsmark
 Hemse
+Hemsjö
 Henån
-Herratjärnfäbodarna
 Herrenäs
 Herrestad
 Herrljunga
 Herrskog
+Herrviksnäs
 Herräng
 Herråkra
 Herrö
-Herserud
 Herstadberg
 Hestra
-Hestrahult
 Hillared
 Hillerstorp
+Hillsta
 Himle
 Hindås
 Hinneryd
@@ -802,26 +828,24 @@ Hogstad
 Hogstorp
 Hok
 Holm
-Holmedal
 Holmeja
 Holmfors
 Holmsjö
-Holmsta
 Holmsund
-Holmåkra
 Holsbybrunn
+Holsljunga
 Horda
 Horn
 Horndal
+Hornmyr
 Hornön
 Horred
 Hotagen
 Hoting
-Hov
 Hova
+Hoverberg
 Hovid
 Hovmantorp
-Hovslätt
 Hovsta
 Huaröd
 Huddinge
@@ -834,22 +858,23 @@ Hultsjön
 Hulu
 Hummelsta
 Hunnebostrand
-Hunnestad
 Hurva
+Husbondliden
 Husby
 Huskvarna
-Hustega
+Hustahöjden
 Husum
 Huså
-Hybo
 Hylletofta
 Hyllinge
 Hylta
 Hyltebruk
 Hysingsvik
 Hyssna
+Häggdånger
 Häggenås
 Häggnäs
+Hägnen
 Häljarp
 Hällabrottet
 Hällaryd
@@ -865,30 +890,31 @@ Hällevik
 Hälleviksstrand
 Hällingsjö
 Hällnäs
-Hällskär
-Hälsingborg
-Hälsingfors
 Hälsö
 Härad
 Häradsbygden
+Häradsbäck
 Härnösand
 Härryda
 Härslöv
+Hässelmara
+Hässjö
 Hässleholm
+Hästebäcken
 Hästhagen
 Hästholmen
 Hästveda
 Häverödal
 Håbo-Tibble kyrkby
-Håkanstå
 Håkmark
 Håksberg
 Hålland
 Hållsta
-Hålltålln
 Hålludden
 Hålsjö
 Hånger
+Hårdvallen
+Hårte
 Höganäs
 Högboda
 Högland
@@ -901,6 +927,7 @@ Hökerum
 Hökvattnet
 Hökåsen
 Hököpinge
+Höljes
 Höllviken
 Hölö
 Hönö
@@ -933,10 +960,11 @@ Ingsta
 Innertavle
 Insjön
 Irsta
-Islinge
+Isebakke
 Jakobsbyn
 Jarhoinen
-Johannedal
+Joesjö
+Joeström
 Johannesudd
 Johannishus
 Johansfors
@@ -946,17 +974,16 @@ Jonslund
 Jonstorp
 Jordbro
 Jugansbo
-Juhonpieti och Erkheikki
 Jukkasjärvi
-Julsätra
 Jung
 Junibodsand
 Juniskär
 Junosuando
 Junsele
 Juoksengi
+Juoksenki
 Jursla
-Jytatorp
+Jursta
 Jäderfors
 Jädraås
 Jäkkvik
@@ -969,18 +996,16 @@ Järbo
 Järfälla
 Järlåsa
 Järna
-Järnas
-Järnasklubb
 Järnavik
-Järnboås
 Järnforsen
-Järnskog
+Järnäs
+Järnäsklubb
+Järpebo
 Järpen
 Järpås
 Järstorp
 Järved
 Järvsö
-Järvträsk
 Jättendal
 Jävre
 Jönköping
@@ -990,6 +1015,7 @@ Jörn
 Jössefors
 Kaaresuvanto
 Kalix
+Kalkudden
 Kallax
 Kallinge
 Kalmar
@@ -998,7 +1024,6 @@ Kangos
 Karby
 Kareby
 Karesuando
-Karl Gustav
 Karlholmsbruk
 Karlsborg
 Karlsby
@@ -1006,14 +1031,18 @@ Karlshamn
 Karlskoga
 Karlskrona
 Karlstad
-Karlstorp
 Karlsvik
 Karungi
+Karunki
 Karups sommarby
 Kasamark
 Kassjö
+Kastlösa
 Katrineholm
 Kattarp
+Kattilasaari
+Kattisavan
+Kauliranta
 Kaunisvaara
 Kaxholmen
 Kaxås
@@ -1029,7 +1058,6 @@ Kinna
 Kinnared
 Kinnarp
 Kinnarumma
-Kinnbäck
 Kirnujärvi
 Kiruna
 Kisa
@@ -1041,13 +1069,10 @@ Klagshamn
 Klagstorp
 Klevshult
 Klimpfjäll
-Klingsta och Allsta
 Klinte
 Klintehamn
 Klintemåla
-Klintsjön
 Klippan
-Klippans bruk
 Klippen
 Klockestrand
 Klockrike
@@ -1057,6 +1082,8 @@ Klässbol
 Klågerup
 Klöverträsk
 Klövsjö
+Knaften
+Knarrevik
 Knislinge
 Knivsta
 Knutby
@@ -1064,22 +1091,27 @@ Knäred
 Knösta
 Kode
 Kolari
+Kolbergs
 Kolbäck
 Kolsva
-Kolvarp
 Kompelusvaara
 Konga
 Kopparberg
+Kopparmora
+Koppartorp
 Koppom
 Korpilombolo
 Korsanäs
 Korsberga
+Korsta
 Korsträsk
 Koskullskulle
 Kosta
 Koviksnäs
 Kovland
+Krakerud
 Kramfors
+Krigslida
 Kristdala
 Kristianopel
 Kristianstad
@@ -1089,13 +1121,15 @@ Krokek
 Krokom
 Kroksjö
 Krokvåg
-Kronborg
 Krägga
+Kränge
 Kråksmåla
 Krångede
 Krångfors
 Kubbe
 Kukkola
+Kullbacka
+Kullåkra
 Kullö
 Kumla
 Kumla by
@@ -1103,6 +1137,7 @@ Kumla kyrkby
 Kungsbacka
 Kungsberga
 Kungsborg
+Kungsfors
 Kungsgården
 Kungshamn
 Kungshult
@@ -1111,30 +1146,27 @@ Kungsängen
 Kungsäter
 Kungsör
 Kungälv
-Kuntmått
 Kurkkio
 Kurland
 Kurravaara
 Kusmark
 Kuttainen
-Kvarnriset
-Kvarnå
+Kvarnåsen
+Kvarsebo
 Kvibille
 Kvicksund
 Kvidinge
 Kvikkjokk
 Kvillsfors
-Kvisljungeby
 Kvissleby
 Kvisthamra
 Kvänum
 Kvärlöv
-Kyllaj
+Kypasjärv
+Kyrkbyn
 Kyrkheddinge
 Kyrkhult
 Kyrksten
-Kyrktåsjö
-Käbol
 Kälarne
 Källby
 Källö-Knippla
@@ -1154,14 +1186,12 @@ Kåfalla
 Kåge
 Kågeröd
 Kåhög
-Kålaboda
 Kållekärr
 Kållered
 Kånna
 Kårböle
 Kårsta
-Kårviken
-Kåsböle
+Kölsta
 Köping
 Köpingebro
 Köpingsvik
@@ -1179,28 +1209,31 @@ Landfjärden
 Landsbro
 Landskrona
 Landvetter
-Landön
 Lane
 Lanesund
 Lanna
+Lannafors
 Lannavaara
 Lappea
-Lappvattnet
-Larsberg
+Larv
 Laröd
 Latikberg
 Latorpsbruk
+Lauker
 Lavsjö
 Laxne
 Laxsjö
 Laxvik
-Legdeå
+Laxå
 Leipojärvi
 Lekeryd
 Leksand
+Lem
 Lempeä
 Lenhovda
 Lerberget
+Lerbo
+Lerbäckshult
 Lerdala
 Lerkil
 Lerum
@@ -1228,26 +1261,24 @@ Lillpite
 Lillsjöhögen
 Lillängsdal
 Lillån
+Lillögda
 Lima
 Limabacka
 Limedsforsen
 Limmared
+Lindbacken
 Linderöd
 Lindesberg
-Lindesby
 Lindholmen
 Lindome
 Lindsdal
 Lindshammar
-Lindängen
-Lindärva
 Lindås
 Lindö
 Lingbo
 Linghed
 Linghem
 Linköping
-Linnarp
 Linneryd
 Linsell
 Linudden
@@ -1267,8 +1298,9 @@ Ljungsbro
 Ljungskile
 Ljungstorp och Jägersbo
 Ljusdal
+Ljusfallshammar
+Ljusnarn
 Ljusne
-Ljusrotet
 Ljustorp
 Locknevi
 Lofsdalen
@@ -1281,43 +1313,48 @@ Lottefors
 Lovikka
 Lovsjö
 Lucksta
+Luddingsbo
 Ludvigsborg
 Ludvika
+Lugnet
 Lugnet och Skälsmara
 Lugnvik
 Lugnås
 Luleå
 Lund
+Lundby
 Lunde
+Lunds by
 Lundsbrunn
 Lunnarp
 Lunnön
 Lurudden
 Luspa
+Lycksaberg
 Lycksele
 Lyrestad
 Lysekil
 Lysvik
 Läby
 Läckeby
+Läggesta
 Länghem
 Länna
 Läppe
-Läppe (östra delen)
 Lärbro
 Lästringe
 Lättinge
-Lågetorp
+Långared
 Långasjö
+Långbäcken
 Långemåla
-Långfors
-Långkobben
 Långsel
 Långsele
 Långshyttan
-Långtora
+Långsjöby
+Långstrandsudd
 Långträsk
-Långviken
+Långvik
 Långviksmon
 Långviksvallen
 Långvinds bruk
@@ -1336,22 +1373,19 @@ Lörudden
 Lösen
 Löttorp
 Lövberga
-Lövdalen
 Löved
 Lövestad
 Lövliden
-Lövstabruk
 Lövstalöt
-Lövsätter
 Lövsättra
 Lövånger
+Lövås
 Lövåsen
 Löwenströmska lasarettet
 Madängsholm
 Maj
 Mala
 Malgovik
-Malmberget
 Malmbäck
 Malmköping
 Malmslätt
@@ -1360,6 +1394,8 @@ Malsta
 Malung
 Malungsfors
 Malå
+Mangskog
+Manjaur
 Mantorp
 Marbäck
 Margretetorp
@@ -1378,24 +1414,26 @@ Marma
 Marmaskogen
 Marmaverken
 Marmorbyn
+Marsgölehult
 Marstrand
 Maspelösa
 Matfors
-Mattmar
 Medevi
 Medle
+Medskogsbron
 Medåker
 Mehedeby
+Mellanfjärden
 Mellansel
 Mellbystrand
 Mellerud
 Mellösa
 Merasjärvi
 Merlänna
+Mertajärvi Nearvá
 Meselefors
 Mettä Dokkas
 Mickelsträsk
-Mickrum
 Millegarne
 Misterhult
 Mjällby
@@ -1414,12 +1452,13 @@ Moholm
 Moliden
 Molkom
 Mollösund
+Mom
 Mora
 Morgongåva
 Morjärv
 Morup
 Moskosel
-Mossbo
+Mossängen
 Mosås
 Motala
 Mullhyttan
@@ -1427,9 +1466,11 @@ Mullsjö
 Munga
 Munka-Ljungby
 Munkedal
+Munkerud
 Munkfors
 Munktorp
 Muodoslompolo
+Muoniovaara
 Murjek
 Muskö
 Myckle
@@ -1439,16 +1480,19 @@ Myresjö
 Myrviken
 Mysingsö
 Mysterna
+Mällbyn
 Märsta
 Mästocka
 Målerås
 Målilla
-Mångbyn
 Månkarbo
+Månsarp
+Mårtenstorp
 Måttsund
 Möcklehult
 Möjaström
 Möklinta
+Möljeryd
 Mölle
 Mölltorp
 Mölnbo
@@ -1464,26 +1508,29 @@ Mörtfors
 Mörtviken
 Nacka
 Naglarby
-Nattavaara
 Nattavaara by
 Nedansjö
-Nedre Bäck
 Nedre Gärdsjö
 Nedre Parakka
 Nianfors
 Niemisel
-Niilivaara
 Nikkala
 Nikkaluokta
+Nilivaara
+Nilsby
 Nissafors
 Nitta
 Njurundabommen
 Njutånger
 Nogersund
+Nol
 Nolby
+Nolvik
 Nora
 Norberg
 Nordanå
+Nordanåker
+Nordanås
 Nordanö
 Norderåsen
 Nordingrå
@@ -1492,20 +1539,19 @@ Nordmaling
 Nordmanneröd
 Nordmark
 Nore
+Noret
 Norje
 Normlösa
 Norr Amsberg
 Norr-Hede
+Norra Ammarnäs
 Norra Björke
 Norra Bredåker
 Norra Bro
-Norra Kopparmora
 Norra Lagnö
 Norra Mossby
-Norra Rataryd
 Norra Rörum
 Norra Skärvången
-Norra Vi
 Norra Visby
 Norra Åbyggeby
 Norra Åsum
@@ -1522,6 +1568,7 @@ Norrmjöle
 Norrskedika
 Norrsundet
 Norrtälje
+Norrudden
 Norråker
 Norrö
 Norsesund
@@ -1531,12 +1578,13 @@ Nossebro
 Nuksujärvi
 Nusnäs
 Nya Kungshatt
-Nyberget
+Nya Långenäs
 Nyborg
 Nybro
 Nybrostrand
 Nye
 Nygård
+Nygården
 Nygårds hagar
 Nyhammar
 Nyhamn
@@ -1545,13 +1593,16 @@ Nyhem
 Nykil
 Nykroppa
 Nykvarn
+Nykyrka
 Nyköping
 Nyland
 Nymölla
 Nynäshamn
+Nysäter
 Nysätra
 Nysättra
 Nyvång
+Nyåker
 Nälden
 När
 Närkesberg
@@ -1559,7 +1610,6 @@ Näs
 Näs bruk
 Näset
 Näshult
-Näshulta
 Nässjö
 Nästansjö
 Näsum
@@ -1570,8 +1620,7 @@ Nävekvarn
 Nävragöl
 Nås
 Nöbbele
-Nödinge-Nol
-Nösslinge
+Nödinge
 Nösund
 Nötbolandet
 Obbola
@@ -1584,10 +1633,10 @@ Odensjö
 Odensvi
 Ohtanajärvi
 Oleby
+Olofsbo
 Olofsfors
 Olofstorp
 Olofström
-Olsbo
 Olsfors
 Olshammar
 Olstorp
@@ -1595,10 +1644,10 @@ Olsäter
 Onsala
 Onsala kyrkby
 Onslunda
+Ope
 Optand
 Ormanäs och Stanstorp
 Ormaryd
-Ormesta
 Ornäs
 Orrböle
 Orrefors
@@ -1606,6 +1655,7 @@ Orresta
 Orrhammar
 Orrviken
 Orsa
+Os
 Osby
 Osbyholm
 Oskar-Fredriksborg
@@ -1616,16 +1666,18 @@ Ostnäs
 Ostvik
 Otterbäcken
 Ottsjö
+Ovanmyra
 Ovansjö
 Ovanåker
 Ovelund
 Ovesholm
 Oviken
-Oxbacken
 Oxelösund
 Oxie
+Paharova
 Pajala
-Palsträsk
+Palojoensuu
+Pappersbruket
 Parksidan
 Partille
 Pauliström
@@ -1638,22 +1690,23 @@ Perstorp
 Persön
 Pilgrimstad
 Piteå
+Pjesker
+Pjätteryd
 Porjus
 Prästmon
 Puoltikasvaara
-Purnuvaara
 Påarp
+Pålkem
 Pålsboda
 Påläng
 Påryd
 Påskallavik
 Rabbalshede
 Ragunda
-Ragvaldsträsk
 Raksta
 Ramdala
-Ramfall
 Ramkvilla
+Ramneröd
 Ramnäs
 Ramsberg
 Ramsele
@@ -1663,23 +1716,22 @@ Ramundberget
 Ramvik
 Ransta
 Ransäter
+Rantajärvi
 Rappestad
-Rasbokil
 Ratan
-Rataryd
+Reagård
 Reftele
 Regna
 Rejmyre
 Rembacka
 Remmet
 Rengsjö
+Renudden
 Repbäcken
-Resarö
 Resele
-Resta
-Revingeby
+Revinge
 Riala
-Rickleå
+Rickeby
 Riddarhyttan
 Rimbo
 Rimforsa
@@ -1691,8 +1743,6 @@ Ringvattnet
 Rinkaby
 Rinkabyholm
 Risbäck
-Risböle
-Rissna
 Risön
 Ritsem
 Rixö
@@ -1701,6 +1751,7 @@ Rockhammar
 Rockneby
 Rogsta
 Roknäs
+Rolfhamre
 Rolfs
 Rolfstorp
 Roma
@@ -1719,7 +1770,6 @@ Rot
 Roteberg
 Rottne
 Rottneros
-Rud
 Ruda
 Rude
 Rumskulla
@@ -1727,7 +1777,6 @@ Rundvik
 Runemo
 Runhällen
 Runtuna
-Rusele
 Rusksele
 Rutvik
 Rya
@@ -1741,21 +1790,25 @@ Rydsgård
 Rydsnäs
 Rydöbruk
 Ryggamo
-Ryssbelt
 Ryssby
+Ryssbält
 Räfsnäs
 Räknäs
+Rällsvik
 Rämma
 Rängs sand
 Ränneslöv
 Rätan
+Rätansbyn
 Rättarboda
 Rättvik
 Rävemåla
 Rävlanda
 Rå
 Råby
+Råby-Rönö
 Råda
+Rågoliden
 Råneå
 Rångedala
 Rånnaväg
@@ -1763,11 +1816,11 @@ Rånäs
 Röbäck
 Röbäcksmyran
 Röda holme
-Rödbo
 Rödeby
 Rödtjärn
 Rödön
 Röfors
+Röjeråsen
 Röke
 Rönneshytta
 Rönnäng
@@ -1776,9 +1829,9 @@ Rörbäcksnäs
 Rörvik
 Röstånga
 Rötviken
+Sahavaara
 Sala
 Saladamm
-Salbohed
 Saleby
 Salsåker
 Saltsjöbaden
@@ -1790,16 +1843,15 @@ Sandbäck
 Sandhamn
 Sandhem
 Sandhult
-Sandnäset
+Sandkällan
 Sandseryd
 Sandskogen
 Sandslån
-Sandtrappan
+Sandvik
 Sandviken
 Sangis
 Sankt Olof
 Sannahed
-Sarkavare
 Sarsjöliden
 Sattajärvi
 Saxdalen
@@ -1809,28 +1861,27 @@ Saxtorp
 Saxtorpsskogen
 Segersta
 Segersäng
-Seglinge
 Seglingsberg
 Segmon
-Selet
 Selja
+Seltjärn
+Selånger
 Sennan
+Seskarö
 Sevalla
 Sexdrega
 Sibbhult
 Sibble
-Sibo
 Sidensjö
 Sifferbo
-Siggesta
 Sigtuna
 Sikeå
 Sikfors
 Sikhall
 Siknäs
+Siksele
 Sikås
 Siljansnäs
-Siljebodarna
 Simlångsdalen
 Simonstorp
 Simpnäs
@@ -1838,19 +1889,17 @@ Simris
 Simrishamn
 Simtuna
 Sinnerbo
-Siviken
 Sjuhalla
 Sjulsmark
 Sjunnen
 Sjuntorp
-Sjö
+Själevad
 Sjöberg
 Sjöbo
 Sjöbo sommarby och Svansjö sommarby
-Sjöbotten
-Sjödalen-Fullersta
 Sjödiken
 Sjögestad
+Sjöhagen
 Sjömarken
 Sjömellankälen
 Sjörröd
@@ -1861,6 +1910,7 @@ Skagersvik
 Skansholm
 Skanör med Falsterbo
 Skara
+Skarda
 Skarvsjöby
 Skaten
 Skattkärr
@@ -1870,7 +1920,7 @@ Skavdal
 Skavkulla och Skillingenäs
 Skebobruk
 Skebokvarn
-Skeda Udde
+Skeda udde
 Skedala
 Skede
 Skedvi kyrkby
@@ -1884,10 +1934,13 @@ Skepplanda
 Skeppsdalsström
 Skeppshult
 Skeppsvik
+Skepptuna
 Skillingaryd
 Skillinge
+Skillingsfors
 Skinnskatteberg
 Skivarp
+Skivsjö
 Sklörbacken
 Skoby
 Skog
@@ -1896,7 +1949,7 @@ Skoghall
 Skogs-Tibble
 Skogsby
 Skogstorp
-Skommarsveden
+Skorped
 Skottorp
 Skottsund
 Skravelsjö
@@ -1908,6 +1961,7 @@ Skråmträsk
 Skultorp
 Skultuna
 Skumparp
+Skurträsk
 Skurup
 Skutskär
 Skyllberg
@@ -1918,20 +1972,22 @@ Skänninge
 Skärblacka
 Skärgårdsstad
 Skärhamn
-Skärkdalen
 Skärmarö
 Skärplinge
+Skärsjövålen
 Skärstad
 Skärså
 Skärvsta
 Skålan
-Skållerud
 Skålviken
+Skålö
 Skånes-Fagerhult
 Skåpafors
 Sköldinge
 Sköllersta
 Skölsta
+Skön
+Skönberga
 Skövde
 Slagnäs
 Slaka
@@ -1939,19 +1995,20 @@ Slite
 Slottsbron
 Slottsskogen
 Slussfors
+Slädaviken
 Slättåkra
 Slöinge
 Smedby
 Smedjebacken
 Smedstorp
-Smolmark
 Smygehamn
 Smålandsstenar
 Smögen
-Snöveltorp
+Snövelstorp
 Sockarby
 Solberg
 Solberga
+Solhaga
 Sollebrunn
 Sollefteå
 Sollentuna
@@ -1961,14 +2018,17 @@ Solsidan
 Solvarbo
 Sommen
 Sonstorp
+Sonö
 Sorsele
 Sorunda
 Sparreholm
 Spersboda
 Spetsamåla
 Spillersboda
+Spjutmuren
 Spjutsbygd
-St. Kopperöd
+Sponvika
+Spångsholm
 Staffanstorp
 Stallarholmen
 Stamnäs
@@ -1979,21 +2039,22 @@ Stavre
 Stavreviken
 Stavsjö
 Stavsnäs
-Stavsnäs gärde
 Stehag
-Stekenjokk
 Stenared
 Stenberga
 Stenhamra
 Steninge
+Stenis och Vika
+Stenkumla
+Stenkyrkehuk
 Stensele
 Stensjö
+Stensjön
 Stenslätten
 Stenstorp
 Stensund och Krymla
 Stenungsund
 Stenungsön
-Sticklinge udde
 Stidsvig
 Stigen
 Stigtomta
@@ -2006,31 +2067,31 @@ Stockaryd
 Stockby
 Stocken
 Stockholm
+Stocksbo
 Stocksund
 Stockvik
-Stora Backa
 Stora Blåsjön
 Stora Bugärde
+Stora Dyrön
 Stora Herrestad
 Stora Höga
+Stora Kopperöd
 Stora Levene
-Stora Lötgården
 Stora Mellby
 Stora Mellösa
 Stora Skipås
-Stora Sundby
 Stora Uttervik
 Stora Vika
 Storebro
 Storfors
 Storhäggsjö
 Storlien
+Storsand
 Storseleby
 Storsjö
 Storsund
-Storsätter
-Stortorp
 Storuman
+Storvallen
 Storvik
 Storvreta
 Storå
@@ -2039,6 +2100,7 @@ Strand
 Strandhugget
 Strandnorum
 Striberg
+Strycksele
 Strängnäs
 Strålsnäs
 Strångsjö
@@ -2061,14 +2123,14 @@ Strömsön
 Strövelstorp
 Stugsund
 Stugun
+Sturefors
 Sturkö
-Stuvsta-Snättringe
+Styrstad
 Styrsö
 Stäket
 Ställdalen
 Stämsvik
 Stärkesmark
-Stättared
 Stånga
 Stångby
 Stöcke
@@ -2076,13 +2138,14 @@ Stöcksjö
 Stöde
 Stöllet
 Stöpen
+Suaningi
 Sulvik
 Sund
 Sundborn
 Sundby
 Sundbyberg
 Sundbyholm
-Sundsbruk
+Sundsjö
 Sundsvall
 Sundänge
 Sunhultsbrunn
@@ -2091,11 +2154,10 @@ Sunnantorp
 Sunne
 Sunnemo
 Sunnerby
-Sunnerskog
-Sunningen
 Surahammar
 Surte
 Sutterhöjden
+Svalboviken
 Svallet
 Svalsta
 Svalöv
@@ -2109,34 +2171,30 @@ Svappavaara
 Svartbyn
 Svartbäcken
 Svarte
-Svartnäset
 Svartvik
 Svartå
 Svedala
-Svedjorna
 Sveg
 Svenarum
 Svenljunga
 Svennevad
 Svensboda
 Svensbyn
-Svenshult
 Svenshögen
 Svenstavik
 Svenstorp
-Svinhult
 Svinninge
 Svängsta
 Svärdsjö
 Svärtinge
+Sya
 Sylta
 Sysslebäck
-Säbrå
 Säffle
+Säivis
 Sälen
 Sälgsjön
-Sällstorp
-Särdal
+Sänna
 Särna
 Särö
 Säter
@@ -2156,19 +2214,17 @@ Söderby
 Söderby-Karl
 Söderbärke
 Söderfors
-Södergärdet
 Söderhamn
 Söderköping
 Söderskogen
 Södersvik
 Södertälje
 Södervik
-Södra Arneby
+Söderåkra
 Södra Bredåker
-Södra Kopparmora
 Södra Ljunga
+Södra Mannaberg
 Södra Näs
-Södra Rataryd
 Södra Sandby
 Södra Sunderbyn
 Södra Svartbyn
@@ -2178,10 +2234,12 @@ Södra Åbyggeby
 Sölvesborg
 Sörbo
 Sörbygden
+Sörbyn
 Sörfjärden
 Sörfors
 Sörforsa
 Sörmjöle
+Sörnacksta
 Sörstafors
 Sörvik
 Sörviken
@@ -2192,7 +2250,8 @@ Sövestad
 Taberg
 Tahult
 Tallberg
-Tallsjö
+Tallboda
+Tallträsk
 Tallåsen
 Tandsbyn
 Tandsjöborg
@@ -2201,7 +2260,6 @@ Tavelsjö
 Tavnäs
 Teckomatorp
 Tenhult
-Tibble
 Tibro
 Tidaholm
 Tidan
@@ -2217,7 +2275,6 @@ Timsfors
 Tingsryd
 Tingstäde
 Tjautjas
-Tjutboda
 Tjuvkil
 Tjällmo
 Tjärnheden
@@ -2226,6 +2283,7 @@ Toarp
 Tobo
 Tofta
 Toftbyn
+Tofteryd
 Tokarp
 Tolfta
 Tollarp
@@ -2240,6 +2298,7 @@ Torhamn
 Tormestorp
 Torna Hällestad
 Tornio
+Torp
 Torpsbruk
 Torpshammar
 Torreby
@@ -2247,8 +2306,7 @@ Torsby
 Torsebro
 Torshälla
 Torshälla huvud
-Torsta
-Torstuna
+Torslanda
 Torsåker
 Torsång
 Torsås
@@ -2256,9 +2314,9 @@ Tortuna
 Torup
 Tosseryd
 Tossåsen
+Tostebo
 Totebo
 Totra
-Toverum
 Tranemo
 Tranholmen
 Transtrand
@@ -2270,15 +2328,15 @@ Trelleborg
 Trollberget
 Trollhättan
 Trosa
-Trulsegården
-Trysunda
 Trädet
+Träkumla
 Träslövsläge
 Trångsviken
 Tråvad
 Trödje
 Trönninge
 Trönningenäs
+Trönö
 Tulebo
 Tullerum
 Tulleråsen
@@ -2286,13 +2344,15 @@ Tullinge
 Tullingsås
 Tumba
 Tumbo
+Tumlehed
 Tuna
-Tunadal
 Tunbohässle
 Tunnerstad
 Tunnsjø senter
 Tureholm
-Tuvattnet
+Turtola
+Tuvträsk
+Tveta
 Tving
 Tvärskog
 Tväråbäck
@@ -2301,8 +2361,8 @@ Tvärån
 Tväråträsk
 Tvååker
 Tygelsjö
-Tyllinge
 Tylösand
+Tynderö
 Tyresö
 Tyringe
 Tystberga
@@ -2320,7 +2380,6 @@ Tävelsås
 Tågarp
 Tånga och Rögle
 Tångaberg
-Tången
 Tånnö
 Töcksfors
 Töllsjö
@@ -2334,10 +2393,9 @@ Uddebo
 Uddeholm
 Uddevalla
 Uddheden
-Uddnäs
 Ugglarp
+Ukna
 Ulebergshamn
-Uleviken
 Ullared
 Ullatti
 Ullervad
@@ -2348,6 +2406,7 @@ Ulriksfors
 Umeå
 Umfors
 Umgransele
+Umnäs
 Undenäs
 Undersåker
 Unnaryd
@@ -2356,6 +2415,7 @@ Upplanda
 Upplands Väsby
 Upplunda
 Uppsala
+Urfors
 Urshult
 Ursviken
 Utansjö
@@ -2369,8 +2429,9 @@ Vadstena
 Vaggeryd
 Vagnhärad
 Valbo
-Valbo-Ryrs
+Valbo-Ryr
 Valdemarsvik
+Valinge
 Valje
 Valla
 Vallargärdet
@@ -2383,7 +2444,6 @@ Vallsjö
 Vallsta
 Vallvik
 Vallåkra
-Valsfäboda
 Valsjöbyn
 Valskog
 Vangsta
@@ -2391,14 +2451,17 @@ Vankiva
 Vanneberga
 Vannsätter
 Vansbro
-Vansö kyrkby
+Vanstad
+Vansö
 Vaplan
 Vara
 Varberg
 Varekil
+Vargträsk
 Vargön
 Varmsätra
 Varnhem
+Varola
 Vartofta
 Varv
 Vassbotten
@@ -2412,10 +2475,8 @@ Vattnäs
 Vattrång
 Vattubrinken
 Vaxholm
-Vaxmora
 Veberöd
 Veddige
-Vedergärde
 Vederslöv
 Vedevåg
 Vedum
@@ -2431,21 +2492,18 @@ Vemhån
 Vena
 Vendel
 Venjan
-Verahult
 Verkebäck
+Vessige
 Vessigebro
 Vetlanda
 Vi
 Via
-Viala
-Viala by
 Vibble
 Viby
 Vickleby
 Vidbo
 Vidja
 Vidsel
-Vidöåsen
 Vigelsjö
 Vik
 Vika
@@ -2456,14 +2514,18 @@ Vikmanshyttan
 Viksjöfors
 Viksäter
 Vilhelmina
+Villastaden
 Villshärad
 Vilshult
+Vimmaråsen
 Vimmerby
 Vinberg
 Vinbergs kyrkby
 Vindel-Ånäset
+Vindelgransele
 Vindeln
 Vingåker
+Vinliden
 Vinninga
 Vinnö
 Vinslöv
@@ -2489,17 +2551,19 @@ Vittskövle
 Vitå
 Vivljunga
 Vollsjö
+Vormsele
+Vormträsk
 Vrena
+Vreta
 Vretstorp
 Vrigstad
-Vrå
 Vrångö
 Vuollerim
-Vuonatjviken
 Vuono
 Väckelsång
 Väderstad
 Väggarp
+Vägsele
 Väja
 Väjern
 Välivaara
@@ -2509,30 +2573,30 @@ Väländan
 Väne-Åsaka
 Vänersborg
 Vänge
+Vänjaurbäck
+Vänjaurträsk
 Vännäs
 Vännäsby
 Väring
 Värmlandsbro
 Värnamo
 Värsås
-Väröbacka
+Väsby
 Väse
-Väskinde
 Västanbäck
+Västanfäbodarna
 Västansjö
 Västanträsk
 Västanvik
 Västerberg
 Västerby
 Västerfärnebo
-Västergårde
 Västerhaninge
 Västerhejde
 Västerljung
 Västerlösa
 Västermyckeläng
-Västermyrriset
-Västerrå och Österrå
+Västerrå
 Västerselet
 Västersjön
 Västervik
@@ -2542,34 +2606,44 @@ Västerås
 Västland
 Västra Bodarna
 Västra Hagen
+Västra Harg
 Västra Husby
 Västra Ingelstad
 Västra Jakobsberg
 Västra Karup
 Västra Klagstorp
+Västra Låssby
 Västra Selet
+Västra Skägga
 Västra Spöland
 Västra Tommarp
 Västra Yttringe
+Västra Älvsala
 Västra Ämtervik
 Västrum
 Växjö
 Vålberg
 Våmhus
+Vånafjärden
 Vånga
-Vånnafjärden
+Vångelsta
 Vårgårda
 Vårsta
 Våxtorp
+Wenngarn
 Yngsjö
 Ysby
 Ystad
+Ytterberg
+Ytterby
 Ytterhogdal
+Yttermalung
 Ytternäs och Vreta
 Yttersjö
 Ytterån
 Ytteråträsk
 Yttre Ursviken
+Yxskaftkälen
 Zinkgruvan
 Älandsbro
 Älgarås
@@ -2583,35 +2657,35 @@ Zinkgruvan
 Älvkarleby
 Älvnäs
 Älvros
+Älvsala
 Älvsbyn
 Älvsered
 Älvängen
 Änge
 Ängelholm
+Ängesån
 Ängsholmen
-Ängsjö
 Ängsvik
-Ängsö
 Äppelbo
 Ärla
 Äsköping
+Äspered
 Äsperöd
 Ätran
 Åby
-Åbydal
 Åbyn
 Åbytorp
-Ådalen
+Ådran
 Åhus
 Åkarp
 Åkerby
 Åkers styckebruk
 Åkersberga
-Åkulla
+Åkullsjön
+Ålaryd
 Ålberga
 Åled
 Ålem
-Ålstorp
 Ålåsen
 Åmmeberg
 Åmot
@@ -2630,10 +2704,10 @@ Zinkgruvan
 Åryd
 Ås
 Åsa
+Åsaka
 Åsarna
 Åsarp
 Åsbro
-Åsby
 Åsebro
 Åseda
 Åsele
@@ -2642,19 +2716,23 @@ Zinkgruvan
 Åsensbruk
 Åshammar
 Åskilje
+Åskloster
 Åsljunga
-Åstol
 Åstorp
 Åsvallen
+Åsättra
 Återvall
 Åtorp
+Åttersta
 Åttonträsk
 Åtvidaberg
+Åvikebruk
 Öbonäs
 Öckerö
 Ödeborg
 Ödeshög
 Ödestugu
+Ödevata
 Ödsmål
 Ödåkra
 Öggestorp
@@ -2665,8 +2743,8 @@ Zinkgruvan
 Ölme
 Ölmstad
 Ölsta
-Öndebyn
 Önneköp
+Önnesmark
 Önnestad
 Örbyhus
 Örebro
@@ -2674,34 +2752,35 @@ Zinkgruvan
 Örkelljunga
 Örnsköldsvik
 Örserum
+Örsjö
 Örslösa
 Örstig
 Örsundsbro
 Örtagården
-Örtomta
+Örträsk
 Örviken
 Ösmo
+Östad
 Östadkulle
 Östanbäck
 Östansjö
 Östanå
 Östavall
 Österbacka
-Österby
 Österbybruk
 Österbymo
 Österforse
 Österfärnebo
-Österhagen och Bergliden
 Österlövsta
 Östernäs
+Österrå
 Österselet
 Österskär
 Österslöv
 Österstad
 Östersund
-Österunda
 Östervåla
+Österängarna
 Österå
 Österåker
 Österås
@@ -2709,8 +2788,7 @@ Zinkgruvan
 Östhammar
 Östhamra
 Östmark
-Östnor
-Östorp och Ådran
+Östorp
 Östra Frölunda
 Östra Grevie
 Östra Husby
@@ -2721,15 +2799,20 @@ Zinkgruvan
 Östra Spöland
 Östra Sönnarslöv
 Östra Tommarp
+Östra Vingåker
 Östra Ånneröd
 Östraby
+Överberg
 Överboda
 Överkalix
 Överklinten
 Överlida
+Övermyra
 Övertorneå
 Överum
+Övre Mom
 Övre Soppero
+Övre Storvik
 Övre Svartlå
 Öxabäck
 Öxeryd
