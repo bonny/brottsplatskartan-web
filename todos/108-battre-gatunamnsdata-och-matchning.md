@@ -1,4 +1,4 @@
-**Status:** aktiv — mätt 2026-10-07: nuvarande matchning fungerar bra, låg nytta att bygga om. Väntar på beslut
+**Status:** parkerad 2026-10-07 — småfixen (`högsta` i `highways_ignored`) gjord på prod; NVDB-ombyggnaden parkerad tills felplacering blir ett problem
 **Senast uppdaterad:** 2026-10-07
 **Källa:** Pär, 2026-10-07 (uppföljning av #106)
 
@@ -54,8 +54,8 @@ Data i `tmp-108/` (gitignorerad).
 
 ## Förslag
 
-1. **Småfix nu:** lägg till `högsta` i `highways_ignored` (prod-DB, kräver
-   OK). Eventuellt fler vanliga ord efter en titt på topp 200.
+1. **Småfix — gjord 2026-10-07:** `högsta` tillagd i `highways_ignored` på
+   prod (id 1698, backup `backups/prod-2026-10-07-171625.sql.gz` före). Eventuellt fler vanliga ord efter en titt på topp 200.
 2. **Parkera ombyggnaden** (NVDB + kommunmatchning). Bygg först om
    felplaceringar blir ett märkbart problem eller Google-anropen passerar
    10 000/månad.
