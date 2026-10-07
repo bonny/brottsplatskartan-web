@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Laravel\Ai\Events\AgentPrompted;
 use Laravel\Ai\Events\AgentStreamed;
-use Laravel\Ai\Responses\Data\Usage;
+use Laravel\Ai\Responses\Data\TextUsage;
 
 /**
  * Persisterar token-användning från `laravel/ai` agent-anrop till
@@ -36,11 +36,16 @@ class LogAiUsage
                 'agent' => $agent,
                 'model' => $model,
                 'invocation_id' => $event->invocationId,
-                'input_tokens' => $usage->promptTokens,
-                'output_tokens' => $usage->completionTokens,
-                'cache_read_tokens' => $usage->cacheReadInputTokens,
-                'cache_write_tokens' => $usage->cacheWriteInputTokens,
-                'reasoning_tokens' => $usage->reasoningTokens,
+                // Sedan laravel/ai 1.0 inkluderar inputTokens cache-tokens och
+                // cache-/reasoning-fälten är null när providern inte rapporterar
+                // dem. Kolumnerna är NOT NULL, och input_tokens har alltid
+                // betytt okachad input (Anthropics `input_tokens`) — behåll den
+                // betydelsen så gammal och ny data går att jämföra i ai:usage.
+                'input_tokens' => $usage->uncachedInputTokens(),
+                'output_tokens' => $usage->outputTokens,
+                'cache_read_tokens' => $usage->cacheReadInputTokens ?? 0,
+                'cache_write_tokens' => $usage->cacheWriteInputTokens ?? 0,
+                'reasoning_tokens' => $usage->reasoningTokens ?? 0,
                 'cost_usd_micros' => $costMicros,
                 'context_json' => json_encode($this->collectContext()),
                 'created_at' => now(),
@@ -60,7 +65,7 @@ class LogAiUsage
      * om modellen saknas i prismatrisen — vi loggar då anropet ändå men
      * utan kostnad, så `ai:usage` kan flagga okända modeller.
      */
-    private function calculateCostMicros(string $model, Usage $usage): ?int
+    private function calculateCostMicros(string $model, TextUsage $usage): ?int
     {
         $pricing = config("ai-pricing.{$model}");
         if (! is_array($pricing)) {
@@ -71,11 +76,12 @@ class LogAiUsage
         // Pris-fälten är USD per million tokens. Multiplicera tokens × pris,
         // dela med 1_000_000 (för MTok), multiplicera med 1_000_000 (för micro-USD).
         // De två faktorerna tar ut varandra — direkt: tokens × pris.
-        $cost = $usage->promptTokens * $pricing['input']
-            + $usage->completionTokens * $pricing['output']
-            + $usage->cacheWriteInputTokens * $pricing['cache_write']
-            + $usage->cacheReadInputTokens * $pricing['cache_read']
-            + $usage->reasoningTokens * $pricing['reasoning'];
+        // Reasoning-tokens är en delmängd av outputTokens (laravel/ai 1.0) och
+        // ska inte läggas på en gång till.
+        $cost = $usage->uncachedInputTokens() * $pricing['input']
+            + $usage->outputTokens * $pricing['output']
+            + ($usage->cacheWriteInputTokens ?? 0) * $pricing['cache_write']
+            + ($usage->cacheReadInputTokens ?? 0) * $pricing['cache_read'];
 
         return (int) round($cost);
     }

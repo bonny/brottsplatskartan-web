@@ -42,13 +42,14 @@ samma minut. Räknat på det faktiska burst-mönstret ger caching **~$0,83/mån*
 EventNewsMatchers prompt, men landar på $38–49/mån mot Haikus $25,70 okachat.
 Haiku utan cache slår varje Sonnet-med-cache-variant.
 
-**`laravel/ai` stödjer det inte heller** (kontrollerat i v0.11.0):
-`Gateway/Anthropic/Concerns/BuildsTextRequests.php` sätter `$body['system']`
-som ren sträng och sätter aldrig `cache_control`. Det finns dock en escape
-hatch — sista raden är `array_merge($body, $providerOptions)`, så en agent
-som implementerar `HasProviderOptions` kan skriva över `system` med
-cache_control-block. **Ingen vendor-PR behövs** om vi någon gång skulle vilja.
-(Äldre anteckningar i #81 påstår motsatsen — de är inaktuella.)
+**`laravel/ai` hindrar inte längre.** I v0.11.0 satte
+`Gateway/Anthropic/Concerns/BuildsTextRequests.php` `$body['system']` som ren
+sträng utan `cache_control` (escape hatch då: `HasProviderOptions`, eftersom
+sista steget är `array_merge($body, $providerOptions)`). Sedan v1.0 finns
+attributet `#[CacheInstructions]` (valfri `ttl`) som stämplar `cache_control`
+på systemprompten. Det ändrar inte kalkylen ovan — prefixen är fortfarande för
+korta eller för sällan återanvända. (Äldre anteckningar i #81 påstår att en
+vendor-PR behövs — de är inaktuella.)
 
 ## Det som faktiskt kostade: boilerplate per anrop
 
@@ -98,6 +99,26 @@ tappar N omdömen i stället för ett. Inte värt det.
 
 Om det ändå ska göras: mät om N först. Ratiot beror på hur mycket
 `place_news` innehåller och kan ändras.
+
+## Sonnet 4.6 → 5.5 utvärderat och avvisat (2026-10-07)
+
+Jämfört i [todo #107](../todos/107-uppgradera-ai-paket-och-modeller.md) på
+riktiga indata (5 titlar, 5 dagar, 4 månader). Sonnet 5.5 har lägre listpris
+($2/$10 mot $3/$15 per MTok) men ny tokenizer: samma prompt blir **20–26 %
+fler input-tokens** och svaren **29–44 % fler output-tokens**. Netto **12–16 %
+billigare per anrop** — ungefär $2,7/mån på Sonnet-spenden (~$21/mån).
+
+Kvaliteten var inte klart bättre: längre dagssammanfattningar än prompten
+tillåter, fler länkar än 4–8 i månadstexterna, och mer ordagranna titel-
+omskrivningar. Två saker att veta om det görs om:
+
+- `#[Temperature(0.5)]` måste bort — icke-default sampling ger 400 på Sonnet 5+.
+- Utan `thinking`-parameter kör 5.5 adaptive thinking. På våra korta uppgifter
+  tänkte den sällan, men månadssammanfattningen fick 722 reasoning-tokens
+  (+36 % output). `thinking: {type: "between_tools"}` stänger av det; skicka det
+  via `HasProviderOptions` (top-level-nyckel, krockar inte med `output_config`).
+  Lägg **inte** `output_config.effort` där — `array_merge` är grund och skriver
+  över structured output-schemat.
 
 ## Att tänka på vid promptändringar
 

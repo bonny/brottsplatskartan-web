@@ -39,11 +39,6 @@ return [
         'signing_secret' => env('GOOGLE_SIGNING_SECRET'),
     ],
 
-    'claude' => [
-        'api_key' => env('CLAUDE_API_KEY'),
-        'model' => env('CLAUDE_MODEL', 'claude-sonnet-4-5-20250929'),
-    ],
-
     'tileserver' => [
         'url' => env('TILESERVER_URL', 'https://kartbilder.brottsplatskartan.se/'),
         // Kartbild-stil för enskilda händelser: 'circle' (röd tonad cirkel
