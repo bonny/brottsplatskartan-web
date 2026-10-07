@@ -136,11 +136,19 @@ def tyngdpunkt(geometri):
     total_a = cx = cy = 0.0
     for r in ringar:
         pts = [(x * kx, y) for x, y in r]
+        a = sx = sy = 0.0
         for (x1, y1), (x2, y2) in zip(pts, pts[1:] + pts[:1]):
             k = x1 * y2 - x2 * y1
-            total_a += k / 2
-            cx += (x1 + x2) * k / 6
-            cy += (y1 + y2) * k / 6
+            a += k / 2
+            sx += (x1 + x2) * k / 6
+            sy += (y1 + y2) * k / 6
+        # Nominatim garanterar inte samma ringriktning för alla delar av en
+        # MultiPolygon; en ö med motsatt riktning skulle annars dras ifrån.
+        if a < 0:
+            a, sx, sy = -a, -sx, -sy
+        total_a += a
+        cx += sx
+        cy += sy
 
     return cy / total_a, (cx / total_a) / kx
 

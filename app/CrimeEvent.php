@@ -914,8 +914,10 @@ class CrimeEvent extends Model implements Feedable {
 
     /**
      * Kolumnerna StaticMapUrlBuilder faktiskt läser. Håll listan i synk med
-     * circleUrl()/closeUpUrl()/farUrl() — getViewPortSizeAsString() räknar
-     * bara på viewport-fälten, så det är hela beroendet.
+     * circleUrl()/closeUpUrl()/farUrl()/areaUrl() — getViewPortSizeAsString()
+     * räknar bara på viewport-fälten, och areaUrl() slår upp länscirkeln på
+     * administrative_area_level_1 (todo #78). Saknas länet faller
+     * omrade-bilderna tyst tillbaka till kartan utan markering.
      */
     private const KARTBILD_COLUMNS = [
         'id',

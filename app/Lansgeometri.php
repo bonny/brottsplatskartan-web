@@ -30,8 +30,10 @@ class Lansgeometri
         }
 
         if (self::$cirklar === null) {
-            $json = file_get_contents(resource_path('geo/lanscirklar.json'));
-            self::$cirklar = $json === false ? [] : (json_decode($json, true) ?? []);
+            // Trasig eller saknad fil ska ge kartbild utan markering, inte 500.
+            $json = @file_get_contents(resource_path('geo/lanscirklar.json'));
+            $decoded = $json === false ? null : json_decode($json, true);
+            self::$cirklar = is_array($decoded) ? $decoded : [];
         }
 
         return self::$cirklar[$lan] ?? null;
