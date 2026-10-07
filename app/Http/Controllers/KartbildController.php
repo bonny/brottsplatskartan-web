@@ -19,6 +19,7 @@ use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
  *   /k/v1/circle-low-{id}-{w}x{h}[@2x].jpg   — kapad densitet (1 lager × 24) — för thumbs
  *   /k/v1/near-{id}-{w}x{h}[@2x].jpg         — close-up bbox
  *   /k/v1/far-{id}-{w}x{h}[@2x].jpg          — översikt zoom 5
+ *   /k/v1/area-{id}-{w}x{h}[@2x].jpg         — område utan markering, för sammanfattningar (todo #78)
  *
  * `v1` är versions-prefix: vid stilbyte (cirkel-färg, opacity etc.) bumpa
  * till v2 så browser-cache invalideras på en gång — `immutable` annars
@@ -26,7 +27,7 @@ use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
  */
 class KartbildController extends Controller
 {
-    private const SPEC_PATTERN = '/^(?<mode>circle-low|circle|near|far)-(?<id>\d+)-(?<w>\d+)x(?<h>\d+)(?<retina>@2x)?$/';
+    private const SPEC_PATTERN = '/^(?<mode>circle-low|circle|near|far|area)-(?<id>\d+)-(?<w>\d+)x(?<h>\d+)(?<retina>@2x)?$/';
 
     public function show(string $spec, StaticMapUrlBuilder $builder): SymfonyResponse
     {
@@ -54,6 +55,7 @@ class KartbildController extends Controller
             'circle-low' => $builder->circleUrl($event, $width, $height, $scale, 'low'),
             'near'       => $builder->closeUpUrl($event, $width, $height, $scale),
             'far'        => $builder->farUrl($event, $width, $height, $scale),
+            'area'       => $builder->areaUrl($event, $width, $height, $scale),
         };
 
         if ($longUrl === '') {

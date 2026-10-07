@@ -177,6 +177,12 @@ function getLayerIcon(layer, map, classToAdd = "", innerText = "") {
         console.log("No icon found for marker", crimeEventType, layer);
     }
 
+    // Sammanfattningar från flera platser i länet får en "område"-pin
+    // istället för en brottsplats-prick (todo #78).
+    if (layer?.options?.crimeEventData?.multi_place) {
+        classToAdd = `${classToAdd} EventsMap-marker-icon--area`;
+    }
+
     // Default zoomed out icons.
     let className = `EventsMap-marker-icon EventsMap-marker-icon--far ${classToAdd}`;
     let iconSize = [10, 10];
@@ -237,15 +243,21 @@ class EventsMap {
         const markers = [];
 
         events.forEach((event) => {
+            // Koordinaten för en sammanfattning är bara Polisens
+            // samordningspunkt — säg det i popupen istället för platslistan.
+            const locations = event.multi_place
+                ? `Flera platser${event.lan ? ` i ${escapeHtml(event.lan)}` : ""}`
+                : event.locations;
             const oneMarker = L.marker([event.lat, event.lng], {
-                icon: getLayerIcon(null, map, "", ""),
+                // Ikonen läser crimeEventData (multi_place) från lagret.
+                icon: getLayerIcon({ options: { crimeEventData: event } }, map, "", ""),
                 crimeEventData: event,
             }).bindPopup(
                 `
                     <div class="EventsMap-markerTooltip">
                         <img class="EventsMap-markerTooltip-image" src="${event.image}" alt="">
                         <div class="EventsMap-markerTooltip-innerContent">
-                            <div class="EventsMap-markerTooltip-locations">${event.locations}</div>
+                            <div class="EventsMap-markerTooltip-locations">${locations}</div>
                             <h3 class="EventsMap-markerTooltip-headline">
                                 <a class="EventsMap-markerTooltip-link" href="${event.permalink}?utm_source=brottsplatskartan&utm_medium=maplink" target="_blank">
                                     ${event.headline}

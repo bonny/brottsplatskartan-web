@@ -303,6 +303,22 @@ body.map-is-expanded .SiteHeader {
     height: 50px;
 }
 
+/* "Område"-pin för sammanfattningar från flera platser (todo #78):
+   genomskinlig med streckad kant, så den inte läses som en brottsplats. */
+.EventsMap-marker-icon--area {
+    background-color: rgba(220, 50, 50, 0.15);
+    border: 2px dashed var(--color-red);
+}
+
+.EventsMap-marker-icon--area .EventsMap-marker-icon-inner {
+    background-color: transparent;
+    animation: none;
+}
+
+.EventsMap-marker-icon--area .EventsMap-marker-icon-innerIcon {
+    filter: brightness(0.3);
+}
+
 .EventsMap-marker-icon-innerIcon--fire {
     background-image: url("/img/local_fire_department_24dp_FILL0_wght400_GRAD0_opsz24.svg");
 }

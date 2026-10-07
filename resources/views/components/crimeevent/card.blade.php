@@ -62,7 +62,10 @@
                     src="{{ $nearMapSrc }}"
                     srcset="{{ $nearMapSrc }} 1x, {{ $nearMapSrc2x }} 2x"
                     width="426" height="320" />
-                @if ($useCircleStyle)
+                @if ($event->isMultiPlaceSummary())
+                    {{-- Todo #78: sammanfattningar ritas utan markering. --}}
+                    <span class="Event__mapCaption">Sammanfattning från flera platser{{ $event->administrative_area_level_1 ? ' i ' . $event->administrative_area_level_1 : '' }} — kartan visar området, inte en enskild plats.</span>
+                @elseif ($useCircleStyle)
                     <span class="Event__mapCaption">Ungefärlig plats — markeringen visar området, inte exakt koordinat.</span>
                 @endif
             </span>

@@ -45,6 +45,12 @@ class StaticMapUrlBuilder
     private const THUMB_MAX_RADIUS_METERS = 1500;
 
     /**
+     * Ungefärlig bredd (meter) som areaUrl() visar — ett mindre län i sin
+     * helhet, eller kärnan av ett stort. Se todo #78.
+     */
+    private const AREA_SPAN_METERS = 150000;
+
+    /**
      * Radie att använda för en thumbnail: kapad vid takvärdet, och
      * takvärdet även när precisionen saknas helt.
      */
@@ -184,6 +190,38 @@ class StaticMapUrlBuilder
         }
 
         return $base . '?' . implode('&', $params);
+    }
+
+    /**
+     * Områdesbild för sammanfattningshändelser som nämner många utspridda
+     * platser (todo #78): karta över trakten runt eventets koordinat utan
+     * någon markering alls. Polisen plottar "Sammanfattning natt" på en
+     * samordningspunkt (ofta länets centrum eller en polisstation) och
+     * viewporten är ofta en punkt, så cirkeln blev en skarp prick på en
+     * plats där inget hänt. Hellre en översikt av länet än en falsk prick.
+     *
+     * Zoom räknas fram så bilden täcker ungefär AREA_SPAN_METERS i bredd
+     * oavsett bildstorlek. tileserver-gl tar decimal-zoom.
+     */
+    public function areaUrl(CrimeEvent $event, int $width = 320, int $height = 320, int $scale = 1): string
+    {
+        if (!$event->location_lat || !$event->location_lng) {
+            return '';
+        }
+
+        $lat = (float) $event->location_lat;
+        $lng = (float) $event->location_lng;
+
+        // Web Mercator: meter per pixel vid zoom 0 är 156 543 × cos(lat).
+        $zoom = log($width * 156543.03 * cos(deg2rad($lat)) / self::AREA_SPAN_METERS, 2);
+        $zoom = number_format(max(4, min(9, $zoom)), 1, '.', '');
+
+        $suffix = $scale === 2 ? '@2x' : '';
+
+        return config('services.tileserver.url')
+            . 'styles/basic-preview/static/'
+            . number_format($lng, 5, '.', '') . ',' . number_format($lat, 5, '.', '') . ",{$zoom}"
+            . "/{$width}x{$height}{$suffix}.jpg";
     }
 
     /**

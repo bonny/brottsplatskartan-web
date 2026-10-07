@@ -1,5 +1,5 @@
-**Status:** aktiv — volym-mätning 2026-05-27 visar ~12 events/dygn (19 % av all events-volym); titel-regex täcker ~100 % av kända fall
-**Senast uppdaterad:** 2026-05-27
+**Status:** Fas 1 implementerad 2026-10-07 (ej deployad) — Fas 2 villkorlig på mätning
+**Senast uppdaterad:** 2026-10-07
 
 # Todo #78 — Hantera händelser som nämner många utspridda platser
 
@@ -159,3 +159,37 @@ browsing helt.
 medel — volym-mätning bekräftar att problemet är stort nog att åtgärda
 och att regex-detektering räcker. Lösningsutrymmet rangordnat: Fas 1
 (alt C) först, Fas 2 (alt E) bara vid mätbart kvarstående problem.
+
+## Genomfört 2026-10-07 — Fas 1 (alt C)
+
+Stickprov på prod (365 d) gav fyra titelvarianter: `Sammanfattning natt`
+(3 891), `Sammanfattning kväll och natt` (1 131), `Sammanfattning helg` (2)
+och `Sammanfattning eftermiddag` (1). Lokalt hade de flesta viewport-klass
+`closest`, dvs. Polisens koordinat är en punkt — cirkeln blev en 150 m-prick
+mitt i ett län. Det var den egentliga missvisningen.
+
+- **Detektering:** `CrimeEvent::isMultiPlaceSummary()` — regex
+  `^sammanfattning\s` på `parsed_title`. Ingen AI, ingen ny kolumn.
+- **Statiska kartbilder:** ny `StaticMapUrlBuilder::areaUrl()` ritar en
+  översikt (~150 km bred, zoom räknad från bildbredd och latitud, decimal-zoom
+  som tileserver-gl tar) runt koordinaten **utan markering**. Ny kort-URL
+  `/k/v1/area-{id}-{w}x{h}[@2x].jpg`. `getKortKartbildUrl()` byter
+  `circle`/`circle-low`/`near` → `area` för sammanfattningar, och
+  `getStaticImageSrc()` (API, eventsMap-popup, sitemaps) ger `areaUrl()`.
+  Kartbilden finns alltså kvar överallt, den visar bara området i stället för
+  en prick. `far` (Sverige-översikten) är orörd. Ny mode i URL:en i stället
+  för v2-bump, så bara sammanfattningarnas bilder får nya URL:er och övriga
+  ~500k kartbilders immutable-cache påverkas inte.
+- **Bildtext på händelsesidan:** "Sammanfattning från flera platser i {län} —
+  kartan visar området, inte en enskild plats." i stället för
+  "Ungefärlig plats …". Alt-texten blir "Översiktskarta över {län} för
+  sammanfattning natt från flera platser, {datum}".
+- **Leaflet-kartan:** `/api/eventsMap` skickar `multi_place` + `lan`.
+  Sammanfattningar får "område"-pin (`EventsMap-marker-icon--area`:
+  genomskinlig, streckad kant, ingen puls) och popupen säger "Flera platser i
+  {län}" i stället för platslistan. 1:1-relationen event↔marker är oförändrad.
+- **Tester:** `tests/Unit/MultiPlaceSummaryTest.php`.
+
+Inte gjort: Gävleborg-fallet (trafikolyckor i hela Hälsingland) fångas inte av
+titel-regexen — det är Fas 2-materialet. Fas 2 byggs bara om GA4 visar att
+Fas 1 inte räcker.

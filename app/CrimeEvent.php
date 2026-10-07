@@ -92,6 +92,18 @@ class CrimeEvent extends Model implements Feedable {
         };
     }
 
+    /**
+     * Är händelsen en av Polisens sammanfattningar ("Sammanfattning natt",
+     * "Sammanfattning kväll och natt", "Sammanfattning helg" …) som räknar
+     * upp händelser från många platser i länet? Koordinaten är då bara en
+     * samordningspunkt, så kartan ska visa området och inte en prick.
+     * Titelmönstret täcker i praktiken alla sådana händelser (todo #78).
+     */
+    public function isMultiPlaceSummary(): bool
+    {
+        return preg_match('/^sammanfattning\s/iu', trim($this->parsed_title ?? '')) === 1;
+    }
+
     private const MIN_BODY_FOR_AI_REWRITE = 100;
 
     /**
@@ -146,7 +158,11 @@ class CrimeEvent extends Model implements Feedable {
 
     // return src for an image
     public function getStaticImageSrc($width = 320, $height = 320, $scale = 1) {
-        return app(StaticMapUrlBuilder::class)->closeUpUrl($this, (int) $width, (int) $height, (int) $scale);
+        $builder = app(StaticMapUrlBuilder::class);
+        if ($this->isMultiPlaceSummary()) {
+            return $builder->areaUrl($this, (int) $width, (int) $height, (int) $scale);
+        }
+        return $builder->closeUpUrl($this, (int) $width, (int) $height, (int) $scale);
     }
 
     /**
@@ -244,7 +260,11 @@ class CrimeEvent extends Model implements Feedable {
     /**
      * Kort URL till statisk kartbild via /k/v1/-routen (todo #55, Alt B).
      * Returnerar 301 till tileservern, browser-cachas immutable 1 år.
-     * Mode: 'circle' | 'circle-low' | 'near' | 'far'.
+     * Mode: 'circle' | 'circle-low' | 'near' | 'far' | 'area'.
+     *
+     * Sammanfattningar (isMultiPlaceSummary) får 'area' istället för
+     * närbildslägena — en prick vid samordningspunkten är missvisande
+     * (todo #78). 'far' lämnas orörd: den är en Sverige-översikt.
      *
      * `$absolute=true` ger fullständig URL — krävs för OG/Twitter-meta
      * (`<meta property="og:image">`) och sitemap image:loc där relativa
@@ -252,6 +272,9 @@ class CrimeEvent extends Model implements Feedable {
      */
     public function getKortKartbildUrl(string $mode, int $width, int $height, int $scale = 1, bool $absolute = false): string
     {
+        if ($mode !== 'far' && $this->isMultiPlaceSummary()) {
+            $mode = 'area';
+        }
         $retina = $scale === 2 ? '@2x' : '';
         $path = "/k/v1/{$mode}-{$this->id}-{$width}x{$height}{$retina}.jpg";
         return $absolute ? url($path) : $path;
@@ -1621,6 +1644,16 @@ class CrimeEvent extends Model implements Feedable {
         // (Google rekommenderar alt-text under ~125 tecken).
         if (mb_strlen($location) > 50) {
             $location = $this->getLocationString(true, true, false);
+        }
+
+        // Sammanfattningar visar området, inte en plats (todo #78).
+        if ($variant !== 'far' && $this->isMultiPlaceSummary()) {
+            $area = $this->administrative_area_level_1 ?: $location;
+            $date = $this->getParsedDateInFormat('D MMMM YYYY');
+            if ($area === '') {
+                return "Översiktskarta för {$type} från flera platser, {$date}";
+            }
+            return "Översiktskarta över {$area} för {$type} från flera platser, {$date}";
         }
 
         if ($variant === 'far') {

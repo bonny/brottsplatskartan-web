@@ -105,6 +105,9 @@ class ApiEventsMapController extends Controller {
                 'locations' => $item->getLocationString(includeAdministrativeAreaLevel1Locations: false),
                 'lat' => (float) $item->location_lat,
                 'lng' => (float) $item->location_lng,
+                // Sammanfattningar ritas som "område"-pin, inte som brottsplats (todo #78).
+                'multi_place' => $item->isMultiPlaceSummary(),
+                'lan' => $item->administrative_area_level_1,
                 'image' => $item->getStaticImageSrc(320, 320, 2),
                 'permalink' => $item->getPermalink(true),
             ];
