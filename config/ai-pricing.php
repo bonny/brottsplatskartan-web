@@ -8,7 +8,9 @@
  *
  * Källa: https://www.anthropic.com/pricing (2026-01 snapshot, kontrollera
  * vid modellbyte). Reasoning-tokens betalas till output-pris i Anthropics
- * extended thinking-mode.
+ * extended thinking-mode. Sedan laravel/ai 1.0 ingår de redan i
+ * outputTokens, så LogAiUsage läser inte längre 'reasoning'-fältet — det
+ * står kvar som dokumentation.
  */
 return [
     'claude-sonnet-4-6' => [
