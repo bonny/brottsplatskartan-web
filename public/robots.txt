@@ -32,6 +32,15 @@ Disallow: /
 User-agent: MJ12bot
 Disallow: /
 
+# 2026-10-07: ExaSearchBot ~2 400 req/h, AhrefsBot ~1 900 req/h —
+# tillsammans ~13 % av appens requests. Baidu blockas numera på IP i
+# Caddy eftersom den ignorerade raderna ovan.
+User-agent: ExaSearchBot
+Disallow: /
+
+User-agent: AhrefsBot
+Disallow: /
+
 # -----------------------------------------------------------------
 # AI-träningsbotar — inte tillåtna (vi vill inte bli träningsdata
 # utan kompensation).

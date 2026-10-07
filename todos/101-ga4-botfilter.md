@@ -1,6 +1,6 @@
 **Status:** öppen — kräver konfiguration i GA4:s gränssnitt, går inte att
 göra i kod eller via API:t.
-**Senast uppdaterad:** 2026-10-04
+**Senast uppdaterad:** 2026-10-07
 **Källa:** SEO-granskning 2026-08-02 (fynd 1)
 
 # Todo #101 — Filtrera bort botttrafik i GA4
@@ -152,3 +152,22 @@ vecka 40.
    **Blocket slutar gälla när farmen byter Chrome-version** — kolla vid
    uppföljningen.
 3. Senare, om det behövs: svara `/k/v1`-301:an utan en PHP-worker.
+
+### Uppföljning 2026-10-07
+
+App-accessloggen, en timme (34 476 requests):
+
+- **Baidu ignorerade robots.txt.** ~6 700 req/h (19 %), varav 5 503
+  Baiduspider-render. Ingen hämtning av robots.txt under timmen. GA4
+  "Kina desktop" gick från ~250/dygn till 2 300–5 000/dygn från
+  2026-10-01 och låg kvar på ~3 000 den 5–6 oktober. Alla Baidu-UA:n
+  kom från `116.179.0.0/16` (render, plus resurshämtningar med vanliga
+  webbläsar-UA:n) och `220.181.108.0/24` (klassiska Baiduspider).
+  **Åtgärd:** båda näten får 403 i `deploy/Caddyfile`.
+- **Headless-farmen blockas.** Linux Chrome/154 med `en-US` får 403
+  (testat utifrån); bara 76 sådana requests nådde appen (mot 13 518/h
+  2026-10-04). Inget Chrome/155 ännu.
+- DataForSeo och MJ12 borta (0 requests).
+- Nya stora källor: ExaSearchBot ~2 400 req/h och AhrefsBot ~1 900
+  req/h. **Åtgärd:** Disallow i `public/robots.txt`. python-requests
+  ~1 900 req/h är kvar och inte utredd.

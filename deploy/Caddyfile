@@ -53,6 +53,20 @@ brottsplatskartan.se {
 	}
 	respond @headlessFarm 403
 
+	# Baidu (todo #101): stängdes ute i robots.txt 2026-10-04 men
+	# struntade i det — tre dygn senare 2026-10-07 fortfarande ~6 700
+	# req/h (19 % av allt som nådde appen), mest Baiduspider-render som
+	# kör JS och därför syns som "Kina desktop" i GA4 (~3 000 sessioner/
+	# dygn, 99 % avvisning). Ger ingen svensk söktrafik. Blockas på IP i
+	# stället för UA eftersom render-crawlern hämtar bilder/resurser med
+	# vanliga webbläsar-UA:n från samma nät. Alla Baidu-UA:n i
+	# accessloggen kom från dessa två nät:
+	#   116.179.0.0/16   Baiduspider-render (+ dess resurshämtningar)
+	#   220.181.108.0/24 klassiska Baiduspider
+	# Byter Baidu nät syns det som Baiduspider i appens accesslogg igen.
+	@baidu remote_ip 116.179.0.0/16 220.181.108.0/24
+	respond @baidu 403
+
 	# Security headers sätts av serversideup/php nginx (security.conf) —
 	# dubblera inte här. X-Frame-Options sätts också där.
 }
