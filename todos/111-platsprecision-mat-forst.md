@@ -1,4 +1,4 @@
-**Status:** aktiv — A1 deployad 2026-10-10 (`4c411897`), A2 `geocode:halsa` byggd, A3 mätt: LLM-extraktion avfärdad (läckage 0,2 %). Fas B och C klara 2026-10-10 (snapshot-test, #109.1–4, 6), engångskörning på 30 dagar: utanför länet 0,6 % → 0,2 %. Kvar: viewport-cirkel, ev. Trafikverket
+**Status:** aktiv — A1 deployad 2026-10-10 (`4c411897`), A2 `geocode:halsa` byggd, A3 mätt: LLM-extraktion avfärdad (läckage 0,2 %). Fas B och C klara 2026-10-10 (snapshot-test, #109.1–4, 6), engångskörning på 30 dagar: utanför länet 0,6 % → 0,2 %. Statussida `/status` deployad. Kvar: viewport-cirkel, ev. Trafikverket
 **Senast uppdaterad:** 2026-10-10
 **Källa:** Brainstorm med Pär 2026-10-10 + kritisk granskning av den (subagent, samma dag)
 
@@ -89,6 +89,11 @@ Ungefär i prioritetsordning:
    (A2) — länstest mot `polisen_location_name`, fördelning av
    `location_geometry_type` och precisionsklass från `google_types`. Körs vid
    behov, inte schemalagt: allt räknas i efterhand ur databasen.
+   **Statussida `/status`** (2026-10-10, publik men noindex) visar samma
+   siffror plus när varje schemalagt jobb senast lyckades (grönt/gult/rött
+   mot jobbets cron-schema, markeringar från `App\Services\Jobbstatus`),
+   senaste data per källa och händelser/nyhetskopplingar per dag. Beräkningen
+   delas via `App\Services\GeokodHalsa`.
 5. **Strikt `components=locality:{titelort}|administrative_area:{län}`** och
    bara gata/stadsdel i `address`. Löser Trelleborg→Malmö strukturellt.
    Risk: fler `ZERO_RESULTS`, kräver reserv utan components. Mät mot facit.
