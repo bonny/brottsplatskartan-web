@@ -25,23 +25,24 @@ använder den.
 }
 ```
 
-Fält och hur vi använder dem:
+Fält och hur vi använder dem (hela objektet sparas dessutom i
+`crime_events.polisen_raw` när händelsen skapas, sedan 2026-10-10):
 
-| Fält            | Mening                                       | Lagras som                                  |
-| --------------- | -------------------------------------------- | ------------------------------------------- |
-| `id`            | Stabilt nummer hos Polisen                   | `crime_events.polisen_id` (indexerad, dedup) |
-| `datetime`      | Polisens publicerings-/uppdateringstid       | `pubdate` (unix), `pubdate_iso8601`          |
-| `name`          | Titel: "DD månad HH.MM, Typ, Plats"          | `title` + `parsed_title` + `parsed_date`     |
-| `summary`       | 1-meningssammanfattning                      | `description` (vi hämtar full text separat)  |
-| `url`           | Relativ URL till Polisens detaljsida         | `permalink` (prefix `https://polisen.se`)    |
-| `type`          | Brottskategori (separat fält)                | parsas idag ur `name`; `type` ej lagrad     |
-| `location.name` | Län-namn ("Stockholms län") — alltid län     | `polisen_location_name`                      |
-| `location.gps`  | Mittpunkt för **län/kommun**, ej event-precis | `polisen_gps_lat`, `polisen_gps_lng`         |
+| Fält            | Mening                                   | Lagras som                                   |
+| --------------- | ---------------------------------------- | -------------------------------------------- |
+| `id`            | Stabilt nummer hos Polisen               | `crime_events.polisen_id` (indexerad, dedup) |
+| `datetime`      | Polisens publicerings-/uppdateringstid   | `pubdate` (unix), `pubdate_iso8601`          |
+| `name`          | Titel: "DD månad HH.MM, Typ, Plats"      | `title` + `parsed_title` + `parsed_date`     |
+| `summary`       | 1-meningssammanfattning                  | `description` (vi hämtar full text separat)  |
+| `url`           | Relativ URL till Polisens detaljsida     | `permalink` (prefix `https://polisen.se`)    |
+| `type`          | Brottskategori (separat fält)            | `polisen_type` (sedan 2026-10-10)            |
+| `location.name` | Län-namn ("Stockholms län") — alltid län | `polisen_location_name`                      |
+| `location.gps`  | Länets mittpunkt, ej event-precis        | `polisen_gps_lat`, `polisen_gps_lng`         |
 
 ### Viktiga nyanser
 
-- **`location.gps` är inte event-koordinater** — det är län- eller
-  kommun-mittpunkten. Vi använder den som viewport-bias (~50 km bbox)
+- **`location.gps` är inte event-koordinater** — det är länets
+  mittpunkt, exakt samma punkt för alla händelser i ett län. Vi använder den som viewport-bias (~50 km bbox)
   i Google Geocoding-anropet för att förbättra träff på tvetydiga
   ortnamn ("Partille"). Den exakta event-koordinaten geokodas separat
   utifrån ortnamnet i titeln.
@@ -57,12 +58,12 @@ Fält och hur vi använder dem:
 
 ## Rate-limits (officiella)
 
-| Regel              | Värde       |
-| ------------------ | ----------- |
-| Min mellan anrop   | 10 sekunder |
-| Max per timme      | 60 anrop    |
-| Max per dygn       | 1440 anrop  |
-| Vid överskridning  | HTTP 429    |
+| Regel             | Värde       |
+| ----------------- | ----------- |
+| Min mellan anrop  | 10 sekunder |
+| Max per timme     | 60 anrop    |
+| Max per dygn      | 1440 anrop  |
+| Vid överskridning | HTTP 429    |
 
 Brottsplatskartans inställning: 75 sekunder cache i Redis (`Cache::put`)
 → max ~48 anrop/h, väl under taket. Lyckade svar cachas; vid HTTP-fel
@@ -74,11 +75,11 @@ hämta en specifik detaljsida för enskilda events (vilket vi gör för
 
 ## Filter-parametrar (används inte idag)
 
-| Parameter      | Exempel                              | Användning                       |
-| -------------- | ------------------------------------ | -------------------------------- |
-| `DateTime`     | `?DateTime=2026-04`                  | Filtrera på månad/dag/timme      |
-| `locationname` | `?locationname=Stockholm;Järfälla`   | Flera platser via semikolon      |
-| `type`         | `?type=Misshandel;Rån`               | Flera typer via semikolon        |
+| Parameter      | Exempel                            | Användning                  |
+| -------------- | ---------------------------------- | --------------------------- |
+| `DateTime`     | `?DateTime=2026-04`                | Filtrera på månad/dag/timme |
+| `locationname` | `?locationname=Stockholm;Järfälla` | Flera platser via semikolon |
+| `type`         | `?type=Misshandel;Rån`             | Flera typer via semikolon   |
 
 Vi använder default-endpointen (500 senaste) eftersom:
 
@@ -91,11 +92,11 @@ eller om vi någon gång parallelliserar import per län.
 
 ## Var i koden
 
-| Plats                                                       | Vad                                  |
-| ----------------------------------------------------------- | ------------------------------------ |
-| `app/Http/Controllers/FeedController.php::updateFeedsFromPolisen` | Hämtning + dedup + `CrimeEvent`-create |
-| `FeedController::parseItem`                                  | Titel-parsing + datum-korrigering    |
-| `FeedController::geocodeItem`                                | Google Geocoding med viewport-bias   |
-| `FeedController::parseItemContentAndUpdateIfChanges`         | Skrapa Polisens detaljsida för full text |
-| `app/Console/Commands/FetchEvents.php`                       | `crimeevents:fetch` artisan-kommando |
-| `app/Http/Controllers/FeedParserController.php::parseTitle`  | Extrahera datum/titel/plats ur `name` |
+| Plats                                                             | Vad                                      |
+| ----------------------------------------------------------------- | ---------------------------------------- |
+| `app/Http/Controllers/FeedController.php::updateFeedsFromPolisen` | Hämtning + dedup + `CrimeEvent`-create   |
+| `FeedController::parseItem`                                       | Titel-parsing + datum-korrigering        |
+| `FeedController::geocodeItem`                                     | Google Geocoding med viewport-bias       |
+| `FeedController::parseItemContentAndUpdateIfChanges`              | Skrapa Polisens detaljsida för full text |
+| `app/Console/Commands/FetchEvents.php`                            | `crimeevents:fetch` artisan-kommando     |
+| `app/Http/Controllers/FeedParserController.php::parseTitle`       | Extrahera datum/titel/plats ur `name`    |

@@ -21,6 +21,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 use App\Services\StaticMapUrlBuilder;
 
+/**
+ * Kolumner från migrationer med rå SQL, som Larastan inte kan läsa:
+ *
+ * @property array<int, string>|null $google_types
+ * @property bool|null $google_partial_match
+ * @property string|null $polisen_type
+ * @property array<string, mixed>|null $polisen_raw
+ */
 class CrimeEvent extends Model implements Feedable {
     protected $fillable = [
         'title',
@@ -33,6 +41,8 @@ class CrimeEvent extends Model implements Feedable {
         'polisen_gps_lat',
         'polisen_gps_lng',
         'polisen_location_name',
+        'polisen_type',
+        'polisen_raw',
         'parsed_date',
         'parsed_title',
         'parsed_title_location',
@@ -46,6 +56,12 @@ class CrimeEvent extends Model implements Feedable {
         'title_alt_1',
         'description_alt_1',
         'is_public',
+    ];
+
+    protected $casts = [
+        'google_types' => 'array',
+        'google_partial_match' => 'boolean',
+        'polisen_raw' => 'array',
     ];
 
     /**

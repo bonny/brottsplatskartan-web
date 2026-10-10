@@ -138,6 +138,7 @@ class FeedController extends Controller
         $geometry_location_lat = null;
         $geometry_location_lng = null;
         $types = null;
+        $partial_match = null;
 
         foreach ( $result_results as $one_result ) {
 
@@ -168,6 +169,7 @@ class FeedController extends Controller
             }
 
             $types = $one_result->types;
+            $partial_match = ! empty($one_result->partial_match);
 
             // only return first matching place
             break;
@@ -184,6 +186,8 @@ class FeedController extends Controller
             $item->location_lng = $geometry_location_lng;
 
             $item->location_geometry_type = $geometry_type;
+            $item->google_types = $types;
+            $item->google_partial_match = $partial_match;
 
             $item->viewport_northeast_lat = $geometry_viewport->northeast->lat;
             $item->viewport_northeast_lng = $geometry_viewport->northeast->lng;
@@ -246,6 +250,8 @@ class FeedController extends Controller
         $geometry_viewport = null;
         $administrative_area_level_1 = null;
         $administrative_area_level_2 = null;
+        $types = null;
+        $partial_match = null;
 
         foreach ( $result_results as $one_result ) {
 
@@ -275,6 +281,9 @@ class FeedController extends Controller
                 }
             }
 
+            $types = $one_result->types;
+            $partial_match = ! empty($one_result->partial_match);
+
             // only return first matching place
             break;
 
@@ -291,6 +300,8 @@ class FeedController extends Controller
             $item->location_lng = $geometry_location_lng;
 
             $item->location_geometry_type = $geometry_type;
+            $item->google_types = $types;
+            $item->google_partial_match = $partial_match;
 
             $item->viewport_northeast_lat = $geometry_viewport->northeast->lat;
             $item->viewport_northeast_lng = $geometry_viewport->northeast->lng;
@@ -520,6 +531,8 @@ class FeedController extends Controller
                 'polisen_gps_lat' => $gpsLat,
                 'polisen_gps_lng' => $gpsLng,
                 'polisen_location_name' => $locationName,
+                'polisen_type' => $item['type'] ?? null,
+                'polisen_raw' => $item,
             ]);
 
             $data["numItemsAdded"]++;
