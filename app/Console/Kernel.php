@@ -236,6 +236,29 @@ class Kernel extends ConsoleKernel
         // Markeringar för statussidan (/status): när lyckades/misslyckades
         // varje jobb senast. Måste ligga sist så att alla jobb kommer med.
         \App\Services\Jobbstatus::registrera($schedule);
+
+        $this->begransaOverlappslas($schedule);
+    }
+
+    /**
+     * withoutOverlapping() låser i 24 h som standard. Kan låset inte släppas
+     * — Redis startades om mitt i en körning vid deploy 2026-10-10 — står
+     * jobbet still i ett dygn: trafikverket:fetch (var 5:e min) körde inte
+     * på 20 min innan /status visade det. Låt låset gälla tre intervall
+     * (minst 10 min, högst 24 h), så att ett fast lås släpper av sig självt.
+     */
+    private function begransaOverlappslas(Schedule $schedule): void
+    {
+        foreach ($schedule->events() as $event) {
+            if (! $event->withoutOverlapping || $event->expiresAt !== 1440) {
+                continue;
+            }
+            $korningar = (new \Cron\CronExpression($event->expression))->getMultipleRunDates(4);
+            $intervall = (int) round(
+                \Carbon\Carbon::instance($korningar[0])->diffInMinutes(\Carbon\Carbon::instance(end($korningar))) / 3
+            );
+            $event->expiresAt = min(1440, max(10, 3 * $intervall));
+        }
     }
 
     /**
