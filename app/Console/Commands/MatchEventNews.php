@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Laravel\Ai\Attributes\Model;
 use Laravel\Ai\Responses\StructuredAgentResponse;
 
 /**
@@ -81,6 +82,10 @@ class MatchEventNews extends Command
 
         $now = Carbon::now()->toDateTimeString();
         $matcher = new EventNewsMatcher;
+        // Aliaset ur #[Model], så att ai_model följer med vid modellbyte (#110)
+        // utan att ändras här. Svarets meta->model ger det daterade id:t
+        // (claude-haiku-4-5-20251001) och skulle blanda format i kolumnen.
+        $aiModel = (new \ReflectionClass($matcher))->getAttributes(Model::class)[0]->newInstance()->value;
 
         foreach ($eventIds as $eventId) {
             $event = CrimeEvent::find($eventId);
@@ -173,7 +178,7 @@ class MatchEventNews extends Command
                     'is_match' => $isMatch,
                     'confidence' => $confidence,
                     'ai_reason' => $reason,
-                    'ai_model' => 'claude-haiku-4-5',
+                    'ai_model' => $aiModel,
                     'matched_at' => $now,
                     'created_at' => $now,
                     'updated_at' => $now,
