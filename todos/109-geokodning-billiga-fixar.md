@@ -105,7 +105,8 @@ alla riktiga ändringar, inga falska av formatering. Exempel: 511009 "Knivlagen"
 **Gjort:** importen jämför titel och sammanfattning för publika befintliga
 händelser. Vid skillnad: `FeedController::uppdateraFranApi()` sparar ny titel,
 sammanfattning och `polisen_type`, tolkar om titel/datum, hämtar detaljsidan
-igen och kör `tolkaOmEfterAndring()`.
+igen och kör `tolkaOmEfterAndring()`. Den gamla versionen skrivs över — att spara
+versionerna och visa "uppdaterad" för användaren är [#112](112-versionshistorik-for-handelser.md).
 
 ## 7. (Avfärdad) Avrunda känsliga brottstyper
 

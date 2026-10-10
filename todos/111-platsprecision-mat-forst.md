@@ -97,7 +97,9 @@ Ungefär i prioritetsordning:
    cachas som hela modeller i Redis (`LanController`, `PlatsController`),
    rådatan låg där två gånger per händelse, och nästan allt i den finns redan
    i andra kolumner. Kolumnen står tom och tas bort nästa gång
-   `crime_events` ändå behöver en ALTER (38 s skrivlås på prod).
+   `crime_events` ändå behöver en ALTER (38 s skrivlås på prod). Planerat i
+   [#112](112-versionshistorik-for-handelser.md), som behöver en ny kolumn
+   där ändå.
 7. **Litet facit:** ~100 händelser märkta med precisionsklass och rätt ort
    (inte meter — facitkoordinater saknas oftast).
 

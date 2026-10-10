@@ -27,7 +27,7 @@ use App\Services\StaticMapUrlBuilder;
  * @property array<int, string>|null $google_types
  * @property bool|null $google_partial_match
  * @property string|null $polisen_type
- * @property string|null $polisen_raw Används inte (skrivs inte sedan code review 2026-10-10), tas bort vid nästa ALTER
+ * @property string|null $polisen_raw Används inte (skrivs inte sedan code review 2026-10-10), tas bort i #112:s ALTER
  */
 class CrimeEvent extends Model implements Feedable {
     protected $fillable = [
