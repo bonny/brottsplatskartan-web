@@ -32,7 +32,15 @@ class FeedController extends Controller
      */
     public function getGeocodeURL($itemID)
     {
-        $item = CrimeEvent::findOrFail($itemID);
+        return $this->geocodeUrlFor(CrimeEvent::findOrFail($itemID));
+    }
+
+    /**
+     * Bygger Google-frågan för en händelse. Utbruten från getGeocodeURL() så
+     * att den kan testas utan databas (tests/Unit/GeocodeUrlSnapshotTest).
+     */
+    public function geocodeUrlFor(CrimeEvent $item): string
+    {
         $itemLocations = $item->locations;
         $googleApiKey = getenv('GEOCODE_GOOGLE_APIKEY');
 
@@ -203,14 +211,15 @@ class FeedController extends Controller
 
         } else {
 
-            // location not so good, fallback to checking prio 3 location = location found in text "Polisen nnn"
-            $prioThreeLocation = $item->locations->where("prio", 3)->first();
-            if ($prioThreeLocation) {
-                $fallbackLocation = $prioThreeLocation->name;
-                if ($item->parsed_title_location) {
-                    $fallbackLocation = "{$item->parsed_title_location}, $fallbackLocation";
-                    // echo $fallbackLocation;exit;
-                }
+            // Träffen var för grov (hela landet) eller saknas: försök igen
+            // med bara titelns ort och Polisens län. Tidigare hängde detta på
+            // en prio 3-location som alltid var tom (länet togs bort ur
+            // polisens text 2018), så frågan blev "Umeå, " utan län (#109.3).
+            $fallbackLocation = collect([$item->parsed_title_location, $item->polisen_location_name])
+                ->filter()
+                ->unique()
+                ->implode(', ');
+            if ($fallbackLocation !== '') {
                 $this->geocodeItemFallbackVersion($itemID, $fallbackLocation);
             }
 
@@ -226,7 +235,9 @@ class FeedController extends Controller
 
         $item = CrimeEvent::findOrFail($itemID);
 
-        $apiUrlTemplate = 'https://maps.googleapis.com/maps/api/geocode/json?key=' . getenv('GOOGLE_API_KEY') . '&language=sv';
+        // Samma nyckel som huvudvägen. GOOGLE_API_KEY är en annan nyckel på
+        // prod och används inte längre någonstans.
+        $apiUrlTemplate = 'https://maps.googleapis.com/maps/api/geocode/json?key=' . getenv('GEOCODE_GOOGLE_APIKEY') . '&language=sv';
         $apiUrlTemplate .= '&components=country:SE';
         $apiUrlTemplate .= '&address=%1$s';
 
@@ -366,6 +377,10 @@ class FeedController extends Controller
 
         foreach ($locationsByPrio as $locations) {
             foreach ($locations["locations"] as $locationName) {
+                if ($locationName === '') {
+                    continue;
+                }
+
                 // Add location of not already added
                 if ($item->locations->contains("name", $locationName)) {
                     // echo "\nskipping, location already added $locationName";

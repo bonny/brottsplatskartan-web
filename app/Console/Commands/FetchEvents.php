@@ -8,12 +8,17 @@ use App\Http\Controllers\FeedParserController;
 use App\CrimeEvent;
 use App\highways_ignored;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 use App;
 use DB;
 use App\Services\ContentFilterService;
 
 class FetchEvents extends Command
 {
+    /** Max antal geokodningsförsök per händelse (#109.4). */
+    private const MAX_GEOKODFORSOK = 10;
+
     /**
      * The name and signature of the console command.
      *
@@ -96,6 +101,20 @@ class FetchEvents extends Command
         // $bar = $this->output->createProgressBar($itemsNotGeocoded->count());
 
         foreach ($itemsNotGeocoded as $oneItem) {
+            // Tak på försök per händelse (#109.4): körs var 12:e minut i 15
+            // dagar, så en händelse som aldrig går att geokoda gav annars upp
+            // till ~1 800 Google-anrop. Räknaren ligger i cachen — töms den
+            // blir det bara några extra försök.
+            $forsokKey = 'geokodforsok:' . $oneItem->getKey();
+            Cache::add($forsokKey, 0, now()->addDays(16));
+            $forsok = Cache::increment($forsokKey);
+            if ($forsok > self::MAX_GEOKODFORSOK) {
+                if ($forsok === self::MAX_GEOKODFORSOK + 1) {
+                    Log::warning('Ger upp geokodning efter ' . self::MAX_GEOKODFORSOK . ' försök', ['crime_event_id' => $oneItem->getKey()]);
+                }
+                continue;
+            }
+
             $this->line("Getting geocode info for $oneItem->title, id " . $oneItem->getKey());
             $geocodeResult = $this->feedController->geocodeItem($oneItem->getKey());
             if ($geocodeResult['error']) {

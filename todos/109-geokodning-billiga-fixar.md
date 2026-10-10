@@ -1,4 +1,4 @@
-**Status:** aktiv — ny 2026-10-07, från granskningen av #108; utökad 2026-10-10 med punkt 6 och 8 (brainstorm + granskning, se #111). Ingen kod skriven
+**Status:** aktiv — punkt 3, 4 klara 2026-10-10 (#111 fas B); kvar: 1, 2, 6 (fas C) och 5. Ny 2026-10-07, från granskningen av #108; utökad 2026-10-10 med punkt 6 och 8 (brainstorm + granskning, se #111). Ingen kod skriven
 **Senast uppdaterad:** 2026-10-10
 **Källa:** Oberoende granskning av #108 (subagent, 2026-10-07)
 
@@ -40,24 +40,31 @@ Behåll gator och stadsdelar.
 Förslag: vid `CHANGED`, töm locations, kör `parseItemForLocations()` och
 sedan `geocodeItem()`.
 
-## 3. Småbuggar i geokodningen
+## 3. Småbuggar i geokodningen — ✅ klart 2026-10-10
 
-- ~~`FeedController::geocodeItemFallbackVersion()`: `if ($result_results
-=== "OK")` ska vara `if ($result_status !== "OK")`~~ — **fixat
-  2026-10-10** (code review), loggar nu en varning med status.
-- Fallbacken använder `GOOGLE_API_KEY` (rad ~225), huvudanropet
-  `GEOCODE_GOOGLE_APIKEY` (rad ~37). Båda satta på prod; välj en.
-- `FeedParserController::findLocations()`: prio 3 är alltid `$police_lan =
-""` (rad ~363, ~523) — en tom location sparas för varje händelse. Ta bort
-  prio 3 eller fyll den från `polisen_location_name`.
+- `geocodeItemFallbackVersion()` jämförde `$result_results` (en array) med
+  `"OK"`, så Googles felstatus passerade tyst. Kontrollerar nu
+  `$result_status` och loggar `Reservgeokodning misslyckades` med status.
+- Reservvägen använde `GOOGLE_API_KEY`, huvudvägen `GEOCODE_GOOGLE_APIKEY`.
+  De är **olika nycklar** på prod. Reservvägen använder nu
+  `GEOCODE_GOOGLE_APIKEY`, som bevisligen har Geocoding. `GOOGLE_API_KEY`
+  används inte längre någonstans i koden; den står kvar i prod-env och
+  `deploy/.env*.example` tills Pär bestämmer om den ska bort.
+- Prio 3 i `findLocations()` var alltid tom, så varje händelse fick en tom
+  location. Den togs bort, och `parseItemForLocations()` hoppar över tomma
+  namn. Reservvägen hängde på just den tomma prio 3-raden (frågan blev
+  "Umeå, " utan län); den bygger nu frågan av `parsed_title_location` +
+  `polisen_location_name`. Snapshot-testet visade att Google-frågan inte
+  ändras av att den tomma raden försvinner.
 
-## 4. Kostnadsrisk att känna till
+## 4. Kostnadsrisk — ✅ tak infört 2026-10-10
 
-`FetchEvents` försöker geokoda om alla händelser med `geocoded = 0` från de
-senaste 15 dagarna vid varje körning (var 12:e minut). En händelse som aldrig
-går att geokoda kan alltså ge upp till ~1 800 anrop. Inga sådana nu (0 med
-`geocoded = 0` senaste 15 dagarna), men en räknare/backoff vore billig
-försäkring.
+`FetchEvents` försökte geokoda om alla händelser med `geocoded = 0` från de
+senaste 15 dagarna vid varje körning (var 12:e minut), alltså upp till ~1 800
+anrop för en händelse som aldrig går att geokoda. Nu max 10 försök per
+händelse (`FetchEvents::MAX_GEOKODFORSOK`, räknare i cachen under
+`geokodforsok:{id}`), och en varning `Ger upp geokodning efter 10 försök`
+loggas när taket nås.
 
 ## 5. Valfritt: polygonkontroll (~0,5 dag)
 

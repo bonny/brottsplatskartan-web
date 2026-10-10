@@ -354,29 +354,6 @@ class FeedParserController extends Controller
         $arr_description_words = $matches[0];
         $arr_description_words = array_map("mb_strtolower", $arr_description_words);
 
-        // Länet, t.ex. "Stockholms län" — kunde tidigare läsas från
-        // sista raden i händelsetexten ("Polisen Stockholms län") men
-        // togs bort av polisen.se 2018-02-22. Sedan #48 finns det i
-        // `polisen_location_name` (från JSON-API:t) på CrimeEvent —
-        // den här lokala variabeln är vestigial men behålls eftersom
-        // findLocations()-arrayen byggs runt prio-strukturen nedan.
-        $police_lan = "";
-
-        // Remove "Polisen Värmland" etc that's the last line in the content words
-        // $parsed_content_lines = explode("\n", $item_parsed_content);
-        // if (false !== strpos($parsed_content_lines[count($parsed_content_lines)-1], "Polisen ")) {
-        //     #echo "\nfound polisen at last line";
-        //     $police_lan = array_pop($parsed_content_lines);
-        //     $police_lan = str_replace("Polisen ", "", $police_lan);
-        //     #echo "\ntext before removal: $item_parsed_content";
-        //     $item_parsed_content = implode($parsed_content_lines);
-        //     #echo "\ntext after removal: $item_parsed_content";
-        //     #echo "\n\n";
-        // }
-        #exit;
-
-        #print_r($parsed_content_lines);exit;
-
         // Split content into words
         $item_parsed_content = strip_tags($item_parsed_content);
         preg_match_all('/\pL+/u', $item_parsed_content, $matches);
@@ -519,10 +496,10 @@ class FeedParserController extends Controller
                 "prio" => 2,
                 "locations" => $matchingHighwayItemsInContent
             ],
-            [
-                "prio" => 3,
-                "locations" => [$police_lan]
-            ]
+            // Prio 3 (länet ur "Polisen nnn" sist i texten) togs bort
+            // 2026-10-10: raden försvann ur polisens text 2018 och prio 3
+            // blev en tom location per händelse (#109.3). Länet finns i
+            // polisen_location_name.
         ];
 
         #print_r($returnArr);exit;

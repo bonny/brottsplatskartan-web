@@ -1,4 +1,4 @@
-**Status:** aktiv — A1 deployad 2026-10-10 (`4c411897`), A2 `geocode:halsa` byggd, A3 mätt: LLM-extraktion avfärdad (läckage 0,2 %). Nästa: #109
+**Status:** aktiv — A1 deployad 2026-10-10 (`4c411897`), A2 `geocode:halsa` byggd, A3 mätt: LLM-extraktion avfärdad (läckage 0,2 %). Fas B klar 2026-10-10 (snapshot-test, #109.3–4). Nästa: fas C = #109.1, 2, 6
 **Senast uppdaterad:** 2026-10-10
 **Källa:** Brainstorm med Pär 2026-10-10 + kritisk granskning av den (subagent, samma dag)
 
@@ -79,9 +79,12 @@ Ungefär i prioritetsordning:
 2. **Viewport-cirkel vid ortsnivå** i stället för exakt nål. Viewport och
    `location_geometry_type` sparas redan (`FeedController::geocodeItem`), så
    ingen LLM behövs.
-3. **Regressionstest av Google-frågan:** snapshot av `getGeocodeURL()` för
-   ~50 frysta händelser, utan Google-anrop. Varje ändring i stopplista eller
-   parser syns som diff. Skyddar #109.
+3. ✅ **Regressionstest av Google-frågan** (fas B, 2026-10-10):
+   `tests/Unit/GeocodeUrlSnapshotTest.php` med 54 prod-händelser i
+   `tests/fixtures/geocode-fragor.json` (slump + länstitlar + många platser +
+   kända fel som 510086 och 510987). Bygger frågan via
+   `FeedController::geocodeUrlFor()` utan databas och utan Google-anrop.
+   Uppdatera medvetet med `UPPDATERA_SNAPSHOT=1` och granska diffen.
 4. ✅ **Hälsosiffra:** `php artisan geocode:halsa [--dagar=30 | --fran= --till=]`
    (A2) — länstest mot `polisen_location_name`, fördelning av
    `location_geometry_type` och precisionsklass från `google_types`. Körs vid

@@ -1,0 +1,1774 @@
+[
+    {
+        "indata": {
+            "id": 509532,
+            "parsed_title": "Sammanfattning natt",
+            "parsed_title_location": "Västerbottens län",
+            "polisen_location_name": "Västerbottens län",
+            "polisen_gps_lat": "65.3337310",
+            "polisen_gps_lng": "16.5161690",
+            "locations": [
+                [
+                    "umeå",
+                    2
+                ],
+                [
+                    "ålidhem",
+                    2
+                ],
+                [
+                    "robertsfors",
+                    2
+                ],
+                [
+                    "",
+                    3
+                ]
+            ]
+        },
+        "fraga": {
+            "language": "sv",
+            "components": "country:SE",
+            "address": "umeå, ålidhem, robertsfors, Västerbottens län",
+            "bounds": "64.883731,15.616169|65.783731,17.416169"
+        }
+    },
+    {
+        "indata": {
+            "id": 509535,
+            "parsed_title": "Sammanfattning natt",
+            "parsed_title_location": "Jönköpings län",
+            "polisen_location_name": "Jönköpings län",
+            "polisen_gps_lat": "57.3708430",
+            "polisen_gps_lng": "14.3439170",
+            "locations": [
+                [
+                    "",
+                    3
+                ]
+            ]
+        },
+        "fraga": {
+            "language": "sv",
+            "components": "country:SE",
+            "address": "Jönköpings län",
+            "bounds": "56.920843,13.443917|57.820843,15.243917"
+        }
+    },
+    {
+        "indata": {
+            "id": 509542,
+            "parsed_title": "Trafikkontroll",
+            "parsed_title_location": "Västerbottens län",
+            "polisen_location_name": "Västerbottens län",
+            "polisen_gps_lat": "65.3337310",
+            "polisen_gps_lng": "16.5161690",
+            "locations": [
+                [
+                    "ersboda",
+                    2
+                ],
+                [
+                    "umeå",
+                    2
+                ],
+                [
+                    "bärnstensvägen",
+                    2
+                ],
+                [
+                    "carlshem",
+                    2
+                ],
+                [
+                    "brännbergsvägen",
+                    2
+                ],
+                [
+                    "forsdala",
+                    2
+                ],
+                [
+                    "lycksele",
+                    2
+                ],
+                [
+                    "ersmark",
+                    2
+                ],
+                [
+                    "furuvik",
+                    2
+                ],
+                [
+                    "",
+                    3
+                ]
+            ]
+        },
+        "fraga": {
+            "language": "sv",
+            "components": "country:SE",
+            "address": "ersboda, umeå, bärnstensvägen, carlshem, brännbergsvägen, forsdala, lycksele, ersmark, furuvik, Västerbottens län",
+            "bounds": "64.883731,15.616169|65.783731,17.416169"
+        }
+    },
+    {
+        "indata": {
+            "id": 509604,
+            "parsed_title": "Sammanfattning natt",
+            "parsed_title_location": "Västernorrlands län",
+            "polisen_location_name": "Västernorrlands län",
+            "polisen_gps_lat": "63.4276470",
+            "polisen_gps_lng": "17.7292440",
+            "locations": [
+                [
+                    "sundsvall",
+                    2
+                ],
+                [
+                    "stenstan",
+                    2
+                ],
+                [
+                    "örnsköldsvik",
+                    2
+                ],
+                [
+                    "länkgatan",
+                    2
+                ],
+                [
+                    "kramfors",
+                    2
+                ],
+                [
+                    "lunde",
+                    2
+                ],
+                [
+                    "ramsele",
+                    2
+                ],
+                [
+                    "",
+                    3
+                ]
+            ]
+        },
+        "fraga": {
+            "language": "sv",
+            "components": "country:SE",
+            "address": "sundsvall, stenstan, örnsköldsvik, länkgatan, kramfors, lunde, ramsele, Västernorrlands län",
+            "bounds": "62.977647,16.829244|63.877647,18.629244"
+        }
+    },
+    {
+        "indata": {
+            "id": 509607,
+            "parsed_title": "Sammanfattning natt",
+            "parsed_title_location": "Östergötlands län",
+            "polisen_location_name": "Östergötlands län",
+            "polisen_gps_lat": "58.3453640",
+            "polisen_gps_lng": "15.5197840",
+            "locations": [
+                [
+                    "stora torget",
+                    2
+                ],
+                [
+                    "",
+                    3
+                ]
+            ]
+        },
+        "fraga": {
+            "language": "sv",
+            "components": "country:SE",
+            "address": "stora torget, Östergötlands län",
+            "bounds": "57.895364,14.619784|58.795364,16.419784"
+        }
+    },
+    {
+        "indata": {
+            "id": 509642,
+            "parsed_title": "Övrigt",
+            "parsed_title_location": "Hallands län",
+            "polisen_location_name": "Hallands län",
+            "polisen_gps_lat": "56.8966810",
+            "polisen_gps_lng": "12.8033990",
+            "locations": [
+                [
+                    "",
+                    3
+                ]
+            ]
+        },
+        "fraga": {
+            "language": "sv",
+            "components": "country:SE",
+            "address": "Hallands län",
+            "bounds": "56.446681,11.903399|57.346681,13.703399"
+        }
+    },
+    {
+        "indata": {
+            "id": 509741,
+            "parsed_title": "Trafikkontroll",
+            "parsed_title_location": "Norrbottens län",
+            "polisen_location_name": "Norrbottens län",
+            "polisen_gps_lat": "66.8309220",
+            "polisen_gps_lng": "20.3991970",
+            "locations": [
+                [
+                    "bälingevägen",
+                    2
+                ],
+                [
+                    "luleå",
+                    2
+                ],
+                [
+                    "klöverträsk",
+                    2
+                ],
+                [
+                    "munksundsvägen",
+                    2
+                ],
+                [
+                    "piteå",
+                    2
+                ],
+                [
+                    "arvidsjaur",
+                    2
+                ],
+                [
+                    "bensbyn",
+                    2
+                ],
+                [
+                    "kiruna",
+                    2
+                ],
+                [
+                    "gällivare",
+                    2
+                ],
+                [
+                    "",
+                    3
+                ]
+            ]
+        },
+        "fraga": {
+            "language": "sv",
+            "components": "country:SE",
+            "address": "bälingevägen, luleå, klöverträsk, munksundsvägen, piteå, arvidsjaur, bensbyn, kiruna, gällivare, Norrbottens län",
+            "bounds": "66.380922,19.499197|67.280922,21.299197"
+        }
+    },
+    {
+        "indata": {
+            "id": 509793,
+            "parsed_title": "Sammanfattning natt",
+            "parsed_title_location": "Norrbottens län",
+            "polisen_location_name": "Norrbottens län",
+            "polisen_gps_lat": "66.8309220",
+            "polisen_gps_lng": "20.3991970",
+            "locations": [
+                [
+                    "luleå",
+                    2
+                ],
+                [
+                    "notviken",
+                    2
+                ],
+                [
+                    "",
+                    3
+                ]
+            ]
+        },
+        "fraga": {
+            "language": "sv",
+            "components": "country:SE",
+            "address": "luleå, notviken, Norrbottens län",
+            "bounds": "66.380922,19.499197|67.280922,21.299197"
+        }
+    },
+    {
+        "indata": {
+            "id": 509857,
+            "parsed_title": "Brand",
+            "parsed_title_location": "Ockelbo",
+            "polisen_location_name": "Gävleborgs län",
+            "polisen_gps_lat": "61.3011990",
+            "polisen_gps_lng": "16.1534210",
+            "locations": [
+                [
+                    "finnstigen",
+                    2
+                ],
+                [
+                    "",
+                    3
+                ]
+            ]
+        },
+        "fraga": {
+            "language": "sv",
+            "components": "country:SE",
+            "address": "finnstigen, Ockelbo, Gävleborgs län",
+            "bounds": "60.851199,15.253421|61.751199,17.053421"
+        }
+    },
+    {
+        "indata": {
+            "id": 509907,
+            "parsed_title": "Trafikkontroll",
+            "parsed_title_location": "Jämtlands län",
+            "polisen_location_name": "Jämtlands län",
+            "polisen_gps_lat": "63.1711920",
+            "polisen_gps_lng": "14.9591800",
+            "locations": [
+                [
+                    "jämtland",
+                    1
+                ],
+                [
+                    "östersunds kommun",
+                    2
+                ],
+                [
+                    "svedje",
+                    2
+                ],
+                [
+                    "hoting",
+                    2
+                ],
+                [
+                    "strömsunds kommun",
+                    2
+                ],
+                [
+                    "tänndalen",
+                    2
+                ],
+                [
+                    "härjedalens kommun",
+                    2
+                ],
+                [
+                    "mattmar",
+                    2
+                ],
+                [
+                    "åre kommun",
+                    2
+                ],
+                [
+                    "näsviken",
+                    2
+                ],
+                [
+                    "",
+                    3
+                ]
+            ]
+        },
+        "fraga": {
+            "language": "sv",
+            "components": "country:SE",
+            "address": "jämtland, östersunds kommun, svedje, hoting, strömsunds kommun, tänndalen, härjedalens kommun, mattmar, åre kommun, näsviken, Jämtlands län",
+            "bounds": "62.721192,14.059180|63.621192,15.859180"
+        }
+    },
+    {
+        "indata": {
+            "id": 509918,
+            "parsed_title": "Sammanfattning natt",
+            "parsed_title_location": "Södermanlands län",
+            "polisen_location_name": "Södermanlands län",
+            "polisen_gps_lat": "59.0336350",
+            "polisen_gps_lng": "16.7518900",
+            "locations": [
+                [
+                    "eskilstuna",
+                    2
+                ],
+                [
+                    "nyfors",
+                    2
+                ],
+                [
+                    "",
+                    3
+                ]
+            ]
+        },
+        "fraga": {
+            "language": "sv",
+            "components": "country:SE",
+            "address": "eskilstuna, nyfors, Södermanlands län",
+            "bounds": "58.583635,15.851890|59.483635,17.651890"
+        }
+    },
+    {
+        "indata": {
+            "id": 509932,
+            "parsed_title": "Sammanfattning natt",
+            "parsed_title_location": "Västernorrlands län",
+            "polisen_location_name": "Västernorrlands län",
+            "polisen_gps_lat": "63.4276470",
+            "polisen_gps_lng": "17.7292440",
+            "locations": [
+                [
+                    "västernorrland",
+                    1
+                ],
+                [
+                    "sollefteå",
+                    2
+                ],
+                [
+                    "örnsköldsvik",
+                    2
+                ],
+                [
+                    "kramfors",
+                    2
+                ],
+                [
+                    "lunde",
+                    2
+                ],
+                [
+                    "sundsvall",
+                    2
+                ],
+                [
+                    "",
+                    3
+                ]
+            ]
+        },
+        "fraga": {
+            "language": "sv",
+            "components": "country:SE",
+            "address": "västernorrland, sollefteå, örnsköldsvik, kramfors, lunde, sundsvall, Västernorrlands län",
+            "bounds": "62.977647,16.829244|63.877647,18.629244"
+        }
+    },
+    {
+        "indata": {
+            "id": 510062,
+            "parsed_title": "Sammanfattning natt",
+            "parsed_title_location": "Jönköpings län",
+            "polisen_location_name": "Jönköpings län",
+            "polisen_gps_lat": "57.3708430",
+            "polisen_gps_lng": "14.3439170",
+            "locations": [
+                [
+                    "bankeryd",
+                    2
+                ],
+                [
+                    "",
+                    3
+                ]
+            ]
+        },
+        "fraga": {
+            "language": "sv",
+            "components": "country:SE",
+            "address": "bankeryd, Jönköpings län",
+            "bounds": "56.920843,13.443917|57.820843,15.243917"
+        }
+    },
+    {
+        "indata": {
+            "id": 510079,
+            "parsed_title": "Trafikkontroll",
+            "parsed_title_location": "Norrbottens län",
+            "polisen_location_name": "Norrbottens län",
+            "polisen_gps_lat": "66.8309220",
+            "polisen_gps_lng": "20.3991970",
+            "locations": [
+                [
+                    "norrbotten",
+                    1
+                ],
+                [
+                    "neistenkangas",
+                    2
+                ],
+                [
+                    "övertorneå kommun",
+                    2
+                ],
+                [
+                    "haparanda",
+                    2
+                ],
+                [
+                    "svanstein",
+                    2
+                ],
+                [
+                    "kalix",
+                    2
+                ],
+                [
+                    "luleå",
+                    2
+                ],
+                [
+                    "",
+                    3
+                ]
+            ]
+        },
+        "fraga": {
+            "language": "sv",
+            "components": "country:SE",
+            "address": "norrbotten, neistenkangas, övertorneå kommun, haparanda, svanstein, kalix, luleå, Norrbottens län",
+            "bounds": "66.380922,19.499197|67.280922,21.299197"
+        }
+    },
+    {
+        "indata": {
+            "id": 510086,
+            "parsed_title": "Försvunnen person",
+            "parsed_title_location": "Trelleborg",
+            "polisen_location_name": "Skåne län",
+            "polisen_gps_lat": "55.9902570",
+            "polisen_gps_lng": "13.5957690",
+            "locations": [
+                [
+                    "valldammsgatan",
+                    2
+                ],
+                [
+                    "skåne",
+                    2
+                ],
+                [
+                    "malmö",
+                    2
+                ],
+                [
+                    "",
+                    3
+                ]
+            ]
+        },
+        "fraga": {
+            "language": "sv",
+            "components": "country:SE",
+            "address": "valldammsgatan, skåne, malmö, Trelleborg, Skåne län",
+            "bounds": "55.540257,12.695769|56.440257,14.495769"
+        }
+    },
+    {
+        "indata": {
+            "id": 510158,
+            "parsed_title": "Trafikkontroll",
+            "parsed_title_location": "Västernorrlands län",
+            "polisen_location_name": "Västernorrlands län",
+            "polisen_gps_lat": "63.4276470",
+            "polisen_gps_lng": "17.7292440",
+            "locations": [
+                [
+                    "tullportsgatan",
+                    2
+                ],
+                [
+                    "gådeåstaden",
+                    2
+                ],
+                [
+                    "härnösand",
+                    2
+                ],
+                [
+                    "heffners",
+                    2
+                ],
+                [
+                    "skönsberg",
+                    2
+                ],
+                [
+                    "sundsvall",
+                    2
+                ],
+                [
+                    "löpargatan",
+                    2
+                ],
+                [
+                    "övre änget",
+                    2
+                ],
+                [
+                    "björna",
+                    2
+                ],
+                [
+                    "örnsköldsvik",
+                    2
+                ],
+                [
+                    "",
+                    3
+                ]
+            ]
+        },
+        "fraga": {
+            "language": "sv",
+            "components": "country:SE",
+            "address": "tullportsgatan, gådeåstaden, härnösand, heffners, skönsberg, sundsvall, löpargatan, övre änget, björna, örnsköldsvik, Västernorrlands län",
+            "bounds": "62.977647,16.829244|63.877647,18.629244"
+        }
+    },
+    {
+        "indata": {
+            "id": 510172,
+            "parsed_title": "Trafikolycka,  singel",
+            "parsed_title_location": "Flen",
+            "polisen_location_name": "Södermanlands län",
+            "polisen_gps_lat": "59.0336350",
+            "polisen_gps_lng": "16.7518900",
+            "locations": [
+                [
+                    "sparreholm",
+                    2
+                ],
+                [
+                    "",
+                    3
+                ]
+            ]
+        },
+        "fraga": {
+            "language": "sv",
+            "components": "country:SE",
+            "address": "sparreholm, Flen, Södermanlands län",
+            "bounds": "58.583635,15.851890|59.483635,17.651890"
+        }
+    },
+    {
+        "indata": {
+            "id": 510269,
+            "parsed_title": "Information",
+            "parsed_title_location": "Södermanlands län",
+            "polisen_location_name": "Södermanlands län",
+            "polisen_gps_lat": "59.0336350",
+            "polisen_gps_lng": "16.7518900",
+            "locations": [
+                [
+                    "",
+                    3
+                ]
+            ]
+        },
+        "fraga": {
+            "language": "sv",
+            "components": "country:SE",
+            "address": "Södermanlands län",
+            "bounds": "58.583635,15.851890|59.483635,17.651890"
+        }
+    },
+    {
+        "indata": {
+            "id": 510296,
+            "parsed_title": "Övrigt",
+            "parsed_title_location": "Värmlands län",
+            "polisen_location_name": "Värmlands län",
+            "polisen_gps_lat": "59.7294070",
+            "polisen_gps_lng": "13.2354020",
+            "locations": [
+                [
+                    "",
+                    3
+                ]
+            ]
+        },
+        "fraga": {
+            "language": "sv",
+            "components": "country:SE",
+            "address": "Värmlands län",
+            "bounds": "59.279407,12.335402|60.179407,14.135402"
+        }
+    },
+    {
+        "indata": {
+            "id": 510301,
+            "parsed_title": "Sammanfattning natt",
+            "parsed_title_location": "Östergötlands län",
+            "polisen_location_name": "Östergötlands län",
+            "polisen_gps_lat": "58.3453640",
+            "polisen_gps_lng": "15.5197840",
+            "locations": [
+                [
+                    "",
+                    3
+                ]
+            ]
+        },
+        "fraga": {
+            "language": "sv",
+            "components": "country:SE",
+            "address": "Östergötlands län",
+            "bounds": "57.895364,14.619784|58.795364,16.419784"
+        }
+    },
+    {
+        "indata": {
+            "id": 510307,
+            "parsed_title": "Sammanfattning natt",
+            "parsed_title_location": "Södermanlands län",
+            "polisen_location_name": "Södermanlands län",
+            "polisen_gps_lat": "59.0336350",
+            "polisen_gps_lng": "16.7518900",
+            "locations": [
+                [
+                    "södermanland",
+                    2
+                ],
+                [
+                    "",
+                    3
+                ]
+            ]
+        },
+        "fraga": {
+            "language": "sv",
+            "components": "country:SE",
+            "address": "södermanland, Södermanlands län",
+            "bounds": "58.583635,15.851890|59.483635,17.651890"
+        }
+    },
+    {
+        "indata": {
+            "id": 510311,
+            "parsed_title": "Trafikolycka",
+            "parsed_title_location": "Mölndal",
+            "polisen_location_name": "Västra Götalands län",
+            "polisen_gps_lat": "58.2527930",
+            "polisen_gps_lng": "13.0596430",
+            "locations": [
+                [
+                    "krokslätts torg",
+                    1
+                ],
+                [
+                    "",
+                    3
+                ]
+            ]
+        },
+        "fraga": {
+            "language": "sv",
+            "components": "country:SE",
+            "address": "krokslätts torg, Mölndal, Västra Götalands län",
+            "bounds": "57.802793,12.159643|58.702793,13.959643"
+        }
+    },
+    {
+        "indata": {
+            "id": 510320,
+            "parsed_title": "Trafikkontroll",
+            "parsed_title_location": "Östersund",
+            "polisen_location_name": "Jämtlands län",
+            "polisen_gps_lat": "63.1711920",
+            "polisen_gps_lng": "14.9591800",
+            "locations": [
+                [
+                    "brunnsgränd",
+                    2
+                ],
+                [
+                    "köpmangatan",
+                    2
+                ],
+                [
+                    "fagerbacken",
+                    2
+                ],
+                [
+                    "marielund",
+                    2
+                ],
+                [
+                    "trådvägen",
+                    2
+                ],
+                [
+                    "allégatan",
+                    2
+                ],
+                [
+                    "stuguvägen",
+                    2
+                ],
+                [
+                    "odenslund",
+                    2
+                ],
+                [
+                    "",
+                    3
+                ]
+            ]
+        },
+        "fraga": {
+            "language": "sv",
+            "components": "country:SE",
+            "address": "brunnsgränd, köpmangatan, fagerbacken, marielund, trådvägen, allégatan, stuguvägen, odenslund, Östersund, Jämtlands län",
+            "bounds": "62.721192,14.059180|63.621192,15.859180"
+        }
+    },
+    {
+        "indata": {
+            "id": 510354,
+            "parsed_title": "Trafikolycka",
+            "parsed_title_location": "Malmö",
+            "polisen_location_name": "Skåne län",
+            "polisen_gps_lat": "55.9902570",
+            "polisen_gps_lng": "13.5957690",
+            "locations": [
+                [
+                    "",
+                    3
+                ]
+            ]
+        },
+        "fraga": {
+            "language": "sv",
+            "components": "country:SE",
+            "address": "Malmö, Skåne län",
+            "bounds": "55.540257,12.695769|56.440257,14.495769"
+        }
+    },
+    {
+        "indata": {
+            "id": 510391,
+            "parsed_title": "Skottlossning",
+            "parsed_title_location": "Strängnäs",
+            "polisen_location_name": "Södermanlands län",
+            "polisen_gps_lat": "59.0336350",
+            "polisen_gps_lng": "16.7518900",
+            "locations": [
+                [
+                    "nygatan",
+                    2
+                ],
+                [
+                    "",
+                    3
+                ]
+            ]
+        },
+        "fraga": {
+            "language": "sv",
+            "components": "country:SE",
+            "address": "nygatan, Strängnäs, Södermanlands län",
+            "bounds": "58.583635,15.851890|59.483635,17.651890"
+        }
+    },
+    {
+        "indata": {
+            "id": 510413,
+            "parsed_title": "Stöld",
+            "parsed_title_location": "Uppsala",
+            "polisen_location_name": "Uppsala län",
+            "polisen_gps_lat": "60.0092260",
+            "polisen_gps_lng": "17.2714590",
+            "locations": [
+                [
+                    "rasbo",
+                    2
+                ],
+                [
+                    "",
+                    3
+                ]
+            ]
+        },
+        "fraga": {
+            "language": "sv",
+            "components": "country:SE",
+            "address": "rasbo, Uppsala, Uppsala län",
+            "bounds": "59.559226,16.371459|60.459226,18.171459"
+        }
+    },
+    {
+        "indata": {
+            "id": 510442,
+            "parsed_title": "Rattfylleri",
+            "parsed_title_location": "Ludvika",
+            "polisen_location_name": "Dalarnas län",
+            "polisen_gps_lat": "61.0917010",
+            "polisen_gps_lng": "14.6663650",
+            "locations": [
+                [
+                    "",
+                    3
+                ]
+            ]
+        },
+        "fraga": {
+            "language": "sv",
+            "components": "country:SE",
+            "address": "Ludvika, Dalarnas län",
+            "bounds": "60.641701,13.766365|61.541701,15.566365"
+        }
+    },
+    {
+        "indata": {
+            "id": 510451,
+            "parsed_title": "Trafikkontroll",
+            "parsed_title_location": "Jämtlands län",
+            "polisen_location_name": "Jämtlands län",
+            "polisen_gps_lat": "63.1711920",
+            "polisen_gps_lng": "14.9591800",
+            "locations": [
+                [
+                    "strömsund",
+                    2
+                ],
+                [
+                    "hammerdal",
+                    2
+                ],
+                [
+                    "ytterån",
+                    2
+                ],
+                [
+                    "krokom",
+                    2
+                ],
+                [
+                    "",
+                    3
+                ]
+            ]
+        },
+        "fraga": {
+            "language": "sv",
+            "components": "country:SE",
+            "address": "strömsund, hammerdal, ytterån, krokom, Jämtlands län",
+            "bounds": "62.721192,14.059180|63.621192,15.859180"
+        }
+    },
+    {
+        "indata": {
+            "id": 510468,
+            "parsed_title": "Misshandel",
+            "parsed_title_location": "Malmö",
+            "polisen_location_name": "Skåne län",
+            "polisen_gps_lat": "55.9902570",
+            "polisen_gps_lng": "13.5957690",
+            "locations": [
+                [
+                    "kanalen",
+                    2
+                ],
+                [
+                    "södra förstadsgatan",
+                    2
+                ],
+                [
+                    "",
+                    3
+                ]
+            ]
+        },
+        "fraga": {
+            "language": "sv",
+            "components": "country:SE",
+            "address": "kanalen, södra förstadsgatan, Malmö, Skåne län",
+            "bounds": "55.540257,12.695769|56.440257,14.495769"
+        }
+    },
+    {
+        "indata": {
+            "id": 510482,
+            "parsed_title": "Trafikolycka",
+            "parsed_title_location": "Eskilstuna",
+            "polisen_location_name": "Södermanlands län",
+            "polisen_gps_lat": "59.0336350",
+            "polisen_gps_lng": "16.7518900",
+            "locations": [
+                [
+                    "kjula",
+                    1
+                ],
+                [
+                    "",
+                    3
+                ]
+            ]
+        },
+        "fraga": {
+            "language": "sv",
+            "components": "country:SE",
+            "address": "kjula, Eskilstuna, Södermanlands län",
+            "bounds": "58.583635,15.851890|59.483635,17.651890"
+        }
+    },
+    {
+        "indata": {
+            "id": 510512,
+            "parsed_title": "Våld/hot mot tjänsteman",
+            "parsed_title_location": "Malmö",
+            "polisen_location_name": "Skåne län",
+            "polisen_gps_lat": "55.9902570",
+            "polisen_gps_lng": "13.5957690",
+            "locations": [
+                [
+                    "norra grängesbergsgatan",
+                    2
+                ],
+                [
+                    "",
+                    3
+                ]
+            ]
+        },
+        "fraga": {
+            "language": "sv",
+            "components": "country:SE",
+            "address": "norra grängesbergsgatan, Malmö, Skåne län",
+            "bounds": "55.540257,12.695769|56.440257,14.495769"
+        }
+    },
+    {
+        "indata": {
+            "id": 510617,
+            "parsed_title": "Knivlagen",
+            "parsed_title_location": "Sundsvall",
+            "polisen_location_name": "Västernorrlands län",
+            "polisen_gps_lat": "63.4276470",
+            "polisen_gps_lng": "17.7292440",
+            "locations": [
+                [
+                    "birsta",
+                    2
+                ],
+                [
+                    "",
+                    3
+                ]
+            ]
+        },
+        "fraga": {
+            "language": "sv",
+            "components": "country:SE",
+            "address": "birsta, Sundsvall, Västernorrlands län",
+            "bounds": "62.977647,16.829244|63.877647,18.629244"
+        }
+    },
+    {
+        "indata": {
+            "id": 510634,
+            "parsed_title": "Sammanfattning natt",
+            "parsed_title_location": "Jönköpings län",
+            "polisen_location_name": "Jönköpings län",
+            "polisen_gps_lat": "57.3708430",
+            "polisen_gps_lng": "14.3439170",
+            "locations": [
+                [
+                    "skillingaryd",
+                    2
+                ],
+                [
+                    "östra fåglabäcksvägen",
+                    2
+                ],
+                [
+                    "mellangatan",
+                    2
+                ],
+                [
+                    "nässjö",
+                    2
+                ],
+                [
+                    "",
+                    3
+                ]
+            ]
+        },
+        "fraga": {
+            "language": "sv",
+            "components": "country:SE",
+            "address": "skillingaryd, östra fåglabäcksvägen, mellangatan, nässjö, Jönköpings län",
+            "bounds": "56.920843,13.443917|57.820843,15.243917"
+        }
+    },
+    {
+        "indata": {
+            "id": 510650,
+            "parsed_title": "Information",
+            "parsed_title_location": "Jönköpings län",
+            "polisen_location_name": "Jönköpings län",
+            "polisen_gps_lat": "57.3708430",
+            "polisen_gps_lng": "14.3439170",
+            "locations": [
+                [
+                    "",
+                    3
+                ]
+            ]
+        },
+        "fraga": {
+            "language": "sv",
+            "components": "country:SE",
+            "address": "Jönköpings län",
+            "bounds": "56.920843,13.443917|57.820843,15.243917"
+        }
+    },
+    {
+        "indata": {
+            "id": 510676,
+            "parsed_title": "Trafikhinder",
+            "parsed_title_location": "Flen",
+            "polisen_location_name": "Södermanlands län",
+            "polisen_gps_lat": "59.0336350",
+            "polisen_gps_lng": "16.7518900",
+            "locations": [
+                [
+                    "sveaborg",
+                    2
+                ],
+                [
+                    "",
+                    3
+                ]
+            ]
+        },
+        "fraga": {
+            "language": "sv",
+            "components": "country:SE",
+            "address": "sveaborg, Flen, Södermanlands län",
+            "bounds": "58.583635,15.851890|59.483635,17.651890"
+        }
+    },
+    {
+        "indata": {
+            "id": 510713,
+            "parsed_title": "Brand",
+            "parsed_title_location": "Norrbottens län",
+            "polisen_location_name": "Norrbottens län",
+            "polisen_gps_lat": "66.8309220",
+            "polisen_gps_lng": "20.3991970",
+            "locations": [
+                [
+                    "luleå",
+                    1
+                ],
+                [
+                    "",
+                    3
+                ]
+            ]
+        },
+        "fraga": {
+            "language": "sv",
+            "components": "country:SE",
+            "address": "luleå, Norrbottens län",
+            "bounds": "66.380922,19.499197|67.280922,21.299197"
+        }
+    },
+    {
+        "indata": {
+            "id": 510731,
+            "parsed_title": "Rattfylleri",
+            "parsed_title_location": "Nyköping",
+            "polisen_location_name": "Södermanlands län",
+            "polisen_gps_lat": "59.0336350",
+            "polisen_gps_lng": "16.7518900",
+            "locations": [
+                [
+                    "sjösa",
+                    2
+                ],
+                [
+                    "",
+                    3
+                ]
+            ]
+        },
+        "fraga": {
+            "language": "sv",
+            "components": "country:SE",
+            "address": "sjösa, Nyköping, Södermanlands län",
+            "bounds": "58.583635,15.851890|59.483635,17.651890"
+        }
+    },
+    {
+        "indata": {
+            "id": 510764,
+            "parsed_title": "Bedrägeri",
+            "parsed_title_location": "Upplands Väsby",
+            "polisen_location_name": "Stockholms län",
+            "polisen_gps_lat": "59.6024960",
+            "polisen_gps_lng": "18.1384380",
+            "locations": [
+                [
+                    "runby",
+                    1
+                ],
+                [
+                    "",
+                    3
+                ]
+            ]
+        },
+        "fraga": {
+            "language": "sv",
+            "components": "country:SE",
+            "address": "runby, Upplands Väsby, Stockholms län",
+            "bounds": "59.152496,17.238438|60.052496,19.038438"
+        }
+    },
+    {
+        "indata": {
+            "id": 510771,
+            "parsed_title": "Trafikolycka",
+            "parsed_title_location": "Strömsund",
+            "polisen_location_name": "Jämtlands län",
+            "polisen_gps_lat": "63.1711920",
+            "polisen_gps_lng": "14.9591800",
+            "locations": [
+                [
+                    "hammerdal",
+                    1
+                ],
+                [
+                    "",
+                    3
+                ]
+            ]
+        },
+        "fraga": {
+            "language": "sv",
+            "components": "country:SE",
+            "address": "hammerdal, Strömsund, Jämtlands län",
+            "bounds": "62.721192,14.059180|63.621192,15.859180"
+        }
+    },
+    {
+        "indata": {
+            "id": 510778,
+            "parsed_title": "Rattfylleri",
+            "parsed_title_location": "Pajala",
+            "polisen_location_name": "Norrbottens län",
+            "polisen_gps_lat": "66.8309220",
+            "polisen_gps_lng": "20.3991970",
+            "locations": [
+                [
+                    "",
+                    3
+                ]
+            ]
+        },
+        "fraga": {
+            "language": "sv",
+            "components": "country:SE",
+            "address": "Pajala, Norrbottens län",
+            "bounds": "66.380922,19.499197|67.280922,21.299197"
+        }
+    },
+    {
+        "indata": {
+            "id": 510783,
+            "parsed_title": "Trafikolycka",
+            "parsed_title_location": "Örebro",
+            "polisen_location_name": "Örebro län",
+            "polisen_gps_lat": "59.5350360",
+            "polisen_gps_lng": "15.0065730",
+            "locations": [
+                [
+                    "",
+                    3
+                ]
+            ]
+        },
+        "fraga": {
+            "language": "sv",
+            "components": "country:SE",
+            "address": "Örebro, Örebro län",
+            "bounds": "59.085036,14.106573|59.985036,15.906573"
+        }
+    },
+    {
+        "indata": {
+            "id": 510785,
+            "parsed_title": "Arbetsplatsolycka",
+            "parsed_title_location": "Skellefteå",
+            "polisen_location_name": "Västerbottens län",
+            "polisen_gps_lat": "65.3337310",
+            "polisen_gps_lng": "16.5161690",
+            "locations": [
+                [
+                    "skelleftehamn",
+                    1
+                ],
+                [
+                    "",
+                    3
+                ]
+            ]
+        },
+        "fraga": {
+            "language": "sv",
+            "components": "country:SE",
+            "address": "skelleftehamn, Skellefteå, Västerbottens län",
+            "bounds": "64.883731,15.616169|65.783731,17.416169"
+        }
+    },
+    {
+        "indata": {
+            "id": 510813,
+            "parsed_title": "Sammanfattning natt",
+            "parsed_title_location": "Värmlands län",
+            "polisen_location_name": "Värmlands län",
+            "polisen_gps_lat": "59.7294070",
+            "polisen_gps_lng": "13.2354020",
+            "locations": [
+                [
+                    "värmland",
+                    1
+                ],
+                [
+                    "karlstad",
+                    2
+                ],
+                [
+                    "herrhagen",
+                    2
+                ],
+                [
+                    "tingvallastaden",
+                    2
+                ],
+                [
+                    "",
+                    3
+                ]
+            ]
+        },
+        "fraga": {
+            "language": "sv",
+            "components": "country:SE",
+            "address": "värmland, karlstad, herrhagen, tingvallastaden, Värmlands län",
+            "bounds": "59.279407,12.335402|60.179407,14.135402"
+        }
+    },
+    {
+        "indata": {
+            "id": 510827,
+            "parsed_title": "Sammanfattning natt",
+            "parsed_title_location": "Norrbottens län",
+            "polisen_location_name": "Norrbottens län",
+            "polisen_gps_lat": "66.8309220",
+            "polisen_gps_lng": "20.3991970",
+            "locations": [
+                [
+                    "gällivare",
+                    2
+                ],
+                [
+                    "nietsak",
+                    2
+                ],
+                [
+                    "",
+                    3
+                ]
+            ]
+        },
+        "fraga": {
+            "language": "sv",
+            "components": "country:SE",
+            "address": "gällivare, nietsak, Norrbottens län",
+            "bounds": "66.380922,19.499197|67.280922,21.299197"
+        }
+    },
+    {
+        "indata": {
+            "id": 510869,
+            "parsed_title": "Sammanfattning natt",
+            "parsed_title_location": "Västerbottens län",
+            "polisen_location_name": "Västerbottens län",
+            "polisen_gps_lat": "65.3337310",
+            "polisen_gps_lng": "16.5161690",
+            "locations": [
+                [
+                    "skellefteå",
+                    2
+                ],
+                [
+                    "umeå",
+                    2
+                ],
+                [
+                    "lycksele",
+                    2
+                ],
+                [
+                    "skelleftehamn",
+                    2
+                ],
+                [
+                    "ersmarksvägen",
+                    2
+                ],
+                [
+                    "ersboda",
+                    2
+                ],
+                [
+                    "",
+                    3
+                ]
+            ]
+        },
+        "fraga": {
+            "language": "sv",
+            "components": "country:SE",
+            "address": "skellefteå, umeå, lycksele, skelleftehamn, ersmarksvägen, ersboda, Västerbottens län",
+            "bounds": "64.883731,15.616169|65.783731,17.416169"
+        }
+    },
+    {
+        "indata": {
+            "id": 510987,
+            "parsed_title": "Information",
+            "parsed_title_location": "Gotland",
+            "polisen_location_name": "Gotlands län",
+            "polisen_gps_lat": "57.4684120",
+            "polisen_gps_lng": "18.4867450",
+            "locations": [
+                [
+                    "stockholm",
+                    2
+                ],
+                [
+                    "gotska sandön",
+                    2
+                ],
+                [
+                    "",
+                    3
+                ]
+            ]
+        },
+        "fraga": {
+            "language": "sv",
+            "components": "country:SE",
+            "address": "stockholm, gotska sandön, Gotland, Gotlands län",
+            "bounds": "57.018412,17.586745|57.918412,19.386745"
+        }
+    },
+    {
+        "indata": {
+            "id": 510999,
+            "parsed_title": "Trafikkontroll",
+            "parsed_title_location": "Norrbottens län",
+            "polisen_location_name": "Norrbottens län",
+            "polisen_gps_lat": "66.8309220",
+            "polisen_gps_lng": "20.3991970",
+            "locations": [
+                [
+                    "norrbotten",
+                    1
+                ],
+                [
+                    "högsta",
+                    2
+                ],
+                [
+                    "arvidsjaurs kommun",
+                    2
+                ],
+                [
+                    "bodens kommun",
+                    2
+                ],
+                [
+                    "drottninggatan",
+                    2
+                ],
+                [
+                    "luleå kommun",
+                    2
+                ],
+                [
+                    "södra sunderbyn",
+                    2
+                ],
+                [
+                    "",
+                    3
+                ]
+            ]
+        },
+        "fraga": {
+            "language": "sv",
+            "components": "country:SE",
+            "address": "norrbotten, högsta, arvidsjaurs kommun, bodens kommun, drottninggatan, luleå kommun, södra sunderbyn, Norrbottens län",
+            "bounds": "66.380922,19.499197|67.280922,21.299197"
+        }
+    },
+    {
+        "indata": {
+            "id": 511090,
+            "parsed_title": "Skadegörelse",
+            "parsed_title_location": "Götene",
+            "polisen_location_name": "Västra Götalands län",
+            "polisen_gps_lat": "58.2527930",
+            "polisen_gps_lng": "13.0596430",
+            "locations": [
+                [
+                    "",
+                    3
+                ]
+            ]
+        },
+        "fraga": {
+            "language": "sv",
+            "components": "country:SE",
+            "address": "Götene, Västra Götalands län",
+            "bounds": "57.802793,12.159643|58.702793,13.959643"
+        }
+    },
+    {
+        "indata": {
+            "id": 511220,
+            "parsed_title": "Sammanfattning natt",
+            "parsed_title_location": "Jämtlands län",
+            "polisen_location_name": "Jämtlands län",
+            "polisen_gps_lat": "63.1711920",
+            "polisen_gps_lng": "14.9591800",
+            "locations": [
+                [
+                    "jämtland",
+                    1
+                ],
+                [
+                    "östersund",
+                    2
+                ],
+                [
+                    "lugnvik",
+                    2
+                ],
+                [
+                    "",
+                    3
+                ]
+            ]
+        },
+        "fraga": {
+            "language": "sv",
+            "components": "country:SE",
+            "address": "jämtland, östersund, lugnvik, Jämtlands län",
+            "bounds": "62.721192,14.059180|63.621192,15.859180"
+        }
+    },
+    {
+        "indata": {
+            "id": 511222,
+            "parsed_title": "Sammanfattning natt",
+            "parsed_title_location": "Östergötlands län",
+            "polisen_location_name": "Östergötlands län",
+            "polisen_gps_lat": "58.3453640",
+            "polisen_gps_lng": "15.5197840",
+            "locations": [
+                [
+                    "motala kommun",
+                    2
+                ],
+                [
+                    "",
+                    3
+                ]
+            ]
+        },
+        "fraga": {
+            "language": "sv",
+            "components": "country:SE",
+            "address": "motala kommun, Östergötlands län",
+            "bounds": "57.895364,14.619784|58.795364,16.419784"
+        }
+    },
+    {
+        "indata": {
+            "id": 511240,
+            "parsed_title": "Arbetsplatsolycka",
+            "parsed_title_location": "Eslöv",
+            "polisen_location_name": "Skåne län",
+            "polisen_gps_lat": "55.9902570",
+            "polisen_gps_lng": "13.5957690",
+            "locations": [
+                [
+                    "östergatan",
+                    2
+                ],
+                [
+                    "",
+                    3
+                ]
+            ]
+        },
+        "fraga": {
+            "language": "sv",
+            "components": "country:SE",
+            "address": "östergatan, Eslöv, Skåne län",
+            "bounds": "55.540257,12.695769|56.440257,14.495769"
+        }
+    },
+    {
+        "indata": {
+            "id": 511273,
+            "parsed_title": "Mord/dråp,  försök",
+            "parsed_title_location": "Huddinge",
+            "polisen_location_name": "Stockholms län",
+            "polisen_gps_lat": "59.6024960",
+            "polisen_gps_lng": "18.1384380",
+            "locations": [
+                [
+                    "segeltorp",
+                    1
+                ],
+                [
+                    "",
+                    3
+                ]
+            ]
+        },
+        "fraga": {
+            "language": "sv",
+            "components": "country:SE",
+            "address": "segeltorp, Huddinge, Stockholms län",
+            "bounds": "59.152496,17.238438|60.052496,19.038438"
+        }
+    },
+    {
+        "indata": {
+            "id": 511294,
+            "parsed_title": "Sammanfattning natt",
+            "parsed_title_location": "Dalarnas län",
+            "polisen_location_name": "Dalarnas län",
+            "polisen_gps_lat": "61.0917010",
+            "polisen_gps_lng": "14.6663650",
+            "locations": [
+                [
+                    "dalarna",
+                    1
+                ],
+                [
+                    "borlänge",
+                    2
+                ],
+                [
+                    "tjärna ängar",
+                    2
+                ],
+                [
+                    "mora",
+                    2
+                ],
+                [
+                    "orsa",
+                    2
+                ],
+                [
+                    "avesta",
+                    2
+                ],
+                [
+                    "krylbo",
+                    2
+                ],
+                [
+                    "",
+                    3
+                ]
+            ]
+        },
+        "fraga": {
+            "language": "sv",
+            "components": "country:SE",
+            "address": "dalarna, borlänge, tjärna ängar, mora, orsa, avesta, krylbo, Dalarnas län",
+            "bounds": "60.641701,13.766365|61.541701,15.566365"
+        }
+    },
+    {
+        "indata": {
+            "id": 511299,
+            "parsed_title": "Sammanfattning natt",
+            "parsed_title_location": "Västerbottens län",
+            "polisen_location_name": "Västerbottens län",
+            "polisen_gps_lat": "65.3337310",
+            "polisen_gps_lng": "16.5161690",
+            "locations": [
+                [
+                    "sörböle",
+                    2
+                ],
+                [
+                    "storgatan",
+                    2
+                ],
+                [
+                    "tegsbron",
+                    2
+                ],
+                [
+                    "västra esplanaden",
+                    2
+                ],
+                [
+                    "åsele",
+                    2
+                ],
+                [
+                    "marknadsgatan",
+                    2
+                ],
+                [
+                    "umeå",
+                    2
+                ],
+                [
+                    "norrböle",
+                    2
+                ],
+                [
+                    "skellefteå",
+                    2
+                ],
+                [
+                    "",
+                    3
+                ]
+            ]
+        },
+        "fraga": {
+            "language": "sv",
+            "components": "country:SE",
+            "address": "sörböle, storgatan, tegsbron, västra esplanaden, åsele, marknadsgatan, umeå, norrböle, skellefteå, Västerbottens län",
+            "bounds": "64.883731,15.616169|65.783731,17.416169"
+        }
+    }
+]
