@@ -148,6 +148,25 @@ det exakt en punkt per län (`count(distinct gps)` = 1 per län). Rätta till
 - **Avfärdat:** "titel kommun → län gör punkten grövre" — när Polisen breddar
   titeln till länet (bedrägerivarningar) är länsnivå rätt.
 
+## Engångskörning på prod 2026-10-10
+
+Backup före: `backups/prod-2026-10-10-182341.sql.gz`. Skript i `tmp-111/`.
+
+1. **Inaktuella platser** (`matt-omtolkning.php` → `backfill-omtolkning.php`):
+   60 av 1 747 publika händelser senaste 30 dagarna hade platser som inte
+   stämde med dagens text — Polisen hade uppdaterat texten men platserna
+   tolkades aldrig om. Alla 60 tolkades om med `tolkaOmEfterAndring()`, 0 fel.
+   Bland vanliga händelser tillkom gator som 510391 "Bondegatan" (rättelsen
+   som motiverade punkt 2), Gyllevägen, Georg Lückligs väg, Jesusparken,
+   Storvreten. 510086 (Trelleborg → Malmö) rättades för hand: texten saknar
+   numera platser, så de gamla ("malmö", "skåne") togs bort och gatan behölls.
+2. **Ny Google-fråga på äldre händelser** (`backfill-ny-fraga.php`): 113
+   händelser vars fråga ändras av punkt 1 geokodades om, 0 fel. 510364
+   hoppades över (enda kända försämringen i evalen).
+
+**Resultat, `geocode:halsa --dagar=30`:** utanför länet **10 → 4 av 1 802
+(0,6 % → 0,2 %)**. Kvar: 509477, 509491, 510546, 510863.
+
 ## Risker
 
 Fix 1 kan göra frågan för snål när titelns ort är ett län ("Skåne län") och

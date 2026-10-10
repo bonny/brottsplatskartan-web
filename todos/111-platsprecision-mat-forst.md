@@ -1,4 +1,4 @@
-**Status:** aktiv — A1 deployad 2026-10-10 (`4c411897`), A2 `geocode:halsa` byggd, A3 mätt: LLM-extraktion avfärdad (läckage 0,2 %). Fas B och C klara 2026-10-10 (snapshot-test, #109.1–4, 6). Kvar: viewport-cirkel, ev. Trafikverket
+**Status:** aktiv — A1 deployad 2026-10-10 (`4c411897`), A2 `geocode:halsa` byggd, A3 mätt: LLM-extraktion avfärdad (läckage 0,2 %). Fas B och C klara 2026-10-10 (snapshot-test, #109.1–4, 6), engångskörning på 30 dagar: utanför länet 0,6 % → 0,2 %. Kvar: viewport-cirkel, ev. Trafikverket
 **Senast uppdaterad:** 2026-10-10
 **Källa:** Brainstorm med Pär 2026-10-10 + kritisk granskning av den (subagent, samma dag)
 
