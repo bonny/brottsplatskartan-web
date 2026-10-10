@@ -15,9 +15,9 @@ use Illuminate\Support\Facades\Cache;
  * Schedulern skriver en markering per jobb till cachen (Redis, delas av
  * scheduler- och app-containern) när ett jobb lyckas eller misslyckas.
  * Markeringen bär med sig jobbets cron-uttryck, eftersom webbförfrågningar
- * inte laddar schemat (det definieras bara i konsolkärnan). Varje deploy
- * tömmer Redis (responsecache:clear utan tagg), så direkt efter en deploy
- * saknas markeringar tills jobben kört en gång.
+ * inte laddar schemat (det definieras bara i konsolkärnan). Responscachen
+ * ligger i en egen Redis-databas, så deployens responsecache:clear rör inte
+ * markeringarna.
  */
 class Jobbstatus
 {
@@ -36,6 +36,13 @@ class Jobbstatus
         'sitemap:generate' => 'Sitemap',
         'cache:warm' => 'Förvärmning av cache',
     ];
+
+    /**
+     * Underhållsjobb hämtar ingen data — de gör sajten snabbare eller
+     * hjälper sökmotorer. Ett fel där är försämrad drift, inte driftstopp:
+     * de kan som mest ge gult och styr inte statusraden överst på /status.
+     */
+    public const UNDERHALL = ['sitemap:generate', 'cache:warm'];
 
     private const NYCKEL = 'jobbstatus:';
 
@@ -70,7 +77,7 @@ class Jobbstatus
 
     /**
      * @return list<array{etikett: string, kommando: string, senast_ok: ?Carbon, senast_fel: ?Carbon,
-     *   intervall_min: ?int, status: string, text: string}>
+     *   intervall_min: ?int, status: string, text: string, underhall: bool}>
      */
     public function lista(): array
     {
@@ -84,6 +91,10 @@ class Jobbstatus
             $cron = $uttryck && CronExpression::isValidExpression($uttryck) ? new CronExpression($uttryck) : null;
 
             [$status, $text] = $this->bedom($cron, $senastOk, $senastFel);
+            $underhall = in_array($kommando, self::UNDERHALL, true);
+            if ($underhall && $status === 'rod') {
+                $status = 'gul';
+            }
             $rader[] = [
                 'etikett' => $etikett,
                 'kommando' => $kommando,
@@ -92,6 +103,7 @@ class Jobbstatus
                 'intervall_min' => $cron ? $this->intervallMinuter($cron) : null,
                 'status' => $status,
                 'text' => $text,
+                'underhall' => $underhall,
             ];
         }
 

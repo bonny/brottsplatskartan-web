@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Helper;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Pre-warm response cache genom att pinga populära sidor.
@@ -50,31 +51,53 @@ class WarmCache extends Command
             }
         }
 
-        $ok = 0;
-        $fail = 0;
-
+        $misslyckade = [];
         foreach ($urls as $url) {
-            $fullUrl = $baseUrl . $url;
-            try {
-                $response = Http::timeout(15)
-                    ->withOptions(['verify' => false]) // ev. self-signed eller intern cert
-                    ->get($fullUrl);
-
-                if ($response->successful()) {
-                    $this->line("  ✓ {$url} ({$response->status()})");
-                    $ok++;
-                } else {
-                    $this->warn("  ⚠ {$url} returnerade {$response->status()}");
-                    $fail++;
-                }
-            } catch (\Exception $e) {
-                $this->error("  ✗ {$url}: {$e->getMessage()}");
-                $fail++;
+            if (! $this->varm($baseUrl . $url, $url, 15)) {
+                $misslyckade[] = $url;
             }
         }
 
-        $this->info("Pre-warm klart: {$ok} OK, {$fail} misslyckade");
+        // En kall sida (direkt efter en deploy, eller under last) kan ta
+        // längre tid än 15 s första gången. Ett nytt försök med längre
+        // timeout räcker nästan alltid.
+        $kvar = [];
+        foreach ($misslyckade as $url) {
+            if (! $this->varm($baseUrl . $url, $url, 45)) {
+                $kvar[] = $url;
+            }
+        }
 
-        return $fail > 0 ? Command::FAILURE : Command::SUCCESS;
+        $antal = count($urls);
+        $this->info(sprintf('Pre-warm klart: %d OK, %d misslyckade', $antal - count($kvar), count($kvar)));
+        if ($kvar !== []) {
+            Log::warning('cache:warm: sidor svarade inte', ['urls' => $kvar]);
+        }
+
+        // Förvärmningen gör bara sajten snabbare — enstaka långsamma sidor
+        // är inget fel. Rapportera fel (syns på /status) bara när startsidan
+        // inte svarar eller mer än en fjärdedel av sidorna föll.
+        $allvarligt = in_array('/', $kvar, true) || count($kvar) > $antal / 4;
+
+        return $allvarligt ? Command::FAILURE : Command::SUCCESS;
+    }
+
+    private function varm(string $fullUrl, string $url, int $timeout): bool
+    {
+        try {
+            $response = Http::timeout($timeout)
+                ->withOptions(['verify' => false]) // ev. self-signed eller intern cert
+                ->get($fullUrl);
+
+            if ($response->successful()) {
+                $this->line("  ✓ {$url} ({$response->status()})");
+                return true;
+            }
+            $this->warn("  ⚠ {$url} returnerade {$response->status()}");
+        } catch (\Exception $e) {
+            $this->error("  ✗ {$url}: {$e->getMessage()}");
+        }
+
+        return false;
     }
 }

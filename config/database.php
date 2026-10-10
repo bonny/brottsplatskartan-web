@@ -151,6 +151,21 @@ return [
             'database' => 0,
         ],
 
+        /*
+         * Egen Redis-databas för Spaties responscache (cache-lagret
+         * `responsecache`, RESPONSE_CACHE_DRIVER=responsecache). Med samma
+         * databas som appens cache tömde `responsecache:clear` i deploy.sh
+         * allt — markeringar för /status, tak på geokodningsförsök, lås och
+         * statistikcacher — och sajten kallstartade efter varje deploy.
+         * Samma Redis-instans och minnestak; databaserna 0–15 finns alltid.
+         */
+        'responsecache' => [
+            'host' => env('REDIS_HOST', 'localhost'),
+            'password' => env('REDIS_PASSWORD', null),
+            'port' => env('REDIS_PORT', 6379),
+            'database' => env('REDIS_RESPONSECACHE_DB', 2),
+        ],
+
     ],
 
 ];

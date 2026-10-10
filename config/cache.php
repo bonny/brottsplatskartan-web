@@ -73,6 +73,13 @@ return [
             'connection' => 'default',
         ],
 
+        // Spaties responscache i en egen Redis-databas, se
+        // config/database.php → redis.responsecache.
+        'responsecache' => [
+            'driver' => 'redis',
+            'connection' => 'responsecache',
+        ],
+
         'none' => [
             'driver' => 'null',
         ],

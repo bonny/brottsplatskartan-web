@@ -40,6 +40,25 @@ Spatie Response Cache cachear kompletta HTTP-responses på middleware-nivå för
 
 ## Installation & Konfiguration
 
+### Egen Redis-databas (sedan 2026-10-10)
+
+Responscachen ligger i Redis-databas 2 (`RESPONSE_CACHE_DRIVER=responsecache`
+→ cache-lagret `responsecache` → Redis-anslutningen `responsecache`, se
+`config/cache.php` och `config/database.php`). Appens övriga cache ligger i
+databas 0.
+
+Varför: `responsecache:clear` (körs i varje deploy) gör `FLUSHDB` på
+responscachens anslutning. När båda delade databas 0 tömdes allt vid varje
+deploy — markeringarna på `/status`, taket på geokodningsförsök, lås och
+statistikcacher — och `cache:warm` föll på kalla sidor. Samma Redis-instans
+och minnestak (3 GB, allkeys-lru) gäller fortfarande.
+
+```bash
+docker compose exec redis redis-cli INFO keyspace   # db0 = app, db2 = sidor
+```
+
+Kör aldrig `FLUSHALL` — det tömmer alla databaser.
+
 ### 1. Installera Paketet
 
 ```bash
@@ -91,13 +110,13 @@ Bestämmer cache-livstider baserat på URL. Se aktuell kod för implementation.
 
 ### Cache-tider Översikt
 
-| Sidtyp | Cache-tid | Motivering |
-|--------|-----------|------------|
-| Startsida (`/`) | 2 minuter | Ofta uppdaterad med nya händelser |
-| VMA alerts (`/vma`) | 2 minuter | Kritisk info, måste vara färsk |
-| Historiska datum (>7 dagar gamla) | 7 dagar | Gammal data ändras aldrig |
-| API events (`/api/events`) | 10 minuter | Balans mellan prestanda och fräschhet |
-| Standard | 30 minuter | Säker fallback |
+| Sidtyp                            | Cache-tid  | Motivering                            |
+| --------------------------------- | ---------- | ------------------------------------- |
+| Startsida (`/`)                   | 2 minuter  | Ofta uppdaterad med nya händelser     |
+| VMA alerts (`/vma`)               | 2 minuter  | Kritisk info, måste vara färsk        |
+| Historiska datum (>7 dagar gamla) | 7 dagar    | Gammal data ändras aldrig             |
+| API events (`/api/events`)        | 10 minuter | Balans mellan prestanda och fräschhet |
+| Standard                          | 30 minuter | Säker fallback                        |
 
 ---
 
@@ -108,6 +127,7 @@ Bestämmer cache-livstider baserat på URL. Se aktuell kod för implementation.
 Filtrerar bort query-parametrar (`?t=`, `?_=`, `?nocache=`, `?timestamp=`) som inte ska påverka cachen.
 
 **Varför viktigt?**
+
 - Utan: `/?t=123` och `/?t=456` skapar separata cache-entries
 - Med: Båda delar samma cache-entry (effektivare)
 
@@ -215,13 +235,14 @@ TTL "laravelresponsecache-<hash>"   # TTL i sekunder
 
 ### Performance Metrics
 
-| Scenario | Response Time | Förklaring |
-|----------|---------------|------------|
-| Response Cache HIT | 5-10ms | Ingen PHP körs |
-| Response Cache MISS + Query Cache HIT | 50-100ms | PHP körs, queries cachade |
-| Response Cache MISS + Query Cache MISS | 500-1000ms | Full database query |
+| Scenario                               | Response Time | Förklaring                |
+| -------------------------------------- | ------------- | ------------------------- |
+| Response Cache HIT                     | 5-10ms        | Ingen PHP körs            |
+| Response Cache MISS + Query Cache HIT  | 50-100ms      | PHP körs, queries cachade |
+| Response Cache MISS + Query Cache MISS | 500-1000ms    | Full database query       |
 
 **Målsättning:**
+
 - 95% requests: Response Cache HIT (<10ms)
 - 4% requests: Query Cache HIT (<100ms)
 - 1% requests: Full query (<1000ms)
@@ -233,6 +254,7 @@ TTL "laravelresponsecache-<hash>"   # TTL i sekunder
 ### Lokal Development
 
 Se till att `.env` har:
+
 ```bash
 CACHE_DRIVER=redis
 RESPONSE_CACHE_DRIVER=redis
@@ -320,15 +342,18 @@ if ($request->is('live-feed')) {
 ## Sammanfattning
 
 ### Fördelar
+
 - ✅ 50-80% snabbare response times vid cache hit
 - ✅ Minskar CPU-belastning och databas-queries
 - ✅ Kan hantera högre trafikvolymer
 
 ### Begränsningar
+
 - ⚠️ Kräver aktiv cache-invalidering
 - ⚠️ Risk för inaktuell data om misslyckad invalidering
 
 ### Implementation Status (Brottsplatskartan)
+
 1. ✅ Grundläggande konfiguration
 2. ✅ `BrottsplatskartanCacheProfile` (cache-livstider)
 3. ✅ `CustomRequestHasher` (filtrerar query-parametrar)
@@ -336,6 +361,7 @@ if ($request->is('live-feed')) {
 5. ✅ Deployment till produktion
 
 ### Performance-resultat
+
 - Cache HIT: ~1-5ms
 - Cache MISS + Query cache HIT: ~50ms
 - Historiska sidor: 7 dagars cache
@@ -346,9 +372,11 @@ if ($request->is('live-feed')) {
 ## Support
 
 **Spatie Laravel Response Cache:**
+
 - GitHub: https://github.com/spatie/laravel-responsecache
 - Dokumentation: https://spatie.be/docs/laravel-responsecache
 
 **Brottsplatskartan:**
+
 - AGENTS.md: Produktionsserver-kommandon
 - API.md: API-dokumentation

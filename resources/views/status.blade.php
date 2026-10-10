@@ -44,13 +44,21 @@
 
     $kortStatus = ['gron' => 'OK', 'gul' => 'Missad', 'rod' => 'Fel', 'okand' => 'Väntar'];
     $statusOrdning = ['rod' => 0, 'gul' => 1, 'okand' => 2, 'gron' => 3];
-    $samlad = collect($jobb)->sortBy(fn ($j) => $statusOrdning[$j['status']])->first()['status'] ?? 'okand';
+    [$underhallsjobb, $datajobb] = collect($jobb)->partition(fn ($j) => $j['underhall']);
+
+    // Bara datahämtningen styr statusraden — underhåll (sitemap,
+    // cachevärmning) är försämrad drift, inte driftstopp.
+    $samlad = $datajobb->sortBy(fn ($j) => $statusOrdning[$j['status']])->first()['status'] ?? 'okand';
     $samladText = [
         'gron' => 'Allt går som det ska',
         'gul' => 'Något jobb har missat en körning',
         'rod' => 'Något är fel',
         'okand' => 'Väntar på första körningarna',
     ][$samlad];
+    if ($samlad === 'gron' && $underhallsjobb->contains(fn ($j) => $j['status'] === 'gul')) {
+        $samladText = 'Datahämtningen går som den ska — ett underhållsjobb har problem';
+    }
+    $grupper = ['Datahämtning' => $datajobb, 'Underhåll' => $underhallsjobb];
 @endphp
 
 @section('content')
@@ -70,16 +78,17 @@
         <section class="widget" id="jobb">
             <h2 class="widget__title">Hämtningar och jobb</h2>
             <table class="DataTable Status__jobb">
+                @foreach ($grupper as $grupp => $gruppjobb)
                 <thead>
                     <tr>
-                        <th>Jobb</th>
+                        <th>{{ $grupp }}</th>
                         <th>Senast klart</th>
                         <th class="Status__smal-dold">Körs</th>
                         <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($jobb as $j)
+                    @foreach ($gruppjobb as $j)
                         <tr>
                             <td>{{ $j['etikett'] }}</td>
                             <td>{{ $tid($j['senast_ok']) }}</td>
@@ -94,10 +103,11 @@
                                     –
                                 @endif
                             </td>
-                            <td title="{{ $j['text'] }}"><span class="Status__dot Status__dot--{{ $j['status'] }}"></span>{{ $kortStatus[$j['status']] }}</td>
+                            <td title="{{ $j['text'] }}"><span class="Status__dot Status__dot--{{ $j['status'] }}"></span>{{ $j['underhall'] && $j['status'] === 'gul' ? 'Varning' : $kortStatus[$j['status']] }}</td>
                         </tr>
                     @endforeach
                 </tbody>
+                @endforeach
             </table>
 
             <h3 class="u-margin-top">Senaste data från varje källa</h3>
