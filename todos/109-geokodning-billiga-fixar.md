@@ -53,6 +53,12 @@ texten igen och geokodar om **bara om Google-frågan ändrats**. Flyttade
 punkter loggas som `Omgeokodad efter ändring hos Polisen` (fråga och punkt
 före/efter) — sök på det för att se hur ofta första geokodningen var fel.
 
+**Lärdom från första körningen på prod:** av 8 omgeokodade blev 3 bättre
+(Borlänge, Kvälleberg, Svampen) men 3 sämre. När Polisen avslutar en händelse
+ersätts texten ofta med "Försvunnen man anträffad", och gatan försvann.
+Hittas inga platser i den nya texten behålls nu de gamla. De tre (511089,
+511023, 510857) återställdes för hand.
+
 ## 3. Småbuggar i geokodningen — ✅ klart 2026-10-10
 
 - `geocodeItemFallbackVersion()` jämförde `$result_results` (en array) med

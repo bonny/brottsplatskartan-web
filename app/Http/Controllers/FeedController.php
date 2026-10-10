@@ -695,8 +695,18 @@ class FeedController extends Controller
         $gammalUrl ??= $this->geocodeUrlFor($item);
         $fore = [$item->location_lat, $item->location_lng];
 
+        $gamlaPlatser = $item->locations->map(fn ($l) => ['name' => $l->name, 'prio' => $l->prio])->all();
         $item->locations()->delete();
-        $this->parseItemForLocations($itemID);
+        $item = $this->parseItemForLocations($itemID);
+
+        // När Polisen avslutar en händelse ersätts texten ofta med en kort rad
+        // ("Försvunnen man anträffad") och gatan försvinner. Hittas inga
+        // platser i den nya texten behålls de gamla — annars hamnar punkten
+        // i ortens mitt (sågs på prod 2026-10-10: 511089, 511023, 510857).
+        // En rättelse ("Brottsplats är Bondegatan") har en plats och ersätter.
+        if ($item->locations->isEmpty() && $gamlaPlatser !== []) {
+            $item->locations()->createMany($gamlaPlatser);
+        }
 
         $nyUrl = $this->getGeocodeURL($itemID);
         if ($nyUrl === $gammalUrl) {
