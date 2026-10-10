@@ -87,6 +87,23 @@ done
 **inte**, den ligger i `ignored_query_parameters` (config/responsecache.php)
 och ger samma cache-nyckel som utan parameter.
 
+### Efter deploy: kolla `/status`
+
+`https://brottsplatskartan.se/status` visar när varje schemalagt jobb
+senast lyckades (markeringar i databasens cache-tabell, överlever deploy).
+Står ett jobb på "Väntar"/rött längre än två–tre av sina intervall har det
+troligen fastnat på ett `withoutOverlapping`-lås: 2026-10-10 återskapades
+Redis mitt i en körning av `trafikverket:fetch`, låset kunde inte släppas
+och jobbet stod still. Se vilka jobb som är låsta och släpp låsen:
+
+```bash
+docker compose exec -T scheduler php artisan schedule:list      # nästa körning per jobb
+docker compose exec -T scheduler php artisan schedule:clear-cache  # tar bort alla scheduler-lås
+```
+
+Sedan samma dag gäller låsen tre intervall (`Kernel::begransaOverlappslas`),
+så ett fast lås släpper av sig självt — men `schedule:clear-cache` går fortare.
+
 ### ⚠️ Prod loggar i svensk tid, GitHub Actions i UTC
 
 `ai_usage_logs`, `storage/logs/` och `date` på servern är Europe/Stockholm
