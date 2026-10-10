@@ -12,9 +12,11 @@ use Tests\TestCase;
  *
  * tests/fixtures/geocode-fragor.json innehåller ~50 riktiga prod-händelser
  * (titelort, län, Polisens GPS och hittade platser i databasens ordning)
- * och frågan som byggdes för dem. Varje ändring i parsern, stopplistan
- * eller FeedController::geocodeUrlFor() syns som en diff här — granska den
- * och uppdatera medvetet:
+ * och frågan som byggdes för dem. Testet täcker frågebygget
+ * (FeedController::geocodeUrlFor() och platserForGoogle()), inte parsern:
+ * platserna läses ur fixturen. Kantfall: PlatserForGoogleTest. Varje
+ * ändring i frågebygget syns som en diff här — granska den och uppdatera
+ * medvetet:
  *
  *   docker compose exec -e UPPDATERA_SNAPSHOT=1 app php vendor/bin/phpunit --filter GeocodeUrlSnapshotTest
  *
@@ -30,12 +32,13 @@ class GeocodeUrlSnapshotTest extends TestCase
     public function test_google_fragan_matchar_snapshot(): void
     {
         $fall = json_decode(file_get_contents(self::FIXTUR), true);
+        $this->assertGreaterThan(40, count($fall), 'Fixturen är tom eller trasig');
         $controller = app(FeedController::class);
         $kommunTillLan = json_decode(file_get_contents(self::KOMMUNER), true);
         $uppdatera = (bool) getenv('UPPDATERA_SNAPSHOT');
 
         foreach ($fall as $i => $f) {
-            $faktisk = $this->fraga($controller->geocodeUrlFor($this->handelse($f['indata']), $kommunTillLan));
+            $faktisk = $this->fraga($controller->geocodeUrlFor($this->handelse($f['indata']), $kommunTillLan, []));
 
             if ($uppdatera) {
                 $fall[$i]['fraga'] = $faktisk;

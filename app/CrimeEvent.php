@@ -462,8 +462,14 @@ class CrimeEvent extends Model implements Feedable {
         }
 
         // Description bara i slug:en för det historiska fönstret. Permalinks
-        // ändras aldrig retroaktivt — alla events publicerade i intervallet
-        // behåller sin URL även efter att fältet tagits bort.
+        // ändras inte retroaktivt av kodändringar — alla events publicerade i
+        // intervallet behåller sin URL även efter att fältet tagits bort.
+        // Däremot kan en enskild händelses slug ändras när Polisen ändrar
+        // titel eller plats och vi tolkar om den (#109.2, #109.6): typ, ort,
+        // prio 1-platser och län ingår. Gamla URL:er fungerar ändå — routen
+        // slår upp på id:t sist i slugen och sidans canonical pekar på den
+        // nya. Ingen 301, medvetet: de historiska slug-formaten gör en
+        // exakt jämförelse riskabel.
         $eventDate = $this->getParsedDateInFormat('YYYY-MM-DD');
         $descriptionInSlug = $eventDate > "2022-02-10" && $eventDate < "2026-04-28";
         if ($descriptionInSlug) {

@@ -62,7 +62,17 @@ class CheckForEventsUpdates extends Command
         foreach ($recentEvents as $oneRecentEvent) {
             $this->line("Checking updates for $oneRecentEvent->title, id $oneRecentEvent->id");
 
-            $itemContentsWasUpdated = $this->feedController->parseItemContentAndUpdateIfChanges($oneRecentEvent->id);
+            try {
+                $itemContentsWasUpdated = $this->feedController->parseItemContentAndUpdateIfChanges($oneRecentEvent->id);
+                if ($itemContentsWasUpdated === 'CHANGED') {
+                    // Tolka om platserna, inte bara geokoda om med de gamla (#109.2).
+                    $this->feedController->tolkaOmEfterAndring($oneRecentEvent->id);
+                }
+            } catch (\Throwable $e) {
+                // Ett fel på en händelse ska inte stoppa resten av loopen.
+                Log::warning('Uppdateringskontroll kastade', ['crime_event_id' => $oneRecentEvent->id, 'fel' => $e->getMessage()]);
+                continue;
+            }
 
             Log::info(
                 'Item was updated from remote after a while',
@@ -72,8 +82,6 @@ class CheckForEventsUpdates extends Command
             );
 
             if ($itemContentsWasUpdated === 'CHANGED') {
-                // Tolka om platserna, inte bara geokoda om med de gamla (#109.2).
-                $this->feedController->tolkaOmEfterAndring($oneRecentEvent->id);
                 Log::debug(
                     'Item was updated from remote after a while',
                     [

@@ -113,24 +113,37 @@ class FetchEvents extends Command
         foreach ($itemsNotGeocoded as $oneItem) {
             // Tak på försök per händelse (#109.4): körs var 12:e minut i 15
             // dagar, så en händelse som aldrig går att geokoda gav annars upp
-            // till ~1 800 Google-anrop. Räknaren ligger i cachen — töms den
-            // blir det bara några extra försök.
+            // till ~1 800 Google-anrop. Bara bestående misslyckanden räknas
+            // (ingen träff, för grov träff) — tillfälliga fel som
+            // OVER_QUERY_LIMIT eller nätverksfel får inte få händelser att ge
+            // upp för gott. Räknaren ligger i cachen och nollställs vid varje
+            // deploy (responsecache:clear tömmer hela Redis-databasen), så
+            // taket är 10 försök per deploy.
             $forsokKey = 'geokodforsok:' . $oneItem->getKey();
-            Cache::add($forsokKey, 0, now()->addDays(16));
-            $forsok = Cache::increment($forsokKey);
-            if ($forsok > self::MAX_GEOKODFORSOK) {
-                if ($forsok === self::MAX_GEOKODFORSOK + 1) {
-                    Log::warning('Ger upp geokodning efter ' . self::MAX_GEOKODFORSOK . ' försök', ['crime_event_id' => $oneItem->getKey()]);
-                }
+            if ((int) Cache::get($forsokKey, 0) >= self::MAX_GEOKODFORSOK) {
                 continue;
             }
 
             $this->line("Getting geocode info for $oneItem->title, id " . $oneItem->getKey());
-            $geocodeResult = $this->feedController->geocodeItem($oneItem->getKey());
+            try {
+                $geocodeResult = $this->feedController->geocodeItem($oneItem->getKey());
+            } catch (\Throwable $e) {
+                Log::warning('Geokodning kastade', ['crime_event_id' => $oneItem->getKey(), 'fel' => $e->getMessage()]);
+                continue;
+            }
+
             if ($geocodeResult['error']) {
                 $this->error("Error during geocodeItem():\n" . $geocodeResult['error_message']);
             } else {
                 $this->info("Geocoded using url: " . $geocodeResult['geocodeUrl']);
+            }
+
+            $bestaendeFel = in_array($geocodeResult['status'] ?? null, ['OK', 'ZERO_RESULTS'], true);
+            if ($bestaendeFel && ! CrimeEvent::withoutGlobalScopes()->whereKey($oneItem->getKey())->value('geocoded')) {
+                Cache::add($forsokKey, 0, now()->addDays(16));
+                if (Cache::increment($forsokKey) === self::MAX_GEOKODFORSOK) {
+                    Log::warning('Ger upp geokodning efter ' . self::MAX_GEOKODFORSOK . ' försök', ['crime_event_id' => $oneItem->getKey()]);
+                }
             }
 
             // $bar->advance();

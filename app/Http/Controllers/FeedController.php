@@ -43,10 +43,16 @@ class FeedController extends Controller
      * @param array<string, string>|null $kommunTillLan Gemener kommun → länets
      *   kortnamn ("malmö" → "Skåne"). null = läs scb_kommuner. Testet skickar in
      *   listan så att det klarar sig utan databas.
+     * @param array<string, list<string>>|null $tatortTillLan Gemener tätort →
+     *   länens kortnamn där en tätort med det namnet finns. null = scb_tatorter.
      */
-    public function geocodeUrlFor(CrimeEvent $item, ?array $kommunTillLan = null): string
+    public function geocodeUrlFor(CrimeEvent $item, ?array $kommunTillLan = null, ?array $tatortTillLan = null): string
     {
-        $itemLocations = $this->platserForGoogle($item, $kommunTillLan ?? $this->kommunTillLan());
+        $itemLocations = $this->platserForGoogle(
+            $item,
+            $kommunTillLan ?? $this->kommunTillLan(),
+            $tatortTillLan ?? $this->tatortTillLan()
+        );
         $googleApiKey = getenv('GEOCODE_GOOGLE_APIKEY');
 
         $apiUrlTemplate = 'https://maps.googleapis.com/maps/api/geocode/json?key=' . $googleApiKey . '&language=sv';
@@ -116,43 +122,84 @@ class FeedController extends Controller
      * Google på 30 dagars händelser visade att det gav fler fel att ta bort
      * dem. Gator, stadsdelar och byar behålls. Underlag: todo #109.
      *
+     * Undantag: finns en tätort med samma namn i händelsens län (Berg i
+     * Östergötland, Lund i Gävleborg) behålls namnet — det är troligen byn,
+     * inte kommunen i ett annat län. Saknas Polisens län filtreras inga
+     * kommuner bort.
+     *
      * @param array<string, string> $kommunTillLan
+     * @param array<string, list<string>> $tatortTillLan
      * @return \Illuminate\Support\Collection<int, \App\Locations>
      */
-    private function platserForGoogle(CrimeEvent $item, array $kommunTillLan)
+    private function platserForGoogle(CrimeEvent $item, array $kommunTillLan, array $tatortTillLan)
     {
         $lanKortnamn = array_map('mb_strtolower', array_unique(array_values($kommunTillLan)));
         $titel = mb_strtolower(trim((string) $item->parsed_title_location));
-        $handelsensLan = mb_strtolower(preg_replace('/s? län$/u', '', (string) $item->polisen_location_name));
+        $handelsensLan = $this->utanSuffix(mb_strtolower((string) $item->polisen_location_name), 'län', $lanKortnamn);
 
-        return $item->locations->filter(function ($location) use ($kommunTillLan, $lanKortnamn, $titel, $handelsensLan) {
+        return $item->locations->filter(function ($location) use ($kommunTillLan, $tatortTillLan, $lanKortnamn, $titel, $handelsensLan) {
             $namn = mb_strtolower(trim((string) $location->name));
 
-            if ($namn === $titel) {
+            // "östersunds kommun" → "östersund", "västerås kommun" → "västerås".
+            $kommun = $this->utanSuffix($namn, 'kommun', array_keys($kommunTillLan));
+            if ($namn === $titel || $kommun === $titel) {
                 return true;
             }
 
-            // "östersunds kommun" → "östersund", "skåne län" → "skåne".
-            $kommun = preg_replace('/s? kommun$/u', '', $namn);
-            if ($kommun === $titel) {
-                return true;
-            }
-
-            $lanForm = preg_replace('/s? län$/u', '', $namn);
+            // "skåne", "stockholms län" — Polisens län läggs till sist ändå.
+            // "stockholm" och "uppsala" är också kommuner och hanteras nedan.
+            $lanForm = $this->utanSuffix($namn, 'län', $lanKortnamn);
             if (in_array($lanForm, $lanKortnamn, true) && ! isset($kommunTillLan[$namn])) {
                 return false;
             }
 
-            if (isset($kommunTillLan[$kommun])) {
-                return mb_strtolower($kommunTillLan[$kommun]) === $handelsensLan;
+            if (isset($kommunTillLan[$kommun]) && $handelsensLan !== '') {
+                return mb_strtolower($kommunTillLan[$kommun]) === $handelsensLan
+                    || in_array($handelsensLan, $tatortTillLan[$namn] ?? [], true);
             }
 
             return true;
         })->values();
     }
 
+    /**
+     * Tar bort " kommun"/" län" och ett eventuellt genitiv-s, men bara om
+     * resultatet finns i $kanda: "västerås kommun" → "västerås" (inte
+     * "västerå"), "stockholms län" → "stockholm".
+     *
+     * @param list<string> $kanda
+     */
+    private function utanSuffix(string $namn, string $suffix, array $kanda): string
+    {
+        if (! str_ends_with($namn, ' ' . $suffix)) {
+            return $namn;
+        }
+
+        $bas = mb_substr($namn, 0, -mb_strlen(' ' . $suffix));
+        if (in_array($bas, $kanda, true) || ! str_ends_with($bas, 's')) {
+            return $bas;
+        }
+
+        return mb_substr($bas, 0, -1);
+    }
+
     /** @var array<string, string>|null */
     private static ?array $kommunTillLanCache = null;
+
+    /** @var array<string, list<string>>|null */
+    private static ?array $tatortTillLanCache = null;
+
+    /**
+     * @return array<string, list<string>> Gemener tätort → länens gemena kortnamn ur scb_tatorter.
+     */
+    private function tatortTillLan(): array
+    {
+        return self::$tatortTillLanCache ??= DB::table('scb_tatorter')
+            ->get(['tatort', 'lan_namn'])
+            ->groupBy(fn ($r) => mb_strtolower($r->tatort))
+            ->map(fn ($rader) => $rader->pluck('lan_namn')->map(fn ($l) => mb_strtolower($l))->unique()->values()->all())
+            ->all();
+    }
 
     /**
      * @return array<string, string> Gemener kommun → länets kortnamn ur scb_kommuner.
@@ -188,7 +235,9 @@ class FeedController extends Controller
      * Geocode an crime event
      *
      * @param int $itemID ID of crime event to geovode.
-     * @return array with info if, key [error] = false is ok, [error] = true if error, [message] with error message
+     * @return array with info if, key [error] = false is ok, [error] = true if error, [message] with error message.
+     *   [status] är Googles status (OK, ZERO_RESULTS, OVER_QUERY_LIMIT …), så
+     *   anroparen kan skilja tillfälliga fel från bestående (#109.4).
      */
     public function geocodeItem($itemID) {
 
@@ -200,8 +249,16 @@ class FeedController extends Controller
         $result_results = $result_data->results;
 
         if ($result_status !== "OK") {
+            // Ingen träff alls är oftast en överspecificerad fråga — prova
+            // den snålare reservfrågan (tidigare kördes den bara vid träff på
+            // landsnivå, inte här).
+            if ($result_status === "ZERO_RESULTS") {
+                $this->provaReservgeokodning($item);
+            }
+
             return [
                 'error' => true,
+                'status' => $result_status,
                 'error_message' => "itemID: {$itemID}\nstatus: {$result_status}\nurl: {$apiUrl}"
             ];
         }
@@ -277,25 +334,31 @@ class FeedController extends Controller
             $item->save();
 
         } else {
-
-            // Träffen var för grov (hela landet) eller saknas: försök igen
-            // med bara titelns ort och Polisens län. Tidigare hängde detta på
-            // en prio 3-location som alltid var tom (länet togs bort ur
-            // polisens text 2018), så frågan blev "Umeå, " utan län (#109.3).
-            $fallbackLocation = collect([$item->parsed_title_location, $item->polisen_location_name])
-                ->filter()
-                ->unique()
-                ->implode(', ');
-            if ($fallbackLocation !== '') {
-                $this->geocodeItemFallbackVersion($itemID, $fallbackLocation);
-            }
-
+            $this->provaReservgeokodning($item);
         }
 
         return [
             'error' => false,
+            'status' => $result_status,
             'geocodeUrl' => $apiUrl
         ];
+    }
+
+    /**
+     * Träffen var för grov (hela landet) eller saknas: försök igen med bara
+     * titelns ort och Polisens län. Tidigare hängde detta på en prio
+     * 3-location som alltid var tom (länet togs bort ur polisens text 2018),
+     * så frågan blev "Umeå, " utan län (#109.3).
+     */
+    private function provaReservgeokodning(CrimeEvent $item): void
+    {
+        $fallbackLocation = collect([$item->parsed_title_location, $item->polisen_location_name])
+            ->filter()
+            ->unique()
+            ->implode(', ');
+        if ($fallbackLocation !== '') {
+            $this->geocodeItemFallbackVersion($item->getKey(), $fallbackLocation);
+        }
     }
 
     public function geocodeItemFallbackVersion($itemID, $fallbackLocation) {
@@ -376,7 +439,8 @@ class FeedController extends Controller
 
         // Non ok is if types contains "Country" because then we have a really zoomed out location.
         // if bad location then fallback to only using
-        $valid_good_location = ! empty($geometry_location_lat);
+        // Även reserven ska avvisa träffar på landsnivå (mitt i Sverige).
+        $valid_good_location = ! empty($geometry_location_lat) && ! in_array("country", (array) $types);
 
         // If ok location then add
         if ($valid_good_location) {
@@ -482,6 +546,24 @@ class FeedController extends Controller
      */
     public function parseItem($itemID)
     {
+        $this->tolkaTitel($itemID);
+
+        // Parse permalink, i.e. get info from remote and store
+        // This can be called a bit later to check if item has remote updates
+        $this->parseItemContentAndUpdateIfChanges($itemID);
+
+        // Find and save locations in teaser and content
+        $this->parseItemForLocations($itemID);
+
+        return true;
+    }
+
+    /**
+     * Tolka titeln ("DD månad HH.MM, Typ, Plats") till parsed_title,
+     * parsed_title_location och parsed_date, och spara.
+     */
+    private function tolkaTitel(int $itemID): void
+    {
         $item = CrimeEvent::findOrFail($itemID);
 
         // Parse title
@@ -508,15 +590,6 @@ class FeedController extends Controller
 
         $item->fill($parsed_title_items);
         $item->save();
-
-        // Parse permalink, i.e. get info from remote and store
-        // This can be called a bit later to check if item has remote updates
-        $this->parseItemContentAndUpdateIfChanges($itemID);
-
-        // Find and save locations in teaser and content
-        $item = $this->parseItemForLocations($itemID);
-
-        return true;
     }
 
     /**
@@ -671,8 +744,11 @@ class FeedController extends Controller
         $item->polisen_type = isset($apiItem['type']) ? mb_substr($apiItem['type'], 0, 80) : $item->polisen_type;
         $item->save();
 
-        // Titel och datum tolkas om, detaljsidan hämtas igen.
-        $this->parseItem($itemID);
+        // Titel och datum tolkas om och detaljsidan hämtas igen. Platserna
+        // tolkas bara i tolkaOmEfterAndring() — parseItem() skulle lägga till
+        // dem additivt först.
+        $this->tolkaTitel($itemID);
+        $this->parseItemContentAndUpdateIfChanges($itemID);
         $this->tolkaOmEfterAndring($itemID, $gammalUrl);
     }
 
@@ -691,42 +767,77 @@ class FeedController extends Controller
      */
     public function tolkaOmEfterAndring(int $itemID, ?string $gammalUrl = null): void
     {
-        $item = CrimeEvent::findOrFail($itemID);
-        $gammalUrl ??= $this->geocodeUrlFor($item);
-        $fore = [$item->location_lat, $item->location_lng];
+        // crimeevents:fetch (*/12) och checkForUpdates (*/33) kan träffa samma
+        // händelse samtidigt (båda startar :00) — utan lås kan platserna
+        // dubbleras.
+        Cache::lock("tolka-om:{$itemID}", 120)->block(30, function () use ($itemID, $gammalUrl) {
+            $item = CrimeEvent::findOrFail($itemID);
+            $gammalUrl ??= $this->geocodeUrlFor($item);
+            $fore = [$item->location_lat, $item->location_lng];
 
-        $gamlaPlatser = $item->locations->map(fn ($l) => ['name' => $l->name, 'prio' => $l->prio])->all();
-        $item->locations()->delete();
-        $item = $this->parseItemForLocations($itemID);
+            // Räkna ut de nya platserna innan något skrivs, så att ett fel
+            // inte lämnar händelsen utan platser.
+            $nya = $this->nyaPlatser($item);
 
-        // När Polisen avslutar en händelse ersätts texten ofta med en kort rad
-        // ("Försvunnen man anträffad") och gatan försvinner. Hittas inga
-        // platser i den nya texten behålls de gamla — annars hamnar punkten
-        // i ortens mitt (sågs på prod 2026-10-10: 511089, 511023, 510857).
-        // En rättelse ("Brottsplats är Bondegatan") har en plats och ersätter.
-        if ($item->locations->isEmpty() && $gamlaPlatser !== []) {
-            $item->locations()->createMany($gamlaPlatser);
+            // När Polisen avslutar en händelse ersätts texten ofta med en kort
+            // rad ("Försvunnen man anträffad") och gatan försvinner. Hittas
+            // inga platser i den nya texten behålls de gamla — annars hamnar
+            // punkten i ortens mitt (sågs på prod 2026-10-10: 511089, 511023,
+            // 510857). En rättelse ("Brottsplats är Bondegatan") ersätter.
+            if ($nya !== []) {
+                DB::transaction(function () use ($item, $nya) {
+                    $item->locations()->delete();
+                    $item->locations()->createMany($nya);
+                });
+            }
+
+            $nyUrl = $this->getGeocodeURL($itemID);
+            if ($nyUrl === $gammalUrl) {
+                return;
+            }
+
+            $resultat = $this->geocodeItem($itemID);
+            $efter = CrimeEvent::findOrFail($itemID);
+            if ($resultat['error'] || ! $efter->geocoded) {
+                Log::warning('Omgeokodning efter ändring hos Polisen misslyckades', [
+                    'crime_event_id' => $itemID,
+                    'status' => $resultat['status'] ?? null,
+                ]);
+                return;
+            }
+
+            $adress = function (string $url): string {
+                parse_str((string) parse_url($url, PHP_URL_QUERY), $q);
+                return (string) ($q['address'] ?? '');
+            };
+            Log::info('Omgeokodad efter ändring hos Polisen', [
+                'crime_event_id' => $itemID,
+                'fraga_fore' => $adress($gammalUrl),
+                'fraga_efter' => $adress($nyUrl),
+                'punkt_fore' => $fore,
+                'punkt_efter' => [$efter->location_lat, $efter->location_lng],
+            ]);
+        });
+    }
+
+    /**
+     * Platserna ur händelsens nuvarande text, i samma form och ordning som
+     * parseItemForLocations() sparar dem (unika namn, prio 1 före 2).
+     *
+     * @return list<array{name: string, prio: int}>
+     */
+    private function nyaPlatser(CrimeEvent $item): array
+    {
+        $nya = [];
+        foreach ($this->feedParser->findLocations($item) as $grupp) {
+            foreach ($grupp['locations'] as $namn) {
+                if ($namn !== '' && ! in_array($namn, array_column($nya, 'name'), true)) {
+                    $nya[] = ['name' => $namn, 'prio' => (int) $grupp['prio']];
+                }
+            }
         }
 
-        $nyUrl = $this->getGeocodeURL($itemID);
-        if ($nyUrl === $gammalUrl) {
-            return;
-        }
-
-        $this->geocodeItem($itemID);
-        $efter = CrimeEvent::findOrFail($itemID);
-
-        $adress = function (string $url): string {
-            parse_str((string) parse_url($url, PHP_URL_QUERY), $q);
-            return (string) ($q['address'] ?? '');
-        };
-        Log::info('Omgeokodad efter ändring hos Polisen', [
-            'crime_event_id' => $itemID,
-            'fraga_fore' => $adress($gammalUrl),
-            'fraga_efter' => $adress($nyUrl),
-            'punkt_fore' => $fore,
-            'punkt_efter' => [$efter->location_lat, $efter->location_lng],
-        ]);
+        return $nya;
     }
 
     /**

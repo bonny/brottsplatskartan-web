@@ -120,6 +120,34 @@ Doc:en säger att `location.gps` är "län- eller kommun-mittpunkt". Lokalt är
 det exakt en punkt per län (`count(distinct gps)` = 1 per län). Rätta till
 "länets mittpunkt".
 
+## Code review av fas B–C (2026-10-10) — åtgärdat samma dag
+
+- **Taket räknade tillfälliga fel:** räknas nu bara vid bestående
+  misslyckanden (`ZERO_RESULTS`, för grov träff). `OVER_QUERY_LIMIT`,
+  `REQUEST_DENIED` och nätverksfel räknas inte. Varje deploy nollställer
+  räknaren (`responsecache:clear` tömmer hela Redis-databasen,
+  `RESPONSE_CACHE_TAG` saknas på prod) — taket är alltså 10 försök per deploy.
+- **Omtolkningen saknade transaktion och felhantering:** nya platser räknas
+  ut innan något skrivs och byts i `DB::transaction`; lås per händelse
+  (`tolka-om:{id}`) eftersom fetch och checkForUpdates kan krocka; try/catch
+  per händelse i båda kommandona.
+- **Dubbel platsparsning** i `uppdateraFranApi()` borta (`tolkaTitel()`
+  utbruten ur `parseItem()`).
+- **Loggen** `Omgeokodad efter ändring` skrivs bara när geokodningen lyckades;
+  annars `Omgeokodning efter ändring hos Polisen misslyckades` med status.
+- **Reservgeokodningen** körs även vid `ZERO_RESULTS` och godtar inte träffar
+  på landsnivå.
+- **`platserForGoogle()`:** "västerås kommun" blev "västerå" (21 kommuner på
+  -s); saknat `polisen_location_name` filtrerade bort alla kommuner; byar med
+  kommunnamn i andra län (Berg i Östergötland, Lund i Gävleborg) behålls nu om
+  en tätort med namnet finns i händelsens län (`scb_tatorter`, 5 sådana
+  kollisioner). Tester: `tests/Unit/PlatserForGoogleTest.php`.
+- **Permalänkar** kan ändras när Polisen ändrar titel/plats. Medvetet ingen
+  301: gamla URL:er ger 200 via id:t och canonical pekar på den nya.
+  Kommentaren i `CrimeEvent::getPermalink()` rättad.
+- **Avfärdat:** "titel kommun → län gör punkten grövre" — när Polisen breddar
+  titeln till länet (bedrägerivarningar) är länsnivå rätt.
+
 ## Risker
 
 Fix 1 kan göra frågan för snål när titelns ort är ett län ("Skåne län") och
