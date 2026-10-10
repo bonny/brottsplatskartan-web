@@ -7,11 +7,13 @@
         $counts (Collection|array)  — objekt med {YMD, count}, från Helper::getDailyEventCountsNearby
         $days (int)                  — fönstret som querydes
         $heading (string|null)       — h2-rubrik, default "Aktivitet senaste N dagarna"
+        $enhet (string)              — vad som räknas, i ingressen och aria-label
 --}}
 @props([
     'counts' => collect(),
     'days' => 90,
     'heading' => null,
+    'enhet' => 'publicerade händelser från Polisen',
 ])
 
 @php
@@ -49,14 +51,14 @@
         <h2 class="widget__title">{{ $heading }}</h2>
         <p class="TrendSparkline__lead">
             <strong>{{ \App\Helper::number($totalEvents) }}</strong>
-            publicerade händelser från Polisen — i snitt
+            {{ $enhet }} — i snitt
             {{ \App\Helper::number($totalEvents / $days, 1) }} per dag.
         </p>
         <svg viewBox="0 0 {{ $svgWidth }} {{ $svgHeight }}"
              class="TrendSparkline__chart"
              role="img"
              preserveAspectRatio="none"
-             aria-label="Bar-graf över antal publicerade händelser per dag senaste {{ $days }} dagarna. Totalt {{ $totalEvents }} händelser."
+             aria-label="Bar-graf över antal {{ $enhet }} per dag senaste {{ $days }} dagarna. Totalt {{ $totalEvents }}."
              xmlns="http://www.w3.org/2000/svg">
             @foreach ($series as $i => $point)
                 @php

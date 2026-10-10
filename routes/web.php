@@ -103,6 +103,8 @@ Route::match(['get', 'post'], '/', [StartController::class, 'start'])->name('sta
 Route::get('/index', [StartController::class, 'start']);
 
 Route::get('/statistik', [\App\Http\Controllers\StatisticsController::class, 'index'])->name('statistik');
+// Statussida för importen (todo #111). Publik men noindex.
+Route::get('/status', [\App\Http\Controllers\StatusController::class, 'index'])->name('status');
 
 // Sitemap-suite. Index + main + aktuellt år från Redis (regen var 30 min
 // av sitemap:generate). Historiska år från storage/app/sitemaps/

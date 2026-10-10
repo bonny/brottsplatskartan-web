@@ -43,6 +43,12 @@ class BrottsplatskartanCacheProfile extends CacheAllSuccessfulGetRequests
             return false;
         }
 
+        // Statussidan ska visa jobbens läge just nu. Det tunga cachar
+        // StatusController själv i 5 min; jobbstatusen är några cache-uppslag.
+        if ($request->is('status')) {
+            return false;
+        }
+
         if ($request->is('plats/*/handelser/*') || $request->is('lan/*/handelser/*')) {
             $date = $this->extractDateFromUrl($request->path());
             if (!$date || $date->diffInDays(now()) > 30) {

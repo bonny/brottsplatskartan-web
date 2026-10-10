@@ -232,6 +232,10 @@ class Kernel extends ConsoleKernel
             ->withoutOverlapping()
             ->name('event-news-match-fresh')
             ->when($aiAllowed);
+
+        // Markeringar för statussidan (/status): när lyckades/misslyckades
+        // varje jobb senast. Måste ligga sist så att alla jobb kommer med.
+        \App\Services\Jobbstatus::registrera($schedule);
     }
 
     /**
