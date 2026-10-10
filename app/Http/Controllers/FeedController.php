@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Requests;
 use App\CrimeEvent;
@@ -38,10 +39,14 @@ class FeedController extends Controller
     /**
      * Bygger Google-frågan för en händelse. Utbruten från getGeocodeURL() så
      * att den kan testas utan databas (tests/Unit/GeocodeUrlSnapshotTest).
+     *
+     * @param array<string, string>|null $kommunTillLan Gemener kommun → länets
+     *   kortnamn ("malmö" → "Skåne"). null = läs scb_kommuner. Testet skickar in
+     *   listan så att det klarar sig utan databas.
      */
-    public function geocodeUrlFor(CrimeEvent $item): string
+    public function geocodeUrlFor(CrimeEvent $item, ?array $kommunTillLan = null): string
     {
-        $itemLocations = $item->locations;
+        $itemLocations = $this->platserForGoogle($item, $kommunTillLan ?? $this->kommunTillLan());
         $googleApiKey = getenv('GEOCODE_GOOGLE_APIKEY');
 
         $apiUrlTemplate = 'https://maps.googleapis.com/maps/api/geocode/json?key=' . $googleApiKey . '&language=sv';
@@ -59,6 +64,7 @@ class FeedController extends Controller
 
             $strLocationURLPart .= ", " . $location->name;
         }
+
 
         // append main location, from title
         if ($item->parsed_title_location) {
@@ -96,6 +102,67 @@ class FeedController extends Controller
         }
 
         return $apiUrl;
+    }
+
+    /**
+     * Platserna ur texten som ska med i Google-frågan (#109.1).
+     *
+     * Texten nämner ibland orter i andra län ("i riktning mot Stockholm",
+     * bedrägerivarningar som räknar upp halva Sverige), och Google valde då
+     * fel ort (510987 Gotland → Stockholm). Nu tas länsnamn bort (Polisens
+     * län läggs till sist ändå) och kommuner i andra län än händelsens.
+     * Kommuner i samma län behålls: Polisens titelkommun är inte alltid där
+     * det hände (511151 "Vimmerby" hände i Hultsfred), och en eval mot
+     * Google på 30 dagars händelser visade att det gav fler fel att ta bort
+     * dem. Gator, stadsdelar och byar behålls. Underlag: todo #109.
+     *
+     * @param array<string, string> $kommunTillLan
+     * @return \Illuminate\Support\Collection<int, \App\Locations>
+     */
+    private function platserForGoogle(CrimeEvent $item, array $kommunTillLan)
+    {
+        $lanKortnamn = array_map('mb_strtolower', array_unique(array_values($kommunTillLan)));
+        $titel = mb_strtolower(trim((string) $item->parsed_title_location));
+        $handelsensLan = mb_strtolower(preg_replace('/s? län$/u', '', (string) $item->polisen_location_name));
+
+        return $item->locations->filter(function ($location) use ($kommunTillLan, $lanKortnamn, $titel, $handelsensLan) {
+            $namn = mb_strtolower(trim((string) $location->name));
+
+            if ($namn === $titel) {
+                return true;
+            }
+
+            // "östersunds kommun" → "östersund", "skåne län" → "skåne".
+            $kommun = preg_replace('/s? kommun$/u', '', $namn);
+            if ($kommun === $titel) {
+                return true;
+            }
+
+            $lanForm = preg_replace('/s? län$/u', '', $namn);
+            if (in_array($lanForm, $lanKortnamn, true) && ! isset($kommunTillLan[$namn])) {
+                return false;
+            }
+
+            if (isset($kommunTillLan[$kommun])) {
+                return mb_strtolower($kommunTillLan[$kommun]) === $handelsensLan;
+            }
+
+            return true;
+        })->values();
+    }
+
+    /** @var array<string, string>|null */
+    private static ?array $kommunTillLanCache = null;
+
+    /**
+     * @return array<string, string> Gemener kommun → länets kortnamn ur scb_kommuner.
+     */
+    private function kommunTillLan(): array
+    {
+        return self::$kommunTillLanCache ??= DB::table('scb_kommuner')
+            ->pluck('lan_namn', 'kommun_namn')
+            ->mapWithKeys(fn ($lan, $kommun) => [mb_strtolower($kommun) => $lan])
+            ->all();
     }
 
     /**

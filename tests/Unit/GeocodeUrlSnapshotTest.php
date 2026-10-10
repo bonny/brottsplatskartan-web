@@ -24,14 +24,18 @@ class GeocodeUrlSnapshotTest extends TestCase
 {
     private const FIXTUR = __DIR__ . '/../fixtures/geocode-fragor.json';
 
+    /** Export av scb_kommuner (gemener kommun → län), så testet slipper databasen. */
+    private const KOMMUNER = __DIR__ . '/../fixtures/kommuner.json';
+
     public function test_google_fragan_matchar_snapshot(): void
     {
         $fall = json_decode(file_get_contents(self::FIXTUR), true);
         $controller = app(FeedController::class);
+        $kommunTillLan = json_decode(file_get_contents(self::KOMMUNER), true);
         $uppdatera = (bool) getenv('UPPDATERA_SNAPSHOT');
 
         foreach ($fall as $i => $f) {
-            $faktisk = $this->fraga($controller->geocodeUrlFor($this->handelse($f['indata'])));
+            $faktisk = $this->fraga($controller->geocodeUrlFor($this->handelse($f['indata']), $kommunTillLan));
 
             if ($uppdatera) {
                 $fall[$i]['fraga'] = $faktisk;

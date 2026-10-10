@@ -383,7 +383,7 @@
         "fraga": {
             "language": "sv",
             "components": "country:SE",
-            "address": "jämtland, östersunds kommun, svedje, hoting, strömsunds kommun, tänndalen, härjedalens kommun, mattmar, åre kommun, näsviken, Jämtlands län",
+            "address": "östersunds kommun, svedje, hoting, strömsunds kommun, tänndalen, härjedalens kommun, mattmar, åre kommun, näsviken, Jämtlands län",
             "bounds": "62.721192,14.059180|63.621192,15.859180"
         }
     },
@@ -459,7 +459,7 @@
         "fraga": {
             "language": "sv",
             "components": "country:SE",
-            "address": "västernorrland, sollefteå, örnsköldsvik, kramfors, lunde, sundsvall, Västernorrlands län",
+            "address": "sollefteå, örnsköldsvik, kramfors, lunde, sundsvall, Västernorrlands län",
             "bounds": "62.977647,16.829244|63.877647,18.629244"
         }
     },
@@ -535,7 +535,7 @@
         "fraga": {
             "language": "sv",
             "components": "country:SE",
-            "address": "norrbotten, neistenkangas, övertorneå kommun, haparanda, svanstein, kalix, luleå, Norrbottens län",
+            "address": "neistenkangas, övertorneå kommun, haparanda, svanstein, kalix, luleå, Norrbottens län",
             "bounds": "66.380922,19.499197|67.280922,21.299197"
         }
     },
@@ -569,7 +569,7 @@
         "fraga": {
             "language": "sv",
             "components": "country:SE",
-            "address": "valldammsgatan, skåne, malmö, Trelleborg, Skåne län",
+            "address": "valldammsgatan, malmö, Trelleborg, Skåne län",
             "bounds": "55.540257,12.695769|56.440257,14.495769"
         }
     },
@@ -749,7 +749,7 @@
         "fraga": {
             "language": "sv",
             "components": "country:SE",
-            "address": "södermanland, Södermanlands län",
+            "address": "Södermanlands län",
             "bounds": "58.583635,15.851890|59.483635,17.651890"
         }
     },
@@ -1369,7 +1369,7 @@
         "fraga": {
             "language": "sv",
             "components": "country:SE",
-            "address": "värmland, karlstad, herrhagen, tingvallastaden, Värmlands län",
+            "address": "karlstad, herrhagen, tingvallastaden, Värmlands län",
             "bounds": "59.279407,12.335402|60.179407,14.135402"
         }
     },
@@ -1475,7 +1475,7 @@
         "fraga": {
             "language": "sv",
             "components": "country:SE",
-            "address": "stockholm, gotska sandön, Gotland, Gotlands län",
+            "address": "gotska sandön, Gotland, Gotlands län",
             "bounds": "57.018412,17.586745|57.918412,19.386745"
         }
     },
@@ -1525,7 +1525,7 @@
         "fraga": {
             "language": "sv",
             "components": "country:SE",
-            "address": "norrbotten, högsta, arvidsjaurs kommun, bodens kommun, drottninggatan, luleå kommun, södra sunderbyn, Norrbottens län",
+            "address": "högsta, arvidsjaurs kommun, bodens kommun, drottninggatan, luleå kommun, södra sunderbyn, Norrbottens län",
             "bounds": "66.380922,19.499197|67.280922,21.299197"
         }
     },
@@ -1581,7 +1581,7 @@
         "fraga": {
             "language": "sv",
             "components": "country:SE",
-            "address": "jämtland, östersund, lugnvik, Jämtlands län",
+            "address": "östersund, lugnvik, Jämtlands län",
             "bounds": "62.721192,14.059180|63.621192,15.859180"
         }
     },
@@ -1709,7 +1709,7 @@
         "fraga": {
             "language": "sv",
             "components": "country:SE",
-            "address": "dalarna, borlänge, tjärna ängar, mora, orsa, avesta, krylbo, Dalarnas län",
+            "address": "borlänge, tjärna ängar, mora, orsa, avesta, krylbo, Dalarnas län",
             "bounds": "60.641701,13.766365|61.541701,15.566365"
         }
     },

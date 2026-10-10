@@ -1,4 +1,4 @@
-**Status:** aktiv — punkt 3, 4 klara 2026-10-10 (#111 fas B); kvar: 1, 2, 6 (fas C) och 5. Ny 2026-10-07, från granskningen av #108; utökad 2026-10-10 med punkt 6 och 8 (brainstorm + granskning, se #111). Ingen kod skriven
+**Status:** aktiv — punkt 1, 3, 4 klara 2026-10-10 (#111 fas B–C); kvar: 2, 6 (fas C) och 5. Ny 2026-10-07, från granskningen av #108; utökad 2026-10-10 med punkt 6 och 8 (brainstorm + granskning, se #111). Ingen kod skriven
 **Senast uppdaterad:** 2026-10-10
 **Källa:** Oberoende granskning av #108 (subagent, 2026-10-07)
 
@@ -14,17 +14,33 @@ Allt nedan är verifierat i koden 2026-10-07. Punkt 6 och 8 lades till
 av den (subagent). Övriga idéer och mätningar därifrån ligger i
 [#111](111-platsprecision-mat-forst.md). Med dem blir det ~0,75 dag.
 
-## 1. Skicka bara titelns ort/län till Google (~1 h)
+## 1. Rensa Google-frågan från fel orter — ✅ klart 2026-10-10
 
-`FeedController::getGeocodeURL()` slår ihop **alla** `locations` för händelsen
-plus `parsed_title_location` och `polisen_location_name` till en adress. Nämner
-texten en annan ort eller ett annat län åker det med.
+`FeedController::getGeocodeURL()` slog ihop **alla** `locations` för
+händelsen plus titelort och län. Nämnde texten en ort i ett annat län åkte den
+med (510987 "Information, Gotland" → Stockholm).
 
-Exempel: 510086 "Försvunnen kvinna, Trelleborg" hamnade i Malmö centrum (~27
-km fel) eftersom "malmö" och "skåne" stod i texten.
+**Gjort:** `FeedController::platserForGoogle()` tar bort länsnamn ("skåne",
+"värmland" — Polisens län läggs till sist ändå) och kommuner i **andra län**
+än händelsens (kommun → län ur `scb_kommuner`; "X kommun" normaliseras).
+Gator, stadsdelar, byar och kommuner i samma län behålls.
 
-Förslag: ta bort orter/kommuner/län ur frågan som skiljer sig från titelns ort.
-Behåll gator och stadsdelar.
+**Eval mot Google innan deploy** (30 dagars publika prod-händelser, 1 749 st,
+skript `tmp-111/eval-109-1.php`): två varianter jämfördes.
+
+| Variant                                             | Frågor ändrade | Utanför länet | Enskilda händelser flyttade ≥ 2 km                            |
+| --------------------------------------------------- | -------------: | ------------: | ------------------------------------------------------------- |
+| A: ta även bort andra kommuner när titeln är kommun |            131 |         7 → 1 | 8: 2 bättre, 3 lika, **3 sämre** (Hultsfred, Häggvik, Bäckby) |
+| **B: bara län + kommuner i andra län (vald)**       |            115 |         7 → 1 | 2: 1 oklar (Berg/Linköping), 1 sämre (Bäckby, Google-tur)     |
+
+Variant A föll på att Polisens titelkommun inte alltid är där det hände:
+511151 "Vimmerby" hände på stationen i Hultsfred, 510753 "Upplands Väsby" i
+Häggvik. Variant B rättar sex av sju länsfel (Gotland, bedrägerivarningar,
+en sammanfattning) och flyttar ingen punkt ut ur sitt län.
+
+**510086 (Trelleborg → Malmö) löses inte av punkt 1**: Malmö ligger i samma
+län. Men texten innehåller inte längre "malmö" eller "skåne" — Polisen har
+uppdaterat händelsen och platserna tolkades aldrig om. Det är punkt 2.
 
 ## 2. Bugg: uppdaterade händelser söks aldrig igenom på nytt (~1–2 h)
 
