@@ -20,6 +20,9 @@ use Illuminate\Console\Command;
  * - Länstest: geokodad punkt mot länsgränsen för `polisen_location_name`
  *   (Polisens län, oberoende av Google). `administrative_area_level_1` duger
  *   inte som facit — den kommer från Google själv.
+ * - Bara publika händelser (CrimeEvents globala scope), samma urval som
+ *   baslinjen i #108 och det användarna ser. Icke-publika geokodas också
+ *   men räknas inte.
  * - Precision: `location_geometry_type` för alla, `google_types` +
  *   `partial_match` för händelser geokodade efter 2026-10-10.
  */
@@ -97,7 +100,7 @@ class GeocodeHalsa extends Command
         }
 
         $this->info("Period {$fran} – {$till} (till exklusivt)");
-        $this->line("Händelser: {$antal}, geokodade: {$geokodade}");
+        $this->line("Publika händelser: {$antal}, geokodade: {$geokodade}");
         $this->newLine();
 
         $this->info('Länstest (punkt mot Polisens län)');

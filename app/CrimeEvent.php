@@ -27,7 +27,7 @@ use App\Services\StaticMapUrlBuilder;
  * @property array<int, string>|null $google_types
  * @property bool|null $google_partial_match
  * @property string|null $polisen_type
- * @property array<string, mixed>|null $polisen_raw
+ * @property string|null $polisen_raw Används inte (skrivs inte sedan code review 2026-10-10), tas bort vid nästa ALTER
  */
 class CrimeEvent extends Model implements Feedable {
     protected $fillable = [
@@ -42,7 +42,6 @@ class CrimeEvent extends Model implements Feedable {
         'polisen_gps_lng',
         'polisen_location_name',
         'polisen_type',
-        'polisen_raw',
         'parsed_date',
         'parsed_title',
         'parsed_title_location',
@@ -61,7 +60,6 @@ class CrimeEvent extends Model implements Feedable {
     protected $casts = [
         'google_types' => 'array',
         'google_partial_match' => 'boolean',
-        'polisen_raw' => 'array',
     ];
 
     /**

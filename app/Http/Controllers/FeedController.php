@@ -240,7 +240,14 @@ class FeedController extends Controller
         $result_status = $result_data->status;
         $result_results = $result_data->results;
 
-        if ($result_results === "OK") {
+        // Jämförde tidigare $result_results (en array) med "OK", så ett
+        // fel från Google (OVER_QUERY_LIMIT, REQUEST_DENIED …) passerade
+        // tyst och händelsen förblev ogeokodad utan spår i loggen.
+        if ($result_status !== "OK") {
+            Log::warning('Reservgeokodning misslyckades', [
+                'crime_event_id' => $itemID,
+                'status' => $result_status,
+            ]);
             return false;
         }
 
@@ -531,8 +538,9 @@ class FeedController extends Controller
                 'polisen_gps_lat' => $gpsLat,
                 'polisen_gps_lng' => $gpsLng,
                 'polisen_location_name' => $locationName,
-                'polisen_type' => $item['type'] ?? null,
-                'polisen_raw' => $item,
+                // Kolumnen är VARCHAR(80); ett för långt värde skulle annars
+                // kasta och stoppa resten av importen.
+                'polisen_type' => isset($item['type']) ? mb_substr($item['type'], 0, 80) : null,
             ]);
 
             $data["numItemsAdded"]++;

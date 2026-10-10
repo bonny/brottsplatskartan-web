@@ -25,8 +25,7 @@ använder den.
 }
 ```
 
-Fält och hur vi använder dem (hela objektet sparas dessutom i
-`crime_events.polisen_raw` när händelsen skapas, sedan 2026-10-10):
+Fält och hur vi använder dem:
 
 | Fält            | Mening                                   | Lagras som                                   |
 | --------------- | ---------------------------------------- | -------------------------------------------- |

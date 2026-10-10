@@ -89,8 +89,12 @@ Ungefär i prioritetsordning:
 5. **Strikt `components=locality:{titelort}|administrative_area:{län}`** och
    bara gata/stadsdel i `address`. Löser Trelleborg→Malmö strukturellt.
    Risk: fler `ZERO_RESULTS`, kräver reserv utan components. Mät mot facit.
-6. ✅ **Spara API:ts `type`-fält** och API-objektet (A1, `polisen_type`,
-   `polisen_raw`).
+6. ✅ **Spara API:ts `type`-fält** (A1, `polisen_type`). API-objektet
+   (`polisen_raw`) slutade sparas samma dag efter code review: CrimeEvent
+   cachas som hela modeller i Redis (`LanController`, `PlatsController`),
+   rådatan låg där två gånger per händelse, och nästan allt i den finns redan
+   i andra kolumner. Kolumnen står tom och tas bort nästa gång
+   `crime_events` ändå behöver en ALTER (38 s skrivlås på prod).
 7. **Litet facit:** ~100 händelser märkta med precisionsklass och rätt ort
    (inte meter — facitkoordinater saknas oftast).
 

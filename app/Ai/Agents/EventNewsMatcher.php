@@ -24,12 +24,15 @@ use Laravel\Ai\Promptable;
  * utreder det igen — modellbyte hjälper inte heller.
  */
 #[Provider(Lab::Anthropic)]
-#[Model('claude-haiku-4-5')]
+#[Model(self::MODEL)]
 #[MaxTokens(400)]
 #[Timeout(60)]
 class EventNewsMatcher implements Agent, HasStructuredOutput
 {
     use Promptable;
+
+    /** Läses även av MatchEventNews för `crime_event_news.ai_model`. */
+    public const MODEL = 'claude-haiku-4-5';
 
     public function instructions(): string
     {

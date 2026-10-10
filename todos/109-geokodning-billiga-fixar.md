@@ -42,9 +42,9 @@ sedan `geocodeItem()`.
 
 ## 3. Småbuggar i geokodningen
 
-- `FeedController::geocodeItemFallbackVersion()` (rad ~239): `if
-($result_results === "OK")` ska rimligen vara `if ($result_status !==
-"OK")` — jämför med huvudvägen på rad ~127.
+- ~~`FeedController::geocodeItemFallbackVersion()`: `if ($result_results
+=== "OK")` ska vara `if ($result_status !== "OK")`~~ — **fixat
+  2026-10-10** (code review), loggar nu en varning med status.
 - Fallbacken använder `GOOGLE_API_KEY` (rad ~225), huvudanropet
   `GEOCODE_GOOGLE_APIKEY` (rad ~37). Båda satta på prod; välj en.
 - `FeedParserController::findLocations()`: prio 3 är alltid `$police_lan =
@@ -75,8 +75,9 @@ alltså aldrig in igen; bara den skrapade detaljsidan jämförs
 (`CheckForEventsUpdates`). Rättelser ("Brottsplats är …") kommer ofta just
 där.
 
-Förslag: jämför `name`/`summary` för befintliga id och kör samma väg som
-punkt 2 (töm locations → `parseItemForLocations()` → `geocodeItem()`) vid
+Förslag: jämför `name`/`summary`/`type` för befintliga id, uppdatera
+`polisen_type` (sparas sedan 2026-10-10, annars fastnar den på första
+versionen) och kör samma väg som punkt 2 (töm locations → `parseItemForLocations()` → `geocodeItem()`) vid
 ändring. Logga gammal och ny punkt: det ger gratis en felsignal för hur ofta
 första geokodningen var fel.
 
