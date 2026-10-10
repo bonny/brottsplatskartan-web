@@ -72,7 +72,8 @@ class CheckForEventsUpdates extends Command
             );
 
             if ($itemContentsWasUpdated === 'CHANGED') {
-                $this->feedController->geocodeItem($oneRecentEvent->id);
+                // Tolka om platserna, inte bara geokoda om med de gamla (#109.2).
+                $this->feedController->tolkaOmEfterAndring($oneRecentEvent->id);
                 Log::debug(
                     'Item was updated from remote after a while',
                     [

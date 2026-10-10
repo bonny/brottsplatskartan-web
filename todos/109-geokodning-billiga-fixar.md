@@ -1,4 +1,4 @@
-**Status:** aktiv — punkt 1, 3, 4 klara 2026-10-10 (#111 fas B–C); kvar: 2, 6 (fas C) och 5. Ny 2026-10-07, från granskningen av #108; utökad 2026-10-10 med punkt 6 och 8 (brainstorm + granskning, se #111). Ingen kod skriven
+**Status:** aktiv — punkt 1–4 och 6 klara 2026-10-10 (#111 fas B–C); kvar: 5 (valfri polygonkontroll). Ny 2026-10-07, från granskningen av #108; utökad 2026-10-10 med punkt 6 och 8 (brainstorm + granskning, se #111). Ingen kod skriven
 **Senast uppdaterad:** 2026-10-10
 **Källa:** Oberoende granskning av #108 (subagent, 2026-10-07)
 
@@ -42,19 +42,16 @@ en sammanfattning) och flyttar ingen punkt ut ur sitt län.
 län. Men texten innehåller inte längre "malmö" eller "skåne" — Polisen har
 uppdaterat händelsen och platserna tolkades aldrig om. Det är punkt 2.
 
-## 2. Bugg: uppdaterade händelser söks aldrig igenom på nytt (~1–2 h)
+## 2. Uppdaterade händelser tolkas om — ✅ klart 2026-10-10
 
-`CheckForEventsUpdates` (rad ~74): vid `CHANGED` körs bara
-`geocodeItem()`, inte `parseItemForLocations()`. Följder:
+`CheckForEventsUpdates` körde vid `CHANGED` bara `geocodeItem()` med de gamla
+platserna: gator i Polisens uppdateringar plockades aldrig upp, gamla platser
+låg kvar och varje omgeokodning var ett anrop med samma fråga.
 
-- Gator som tillkommer i Polisens uppdateringar plockas aldrig upp. Exempel:
-  510391 "Rättelse: Brottsplats är Bondegatan".
-- Varje omgeokodning skickar exakt samma fråga som förut — ett bortkastat
-  Google-anrop (~300/månad).
-- Gamla locations tas inte bort.
-
-Förslag: vid `CHANGED`, töm locations, kör `parseItemForLocations()` och
-sedan `geocodeItem()`.
+**Gjort:** `FeedController::tolkaOmEfterAndring()` tömmer platserna, tolkar
+texten igen och geokodar om **bara om Google-frågan ändrats**. Flyttade
+punkter loggas som `Omgeokodad efter ändring hos Polisen` (fråga och punkt
+före/efter) — sök på det för att se hur ofta första geokodningen var fel.
 
 ## 3. Småbuggar i geokodningen — ✅ klart 2026-10-10
 
@@ -90,19 +87,19 @@ Kommunpolygoner kan hämtas som länen (OSM admin_level=7, jfr
 `deploy/lansgeometri.py`). Ger samtidigt ett löpande mått på felplacering
 (idag 0,6 % utanför länet).
 
-## 6. Läs om API-fälten när Polisen ändrar en händelse (~1 h)
+## 6. Ändrade API-fält läses in — ✅ klart 2026-10-10
 
-`FeedController::updateFeedsFromPolisen()` (rad ~497) hoppar över
-`polisen_id` som redan finns. Ändrad `name` eller `summary` i API:t läses
-alltså aldrig in igen; bara den skrapade detaljsidan jämförs
-(`CheckForEventsUpdates`). Rättelser ("Brottsplats är …") kommer ofta just
-där.
+`updateFeedsFromPolisen()` hoppade över befintliga `polisen_id`, så ändrad
+`name`/`summary` lästes aldrig in. **Mätt på prod 2026-10-10:** 14 av 500
+händelser i API:t skilde sig från det sparade (4 titlar, 10 sammanfattningar),
+alla riktiga ändringar, inga falska av formatering. Exempel: 511009 "Knivlagen"
+→ "Mord/dråp, försök"; 510995 "Linköping" → "Östergötlands län"; flera
+"Försvunnen person" → "anträffad". Skript: `tmp-111/jamfor-api.php`.
 
-Förslag: jämför `name`/`summary`/`type` för befintliga id, uppdatera
-`polisen_type` (sparas sedan 2026-10-10, annars fastnar den på första
-versionen) och kör samma väg som punkt 2 (töm locations → `parseItemForLocations()` → `geocodeItem()`) vid
-ändring. Logga gammal och ny punkt: det ger gratis en felsignal för hur ofta
-första geokodningen var fel.
+**Gjort:** importen jämför titel och sammanfattning för publika befintliga
+händelser. Vid skillnad: `FeedController::uppdateraFranApi()` sparar ny titel,
+sammanfattning och `polisen_type`, tolkar om titel/datum, hämtar detaljsidan
+igen och kör `tolkaOmEfterAndring()`.
 
 ## 7. (Avfärdad) Avrunda känsliga brottstyper
 

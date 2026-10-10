@@ -61,6 +61,16 @@ class FetchEvents extends Command
 
         $this->line("Added " . $updatedFeedsInfo["numItemsAdded"] . " items");
         $this->line("Skipped " . $updatedFeedsInfo["numItemsAlreadyAdded"] . " already added items");
+
+        // Händelser som Polisen ändrat sedan importen (#109.6).
+        foreach ($updatedFeedsInfo["itemsChanged"] as $changedId => $apiItem) {
+            $this->line("Polisen har ändrat händelse {$changedId}, tolkar om");
+            try {
+                $this->feedController->uppdateraFranApi($changedId, $apiItem);
+            } catch (\Exception $e) {
+                Log::warning('Kunde inte tolka om ändrad händelse', ['crime_event_id' => $changedId, 'fel' => $e->getMessage()]);
+            }
+        }
         
         // Find items missing locations and add
         $itemsNotScannedForLocations = CrimeEvent::where('scanned_for_locations', 0)->get();

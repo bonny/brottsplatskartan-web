@@ -558,7 +558,10 @@ class FeedController extends Controller
         $data = [
             "numItemsAdded" => 0,
             "numItemsAlreadyAdded" => 0,
-            "itemsAdded" => []
+            "itemsAdded" => [],
+            // Befintliga händelser där Polisen ändrat titel eller
+            // sammanfattning (#109.6): [crime_event_id => API-objekt].
+            "itemsChanged" => [],
         ];
 
         // Batcha dedup-uppslagen — en query för hela listan istället för
@@ -588,7 +591,8 @@ class FeedController extends Controller
         if (! empty($candidateMd5s)) {
             $existingQuery->orWhereIn('md5', $candidateMd5s);
         }
-        $existingRows = $existingQuery->get(['polisen_id', 'md5']);
+        $existingRows = $existingQuery->get(['id', 'polisen_id', 'md5', 'title', 'description', 'is_public']);
+        $existingByPolisenId = $existingRows->keyBy('polisen_id');
         $existingPolisenIds = $existingRows->pluck('polisen_id')->filter()->all();
         $existingMd5s = $existingRows->pluck('md5')->filter()->all();
         $existingPolisenIdSet = array_flip($existingPolisenIds);
@@ -597,6 +601,25 @@ class FeedController extends Controller
         foreach ($itemRows as [$item, $polisenId, $permalink, $itemMd5Permalink]) {
             if (isset($existingPolisenIdSet[$polisenId]) || isset($existingMd5Set[$itemMd5Permalink])) {
                 $data["numItemsAlreadyAdded"]++;
+
+                // Polisen ändrar ofta titel eller sammanfattning efteråt
+                // ("Knivlagen" → "Mord/dråp, försök", kommun → län,
+                // "Försvunnen man anträffad"). Tidigare lästes det aldrig in.
+                // Mätt 2026-10-10: 14 av 500 skilde sig, inga falska
+                // skillnader av formatering. Bara publika — icke-publika
+                // visas inte och findOrFail() i parsningen hittar dem inte.
+                $existing = $existingByPolisenId[$polisenId] ?? null;
+                if (
+                    $existing
+                    && $existing->is_public
+                    && (
+                        $existing->title !== ($item['name'] ?? '')
+                        || $existing->description !== html_entity_decode($item['summary'] ?? '')
+                    )
+                ) {
+                    $data["itemsChanged"][$existing->id] = $item;
+                }
+
                 continue;
             }
 
@@ -630,6 +653,70 @@ class FeedController extends Controller
         }
 
         return $data;
+    }
+
+    /**
+     * Läs in Polisens ändrade titel/sammanfattning för en befintlig händelse
+     * och tolka om den (#109.6): titel, datum, brödtext, platser, geokodning.
+     *
+     * @param array<string, mixed> $apiItem Händelsen ur Polisens API
+     */
+    public function uppdateraFranApi(int $itemID, array $apiItem): void
+    {
+        $item = CrimeEvent::findOrFail($itemID);
+        $gammalUrl = $this->geocodeUrlFor($item);
+
+        $item->title = $apiItem['name'] ?? $item->title;
+        $item->description = html_entity_decode($apiItem['summary'] ?? '');
+        $item->polisen_type = isset($apiItem['type']) ? mb_substr($apiItem['type'], 0, 80) : $item->polisen_type;
+        $item->save();
+
+        // Titel och datum tolkas om, detaljsidan hämtas igen.
+        $this->parseItem($itemID);
+        $this->tolkaOmEfterAndring($itemID, $gammalUrl);
+    }
+
+    /**
+     * Tolka om platserna efter att Polisen ändrat en händelse (#109.2).
+     *
+     * Tidigare geokodades händelsen bara om med samma platser: gator som
+     * tillkom i en uppdatering ("Rättelse: Brottsplats är Bondegatan")
+     * plockades aldrig upp, gamla platser låg kvar, och varje omgeokodning
+     * var ett Google-anrop med exakt samma fråga. Nu töms platserna och
+     * texten tolkas om; Google anropas bara om frågan faktiskt ändrats.
+     * Flyttade punkter loggas — ett mått på hur ofta första geokodningen
+     * var fel.
+     *
+     * @param string|null $gammalUrl Frågan före ändringen, om den redan räknats ut
+     */
+    public function tolkaOmEfterAndring(int $itemID, ?string $gammalUrl = null): void
+    {
+        $item = CrimeEvent::findOrFail($itemID);
+        $gammalUrl ??= $this->geocodeUrlFor($item);
+        $fore = [$item->location_lat, $item->location_lng];
+
+        $item->locations()->delete();
+        $this->parseItemForLocations($itemID);
+
+        $nyUrl = $this->getGeocodeURL($itemID);
+        if ($nyUrl === $gammalUrl) {
+            return;
+        }
+
+        $this->geocodeItem($itemID);
+        $efter = CrimeEvent::findOrFail($itemID);
+
+        $adress = function (string $url): string {
+            parse_str((string) parse_url($url, PHP_URL_QUERY), $q);
+            return (string) ($q['address'] ?? '');
+        };
+        Log::info('Omgeokodad efter ändring hos Polisen', [
+            'crime_event_id' => $itemID,
+            'fraga_fore' => $adress($gammalUrl),
+            'fraga_efter' => $adress($nyUrl),
+            'punkt_fore' => $fore,
+            'punkt_efter' => [$efter->location_lat, $efter->location_lng],
+        ]);
     }
 
     /**
