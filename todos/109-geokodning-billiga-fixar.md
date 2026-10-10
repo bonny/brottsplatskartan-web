@@ -1,5 +1,5 @@
-**Status:** aktiv — ny 2026-10-07, från granskningen av #108. Ingen kod skriven
-**Senast uppdaterad:** 2026-10-07
+**Status:** aktiv — ny 2026-10-07, från granskningen av #108; utökad 2026-10-10 med punkt 6 och 8 (brainstorm + granskning, se #111). Ingen kod skriven
+**Senast uppdaterad:** 2026-10-10
 **Källa:** Oberoende granskning av #108 (subagent, 2026-10-07)
 
 # Todo #109 — Geokodning: billiga fixar för felplacering och omgeokodning
@@ -9,7 +9,10 @@
 Granskningen av #108 visade att platsmatchningen i stort sett fungerar och att
 en NVDB-ombyggnad inte är värd det, men hittade några billiga fel i hur vi
 bygger Google-frågan och hanterar uppdaterade händelser. Uppskattat ~0,5 dag.
-Allt nedan är verifierat i koden 2026-10-07.
+Allt nedan är verifierat i koden 2026-10-07. Punkt 6 och 8 lades till
+2026-10-10 efter en brainstorm om platsmatchning och en kritisk granskning
+av den (subagent). Övriga idéer och mätningar därifrån ligger i
+[#111](111-platsprecision-mat-forst.md). Med dem blir det ~0,75 dag.
 
 ## 1. Skicka bara titelns ort/län till Google (~1 h)
 
@@ -63,6 +66,31 @@ Om geokodad punkt hamnar utanför titelns län (polygoner finns:
 Kommunpolygoner kan hämtas som länen (OSM admin_level=7, jfr
 `deploy/lansgeometri.py`). Ger samtidigt ett löpande mått på felplacering
 (idag 0,6 % utanför länet).
+
+## 6. Läs om API-fälten när Polisen ändrar en händelse (~1 h)
+
+`FeedController::updateFeedsFromPolisen()` (rad ~497) hoppar över
+`polisen_id` som redan finns. Ändrad `name` eller `summary` i API:t läses
+alltså aldrig in igen; bara den skrapade detaljsidan jämförs
+(`CheckForEventsUpdates`). Rättelser ("Brottsplats är …") kommer ofta just
+där.
+
+Förslag: jämför `name`/`summary` för befintliga id och kör samma väg som
+punkt 2 (töm locations → `parseItemForLocations()` → `geocodeItem()`) vid
+ändring. Logga gammal och ny punkt: det ger gratis en felsignal för hur ofta
+första geokodningen var fel.
+
+## 7. (Avfärdad) Avrunda känsliga brottstyper
+
+Föreslogs 2026-10-10 och avfärdades av Pär samma dag: vi använder alltid så
+exakt plats som möjligt. Polisens platser är redan väldigt oexakta, så vi
+vill inte göra dem sämre.
+
+## 8. Rätta docs/polisen-api.md
+
+Doc:en säger att `location.gps` är "län- eller kommun-mittpunkt". Lokalt är
+det exakt en punkt per län (`count(distinct gps)` = 1 per län). Rätta till
+"länets mittpunkt".
 
 ## Risker
 

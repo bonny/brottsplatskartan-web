@@ -204,6 +204,17 @@ Dumpar full prod-DB till `backups/prod-YYYY-MM-DD-HHMMSS.sql.gz`
 Använd `deploy/fetch-prod-db-to-local-db.sh` istället när du vill ersätta
 lokal dev-DB direkt utan mellanfil.
 
+### ⚠️ Nya kolumner på `crime_events` låser skrivningar
+
+`crime_events` har ett index på en virtuell kolumn. Därför klarar MariaDB
+varken `ALGORITHM=INSTANT` eller `LOCK=NONE`: varje `ALTER` bygger om hela
+tabellen och blockerar skrivningar medan läsningar går. Uppmätt 2026-10-10:
+~5 s lokalt, **38 s på prod**. `Schema::table()` kör en `ALTER` per kolumn,
+så lägg flera kolumner i **en** `DB::statement('ALTER TABLE … ADD COLUMN …,
+ADD COLUMN …')` och deklarera dem med `@property` på modellen (Larastan
+läser inte rå SQL). Exempel:
+`database/migrations/2026_10_10_120000_add_geocode_metadata_to_crime_events.php`.
+
 ## Loggar och trafik-/bot-analys
 
 Se **[docs/loggar.md](docs/loggar.md)** för var access-/felloggarna ligger
