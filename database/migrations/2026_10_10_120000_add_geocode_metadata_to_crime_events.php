@@ -14,7 +14,9 @@ use Illuminate\Support\Facades\Schema;
  * - `google_partial_match`: Google matchade inte hela frågan. Svag signal så
  *   länge frågan är en ihopslagen sträng av alla orter i texten (#109.1).
  * - `polisen_type`: API:ts `type`-fält, i stället för att tolka titeln.
- * - `polisen_raw`: hela API-objektet vid skapandet, så historiken kan köras om.
+ * - `polisen_raw`: var tänkt för hela API-objektet, men slutade skrivas samma
+ *   dag (code review: CrimeEvent cachas som hela modeller i Redis). Kolumnen
+ *   är tom och tas bort i #112:s ALTER.
  *
  * Tabellen har ett index på en virtuell kolumn, så MariaDB kan inte lägga
  * till kolumner med INSTANT eller utan lås: hela tabellen byggs om och

@@ -252,8 +252,13 @@ class FeedController extends Controller
             // Ingen träff alls är oftast en överspecificerad fråga — prova
             // den snålare reservfrågan (tidigare kördes den bara vid träff på
             // landsnivå, inte här).
-            if ($result_status === "ZERO_RESULTS") {
-                $this->provaReservgeokodning($item);
+            if ($result_status === "ZERO_RESULTS" && $this->provaReservgeokodning($item)) {
+                return [
+                    'error' => false,
+                    'status' => 'OK',
+                    'reserv' => true,
+                    'geocodeUrl' => $apiUrl,
+                ];
             }
 
             return [
@@ -350,15 +355,15 @@ class FeedController extends Controller
      * 3-location som alltid var tom (länet togs bort ur polisens text 2018),
      * så frågan blev "Umeå, " utan län (#109.3).
      */
-    private function provaReservgeokodning(CrimeEvent $item): void
+    private function provaReservgeokodning(CrimeEvent $item): bool
     {
         $fallbackLocation = collect([$item->parsed_title_location, $item->polisen_location_name])
             ->filter()
             ->unique()
             ->implode(', ');
-        if ($fallbackLocation !== '') {
-            $this->geocodeItemFallbackVersion($item->getKey(), $fallbackLocation);
-        }
+
+        return $fallbackLocation !== ''
+            && $this->geocodeItemFallbackVersion($item->getKey(), $fallbackLocation);
     }
 
     public function geocodeItemFallbackVersion($itemID, $fallbackLocation) {
@@ -463,9 +468,12 @@ class FeedController extends Controller
             $item->geocoded = true;
 
             $item->save();
-        } else {
-            // no fallback beacuse this *is* the fallback :)
+
+            return true;
         }
+
+        // Ingen ytterligare reserv — det här *är* reserven.
+        return false;
     }
 
     /**
@@ -490,6 +498,10 @@ class FeedController extends Controller
         }
 
         $item->fill($parsed_content_items);
+        // AI-omskriven titel/text bygger på den gamla brödtexten och visas
+        // före Polisens. Töm dem så att uppdateringen syns (#109.2).
+        $item->title_alt_1 = null;
+        $item->description_alt_1 = null;
         $item->save();
 
         return 'CHANGED';
@@ -546,14 +558,18 @@ class FeedController extends Controller
      */
     public function parseItem($itemID)
     {
-        $this->tolkaTitel($itemID);
+        // Samma lås som tolkaOmEfterAndring(): checkForUpdates kan ta en
+        // nyss importerad händelse medan fetch fortfarande parsar den.
+        Cache::lock("tolka-om:{$itemID}", 120)->block(30, function () use ($itemID) {
+            $this->tolkaTitel($itemID);
 
-        // Parse permalink, i.e. get info from remote and store
-        // This can be called a bit later to check if item has remote updates
-        $this->parseItemContentAndUpdateIfChanges($itemID);
+            // Parse permalink, i.e. get info from remote and store
+            // This can be called a bit later to check if item has remote updates
+            $this->parseItemContentAndUpdateIfChanges($itemID);
 
-        // Find and save locations in teaser and content
-        $this->parseItemForLocations($itemID);
+            // Find and save locations in teaser and content
+            $this->parseItemForLocations($itemID);
+        });
 
         return true;
     }
@@ -738,18 +754,31 @@ class FeedController extends Controller
     {
         $item = CrimeEvent::findOrFail($itemID);
         $gammalUrl = $this->geocodeUrlFor($item);
+        $gammalt = $item->only(['title', 'description', 'polisen_type']);
 
         $item->title = $apiItem['name'] ?? $item->title;
         $item->description = html_entity_decode($apiItem['summary'] ?? '');
-        $item->polisen_type = isset($apiItem['type']) ? mb_substr($apiItem['type'], 0, 80) : $item->polisen_type;
+        $item->polisen_type = isset($apiItem['type']) ? mb_substr((string) $apiItem['type'], 0, 80) : $item->polisen_type;
+        // AI-omskriven titel/text bygger på den gamla versionen och visas
+        // före Polisens (display_title). Töm dem så att ändringen syns;
+        // create-summaries skriver om dem med den nya texten.
+        $item->title_alt_1 = null;
+        $item->description_alt_1 = null;
         $item->save();
 
-        // Titel och datum tolkas om och detaljsidan hämtas igen. Platserna
-        // tolkas bara i tolkaOmEfterAndring() — parseItem() skulle lägga till
-        // dem additivt först.
-        $this->tolkaTitel($itemID);
-        $this->parseItemContentAndUpdateIfChanges($itemID);
-        $this->tolkaOmEfterAndring($itemID, $gammalUrl);
+        try {
+            // Titel och datum tolkas om och detaljsidan hämtas igen. Platserna
+            // tolkas bara i tolkaOmEfterAndring() — parseItem() skulle lägga
+            // till dem additivt först.
+            $this->tolkaTitel($itemID);
+            $this->parseItemContentAndUpdateIfChanges($itemID);
+            $this->tolkaOmEfterAndring($itemID, $gammalUrl);
+        } catch (\Throwable $e) {
+            // Ändringen upptäcks genom att titel/sammanfattning skiljer sig
+            // från API:t. Återställ dem, annars görs omtolkningen aldrig om.
+            CrimeEvent::whereKey($itemID)->update($gammalt);
+            throw $e;
+        }
     }
 
     /**
@@ -798,7 +827,7 @@ class FeedController extends Controller
 
             $resultat = $this->geocodeItem($itemID);
             $efter = CrimeEvent::findOrFail($itemID);
-            if ($resultat['error'] || ! $efter->geocoded) {
+            if ($resultat['error']) {
                 Log::warning('Omgeokodning efter ändring hos Polisen misslyckades', [
                     'crime_event_id' => $itemID,
                     'status' => $resultat['status'] ?? null,

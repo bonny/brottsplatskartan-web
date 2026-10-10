@@ -26,17 +26,14 @@ class WarmCache extends Command
 
     protected $description = 'Pre-warmar response cache genom att pinga populära URL:er';
 
+    /** De mest besökta sidorna — värms alltid och får ett nytt försök. */
+    private const HETA = ['/', '/stockholm', '/vma', '/handelser', '/lan'];
+
     public function handle(): int
     {
         $baseUrl = rtrim(config('app.url'), '/');
 
-        $urls = [
-            '/',
-            '/stockholm',
-            '/vma',
-            '/handelser',
-            '/lan',
-        ];
+        $urls = self::HETA;
 
         // Lägg till alla län om inte --only-hot
         if (!$this->option('only-hot')) {
@@ -58,12 +55,13 @@ class WarmCache extends Command
             }
         }
 
-        // En kall sida (direkt efter en deploy, eller under last) kan ta
-        // längre tid än 15 s första gången. Ett nytt försök med längre
-        // timeout räcker nästan alltid.
+        // En kall sida (direkt efter en deploy) kan ta längre tid än 15 s
+        // första gången. Bara de mest besökta sidorna får ett nytt försök med
+        // längre timeout — under last skulle 45 s × alla län dra ut körningen
+        // förbi sitt eget intervall och belasta sajten ytterligare.
         $kvar = [];
         foreach ($misslyckade as $url) {
-            if (! $this->varm($baseUrl . $url, $url, 45)) {
+            if (! in_array($url, self::HETA, true) || ! $this->varm($baseUrl . $url, $url, 45)) {
                 $kvar[] = $url;
             }
         }

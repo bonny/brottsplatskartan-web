@@ -54,6 +54,24 @@ publicitetskontroll), inte bara när Polisen ändrat något — signalen är bru
    på händelser som ändrats mot oförändrade (de ändrade finns i loggen
    `Omgeokodad efter ändring hos Polisen` och, efter punkt 1, i tabellen).
 
+## "Uppdaterad!" i titeln? (Pär, 2026-10-10)
+
+Frågan: lockar det fler besökare/klick från Google att sätta "Uppdaterad!"
+i `<title>` på händelser som Polisen ändrat? Bedömning: **nej, inte som
+första steg.**
+
+- Google skriver ofta om titlar med lockrop/standardtext som inte beskriver
+  innehållet.
+- Vår egen mätning (#36) visade att titeländringar (AI-titlar) gav _lägre_
+  CTR (−8,5 %) — titlar har inte varit en klickhävstång här.
+- Bara ~3 % av händelserna ändras, och de flesta får sina klick inom ett par
+  dygn.
+
+Gör i stället punkt 2–3 (synligt "Uppdaterad 17:42" på sidan och i listor,
+ärligt `dateModified`, rad om ändrad rubricering). Vill vi ändå prova
+titeltillägget: bara när rubricering eller plats ändrats (inte stavfel), och
+mät CTR i GSC för ändrade händelser mot oförändrade under 30 dagar.
+
 ## Risker
 
 - **Integritet:** när en försvunnen person hittas tar Polisen bort

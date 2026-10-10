@@ -12,12 +12,12 @@ use Illuminate\Support\Facades\Cache;
  * När körde de schemalagda jobben senast, och gick det bra? Underlag för
  * statussidan (/status).
  *
- * Schedulern skriver en markering per jobb till cachen (Redis, delas av
- * scheduler- och app-containern) när ett jobb lyckas eller misslyckas.
+ * Schedulern skriver en markering per jobb när ett jobb lyckas eller
+ * misslyckas. Markeringarna ligger i databasens cache-tabell, inte Redis:
+ * Redis kör allkeys-lru och kan tränga undan nycklar utan förvarning (samma
+ * skäl som EventServiceProvider lägger flush-tidsstämplar utanför Redis).
  * Markeringen bär med sig jobbets cron-uttryck, eftersom webbförfrågningar
- * inte laddar schemat (det definieras bara i konsolkärnan). Responscachen
- * ligger i en egen Redis-databas, så deployens responsecache:clear rör inte
- * markeringarna.
+ * inte laddar schemat (det definieras bara i konsolkärnan).
  */
 class Jobbstatus
 {
@@ -58,8 +58,8 @@ class Jobbstatus
                 continue;
             }
             $cron = $event->expression;
-            $event->onSuccess(fn () => Cache::forever(self::NYCKEL . 'ok:' . $kommando, ['tid' => time(), 'cron' => $cron]));
-            $event->onFailure(fn () => Cache::forever(self::NYCKEL . 'fel:' . $kommando, ['tid' => time(), 'cron' => $cron]));
+            $event->onSuccess(fn () => self::lager()->forever(self::NYCKEL . 'ok:' . $kommando, ['tid' => time(), 'cron' => $cron]));
+            $event->onFailure(fn () => self::lager()->forever(self::NYCKEL . 'fel:' . $kommando, ['tid' => time(), 'cron' => $cron]));
         }
     }
 
@@ -83,8 +83,8 @@ class Jobbstatus
     {
         $rader = [];
         foreach (self::JOBB as $kommando => $etikett) {
-            $ok = Cache::get(self::NYCKEL . 'ok:' . $kommando);
-            $fel = Cache::get(self::NYCKEL . 'fel:' . $kommando);
+            $ok = self::lager()->get(self::NYCKEL . 'ok:' . $kommando);
+            $fel = self::lager()->get(self::NYCKEL . 'fel:' . $kommando);
             $senastOk = isset($ok['tid']) ? Carbon::createFromTimestamp($ok['tid']) : null;
             $senastFel = isset($fel['tid']) ? Carbon::createFromTimestamp($fel['tid']) : null;
             $uttryck = $ok['cron'] ?? $fel['cron'] ?? null;
@@ -143,11 +143,24 @@ class Jobbstatus
         return ['rod', 'Har inte kört på länge'];
     }
 
+    /**
+     * Snittet mellan de kommande 25 körningarna. Ett schema som "var 33:e
+     * minut" kör :00 och :33, så avståndet växlar mellan 33 och 27 minuter.
+     */
     private function intervallMinuter(CronExpression $cron): int
     {
-        $nasta = Carbon::instance($cron->getNextRunDate());
-        $darpa = Carbon::instance($cron->getNextRunDate($nasta, 0, false));
+        $korningar = $cron->getMultipleRunDates(25);
+        $forsta = Carbon::instance($korningar[0]);
+        $sista = Carbon::instance(end($korningar));
 
-        return (int) round($nasta->diffInMinutes($darpa));
+        return (int) round($forsta->diffInMinutes($sista) / (count($korningar) - 1));
+    }
+
+    /**
+     * Databasens cache-tabell: överlever både Redis-utrensning och deploy.
+     */
+    public static function lager(): \Illuminate\Contracts\Cache\Repository
+    {
+        return Cache::store('database');
     }
 }

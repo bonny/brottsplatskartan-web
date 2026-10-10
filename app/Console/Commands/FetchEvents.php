@@ -67,7 +67,7 @@ class FetchEvents extends Command
             $this->line("Polisen har ändrat händelse {$changedId}, tolkar om");
             try {
                 $this->feedController->uppdateraFranApi($changedId, $apiItem);
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
                 Log::warning('Kunde inte tolka om ändrad händelse', ['crime_event_id' => $changedId, 'fel' => $e->getMessage()]);
             }
         }
@@ -116,11 +116,12 @@ class FetchEvents extends Command
             // till ~1 800 Google-anrop. Bara bestående misslyckanden räknas
             // (ingen träff, för grov träff) — tillfälliga fel som
             // OVER_QUERY_LIMIT eller nätverksfel får inte få händelser att ge
-            // upp för gott. Räknaren ligger i cachen och nollställs vid varje
-            // deploy (responsecache:clear tömmer hela Redis-databasen), så
-            // taket är 10 försök per deploy.
+            // upp för gott. Räknaren ligger i databasens cache-tabell (inte
+            // Redis, som kan tränga undan nycklar) och lever i 16 dagar —
+            // längre än de 15 dagar händelsen alls försöks.
             $forsokKey = 'geokodforsok:' . $oneItem->getKey();
-            if ((int) Cache::get($forsokKey, 0) >= self::MAX_GEOKODFORSOK) {
+            $forsokLager = Cache::store('database');
+            if ((int) $forsokLager->get($forsokKey, 0) >= self::MAX_GEOKODFORSOK) {
                 continue;
             }
 
@@ -140,8 +141,8 @@ class FetchEvents extends Command
 
             $bestaendeFel = in_array($geocodeResult['status'] ?? null, ['OK', 'ZERO_RESULTS'], true);
             if ($bestaendeFel && ! CrimeEvent::withoutGlobalScopes()->whereKey($oneItem->getKey())->value('geocoded')) {
-                Cache::add($forsokKey, 0, now()->addDays(16));
-                if (Cache::increment($forsokKey) === self::MAX_GEOKODFORSOK) {
+                $forsokLager->add($forsokKey, 0, now()->addDays(16));
+                if ((int) $forsokLager->increment($forsokKey) === self::MAX_GEOKODFORSOK) {
                     Log::warning('Ger upp geokodning efter ' . self::MAX_GEOKODFORSOK . ' försök', ['crime_event_id' => $oneItem->getKey()]);
                 }
             }
